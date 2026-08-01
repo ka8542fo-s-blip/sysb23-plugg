@@ -1,6 +1,10 @@
 import { topics as strategiTopics } from "./strategi/topics.js";
 import { questions as strategiQuestions } from "./strategi/questions.js";
 import { essays as strategiEssays } from "./strategi/essays.js";
+import {
+  chapters as strategiChapters,
+  glossary as strategiGlossary,
+} from "./strategi/reading.js";
 
 // Manifest över delkurser. Lägg till en ny delkurs genom att skapa
 // src/data/<id>/{topics,questions,essays}.js och registrera den här —
@@ -13,6 +17,8 @@ export const courses = [
     topics: strategiTopics,
     questions: strategiQuestions,
     essays: strategiEssays,
+    chapters: strategiChapters,
+    glossary: strategiGlossary,
   },
   { id: "databaser", name: "Databaser", status: "kommande" },
   {

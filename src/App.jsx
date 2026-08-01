@@ -1,16 +1,25 @@
 import { useEffect, useMemo, useState } from "react";
 import Nav from "./components/Nav.jsx";
 import Home from "./views/Home.jsx";
+import KnowledgeHub from "./views/KnowledgeHub.jsx";
 import Practice from "./views/Practice.jsx";
 import Exam from "./views/Exam.jsx";
-import Concepts from "./views/Concepts.jsx";
 import Essays from "./views/Essays.jsx";
 import Stats from "./views/Stats.jsx";
 import { courses, getCourse } from "./data/index.js";
-import { KEYS, load, save, defaultSettings, recordAnswer } from "./lib/storage.js";
+import {
+  KEYS,
+  load,
+  save,
+  defaultSettings,
+  recordAnswer,
+  loadReadChapters,
+  saveReadChapter,
+} from "./lib/storage.js";
 
 export default function App() {
   const [view, setView] = useState("hem");
+  const [viewParams, setViewParams] = useState(null);
   const [courseId, setCourseId] = useState("strategi");
   const [answers, setAnswers] = useState(() => load(KEYS.answers, {}));
   const [exams, setExams] = useState(() => load(KEYS.exams, []));
@@ -20,7 +29,7 @@ export default function App() {
     ...load(KEYS.settings, {}),
   }));
   // Ett pågående prov ligger här, inte i Prov-vyn, så att det överlever
-  // ett besök i Begrepp eller Statistik. Sparas medvetet inte till
+  // ett besök i Läs eller Statistik. Sparas medvetet inte till
   // localStorage — ett prov ska inte gå att pausa över en omladdning.
   const [examSession, setExamSession] = useState(null);
 
@@ -31,11 +40,27 @@ export default function App() {
 
   const course = useMemo(() => getCourse(courseId), [courseId]);
 
-  // Byter man delkurs hör ett påbörjat prov inte längre hemma någonstans.
-  useEffect(() => setExamSession(null), [courseId]);
+  // Lästa kapitel: en nyckel per kapitel i localStorage.
+  const [readChapters, setReadChapters] = useState(() =>
+    loadReadChapters(
+      courseId,
+      (getCourse(courseId).chapters || []).map((chapter) => chapter.id),
+    ),
+  );
 
-  function navigate(next) {
+  useEffect(() => {
+    setExamSession(null);
+    setReadChapters(
+      loadReadChapters(
+        course.id,
+        (course.chapters || []).map((chapter) => chapter.id),
+      ),
+    );
+  }, [course]);
+
+  function navigate(next, params = null) {
     setView(next);
+    setViewParams(params);
     window.scrollTo({ top: 0 });
   }
 
@@ -55,12 +80,23 @@ export default function App() {
     });
   }
 
+  function toggleRead(chapterId, isRead) {
+    saveReadChapter(course.id, chapterId, isRead);
+    setReadChapters((prev) => {
+      const next = { ...prev };
+      if (isRead) next[chapterId] = true;
+      else delete next[chapterId];
+      return next;
+    });
+  }
+
   function resetAll() {
     setAnswers({});
     setExams([]);
     setEssayState({});
     setSettings(defaultSettings);
     setExamSession(null);
+    setReadChapters({});
   }
 
   const shared = { course, answers, settings, setSettings, navigate };
@@ -84,8 +120,20 @@ export default function App() {
       />
 
       <main id="innehall" className="mx-auto max-w-4xl px-4 py-7 sm:px-6 sm:py-10">
-        {view === "hem" && <Home {...shared} courses={courses} exams={exams} />}
-        {view === "ova" && <Practice {...shared} onAnswer={handleAnswer} />}
+        {view === "hem" && (
+          <Home {...shared} courses={courses} exams={exams} readChapters={readChapters} />
+        )}
+        {view === "las" && (
+          <KnowledgeHub
+            {...shared}
+            params={viewParams}
+            readChapters={readChapters}
+            onToggleRead={toggleRead}
+          />
+        )}
+        {view === "ova" && (
+          <Practice {...shared} params={viewParams} onAnswer={handleAnswer} />
+        )}
         {view === "prov" && (
           <Exam
             {...shared}
@@ -94,11 +142,17 @@ export default function App() {
             onFinish={handleExamFinished}
           />
         )}
-        {view === "begrepp" && <Concepts {...shared} />}
         {view === "essa" && (
           <Essays {...shared} essayState={essayState} setEssayState={setEssayState} />
         )}
-        {view === "statistik" && <Stats {...shared} exams={exams} onReset={resetAll} />}
+        {view === "statistik" && (
+          <Stats
+            {...shared}
+            exams={exams}
+            readChapters={readChapters}
+            onReset={resetAll}
+          />
+        )}
       </main>
 
       <footer className="mx-auto max-w-4xl px-4 pb-10 text-sm text-ink/65 sm:px-6">

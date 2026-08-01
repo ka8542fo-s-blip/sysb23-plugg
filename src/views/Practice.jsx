@@ -11,8 +11,30 @@ const DIFFICULTIES = [
   { value: 3, label: "Klurig" },
 ];
 
-export default function Practice({ course, answers, settings, setSettings, onAnswer }) {
+export default function Practice({
+  course,
+  answers,
+  settings,
+  setSettings,
+  params,
+  onAnswer,
+}) {
   const selectedTopics = settings.practiceTopics;
+
+  // "Öva på detta" från Läs skickar med ett förvalt ämnesfilter.
+  const presetKey = params?.nonce ?? null;
+  useEffect(() => {
+    const preset = params?.topics;
+    if (!preset || preset.length === 0) return;
+    const valid = preset.filter((id) => course.topics.some((topic) => topic.id === id));
+    if (valid.length === 0) return;
+    setSettings((prev) => ({
+      ...prev,
+      practiceTopics: valid,
+      practiceDifficulty: 0,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [presetKey]);
   const difficulty = settings.practiceDifficulty;
 
   const filtered = useMemo(() => {

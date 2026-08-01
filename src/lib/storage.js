@@ -7,7 +7,33 @@ export const KEYS = {
   exams: "exams", // [ { id, date, courseId, points, percent, grade, questions: [...] } ]
   essays: "essays", // { [essayId]: { draft: "…", checked: [bool], updatedAt: iso } }
   settings: "settings", // { timerOn, timerMinutes, practiceTopics, practiceDifficulty }
+  readSegment: "lasSegment", // "kompendium" | "begrepp" | "ordlista"
 };
+
+// Lästa kapitel sparas som en nyckel per kapitel: sysb23:read:<kurs>:<kapitel>
+export function readChapterKey(courseId, chapterId) {
+  return `read:${courseId}:${chapterId}`;
+}
+
+export function loadReadChapters(courseId, chapterIds) {
+  const state = {};
+  for (const chapterId of chapterIds) {
+    if (load(readChapterKey(courseId, chapterId), false) === true) {
+      state[chapterId] = true;
+    }
+  }
+  return state;
+}
+
+export function saveReadChapter(courseId, chapterId, isRead) {
+  const key = PREFIX + readChapterKey(courseId, chapterId);
+  try {
+    if (isRead) localStorage.setItem(key, "true");
+    else localStorage.removeItem(key);
+  } catch {
+    /* privat läge — sidan fungerar ändå */
+  }
+}
 
 export function load(key, fallback) {
   try {

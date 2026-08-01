@@ -4,12 +4,21 @@ import { overallStats, topicStats, focusTopic } from "../lib/progress.js";
 import { clearAll } from "../lib/storage.js";
 import { MAX_EXAM_POINTS } from "../lib/scoring.js";
 
-export default function Stats({ course, answers, exams, onReset, navigate }) {
+export default function Stats({
+  course,
+  answers,
+  exams,
+  readChapters = {},
+  onReset,
+  navigate,
+}) {
   const [confirming, setConfirming] = useState(false);
   const perTopic = useMemo(() => topicStats(course, answers), [course, answers]);
   const overall = useMemo(() => overallStats(course, answers), [course, answers]);
   const focus = useMemo(() => focusTopic(perTopic), [perTopic]);
   const courseExams = exams.filter((exam) => exam.courseId === course.id);
+  const chapters = course.chapters || [];
+  const readCount = chapters.filter((chapter) => readChapters[chapter.id]).length;
 
   function reset() {
     clearAll();
@@ -26,6 +35,9 @@ export default function Stats({ course, answers, exams, onReset, navigate }) {
           {overall.accuracy === null ? "—" : `${overall.accuracy} % rätt`} ·{" "}
           {overall.uniqueSeen} av {overall.total} frågor sedda
         </p>
+        <p className="tabular mt-1 text-[15px] text-ink/70">
+          Lästa kapitel: {readCount} av {chapters.length}
+        </p>
       </section>
 
       <section className="card p-5 sm:p-6">
@@ -36,13 +48,13 @@ export default function Stats({ course, answers, exams, onReset, navigate }) {
               <span className="font-medium">{focus.name}</span> är ditt svagaste
               ämne med <span className="tabular">{focus.accuracy} %</span> rätt på{" "}
               <span className="tabular">{focus.answered}</span> svar. Läs
-              tentafällorna under Begrepp och kör ett övningspass med bara det
-              ämnet valt.
+              tentafällorna under Läs → Begrepp och kör ett övningspass med bara
+              det ämnet valt.
             </p>
             <button
               type="button"
               className="btn-secondary mt-4"
-              onClick={() => navigate("begrepp")}
+              onClick={() => navigate("las", { segment: "begrepp" })}
             >
               Till begreppen
             </button>
@@ -111,8 +123,9 @@ export default function Stats({ course, answers, exams, onReset, navigate }) {
       <section className="card border-wrong/30 p-5">
         <h2 className="font-display text-lg">Nollställ min data</h2>
         <p className="mt-2 text-[15px] text-ink/70">
-          Raderar svarshistorik, provresultat, essäutkast och inställningar från
-          den här webbläsaren. Går inte att ångra.
+          Raderar svarshistorik, provresultat, essäutkast, läsprogress, valt
+          läge i Läs och övriga inställningar från den här webbläsaren. Går inte
+          att ångra.
         </p>
         {confirming ? (
           <div className="mt-4 flex flex-wrap gap-3">

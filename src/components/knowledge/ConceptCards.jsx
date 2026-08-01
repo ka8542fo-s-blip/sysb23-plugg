@@ -1,10 +1,19 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const WEIGHT_LABEL = { hög: "Hög tentavikt", medel: "Medel tentavikt", låg: "Låg tentavikt" };
 
-export default function Concepts({ course }) {
+// Begrepp-segmentet: samma kortlista som förut, nu med korsreferenser till
+// kompendiet och till Öva.
+export default function ConceptCards({
+  course,
+  chapters,
+  openTopicId,
+  onOpenChapter,
+  onPractice,
+}) {
   const [query, setQuery] = useState("");
-  const [openId, setOpenId] = useState(course.topics[0]?.id ?? null);
+  const [openId, setOpenId] = useState(openTopicId || course.topics[0]?.id || null);
+  const cardRefs = useRef({});
 
   const matches = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -22,31 +31,38 @@ export default function Concepts({ course }) {
     if (query.trim() && matches.length === 1) setOpenId(matches[0].id);
   }, [query, matches]);
 
+  // Hopp hit från ett kapitel: öppna rätt kort och scrolla fram det.
+  useEffect(() => {
+    if (!openTopicId) return;
+    setQuery("");
+    setOpenId(openTopicId);
+    const node = cardRefs.current[openTopicId];
+    if (node) node.scrollIntoView({ block: "start", behavior: "smooth" });
+  }, [openTopicId]);
+
+  const chapterNumber = (chapterId) => {
+    const index = chapters.findIndex((chapter) => chapter.id === chapterId);
+    return index === -1 ? null : index + 1;
+  };
+
   return (
-    <div className="space-y-6">
-      <section>
-        <h1 className="font-display text-2xl">Begrepp</h1>
-        <p className="mt-1 max-w-reading text-[15px] text-ink/70">
-          Facit-nivån: samma fakta som frågorna bygger på. Sök efter ett begrepp
-          eller bläddra ämne för ämne.
-        </p>
-        <div className="mt-4">
-          <label htmlFor="sok" className="sr-only">
-            Sök bland begreppen
-          </label>
-          <input
-            id="sok"
-            type="search"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Sök, t.ex. effektivitet, Barney, styrkort…"
-            className="w-full rounded-lg border border-line bg-white px-4 py-2.5 text-[15px]"
-          />
-        </div>
+    <div className="space-y-4">
+      <div>
+        <label htmlFor="begreppssok" className="sr-only">
+          Filtrera ämneskorten
+        </label>
+        <input
+          id="begreppssok"
+          type="search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Filtrera korten, t.ex. effektivitet, Barney, styrkort…"
+          className="w-full rounded-lg border border-line bg-white px-4 py-2.5 text-[15px]"
+        />
         <p className="tabular mt-2 text-sm text-ink/65">
           {matches.length} av {course.topics.length} ämnen
         </p>
-      </section>
+      </div>
 
       {matches.length === 0 && (
         <p className="card p-5 text-[15px] text-ink/70">
@@ -57,9 +73,16 @@ export default function Concepts({ course }) {
       <div className="space-y-3">
         {matches.map((topic) => {
           const open = openId === topic.id;
+          const number = chapterNumber(topic.chapter);
           return (
-            <article key={topic.id} className="card overflow-hidden">
-              <h2>
+            <article
+              key={topic.id}
+              ref={(node) => {
+                cardRefs.current[topic.id] = node;
+              }}
+              className="card scroll-mt-40 overflow-hidden"
+            >
+              <h3>
                 <button
                   type="button"
                   onClick={() => setOpenId(open ? null : topic.id)}
@@ -79,7 +102,7 @@ export default function Concepts({ course }) {
                     {open ? "−" : "+"}
                   </span>
                 </button>
-              </h2>
+              </h3>
 
               {open && (
                 <div className="border-t border-line p-5 pt-4">
@@ -87,19 +110,20 @@ export default function Concepts({ course }) {
                     {topic.summary}
                   </p>
 
-                  <h3 className="mt-5 font-display text-base">Nyckelpunkter</h3>
+                  <h4 className="mt-5 font-display text-base">Nyckelpunkter</h4>
                   <ul className="mt-2 space-y-2">
                     {topic.keyPoints.map((point, i) => (
                       <li key={i} className="flex gap-3 text-[15px] leading-relaxed">
-                        <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-pine" />
+                        <span
+                          aria-hidden="true"
+                          className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-pine"
+                        />
                         <span>{point}</span>
                       </li>
                     ))}
                   </ul>
 
-                  <h3 className="mt-5 font-display text-base text-brass">
-                    Tentafällor
-                  </h3>
+                  <h4 className="mt-5 font-display text-base text-brass">Tentafällor</h4>
                   <ul className="mt-2 space-y-2">
                     {topic.pitfalls.map((pitfall, i) => (
                       <li
@@ -110,6 +134,29 @@ export default function Concepts({ course }) {
                       </li>
                     ))}
                   </ul>
+
+                  <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-line pt-4">
+                    <button
+                      type="button"
+                      className="btn-secondary"
+                      onClick={() => onPractice([topic.id])}
+                    >
+                      Öva på detta ämne
+                    </button>
+                    {number ? (
+                      <button
+                        type="button"
+                        className="btn-quiet"
+                        onClick={() => onOpenChapter(topic.chapter)}
+                      >
+                        Läs hela avsnittet i kapitel {number} →
+                      </button>
+                    ) : (
+                      <span className="text-sm text-ink/65">
+                        Kapiteltexten är inte inlagd ännu.
+                      </span>
+                    )}
+                  </div>
                 </div>
               )}
             </article>

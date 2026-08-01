@@ -2,9 +2,9 @@ import CourseSwitcher from "./CourseSwitcher.jsx";
 
 export const VIEWS = [
   { id: "hem", label: "Hem" },
+  { id: "las", label: "Läs" },
   { id: "ova", label: "Öva" },
   { id: "prov", label: "Prov" },
-  { id: "begrepp", label: "Begrepp" },
   { id: "essa", label: "Essä" },
   { id: "statistik", label: "Statistik" },
 ];

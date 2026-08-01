@@ -1,7 +1,24 @@
 import { useMemo } from "react";
 import { overallStats, topicStats, focusTopic } from "../lib/progress.js";
 
-export default function Home({ course, courses, answers, exams, navigate }) {
+export default function Home({
+  course,
+  courses,
+  answers,
+  exams,
+  readChapters = {},
+  navigate,
+}) {
+  const chapters = course.chapters || [];
+  const readCount = chapters.filter((chapter) => readChapters[chapter.id]).length;
+  const minutesLeft = chapters
+    .filter((chapter) => !readChapters[chapter.id])
+    .reduce((sum, chapter) => sum + (chapter.readingMinutes || 0), 0);
+  const readingHint =
+    chapters.length === 0
+      ? "Kapiteltexten är inte inlagd ännu"
+      : `${readCount} av ${chapters.length} kapitel · ca ${minutesLeft} min kvar`;
+
   const overall = useMemo(() => overallStats(course, answers), [course, answers]);
   const perTopic = useMemo(() => topicStats(course, answers), [course, answers]);
   const focus = useMemo(() => focusTopic(perTopic), [perTopic]);
@@ -53,7 +70,13 @@ export default function Home({ course, courses, answers, exams, navigate }) {
             "Svara på minst fem frågor i ett ämne så pekar sidan ut vad du bör fokusera på."
           )}
         </p>
+        {/* Ordningen speglar arbetsgången: läs → öva → prova. */}
         <div className="mt-5 grid gap-3 sm:grid-cols-3">
+          <Shortcut
+            title="Läs kompendiet"
+            hint={readingHint}
+            onClick={() => navigate("las", { segment: "kompendium" })}
+          />
           <Shortcut
             title="Öva frågor"
             hint="En fråga i taget med facit"
@@ -63,11 +86,6 @@ export default function Home({ course, courses, answers, exams, navigate }) {
             title="Gör ett prov"
             hint="10 frågor med tentans poäng"
             onClick={() => navigate("prov")}
-          />
-          <Shortcut
-            title="Läs begreppen"
-            hint="Sammanfattningar och tentafällor"
-            onClick={() => navigate("begrepp")}
           />
         </div>
       </section>
