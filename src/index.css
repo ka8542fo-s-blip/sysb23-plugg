@@ -50,19 +50,30 @@
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-[15px] font-medium transition-colors;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-[15px] font-medium transition-colors duration-150;
   }
 
+  /* Fylld yta är reserverad för valt/aktivt läge och för den ENDA
+     huvudåtgärden i en vy — aldrig för vanliga genvägar. */
   .btn-primary {
-    @apply btn bg-pine text-white hover:bg-pine-dark disabled:opacity-40 disabled:hover:bg-pine;
+    @apply btn bg-pine text-white hover:bg-pine-dark active:bg-pine-dark
+      disabled:cursor-not-allowed disabled:bg-line disabled:text-ink/40 disabled:hover:bg-line;
   }
 
   .btn-secondary {
-    @apply btn border border-line bg-white text-ink hover:border-pine hover:text-pine disabled:opacity-40;
+    @apply btn border border-line bg-white text-ink
+      hover:border-pine hover:bg-pine/[0.06] hover:text-pine
+      active:bg-pine/[0.12]
+      disabled:cursor-not-allowed disabled:border-line disabled:bg-white disabled:text-ink/40
+      disabled:hover:border-line disabled:hover:bg-white disabled:hover:text-ink/40;
   }
 
   .btn-quiet {
-    @apply btn text-pine underline underline-offset-4 hover:text-pine-dark;
+    @apply btn px-2 text-pine underline underline-offset-4 hover:bg-pine/[0.08] hover:text-pine-dark active:bg-pine/[0.14];
+  }
+
+  .btn-danger {
+    @apply btn bg-wrong text-white hover:bg-[#8F3325] active:bg-[#7C2C20];
   }
 
   .tabular {
@@ -71,11 +82,21 @@
   }
 
   .chip {
-    @apply inline-flex items-center rounded-full border border-line px-3 py-1 text-sm transition-colors;
+    @apply inline-flex items-center rounded-full border border-line bg-white px-3 py-1 text-sm transition-colors duration-150;
+  }
+
+  .chip:not(.chip-on):not(:disabled):hover {
+    @apply border-pine bg-pine/[0.06] text-pine;
   }
 
   .chip-on {
-    @apply border-pine bg-pine text-white;
+    @apply border-pine bg-pine text-white hover:bg-pine-dark;
+  }
+
+  /* Klickbar yta som inte är en knapp i första hand: kort och listrader. */
+  .card-action {
+    @apply card w-full text-left transition-colors duration-150
+      hover:border-pine hover:bg-pine/[0.04] active:bg-pine/[0.08];
   }
 }
 

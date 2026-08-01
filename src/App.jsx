@@ -19,6 +19,10 @@ export default function App() {
     ...defaultSettings,
     ...load(KEYS.settings, {}),
   }));
+  // Ett pågående prov ligger här, inte i Prov-vyn, så att det överlever
+  // ett besök i Begrepp eller Statistik. Sparas medvetet inte till
+  // localStorage — ett prov ska inte gå att pausa över en omladdning.
+  const [examSession, setExamSession] = useState(null);
 
   useEffect(() => save(KEYS.answers, answers), [answers]);
   useEffect(() => save(KEYS.exams, exams), [exams]);
@@ -26,6 +30,9 @@ export default function App() {
   useEffect(() => save(KEYS.settings, settings), [settings]);
 
   const course = useMemo(() => getCourse(courseId), [courseId]);
+
+  // Byter man delkurs hör ett påbörjat prov inte längre hemma någonstans.
+  useEffect(() => setExamSession(null), [courseId]);
 
   function navigate(next) {
     setView(next);
@@ -53,6 +60,7 @@ export default function App() {
     setExams([]);
     setEssayState({});
     setSettings(defaultSettings);
+    setExamSession(null);
   }
 
   const shared = { course, answers, settings, setSettings, navigate };
@@ -66,7 +74,12 @@ export default function App() {
         Hoppa till innehållet
       </a>
 
-      <Nav view={view} onNavigate={navigate} courseName={course.name} />
+      <Nav
+        view={view}
+        onNavigate={navigate}
+        courseName={course.name}
+        examRunning={examSession?.stage === "running"}
+      />
 
       <main id="innehall" className="mx-auto max-w-4xl px-4 py-7 sm:px-6 sm:py-10">
         {view === "hem" && (
@@ -79,7 +92,14 @@ export default function App() {
           />
         )}
         {view === "ova" && <Practice {...shared} onAnswer={handleAnswer} />}
-        {view === "prov" && <Exam {...shared} onFinish={handleExamFinished} />}
+        {view === "prov" && (
+          <Exam
+            {...shared}
+            session={examSession}
+            setSession={setExamSession}
+            onFinish={handleExamFinished}
+          />
+        )}
         {view === "begrepp" && <Concepts {...shared} />}
         {view === "essa" && (
           <Essays {...shared} essayState={essayState} setEssayState={setEssayState} />

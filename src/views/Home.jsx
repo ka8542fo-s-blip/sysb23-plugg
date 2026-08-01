@@ -13,7 +13,7 @@ export default function Home({
   const overall = useMemo(() => overallStats(course, answers), [course, answers]);
   const perTopic = useMemo(() => topicStats(course, answers), [course, answers]);
   const focus = useMemo(() => focusTopic(perTopic), [perTopic]);
-  const latestExam = exams[0];
+  const latestExam = exams.find((exam) => exam.courseId === course.id);
 
   return (
     <div className="space-y-8">
@@ -54,16 +54,22 @@ export default function Home({
             "Svara på minst fem frågor i ett ämne så pekar sidan ut vad du bör fokusera på."
           )}
         </p>
-        <div className="mt-5 flex flex-wrap gap-3">
-          <button type="button" className="btn-primary" onClick={() => navigate("ova")}>
-            Öva frågor
-          </button>
-          <button type="button" className="btn-secondary" onClick={() => navigate("prov")}>
-            Starta prov
-          </button>
-          <button type="button" className="btn-secondary" onClick={() => navigate("begrepp")}>
-            Läs begreppen
-          </button>
+        <div className="mt-5 grid gap-3 sm:grid-cols-3">
+          <Shortcut
+            title="Öva frågor"
+            hint="En fråga i taget med facit"
+            onClick={() => navigate("ova")}
+          />
+          <Shortcut
+            title="Gör ett prov"
+            hint="10 frågor med tentans poäng"
+            onClick={() => navigate("prov")}
+          />
+          <Shortcut
+            title="Läs begreppen"
+            hint="Sammanfattningar och tentafällor"
+            onClick={() => navigate("begrepp")}
+          />
         </div>
       </section>
 
@@ -80,12 +86,10 @@ export default function Home({
                   disabled={!isActive}
                   onClick={() => onSelectCourse(item.id)}
                   aria-current={selected ? "true" : undefined}
-                  className={`card flex w-full items-center justify-between gap-3 p-4 text-left transition-colors ${
+                  className={`flex items-center justify-between gap-3 p-4 ${
                     isActive
-                      ? selected
-                        ? "border-pine"
-                        : "hover:border-pine"
-                      : "cursor-not-allowed opacity-45"
+                      ? `card-action ${selected ? "border-pine bg-pine/[0.04]" : ""}`
+                      : "card w-full cursor-not-allowed text-left opacity-45"
                   }`}
                 >
                   <span>
@@ -116,6 +120,25 @@ export default function Home({
         </p>
       </section>
     </div>
+  );
+}
+
+// Genvägar är navigering, inte val — därför ingen fylld yta som kan
+// förväxlas med "vald".
+function Shortcut({ title, hint, onClick }) {
+  return (
+    <button type="button" onClick={onClick} className="card-action group p-4">
+      <span className="flex items-center justify-between gap-2">
+        <span className="font-medium text-pine">{title}</span>
+        <span
+          aria-hidden="true"
+          className="text-pine transition-transform duration-150 group-hover:translate-x-0.5"
+        >
+          →
+        </span>
+      </span>
+      <span className="mt-0.5 block text-sm text-ink/65">{hint}</span>
+    </button>
   );
 }
 

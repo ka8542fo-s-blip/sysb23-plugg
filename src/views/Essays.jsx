@@ -3,7 +3,7 @@ import { useState } from "react";
 export default function Essays({ course, essayState, setEssayState }) {
   const [activeId, setActiveId] = useState(course.essays[0]?.id);
   const essay = course.essays.find((item) => item.id === activeId) || course.essays[0];
-  const state = essayState[essay.id] || { draft: "", checked: [], showChecklist: false };
+  const state = essayState[essay.id] || { draft: "", checked: [] };
   const [showChecklist, setShowChecklist] = useState(false);
 
   function update(patch) {

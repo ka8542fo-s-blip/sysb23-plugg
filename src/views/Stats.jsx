@@ -116,11 +116,7 @@ export default function Stats({ course, answers, exams, onReset, navigate }) {
         </p>
         {confirming ? (
           <div className="mt-4 flex flex-wrap gap-3">
-            <button
-              type="button"
-              className="btn bg-wrong text-white hover:opacity-90"
-              onClick={reset}
-            >
+            <button type="button" className="btn-danger" onClick={reset}>
               Ja, radera allt
             </button>
             <button

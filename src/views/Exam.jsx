@@ -10,38 +10,62 @@ import {
   formatTime,
 } from "../lib/scoring.js";
 
-export default function Exam({ course, settings, setSettings, onFinish, navigate }) {
-  const [stage, setStage] = useState("intro"); // intro | running | result
-  const [items, setItems] = useState([]); // { question, view, choice, skipped }
-  const [index, setIndex] = useState(0);
-  const [secondsLeft, setSecondsLeft] = useState(null);
-  const [result, setResult] = useState(null);
+// Provet lever i App:s state (`session`) så att man kan gå till Begrepp
+// och tillbaka utan att tappa ett påbörjat prov. Timern räknar mot en
+// absolut deadline av samma skäl.
+export default function Exam({
+  course,
+  settings,
+  setSettings,
+  session,
+  setSession,
+  onFinish,
+  navigate,
+}) {
+  const [now, setNow] = useState(() => Date.now());
+  const [confirmSubmit, setConfirmSubmit] = useState(false);
+  const submittedRef = useRef(null);
+
+  const stage = session?.stage ?? "intro";
+  const items = session?.items ?? [];
+  const index = session?.index ?? 0;
+  const deadline = session?.deadline ?? null;
 
   const topicName = useCallback(
     (topicId) => course.topics.find((topic) => topic.id === topicId)?.name,
     [course],
   );
 
+  const secondsLeft =
+    deadline === null ? null : Math.max(0, Math.round((deadline - now) / 1000));
+
   function startExam() {
     const picked = balancedExamPick(course.questions, QUESTIONS_PER_EXAM, 2);
-    setItems(
-      picked.map((question) => ({
+    const runId = Date.now();
+    setConfirmSubmit(false);
+    setNow(Date.now());
+    setSession({
+      runId,
+      stage: "running",
+      index: 0,
+      deadline: settings.timerOn ? runId + settings.timerMinutes * 60000 : null,
+      items: picked.map((question) => ({
         question,
         view: shuffleQuestion(question),
         choice: null,
         skipped: false,
       })),
-    );
-    setIndex(0);
-    setResult(null);
-    setSecondsLeft(settings.timerOn ? settings.timerMinutes * 60 : null);
-    setStage("running");
+    });
     window.scrollTo({ top: 0 });
   }
 
   const finishExam = useCallback(
     (current) => {
-      const entries = current.map((item) => ({
+      if (!current || current.stage !== "running") return;
+      if (submittedRef.current === current.runId) return;
+      submittedRef.current = current.runId;
+
+      const entries = current.items.map((item) => ({
         questionId: item.question.id,
         topic: item.question.topic,
         choice: item.choice,
@@ -49,52 +73,77 @@ export default function Exam({ course, settings, setSettings, onFinish, navigate
       }));
       const score = scoreExam(entries);
       const record = {
-        id: `${Date.now()}`,
+        id: `${current.runId}`,
         date: new Date().toISOString(),
         courseId: course.id,
         ...score,
         questions: entries,
       };
-      setResult({ record, items: current });
-      setStage("result");
-      setSecondsLeft(null);
+      setConfirmSubmit(false);
+      setSession({ ...current, stage: "result", deadline: null, record });
       onFinish(record);
       window.scrollTo({ top: 0 });
     },
-    [course, onFinish],
+    [course, onFinish, setSession],
   );
 
-  // Timern tickar oberoende av svaren; nedräkningen ska inte starta om
-  // varje gång ett alternativ väljs.
-  const itemsRef = useRef(items);
-  itemsRef.current = items;
-  const timerRunning = stage === "running" && secondsLeft !== null;
-
+  // Klockan tickar oberoende av svaren.
   useEffect(() => {
-    if (!timerRunning) return undefined;
-    const id = setInterval(
-      () => setSecondsLeft((prev) => (prev === null ? null : Math.max(0, prev - 1))),
-      1000,
-    );
+    if (stage !== "running" || deadline === null) return undefined;
+    const id = setInterval(() => setNow(Date.now()), 500);
     return () => clearInterval(id);
-  }, [timerRunning]);
+  }, [stage, deadline]);
 
+  // Tiden ute — lämnas in automatiskt, även om man varit i en annan vy.
   useEffect(() => {
-    if (stage === "running" && secondsLeft === 0) finishExam(itemsRef.current);
-  }, [stage, secondsLeft, finishExam]);
+    if (stage === "running" && secondsLeft === 0) finishExam(session);
+  }, [stage, secondsLeft, session, finishExam]);
 
-  const setChoice = useCallback((choice) => {
-    setItems((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, choice, skipped: false } : item)),
-    );
-  }, [index]);
+  const updateItem = useCallback(
+    (patch) => {
+      setSession((prev) =>
+        prev && prev.stage === "running"
+          ? {
+              ...prev,
+              items: prev.items.map((item, i) =>
+                i === prev.index ? { ...item, ...patch } : item,
+              ),
+            }
+          : prev,
+      );
+    },
+    [setSession],
+  );
+
+  const goTo = useCallback(
+    (updater) => {
+      setSession((prev) =>
+        prev && prev.stage === "running"
+          ? {
+              ...prev,
+              index: Math.min(
+                Math.max(
+                  typeof updater === "function" ? updater(prev.index) : updater,
+                  0,
+                ),
+                prev.items.length - 1,
+              ),
+            }
+          : prev,
+      );
+    },
+    [setSession],
+  );
+
+  const setChoice = useCallback(
+    (choice) => updateItem({ choice, skipped: false }),
+    [updateItem],
+  );
 
   const skip = useCallback(() => {
-    setItems((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, choice: null, skipped: true } : item)),
-    );
-    setIndex((prev) => Math.min(prev + 1, itemsRef.current.length - 1));
-  }, [index]);
+    updateItem({ choice: null, skipped: true });
+    goTo((prev) => prev + 1);
+  }, [updateItem, goTo]);
 
   useEffect(() => {
     if (stage !== "running") return undefined;
@@ -106,78 +155,77 @@ export default function Exam({ course, settings, setSettings, onFinish, navigate
         setChoice(Number(event.key) - 1);
       } else if (event.key === "ArrowRight" || event.key === "Enter") {
         event.preventDefault();
-        setIndex((prev) => Math.min(prev + 1, items.length - 1));
+        goTo((prev) => prev + 1);
       } else if (event.key === "ArrowLeft") {
         event.preventDefault();
-        setIndex((prev) => Math.max(prev - 1, 0));
+        goTo((prev) => prev - 1);
       }
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [stage, items.length, setChoice]);
+  }, [stage, setChoice, goTo]);
 
   if (stage === "intro") {
     return (
-      <div className="space-y-6">
-        <section className="card p-5 sm:p-6">
-          <h1 className="font-display text-2xl">Prov</h1>
-          <p className="mt-2 max-w-reading text-[15px] leading-relaxed text-ink/80">
-            Tio frågor, balanserat dragna över ämnena (högst två per ämne). Poängen
-            följer tentan: <span className="font-medium">+6</span> för rätt svar,{" "}
-            <span className="font-medium">−1</span> för fel och{" "}
-            <span className="font-medium">0</span> för överhoppad. Ingen feedback
-            förrän provet är inlämnat.
-          </p>
+      <section className="card p-5 sm:p-6">
+        <h1 className="font-display text-2xl">Prov</h1>
+        <p className="mt-2 max-w-reading text-[15px] leading-relaxed text-ink/80">
+          Tio frågor, balanserat dragna över ämnena (högst två per ämne). Poängen
+          följer tentan: <span className="font-medium">+6</span> för rätt svar,{" "}
+          <span className="font-medium">−1</span> för fel och{" "}
+          <span className="font-medium">0</span> för överhoppad. Ingen feedback
+          förrän provet är inlämnat.
+        </p>
 
-          <div className="mt-6 space-y-4">
-            <label className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                checked={settings.timerOn}
-                onChange={(event) =>
-                  setSettings((prev) => ({ ...prev, timerOn: event.target.checked }))
-                }
-                className="h-4 w-4 accent-pine"
-              />
-              <span className="text-[15px]">Använd timer</span>
+        <div className="mt-6 space-y-4">
+          <label className="flex w-fit cursor-pointer items-center gap-3 rounded-lg py-1 pr-3">
+            <input
+              type="checkbox"
+              checked={settings.timerOn}
+              onChange={(event) =>
+                setSettings((prev) => ({ ...prev, timerOn: event.target.checked }))
+              }
+              className="h-4 w-4 accent-pine"
+            />
+            <span className="text-[15px]">Använd timer</span>
+          </label>
+
+          <div className="flex items-center gap-3">
+            <label htmlFor="minutes" className="text-[15px] text-ink/70">
+              Minuter
             </label>
-
-            <div className="flex items-center gap-3">
-              <label htmlFor="minutes" className="text-[15px] text-ink/70">
-                Minuter
-              </label>
-              <input
-                id="minutes"
-                type="number"
-                min="1"
-                max="120"
-                value={settings.timerMinutes}
-                disabled={!settings.timerOn}
-                onChange={(event) =>
-                  setSettings((prev) => ({
-                    ...prev,
-                    timerMinutes: Math.min(
-                      120,
-                      Math.max(1, Number(event.target.value) || 1),
-                    ),
-                  }))
-                }
-                className="tabular w-20 rounded-lg border border-line bg-white px-3 py-2 disabled:opacity-40"
-              />
-            </div>
+            <input
+              id="minutes"
+              type="number"
+              min="1"
+              max="120"
+              value={settings.timerMinutes}
+              disabled={!settings.timerOn}
+              onChange={(event) =>
+                setSettings((prev) => ({
+                  ...prev,
+                  timerMinutes: Math.min(
+                    120,
+                    Math.max(1, Number(event.target.value) || 1),
+                  ),
+                }))
+              }
+              className="tabular w-20 rounded-lg border border-line bg-white px-3 py-2 disabled:cursor-not-allowed disabled:bg-paper disabled:text-ink/40"
+            />
           </div>
+        </div>
 
-          <button type="button" className="btn-primary mt-6" onClick={startExam}>
-            Starta provet
-          </button>
-        </section>
-      </div>
+        <button type="button" className="btn-primary mt-6" onClick={startExam}>
+          Starta provet
+        </button>
+      </section>
     );
   }
 
   if (stage === "running") {
     const item = items[index];
     const answeredCount = items.filter((entry) => entry.choice !== null).length;
+    const openCount = items.length - answeredCount;
 
     return (
       <div className="space-y-5">
@@ -195,7 +243,6 @@ export default function Exam({ course, settings, setSettings, onFinish, navigate
               className={`tabular rounded-lg px-3 py-1 font-medium ${
                 secondsLeft <= 60 ? "bg-wrong-bg text-wrong" : "text-ink/70"
               }`}
-              aria-live="off"
             >
               {formatTime(secondsLeft)}
             </span>
@@ -207,15 +254,15 @@ export default function Exam({ course, settings, setSettings, onFinish, navigate
             const state =
               entry.choice !== null ? "answered" : entry.skipped ? "skipped" : "untouched";
             const style = {
-              answered: "border-pine bg-pine text-white",
-              skipped: "border-brass text-brass",
-              untouched: "border-line text-ink/65",
+              answered: "border-pine bg-pine text-white hover:bg-pine-dark",
+              skipped: "border-brass text-brass hover:bg-brass/10",
+              untouched: "border-line text-ink/65 hover:border-pine hover:bg-pine/[0.06]",
             }[state];
             return (
               <button
                 key={entry.question.id}
                 type="button"
-                onClick={() => setIndex(i)}
+                onClick={() => goTo(i)}
                 aria-current={i === index ? "true" : undefined}
                 aria-label={`Fråga ${i + 1}, ${
                   state === "answered"
@@ -224,7 +271,7 @@ export default function Exam({ course, settings, setSettings, onFinish, navigate
                       ? "överhoppad"
                       : "obesvarad"
                 }`}
-                className={`tabular h-9 w-9 rounded-lg border text-sm ${style} ${
+                className={`tabular h-9 w-9 rounded-lg border text-sm transition-colors duration-150 ${style} ${
                   i === index ? "ring-2 ring-pine ring-offset-2 ring-offset-paper" : ""
                 }`}
               >
@@ -247,7 +294,7 @@ export default function Exam({ course, settings, setSettings, onFinish, navigate
             <button
               type="button"
               className="btn-secondary"
-              onClick={() => setIndex((prev) => Math.max(prev - 1, 0))}
+              onClick={() => goTo((prev) => prev - 1)}
               disabled={index === 0}
             >
               Föregående
@@ -260,43 +307,60 @@ export default function Exam({ course, settings, setSettings, onFinish, navigate
             >
               Hoppa över
             </button>
-            {index < items.length - 1 ? (
-              <button
-                type="button"
-                className="btn-primary"
-                onClick={() => setIndex((prev) => prev + 1)}
-              >
-                Nästa
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="btn-primary"
-                onClick={() => finishExam(items)}
-              >
-                Lämna in
-              </button>
-            )}
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => goTo((prev) => prev + 1)}
+              disabled={index === items.length - 1}
+            >
+              Nästa
+            </button>
           </div>
         </QuestionCard>
 
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-ink/65">
-            Ett fel svar kostar 1 p — hoppa hellre över när du inte kan.
-          </p>
-          <button
-            type="button"
-            className="btn-quiet text-sm"
-            onClick={() => finishExam(items)}
-          >
-            Lämna in nu
-          </button>
+        <div className="card p-4">
+          {confirmSubmit ? (
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="text-[15px]">
+                {openCount === 0
+                  ? "Lämna in provet?"
+                  : `${openCount} ${openCount === 1 ? "fråga är" : "frågor är"} obesvarade — de ger 0 p. Lämna in ändå?`}
+              </p>
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={() => finishExam(session)}
+              >
+                Lämna in
+              </button>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => setConfirmSubmit(false)}
+              >
+                Fortsätt provet
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm text-ink/65">
+                Ett fel svar kostar 1 p — hoppa hellre över när du inte kan.
+              </p>
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={() => setConfirmSubmit(true)}
+              >
+                Lämna in provet
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );
   }
 
-  const { record, items: finished } = result;
+  const { record } = session;
 
   return (
     <div className="space-y-6">
@@ -332,7 +396,7 @@ export default function Exam({ course, settings, setSettings, onFinish, navigate
 
       <section className="space-y-5">
         <h2 className="font-display text-xl">Genomgång</h2>
-        {finished.map((item, i) => (
+        {items.map((item, i) => (
           <QuestionCard
             key={item.question.id}
             question={item.question}

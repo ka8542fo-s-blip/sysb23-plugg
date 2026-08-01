@@ -64,7 +64,7 @@ export default function Concepts({ course }) {
                   type="button"
                   onClick={() => setOpenId(open ? null : topic.id)}
                   aria-expanded={open}
-                  className="flex w-full items-center justify-between gap-3 p-5 text-left"
+                  className="flex w-full items-center justify-between gap-3 p-5 text-left transition-colors duration-150 hover:bg-pine/[0.04] active:bg-pine/[0.08]"
                 >
                   <span>
                     <span className="block font-display text-lg text-pine">
