@@ -1,47 +1,113 @@
-// Kompendiet (löptext) och ordlistan för delkursen Strategi och ekonomistyrning.
-//
-// Ansvarsfördelning: löptexten ägs HÄR, de korta punkterna ägs av topics.js.
-// Kapitlen har därför medvetet inga egna `recap`- eller `pitfalls`-arrayer —
-// kapitelavslutet ("Kärnan i korthet" och "Se upp för") renderas ur kapitlets
-// `primaryTopics` via lib/topicLookup.js.
-//
-// `topics` och `primaryTopics` sätts automatiskt ur tabellen nedan och ska
-// alltså inte skrivas in i kapitelobjekten. `topics` = allt kapitlet berör
-// (styr "Öva på detta kapitel"), `primaryTopics` = det kapitlet introducerar
-// (styr kapitelavslutet).
-//
-// Kapitelschema: { id, number, title, lead, readingMinutes, sources, body }
-//   där body är markdown.
-// Ordlisteschema: { term, definition, chapter }
+# PROMPT TILL CLAUDE CODE — Läsdel ("Läsesalen") för SYSB23 Plugg
 
-export const CHAPTER_TOPICS = {
-  kap1: { topics: ["grunder"], primaryTopics: ["grunder"] },
-  kap2: { topics: ["vision"], primaryTopics: ["vision"] },
-  kap3: { topics: ["mal"], primaryTopics: ["mal"] },
-  kap4: { topics: ["effektivitet"], primaryTopics: ["effektivitet"] },
-  kap5: { topics: ["organisation", "grunder"], primaryTopics: ["organisation"] },
-  kap6: {
-    topics: ["strategiutveckling", "porter", "rbv"],
-    primaryTopics: ["strategiutveckling", "porter"],
-  },
-  kap7: { topics: ["bsc", "matt"], primaryTopics: ["bsc", "matt"] },
-  kap8: { topics: ["tbl"], primaryTopics: ["tbl"] },
-  kap9: { topics: ["it", "rbv"], primaryTopics: ["it", "rbv"] },
-  kap10: {
-    topics: ["nyamatt", "grunder", "bsc", "tbl"],
-    primaryTopics: ["nyamatt"],
-  },
+## Vad du ska göra
+
+Detta är ett **tillägg till det befintliga projektet SYSB23 Plugg** (pluggsida med Öva, Prov, Begrepp, Essä och Statistik för delkursen Strategi och ekonomistyrning). Uppgiften nu: bygg en **läsdel** — ett sammanhängande kompendium som studenten kan läsa i ett svep för att förstå ämnet *innan* övningarna börjar.
+
+Allt textinnehåll finns färdigskrivet längre ned i detta dokument och är hämtat ur kurslitteraturen (Ax/Johansson/Kullvén "Den nya ekonomistyrningen" kap 1–3, Herrmann 2005, Kaplan & Norton 1993, Ittner & Larcker 2003, Rogers & Hudson 2011, Barney 2024) samt föreläsningsteman. **Skriv inte om, korta inte ned och lägg inte till egna fakta.** Kopiera in innehållet exakt. Din uppgift är vyn, navigationen, läsupplevelsen och kopplingen till övriga lägen.
+
+Om projektet inte finns i mappen: bygg det enligt den tidigare prompten först, eller bygg läsdelen som fristående app med samma designspråk och lämna tydliga TODO-krokar där integrationen ska ske.
+
+## Ny data
+
+Skapa `src/data/strategi/reading.js` som exporterar två saker:
+
+```js
+export const reading = {
+  title: "Strategi och ekonomistyrning",
+  subtitle: "Läskompendium",
+  intro: "…",              // kort orienteringstext, finns nedan
+  chapters: [
+    {
+      id: "kap1",
+      number: 1,
+      title: "…",
+      topics: ["grunder"],        // ids ur topics.js — används för "Öva på detta kapitel"
+      readingMinutes: 9,
+      lead: "…",                  // 1–2 meningar som visas i innehållsförteckningen
+      body: `…markdown…`,         // huvudtexten
+      recap: ["…"],               // "Kärnan i korthet"
+      pitfalls: ["…"],            // "Se upp för"
+      sources: ["AJK kap 1"]
+    }
+  ]
 };
 
-export const CHAPTER_ORDER = Object.keys(CHAPTER_TOPICS);
+export const glossary = [
+  { term: "Ekonomistyrning", definition: "…", chapter: "kap1" }
+];
+```
 
-export const intro = "Den här delkursen handlar om två saker som hänger ihop tätare än man först tror: hur företag bestämmer vart de ska (strategi) och hur de får verksamheten att faktiskt röra sig dit (ekonomistyrning). Kompendiet är skrivet för att läsas i ordning — varje kapitel bygger på det förra, och de sista kapitlen knyter ihop hela bilden. Räkna med ungefär en och en halv timme för hela texten. Läs först, öva sedan. Begreppen sitter mycket bättre när du redan sett dem i sitt sammanhang.";
+`body` är markdown (`##` underrubriker, `**fet**`, punktlistor, `>` för citat/definitioner). Rendera med `react-markdown` + `remark-gfm` (lägg till som dependency) och styla via en `prose`-liknande egen CSS-klass — använd inte Tailwind Typography-pluginet, styla själv med projektets tokens.
 
-const rawChapters = [
+## Vyn "Läs"
+
+Lägg till **Läs** som första flik i navigationen (före Öva) — läsning är startpunkten i pluggflödet. Två nivåer:
+
+**A. Innehållsförteckning (landningsvy för Läs).**
+- Rubrik, introtexten ur `reading.intro`, och total lästid (summan av `readingMinutes`).
+- Kapitellista som numrerade rader: nummer, titel, `lead`, lästid, samt statusmarkering (oläst / pågående / läst). Läst-status sparas i `localStorage` under `sysb23:read:<delkurs>:<kapitelId>`.
+- En framträdande knapp **"Fortsätt läsa"** som hoppar till första kapitlet som inte är markerat läst (annars kapitel 1).
+- Progressindikator: "3 av 10 kapitel lästa" med en tunn stapel i `--pine`.
+
+**B. Kapitelvy (läsläget).**
+- Maxbredd på textkolumnen **~68 tecken** (`max-w-[68ch]`), radavstånd 1.7, brödtext 17–18 px. Rubriker i Fraunces, brödtext i Inter. Rikligt med luft mellan avsnitt. Detta ska vara behagligt att läsa i tio minuter i sträck — prioritera läsbarhet över allt annat i denna vy.
+- Sidhuvud: "Kapitel N av M", titel, lästid, källhänvisning ur `sources`.
+- **Läsprogress:** en 3 px tunn stapel högst upp (sticky) som fylls med `--brass` efter scrollposition i kapitlet. Respektera `prefers-reduced-motion` (ingen mjuk animering då, bara direkt uppdatering).
+- Efter `body` följer i ordning:
+  1. **Kärnan i korthet** — `recap` som lista i ett kort med `--correct-bg` som bakgrund.
+  2. **Se upp för** — `pitfalls` i ett kort med `--wrong-bg`, rubrikikon eller etikett i `--brass`.
+  3. **Åtgärdsrad:** knapp "Markera som läst" (toggle, sparas), knapp "Öva på detta kapitel" som navigerar till Öva-läget **förfiltrerat på kapitlets `topics`**, samt "Nästa kapitel →" / "← Föregående".
+- **Sticky innehållsförteckning** i högerkolumn på desktop (≥1024 px) med kapitlets `##`-underrubriker som ankarlänkar och markering av var man är. På mobil ersätts den av en utfällbar "I detta kapitel"-panel högst upp.
+- Tangentbord: `J`/`↓` och `K`/`↑` scrollar mjukt, `N` nästa kapitel, `P` föregående, `Esc` tillbaka till innehållsförteckningen.
+
+## Ordlista
+
+Lägg **Ordlista** som en flik eller som en sektion inom Läs (ditt val, men den ska vara nåbar i högst två klick):
+- Alfabetiskt sorterade termer ur `glossary`, med sökfält som filtrerar på både term och definition medan man skriver.
+- A–Ö-hoppnavigering (bokstäver utan träff visas nedtonade och är inte klickbara).
+- Varje post visar term, definition och en liten länk "Kapitel N" som hoppar till rätt kapitel.
+
+## Integration med resten av appen
+
+- **Hem-vyn:** lägg till ett kort "Läs kompendiet" högst upp med läsprogressen, som primär startpunkt för nya användare. Texten ska göra ordningen tydlig: läs först, öva sedan, prova dig själv sist.
+- **Begrepp-vyn** (kunskapskorten ur `topics.js`) behålls som den är — den är repetitionsformatet, läsdelen är förståelseformatet. Lägg i varje begreppskort en liten länk "Läs mer i kapitel N" som mappar via `topics`-fältet i kapitlen.
+- **Öva-vyn** måste kunna ta emot ett förvalt ämnesfilter som prop/parameter (för "Öva på detta kapitel").
+- **Statistik-vyn:** lägg till en rad "Lästa kapitel: X av M". "Nollställ min data" ska även rensa läsprogressen (nämn det i bekräftelsedialogen).
+
+## Design
+
+Återanvänd exakt de befintliga tokens (`--paper`, `--ink`, `--pine`, `--brass`, `--correct`, `--wrong`, `--line`) och typsnitten Fraunces + Inter. Inga nya färger. Läsdelen ska kännas som samma bok som resten av appen, bara med mer luft. Enda tillskottet är läsprogresstapeln i mässing.
+
+I `body`-texten renderas följande markdown-element med särbehandling:
+- `>` blockquote → definitionsruta: vänsterkant 3 px i `--pine`, ljusare bakgrund, ingen kursiv.
+- `**fet**` inuti brödtext används för nyckeltermer — ge dem `--pine` som färg och weight 600.
+- Punktlistor får generös radhöjd; numrerade listor används där ordningen betyder något.
+
+---
+
+# INNEHÅLL — kopiera in i `src/data/strategi/reading.js`
+
+## Introtext (`reading.intro`)
+
+```
+Den här delkursen handlar om två saker som hänger ihop tätare än man först tror: hur företag bestämmer vart de ska (strategi) och hur de får verksamheten att faktiskt röra sig dit (ekonomistyrning). Kompendiet är skrivet för att läsas i ordning — varje kapitel bygger på det förra, och de sista kapitlen knyter ihop hela bilden. Räkna med ungefär en och en halv timme för hela texten. Läs först, öva sedan. Begreppen sitter mycket bättre när du redan sett dem i sitt sammanhang.
+```
+
+## Kapitel (`reading.chapters`)
+
+```js
+export const reading = {
+  title: "Strategi och ekonomistyrning",
+  subtitle: "Läskompendium",
+  intro: "Den här delkursen handlar om två saker som hänger ihop tätare än man först tror: hur företag bestämmer vart de ska (strategi) och hur de får verksamheten att faktiskt röra sig dit (ekonomistyrning). Kompendiet är skrivet för att läsas i ordning — varje kapitel bygger på det förra, och de sista kapitlen knyter ihop hela bilden. Räkna med ungefär en och en halv timme för hela texten. Läs först, öva sedan. Begreppen sitter mycket bättre när du redan sett dem i sitt sammanhang.",
+  chapters: [
+
   {
     id: "kap1",
     number: 1,
     title: "Vad ekonomistyrning är",
+    topics: ["grunder"],
     readingMinutes: 9,
     lead: "Grundplattan: vad ekonomi och företag betyder i ämnet, hur ekonomistyrning definieras, vad den som styr faktiskt gör och vilka verktyg som finns.",
     sources: ["AJK kap 1"],
@@ -86,12 +152,26 @@ Det leder till nästa kapitel, för om styrningen ska implementera strategin må
 
 Ämnet är i förändring, och en riktning kallas **strategisk ekonomistyrning**. Det finns ingen konsensus om innebörden, men de vanliga definitionerna delar några särdrag: uppgifterna breddas till att omfatta identifiering och förstärkning av konkurrensfördelar och strategiformulering; det traditionella interna fokuset kompletteras med **externt fokus** på konkurrenters priser, kostnadsnivåer och marknadsandelar samt kunders betalningsvillighet och lojalitet; man arbetar aktivt med värdekedjans länkar och strategiska kostnadsdrivare; och styrningen anpassas explicit till strategisk inriktning. Nya metoder som hör hit: strategisk kostnadsanalys, kostnadsdrivaranalys, värdekedjeanalys, livscykelkalkylering, målkostnadskalkylering och balanserat styrkort.
 `,
+    recap: [
+      "Företag = sammanslutning som medvetet arbetar mot mål (inkluderar offentlig verksamhet och föreningar). Ekonomi = hushållning med knappa resurser.",
+      "Ekonomistyrning = avsiktlig påverkan på en verksamhet och dess befattningshavare mot vissa ekonomiska mål (NE).",
+      "Ekonomiska mål kan vara både finansiella (resultat, lönsamhet, kassaflöde) och icke-finansiella (kunder, kvalitet, medarbetare).",
+      "Tre styrmedelskategorier: formella styrmedel, organisationsstruktur, mindre formaliserade styrmedel.",
+      "Ekonomistyrningens syfte är strategiimplementering — den ska därför anpassas till vald strategi.",
+      "Strategisk ekonomistyrning breddar med externt fokus (konkurrenter, kunder) och värdekedjetänkande."
+    ],
+    pitfalls: [
+      "'Ekonomiska mål' betyder inte 'bara finansiella mål'.",
+      "Budgetering är formellt styrmedel, belöningssystem hör till organisationsstruktur, kultur är mindre formaliserad styrning — sortera rätt.",
+      "Ekonomistyrning är inte extern redovisning och inte statlig reglering."
+    ]
   },
 
   {
     id: "kap2",
     number: 2,
     title: "Vision, affärsidé, strategi och verksamhetsplaner",
+    topics: ["vision"],
     readingMinutes: 8,
     lead: "Kedjan från önskad framtid till konkret styrning — och exakt vad som skiljer en vision från en affärsidé.",
     sources: ["AJK kap 1"],
@@ -143,12 +223,27 @@ Tre saker måste klargöras för varje mål: tidshorisonten (kort, medellång, l
 
 Och det är den sista pusselbiten som förklarar varför kapitel 1:s definition talade om "vissa ekonomiska mål": det är de nedbrutna, operationaliserade målen som styrningen faktiskt arbetar mot, inte strategin i sig.
 `,
+    recap: [
+      "Kedjan: Vision → Affärsidé → Strategi → Verksamhetsplanering → Ekonomistyrning.",
+      "Vision = önskvärt framtida tillstånd, riktningen företaget ska utvecklas i.",
+      "Visionens tre funktioner: legitimerande, ambition & fokus, identifikation & motivation.",
+      "Affärsidé = vad företaget ägnar sig åt och tjänar pengar på, för vilka kunder, och vad som skiljer det från andra.",
+      "Strategi = hur affärsidén ska uppnås; klargör konkurrensfördelar, produktområden, kunder, organisation, kompetens, resurser, finansiering.",
+      "Strateginivåer i stora företag: koncern, affärsområde, division, affärsenhet, funktion. Ekonomistyrning sker främst på divisions-/affärsenhetsnivå.",
+      "Verksamhetsplanering = nedbrytning av huvudmål till delmål med tidshorisont, ansvarig och handlingsplaner."
+    ],
+    pitfalls: [
+      "Vision är inte en konkret plan, och inte enbart extern kommunikation.",
+      "Affärsidén handlar om vad man gör och tjänar pengar på — inte om framtidsdrömmar.",
+      "Blanda inte ihop ordningen: strategin kommer efter affärsidén, inte före."
+    ]
   },
 
   {
     id: "kap3",
     number: 3,
     title: "Vad är egentligen företagets mål?",
+    topics: ["mal"],
     readingMinutes: 11,
     lead: "Fem konkurrerande modeller — från den neoklassiska svarta lådan till intressentmodellen — och vad företag faktiskt säger att de vill.",
     sources: ["AJK kap 1"],
@@ -223,12 +318,28 @@ Företag anger sällan sina mål i nuvärdestermer. I praktiken är **lönsamhet
 
 För offentlig verksamhet gäller inte lönsamhetsmål på samma vis, men skillnaderna ska inte överdrivas: ekonomiska principer bör gälla även där. Mer resurser än nödvändigt ska inte förbrukas för att uppnå en viss effekt eller kvalitet. Uttrycket **värde för pengarna** används för att markera att resurser ska utnyttjas så att de skapar så stor nytta som möjligt, vilket kan inkludera både utförda prestationer och medborgarnas subjektiva uppfattning om servicen.
 `,
+    recap: [
+      "Ingen enskild teori ger ett entydigt svar på vad företags mål är — svaren beror på sammanhang, tid, vems mål som avses och synsätt.",
+      "Vinstmaximeringsmodellen (neoklassisk): företaget som svart låda, vinst enda målet, rationellt handlande, alternativkostnad.",
+      "Kritik: flera mål förekommer, full information saknas inför en osäker framtid, flera effektiva pris-/kvantitetskombinationer finns.",
+      "Företagsledarmodeller: Baumol maximerar försäljning (tillväxt ger ledningen status), Williamson maximerar ledningens egen nytta.",
+      "Simon: begränsad rationalitet → satisfierande vinst i förhållande till en anspråksnivå. Inte låg ambition, utan en praktisk nödvändighet.",
+      "Intressentmodellen: öppet system, jämvikt, balans mellan bidrag och belöningar, målet en kompromiss, krav tillgodoses seriekopplat över tid.",
+      "Kassaflödesmodeller: maximera nuvärdet av framtida nettokassaflöden; kräver kalkylränta; teoretiskt starkt men svårt bokstavligt.",
+      "I praktiken: lönsamhet högst rankat, andra mål som delmål/restriktioner. Offentlig sektor: 'värde för pengarna'."
+    ],
+    pitfalls: [
+      "Satisfiering ≠ låg ambitionsnivå.",
+      "Intressentmodellen kräver inte att alla krav uppfylls samtidigt — seriekopplingen är svaret.",
+      "Kritiken mot vinstmaximering är inte att 'vinst är oviktigt', utan att den inte är det enda målet och att maximering förutsätter information man inte har."
+    ]
   },
 
   {
     id: "kap4",
     number: 4,
     title: "Grundbegreppen: effektivitet, produktivitet, resultat, lönsamhet",
+    topics: ["effektivitet"],
     readingMinutes: 11,
     lead: "Kursens mest förväxlade begrepp, sorterade en gång för alla — inklusive inre kontra yttre effektivitet och de tre begreppsparen.",
     sources: ["AJK kap 2"],
@@ -298,12 +409,27 @@ Resultatbegreppet har dock begränsningar. Ett företag med stor vinst behöver 
 
 **Räntabilitet** (avkastning) är det vanligaste lönsamhetsmåttet, och beräknas oftast utifrån den externa redovisningen. Vanliga kapitalbegrepp: totalt kapital, eget kapital och sysselsatt kapital. Räntabilitet på sysselsatt kapital ställer resultatet i förhållande till det kapital som kräver avkastning, vilket har fördelen att finansieringen styrs mot räntefria krediter.
 `,
+    recap: [
+      "Effektivitet = grad av måluppfyllelse = värdet av utflöde / värdet av inflöde, ställt mot ett mål.",
+      "Inre effektivitet = 'göra saker rätt' (produktivitet, kostnadseffektivitet, internt). Yttre = 'göra rätt saker' (kundvärde, tillväxt, externt). Total effektivitet kräver båda.",
+      "Fyra svårigheter: målnivån påverkar utfallet, orsaken är svår att isolera, mål kan vara motstridiga, kort sikt kan slå mot lång sikt. Överlevnad har föreslagits som slutligt kriterium.",
+      "Produktivitet = samma kvot men i fysiska termer. Produktiviteten kan öka fast företaget presterar sämre (sämre service eller kvalitet).",
+      "Inbetalning/utbetalning = när pengar överförs. Inkomst/utgift = fakturadatum vid försäljning/anskaffning. Intäkt/kostnad = periodiserade värden av prestationer och resursförbrukning.",
+      "Bokföringsmässiga grunder = extern redovisning (matchning mot försäljning). Kalkylmässiga grunder = ekonomistyrning (knutna till vad som presterats). Skillnaderna: urval, värdering, periodisering.",
+      "Resultat = intäkter − kostnader (absolut). Lönsamhet = resultat / kapital (relativt) — bättre mått eftersom kapitalinsatsen vägs in. Räntabilitet är vanligaste lönsamhetsmåttet."
+    ],
+    pitfalls: [
+      "Inre och yttre effektivitet förväxlas oftare än något annat i kursen. Memorera: inre = göra saker rätt.",
+      "Stort resultat betyder inte hög lönsamhet.",
+      "Produktivitet mäts i kvantiteter, effektivitet i värden mot ett mål — det är skillnaden."
+    ]
   },
 
   {
     id: "kap5",
     number: 5,
     title: "Organisation, ansvar och de mjuka styrmedlen",
+    topics: ["organisation", "grunder"],
     readingMinutes: 12,
     lead: "Vertikalt mot horisontellt perspektiv, de fyra ansvarstyperna, belöningssystem, kultur, lärande — och varför teori och praktik glider isär.",
     sources: ["AJK kap 3"],
@@ -407,12 +533,29 @@ Fyra förklaringar anges oftast:
 
 Slutsatsen är viktig och kan användas i essäsvar: litteraturens metoder utgör **inte** en samling metoder som ska användas, utan en samling tillgängliga metoder att välja bland. Det är inte möjligt att kategoriskt hävda att ABC-kalkylen är bättre än bidragskalkylen, att icke-finansiella mått är bättre än finansiella, eller att den processorienterade organisationsformen är bättre än den hierarkiska.
 `,
+    recap: [
+      "Vertikalt perspektiv: företaget som hierarki, ägarkrav bryts ned till ansvar. Horisontellt: företaget som värdekedja av processer och aktiviteter som skapar kundvärde.",
+      "Perspektiven kan kombineras, t.ex. i matrisorganisation med både funktions- och kundansvar.",
+      "Funktionsorganisation = indelning efter funktioner. Divisionsorganisation = efter produkter/geografi, underlättar nya produktområden och marknader.",
+      "Ansvarsfördelning styrs av påverkbarhetsprincipen och befogenhetsprincipen.",
+      "Fyra ansvarstyper: lönsamhetsansvar (resultat/kapital), resultatansvar (rent eller artificiellt), intäkts-/bidragsansvar (täckningsbidrag), kostnadsansvar (ofta standardkostnadsansvar).",
+      "Belöningssystem: finansiella/icke-finansiella, individ/grupp; gruppbelöningar riskerar fripassagerare.",
+      "Kultur = organisationens inre liv. Lärande: individer lär först, organisatoriskt lärande när kunskapen sprids och tillämpas. Enkelkrets löser problemet, dubbelkrets ifrågasätter orsaken.",
+      "Medarbetarskap = demokratisering och reellt inflytande; största hindret är chefers motstånd.",
+      "Gapet teori–praktik förklaras främst av kostnads- och nyttokriteriet: metoder ska väljas efter nettonytta, inte efter teoretisk finhet."
+    ],
+    pitfalls: [
+      "Divisionsorganisationens poäng är diversifiering (produkt/geografi) — inte att alla arbetar mot samma sak.",
+      "Lönsamhetsansvar kräver kontroll över kapitalet; utan den blir det resultatansvar.",
+      "Skriv aldrig i essäsvar att en metod är kategoriskt 'bäst' — kostnads- och nyttokriteriet gör svaret situationsberoende."
+    ]
   },
 
   {
     id: "kap6",
     number: 6,
     title: "Strategiämnets utveckling: från omvärld till kunskap",
+    topics: ["strategiutveckling", "porter", "rbv"],
     readingMinutes: 11,
     lead: "Herrmanns evolutionslinje, Porters positioneringsskola, det resursbaserade synsättet och Mintzbergs framväxande strategi.",
     sources: ["Herrmann (2005)", "Porter", "Mintzberg"],
@@ -474,12 +617,27 @@ En strategi kan inte alltid planeras fullt ut i förväg, eftersom marknaden och
 
 Två feltolkningar att undvika, eftersom de dyker upp som svarsalternativ: Mintzberg hävdar **inte** att planerade strategier alltid misslyckas, och **inte** att strategiarbete är meningslöst och bör ersättas av improvisation. Poängen är att planering behöver kompletteras med lärande och anpassning — och att lärandet är själva mekanismen bakom den framväxande strategin.
 `,
+    recap: [
+      "Herrmanns cykel: variation (diskontinuiteter, era of ferment) → selektion (dominant design, avgörs socialt/organisatoriskt) → retention (inkrementell processförfining).",
+      "Fältets ordning: 1960-talets strategibegrepp och contingencyteori → omvärld/positionering (Porter blir dominant design) → resursbaserat synsätt → kunskap, lärande och innovation.",
+      "Content-forskning studerar vad (positioner, utfall), processforskning studerar hur (system, processer).",
+      "Porters fem krafter: befintlig konkurrens, nya aktörer, substitut, kundernas och leverantörernas förhandlingsstyrka. Lagar och regleringar är INTE en kraft.",
+      "Generiska strategier: kostnadsledarskap, differentiering, fokus. Femkraftsanalys används t.ex. inför inträde i ny bransch.",
+      "RBV: uthållig fördel från värdefulla, sällsynta, svårimiterade resurser som företaget är organiserat att utnyttja.",
+      "Mintzberg: realiserad strategi = avsiktlig + framväxande. Osäker och föränderlig omvärld gör fullständig förhandsplanering omöjlig."
+    ],
+    pitfalls: [
+      "Kasta inte om ordningen: positionering före RBV, RBV före kunskaps-/lärandeeran.",
+      "Mintzberg avfärdar inte planering — han kompletterar den.",
+      "Femkraftsmodellen analyserar branschen, inte arbetsmiljö, leveranskedja eller enskilda kampanjer."
+    ]
   },
 
   {
     id: "kap7",
     number: 7,
     title: "Att mäta rätt saker: styrkortet och dess fallgropar",
+    topics: ["bsc", "matt"],
     readingMinutes: 11,
     lead: "Kaplan & Nortons fyra perspektiv, och Ittner & Larckers fyra sätt att misslyckas med icke-finansiella mått.",
     sources: ["Kaplan & Norton (1993)", "Ittner & Larcker (2003)"],
@@ -556,12 +714,28 @@ Här ligger kapitlets tyngsta belägg, användbart i essäsvar: **företag som i
 5. **Agera på fynden** — prioritera de slutsatser som ger störst finansiell avkastning. Ett finansbolag baserade sina rekommendationer för kapitalallokering på den relativa betydelsen av tre drivare: medarbetarnöjdhet, antal handläggningsfel och kundnöjdhet.
 6. **Utvärdera utfallen** — avgör om handlingsplanerna gav önskat resultat. Även nedslående efterhandsgranskningar hjälper till att revidera modellen och avslöja fel i datainsamlingen.
 `,
+    recap: [
+      "Finansiella mått är historiska — de visar vad som hände utan att peka framåt. Det är BSC:s utgångspunkt.",
+      "BSC:s fyra perspektiv: finansiellt, kund, interna processer, innovation & lärande. Balans mellan externa och interna mått; integrerar förbättringsinitiativ.",
+      "Styrkortet är ingen mall — det skräddarsys per affärsenhet. Transparenstestet: av 15–20 mått ska en utomstående kunna utläsa konkurrensstrategin.",
+      "Rockwater: vision → strategi → mål → mått i alla fyra perspektiv; Tier I/Tier II-kunder, projektlivscykelmått, integrerade processer istället för funktionsprestation.",
+      "Ittner & Larckers fyra misstag: ingen koppling till strategin (ingen kausalmodell), ingen validering, fel målnivåer (100 %-exemplet), felaktig mätning.",
+      "Mått utan validerad koppling inbjuder till manipulation: patenträkning, fika inför nöjdhetsmätning, omklassificerade defekter.",
+      "Empiriskt fynd: företag med validerade kausalmodeller hade signifikant högre ROA och ROE över fem år.",
+      "Rätt arbetsgång: kausalmodell → data → validering → förfining → agera → utvärdera."
+    ],
+    pitfalls: [
+      "BSC ersätter inte finansiella mått — det integrerar finansiella och icke-finansiella.",
+      "Att 'införa BSC' räcker inte; mallversioner utan egna validerade samband ger ingen effekt.",
+      "Blanda inte ihop BSC (styrning mot strategi) med TBL/ESG (hållbarhetsdimensioner)."
+    ]
   },
 
   {
     id: "kap8",
     number: 8,
     title: "Hållbarhet: Triple Bottom Line och ESG",
+    topics: ["tbl"],
     readingMinutes: 8,
     lead: "Tre resultaträkningar istället för en — Brundtland, Elkington, Venn-diagrammet och hur ESG-exempel sorteras rätt.",
     sources: ["Rogers & Hudson (2011)", "ESG-tema"],
@@ -633,12 +807,28 @@ Syftet med ramverket är att skydda miljön, förbättra det sociala ansvarstaga
 
 Sorteringsövningen är den vanliga tentaformen: löner och kompetensutveckling är **S** (inte G), styrelsefrågor är **G**, utsläpp och energi är **E**. Var uppmärksam när ett svarsalternativ placerar en personalfråga under Governance — det är fel bokstav.
 `,
+    recap: [
+      "Brundtland: hållbar utveckling möter dagens behov utan att äventyra kommande generationers förmåga att möta sina.",
+      "Definitionens fyra drag: globalt problem, gränser för/omriktning av tillväxt, social rättvisa, långsiktighet mot marknadens kortsiktighet.",
+      "TBL (Elkington): People, Planet, Profit/Prosperity. 'Purpose' ingår inte.",
+      "TBL:s två bidrag: konkreta kriterier per domän ('what gets measured gets done') och synliggörande av relationer — synergier och målkonflikter.",
+      "Venn-snitten: bearable (social+miljö), equitable (social+ekonomi), viable (miljö+ekonomi), hållbart i mitten.",
+      "Pull = ledare som ser hållbarhet som nästa utvecklingssteg. Push = marknadskrafter och reglering.",
+      "Hållbarhet kräver förändring på alla nivåer; distribuerad intelligens och ledarskap även utanför toppen.",
+      "ESG: E = energi/utsläpp, S = löner/utbildning/arbetsvillkor, G = styrelse/ersättning/transparens."
+    ],
+    pitfalls: [
+      "'Purpose' är en distraktor i TBL-frågor.",
+      "Sortera ESG-exempel rätt: personalfrågor är S, styrelsefrågor är G.",
+      "TBL syftar till balans mellan tre områden — inte till vinstmaximering och inte till att minimera hållbarhetskostnader."
+    ]
   },
 
   {
     id: "kap9",
     number: 9,
     title: "IT, AI och strategi",
+    topics: ["it", "rbv"],
     readingMinutes: 11,
     lead: "Strategic alignment, produktivitetsparadoxen och Barneys argument om varför AI inte ger dig någon ny konkurrensfördel.",
     sources: ["Henderson & Venkatraman", "Barney (2024)"],
@@ -732,12 +922,30 @@ Saknar du sällsynta förmågor och resurser finns en möjlig väg: **bygg affä
 
 Då blir AI mer än ett program för att förbättra affärsmodellen — den möjliggör att hela verksamheten anpassar sig till en föränderlig omvärld, automatiskt och mycket snabbt. Det kan skapa en **agilitet** som är svår för konkurrenter att duplicera, åtminstone till dess att även de byggt om sina modeller kring AI. Men så långt har inget företag lyckats med det, och det är ännu inte klart att tekniken är mogen nog att motivera investeringen och risken.
 `,
+    recap: [
+      "Produktivitetsparadoxen: stora IT-investeringar syns inte i produktiviteten. Lösningen är att omorganisera arbetsflöden och processer så tekniken utnyttjas.",
+      "Strategic Alignment Model: affärsstrategi, IT-strategi, organisationsinfrastruktur & processer, IT-infrastruktur & processer.",
+      "Två dimensioner: strategisk passform (strategi ↔ infrastruktur) och funktionell integration (verksamhet ↔ IT). Alignment är kontinuerligt och går i båda riktningarna.",
+      "Långsiktig fördel kommer inte från tekniken (köp- och kopierbar) utan från kombinationen med processer, kompetens och organisation.",
+      "Barney: transformativa teknologier (ångmaskin, elmotor, PC) gav sällan uthållig fördel eftersom alla tvingades införa dem — de raderade ofta etablerades försprång.",
+      "Värdeskapande ≠ värdefångst: AI:s besparingar och idéer är tillgängliga för alla (tandborstexperimentet).",
+      "First mover-fördelen är kortlivad: dina val absorberas i data som konkurrenternas AI analyserar.",
+      "Proprietär data skyddar sällan: funktionellt likvärdig data finns, större dataset ger avtagande nytta, strategin kan härledas och imiteras, data läcker.",
+      "Silverkanten: applicera AI på befintliga värdefulla, sällsynta, svårimiterade resurser (Amazon) — plus snabbfotadhet att agera.",
+      "Alternativ väg: bygg hela affärsmodellen kring AI för agilitet — men omoget och ingen har lyckats än."
+    ],
+    pitfalls: [
+      "Barneys slutsats är inte 'undvik AI' — AI bör integreras i beslutsprocesserna. Poängen är var fördelen kommer ifrån.",
+      "Paradoxens lösning är organisatorisk förändring, inte mer teknik.",
+      "SAM:s fyra domäner förväxlas med distraktorer som marknadsföring, leveranskedja, personal och riskhantering."
+    ]
   },
 
   {
     id: "kap10",
     number: 10,
     title: "Så hänger allt ihop — och så skriver du tentan",
+    topics: ["nyamatt", "grunder", "bsc", "tbl"],
     readingMinutes: 8,
     lead: "Syntesen av kursens delar, temat 'nya mått' som knyter ihop dem, och konkret tentataktik för både flervals- och essädelen.",
     sources: ["Syntes av kursmaterialet"],
@@ -796,14 +1004,27 @@ Undvik: att bara lista modellnamn utan innehåll, att skriva kategoriskt ("metod
 
 Kan du dessa utan att titta är du klar: kedjan vision→ekonomistyrning, visionens tre funktioner, de fem målmodellerna med upphovsmän, inre kontra yttre effektivitet, de tre begreppsparen, de fyra ansvarstyperna, Herrmanns tre eror i rätt ordning, Porters fem krafter och tre generiska strategier, VRIO-logikens tre krav, BSC:s fyra perspektiv, Ittner & Larckers fyra misstag, TBL:s tre P och ESG:s tre bokstäver med exempel, SAM:s fyra domäner, produktivitetsparadoxens lösning och Barneys tre argument plus silverkanten.
 `,
+    recap: [
+      "Kursens tråd: mål → riktning (vision/affärsidé/strategi) → styrmedel → mätning → nya krav från hållbarhet och digitalisering.",
+      "Nya mått-resonemanget: drivkrafter → måttyper (ESG/TBL och digitala) → ramverk (BSC, TBL) → effekter på arbetssätt → risker (Ittner & Larcker) → slutsats om komplement, inte ersättning.",
+      "Flervalstaktik: gissa om du kan eliminera två alternativ, hoppa över vid total osäkerhet, läs efter negationer, misstro absoluta formuleringar.",
+      "Essästruktur: definiera → redogör strukturerat → besvara varför → konkret exempel → koppla till annan kursdel → kort slutsats.",
+      "Essäerna är 40 % av poängen — där avgörs betyget."
+    ],
+    pitfalls: [
+      "Att lista modellnamn utan innehåll ger få poäng.",
+      "Kategoriska påståenden om att en metod är bäst strider mot kursens hållning (kostnads- och nyttokriteriet).",
+      "Att chansa blint kostar poäng — men att lämna frågor tomma av ren försiktighet kostar också."
+    ]
   }
-];
 
-export const chapters = rawChapters.map((chapter) => ({
-  ...chapter,
-  ...(CHAPTER_TOPICS[chapter.id] || { topics: [], primaryTopics: [] }),
-}));
+  ]
+};
+```
 
+## Ordlistan (`glossary`)
+
+```js
 export const glossary = [
   { term: "Affärsidé", definition: "Vad företaget ägnar sig åt och tjänar pengar på, för vilka kunder och på vilka marknader, samt vad som skiljer det från andra företag.", chapter: "kap2" },
   { term: "Affärsstrategi", definition: "Domänen i Strategic Alignment Model som avser verksamhetens externa strategiska val: marknad, erbjudande och konkurrensfördelar.", chapter: "kap9" },
@@ -896,3 +1117,28 @@ export const glossary = [
   { term: "Yttre effektivitet", definition: "Att göra rätt saker: relationen till omvärlden i form av kundvärde, tillväxt, kvalitet och service.", chapter: "kap4" },
   { term: "Öppet systemsynsätt", definition: "Synsättet att företag har kopplingar till och relationer med sin omgivning; grunden för intressentmodellen.", chapter: "kap3" }
 ];
+```
+
+## Regler för innehållet
+
+- Ändra inte faktainnehållet i `reading.js` på eget initiativ. Misstänker du ett sakfel: flagga det för användaren istället för att korrigera.
+- Kortar du något för layoutskäl är det fel väg — layouten ska anpassas till texten, inte omvänt.
+- Ska nya kapitel läggas till senare (för andra delkurser) används samma schema i `src/data/<delkurs>/reading.js`, och Läs-vyn läser rätt fil utifrån vald delkurs i manifestet.
+
+## Acceptanskriterier
+
+- [ ] `npm run build` går igenom; inga konsolfel.
+- [ ] Alla 10 kapitel finns med **oförkortat** innehåll, plus alla 90+ ordlisteposter.
+- [ ] Läs är första fliken; Hem har ett kort med läsprogress som pekar på läsdelen först.
+- [ ] Innehållsförteckningen visar nummer, titel, lead, lästid, status och total lästid, samt en fungerande "Fortsätt läsa".
+- [ ] Kapitelvyn: textkolumn ~68ch, markdown renderas korrekt (rubriker, listor, tabellen i kapitel 3, blockquotes som definitionsrutor, fetstil i `--pine`), sticky läsprogressstapel i `--brass`.
+- [ ] "Kärnan i korthet" och "Se upp för" visas efter varje kapitel i rätt färgkort.
+- [ ] "Markera som läst" sparas i localStorage och överlever omladdning. "Öva på detta kapitel" öppnar Öva förfiltrerat på kapitlets topics.
+- [ ] Kapitelnavigering fungerar både med knappar och tangentbord (J/K, N/P, Esc).
+- [ ] Sticky underrubriks-navigering på desktop, utfällbar panel på mobil.
+- [ ] Ordlistan är sökbar, alfabetiskt sorterad, med A–Ö-hopp och kapitellänkar.
+- [ ] Statistik visar lästa kapitel; nollställning rensar även läsprogress.
+- [ ] Inga nya färger utanför de befintliga tokens; Fraunces + Inter används; mobilvänligt; synlig fokusring; reduced motion respekteras.
+- [ ] All UI-text på svenska.
+
+Bygg klart, läs själv igenom ett kapitel i webbläsaren för att kontrollera radlängd och luft, verifiera mot listan ovan och sammanfatta sedan kort vad du byggt.

@@ -91,6 +91,11 @@ export default function ChapterView({
   const [tocOpen, setTocOpen] = useState(false);
   const headings = useMemo(() => headingsIn(chapter.body), [chapter.body]);
 
+  // sources är en lista i datat, men kan vara en sträng i äldre delkurser.
+  const sources = Array.isArray(chapter.sources)
+    ? chapter.sources.join(" · ")
+    : chapter.sources;
+
   const keyPointGroups = lookup.keyPointsFor(chapter.primaryTopics);
   const pitfallGroups = lookup.pitfallsFor(chapter.primaryTopics);
   const severalPrimary = keyPointGroups.length > 1;
@@ -177,7 +182,7 @@ export default function ChapterView({
             )}
             <p className="tabular mt-3 text-sm text-ink/65">
               {chapter.readingMinutes} min läsning
-              {chapter.sources ? ` · ${chapter.sources}` : ""}
+              {sources ? ` · ${sources}` : ""}
             </p>
 
             {chapter.topics?.length > 0 && (
