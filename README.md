@@ -19,22 +19,34 @@ npm run dev
 
 ## Lägen
 
-- **Hem** — status, val av delkurs, snabbstart.
+- **Hem** — status, val av delkurs, snabbstart (läs → öva → prova).
+- **Läs** — kunskapsnavet med tre segment och en gemensam sökning:
+  *Kompendium* (kapitel i löptext), *Begrepp* (ämneskorten) och *Ordlista*.
 - **Öva** — en fråga i taget med förklaring till varje alternativ. Frågor du
   svarat fel på återkommer oftare (vikt 3 mot 2 för obesvarade och 1 för rätta).
 - **Prov** — tentasimulering: 10 frågor balanserat över ämnena, +6 / −1 / 0 p,
   valbar timer, resultat med Betygsmätaren och full genomgång.
-- **Begrepp** — kunskapsbanken med sammanfattning, nyckelpunkter och tentafällor.
 - **Essä** — skriv eget svar, fäll ut checklistan, självskatta.
 - **Statistik** — träffsäkerhet per ämne, provhistorik, "Fokusera här".
 
 Tangentbord i Öva och Prov: `1`–`4` väljer alternativ, `Enter` bekräftar/går
-vidare, `→` och `←` bläddrar.
+vidare, `→` och `←` bläddrar. I ett kapitel: `J`/`K` scrollar, `N`/`P` byter
+kapitel, `Esc` går till innehållsförteckningen.
+
+## En källa per faktum
+
+`topics.js` äger **alla** korta punkter (`keyPoints`, `pitfalls`).
+`reading.js` äger löptexten och har medvetet inga egna recap-arrayer —
+kapitelavslutet ("Kärnan i korthet" och "Se upp för") renderas ur kapitlets
+`primaryTopics` via `lib/topicLookup.js`. `topics` är allt kapitlet berör och
+styr "Öva på detta kapitel"; `primaryTopics` är det kapitlet introducerar och
+styr avslutet, så inget upprepas mellan kapitel. Varje ämne pekar tillbaka via
+`chapter`. Ingen komponent får läsa punkter direkt ur datafilerna.
 
 ## Lägga till en ny delkurs
 
-1. Skapa `src/data/<delkursId>/` med `topics.js`, `questions.js` och
-   `essays.js` enligt samma scheman som `src/data/strategi/`.
+1. Skapa `src/data/<delkursId>/` med `topics.js`, `questions.js`, `essays.js`
+   och `reading.js` enligt samma scheman som `src/data/strategi/`.
 2. Registrera delkursen i `src/data/index.js`:
 
 ```js
@@ -60,7 +72,7 @@ Ogranskade frågor märks med etiketten "Ogranskad" i Öva.
 
 ```js
 // topics.js
-{ id, name, examWeight, summary, keyPoints: [], pitfalls: [] }
+{ id, name, chapter, examWeight, summary, keyPoints: [], pitfalls: [] }
 
 // questions.js
 { id, topic, difficulty: 1 | 2 | 3, question,
@@ -70,6 +82,10 @@ Ogranskade frågor märks med etiketten "Ogranskad" i Öva.
 
 // essays.js
 { id, question, context, checklist: [], outline }
+
+// reading.js
+{ id, title, lead, readingMinutes, sources, body }   // body = markdown
+{ term, definition, chapter }                        // ordlistan
 ```
 
 Alternativens ordning blandas (Fisher–Yates) varje gång en fråga visas och
