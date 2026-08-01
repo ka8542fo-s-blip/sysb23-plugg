@@ -77,20 +77,14 @@ export default function App() {
       <Nav
         view={view}
         onNavigate={navigate}
-        courseName={course.name}
+        courses={courses}
+        courseId={course.id}
+        onSelectCourse={setCourseId}
         examRunning={examSession?.stage === "running"}
       />
 
       <main id="innehall" className="mx-auto max-w-4xl px-4 py-7 sm:px-6 sm:py-10">
-        {view === "hem" && (
-          <Home
-            {...shared}
-            courses={courses}
-            courseId={courseId}
-            onSelectCourse={setCourseId}
-            exams={exams}
-          />
-        )}
+        {view === "hem" && <Home {...shared} courses={courses} exams={exams} />}
         {view === "ova" && <Practice {...shared} onAnswer={handleAnswer} />}
         {view === "prov" && (
           <Exam

@@ -1,15 +1,7 @@
 import { useMemo } from "react";
 import { overallStats, topicStats, focusTopic } from "../lib/progress.js";
 
-export default function Home({
-  course,
-  courses,
-  courseId,
-  onSelectCourse,
-  answers,
-  exams,
-  navigate,
-}) {
+export default function Home({ course, courses, answers, exams, navigate }) {
   const overall = useMemo(() => overallStats(course, answers), [course, answers]);
   const perTopic = useMemo(() => topicStats(course, answers), [course, answers]);
   const focus = useMemo(() => focusTopic(perTopic), [perTopic]);
@@ -18,11 +10,18 @@ export default function Home({
   return (
     <div className="space-y-8">
       <section>
-        <h1 className="font-display text-3xl sm:text-4xl">Plugga inför tentan</h1>
+        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-brass">
+          SYSB23 · Delkurs
+        </p>
+        <h1 className="mt-1 font-display text-3xl sm:text-4xl">{course.name}</h1>
         <p className="mt-3 max-w-reading text-[17px] leading-relaxed text-ink/80">
           Öva flervalsfrågor med förklaringar till varje alternativ, simulera
           tentans poängsystem med minuspoäng, och träna essäsvar mot en checklista.
           Allt innehåll kommer ur kurslitteraturen och gamla tentor.
+        </p>
+        <p className="tabular mt-2 text-[15px] text-ink/65">
+          {course.questions.length} frågor · {course.topics.length} ämnen ·{" "}
+          {course.essays.length} essäfrågor
         </p>
       </section>
 
@@ -74,39 +73,23 @@ export default function Home({
       </section>
 
       <section>
-        <h2 className="font-display text-xl">Delkurser</h2>
-        <ul className="mt-3 space-y-2">
-          {courses.map((item) => {
-            const isActive = item.status === "aktiv";
-            const selected = item.id === courseId;
-            return (
+        <h2 className="font-display text-xl">Övriga delkurser</h2>
+        <p className="mt-1 text-[15px] text-ink/65">
+          Du byter delkurs i väljaren högst upp på sidan.
+        </p>
+        <ul className="mt-3 flex flex-wrap gap-2">
+          {courses
+            .filter((item) => item.id !== course.id)
+            .map((item) => (
               <li key={item.id}>
-                <button
-                  type="button"
-                  disabled={!isActive}
-                  onClick={() => onSelectCourse(item.id)}
-                  aria-current={selected ? "true" : undefined}
-                  className={`flex items-center justify-between gap-3 p-4 ${
-                    isActive
-                      ? `card-action ${selected ? "border-pine bg-pine/[0.04]" : ""}`
-                      : "card w-full cursor-not-allowed text-left opacity-45"
-                  }`}
-                >
-                  <span>
-                    <span className="block font-medium">{item.name}</span>
-                    <span className="text-sm text-ink/65">
-                      {isActive
-                        ? `${item.questions.length} frågor · ${item.topics.length} ämnen · ${item.essays.length} essäfrågor`
-                        : "Kommer under terminen"}
-                    </span>
+                <span className="chip text-ink/65">
+                  {item.name}
+                  <span className="ml-2 text-xs text-ink/65">
+                    {item.status === "aktiv" ? "klar att öva" : "kommer under terminen"}
                   </span>
-                  {selected && isActive && (
-                    <span className="chip chip-on shrink-0 text-xs">Vald</span>
-                  )}
-                </button>
+                </span>
               </li>
-            );
-          })}
+            ))}
         </ul>
       </section>
 
