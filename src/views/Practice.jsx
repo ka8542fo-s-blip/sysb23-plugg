@@ -175,7 +175,7 @@ export default function Practice({ course, answers, settings, setSettings, onAns
           </select>
         </div>
 
-        <p className="tabular mt-5 text-sm text-ink/60">
+        <p className="tabular mt-5 text-sm text-ink/65">
           {filtered.length} frågor i urvalet · rätt i passet: {passStats.correct} ·
           fel: {passStats.wrong}
         </p>
@@ -230,7 +230,7 @@ export default function Practice({ course, answers, settings, setSettings, onAns
                 Nästa fråga
               </button>
             )}
-            <span className="text-sm text-ink/50">
+            <span className="text-sm text-ink/65">
               Tangentbord: 1–4 väljer, Enter bekräftar, → nästa.
             </span>
           </div>

@@ -56,7 +56,7 @@ export default function GradeGauge({ percent, grade }) {
             textAnchor="middle"
             fontSize="14"
             fontWeight="600"
-            fill={band.grade === grade ? "var(--pine)" : "rgba(34,40,42,0.55)"}
+            fill={band.grade === grade ? "var(--pine)" : "rgba(34,40,42,0.7)"}
           >
             {band.grade}
           </text>
@@ -77,7 +77,7 @@ export default function GradeGauge({ percent, grade }) {
               y={BAR_Y + BAR_H + 32}
               textAnchor="middle"
               fontSize="11"
-              fill="rgba(34,40,42,0.5)"
+              fill="rgba(34,40,42,0.7)"
               style={{ fontVariantNumeric: "tabular-nums" }}
             >
               {threshold}

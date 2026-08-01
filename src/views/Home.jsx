@@ -90,7 +90,7 @@ export default function Home({
                 >
                   <span>
                     <span className="block font-medium">{item.name}</span>
-                    <span className="text-sm text-ink/55">
+                    <span className="text-sm text-ink/65">
                       {isActive
                         ? `${item.questions.length} frågor · ${item.topics.length} ämnen · ${item.essays.length} essäfrågor`
                         : "Kommer under terminen"}
@@ -122,7 +122,7 @@ export default function Home({
 function Stat({ label, value }) {
   return (
     <div>
-      <dt className="text-sm text-ink/55">{label}</dt>
+      <dt className="text-sm text-ink/65">{label}</dt>
       <dd className="tabular font-display text-2xl text-ink">{value}</dd>
     </div>
   );

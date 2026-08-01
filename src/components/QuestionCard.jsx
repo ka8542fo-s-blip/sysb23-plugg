@@ -23,7 +23,7 @@ export default function QuestionCard({
 
   return (
     <article className="card mx-auto w-full max-w-reading p-5 sm:p-7">
-      <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink/55">
+      <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink/65">
         {counter && <span className="tabular font-medium text-ink/70">{counter}</span>}
         {topicName && <span>{topicName}</span>}
         <span aria-hidden="true">·</span>

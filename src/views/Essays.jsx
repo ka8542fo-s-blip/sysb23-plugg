@@ -56,7 +56,7 @@ export default function Essays({ course, essayState, setEssayState }) {
       </nav>
 
       <article className="card p-5 sm:p-7">
-        <p className="text-sm text-ink/55">{essay.context}</p>
+        <p className="text-sm text-ink/65">{essay.context}</p>
         <h2 className="mt-2 font-display text-[22px] leading-snug text-ink">
           {essay.question}
         </h2>
@@ -72,7 +72,7 @@ export default function Essays({ course, essayState, setEssayState }) {
           placeholder="Skriv utan att titta på checklistan först."
           className="mt-2 w-full rounded-lg border border-line bg-white p-4 text-[15px] leading-relaxed"
         />
-        <p className="tabular mt-1 text-sm text-ink/50">
+        <p className="tabular mt-1 text-sm text-ink/65">
           {(state.draft || "").trim().split(/\s+/).filter(Boolean).length} ord ·
           sparas automatiskt
         </p>
@@ -90,7 +90,7 @@ export default function Essays({ course, essayState, setEssayState }) {
           <div className="mt-6 border-t border-line pt-5">
             <div className="flex items-baseline justify-between gap-3">
               <h3 className="font-display text-lg">Vad ett toppsvar innehåller</h3>
-              <span className="tabular text-sm text-ink/55">
+              <span className="tabular text-sm text-ink/65">
                 {checkedCount}/{essay.checklist.length}
               </span>
             </div>

@@ -43,7 +43,7 @@ export default function Concepts({ course }) {
             className="w-full rounded-lg border border-line bg-white px-4 py-2.5 text-[15px]"
           />
         </div>
-        <p className="tabular mt-2 text-sm text-ink/55">
+        <p className="tabular mt-2 text-sm text-ink/65">
           {matches.length} av {course.topics.length} ämnen
         </p>
       </section>
@@ -70,12 +70,12 @@ export default function Concepts({ course }) {
                     <span className="block font-display text-lg text-pine">
                       {topic.name}
                     </span>
-                    <span className="text-sm text-ink/55">
+                    <span className="text-sm text-ink/65">
                       {WEIGHT_LABEL[topic.examWeight] || topic.examWeight} ·{" "}
                       {topic.keyPoints.length} nyckelpunkter
                     </span>
                   </span>
-                  <span aria-hidden="true" className="shrink-0 text-ink/45">
+                  <span aria-hidden="true" className="shrink-0 text-ink/65">
                     {open ? "−" : "+"}
                   </span>
                 </button>

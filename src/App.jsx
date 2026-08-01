@@ -87,7 +87,7 @@ export default function App() {
         {view === "statistik" && <Stats {...shared} exams={exams} onReset={resetAll} />}
       </main>
 
-      <footer className="mx-auto max-w-4xl px-4 pb-10 text-sm text-ink/45 sm:px-6">
+      <footer className="mx-auto max-w-4xl px-4 pb-10 text-sm text-ink/65 sm:px-6">
         SYSB23 · Ekonomihögskolan, Lunds universitet. Allt innehåll bygger på
         kurslitteraturen och sparas bara lokalt i din webbläsare.
       </footer>

@@ -11,7 +11,7 @@ export default function OptionButton({ index, text, state, disabled, onClick }) 
   }[state];
 
   const badge = {
-    idle: "border-line text-ink/60",
+    idle: "border-line text-ink/65",
     selected: "border-pine bg-pine text-white",
     correct: "border-correct bg-correct text-white",
     wrong: "border-wrong bg-wrong text-white",

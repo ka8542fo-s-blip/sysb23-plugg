@@ -186,7 +186,7 @@ export default function Exam({ course, settings, setSettings, onFinish, navigate
             <span className="tabular font-display text-lg">
               Fråga {index + 1} av {items.length}
             </span>
-            <span className="tabular ml-3 text-sm text-ink/55">
+            <span className="tabular ml-3 text-sm text-ink/65">
               {answeredCount} besvarade
             </span>
           </div>
@@ -209,7 +209,7 @@ export default function Exam({ course, settings, setSettings, onFinish, navigate
             const style = {
               answered: "border-pine bg-pine text-white",
               skipped: "border-brass text-brass",
-              untouched: "border-line text-ink/50",
+              untouched: "border-line text-ink/65",
             }[state];
             return (
               <button
@@ -281,7 +281,7 @@ export default function Exam({ course, settings, setSettings, onFinish, navigate
         </QuestionCard>
 
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-ink/50">
+          <p className="text-sm text-ink/65">
             Ett fel svar kostar 1 p — hoppa hellre över när du inte kan.
           </p>
           <button

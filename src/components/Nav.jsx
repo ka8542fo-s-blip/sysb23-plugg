@@ -19,7 +19,7 @@ export default function Nav({ view, onNavigate, courseName }) {
           >
             SYSB23 Plugg
           </button>
-          <span className="truncate text-sm text-ink/55">{courseName}</span>
+          <span className="truncate text-sm text-ink/65">{courseName}</span>
         </div>
         <nav aria-label="Huvudmeny" className="-mx-1 overflow-x-auto">
           <ul className="flex gap-1 px-1">

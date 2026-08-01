@@ -64,7 +64,7 @@ export default function ExplanationPanel({ options, chosen, correct, source }) {
       )}
 
       {source && (
-        <p className="mt-4 text-sm text-ink/55">
+        <p className="mt-4 text-sm text-ink/65">
           Källa: <span className="text-ink/70">{source}</span>
         </p>
       )}

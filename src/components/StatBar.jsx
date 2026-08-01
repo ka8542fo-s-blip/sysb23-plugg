@@ -6,9 +6,9 @@ export default function StatBar({ label, percent, answered, total }) {
     <div>
       <div className="flex items-baseline justify-between gap-3">
         <span className="text-[15px]">{label}</span>
-        <span className="tabular shrink-0 text-sm text-ink/60">
+        <span className="tabular shrink-0 text-sm text-ink/65">
           {hasData ? `${percent} %` : "—"}
-          <span className="ml-2 text-ink/45">
+          <span className="ml-2 text-ink/65">
             {answered}/{total} svar
           </span>
         </span>
