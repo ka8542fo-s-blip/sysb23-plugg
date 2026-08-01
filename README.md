@@ -8,6 +8,9 @@ delkurser.
 Ren SPA: Vite + React 18 + Tailwind. Ingen backend och inga konton — all
 progress sparas i `localStorage` under prefixet `sysb23:`.
 
+Publicerad på **https://ka8542fo-s-blip.github.io/sysb23-plugg/** — varje push
+till `main` bygger och publicerar om sidan automatiskt.
+
 ## Kom igång
 
 ```bash
@@ -15,7 +18,16 @@ npm install
 npm run dev
 ```
 
-`npm run build` bygger till `dist/`.
+`npm run build` bygger till `dist/`. Sätt `VITE_BASE` om bygget ska ligga i en
+underkatalog (deploy-workflowet gör det åt dig).
+
+## Var progressen sparas
+
+Allt ligger i webbläsarens `localStorage` under prefixet `sysb23:` — svar per
+fråga, provhistorik, essäutkast, lästa kapitel (`read:<kurs>:<kapitel>`), valt
+segment i Läs och inställningar. Ingen server, inga konton. Lagringen hör till
+den webbläsaren på den enheten och följer inte med till en annan dator, och den
+är knuten till adressen: byter sidan domän börjar progressen om.
 
 ## Lägen
 
