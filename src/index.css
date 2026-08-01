@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #fbfaf6;
+  --ink: #22282a;
+  --pine: #1f4e45;
+  --pine-hover: #173b34;
+  --brass: #b9932f;
+  --correct: #2e7d5b;
+  --correct-bg: #eaf4ef;
+  --wrong: #b3402e;
+  --wrong-bg: #f9ece8;
+  --line: #e5e1d6;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-pine;
+    font-variation-settings: "opsz" 100;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+
+  /* Synlig fokusring överallt */
+  :focus-visible {
+    outline: 2px solid var(--pine);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-card border border-line bg-white;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-[15px] font-medium transition-colors;
+  }
+
+  .btn-primary {
+    @apply btn bg-pine text-white hover:bg-pine-dark disabled:opacity-40 disabled:hover:bg-pine;
+  }
+
+  .btn-secondary {
+    @apply btn border border-line bg-white text-ink hover:border-pine hover:text-pine disabled:opacity-40;
+  }
+
+  .btn-quiet {
+    @apply btn text-pine underline underline-offset-4 hover:text-pine-dark;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-full border border-line px-3 py-1 text-sm transition-colors;
+  }
+
+  .chip-on {
+    @apply border-pine bg-pine text-white;
+  }
+}
+
+/* Respektera reducerad rörelse */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
