@@ -61,7 +61,9 @@ export function readinessFor({ course, answers, exams, readChapters }) {
     parts.push(`läst ${chaptersRead} av ${chapters.length} kapitel`);
   }
   if (stats.answered > 0) {
-    parts.push(`${stats.accuracy} % rätt på ${stats.answered} frågor`);
+    parts.push(
+      `${stats.accuracy} % rätt på ${stats.answered} ${stats.answered === 1 ? "fråga" : "frågor"}`,
+    );
   }
   if (courseExams.length > 0) {
     parts.push(`bästa prov ${grade}`);
