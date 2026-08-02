@@ -6,6 +6,7 @@ import Practice from "./views/Practice.jsx";
 import Exam from "./views/Exam.jsx";
 import Essays from "./views/Essays.jsx";
 import Stats from "./views/Stats.jsx";
+import Schedule from "./views/Schedule.jsx";
 import { courses, getCourse } from "./data/index.js";
 import {
   KEYS,
@@ -145,6 +146,7 @@ export default function App() {
         {view === "essa" && (
           <Essays {...shared} essayState={essayState} setEssayState={setEssayState} />
         )}
+        {view === "schema" && <Schedule answers={answers} exams={exams} />}
         {view === "statistik" && (
           <Stats
             {...shared}

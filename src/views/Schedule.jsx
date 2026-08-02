@@ -1,0 +1,81 @@
+import { useMemo } from "react";
+import ExamCountdown from "../components/schedule/ExamCountdown.jsx";
+import TermOverview from "../components/schedule/TermOverview.jsx";
+import WeekLoad from "../components/schedule/WeekLoad.jsx";
+import SessionList from "../components/schedule/SessionList.jsx";
+import { schedule } from "../data/schedule.js";
+import { getCourse } from "../data/index.js";
+import {
+  decoratedExams,
+  nextExam,
+  termState,
+  currentPeriod,
+  currentWeek,
+} from "../lib/scheduleInfo.js";
+import { readinessFor, pacingFor } from "../lib/readiness.js";
+import { daysUntil, formatFullDate, formatSwedish } from "../lib/dates.js";
+
+// Schemat kopplar terminens datum till pluggstatus: hur nära nästa tenta
+// ligger och hur långt du kommit i materialet för den.
+export default function Schedule({ answers, exams: examHistory }) {
+  const exams = useMemo(() => decoratedExams(schedule), []);
+  const next = useMemo(() => nextExam(schedule), []);
+  const state = termState(schedule);
+  const period = currentPeriod(schedule);
+  const week = currentWeek(schedule);
+
+  // Beredskap för en tenta, om delkursen har innehåll i appen.
+  function readinessForExam(exam) {
+    const contentId = exam.subcourseData?.contentId;
+    if (!contentId) {
+      return { sentence: "Material saknas i appen än.", short: null, pacing: null };
+    }
+    const course = getCourse(contentId);
+    const readiness = readinessFor({
+      course,
+      answers,
+      exams: examHistory,
+    });
+    return {
+      ...readiness,
+      short: readiness.sentence,
+      pacing: exam.past ? null : pacingFor(readiness, exam.date),
+    };
+  }
+
+  return (
+    <div className="space-y-10">
+      <section>
+        <h1 className="font-display text-2xl">Schema</h1>
+        <p className="mt-1 max-w-reading text-[15px] text-ink/70">
+          {schedule.term} · {formatSwedish(schedule.termStart)} till{" "}
+          {formatSwedish(schedule.termEnd)}. Vyn kopplar terminens datum till hur långt
+          du kommit i pluggandet.
+        </p>
+      </section>
+
+      <ExamCountdown
+        schedule={schedule}
+        exams={exams}
+        next={next}
+        termState={state}
+        daysToTerm={daysUntil(schedule.termStart)}
+        readinessFor={readinessForExam}
+      />
+
+      <TermOverview schedule={schedule} exams={schedule.exams} currentPeriod={period} />
+
+      <WeekLoad schedule={schedule} currentWeek={week} />
+
+      <SessionList schedule={schedule} defaultForwardOnly={state === "during"} />
+
+      <section className="border-t border-line pt-5">
+        <p className="text-sm leading-relaxed text-ink/65">
+          Verifierat mot TimeEdit {formatFullDate(schedule.verifiedOn)}. Kontrollera alltid
+          aktuell vecka i TimeEdit — salar och tider kan ändras.
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-ink/65">{schedule.note}</p>
+      </section>
+    </div>
+  );
+}

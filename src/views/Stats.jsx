@@ -3,6 +3,10 @@ import StatBar from "../components/StatBar.jsx";
 import { overallStats, topicStats, focusTopic } from "../lib/progress.js";
 import { clearAll } from "../lib/storage.js";
 import { MAX_EXAM_POINTS } from "../lib/scoring.js";
+import { schedule } from "../data/schedule.js";
+import { decoratedExams } from "../lib/scheduleInfo.js";
+import { relativeDays } from "../lib/dates.js";
+import { accuracy } from "../lib/scoring.js";
 
 export default function Stats({
   course,
@@ -19,6 +23,20 @@ export default function Stats({
   const courseExams = exams.filter((exam) => exam.courseId === course.id);
   const chapters = course.chapters || [];
   const readCount = chapters.filter((chapter) => readChapters[chapter.id]).length;
+
+  // Tidsdimension: dagar till tenta för de delkurser som har material i appen.
+  const timeline = useMemo(() => {
+    return decoratedExams(schedule)
+      .filter(
+        (exam) => exam.type === "ordinarie" && exam.subcourseData?.contentId === course.id,
+      )
+      .map((exam) => ({
+        exam,
+        chaptersRead: readCount,
+        chaptersTotal: chapters.length,
+        accuracy: accuracy({ correct: overall.correct, wrong: overall.wrong }),
+      }));
+  }, [course, readCount, chapters.length, overall.correct, overall.wrong]);
 
   function reset() {
     clearAll();
@@ -65,6 +83,29 @@ export default function Stats({
             ämne. Kör ett pass under Öva så börjar mönstret synas.
           </p>
         )}
+      </section>
+
+      <section>
+        <h2 className="font-display text-xl">Tid kvar per delkurs</h2>
+        <ul className="card mt-3 divide-y divide-line">
+          {timeline.map((row) => (
+            <li key={row.exam.id} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 p-4">
+              <span className="flex items-center gap-2">
+                <span
+                  aria-hidden="true"
+                  className="h-2.5 w-2.5 shrink-0 rounded-full"
+                  style={{ backgroundColor: `var(${row.exam.subcourseData?.color})` }}
+                />
+                <span className="text-[15px]">{row.exam.subcourseData?.name}</span>
+              </span>
+              <span className="tabular text-sm text-ink/65">
+                {row.exam.past ? "tenta avklarad" : relativeDays(row.exam.days)} ·{" "}
+                {row.chaptersRead}/{row.chaptersTotal} kapitel ·{" "}
+                {row.accuracy === null ? "inga svar" : `${row.accuracy} % rätt`}
+              </span>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section>

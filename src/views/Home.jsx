@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { overallStats, topicStats, focusTopic } from "../lib/progress.js";
+import NextExamBar from "../components/schedule/NextExamBar.jsx";
 
 export default function Home({
   course,
@@ -26,6 +27,8 @@ export default function Home({
 
   return (
     <div className="space-y-8">
+      <NextExamBar onOpen={() => navigate("schema")} />
+
       <section>
         <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-brass">
           SYSB23 · Delkurs

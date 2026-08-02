@@ -39,7 +39,12 @@ den webbläsaren på den enheten och följer inte med till en annan dator, och d
 - **Prov** — tentasimulering: 10 frågor balanserat över ämnena, +6 / −1 / 0 p,
   valbar timer, resultat med Betygsmätaren och full genomgång.
 - **Essä** — skriv eget svar, fäll ut checklistan, självskatta.
-- **Statistik** — träffsäkerhet per ämne, provhistorik, "Fokusera här".
+- **Statistik** — träffsäkerhet per ämne, provhistorik, "Fokusera här", tid kvar
+  till tenta.
+- **Schema** — terminens datum kopplade till pluggstatus: nedräkning till nästa
+  examination med beredskapsrad, terminsöversikt, veckobelastning och hela
+  schemat med filter. Data i `src/data/schedule.js`, avläst ur TimeEdit och
+  inte en levande källa — ändra inte datum, tider eller salar på eget initiativ.
 
 Tangentbord i Öva och Prov: `1`–`4` väljer alternativ, `Enter` bekräftar/går
 vidare, `→` och `←` bläddrar. I ett kapitel: `J`/`K` scrollar, `N`/`P` byter

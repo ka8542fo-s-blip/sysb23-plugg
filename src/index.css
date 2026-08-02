@@ -13,6 +13,17 @@
   --wrong: #b3402e;
   --wrong-bg: #f9ece8;
   --line: #e5e1d6;
+
+  /* Delkursfärger — dämpade toner som hör hemma i Läsesalen. Används som
+     prickar, staplar och kanter, aldrig som textfärg på brödtext och
+     aldrig som enda informationsbärare. */
+  --c-strategi: #b0632e; /* terrakotta */
+  --c-databaser: #2f5d7c; /* skifferblå */
+  --c-process: #2f7a63; /* grangrön */
+  --c-arkitektur: #a07a1b; /* mörk mässing */
+  --c-sakerhet: #8c4a63; /* plommon */
+  --c-ansvarsfull: #566b2a; /* oliv */
+  --c-isprojekt: #4b4a7a; /* indigo */
 }
 
 @layer base {
@@ -91,6 +102,14 @@
 
   .chip-on {
     @apply border-pine bg-pine text-white hover:bg-pine-dark;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
   /* Klickbar yta som inte är en knapp i första hand: kort och listrader. */

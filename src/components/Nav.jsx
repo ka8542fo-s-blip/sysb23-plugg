@@ -7,6 +7,7 @@ export const VIEWS = [
   { id: "prov", label: "Prov" },
   { id: "essa", label: "Essä" },
   { id: "statistik", label: "Statistik" },
+  { id: "schema", label: "Schema" },
 ];
 
 export default function Nav({
@@ -38,8 +39,8 @@ export default function Nav({
           />
         </div>
 
-        <nav aria-label="Huvudmeny">
-          <ul className="flex flex-wrap gap-0.5 sm:gap-1">
+        <nav aria-label="Huvudmeny" className="relative">
+          <ul className="no-scrollbar flex gap-0.5 overflow-x-auto sm:flex-wrap sm:gap-1">
             {VIEWS.map((item) => {
               const active = view === item.id;
               const showDot = item.id === "prov" && examRunning && !active;
@@ -70,6 +71,11 @@ export default function Nav({
               );
             })}
           </ul>
+          {/* Tunn fade i papperstonen som visar att raden går att dra i. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-paper to-transparent sm:hidden"
+          />
         </nav>
       </div>
     </header>
