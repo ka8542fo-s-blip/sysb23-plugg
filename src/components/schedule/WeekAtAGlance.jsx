@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { schedule } from "../../data/schedule.js";
 import { nextExam, termState, subcoursesById } from "../../lib/scheduleInfo.js";
 import { nextStudyStep, startStudying } from "../../lib/studyPlan.js";
@@ -13,38 +14,61 @@ import {
 
 const DAY_COUNT = 7;
 
-function weekdayName(iso) {
+function weekdayShort(iso) {
+  return new Intl.DateTimeFormat("sv-SE", { timeZone: "UTC", weekday: "short" })
+    .format(new Date(`${iso}T00:00:00Z`))
+    .slice(0, 2);
+}
+
+function weekdayLong(iso) {
   return new Intl.DateTimeFormat("sv-SE", { timeZone: "UTC", weekday: "long" }).format(
     new Date(`${iso}T00:00:00Z`),
   );
 }
 
-// "Den här veckan" på Hem: nedräkning till nästa tenta och de sju
-// närmaste dagarna. Detaljerna finns i Schema.
+// "Den här veckan" på Hem: nedräkning plus en kompakt veckorad där man
+// öppnar en dag i taget. Detaljerna finns i Pluggkalendern.
 export default function WeekAtAGlance({ answers, exams, navigate, onSelectCourse }) {
   const state = termState(schedule);
   const next = nextExam(schedule);
-  const byId = subcoursesById(schedule);
+  const byId = useMemo(() => subcoursesById(schedule), []);
   const now = today();
 
   // Före terminsstart är de sju kommande dagarna tomma — visa terminens
   // första vecka i stället, så raden säger något.
   const beforeTerm = state === "before";
   const windowStart = beforeTerm ? schedule.termStart : now;
-  const days = Array.from({ length: DAY_COUNT }, (_, i) => addDays(windowStart, i));
-  const windowEnd = days[days.length - 1];
 
-  const inWindow = schedule.sessions.filter((session) => {
-    const from = session.date;
-    const to = session.dateEnd || session.date;
-    return to >= windowStart && from <= windowEnd;
-  });
+  const days = useMemo(() => {
+    return Array.from({ length: DAY_COUNT }, (_, i) => {
+      const date = addDays(windowStart, i);
+      const sessions = schedule.sessions.filter(
+        (session) => session.date <= date && (session.dateEnd || session.date) >= date,
+      );
+      return {
+        date,
+        sessions,
+        isToday: date === now,
+        hasExam: sessions.some((session) => session.kind === "tenta"),
+      };
+    });
+  }, [windowStart, now]);
+
+  const total = days.reduce((sum, day) => sum + day.sessions.length, 0);
+  // Öppna den dag som är mest intressant: idag om något händer, annars
+  // nästa dag med pass.
+  const [openDate, setOpenDate] = useState(
+    () =>
+      days.find((day) => day.isToday && day.sessions.length > 0)?.date ||
+      days.find((day) => day.sessions.length > 0)?.date ||
+      days[0].date,
+  );
+  const open = days.find((day) => day.date === openDate) || days[0];
 
   const step = next
     ? nextStudyStep({ subcourse: next.subcourseData, answers, exams })
     : null;
 
-  // Terminen slut: sju tomma dagrader säger ingenting.
   if (state === "after") {
     return (
       <section className="card p-5">
@@ -67,34 +91,28 @@ export default function WeekAtAGlance({ answers, exams, navigate, onSelectCourse
     <section className="card overflow-hidden">
       {next && (
         <div
-          className="p-5"
+          className="flex flex-wrap items-center gap-x-5 gap-y-3 p-4 sm:p-5"
           style={{ borderLeft: `4px solid var(${next.subcourseData?.color})` }}
         >
-          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-brass">
-            Nästa tenta
-          </p>
-          <p className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <span className="tabular font-display text-4xl text-pine">{next.days}</span>
-            <span className="text-[17px]">
-              {next.days === 1 ? "dag kvar till" : "dagar kvar till"}{" "}
-              <span className="font-medium">{next.subcourseData?.name}</span>
+          <p className="min-w-0 flex-1 basis-full sm:basis-0">
+            <span className="flex flex-wrap items-baseline gap-x-2">
+              <span className="tabular font-display text-3xl text-pine">{next.days}</span>
+              <span className="text-[15px]">
+                {next.days === 1 ? "dag kvar till" : "dagar kvar till"}
+              </span>
+              <span className="text-[15px] font-medium">{next.subcourseData?.name}</span>
+            </span>
+            <span className="tabular mt-0.5 block text-sm text-ink/65">
+              {formatLongDate(next.date)} · {next.start}–{next.end} · {next.room}
+              {beforeTerm &&
+                ` · terminen börjar ${relativeDays(daysUntil(schedule.termStart))}`}
             </span>
           </p>
-          <p className="tabular mt-1 text-[15px] text-ink/65">
-            {formatLongDate(next.date)} · {next.start}–{next.end} · {next.room}
-          </p>
-
-          {beforeTerm && (
-            <p className="mt-2 text-[15px] text-ink/70">
-              Terminen börjar {formatLongDate(schedule.termStart)} —{" "}
-              {relativeDays(daysUntil(schedule.termStart))}.
-            </p>
-          )}
 
           {step?.available && (
             <button
               type="button"
-              className="btn-primary mt-4"
+              className="btn-primary w-full shrink-0 sm:w-auto"
               onClick={() =>
                 startStudying({ step, exam: next, navigate, onSelectCourse })
               }
@@ -105,75 +123,116 @@ export default function WeekAtAGlance({ answers, exams, navigate, onSelectCourse
         </div>
       )}
 
-      <div className="border-t border-line p-5">
+      <div className="border-t border-line p-4 sm:p-5">
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-          <h2 className="font-display text-xl">
+          <h2 className="font-display text-lg">
             {beforeTerm ? "Terminens första vecka" : "Den här veckan"}
           </h2>
           <span className="tabular text-sm text-ink/65">
-            {formatRange(windowStart, windowEnd)} ·{" "}
-            {inWindow.length === 0
-              ? "inget inbokat"
-              : `${inWindow.length} ${inWindow.length === 1 ? "pass" : "pass"}`}
+            {formatRange(days[0].date, days[days.length - 1].date)} ·{" "}
+            {total === 0 ? "inget inbokat" : `${total} pass`}
           </span>
         </div>
 
-        <ul className="mt-3 divide-y divide-line border-y border-line">
+        {/* Sju kompakta dagar i stället för sju rader. */}
+        <div className="mt-3 grid grid-cols-7 gap-1">
           {days.map((day) => {
-            const isToday = day === now;
-            const sessions = inWindow.filter(
-              (session) => session.date <= day && (session.dateEnd || session.date) >= day,
-            );
+            const selected = day.date === open.date;
             return (
-              <li
-                key={day}
-                className={`flex gap-4 py-2.5 ${isToday ? "bg-pine/[0.05]" : ""}`}
+              <button
+                key={day.date}
+                type="button"
+                onClick={() => setOpenDate(day.date)}
+                aria-pressed={selected}
+                aria-label={`${weekdayLong(day.date)} ${formatDayMonth(day.date)}, ${
+                  day.sessions.length === 0
+                    ? "inget inbokat"
+                    : `${day.sessions.length} pass`
+                }${day.isToday ? ", idag" : ""}`}
+                className={`rounded-lg border px-1 py-2 text-center transition-colors duration-150 ${
+                  selected
+                    ? "border-pine bg-pine text-paper"
+                    : "border-line bg-white hover:border-pine hover:bg-pine/[0.06] active:bg-pine/[0.12]"
+                }`}
               >
-                <span className="w-24 shrink-0 text-sm">
-                  <span className={isToday ? "font-medium text-pine" : ""}>
-                    {weekdayName(day)}
-                  </span>
-                  <span className="tabular block text-ink/65">{formatDayMonth(day)}</span>
-                  {isToday && <span className="sr-only">(idag)</span>}
+                <span
+                  className={`block text-[11px] uppercase ${
+                    selected ? "text-paper/80" : day.isToday ? "text-brass" : "text-ink/65"
+                  }`}
+                >
+                  {day.isToday ? "idag" : weekdayShort(day.date)}
                 </span>
-                <span className="min-w-0 flex-1">
-                  {sessions.length === 0 ? (
-                    <span className="text-sm text-ink/45">Inget inbokat</span>
+                <span className="tabular block text-[15px] font-medium">
+                  {day.date.slice(8).replace(/^0/, "")}
+                </span>
+                <span className="mt-1 flex h-1.5 items-center justify-center gap-0.5">
+                  {day.sessions.length === 0 ? (
+                    <span
+                      aria-hidden="true"
+                      className={`h-px w-2 ${selected ? "bg-paper/50" : "bg-line"}`}
+                    />
                   ) : (
-                    <span className="space-y-1">
-                      {sessions.map((session, index) => {
-                        const subcourse = byId[session.subcourse];
-                        const exam = session.kind === "tenta";
-                        return (
-                          <span
-                            key={`${session.date}-${session.time}-${index}`}
-                            className={`block text-[15px] ${exam ? "font-medium text-wrong" : ""}`}
-                          >
-                            <span className="tabular text-ink/65">{session.time}</span>{" "}
-                            {session.title}
-                            <span className="mt-0.5 flex flex-wrap items-center gap-x-2 text-sm text-ink/65">
-                              <span
-                                aria-hidden="true"
-                                className="h-2 w-2 shrink-0 rounded-full"
-                                style={{ backgroundColor: `var(${subcourse?.color})` }}
-                              />
-                              <span>{subcourse?.short}</span>
-                              <span>· {session.place}</span>
-                            </span>
-                          </span>
-                        );
-                      })}
-                    </span>
+                    day.sessions.slice(0, 3).map((session, i) => (
+                      <span
+                        key={i}
+                        aria-hidden="true"
+                        className="h-1.5 w-1.5 rounded-full"
+                        style={{
+                          backgroundColor:
+                            session.kind === "tenta"
+                              ? "var(--wrong)"
+                              : selected
+                                ? "var(--paper)"
+                                : `var(${byId[session.subcourse]?.color})`,
+                        }}
+                      />
+                    ))
                   )}
                 </span>
-              </li>
+              </button>
             );
           })}
-        </ul>
+        </div>
+
+        <div className="mt-3 border-t border-line pt-3">
+          <p className="text-sm font-medium">
+            {weekdayLong(open.date)} {formatDayMonth(open.date)}
+            {open.isToday && <span className="text-brass"> · idag</span>}
+          </p>
+          {open.sessions.length === 0 ? (
+            <p className="mt-1 text-[15px] text-ink/65">Inget inbokat.</p>
+          ) : (
+            <ul className="mt-1 space-y-1.5">
+              {open.sessions.map((session, index) => {
+                const subcourse = byId[session.subcourse];
+                const exam = session.kind === "tenta";
+                return (
+                  <li key={`${session.date}-${session.time}-${index}`}>
+                    <span
+                      className={`block text-[15px] ${exam ? "font-medium text-wrong" : ""}`}
+                    >
+                      <span className="tabular text-ink/65">{session.time}</span>{" "}
+                      {session.title}
+                    </span>
+                    <span className="flex flex-wrap items-center gap-x-2 text-sm text-ink/65">
+                      <span
+                        aria-hidden="true"
+                        className="h-2 w-2 shrink-0 rounded-full"
+                        style={{ backgroundColor: `var(${subcourse?.color})` }}
+                      />
+                      <span>{subcourse?.short}</span>
+                      <span>· {session.place}</span>
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
 
         <button
           type="button"
-          className="btn-secondary mt-4"
+          className="btn-quiet mt-3 -ml-2"
           onClick={() => navigate("schema")}
         >
           Hela pluggkalendern →
