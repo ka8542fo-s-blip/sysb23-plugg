@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { overallStats, topicStats, focusTopic } from "../lib/progress.js";
-import NextExamBar from "../components/schedule/NextExamBar.jsx";
+import WeekAtAGlance from "../components/schedule/WeekAtAGlance.jsx";
 
 export default function Home({
   course,
@@ -28,7 +28,7 @@ export default function Home({
 
   return (
     <div className="space-y-8">
-      <NextExamBar
+      <WeekAtAGlance
         answers={answers}
         exams={exams}
         navigate={navigate}

@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import ExamCountdown from "../components/schedule/ExamCountdown.jsx";
 import TermOverview from "../components/schedule/TermOverview.jsx";
-import WeekLoad from "../components/schedule/WeekLoad.jsx";
 import SessionList from "../components/schedule/SessionList.jsx";
 import { schedule } from "../data/schedule.js";
 import { getCourse } from "../data/index.js";
@@ -10,7 +9,6 @@ import {
   nextExam,
   termState,
   currentPeriod,
-  currentWeek,
 } from "../lib/scheduleInfo.js";
 import { readinessFor, pacingFor } from "../lib/readiness.js";
 import { nextStudyStep, startStudying } from "../lib/studyPlan.js";
@@ -23,7 +21,6 @@ export default function Schedule({ answers, exams: examHistory, navigate, onSele
   const next = useMemo(() => nextExam(schedule), []);
   const state = termState(schedule);
   const period = currentPeriod(schedule);
-  const week = currentWeek(schedule);
 
   // Beredskap för en tenta, om delkursen har innehåll i appen.
   function readinessForExam(exam) {
@@ -66,11 +63,11 @@ export default function Schedule({ answers, exams: examHistory, navigate, onSele
   return (
     <div className="space-y-10">
       <section>
-        <h1 className="font-display text-2xl">Schema</h1>
+        <h1 className="font-display text-2xl">Pluggkalender</h1>
         <p className="mt-1 max-w-reading text-[15px] text-ink/70">
           {schedule.term} · {formatSwedish(schedule.termStart)} till{" "}
-          {formatSwedish(schedule.termEnd)}. Vyn kopplar terminens datum till hur långt
-          du kommit i pluggandet.
+          {formatSwedish(schedule.termEnd)}. Alla pass och examinationer, med
+          nedräkning till nästa tenta.
         </p>
       </section>
 
@@ -85,11 +82,9 @@ export default function Schedule({ answers, exams: examHistory, navigate, onSele
         onStudy={onStudy}
       />
 
-      <TermOverview schedule={schedule} exams={schedule.exams} currentPeriod={period} />
-
-      <WeekLoad schedule={schedule} currentWeek={week} />
-
       <SessionList schedule={schedule} defaultForwardOnly={state === "during"} />
+
+      <TermOverview schedule={schedule} exams={schedule.exams} currentPeriod={period} />
 
       <section className="border-t border-line pt-5">
         <p className="text-sm leading-relaxed text-ink/65">

@@ -32,7 +32,7 @@ export default function SessionList({ schedule, defaultForwardOnly }) {
 
   return (
     <section>
-      <h2 className="font-display text-xl">Hela schemat</h2>
+      <h2 className="font-display text-xl">Kalender</h2>
       <p className="mt-1 text-[15px] text-ink/70">
         {schedule.sessions.length} bokade pass vid avläsningen. Delkurserna i november
         har färre pass inlagda än de sannolikt får.

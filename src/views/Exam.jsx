@@ -178,7 +178,7 @@ export default function Exam({
         </p>
 
         <div className="mt-6 space-y-4">
-          <label className="flex w-fit cursor-pointer items-center gap-3 rounded-lg py-1 pr-3">
+          <label className="flex w-fit cursor-pointer items-center gap-3 rounded-lg px-2 py-1 transition-colors duration-150 hover:bg-pine/[0.06] hover:text-pine">
             <input
               type="checkbox"
               checked={settings.timerOn}

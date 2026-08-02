@@ -111,6 +111,10 @@ export default function TermOverview({ schedule, exams, currentPeriod }) {
         )}
       </div>
 
+      <p className="mt-3 rounded-card border-l-2 border-brass bg-white p-4 text-[15px] leading-relaxed">
+        {schedule.heaviestStretch.label}
+      </p>
+
       <ul className="mt-3 space-y-2">
         {schedule.periods.map((period) => {
           const active = currentPeriod?.from === period.from;

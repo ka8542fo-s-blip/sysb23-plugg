@@ -52,7 +52,7 @@ export default function Nav({
                     aria-current={active ? "page" : undefined}
                     className={`flex items-center gap-1 whitespace-nowrap rounded-lg px-2 py-1.5 text-[14px] transition-colors duration-150 sm:gap-1.5 sm:px-3 sm:text-[15px] ${
                       active
-                        ? "bg-pine font-medium text-white"
+                        ? "bg-pine font-medium text-white hover:bg-pine-dark"
                         : "text-ink/70 hover:bg-pine/[0.08] hover:text-pine active:bg-pine/[0.14]"
                     }`}
                   >

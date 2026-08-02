@@ -47,6 +47,19 @@
     line-height: 1.15;
   }
 
+  /* Inmatningsfält ska svara på muspekaren precis som knappar gör. */
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    transition: border-color 150ms;
+  }
+
+  input:not([type="checkbox"]):not([type="radio"]):hover:not(:disabled),
+  select:hover:not(:disabled),
+  textarea:hover:not(:disabled) {
+    border-color: var(--pine);
+  }
+
   /* Synlig fokusring överallt */
   :focus-visible {
     outline: 2px solid var(--pine);
