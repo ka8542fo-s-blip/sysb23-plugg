@@ -93,7 +93,7 @@ export default function ConceptCards({
                     <span className="block font-display text-lg text-pine">
                       {topic.name}
                     </span>
-                    <span className="text-sm text-ink/65">
+                    <span className="block font-sans text-sm text-ink/70">
                       {WEIGHT_LABEL[topic.examWeight] || topic.examWeight} ·{" "}
                       {topic.keyPoints.length} nyckelpunkter
                     </span>

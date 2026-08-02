@@ -96,7 +96,7 @@ export default function SessionList({ schedule, defaultForwardOnly }) {
               <h3 className="tabular font-display text-lg">
                 v.{group.week}
                 {group.from && (
-                  <span className="ml-2 text-sm font-normal text-ink/65">
+                  <span className="ml-3 font-sans text-[15px] font-normal text-ink/80">
                     {formatRange(group.from, group.to)}
                   </span>
                 )}

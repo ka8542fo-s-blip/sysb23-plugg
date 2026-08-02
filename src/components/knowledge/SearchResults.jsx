@@ -14,7 +14,10 @@ function Group({ title, count, children }) {
   return (
     <section>
       <h3 className="font-display text-lg">
-        {title} <span className="tabular text-ink/65">({count})</span>
+        {title}{" "}
+        <span className="tabular font-sans text-[15px] font-normal text-ink/70">
+          ({count})
+        </span>
       </h3>
       <ul className="mt-2 space-y-2">{children}</ul>
     </section>
