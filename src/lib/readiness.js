@@ -73,6 +73,10 @@ export function readinessFor({ course, answers, exams, readChapters }) {
 
   return {
     hasContent: true,
+    // Läskartan följer med så att den som behöver veta *vilket* kapitel som
+    // är oläst slipper läsa localStorage en gång till.
+    read,
+    chapters,
     chaptersRead,
     chaptersTotal: chapters.length,
     unread,

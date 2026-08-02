@@ -13,11 +13,12 @@ import {
   currentWeek,
 } from "../lib/scheduleInfo.js";
 import { readinessFor, pacingFor } from "../lib/readiness.js";
+import { nextStudyStep, startStudying } from "../lib/studyPlan.js";
 import { daysUntil, formatFullDate, formatSwedish } from "../lib/dates.js";
 
 // Schemat kopplar terminens datum till pluggstatus: hur nära nästa tenta
 // ligger och hur långt du kommit i materialet för den.
-export default function Schedule({ answers, exams: examHistory }) {
+export default function Schedule({ answers, exams: examHistory, navigate, onSelectCourse }) {
   const exams = useMemo(() => decoratedExams(schedule), []);
   const next = useMemo(() => nextExam(schedule), []);
   const state = termState(schedule);
@@ -28,7 +29,8 @@ export default function Schedule({ answers, exams: examHistory }) {
   function readinessForExam(exam) {
     const contentId = exam.subcourseData?.contentId;
     if (!contentId) {
-      return { sentence: "Material saknas i appen än.", short: null, pacing: null };
+      const neutral = "Material saknas i appen än.";
+      return { sentence: neutral, short: neutral, pacing: null };
     }
     const course = getCourse(contentId);
     const readiness = readinessFor({
@@ -41,6 +43,24 @@ export default function Schedule({ answers, exams: examHistory }) {
       short: readiness.sentence,
       pacing: exam.past ? null : pacingFor(readiness, exam.date),
     };
+  }
+
+  // Vad "Plugga till denna tenta" gör beror på hur långt du kommit.
+  function studyStepFor(exam) {
+    return nextStudyStep({
+      subcourse: exam.subcourseData,
+      answers,
+      exams: examHistory,
+    });
+  }
+
+  function onStudy(exam) {
+    startStudying({
+      step: studyStepFor(exam),
+      exam,
+      navigate,
+      onSelectCourse,
+    });
   }
 
   return (
@@ -61,6 +81,8 @@ export default function Schedule({ answers, exams: examHistory }) {
         termState={state}
         daysToTerm={daysUntil(schedule.termStart)}
         readinessFor={readinessForExam}
+        studyStepFor={studyStepFor}
+        onStudy={onStudy}
       />
 
       <TermOverview schedule={schedule} exams={schedule.exams} currentPeriod={period} />

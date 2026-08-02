@@ -9,6 +9,7 @@ export default function Home({
   exams,
   readChapters = {},
   navigate,
+  onSelectCourse,
 }) {
   const chapters = course.chapters || [];
   const readCount = chapters.filter((chapter) => readChapters[chapter.id]).length;
@@ -27,7 +28,12 @@ export default function Home({
 
   return (
     <div className="space-y-8">
-      <NextExamBar onOpen={() => navigate("schema")} />
+      <NextExamBar
+        answers={answers}
+        exams={exams}
+        navigate={navigate}
+        onSelectCourse={onSelectCourse}
+      />
 
       <section>
         <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-brass">

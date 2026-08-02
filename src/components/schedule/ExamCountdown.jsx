@@ -2,7 +2,7 @@ import { useState } from "react";
 import CourseDot from "./CourseDot.jsx";
 import { formatSwedish, relativeDays } from "../../lib/dates.js";
 
-function ExamRow({ exam, readiness }) {
+function ExamRow({ exam, readiness, step, onStudy }) {
   return (
     <li
       className={`flex flex-wrap items-center justify-between gap-x-4 gap-y-1 p-4 ${
@@ -22,11 +22,23 @@ function ExamRow({ exam, readiness }) {
           <span className="mt-0.5 block text-sm text-ink/65">{readiness}</span>
         )}
       </span>
-      <span className="tabular shrink-0 text-sm">
-        {exam.past ? (
-          <span className="text-correct">✓ avklarad</span>
-        ) : (
-          <span className="text-ink/70">{relativeDays(exam.days)}</span>
+      <span className="flex shrink-0 items-center gap-3">
+        <span className="tabular text-sm">
+          {exam.past ? (
+            <span className="text-correct">✓ avklarad</span>
+          ) : (
+            <span className="text-ink/70">{relativeDays(exam.days)}</span>
+          )}
+        </span>
+        {step?.available && (
+          <button
+            type="button"
+            className="btn-secondary px-3 py-1.5 text-sm"
+            title={`${step.label} — ${step.courseName}`}
+            onClick={() => onStudy(exam)}
+          >
+            {step.label}
+          </button>
         )}
       </span>
     </li>
@@ -40,11 +52,14 @@ export default function ExamCountdown({
   termState,
   daysToTerm,
   readinessFor,
+  studyStepFor,
+  onStudy,
 }) {
   const [showRetakes, setShowRetakes] = useState(false);
   const ordinary = exams.filter((exam) => exam.type === "ordinarie");
   const retakes = exams.filter((exam) => exam.type === "omtenta");
   const readiness = next ? readinessFor(next) : null;
+  const nextStep = next ? studyStepFor(next) : null;
 
   return (
     <section className="space-y-4">
@@ -99,12 +114,22 @@ export default function ExamCountdown({
 
           {next.note && <p className="mt-3 text-sm text-ink/65">{next.note}</p>}
 
-          <p className="mt-4 border-t border-line pt-4 text-[15px]">
-            {readiness?.sentence}
-            {readiness?.pacing && (
-              <span className="mt-1 block text-ink/70">{readiness.pacing}</span>
+          <div className="mt-4 border-t border-line pt-4">
+            <p className="text-[15px]">
+              {readiness?.sentence}
+              {readiness?.pacing && (
+                <span className="mt-1 block text-ink/70">{readiness.pacing}</span>
+              )}
+            </p>
+            {nextStep?.available && (
+              <div className="mt-4">
+                <button type="button" className="btn-primary" onClick={() => onStudy(next)}>
+                  {nextStep.label}
+                </button>
+                <p className="mt-1 text-sm text-ink/65">{nextStep.courseName}</p>
+              </div>
             )}
-          </p>
+          </div>
         </div>
       ) : (
         <div className="card p-5">
@@ -123,6 +148,8 @@ export default function ExamCountdown({
               key={exam.id}
               exam={exam}
               readiness={readinessFor(exam)?.short}
+              step={studyStepFor(exam)}
+              onStudy={onStudy}
             />
           ))}
         </ul>
@@ -140,7 +167,12 @@ export default function ExamCountdown({
         {showRetakes && (
           <ul className="card mt-2 divide-y divide-line">
             {retakes.map((exam) => (
-              <ExamRow key={exam.id} exam={exam} />
+              <ExamRow
+                key={exam.id}
+                exam={exam}
+                step={studyStepFor(exam)}
+                onStudy={onStudy}
+              />
             ))}
           </ul>
         )}

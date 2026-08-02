@@ -25,9 +25,9 @@ export default function Practice({
   const presetKey = params?.nonce ?? null;
   useEffect(() => {
     const preset = params?.topics;
-    if (!preset || preset.length === 0) return;
+    // En tom lista är ett giltigt val — den betyder "alla ämnen".
+    if (!Array.isArray(preset)) return;
     const valid = preset.filter((id) => course.topics.some((topic) => topic.id === id));
-    if (valid.length === 0) return;
     setSettings((prev) => ({
       ...prev,
       practiceTopics: valid,

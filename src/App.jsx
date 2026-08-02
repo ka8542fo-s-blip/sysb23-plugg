@@ -21,6 +21,8 @@ import {
 export default function App() {
   const [view, setView] = useState("hem");
   const [viewParams, setViewParams] = useState(null);
+  // Tillbakalänken lever bara i vy-state — den ska inte överleva en omladdning.
+  const [backLink, setBackLink] = useState(null);
   const [courseId, setCourseId] = useState("strategi");
   const [answers, setAnswers] = useState(() => load(KEYS.answers, {}));
   const [exams, setExams] = useState(() => load(KEYS.exams, []));
@@ -59,9 +61,12 @@ export default function App() {
     );
   }, [course]);
 
-  function navigate(next, params = null) {
+  // Tillbakalänken sätts bara av den som navigerar med avsikt (t.ex.
+  // "Plugga till denna tenta") och nollställs av all annan navigering.
+  function navigate(next, params = null, back = null) {
     setView(next);
     setViewParams(params);
+    setBackLink(back);
     window.scrollTo({ top: 0 });
   }
 
@@ -121,8 +126,26 @@ export default function App() {
       />
 
       <main id="innehall" className="mx-auto max-w-4xl px-4 py-7 sm:px-6 sm:py-10">
+        {backLink && (
+          <button
+            type="button"
+            onClick={() => navigate(backLink.view)}
+            className="btn-quiet mb-5 -ml-2 max-w-full justify-start text-left"
+          >
+            <span className="truncate">
+              ← Tillbaka till schemat · {backLink.label}
+            </span>
+          </button>
+        )}
+
         {view === "hem" && (
-          <Home {...shared} courses={courses} exams={exams} readChapters={readChapters} />
+          <Home
+            {...shared}
+            courses={courses}
+            exams={exams}
+            readChapters={readChapters}
+            onSelectCourse={setCourseId}
+          />
         )}
         {view === "las" && (
           <KnowledgeHub
@@ -146,7 +169,14 @@ export default function App() {
         {view === "essa" && (
           <Essays {...shared} essayState={essayState} setEssayState={setEssayState} />
         )}
-        {view === "schema" && <Schedule answers={answers} exams={exams} />}
+        {view === "schema" && (
+          <Schedule
+            answers={answers}
+            exams={exams}
+            navigate={navigate}
+            onSelectCourse={setCourseId}
+          />
+        )}
         {view === "statistik" && (
           <Stats
             {...shared}
