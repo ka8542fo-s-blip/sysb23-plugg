@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { overallStats, topicStats, focusTopic } from "../lib/progress.js";
 import WeekAtAGlance from "../components/schedule/WeekAtAGlance.jsx";
+import StatTile from "../components/StatTile.jsx";
 
 export default function Home({
   course,
@@ -62,8 +63,12 @@ export default function Home({
         <dl className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {sqlExercises.length > 0 ? (
             <>
-              <Stat label="Lösta övningar" value={`${sqlSolved}/${sqlExercises.length}`} />
-              <Stat
+              <StatTile
+                label="Lösta övningar"
+                value={`${sqlSolved}/${sqlExercises.length}`}
+                tip="sqlLosta"
+              />
+              <StatTile
                 label="Med hjälp"
                 value={
                   sqlExercises.filter(
@@ -74,18 +79,21 @@ export default function Home({
             </>
           ) : (
             <>
-              <Stat label="Besvarade frågor" value={overall.answered} />
-              <Stat
+              <StatTile label="Besvarade frågor" value={overall.answered} tip="svar" />
+              <StatTile
                 label="Träffsäkerhet"
                 value={overall.accuracy === null ? "—" : `${overall.accuracy} %`}
+                tip="traffsakerhet"
               />
-              <Stat
+              <StatTile
                 label="Frågor du sett"
                 value={`${overall.uniqueSeen}/${overall.total}`}
+                tip="fragorSedda"
               />
-              <Stat
+              <StatTile
                 label="Senaste prov"
                 value={latestExam ? `${latestExam.grade}` : "—"}
+                tip="senasteProv"
               />
             </>
           )}
@@ -191,11 +199,3 @@ function Shortcut({ title, hint, onClick }) {
   );
 }
 
-function Stat({ label, value }) {
-  return (
-    <div>
-      <dt className="text-sm text-ink/65">{label}</dt>
-      <dd className="tabular font-display text-2xl text-ink">{value}</dd>
-    </div>
-  );
-}

@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import StatBar from "../components/StatBar.jsx";
+import InfoTip from "../components/InfoTip.jsx";
+import StatTile from "../components/StatTile.jsx";
 import { overallStats, topicStats, focusTopic } from "../lib/progress.js";
 import { clearAll } from "../lib/storage.js";
 import { MAX_EXAM_POINTS } from "../lib/scoring.js";
@@ -54,29 +56,47 @@ export default function Stats({
     <div className="space-y-8">
       <section>
         <h1 className="font-display text-2xl">Statistik</h1>
-        {overall.total > 0 && (
-          <p className="tabular mt-1 text-[15px] text-ink/70">
-            {overall.answered} svar totalt ·{" "}
-            {overall.accuracy === null ? "—" : `${overall.accuracy} % rätt`} ·{" "}
-            {overall.uniqueSeen} av {overall.total} frågor sedda
-          </p>
-        )}
-        {chapters.length > 0 && (
-          <p className="tabular mt-1 text-[15px] text-ink/70">
-            Lästa kapitel: {readCount} av {chapters.length}
-          </p>
-        )}
-        {sqlExercises.length > 0 && (
-          <p className="tabular mt-1 text-[15px] text-ink/70">
-            SQL-övningar: {sqlSolved} av {sqlExercises.length} lösta
-            {sqlWithHelp > 0 && ` (${sqlWithHelp} med hjälp)`}
-          </p>
-        )}
+        {/* Termerna får varsin ruta med ett frågetecken — i löpande text
+            hamnade förklaringarna på rad utan att höra till något. */}
+        <dl className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {overall.total > 0 && (
+            <>
+              <StatTile label="Svar totalt" value={overall.answered} tip="svar" />
+              <StatTile
+                label="Träffsäkerhet"
+                value={overall.accuracy === null ? "—" : `${overall.accuracy} %`}
+                tip="traffsakerhet"
+              />
+              <StatTile
+                label="Frågor du sett"
+                value={`${overall.uniqueSeen}/${overall.total}`}
+                tip="fragorSedda"
+              />
+            </>
+          )}
+          {chapters.length > 0 && (
+            <StatTile
+              label="Lästa kapitel"
+              value={`${readCount}/${chapters.length}`}
+              tip="lastaKapitel"
+            />
+          )}
+          {sqlExercises.length > 0 && (
+            <StatTile
+              label="Lösta SQL-övningar"
+              value={`${sqlSolved}/${sqlExercises.length}`}
+              note={sqlWithHelp > 0 ? `${sqlWithHelp} med hjälp` : null}
+              tip="sqlLosta"
+            />
+          )}
+        </dl>
       </section>
 
       {course.questions.length > 0 && (
       <section className="card p-5 sm:p-6">
-        <h2 className="font-display text-xl">Fokusera här</h2>
+        <h2 className="flex items-center gap-2 font-display text-xl">
+          Fokusera här <InfoTip id="fokusera" />
+        </h2>
         {focus ? (
           <>
             <p className="mt-2 text-[15px] leading-relaxed">
@@ -104,7 +124,9 @@ export default function Stats({
       )}
 
       <section>
-        <h2 className="font-display text-xl">Tid kvar per delkurs</h2>
+        <h2 className="flex items-center gap-2 font-display text-xl">
+          Tid kvar per delkurs <InfoTip id="tidKvar" />
+        </h2>
         <ul className="card mt-3 divide-y divide-line">
           {timeline.map((row) => (
             <li key={row.exam.id} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 p-4">
@@ -131,7 +153,9 @@ export default function Stats({
 
       {perTopic.length > 0 && (
       <section>
-        <h2 className="font-display text-xl">Träffsäkerhet per ämne</h2>
+        <h2 className="flex items-center gap-2 font-display text-xl">
+          Träffsäkerhet per ämne <InfoTip id="traffsakerhetAmne" />
+        </h2>
         <div className="card mt-3 space-y-4 p-5">
           {perTopic.map((topic) => (
             <StatBar
@@ -148,7 +172,9 @@ export default function Stats({
 
       {course.questions.length > 0 && (
       <section>
-        <h2 className="font-display text-xl">Provhistorik</h2>
+        <h2 className="flex items-center gap-2 font-display text-xl">
+          Provhistorik <InfoTip id="provhistorik" />
+        </h2>
         {courseExams.length === 0 ? (
           <div className="card mt-3 p-5">
             <p className="text-[15px] text-ink/70">
