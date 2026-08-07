@@ -74,6 +74,17 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve }) {
     setConfirmSolution(false);
   }, [exercise?.id]);
 
+  // Redigeraren och Kör-knappen blir disabled under körningen, och då
+  // kastar webbläsaren fokus till <body>. Lägg tillbaka det efteråt, så att
+  // man kan fortsätta skriva direkt efter Ctrl/Cmd + Enter.
+  const wasRunning = useRef(false);
+  useEffect(() => {
+    if (wasRunning.current && !running && document.activeElement === document.body) {
+      editorRef.current?.focus();
+    }
+    wasRunning.current = running;
+  }, [running]);
+
   const solvedCount = useMemo(
     () => exercises.filter((item) => sqlProgress[item.id]).length,
     [exercises, sqlProgress],
@@ -241,15 +252,9 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve }) {
                 />
               </div>
 
+              {/* Kör ligger sist och längst till höger — fylld yta betyder
+                  "valt" i resten av appen och ska inte användas här. */}
               <div className="mt-3 flex flex-wrap items-center gap-3">
-                <button
-                  type="button"
-                  className="btn-primary"
-                  onClick={runExercise}
-                  disabled={running}
-                >
-                  {running ? "Kör…" : "Kör"}
-                </button>
                 <button
                   type="button"
                   className="btn-secondary"
@@ -280,7 +285,11 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve }) {
                 ) : (
                   <span className="flex flex-wrap items-center gap-2 text-[15px]">
                     Vill du se lösningen? Övningen markeras som löst med hjälp.
-                    <button type="button" className="btn-primary" onClick={revealSolution}>
+                    <button
+                      type="button"
+                      className="btn-emphasis"
+                      onClick={revealSolution}
+                    >
                       Visa
                     </button>
                     <button
@@ -292,6 +301,15 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve }) {
                     </button>
                   </span>
                 )}
+
+                <button
+                  type="button"
+                  className="btn-emphasis ml-auto"
+                  onClick={runExercise}
+                  disabled={running}
+                >
+                  {running ? "Kör…" : "Kör ▸"}
+                </button>
               </div>
 
               {schemaOpen && (
@@ -351,10 +369,7 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve }) {
               />
             </div>
 
-            <div className="mt-3 flex flex-wrap gap-3">
-              <button type="button" className="btn-primary" onClick={runFree}>
-                Kör
-              </button>
+            <div className="mt-3 flex flex-wrap items-center gap-3">
               <button
                 type="button"
                 className="btn-secondary"
@@ -368,6 +383,9 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve }) {
                 onClick={resetFreeDatabase}
               >
                 Återställ databasen
+              </button>
+              <button type="button" className="btn-emphasis ml-auto" onClick={runFree}>
+                Kör ▸
               </button>
             </div>
 
