@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { schedule } from "../../data/schedule.js";
 import { nextExam, termState, subcoursesById } from "../../lib/scheduleInfo.js";
-import { nextStudyStep, startStudying } from "../../lib/studyPlan.js";
+import { studyTargetFor, startStudying, STUDY_LABEL } from "../../lib/studyPlan.js";
 import {
   addDays,
   daysUntil,
@@ -28,7 +28,7 @@ function weekdayLong(iso) {
 
 // "Den här veckan" på Hem: nedräkning plus en kompakt veckorad där man
 // öppnar en dag i taget. Detaljerna finns i Pluggkalendern.
-export default function WeekAtAGlance({ answers, exams, navigate, onSelectCourse }) {
+export default function WeekAtAGlance({ navigate, onSelectCourse }) {
   const state = termState(schedule);
   const next = nextExam(schedule);
   const byId = useMemo(() => subcoursesById(schedule), []);
@@ -65,9 +65,7 @@ export default function WeekAtAGlance({ answers, exams, navigate, onSelectCourse
   );
   const open = days.find((day) => day.date === openDate) || days[0];
 
-  const step = next
-    ? nextStudyStep({ subcourse: next.subcourseData, answers, exams })
-    : null;
+  const target = next ? studyTargetFor(next.subcourseData) : null;
 
   if (state === "after") {
     return (
@@ -109,15 +107,15 @@ export default function WeekAtAGlance({ answers, exams, navigate, onSelectCourse
             </span>
           </p>
 
-          {step?.available && (
+          {target?.available && (
             <button
               type="button"
               className="btn-primary w-full shrink-0 sm:w-auto"
               onClick={() =>
-                startStudying({ step, exam: next, navigate, onSelectCourse })
+                startStudying({ target, exam: next, navigate, onSelectCourse })
               }
             >
-              {step.label}
+              {STUDY_LABEL}
             </button>
           )}
         </div>

@@ -37,7 +37,8 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
   useEffect(() => {
     if (!params) return;
     if (params.segment) setSegment(params.segment);
-    if (params.chapterId) setChapterId(params.chapterId);
+    // Explicit null betyder innehållsförteckningen, inte "lämna som det är".
+    if (params.chapterId !== undefined) setChapterId(params.chapterId);
     if (params.topicId) setOpenTopicId(params.topicId);
     if (params.term) setHighlightTerm(params.term);
   }, [params]);

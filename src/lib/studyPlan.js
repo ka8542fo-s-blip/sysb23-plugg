@@ -1,62 +1,21 @@
-// Väljer vad "Plugga till denna tenta" ska göra. Räknar inte om något —
-// återanvänder beredskapsberäkningen i readiness.js.
+// Vart pluggknappen leder. Den väljer inte läge åt användaren — den byter
+// delkurs och öppnar kompendiets innehållsförteckning. Därifrån bestämmer
+// man själv: "Fortsätt läsa", ett visst kapitel, eller något annat.
 
 import { getCourse } from "../data/index.js";
-import { readinessFor } from "./readiness.js";
 import { relativeDays } from "./dates.js";
 
-// Under så här många besvarade frågor är det för tidigt att provskriva.
-export const EXAM_READY_THRESHOLD = 20;
+export const STUDY_LABEL = "Plugga till denna tenta";
 
-// subcourse = posten ur schedule.subcourses. Fungerar oavsett var den anropas.
-export function nextStudyStep({ subcourse, answers, exams }) {
+// Delkurser utan innehåll i appen får ingen knapp alls.
+export function studyTargetFor(subcourse) {
   const contentId = subcourse?.contentId;
   if (!contentId) return { available: false };
 
   const course = getCourse(contentId);
   if (!course || course.id !== contentId) return { available: false };
 
-  const readiness = readinessFor({ course, answers, exams });
-  const chapters = course.chapters || [];
-
-  // 1. Olästa kapitel → läs nästa olästa.
-  if (readiness.unread > 0) {
-    const index = chapters.findIndex((chapter) => !readiness.read[chapter.id]);
-    const chapter = chapters[index];
-    return {
-      available: true,
-      courseId: contentId,
-      courseName: course.name,
-      readiness,
-      view: "las",
-      params: { segment: "kompendium", chapterId: chapter.id },
-      label: `Läs kapitel ${index + 1}`,
-    };
-  }
-
-  // 2. Allt läst men för få frågor → öva utan ämnesfilter.
-  if (readiness.answered < EXAM_READY_THRESHOLD) {
-    return {
-      available: true,
-      courseId: contentId,
-      courseName: course.name,
-      readiness,
-      view: "ova",
-      params: { topics: [] },
-      label: "Öva frågor",
-    };
-  }
-
-  // 3. Tillräckligt övat → förbered ett prov (startas av användaren).
-  return {
-    available: true,
-    courseId: contentId,
-    courseName: course.name,
-    readiness,
-    view: "prov",
-    params: null,
-    label: "Gör ett prov",
-  };
+  return { available: true, courseId: contentId, courseName: course.name };
 }
 
 // "Strategi-tentan om 50 dagar"
@@ -65,13 +24,15 @@ export function examBackLabel(exam) {
   return `${name}-tentan ${relativeDays(exam.days)}`;
 }
 
-// Byter delkurs, navigerar och sätter tillbakalänken i ett svep.
-export function startStudying({ step, exam, navigate, onSelectCourse }) {
-  if (!step?.available) return;
-  onSelectCourse(step.courseId);
+// Byter delkurs, går till Läs → Kompendium och sätter tillbakalänken.
+// chapterId: null nollställer ett kapitel som råkade vara öppet sedan
+// tidigare, så att man alltid landar på innehållsförteckningen.
+export function startStudying({ target, exam, navigate, onSelectCourse }) {
+  if (!target?.available) return;
+  onSelectCourse(target.courseId);
   navigate(
-    step.view,
-    step.params ? { ...step.params, nonce: Date.now() } : null,
+    "las",
+    { segment: "kompendium", chapterId: null },
     { view: "schema", label: examBackLabel(exam) },
   );
 }

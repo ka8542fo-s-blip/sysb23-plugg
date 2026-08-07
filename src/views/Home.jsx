@@ -28,12 +28,7 @@ export default function Home({
 
   return (
     <div className="space-y-8">
-      <WeekAtAGlance
-        answers={answers}
-        exams={exams}
-        navigate={navigate}
-        onSelectCourse={onSelectCourse}
-      />
+      <WeekAtAGlance navigate={navigate} onSelectCourse={onSelectCourse} />
 
       <section>
         <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-brass">

@@ -11,7 +11,7 @@ import {
   currentPeriod,
 } from "../lib/scheduleInfo.js";
 import { readinessFor, pacingFor } from "../lib/readiness.js";
-import { nextStudyStep, startStudying } from "../lib/studyPlan.js";
+import { studyTargetFor, startStudying, STUDY_LABEL } from "../lib/studyPlan.js";
 import { daysUntil, formatFullDate, formatSwedish } from "../lib/dates.js";
 
 // Schemat kopplar terminens datum till pluggstatus: hur nära nästa tenta
@@ -42,18 +42,14 @@ export default function Schedule({ answers, exams: examHistory, navigate, onSele
     };
   }
 
-  // Vad "Plugga till denna tenta" gör beror på hur långt du kommit.
-  function studyStepFor(exam) {
-    return nextStudyStep({
-      subcourse: exam.subcourseData,
-      answers,
-      exams: examHistory,
-    });
+  // Knappen visas bara för delkurser som har material i appen.
+  function studyTarget(exam) {
+    return studyTargetFor(exam.subcourseData);
   }
 
   function onStudy(exam) {
     startStudying({
-      step: studyStepFor(exam),
+      target: studyTarget(exam),
       exam,
       navigate,
       onSelectCourse,
@@ -78,7 +74,8 @@ export default function Schedule({ answers, exams: examHistory, navigate, onSele
         termState={state}
         daysToTerm={daysUntil(schedule.termStart)}
         readinessFor={readinessForExam}
-        studyStepFor={studyStepFor}
+        studyTargetFor={studyTarget}
+        studyLabel={STUDY_LABEL}
         onStudy={onStudy}
       />
 

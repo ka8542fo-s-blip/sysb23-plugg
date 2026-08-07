@@ -2,7 +2,7 @@ import { useState } from "react";
 import CourseDot from "./CourseDot.jsx";
 import { formatSwedish, relativeDays } from "../../lib/dates.js";
 
-function ExamRow({ exam, readiness, step, onStudy }) {
+function ExamRow({ exam, readiness, target, label, onStudy }) {
   return (
     <li
       className={`flex flex-wrap items-center justify-between gap-x-4 gap-y-1 p-4 ${
@@ -30,14 +30,14 @@ function ExamRow({ exam, readiness, step, onStudy }) {
             <span className="text-ink/70">{relativeDays(exam.days)}</span>
           )}
         </span>
-        {step?.available && (
+        {target?.available && (
           <button
             type="button"
             className="btn-secondary px-3 py-1.5 text-sm"
-            title={`${step.label} — ${step.courseName}`}
+            title={`${label} — ${target.courseName}`}
             onClick={() => onStudy(exam)}
           >
-            {step.label}
+            {label}
           </button>
         )}
       </span>
@@ -52,14 +52,15 @@ export default function ExamCountdown({
   termState,
   daysToTerm,
   readinessFor,
-  studyStepFor,
+  studyTargetFor,
+  studyLabel,
   onStudy,
 }) {
   const [showRetakes, setShowRetakes] = useState(false);
   const ordinary = exams.filter((exam) => exam.type === "ordinarie");
   const retakes = exams.filter((exam) => exam.type === "omtenta");
   const readiness = next ? readinessFor(next) : null;
-  const nextStep = next ? studyStepFor(next) : null;
+  const nextTarget = next ? studyTargetFor(next) : null;
 
   return (
     <section className="space-y-4">
@@ -121,12 +122,12 @@ export default function ExamCountdown({
                 <span className="mt-1 block text-ink/70">{readiness.pacing}</span>
               )}
             </p>
-            {nextStep?.available && (
+            {nextTarget?.available && (
               <div className="mt-4">
                 <button type="button" className="btn-primary" onClick={() => onStudy(next)}>
-                  {nextStep.label}
+                  {studyLabel}
                 </button>
-                <p className="mt-1 text-sm text-ink/65">{nextStep.courseName}</p>
+                <p className="mt-1 text-sm text-ink/65">{nextTarget.courseName}</p>
               </div>
             )}
           </div>
@@ -148,7 +149,8 @@ export default function ExamCountdown({
               key={exam.id}
               exam={exam}
               readiness={readinessFor(exam)?.short}
-              step={studyStepFor(exam)}
+              target={studyTargetFor(exam)}
+              label={studyLabel}
               onStudy={onStudy}
             />
           ))}
@@ -170,7 +172,8 @@ export default function ExamCountdown({
               <ExamRow
                 key={exam.id}
                 exam={exam}
-                step={studyStepFor(exam)}
+                target={studyTargetFor(exam)}
+                label={studyLabel}
                 onStudy={onStudy}
               />
             ))}
