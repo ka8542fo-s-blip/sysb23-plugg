@@ -15,7 +15,10 @@ export function studyTargetFor(subcourse) {
   const course = getCourse(contentId);
   if (!course || course.id !== contentId) return { available: false };
 
-  return { available: true, courseId: contentId, courseName: course.name };
+  // Första läget i manifestet är delkursens naturliga ingång: Läs för
+  // Strategi, SQL för Databaser.
+  const firstView = (course.views || [])[0] || "hem";
+  return { available: true, courseId: contentId, courseName: course.name, firstView };
 }
 
 // "Strategi-tentan om 50 dagar"
@@ -31,8 +34,8 @@ export function startStudying({ target, exam, navigate, onSelectCourse }) {
   if (!target?.available) return;
   onSelectCourse(target.courseId);
   navigate(
-    "las",
-    { segment: "kompendium", chapterId: null },
+    target.firstView,
+    target.firstView === "las" ? { segment: "kompendium", chapterId: null } : null,
     { view: "schema", label: examBackLabel(exam) },
   );
 }

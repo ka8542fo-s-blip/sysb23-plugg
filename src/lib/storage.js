@@ -10,6 +10,24 @@ export const KEYS = {
   readSegment: "lasSegment", // "kompendium" | "begrepp" | "ordlista"
 };
 
+// Lösta SQL-övningar: sysb23:sql:<övningsId> = "solved" | "solved-with-help"
+export function sqlKey(exerciseId) {
+  return `sql:${exerciseId}`;
+}
+
+export function loadSqlProgress(exerciseIds) {
+  const state = {};
+  for (const id of exerciseIds) {
+    const value = load(sqlKey(id), null);
+    if (value === "solved" || value === "solved-with-help") state[id] = value;
+  }
+  return state;
+}
+
+export function saveSqlResult(exerciseId, status) {
+  if (status) save(sqlKey(exerciseId), status);
+}
+
 // Lästa kapitel sparas som en nyckel per kapitel: sysb23:read:<kurs>:<kapitel>
 export function readChapterKey(courseId, chapterId) {
   return `read:${courseId}:${chapterId}`;

@@ -6,13 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predev": "node scripts/copy-sql-wasm.mjs",
+    "prebuild": "node scripts/copy-sql-wasm.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^9.1.0",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "sql.js": "^1.14.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",

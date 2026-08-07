@@ -1,23 +1,35 @@
 import CourseSwitcher from "./CourseSwitcher.jsx";
 
-export const VIEWS = [
-  { id: "hem", label: "Hem" },
-  { id: "las", label: "Läs" },
-  { id: "ova", label: "Öva" },
-  { id: "prov", label: "Prov" },
-  { id: "essa", label: "Essä" },
-  { id: "statistik", label: "Statistik" },
-  { id: "schema", label: "Schema" },
-];
+export const VIEW_LABELS = {
+  hem: "Hem",
+  las: "Läs",
+  ova: "Öva",
+  prov: "Prov",
+  essa: "Essä",
+  sql: "SQL",
+  statistik: "Statistik",
+  schema: "Schema",
+};
+
+// Hem och Schema är globala; däremellan ligger delkursens egna lägen i
+// den ordning manifestet anger.
+export function viewsForCourse(course) {
+  return ["hem", ...(course?.views || []), "schema"].map((id) => ({
+    id,
+    label: VIEW_LABELS[id] || id,
+  }));
+}
 
 export default function Nav({
   view,
   onNavigate,
   courses,
+  course,
   courseId,
   onSelectCourse,
   examRunning,
 }) {
+  const tabs = viewsForCourse(course);
   return (
     <header className="sticky top-0 z-10 border-b border-line bg-paper/95 backdrop-blur">
       <div className="mx-auto flex max-w-4xl flex-col gap-2 px-4 py-2.5 sm:gap-3 sm:px-6 sm:py-3">
@@ -41,7 +53,7 @@ export default function Nav({
 
         <nav aria-label="Huvudmeny" className="relative">
           <ul className="no-scrollbar flex gap-0.5 overflow-x-auto sm:flex-wrap sm:gap-1">
-            {VIEWS.map((item) => {
+            {tabs.map((item) => {
               const active = view === item.id;
               const showDot = item.id === "prov" && examRunning && !active;
               return (

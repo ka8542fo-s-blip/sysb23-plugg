@@ -39,8 +39,11 @@ den webbläsaren på den enheten och följer inte med till en annan dator, och d
 - **Prov** — tentasimulering: 10 frågor balanserat över ämnena, +6 / −1 / 0 p,
   valbar timer, resultat med Betygsmätaren och full genomgång.
 - **Essä** — skriv eget svar, fäll ut checklistan, självskatta.
+- **SQL** (Databaser) — SQL-verkstad med kursens sjukhusdatabas körd i
+  webbläsaren via sql.js. 32 övningar i åtta nivåer som rättas mot en
+  referenslösning, plus ett fritt läge med schemapanel.
 - **Statistik** — träffsäkerhet per ämne, provhistorik, "Fokusera här", tid kvar
-  till tenta.
+  till tenta, lösta SQL-övningar.
 - **Schema** — terminens datum kopplade till pluggstatus: nedräkning till nästa
   examination med beredskapsrad, terminsöversikt, veckobelastning och hela
   schemat med filter. Data i `src/data/schedule.js`, avläst ur TimeEdit och
@@ -59,6 +62,27 @@ kapitelavslutet ("Kärnan i korthet" och "Se upp för") renderas ur kapitlets
 styr "Öva på detta kapitel"; `primaryTopics` är det kapitlet introducerar och
 styr avslutet, så inget upprepas mellan kapitel. Varje ämne pekar tillbaka via
 `chapter`. Ingen komponent får läsa punkter direkt ur datafilerna.
+
+## Lägen per delkurs
+
+`views` i manifestet avgör vilka flikar en delkurs har; Hem och Schema är
+globala och läggs till av navigationen. Strategi har `["las", "ova", "prov",
+"essa", "statistik"]`, Databaser `["sql", "statistik"]`. Lägg inga tomma vyer —
+en flik ska bara finnas när materialet gör det.
+
+## SQL-verkstaden
+
+Databasen körs med sql.js (SQLite i WebAssembly). WASM-filen kopieras till
+`public/` av `scripts/copy-sql-wasm.mjs`, som körs automatiskt före `npm run
+dev` och `npm run build`. Motorn laddas lazy — inget hämtas förrän SQL-läget
+öppnas — och varje körning bygger en **ny** databas ur seed-skriptet, så en
+DELETE i ett svar kan inte förstöra resten av passet.
+
+Rättningen ligger i `lib/sqlCheck.js`: kolumnantal måste stämma men inte
+kolumnnamn (alias godkänns), radordning ignoreras utom när övningen har
+`ordered: true`, dubbletter räknas, och DML-övningar jämförs via sin
+`check`-fråga så att vilken korrekt formulering som helst godkänns. Ändra inte
+`solution`, `check` eller seed — allt är kört och verifierat.
 
 ## Lägga till en ny delkurs
 

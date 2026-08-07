@@ -7,6 +7,7 @@ import Exam from "./views/Exam.jsx";
 import Essays from "./views/Essays.jsx";
 import Stats from "./views/Stats.jsx";
 import Schedule from "./views/Schedule.jsx";
+import SqlWorkshop from "./views/SqlWorkshop.jsx";
 import { courses, getCourse } from "./data/index.js";
 import {
   KEYS,
@@ -16,6 +17,8 @@ import {
   recordAnswer,
   loadReadChapters,
   saveReadChapter,
+  loadSqlProgress,
+  saveSqlResult,
 } from "./lib/storage.js";
 
 export default function App() {
@@ -51,13 +54,25 @@ export default function App() {
     ),
   );
 
+  // Lösta SQL-övningar: en nyckel per övning i localStorage.
+  const [sqlProgress, setSqlProgress] = useState(() =>
+    loadSqlProgress((getCourse(courseId).sqlExercises || []).map((item) => item.id)),
+  );
+
   useEffect(() => {
     setExamSession(null);
+    setSqlProgress(
+      loadSqlProgress((course.sqlExercises || []).map((item) => item.id)),
+    );
     setReadChapters(
       loadReadChapters(
         course.id,
         (course.chapters || []).map((chapter) => chapter.id),
       ),
+    );
+    // Byter man till en delkurs som saknar den öppna vyn hamnar man på Hem.
+    setView((current) =>
+      ["hem", "schema", ...(course.views || [])].includes(current) ? current : "hem",
     );
   }, [course]);
 
@@ -96,6 +111,11 @@ export default function App() {
     });
   }
 
+  function solveSqlExercise(exerciseId, status) {
+    saveSqlResult(exerciseId, status);
+    setSqlProgress((prev) => ({ ...prev, [exerciseId]: status }));
+  }
+
   function resetAll() {
     setAnswers({});
     setExams([]);
@@ -103,6 +123,7 @@ export default function App() {
     setSettings(defaultSettings);
     setExamSession(null);
     setReadChapters({});
+    setSqlProgress({});
   }
 
   const shared = { course, answers, settings, setSettings, navigate };
@@ -120,6 +141,7 @@ export default function App() {
         view={view}
         onNavigate={navigate}
         courses={courses}
+        course={course}
         courseId={course.id}
         onSelectCourse={setCourseId}
         examRunning={examSession?.stage === "running"}
@@ -144,6 +166,7 @@ export default function App() {
             courses={courses}
             exams={exams}
             readChapters={readChapters}
+            sqlProgress={sqlProgress}
             onSelectCourse={setCourseId}
           />
         )}
@@ -169,6 +192,13 @@ export default function App() {
         {view === "essa" && (
           <Essays {...shared} essayState={essayState} setEssayState={setEssayState} />
         )}
+        {view === "sql" && (
+          <SqlWorkshop
+            course={course}
+            sqlProgress={sqlProgress}
+            onSolve={solveSqlExercise}
+          />
+        )}
         {view === "schema" && (
           <Schedule
             answers={answers}
@@ -182,6 +212,7 @@ export default function App() {
             {...shared}
             exams={exams}
             readChapters={readChapters}
+            sqlProgress={sqlProgress}
             onReset={resetAll}
           />
         )}

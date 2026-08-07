@@ -13,6 +13,7 @@ export default function Stats({
   answers,
   exams,
   readChapters = {},
+  sqlProgress = {},
   onReset,
   navigate,
 }) {
@@ -23,6 +24,11 @@ export default function Stats({
   const courseExams = exams.filter((exam) => exam.courseId === course.id);
   const chapters = course.chapters || [];
   const readCount = chapters.filter((chapter) => readChapters[chapter.id]).length;
+  const sqlExercises = course.sqlExercises || [];
+  const sqlSolved = sqlExercises.filter((item) => sqlProgress[item.id]).length;
+  const sqlWithHelp = sqlExercises.filter(
+    (item) => sqlProgress[item.id] === "solved-with-help",
+  ).length;
 
   // Tidsdimension: dagar till tenta för de delkurser som har material i appen.
   const timeline = useMemo(() => {
@@ -48,16 +54,27 @@ export default function Stats({
     <div className="space-y-8">
       <section>
         <h1 className="font-display text-2xl">Statistik</h1>
-        <p className="tabular mt-1 text-[15px] text-ink/70">
-          {overall.answered} svar totalt ·{" "}
-          {overall.accuracy === null ? "—" : `${overall.accuracy} % rätt`} ·{" "}
-          {overall.uniqueSeen} av {overall.total} frågor sedda
-        </p>
-        <p className="tabular mt-1 text-[15px] text-ink/70">
-          Lästa kapitel: {readCount} av {chapters.length}
-        </p>
+        {overall.total > 0 && (
+          <p className="tabular mt-1 text-[15px] text-ink/70">
+            {overall.answered} svar totalt ·{" "}
+            {overall.accuracy === null ? "—" : `${overall.accuracy} % rätt`} ·{" "}
+            {overall.uniqueSeen} av {overall.total} frågor sedda
+          </p>
+        )}
+        {chapters.length > 0 && (
+          <p className="tabular mt-1 text-[15px] text-ink/70">
+            Lästa kapitel: {readCount} av {chapters.length}
+          </p>
+        )}
+        {sqlExercises.length > 0 && (
+          <p className="tabular mt-1 text-[15px] text-ink/70">
+            SQL-övningar: {sqlSolved} av {sqlExercises.length} lösta
+            {sqlWithHelp > 0 && ` (${sqlWithHelp} med hjälp)`}
+          </p>
+        )}
       </section>
 
+      {course.questions.length > 0 && (
       <section className="card p-5 sm:p-6">
         <h2 className="font-display text-xl">Fokusera här</h2>
         {focus ? (
@@ -84,6 +101,7 @@ export default function Stats({
           </p>
         )}
       </section>
+      )}
 
       <section>
         <h2 className="font-display text-xl">Tid kvar per delkurs</h2>
@@ -99,15 +117,19 @@ export default function Stats({
                 <span className="text-[15px]">{row.exam.subcourseData?.name}</span>
               </span>
               <span className="tabular text-sm text-ink/65">
-                {row.exam.past ? "tenta avklarad" : relativeDays(row.exam.days)} ·{" "}
-                {row.chaptersRead}/{row.chaptersTotal} kapitel ·{" "}
-                {row.accuracy === null ? "inga svar" : `${row.accuracy} % rätt`}
+                {row.exam.past ? "tenta avklarad" : relativeDays(row.exam.days)}
+                {sqlExercises.length > 0
+                  ? ` · ${sqlSolved}/${sqlExercises.length} SQL-övningar`
+                  : ` · ${row.chaptersRead}/${row.chaptersTotal} kapitel · ${
+                      row.accuracy === null ? "inga svar" : `${row.accuracy} % rätt`
+                    }`}
               </span>
             </li>
           ))}
         </ul>
       </section>
 
+      {perTopic.length > 0 && (
       <section>
         <h2 className="font-display text-xl">Träffsäkerhet per ämne</h2>
         <div className="card mt-3 space-y-4 p-5">
@@ -122,7 +144,9 @@ export default function Stats({
           ))}
         </div>
       </section>
+      )}
 
+      {course.questions.length > 0 && (
       <section>
         <h2 className="font-display text-xl">Provhistorik</h2>
         {courseExams.length === 0 ? (
@@ -160,13 +184,14 @@ export default function Stats({
           </ul>
         )}
       </section>
+      )}
 
       <section className="card border-wrong/30 p-5">
         <h2 className="font-display text-lg">Nollställ min data</h2>
         <p className="mt-2 text-[15px] text-ink/70">
-          Raderar svarshistorik, provresultat, essäutkast, läsprogress, valt
-          läge i Läs och övriga inställningar från den här webbläsaren. Går inte
-          att ångra.
+          Raderar svarshistorik, provresultat, essäutkast, läsprogress, lösta
+          SQL-övningar, valt läge i Läs och övriga inställningar från den här
+          webbläsaren. Går inte att ångra.
         </p>
         {confirming ? (
           <div className="mt-4 flex flex-wrap gap-3">

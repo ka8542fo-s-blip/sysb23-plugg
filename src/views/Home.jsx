@@ -8,9 +8,13 @@ export default function Home({
   answers,
   exams,
   readChapters = {},
+  sqlProgress = {},
   navigate,
   onSelectCourse,
 }) {
+  const views = course.views || [];
+  const sqlExercises = course.sqlExercises || [];
+  const sqlSolved = sqlExercises.filter((item) => sqlProgress[item.id]).length;
   const chapters = course.chapters || [];
   const readCount = chapters.filter((chapter) => readChapters[chapter.id]).length;
   const minutesLeft = chapters
@@ -36,33 +40,57 @@ export default function Home({
         </p>
         <h1 className="mt-1 font-display text-3xl sm:text-4xl">{course.name}</h1>
         <p className="mt-3 max-w-reading text-[17px] leading-relaxed text-ink/80">
-          Öva flervalsfrågor med förklaringar till varje alternativ, simulera
-          tentans poängsystem med minuspoäng, och träna essäsvar mot en checklista.
-          Allt innehåll kommer ur kurslitteraturen och gamla tentor.
+          {views.includes("sql")
+            ? "Skriv riktig SQL mot kursens sjukhusdatabas, kör frågorna i webbläsaren och få dem rättade mot en referenslösning."
+            : "Öva flervalsfrågor med förklaringar till varje alternativ, simulera tentans poängsystem med minuspoäng, och träna essäsvar mot en checklista. Allt innehåll kommer ur kurslitteraturen och gamla tentor."}
         </p>
         <p className="tabular mt-2 text-[15px] text-ink/65">
-          {course.questions.length} frågor · {course.topics.length} ämnen ·{" "}
-          {course.essays.length} essäfrågor
+          {[
+            course.chapters.length > 0 && `${course.chapters.length} kapitel`,
+            course.questions.length > 0 && `${course.questions.length} frågor`,
+            course.topics.length > 0 && `${course.topics.length} ämnen`,
+            course.essays.length > 0 && `${course.essays.length} essäfrågor`,
+            sqlExercises.length > 0 && `${sqlExercises.length} SQL-övningar`,
+          ]
+            .filter(Boolean)
+            .join(" · ")}
         </p>
       </section>
 
       <section className="card p-5 sm:p-6">
         <h2 className="font-display text-xl">Var står du?</h2>
         <dl className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          <Stat label="Besvarade frågor" value={overall.answered} />
-          <Stat
-            label="Träffsäkerhet"
-            value={overall.accuracy === null ? "—" : `${overall.accuracy} %`}
-          />
-          <Stat
-            label="Frågor du sett"
-            value={`${overall.uniqueSeen}/${overall.total}`}
-          />
-          <Stat
-            label="Senaste prov"
-            value={latestExam ? `${latestExam.grade}` : "—"}
-          />
+          {sqlExercises.length > 0 ? (
+            <>
+              <Stat label="Lösta övningar" value={`${sqlSolved}/${sqlExercises.length}`} />
+              <Stat
+                label="Med hjälp"
+                value={
+                  sqlExercises.filter(
+                    (item) => sqlProgress[item.id] === "solved-with-help",
+                  ).length
+                }
+              />
+            </>
+          ) : (
+            <>
+              <Stat label="Besvarade frågor" value={overall.answered} />
+              <Stat
+                label="Träffsäkerhet"
+                value={overall.accuracy === null ? "—" : `${overall.accuracy} %`}
+              />
+              <Stat
+                label="Frågor du sett"
+                value={`${overall.uniqueSeen}/${overall.total}`}
+              />
+              <Stat
+                label="Senaste prov"
+                value={latestExam ? `${latestExam.grade}` : "—"}
+              />
+            </>
+          )}
         </dl>
+        {course.questions.length > 0 && (
         <p className="mt-4 text-[15px] text-ink/70">
           {focus ? (
             <>
@@ -74,23 +102,37 @@ export default function Home({
             "Svara på minst fem frågor i ett ämne så pekar sidan ut vad du bör fokusera på."
           )}
         </p>
-        {/* Ordningen speglar arbetsgången: läs → öva → prova. */}
+        )}
+        {/* Genvägarna byggs ur delkursens lägen, i manifestets ordning. */}
         <div className="mt-5 grid gap-3 sm:grid-cols-3">
-          <Shortcut
-            title="Läs kompendiet"
-            hint={readingHint}
-            onClick={() => navigate("las", { segment: "kompendium" })}
-          />
-          <Shortcut
-            title="Öva frågor"
-            hint="En fråga i taget med facit"
-            onClick={() => navigate("ova")}
-          />
-          <Shortcut
-            title="Gör ett prov"
-            hint="10 frågor med tentans poäng"
-            onClick={() => navigate("prov")}
-          />
+          {views.includes("las") && (
+            <Shortcut
+              title="Läs kompendiet"
+              hint={readingHint}
+              onClick={() => navigate("las", { segment: "kompendium" })}
+            />
+          )}
+          {views.includes("sql") && (
+            <Shortcut
+              title="SQL-verkstad"
+              hint={`${sqlSolved} av ${sqlExercises.length} övningar lösta`}
+              onClick={() => navigate("sql")}
+            />
+          )}
+          {views.includes("ova") && (
+            <Shortcut
+              title="Öva frågor"
+              hint="En fråga i taget med facit"
+              onClick={() => navigate("ova")}
+            />
+          )}
+          {views.includes("prov") && (
+            <Shortcut
+              title="Gör ett prov"
+              hint="10 frågor med tentans poäng"
+              onClick={() => navigate("prov")}
+            />
+          )}
         </div>
       </section>
 
@@ -115,6 +157,7 @@ export default function Home({
         </ul>
       </section>
 
+      {course.questions.length > 0 && (
       <section className="card border-brass/40 p-5">
         <h2 className="font-display text-lg">Så räknas tentan</h2>
         <p className="mt-2 text-[15px] leading-relaxed text-ink/80">
@@ -124,6 +167,7 @@ export default function Home({
           fråga du inte kan är alltså värt en poäng — träna på det i Prov-läget.
         </p>
       </section>
+      )}
     </div>
   );
 }

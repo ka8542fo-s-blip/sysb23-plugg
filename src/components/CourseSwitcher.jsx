@@ -2,6 +2,17 @@ import { useEffect, useRef, useState } from "react";
 
 // Delkursen är en egen nivå ovanför vyflikarna: den syns i den fasta
 // headern i alla lägen, och det är här man byter kurs.
+// Kort beskrivning av vad delkursen har — den skiljer sig mellan kurser.
+function describeContent(course) {
+  const parts = [
+    course.chapters?.length && `${course.chapters.length} kapitel`,
+    course.questions?.length && `${course.questions.length} frågor`,
+    course.sqlExercises?.length && `${course.sqlExercises.length} SQL-övningar`,
+    course.essays?.length && `${course.essays.length} essäfrågor`,
+  ].filter(Boolean);
+  return parts.length ? parts.join(" · ") : "Material på väg";
+}
+
 export default function CourseSwitcher({ courses, courseId, onSelect, examRunning }) {
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(null); // bekräftelse när ett prov pågår
@@ -114,7 +125,7 @@ export default function CourseSwitcher({ courses, courseId, onSelect, examRunnin
                       ? "Kommer under terminen"
                       : confirming
                         ? "Prov pågår — klicka igen för att byta och avbryta det"
-                        : `${course.questions.length} frågor · ${course.essays.length} essäfrågor`}
+                        : describeContent(course)}
                   </span>
                 </span>
                 {selected && (
