@@ -26,7 +26,7 @@ delkursvillkor utspridda i koden.
 
 | Delkurs | Status | Har |
 |---|---|---|
-| strategi | komplett | 10 kapitel, 13 ämnen, 90 termer, 49 frågor, 4 essäer |
+| strategi | komplett | 10 kapitel, 13 ämnen, 90 termer, 49 frågor (omskrivna 2026-08-07 så längd/position inte läcker svaret), 4 essäer |
 | databaser | delvis | 8 kapitel, 8 ämnen, 64 termer, SQL-verkstad (32 övningar), **`questions.js` är en tom array** — frågebanken kommer i en egen prompt; Öva/Prov visar tomlägen och "Öva på detta"-knappar i Läs är dolda tills den fylls |
 | process, arkitektur, sakerhet | kommande | platshållare i manifestet |
 
@@ -128,5 +128,9 @@ för brödtext — sekundär text i rubriker sätts i Inter, inte Fraunces.
 Frågebank för Databaser (egen prompt kommer): fyll
 `src/data/databaser/questions.js` enligt schemat i `strategi/questions.js`
 (4 alternativ, `explain` per alternativ, `reviewed`), så vaknar Öva/Prov och
-"Öva på detta"-knapparna av sig själva. Därefter sannolikt fler delkurser enligt
-samma mall (data + manifestrad, ingen ny kod).
+"Öva på detta"-knapparna av sig själva. Frågorna ska följa designreglerna i
+kommentaren överst i `strategi/questions.js` (jämnlånga alternativ, jämn
+positionsfördelning, inga skämtdistraktorer) och verifieras med
+`node scripts/check-fragebank.mjs src/data/databaser/questions.js`.
+Därefter sannolikt fler delkurser enligt samma mall (data + manifestrad,
+ingen ny kod).
