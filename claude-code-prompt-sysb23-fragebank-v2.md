@@ -1,3 +1,46 @@
+# PROMPT TILL CLAUDE CODE — Omskriven frågebank för Strategi och ekonomistyrning
+
+## Varför
+
+Den nuvarande frågebanken (`src/data/strategi/questions.js`, 49 frågor) har två statistiskt mätbara brister som gör det möjligt att svara rätt utan ämneskunskap:
+
+- Det rätta svaret är det längsta alternativet i **42 av 49 frågor (85 %)**. Slumpen ger 25 %.
+- Rätt svar ligger på position 4 i **0 av 49 frågor**. Fördelningen är 15 / 28 / 6 / 0.
+
+Ersätt filens `questions` helt med innehållet nedan. Frågornas `id`, `topic` och `source` är oförändrade så att statistik, ämnesfilter och kapitelkopplingar fortsätter fungera. Antalet är fortfarande 49.
+
+## Designregler som gäller framåt
+
+Dessa ska stå som kommentar överst i `questions.js`, och gäller varje fråga som läggs till i framtiden:
+
+1. **Alla fyra alternativ ska vara jämnlånga.** Det längsta får vara högst 25 % längre än det kortaste inom samma fråga.
+2. **Inga skämtdistraktorer.** Varje felaktigt alternativ ska vara något en oförberedd student rimligen kan tro är rätt. Formuleringar av typen "det är olagligt" eller "det finns ingen sådan regel" är förbjudna.
+3. **Distraktorerna byggs på tre mönster:** rätt begrepp men fel upphovsman (Baumol/Williamson/Simon), rätt idé men fel omfattning eller nivå, eller ett sant påstående som inte besvarar den ställda frågan.
+4. **Rätt svar får inte vara det enda med reservationer.** Är det rätta svaret nyanserat ska minst ett felaktigt alternativ också vara det.
+5. **Rätt svars position fördelas jämnt** över 0, 1, 2 och 3 — cirka tolv frågor vardera.
+6. Inga alternativ av typen "alla ovanstående" eller "inget av ovanstående".
+7. `explain` för varje alternativ, även de felaktiga, och de ska vara jämnlånga av samma skäl som alternativen.
+
+## Verifiering du ska köra efter inklistring
+
+Skriv ett engångsskript (eller ett test) som läser `questions.js` och rapporterar:
+
+- andel frågor där rätt svar är det längsta alternativet — **ska ligga under 35 %**
+- rätt svarets genomsnittliga längd delat med frågans genomsnittliga alternativlängd — **ska ligga mellan 0,9 och 1,1**
+- fördelningen av `correct` över positionerna 0–3 — **ingen position under 8 eller över 16**
+- max/min-längdkvot inom varje fråga — **ingen fråga över 1,25**
+
+Rapportera siffrorna i din sammanfattning. Blir någon utanför gränserna: säg vilken fråga och lämna den till mig, ändra inte innehållet själv.
+
+Banken nedan är redan mätt med dessa mått och ligger inom gränserna: rätt svar är unikt längst i 12 av 49 frågor (24 %), längdkvoten är 1,01, positionsfördelningen är 15/13/12/9 och största spridning inom en fråga är 1,23. Får du andra siffror har något gått fel i inklistringen.
+
+Notera att måttet ska räkna **unikt** längst. Är två alternativ lika långa är det inte exploaterbart och ska inte räknas som träff.
+
+---
+
+# INNEHÅLL — ersätt `questions` i `src/data/strategi/questions.js`
+
+```js
 // Designregler för frågor i denna fil:
 // 1. Alla fyra alternativ jämnlånga — längsta högst 25 % längre än kortaste.
 // 2. Inga skämtdistraktorer; varje fel alternativ ska vara rimligt att tro på.
@@ -498,3 +541,4 @@ export const questions = [
     ],
     correct: 0, source: "Henderson & Venkatraman / föreläsning", reviewed: true }
 ];
+```
