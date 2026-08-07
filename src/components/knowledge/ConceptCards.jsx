@@ -70,8 +70,12 @@ export default function ConceptCards({
         </p>
       )}
 
-      <div className="space-y-3">
-        {matches.map((topic) => {
+      <div className="grid gap-3 lg:grid-cols-2 lg:items-start">
+        {[matches.slice(0, Math.ceil(matches.length / 2)), matches.slice(Math.ceil(matches.length / 2))]
+          .filter((half) => half.length > 0)
+          .map((half, halfIndex) => (
+        <div key={halfIndex} className="space-y-3">
+        {half.map((topic) => {
           const open = openId === topic.id;
           const number = chapterNumber(topic.chapter);
           return (
@@ -162,6 +166,8 @@ export default function ConceptCards({
             </article>
           );
         })}
+        </div>
+          ))}
       </div>
     </div>
   );

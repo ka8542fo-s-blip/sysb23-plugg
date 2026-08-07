@@ -144,6 +144,13 @@ export default function Home({
         </div>
       </section>
 
+      <div
+        className={
+          course.questions.length > 0
+            ? "grid gap-8 lg:grid-cols-2 lg:items-start"
+            : ""
+        }
+      >
       <section>
         <h2 className="font-display text-xl">Övriga delkurser</h2>
         <p className="mt-1 text-[15px] text-ink/65">
@@ -176,6 +183,7 @@ export default function Home({
         </p>
       </section>
       )}
+      </div>
     </div>
   );
 }

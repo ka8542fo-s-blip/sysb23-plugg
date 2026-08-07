@@ -167,7 +167,7 @@ export default function Exam({
 
   if (stage === "intro") {
     return (
-      <section className="card p-5 sm:p-6">
+      <section className="card max-w-3xl p-5 sm:p-6">
         <h1 className="font-display text-2xl">Prov</h1>
         <p className="mt-2 max-w-reading text-[15px] leading-relaxed text-ink/80">
           Tio frågor, balanserat dragna över ämnena (högst två per ämne). Poängen
@@ -228,8 +228,8 @@ export default function Exam({
     const openCount = items.length - answeredCount;
 
     return (
-      <div className="space-y-5">
-        <div className="card flex flex-wrap items-center justify-between gap-3 p-4">
+      <div className="flex flex-col gap-5 lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-6">
+        <div className="card flex flex-wrap items-center justify-between gap-3 p-4 lg:col-start-2 lg:row-start-1">
           <div>
             <span className="tabular font-display text-lg">
               Fråga {index + 1} av {items.length}
@@ -249,7 +249,10 @@ export default function Exam({
           )}
         </div>
 
-        <nav aria-label="Frågeöversikt" className="flex flex-wrap gap-2">
+        <nav
+          aria-label="Frågeöversikt"
+          className="flex flex-wrap gap-2 lg:col-start-2 lg:row-start-2"
+        >
           {items.map((entry, i) => {
             const state =
               entry.choice !== null ? "answered" : entry.skipped ? "skipped" : "untouched";
@@ -281,6 +284,7 @@ export default function Exam({
           })}
         </nav>
 
+        <div className="w-full lg:col-start-1 lg:row-start-1 lg:row-span-3">
         <QuestionCard
           question={item.question}
           view={item.view}
@@ -317,8 +321,9 @@ export default function Exam({
             </button>
           </div>
         </QuestionCard>
+        </div>
 
-        <div className="card p-4">
+        <div className="card p-4 lg:col-start-2 lg:row-start-3">
           {confirmSubmit ? (
             <div className="flex flex-wrap items-center gap-3">
               <p className="text-[15px]">
@@ -376,7 +381,7 @@ export default function Exam({
           {record.wrong}), {record.skipped} överhoppade.
         </p>
 
-        <div className="mt-6">
+        <div className="mt-6 max-w-3xl">
           <GradeGauge percent={record.percent} grade={record.grade} />
         </div>
 
@@ -396,18 +401,20 @@ export default function Exam({
 
       <section className="space-y-5">
         <h2 className="font-display text-xl">Genomgång</h2>
-        {items.map((item, i) => (
-          <QuestionCard
-            key={item.question.id}
-            question={item.question}
-            view={item.view}
-            chosen={item.choice}
-            revealed
-            onChoose={() => {}}
-            topicName={topicName(item.question.topic)}
-            counter={`Fråga ${i + 1}${item.choice === null ? " · överhoppad" : ""}`}
-          />
-        ))}
+        <div className="grid gap-5 xl:grid-cols-2 xl:items-start">
+          {items.map((item, i) => (
+            <QuestionCard
+              key={item.question.id}
+              question={item.question}
+              view={item.view}
+              chosen={item.choice}
+              revealed
+              onChoose={() => {}}
+              topicName={topicName(item.question.topic)}
+              counter={`Fråga ${i + 1}${item.choice === null ? " · överhoppad" : ""}`}
+            />
+          ))}
+        </div>
       </section>
     </div>
   );

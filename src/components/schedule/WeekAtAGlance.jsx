@@ -86,13 +86,13 @@ export default function WeekAtAGlance({ navigate, onSelectCourse }) {
   }
 
   return (
-    <section className="card overflow-hidden">
+    <section className="card overflow-hidden lg:flex lg:items-stretch">
       {next && (
         <div
-          className="flex flex-wrap items-center gap-x-5 gap-y-3 p-4 sm:p-5"
+          className="flex flex-wrap items-center gap-x-5 gap-y-3 p-4 sm:p-5 lg:w-96 lg:shrink-0 lg:content-start lg:border-r lg:border-line"
           style={{ borderLeft: `4px solid var(${next.subcourseData?.color})` }}
         >
-          <p className="min-w-0 flex-1 basis-full sm:basis-0">
+          <p className="min-w-0 flex-1 basis-full sm:basis-0 lg:basis-full">
             <span className="flex flex-wrap items-baseline gap-x-2">
               <span className="tabular font-display text-3xl text-pine">{next.days}</span>
               <span className="text-[15px]">
@@ -110,7 +110,7 @@ export default function WeekAtAGlance({ navigate, onSelectCourse }) {
           {target?.available && (
             <button
               type="button"
-              className="btn-primary w-full shrink-0 sm:w-auto"
+              className="btn-primary w-full shrink-0 sm:w-auto lg:w-full"
               onClick={() =>
                 startStudying({ target, exam: next, navigate, onSelectCourse })
               }
@@ -121,7 +121,7 @@ export default function WeekAtAGlance({ navigate, onSelectCourse }) {
         </div>
       )}
 
-      <div className="border-t border-line p-4 sm:p-5">
+      <div className="min-w-0 border-t border-line p-4 sm:p-5 lg:flex-1 lg:border-t-0">
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
           <h2 className="font-display text-lg">
             {beforeTerm ? "Terminens första vecka" : "Den här veckan"}

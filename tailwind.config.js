@@ -20,7 +20,7 @@ export default {
         card: "12px",
       },
       maxWidth: {
-        reading: "720px",
+        reading: "45rem",
       },
     },
   },

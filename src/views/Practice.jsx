@@ -143,8 +143,10 @@ export default function Practice({
   const done = queue.length > 0 && index >= queue.length;
 
   return (
-    <div className="space-y-6">
-      <section className="card p-5">
+    <div className="space-y-6 lg:flex lg:items-start lg:gap-8 lg:space-y-0">
+      {/* Urvalet blir sidopanel på desktop så att frågan får mitten av
+          skärmen och filtret alltid är synligt. */}
+      <section className="card p-5 lg:sticky lg:top-36 lg:max-h-[calc(100vh-11rem)] lg:w-80 lg:shrink-0 lg:overflow-y-auto">
         <h1 className="font-display text-2xl">Öva</h1>
         <p className="mt-1 text-[15px] text-ink/70">
           En fråga i taget med direkt facit. Frågor du svarat fel på återkommer
@@ -203,6 +205,7 @@ export default function Practice({
         </p>
       </section>
 
+      <div className="min-w-0 flex-1 space-y-6">
       {filtered.length === 0 && (
         <p className="card p-5 text-[15px] text-ink/70">
           Inga frågor matchar filtret. Välj fler ämnen eller en annan
@@ -258,6 +261,7 @@ export default function Practice({
           </div>
         </QuestionCard>
       )}
+      </div>
     </div>
   );
 }

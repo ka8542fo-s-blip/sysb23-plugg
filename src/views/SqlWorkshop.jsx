@@ -170,12 +170,14 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve }) {
         </p>
       </section>
 
-      <SegmentedControl
-        label="Välj läge"
-        segments={MODES}
-        value={mode}
-        onChange={setMode}
-      />
+      <div className="max-w-lg">
+        <SegmentedControl
+          label="Välj läge"
+          segments={MODES}
+          value={mode}
+          onChange={setMode}
+        />
+      </div>
 
       {engineState === "loading" && (
         <p className="card p-4 text-[15px] text-ink/70">Startar databasen…</p>
@@ -338,7 +340,7 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve }) {
             </section>
           </div>
 
-          <div className="mt-6 lg:order-1 lg:mt-0 lg:w-72 lg:shrink-0">
+          <div className="mt-6 lg:order-1 lg:mt-0 lg:w-80 lg:shrink-0">
             <ExerciseList
               levels={levels}
               exercises={exercises}

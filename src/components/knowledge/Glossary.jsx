@@ -65,8 +65,12 @@ export default function Glossary({ glossary, chapters, onOpenChapter, highlightT
         </p>
       )}
 
-      <dl className="card divide-y divide-line">
-        {matches.map((entry) => {
+      <div className="grid gap-3 lg:grid-cols-2 lg:items-start">
+        {[matches.slice(0, Math.ceil(matches.length / 2)), matches.slice(Math.ceil(matches.length / 2))]
+          .filter((half) => half.length > 0)
+          .map((half, halfIndex) => (
+      <dl key={halfIndex} className="card divide-y divide-line">
+        {half.map((entry) => {
           const number = chapterNumber(entry.chapter);
           const highlighted =
             highlightTerm && entry.term.toLowerCase() === highlightTerm.toLowerCase();
@@ -92,6 +96,8 @@ export default function Glossary({ glossary, chapters, onOpenChapter, highlightT
           );
         })}
       </dl>
+          ))}
+      </div>
     </div>
   );
 }

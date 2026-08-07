@@ -63,9 +63,9 @@ export default function ExamCountdown({
   const nextTarget = next ? studyTargetFor(next) : null;
 
   return (
-    <section className="space-y-4">
+    <section className="flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:items-start lg:gap-6">
       {termState === "before" && (
-        <p className="text-[15px] text-ink/70">
+        <p className="text-[15px] text-ink/70 lg:col-span-2">
           Terminen börjar om <span className="tabular font-medium">{daysToTerm}</span>{" "}
           dagar — {formatSwedish(schedule.termStart)}.
         </p>
@@ -73,7 +73,7 @@ export default function ExamCountdown({
 
       {next ? (
         <div
-          className="card overflow-hidden p-5 sm:p-6"
+          className="card overflow-hidden p-5 sm:p-6 lg:row-span-2"
           style={{ borderLeft: `4px solid var(${next.subcourseData?.color})` }}
         >
           <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-brass">

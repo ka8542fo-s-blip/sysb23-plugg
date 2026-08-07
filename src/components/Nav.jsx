@@ -32,7 +32,7 @@ export default function Nav({
   const tabs = viewsForCourse(course);
   return (
     <header className="sticky top-0 z-10 border-b border-line bg-paper/95 backdrop-blur">
-      <div className="mx-auto flex max-w-4xl flex-col gap-2 px-4 py-2.5 sm:gap-3 sm:px-6 sm:py-3">
+      <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-2.5 sm:gap-3 sm:px-6 sm:py-3 lg:px-8">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
           {/* På mobil bär delkursväljarens etikett kursnamnet i stället —
               headern ska inte äta en fjärdedel av skärmen. */}

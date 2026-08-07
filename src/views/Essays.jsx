@@ -56,6 +56,8 @@ export default function Essays({ course, essayState, setEssayState }) {
       </nav>
 
       <article className="card p-5 sm:p-7">
+        <div className={showChecklist ? "lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(22rem,26rem)] lg:gap-10" : ""}>
+        <div className="min-w-0">
         <p className="text-sm text-ink/65">{essay.context}</p>
         <h2 className="mt-2 font-display text-[22px] leading-snug text-ink">
           {essay.question}
@@ -86,8 +88,10 @@ export default function Essays({ course, essayState, setEssayState }) {
           {showChecklist ? "Dölj checklista" : "Visa checklista"}
         </button>
 
+        </div>
+
         {showChecklist && (
-          <div className="mt-6 border-t border-line pt-5">
+          <div className="mt-6 border-t border-line pt-5 lg:mt-0 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
             <div className="flex items-baseline justify-between gap-3">
               <h3 className="font-display text-lg">Vad ett toppsvar innehåller</h3>
               <span className="tabular text-sm text-ink/65">
@@ -116,6 +120,7 @@ export default function Essays({ course, essayState, setEssayState }) {
             </p>
           </div>
         )}
+        </div>
       </article>
     </div>
   );

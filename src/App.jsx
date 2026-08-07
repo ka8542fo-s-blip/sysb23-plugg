@@ -156,7 +156,7 @@ export default function App() {
         examRunning={examSession?.stage === "running"}
       />
 
-      <main id="innehall" className="mx-auto max-w-4xl px-4 py-7 sm:px-6 sm:py-10">
+      <main id="innehall" className="mx-auto max-w-7xl px-4 py-7 sm:px-6 sm:py-10 lg:px-8">
         {backLink && (
           <button
             type="button"
@@ -227,7 +227,7 @@ export default function App() {
         )}
       </main>
 
-      <footer className="mx-auto max-w-4xl px-4 pb-10 text-sm text-ink/65 sm:px-6">
+      <footer className="mx-auto max-w-7xl px-4 pb-10 text-sm text-ink/65 sm:px-6 lg:px-8">
         SYSB23 · Ekonomihögskolan, Lunds universitet. Allt innehåll bygger på
         kurslitteraturen och sparas bara lokalt i din webbläsare.
       </footer>

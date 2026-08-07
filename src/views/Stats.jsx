@@ -92,6 +92,13 @@ export default function Stats({
         </dl>
       </section>
 
+      <div
+        className={
+          course.questions.length > 0
+            ? "grid gap-8 lg:grid-cols-2 lg:items-start"
+            : "space-y-8"
+        }
+      >
       {course.questions.length > 0 && (
       <section className="card p-5 sm:p-6">
         <h2 className="flex items-center gap-2 font-display text-xl">
@@ -150,13 +157,14 @@ export default function Stats({
           ))}
         </ul>
       </section>
+      </div>
 
       {perTopic.length > 0 && (
       <section>
         <h2 className="flex items-center gap-2 font-display text-xl">
           Träffsäkerhet per ämne <InfoTip id="traffsakerhetAmne" />
         </h2>
-        <div className="card mt-3 space-y-4 p-5">
+        <div className="card mt-3 grid gap-4 p-5 lg:grid-cols-2 lg:gap-x-10">
           {perTopic.map((topic) => (
             <StatBar
               key={topic.id}

@@ -78,7 +78,7 @@ export default function ChapterList({ chapters, readChapters, currentId, onOpen,
         )}
       </div>
 
-      <ol className="space-y-2">
+      <ol className="grid gap-2 lg:grid-cols-2">
         {chapters.map((chapter, index) => {
           const status = readChapters[chapter.id]
             ? "read"

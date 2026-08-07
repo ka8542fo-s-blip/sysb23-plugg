@@ -25,7 +25,7 @@ export default function SchemaPanel({ onPickTable }) {
         </span>
       </p>
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(15rem,1fr))]">
         {hospitalSchema.map((table) => (
           <div key={table.name} className="card overflow-hidden">
             <div className="flex items-center gap-2 border-b border-line pr-3">

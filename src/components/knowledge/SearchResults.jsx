@@ -19,7 +19,7 @@ function Group({ title, count, children }) {
           ({count})
         </span>
       </h3>
-      <ul className="mt-2 space-y-2">{children}</ul>
+      <ul className="mt-2 grid gap-2 lg:grid-cols-2 lg:items-start">{children}</ul>
     </section>
   );
 }

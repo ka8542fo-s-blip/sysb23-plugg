@@ -166,7 +166,7 @@ export default function ChapterView({
         ← Innehållsförteckning
       </button>
 
-      <div className="mt-4 lg:flex lg:gap-10">
+      <div className="mt-4 lg:mx-auto lg:flex lg:max-w-5xl lg:gap-10">
         <div className="min-w-0 flex-1">
           <header>
             <p className="tabular text-[11px] font-medium uppercase tracking-[0.14em] text-brass">

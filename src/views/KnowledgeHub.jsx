@@ -102,7 +102,7 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
         </section>
       )}
 
-      <div>
+      <div className="max-w-3xl">
         <label htmlFor="navsok" className="sr-only">
           Sök i kompendium, begrepp och ordlista
         </label>
@@ -125,15 +125,17 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
         />
       ) : (
         <>
-          <SegmentedControl
-            label="Välj läge"
-            segments={segmentsWithCounts}
-            value={segment}
-            onChange={(next) => {
-              setSegment(next);
-              window.scrollTo({ top: 0 });
-            }}
-          />
+          <div className="max-w-3xl">
+            <SegmentedControl
+              label="Välj läge"
+              segments={segmentsWithCounts}
+              value={segment}
+              onChange={(next) => {
+                setSegment(next);
+                window.scrollTo({ top: 0 });
+              }}
+            />
+          </div>
 
           {segment === "kompendium" &&
             (current ? (
