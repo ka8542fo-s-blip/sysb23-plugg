@@ -142,6 +142,18 @@ export default function Practice({
 
   const done = queue.length > 0 && index >= queue.length;
 
+  if (course.questions.length === 0) {
+    return (
+      <div className="card max-w-3xl p-5 sm:p-6">
+        <h1 className="font-display text-2xl">Öva</h1>
+        <p className="mt-2 text-[15px] leading-relaxed text-ink/70">
+          Frågebanken för den här delkursen är inte inlagd ännu. Under tiden
+          finns kompendiet under Läs{course.views?.includes("sql") ? " och SQL-verkstaden under SQL" : ""}.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 lg:flex lg:items-start lg:gap-8 lg:space-y-0">
       {/* Urvalet blir sidopanel på desktop så att frågan får mitten av

@@ -6,6 +6,14 @@ import {
   glossary as strategiGlossary,
 } from "./strategi/reading.js";
 import { levels as sqlLevels, sqlExercises } from "./databaser/sqlExercises.js";
+import { topics as databaserTopics } from "./databaser/topics.js";
+import { questions as databaserQuestions } from "./databaser/questions.js";
+import {
+  chapters as databaserChapters,
+  glossary as databaserGlossary,
+  intro as databaserIntro,
+} from "./databaser/reading.js";
+import { intro as strategiIntro } from "./strategi/reading.js";
 
 // Tomma listor för delkurser som ännu inte har den sortens material.
 const noContent = {
@@ -33,13 +41,20 @@ export const courses = [
     essays: strategiEssays,
     chapters: strategiChapters,
     glossary: strategiGlossary,
+    readingIntro: strategiIntro,
   },
   {
     ...noContent,
     id: "databaser",
     name: "Databaser",
     status: "aktiv",
-    views: ["sql", "statistik"],
+    // Öva och Prov visar tomlägen tills frågebanken är inlagd.
+    views: ["las", "sql", "ova", "prov", "statistik"],
+    topics: databaserTopics,
+    questions: databaserQuestions,
+    chapters: databaserChapters,
+    glossary: databaserGlossary,
+    readingIntro: databaserIntro,
     sqlLevels,
     sqlExercises,
   },

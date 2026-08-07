@@ -6,7 +6,6 @@ import ConceptCards from "../components/knowledge/ConceptCards.jsx";
 import Glossary from "../components/knowledge/Glossary.jsx";
 import SearchResults from "../components/knowledge/SearchResults.jsx";
 import { searchKnowledge } from "../lib/knowledgeSearch.js";
-import { intro } from "../data/strategi/reading.js";
 import { KEYS, load, save } from "../lib/storage.js";
 
 const SEGMENTS = [
@@ -20,6 +19,8 @@ const SEGMENTS = [
 export default function KnowledgeHub({ course, params, navigate, readChapters, onToggleRead }) {
   const chapters = course.chapters || [];
   const glossary = course.glossary || [];
+  // "Öva på detta"-knapparna kräver en frågebank.
+  const canPractice = (course.questions || []).length > 0;
 
   const [segment, setSegment] = useState(() => {
     const saved = load(KEYS.readSegment, "kompendium");
@@ -148,6 +149,7 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
                 onToggleRead={onToggleRead}
                 onOpenTopic={openTopic}
                 onPractice={practice}
+                canPractice={canPractice}
                 onBack={() => setChapterId(null)}
                 onPrev={() => step(-1)}
                 onNext={() => step(1)}
@@ -158,7 +160,7 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
                 readChapters={readChapters}
                 currentId={chapterId}
                 onOpen={openChapter}
-                intro={intro}
+                intro={course.readingIntro || ""}
               />
             ))}
 
@@ -169,6 +171,7 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
               openTopicId={openTopicId}
               onOpenChapter={openChapter}
               onPractice={practice}
+              canPractice={canPractice}
             />
           )}
 

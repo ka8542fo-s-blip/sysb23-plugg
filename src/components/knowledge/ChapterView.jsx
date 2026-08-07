@@ -65,6 +65,12 @@ const markdownComponents = {
   code: ({ children }) => (
     <code className="rounded bg-white px-1.5 py-0.5 text-[0.95em]">{children}</code>
   ),
+  // Kapitel med DDL-exempel behöver riktiga kodblock, inte brödtext.
+  pre: ({ children }) => (
+    <pre className="my-5 overflow-x-auto rounded-lg border border-line bg-white p-3 font-mono text-[13px] leading-relaxed">
+      {children}
+    </pre>
+  ),
   hr: () => <hr className="my-8 border-line" />,
   a: ({ href, children }) => (
     <a href={href} className="text-pine underline underline-offset-4">
@@ -82,6 +88,7 @@ export default function ChapterView({
   onToggleRead,
   onOpenTopic,
   onPractice,
+  canPractice = true,
   onBack,
   onPrev,
   onNext,
@@ -297,13 +304,15 @@ export default function ChapterView({
             >
               {isRead ? "✓ Läst — markera som oläst" : "Markera som läst"}
             </button>
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={() => onPractice(chapter.topics)}
-            >
-              Öva på detta kapitel
-            </button>
+            {canPractice && (
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => onPractice(chapter.topics)}
+              >
+                Öva på detta kapitel
+              </button>
+            )}
           </div>
 
           <div className="mt-4 flex flex-wrap justify-between gap-3">

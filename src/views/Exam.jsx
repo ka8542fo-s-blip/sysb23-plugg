@@ -166,6 +166,17 @@ export default function Exam({
   }, [stage, setChoice, goTo]);
 
   if (stage === "intro") {
+    if (course.questions.length === 0) {
+      return (
+        <section className="card max-w-3xl p-5 sm:p-6">
+          <h1 className="font-display text-2xl">Prov</h1>
+          <p className="mt-2 text-[15px] leading-relaxed text-ink/70">
+            Frågebanken för den här delkursen är inte inlagd ännu, så det finns
+            inget prov att simulera. Under tiden finns kompendiet under Läs.
+          </p>
+        </section>
+      );
+    }
     return (
       <section className="card max-w-3xl p-5 sm:p-6">
         <h1 className="font-display text-2xl">Prov</h1>

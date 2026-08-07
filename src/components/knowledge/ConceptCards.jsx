@@ -10,6 +10,7 @@ export default function ConceptCards({
   openTopicId,
   onOpenChapter,
   onPractice,
+  canPractice = true,
 }) {
   const [query, setQuery] = useState("");
   const [openId, setOpenId] = useState(openTopicId || course.topics[0]?.id || null);
@@ -140,13 +141,15 @@ export default function ConceptCards({
                   </ul>
 
                   <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-line pt-4">
-                    <button
-                      type="button"
-                      className="btn-secondary"
-                      onClick={() => onPractice([topic.id])}
-                    >
-                      Öva på detta ämne
-                    </button>
+                    {canPractice && (
+                      <button
+                        type="button"
+                        className="btn-secondary"
+                        onClick={() => onPractice([topic.id])}
+                      >
+                        Öva på detta ämne
+                      </button>
+                    )}
                     {number ? (
                       <button
                         type="button"
