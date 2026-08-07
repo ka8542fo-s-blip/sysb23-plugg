@@ -9,8 +9,8 @@ import {
   formatLongDate,
   formatRange,
   relativeDays,
-  today,
 } from "../../lib/dates.js";
+import { useToday } from "../../lib/useToday.js";
 
 const DAY_COUNT = 7;
 
@@ -32,7 +32,7 @@ export default function WeekAtAGlance({ navigate, onSelectCourse }) {
   const state = termState(schedule);
   const next = nextExam(schedule);
   const byId = useMemo(() => subcoursesById(schedule), []);
-  const now = today();
+  const now = useToday();
 
   // Före terminsstart är de sju kommande dagarna tomma — visa terminens
   // första vecka i stället, så raden säger något.

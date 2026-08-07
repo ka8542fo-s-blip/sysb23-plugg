@@ -13,12 +13,16 @@ import {
 import { readinessFor, pacingFor } from "../lib/readiness.js";
 import { studyTargetFor, startStudying, STUDY_LABEL } from "../lib/studyPlan.js";
 import { daysUntil, formatFullDate, formatSwedish } from "../lib/dates.js";
+import { useToday } from "../lib/useToday.js";
 
 // Schemat kopplar terminens datum till pluggstatus: hur nära nästa tenta
 // ligger och hur långt du kommit i materialet för den.
 export default function Schedule({ answers, exams: examHistory, navigate, onSelectCourse }) {
-  const exams = useMemo(() => decoratedExams(schedule), []);
-  const next = useMemo(() => nextExam(schedule), []);
+  // Datumet är reaktivt så att nedräkningar och passerat-markeringar
+  // följer med om fliken står öppen över midnatt.
+  const now = useToday();
+  const exams = useMemo(() => decoratedExams(schedule), [now]);
+  const next = useMemo(() => nextExam(schedule), [now]);
   const state = termState(schedule);
   const period = currentPeriod(schedule);
 
@@ -79,7 +83,11 @@ export default function Schedule({ answers, exams: examHistory, navigate, onSele
         onStudy={onStudy}
       />
 
-      <SessionList schedule={schedule} defaultForwardOnly={state === "during"} />
+      <SessionList
+        schedule={schedule}
+        defaultForwardOnly={state === "during"}
+        now={now}
+      />
 
       <TermOverview schedule={schedule} exams={schedule.exams} currentPeriod={period} />
 

@@ -3,21 +3,21 @@ import CourseDot from "./CourseDot.jsx";
 import { sessionsByWeek, subcoursesById } from "../../lib/scheduleInfo.js";
 import { formatShort, formatRange, isPast, today } from "../../lib/dates.js";
 
-export default function SessionList({ schedule, defaultForwardOnly }) {
+export default function SessionList({ schedule, defaultForwardOnly, now: nowProp }) {
   const byId = useMemo(() => subcoursesById(schedule), [schedule]);
   const [topics, setTopics] = useState([]);
   const [onlyExams, setOnlyExams] = useState(false);
   const [forwardOnly, setForwardOnly] = useState(defaultForwardOnly);
 
   const filtered = useMemo(() => {
-    const now = today();
+    const now = nowProp || today();
     return schedule.sessions.filter((session) => {
       if (topics.length > 0 && !topics.includes(session.subcourse)) return false;
       if (onlyExams && session.kind !== "tenta") return false;
       if (forwardOnly && (session.dateEnd || session.date) < now) return false;
       return true;
     });
-  }, [schedule, topics, onlyExams, forwardOnly]);
+  }, [schedule, topics, onlyExams, forwardOnly, nowProp]);
 
   const groups = useMemo(
     () => sessionsByWeek(filtered, schedule),

@@ -9,6 +9,7 @@ import { schedule } from "../data/schedule.js";
 import { decoratedExams } from "../lib/scheduleInfo.js";
 import { relativeDays } from "../lib/dates.js";
 import { accuracy } from "../lib/scoring.js";
+import { useToday } from "../lib/useToday.js";
 
 export default function Stats({
   course,
@@ -20,6 +21,7 @@ export default function Stats({
   navigate,
 }) {
   const [confirming, setConfirming] = useState(false);
+  const now = useToday();
   const perTopic = useMemo(() => topicStats(course, answers), [course, answers]);
   const overall = useMemo(() => overallStats(course, answers), [course, answers]);
   const focus = useMemo(() => focusTopic(perTopic), [perTopic]);
@@ -44,7 +46,7 @@ export default function Stats({
         chaptersTotal: chapters.length,
         accuracy: accuracy({ correct: overall.correct, wrong: overall.wrong }),
       }));
-  }, [course, readCount, chapters.length, overall.correct, overall.wrong]);
+  }, [course, readCount, chapters.length, overall.correct, overall.wrong, now]);
 
   function reset() {
     clearAll();
