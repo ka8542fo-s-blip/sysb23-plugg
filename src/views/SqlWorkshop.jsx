@@ -421,9 +421,6 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve }) {
 
           <section>
             <h2 className="font-display text-xl">Tabellerna</h2>
-            <p className="mt-1 text-[15px] text-ink/70">
-              Klicka på ett tabellnamn för att klistra in en SELECT.
-            </p>
             <div className="mt-3">
               <SchemaPanel onPickTable={(sql) => setFreeCode(sql)} />
             </div>

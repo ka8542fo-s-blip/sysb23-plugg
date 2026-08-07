@@ -8,6 +8,7 @@ export const KEYS = {
   essays: "essays", // { [essayId]: { draft: "…", checked: [bool], updatedAt: iso } }
   settings: "settings", // { timerOn, timerMinutes, practiceTopics, practiceDifficulty }
   readSegment: "lasSegment", // "kompendium" | "begrepp" | "ordlista"
+  course: "delkurs", // senast valda delkursen
 };
 
 // Lösta SQL-övningar: sysb23:sql:<övningsId> = "solved" | "solved-with-help"

@@ -30,12 +30,16 @@ export default function InfoTip({ id, term, text, className = "" }) {
   // position — ingen efterjustering behövs.
   function placeAndOpen() {
     const rect = buttonRef.current?.getBoundingClientRect();
-    const viewport = window.innerWidth || document.documentElement.clientWidth;
-    if (!rect || !viewport) return;
+    if (!rect) return;
 
-    const width = Math.min(MAX_WIDTH, viewport - EDGE * 2);
+    // Saknas fönstermått av någon anledning ska bubblan ändå visas —
+    // klämningen mot kanterna är en förbättring, inte ett villkor.
+    const viewport = window.innerWidth || document.documentElement.clientWidth || 0;
+    const width = viewport ? Math.min(MAX_WIDTH, viewport - EDGE * 2) : MAX_WIDTH;
     const centered = rect.left + rect.width / 2 - width / 2;
-    const left = Math.min(Math.max(EDGE, centered), viewport - EDGE - width);
+    const left = viewport
+      ? Math.min(Math.max(EDGE, centered), viewport - EDGE - width)
+      : Math.max(EDGE, centered);
 
     setBox({ left, top: rect.bottom + 8, width });
     setOpen(true);

@@ -26,7 +26,14 @@ export default function App() {
   const [viewParams, setViewParams] = useState(null);
   // Tillbakalänken lever bara i vy-state — den ska inte överleva en omladdning.
   const [backLink, setBackLink] = useState(null);
-  const [courseId, setCourseId] = useState("strategi");
+  // Vald delkurs överlever en omladdning — man ska landa där man var.
+  const [courseId, setCourseId] = useState(() => {
+    const saved = load(KEYS.course, null);
+    const valid = courses.some(
+      (item) => item.id === saved && item.status === "aktiv",
+    );
+    return valid ? saved : "strategi";
+  });
   const [answers, setAnswers] = useState(() => load(KEYS.answers, {}));
   const [exams, setExams] = useState(() => load(KEYS.exams, []));
   const [essayState, setEssayState] = useState(() => load(KEYS.essays, {}));
@@ -43,6 +50,7 @@ export default function App() {
   useEffect(() => save(KEYS.exams, exams), [exams]);
   useEffect(() => save(KEYS.essays, essayState), [essayState]);
   useEffect(() => save(KEYS.settings, settings), [settings]);
+  useEffect(() => save(KEYS.course, courseId), [courseId]);
 
   const course = useMemo(() => getCourse(courseId), [courseId]);
 
@@ -124,6 +132,7 @@ export default function App() {
     setExamSession(null);
     setReadChapters({});
     setSqlProgress({});
+    setCourseId("strategi");
   }
 
   const shared = { course, answers, settings, setSettings, navigate };
