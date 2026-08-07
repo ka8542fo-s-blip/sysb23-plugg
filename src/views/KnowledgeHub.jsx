@@ -161,6 +161,7 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
                 currentId={chapterId}
                 onOpen={openChapter}
                 intro={course.readingIntro || ""}
+                examNote={course.examNote}
               />
             ))}
 

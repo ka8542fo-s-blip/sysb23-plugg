@@ -688,11 +688,31 @@ export const CHAPTER_TOPICS = {
   kap8: { topics: ["fysisk", "nycklar"], primaryTopics: ["fysisk"] },
 };
 
+// Tentans område per kapitel. null = bakgrund som är nyttig att läsa men
+// inte tentas direkt. SQL-området motsvaras av SQL-verkstaden.
+export const EXAM_AREAS = {
+  kap1: null,
+  kap2: "Grund",
+  kap3: "Grund",
+  kap4: "ER-modellering",
+  kap5: "ER-modellering",
+  kap6: "Transformation",
+  kap7: "Normalisering",
+  kap8: "Transformation",
+};
+
+export const examNote = {
+  text: "Tentan täcker fyra områden: ER-modellering, transformation av konceptuell till fysisk datamodell, normalformer och normalisering, samt SQL. Frågeformatet kan variera.",
+  source: "Föreläsning 1",
+  sqlHint: "SQL-området tränas i SQL-verkstaden.",
+};
+
 export const intro = reading.intro;
 
 export const chapters = reading.chapters.map((chapter) => ({
   ...chapter,
   ...(CHAPTER_TOPICS[chapter.id] || { topics: [], primaryTopics: [] }),
+  examArea: EXAM_AREAS[chapter.id] ?? null,
 }));
 
 export const glossary = [

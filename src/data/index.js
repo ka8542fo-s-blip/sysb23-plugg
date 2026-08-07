@@ -12,6 +12,7 @@ import {
   chapters as databaserChapters,
   glossary as databaserGlossary,
   intro as databaserIntro,
+  examNote as databaserExamNote,
 } from "./databaser/reading.js";
 import { intro as strategiIntro } from "./strategi/reading.js";
 
@@ -55,6 +56,7 @@ export const courses = [
     chapters: databaserChapters,
     glossary: databaserGlossary,
     readingIntro: databaserIntro,
+    examNote: databaserExamNote,
     sqlLevels,
     sqlExercises,
   },

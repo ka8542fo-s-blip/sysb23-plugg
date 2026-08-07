@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { topicLookup } from "../../lib/topicLookup.js";
+import { ExamAreaTag } from "./ChapterList.jsx";
 
 export function slugify(text) {
   return String(text)
@@ -187,9 +188,14 @@ export default function ChapterView({
                 {chapter.lead}
               </p>
             )}
-            <p className="tabular mt-3 text-sm text-ink/65">
-              {chapter.readingMinutes} min läsning
-              {sources ? ` · ${sources}` : ""}
+            <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1">
+              <span className="tabular text-sm text-ink/65">
+                {chapter.readingMinutes} min läsning
+                {sources ? ` · ${sources}` : ""}
+              </span>
+              <ExamAreaTag
+                area={"examArea" in chapter ? chapter.examArea : undefined}
+              />
             </p>
 
             {chapter.topics?.length > 0 && (
