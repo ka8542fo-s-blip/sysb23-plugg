@@ -18,13 +18,10 @@ export default function Home({
   const sqlSolved = sqlExercises.filter((item) => sqlProgress[item.id]).length;
   const chapters = course.chapters || [];
   const readCount = chapters.filter((chapter) => readChapters[chapter.id]).length;
-  const minutesLeft = chapters
-    .filter((chapter) => !readChapters[chapter.id])
-    .reduce((sum, chapter) => sum + (chapter.readingMinutes || 0), 0);
   const readingHint =
     chapters.length === 0
       ? "Kapiteltexten är inte inlagd ännu"
-      : `${readCount} av ${chapters.length} kapitel · ca ${minutesLeft} min kvar`;
+      : `${readCount} av ${chapters.length} kapitel lästa`;
 
   const overall = useMemo(() => overallStats(course, answers), [course, answers]);
   const perTopic = useMemo(() => topicStats(course, answers), [course, answers]);

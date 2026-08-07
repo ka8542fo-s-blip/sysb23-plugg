@@ -33,13 +33,6 @@ export default function ChapterList({
     ? chapters.filter((chapter) => chapter.examArea)
     : chapters;
   const readCount = chapters.filter((chapter) => readChapters[chapter.id]).length;
-  const totalMinutes = chapters.reduce(
-    (sum, chapter) => sum + (chapter.readingMinutes || 0),
-    0,
-  );
-  const minutesLeft = chapters
-    .filter((chapter) => !readChapters[chapter.id])
-    .reduce((sum, chapter) => sum + (chapter.readingMinutes || 0), 0);
   const next = chapters.find((chapter) => !readChapters[chapter.id]) || chapters[0];
   const percent = chapters.length
     ? Math.round((readCount / chapters.length) * 100)
@@ -89,9 +82,7 @@ export default function ChapterList({
           <span className="tabular font-display text-lg">
             {readCount} av {chapters.length} kapitel lästa
           </span>
-          <span className="tabular text-sm text-ink/65">
-            {totalMinutes} min totalt · ca {minutesLeft} min kvar
-          </span>
+          <span className="tabular text-sm text-ink/65">{percent} %</span>
         </div>
         <div
           className="mt-3 h-2 w-full overflow-hidden rounded-full bg-line"
@@ -149,7 +140,7 @@ export default function ChapterList({
                   )}
                   <span className="mt-1 flex flex-wrap items-center gap-2">
                     <span className="tabular text-sm text-ink/65">
-                      {chapter.readingMinutes} min
+                      ca {chapter.readingMinutes} min
                     </span>
                     <ExamAreaTag area={"examArea" in chapter ? chapter.examArea : undefined} />
                   </span>
