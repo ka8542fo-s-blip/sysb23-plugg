@@ -71,7 +71,14 @@ summerar till 20, inte 30 — medvetet orört).
   reaktivt (minutkoll + fokus) så öppna flikar slår över vid midnatt.
   "Plugga till denna tenta" väljer ALDRIG läge åt användaren — den byter delkurs
   och går till första vyn i `views` (Läs-TOC för båda), med tillbakalänk som bara
-  lever i vy-state.
+  lever i vy-state. **Tentaanmälan:** deadline härleds ALLTID i kod
+  (`registrationDeadline` i `lib/dates.js` = tentadatum − 7 dagar, aldrig lagrad;
+  "omkring" i texterna är avsiktligt — exakt gräns finns bara i Ladok, länka inte).
+  Kryssruta "Anmäld" per examination (`examreg:<examId>`); nedräkningskortet
+  framhäver anmälan tills deadlinen passerats/kryssats, sedan tentan. Passerad
+  deadline på okryssad kommande tenta = neutral text, aldrig rött larm. Hem-raden
+  visar närmaste okryssade deadline i stället för tentan när den är närmast
+  (kan tillhöra en senare tenta — novembertentorna ligger tätare än sju dagar).
 - **Statistik** — InfoTips (frågetecken) förklarar varje term; texterna i
   `data/statTerms.js` är skrivna mot koden och måste följa med om beräkningar ändras.
 
@@ -110,7 +117,8 @@ ihop om TimeEdit ändrar format.
 ## Lagringsnycklar
 
 `answers`, `exams`, `essays`, `settings`, `lasSegment`, `delkurs`,
-`read:<kurs>:<kapitel>`, `sql:<övningsId>` (= `"solved"` | `"solved-with-help"`).
+`read:<kurs>:<kapitel>`, `sql:<övningsId>` (= `"solved"` | `"solved-with-help"`),
+`examreg:<examId>` (= `true`, nyckeln tas bort vid avbockning).
 "Nollställ min data" i Statistik rensar allt. Progress är per webbläsare och domän
 — ingen synk, medvetet val.
 

@@ -226,8 +226,8 @@ export default function Stats({
         <h2 className="font-display text-lg">Nollställ min data</h2>
         <p className="mt-2 text-[15px] text-ink/70">
           Raderar svarshistorik, provresultat, essäutkast, läsprogress, lösta
-          SQL-övningar, valt läge i Läs och övriga inställningar från den här
-          webbläsaren. Går inte att ångra.
+          SQL-övningar, tentaanmälningar, valt läge i Läs och övriga
+          inställningar från den här webbläsaren. Går inte att ångra.
         </p>
         {confirming ? (
           <div className="mt-4 flex flex-wrap gap-3">

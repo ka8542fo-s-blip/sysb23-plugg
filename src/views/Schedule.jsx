@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import ExamCountdown from "../components/schedule/ExamCountdown.jsx";
 import TermOverview from "../components/schedule/TermOverview.jsx";
 import SessionList from "../components/schedule/SessionList.jsx";
@@ -13,6 +13,7 @@ import {
 import { readinessFor, pacingFor } from "../lib/readiness.js";
 import { studyTargetFor, startStudying, STUDY_LABEL } from "../lib/studyPlan.js";
 import { daysUntil, formatFullDate, formatSwedish } from "../lib/dates.js";
+import { loadExamRegistrations, saveExamRegistration } from "../lib/storage.js";
 import { useToday } from "../lib/useToday.js";
 
 // Schemat kopplar terminens datum till pluggstatus: hur nära nästa tenta
@@ -25,6 +26,20 @@ export default function Schedule({ answers, exams: examHistory, navigate, onSele
   const next = useMemo(() => nextExam(schedule), [now]);
   const state = termState(schedule);
   const period = currentPeriod(schedule);
+
+  // Anmäld i Ladok, per examination. Kryssrutorna finns i tentalistan.
+  const [registrations, setRegistrations] = useState(() =>
+    loadExamRegistrations(schedule.exams.map((exam) => exam.id)),
+  );
+  function toggleRegistration(examId, isRegistered) {
+    saveExamRegistration(examId, isRegistered);
+    setRegistrations((prev) => {
+      const next = { ...prev };
+      if (isRegistered) next[examId] = true;
+      else delete next[examId];
+      return next;
+    });
+  }
 
   // Beredskap för en tenta, om delkursen har innehåll i appen.
   function readinessForExam(exam) {
@@ -81,6 +96,8 @@ export default function Schedule({ answers, exams: examHistory, navigate, onSele
         studyTargetFor={studyTarget}
         studyLabel={STUDY_LABEL}
         onStudy={onStudy}
+        registrations={registrations}
+        onToggleRegistration={toggleRegistration}
       />
 
       <SessionList

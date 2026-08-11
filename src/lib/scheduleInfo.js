@@ -1,4 +1,4 @@
-import { daysUntil, isPast, weekNumber, today } from "./dates.js";
+import { daysUntil, isPast, registrationDeadline, weekNumber, today } from "./dates.js";
 
 export function subcoursesById(schedule) {
   return Object.fromEntries(schedule.subcourses.map((item) => [item.id, item]));
@@ -9,12 +9,17 @@ export function decoratedExams(schedule) {
   const byId = subcoursesById(schedule);
   return [...schedule.exams]
     .sort((a, b) => (a.date + a.start).localeCompare(b.date + b.start))
-    .map((exam) => ({
-      ...exam,
-      subcourseData: byId[exam.subcourse],
-      days: daysUntil(exam.date),
-      past: isPast(`${exam.date} ${exam.end}`),
-    }));
+    .map((exam) => {
+      const regDate = registrationDeadline(exam);
+      return {
+        ...exam,
+        subcourseData: byId[exam.subcourse],
+        days: daysUntil(exam.date),
+        past: isPast(`${exam.date} ${exam.end}`),
+        regDate,
+        regDays: daysUntil(regDate),
+      };
+    });
 }
 
 export function nextExam(schedule) {

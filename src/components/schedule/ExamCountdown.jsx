@@ -1,8 +1,55 @@
 import { useState } from "react";
 import CourseDot from "./CourseDot.jsx";
-import { formatSwedish, relativeDays } from "../../lib/dates.js";
+import { formatLongDate, formatSwedish, relativeDays } from "../../lib/dates.js";
 
-function ExamRow({ exam, readiness, target, label, onStudy }) {
+// Anmälningsläget för en kommande examination. Passerade tentor har
+// inget läge alls — raden tonas ned och anmälan är inte längre relevant.
+function regState(exam, registrations) {
+  if (registrations[exam.id]) return "registered";
+  return exam.regDays >= 0 ? "open" : "passed";
+}
+
+function RegistrationNote({ exam, state }) {
+  if (state === "registered") {
+    return (
+      <span className="mt-0.5 block text-sm text-ink/65">
+        <span className="text-correct">✓</span> Anmäld i Ladok
+      </span>
+    );
+  }
+  if (state === "open") {
+    return (
+      <span className="mt-0.5 block text-sm text-ink/65">
+        Anmälan i Ladok: senast omkring {formatLongDate(exam.regDate)},{" "}
+        {relativeDays(exam.regDays)}.
+      </span>
+    );
+  }
+  // Passerad deadline på okryssad, kommande tenta — neutralt, inte larm.
+  return (
+    <span className="mt-0.5 block text-sm text-ink/65">
+      Anmälningstiden kan ha gått ut — kontrollera i Ladok.
+    </span>
+  );
+}
+
+function RegistrationCheckbox({ exam, registered, onToggle, className = "" }) {
+  return (
+    <label
+      className={`flex w-fit cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1 text-sm transition-colors duration-150 hover:bg-pine/[0.06] hover:text-pine ${className}`}
+    >
+      <input
+        type="checkbox"
+        checked={registered}
+        onChange={(event) => onToggle(exam.id, event.target.checked)}
+        className="h-4 w-4 accent-pine"
+      />
+      Anmäld
+    </label>
+  );
+}
+
+function ExamRow({ exam, readiness, target, label, onStudy, registrations, onToggleRegistration }) {
   return (
     <li
       className={`flex flex-wrap items-center justify-between gap-x-4 gap-y-1 p-4 ${
@@ -18,11 +65,19 @@ function ExamRow({ exam, readiness, target, label, onStudy }) {
         <span className="mt-0.5 block text-sm text-ink/65">
           {formatSwedish(exam.date)} · {exam.start}–{exam.end} · {exam.room || "sal okänd"}
         </span>
+        {!exam.past && <RegistrationNote exam={exam} state={regState(exam, registrations)} />}
         {readiness && (
           <span className="mt-0.5 block text-sm text-ink/65">{readiness}</span>
         )}
       </span>
       <span className="flex shrink-0 items-center gap-3">
+        {!exam.past && (
+          <RegistrationCheckbox
+            exam={exam}
+            registered={Boolean(registrations[exam.id])}
+            onToggle={onToggleRegistration}
+          />
+        )}
         <span className="tabular text-sm">
           {exam.past ? (
             <span className="text-correct">✓ avklarad</span>
@@ -55,12 +110,18 @@ export default function ExamCountdown({
   studyTargetFor,
   studyLabel,
   onStudy,
+  registrations,
+  onToggleRegistration,
 }) {
   const [showRetakes, setShowRetakes] = useState(false);
   const ordinary = exams.filter((exam) => exam.type === "ordinarie");
   const retakes = exams.filter((exam) => exam.type === "omtenta");
   const readiness = next ? readinessFor(next) : null;
   const nextTarget = next ? studyTargetFor(next) : null;
+  // Anmälningsdeadlinen framhävs så länge den ligger närmare i tiden än
+  // tentan (dvs. tills den passerats eller kryssats av) — därefter tentan.
+  const nextReg = next ? regState(next, registrations) : null;
+  const regFocus = nextReg === "open";
 
   return (
     <section className="flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:items-start lg:gap-6">
@@ -81,16 +142,60 @@ export default function ExamCountdown({
           </p>
           <h2 className="mt-1 font-display text-2xl">{next.subcourseData?.name}</h2>
 
-          <p className="mt-4 flex items-baseline gap-3">
-            <span className="tabular font-display text-5xl text-pine">{next.days}</span>
-            <span className="text-[17px] text-ink/70">
-              {next.days === 0
-                ? "— det är idag"
-                : next.days === 1
-                  ? "dag kvar"
-                  : "dagar kvar"}
-            </span>
-          </p>
+          {regFocus ? (
+            <>
+              <p className="mt-4 flex items-baseline gap-3">
+                <span className="tabular font-display text-5xl text-pine">
+                  {next.regDays}
+                </span>
+                <span className="text-[17px] text-ink/70">
+                  {next.regDays === 0
+                    ? "— omkring sista dagen att anmäla sig"
+                    : next.regDays === 1
+                      ? "dag kvar att anmäla sig"
+                      : "dagar kvar att anmäla sig"}
+                </span>
+              </p>
+              <p className="mt-2 text-[15px]">
+                Anmälan i Ladok: senast omkring {formatLongDate(next.regDate)},{" "}
+                {relativeDays(next.regDays)}. Den exakta gränsen står i Ladok.
+              </p>
+              <p className="mt-1 text-[15px] text-ink/70">
+                Tentan skrivs {formatSwedish(next.date)}, {relativeDays(next.days)}.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="mt-4 flex items-baseline gap-3">
+                <span className="tabular font-display text-5xl text-pine">
+                  {next.days}
+                </span>
+                <span className="text-[17px] text-ink/70">
+                  {next.days === 0
+                    ? "— det är idag"
+                    : next.days === 1
+                      ? "dag kvar"
+                      : "dagar kvar"}
+                </span>
+              </p>
+              {nextReg === "registered" ? (
+                <p className="mt-2 text-[15px]">
+                  <span className="text-correct">✓</span> Anmäld i Ladok
+                </p>
+              ) : (
+                <p className="mt-2 text-[15px] text-ink/65">
+                  Anmälningstiden kan ha gått ut — kontrollera i Ladok.
+                </p>
+              )}
+            </>
+          )}
+
+          <RegistrationCheckbox
+            exam={next}
+            registered={Boolean(registrations[next.id])}
+            onToggle={onToggleRegistration}
+            className="-ml-2 mt-2"
+          />
 
           <dl className="mt-4 grid gap-x-6 gap-y-2 text-[15px] sm:grid-cols-2">
             <div className="flex gap-2">
@@ -152,6 +257,8 @@ export default function ExamCountdown({
               target={studyTargetFor(exam)}
               label={studyLabel}
               onStudy={onStudy}
+              registrations={registrations}
+              onToggleRegistration={onToggleRegistration}
             />
           ))}
         </ul>
@@ -175,6 +282,8 @@ export default function ExamCountdown({
                 target={studyTargetFor(exam)}
                 label={studyLabel}
                 onStudy={onStudy}
+                registrations={registrations}
+                onToggleRegistration={onToggleRegistration}
               />
             ))}
           </ul>

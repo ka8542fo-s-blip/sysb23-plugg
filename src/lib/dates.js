@@ -118,6 +118,14 @@ export function addDays(isoDate, days) {
   return date.toISOString().slice(0, 10);
 }
 
+// Sista anmälningsdag i Ladok, härledd som tentadatum minus sju dagar.
+// Lagras aldrig i schedule.js — en sparad deadline kan glida isär från
+// tentadatumet om datumet ändras. "Senast en vecka innan" är TimeEdits
+// formulering utan exakt klockslag, därav "omkring" i alla UI-texter.
+export function registrationDeadline(exam) {
+  return addDays(exam.date, -7);
+}
+
 // "om 50 dagar", "imorgon", "idag", "för 3 dagar sedan"
 export function relativeDays(days) {
   if (days === 0) return "idag";

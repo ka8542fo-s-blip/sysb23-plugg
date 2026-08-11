@@ -1,7 +1,13 @@
 import { useMemo, useState } from "react";
 import { schedule } from "../../data/schedule.js";
-import { nextExam, termState, subcoursesById } from "../../lib/scheduleInfo.js";
+import {
+  decoratedExams,
+  nextExam,
+  termState,
+  subcoursesById,
+} from "../../lib/scheduleInfo.js";
 import { studyTargetFor, startStudying, STUDY_LABEL } from "../../lib/studyPlan.js";
+import { loadExamRegistrations } from "../../lib/storage.js";
 import {
   addDays,
   daysUntil,
@@ -34,6 +40,24 @@ export default function WeekAtAGlance({ navigate, onSelectCourse }) {
   const byId = useMemo(() => subcoursesById(schedule), []);
   const now = useToday();
 
+  // Närmast okryssade anmälningsdeadline. Kan tillhöra en senare tenta än
+  // nästa (i november ligger tentorna tätare än sju dagar), därför söks
+  // den bland alla kommande i stället för att härledas ur `next`.
+  const registrations = useMemo(
+    () => loadExamRegistrations(schedule.exams.map((exam) => exam.id)),
+    [now],
+  );
+  const regNext = useMemo(
+    () =>
+      decoratedExams(schedule).find(
+        (exam) => !exam.past && !registrations[exam.id] && exam.regDays >= 0,
+      ) || null,
+    [now, registrations],
+  );
+  // Anmälningsnedräkningen visas i stället för tentans när den är närmast.
+  const showReg = Boolean(next && regNext && regNext.regDays <= next.days);
+  const shown = showReg ? regNext : next;
+
   // Före terminsstart är de sju kommande dagarna tomma — visa terminens
   // första vecka i stället, så raden säger något.
   const beforeTerm = state === "before";
@@ -65,7 +89,7 @@ export default function WeekAtAGlance({ navigate, onSelectCourse }) {
   );
   const open = days.find((day) => day.date === openDate) || days[0];
 
-  const target = next ? studyTargetFor(next.subcourseData) : null;
+  const target = shown ? studyTargetFor(shown.subcourseData) : null;
 
   if (state === "after") {
     return (
@@ -87,24 +111,55 @@ export default function WeekAtAGlance({ navigate, onSelectCourse }) {
 
   return (
     <section className="card overflow-hidden lg:flex lg:items-stretch">
-      {next && (
+      {shown && (
         <div
           className="flex flex-wrap items-center gap-x-5 gap-y-3 p-4 sm:p-5 lg:w-96 lg:shrink-0 lg:content-start lg:border-r lg:border-line"
-          style={{ borderLeft: `4px solid var(${next.subcourseData?.color})` }}
+          style={{ borderLeft: `4px solid var(${shown.subcourseData?.color})` }}
         >
           <p className="min-w-0 flex-1 basis-full sm:basis-0 lg:basis-full">
-            <span className="flex flex-wrap items-baseline gap-x-2">
-              <span className="tabular font-display text-3xl text-pine">{next.days}</span>
-              <span className="text-[15px]">
-                {next.days === 1 ? "dag kvar till" : "dagar kvar till"}
-              </span>
-              <span className="text-[15px] font-medium">{next.subcourseData?.name}</span>
-            </span>
-            <span className="tabular mt-0.5 block text-sm text-ink/65">
-              {formatLongDate(next.date)} · {next.start}–{next.end} · {next.room}
-              {beforeTerm &&
-                ` · terminen börjar ${relativeDays(daysUntil(schedule.termStart))}`}
-            </span>
+            {showReg ? (
+              <>
+                <span className="flex flex-wrap items-baseline gap-x-2">
+                  <span className="tabular font-display text-3xl text-pine">
+                    {shown.regDays}
+                  </span>
+                  <span className="text-[15px]">
+                    {shown.regDays === 1
+                      ? "dag kvar att anmäla"
+                      : "dagar kvar att anmäla"}
+                  </span>
+                  <span className="text-[15px] font-medium">
+                    {shown.subcourseData?.name}
+                  </span>
+                </span>
+                <span className="tabular mt-0.5 block text-sm text-ink/65">
+                  Anmälan i Ladok: senast omkring {formatLongDate(shown.regDate)} ·
+                  tentan {formatLongDate(shown.date)}
+                  {beforeTerm &&
+                    ` · terminen börjar ${relativeDays(daysUntil(schedule.termStart))}`}
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="flex flex-wrap items-baseline gap-x-2">
+                  <span className="tabular font-display text-3xl text-pine">
+                    {shown.days}
+                  </span>
+                  <span className="text-[15px]">
+                    {shown.days === 1 ? "dag kvar till" : "dagar kvar till"}
+                  </span>
+                  <span className="text-[15px] font-medium">
+                    {shown.subcourseData?.name}
+                  </span>
+                </span>
+                <span className="tabular mt-0.5 block text-sm text-ink/65">
+                  {formatLongDate(shown.date)} · {shown.start}–{shown.end} ·{" "}
+                  {shown.room}
+                  {beforeTerm &&
+                    ` · terminen börjar ${relativeDays(daysUntil(schedule.termStart))}`}
+                </span>
+              </>
+            )}
           </p>
 
           {target?.available && (
@@ -112,7 +167,7 @@ export default function WeekAtAGlance({ navigate, onSelectCourse }) {
               type="button"
               className="btn-primary w-full shrink-0 sm:w-auto lg:w-full"
               onClick={() =>
-                startStudying({ target, exam: next, navigate, onSelectCourse })
+                startStudying({ target, exam: shown, navigate, onSelectCourse })
               }
             >
               {STUDY_LABEL}

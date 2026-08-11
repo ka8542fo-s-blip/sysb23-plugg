@@ -29,6 +29,30 @@ export function saveSqlResult(exerciseId, status) {
   if (status) save(sqlKey(exerciseId), status);
 }
 
+// Tentaanmälan i Ladok: sysb23:examreg:<examId> = true (nyckeln tas
+// bort vid avbockning, precis som lästa kapitel).
+export function examRegKey(examId) {
+  return `examreg:${examId}`;
+}
+
+export function loadExamRegistrations(examIds) {
+  const state = {};
+  for (const id of examIds) {
+    if (load(examRegKey(id), false) === true) state[id] = true;
+  }
+  return state;
+}
+
+export function saveExamRegistration(examId, isRegistered) {
+  const key = PREFIX + examRegKey(examId);
+  try {
+    if (isRegistered) localStorage.setItem(key, "true");
+    else localStorage.removeItem(key);
+  } catch {
+    /* privat läge — sidan fungerar ändå */
+  }
+}
+
 // Lästa kapitel sparas som en nyckel per kapitel: sysb23:read:<kurs>:<kapitel>
 export function readChapterKey(courseId, chapterId) {
   return `read:${courseId}:${chapterId}`;
