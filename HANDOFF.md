@@ -69,7 +69,12 @@ summerar till 20, inte 30 — medvetet orört).
   2026-08-01, inte levande). Passlistan har vyväxling Lista/Kalender
   (SegmentedControl, sparas i `schemaVy`); månadskalendern (`MonthCalendar.jsx`)
   delar filtren med listan, börjar veckor på måndag, visar flerdagarspass på
-  varje täckt dag och är låst till terminens månader. Datumlogik i `lib/dates.js`: Europe/Stockholm,
+  varje täckt dag och är låst till terminens månader. Google Kalender-stil:
+  hela veckor med angränsande månaders dagar nedtonade men klickbara,
+  hårlinjerutnät (gap-px på `--line`), chips med tid+titel i cellerna på
+  desktop (fyllt rött = tenta, delkurständ vänsterkant annars), prickar +
+  detaljpanel på mobil, veckonummer i vänsterkanten ≥ sm, "idag"-knapp när
+  man bläddrat bort. Vald dag = fylld pine-cirkel på dagnumret, idag = mässing. Datumlogik i `lib/dates.js`: Europe/Stockholm,
   UTC-midnattsdiffar (sommartidssäkert), ISO-veckor. `lib/useToday.js` gör datumet
   reaktivt (minutkoll + fokus) så öppna flikar slår över vid midnatt.
   "Plugga till denna tenta" väljer ALDRIG läge åt användaren — den byter delkurs
