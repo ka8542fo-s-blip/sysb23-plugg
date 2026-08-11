@@ -94,6 +94,9 @@ summerar till 20, inte 30 — medvetet orört).
 
 Tokens i `src/index.css` (+ 7 delkursfärger `--c-*`). Fraunces för rubriker, Inter
 för brödtext — sekundär text i rubriker sätts i Inter, inte Fraunces.
+Delkursfärgerna är en validerad helhet (jämn kulörspridning + växlande ljushet,
+kontrollerad parvis även för rödgrönt färgseende; rött reserverat för tentor) —
+ändra aldrig en färg isolerat, se kommentaren vid tokens i `index.css`.
 
 - **Fylld pine-yta = valt tillstånd + vyns ENDA huvudåtgärd.** Genvägar/åtgärder
   bland likadana knappar får aldrig fyllas (därav `btn-emphasis`).

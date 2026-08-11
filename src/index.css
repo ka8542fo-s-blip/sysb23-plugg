@@ -14,16 +14,20 @@
   --wrong-bg: #f9ece8;
   --line: #e5e1d6;
 
-  /* Delkursfärger — dämpade toner som hör hemma i Läsesalen. Används som
-     prickar, staplar och kanter, aldrig som textfärg på brödtext och
-     aldrig som enda informationsbärare. */
-  --c-strategi: #b0632e; /* terrakotta */
-  --c-databaser: #2f5d7c; /* skifferblå */
-  --c-process: #2f7a63; /* grangrön */
-  --c-arkitektur: #a07a1b; /* mörk mässing */
-  --c-sakerhet: #8c4a63; /* plommon */
-  --c-ansvarsfull: #566b2a; /* oliv */
-  --c-isprojekt: #4b4a7a; /* indigo */
+  /* Delkursfärger — används som prickar, staplar, kanter och chip-tinter,
+     aldrig som textfärg på brödtext och aldrig som enda informationsbärare.
+     Paletten är validerad som helhet (alla 21 par): kulörerna är jämnt
+     spridda och ljusheten växlar mörk/ljus runt hjulet så att paren skiljer
+     sig även för rödgrönt färgseende. Ändra ingen färg isolerat — minsta
+     parvisa avstånd ligger nära gränsen, så en ensam justering kan göra
+     två delkurser oskiljbara igen. Rött är reserverat för tentor (--wrong). */
+  --c-strategi: #b86000; /* bränd ockra */
+  --c-databaser: #00559a; /* koboltblå */
+  --c-process: #006235; /* skogsgrön */
+  --c-arkitektur: #c2a140; /* ljust guld */
+  --c-sakerhet: #8d2b6c; /* mörk hallon */
+  --c-ansvarsfull: #0498a2; /* petrol */
+  --c-isprojekt: #8768b6; /* ljungviolett */
 }
 
 @layer base {
