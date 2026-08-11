@@ -66,7 +66,10 @@ summerar till 20, inte 30 — medvetet orört).
   längst till höger. Schemapanelen har InfoTip på varje tabell/kolumn (beskrivningarna
   i `schemaGlossary.js` är lästa ur seeden — hitta inte på egenskaper).
 - **Schema (Pluggkalender)** — data i `src/data/schedule.js` (avläst ur TimeEdit
-  2026-08-01, inte levande). Datumlogik i `lib/dates.js`: Europe/Stockholm,
+  2026-08-01, inte levande). Passlistan har vyväxling Lista/Kalender
+  (SegmentedControl, sparas i `schemaVy`); månadskalendern (`MonthCalendar.jsx`)
+  delar filtren med listan, börjar veckor på måndag, visar flerdagarspass på
+  varje täckt dag och är låst till terminens månader. Datumlogik i `lib/dates.js`: Europe/Stockholm,
   UTC-midnattsdiffar (sommartidssäkert), ISO-veckor. `lib/useToday.js` gör datumet
   reaktivt (minutkoll + fokus) så öppna flikar slår över vid midnatt.
   "Plugga till denna tenta" väljer ALDRIG läge åt användaren — den byter delkurs
@@ -116,9 +119,10 @@ ihop om TimeEdit ändrar format.
 
 ## Lagringsnycklar
 
-`answers`, `exams`, `essays`, `settings`, `lasSegment`, `delkurs`,
-`read:<kurs>:<kapitel>`, `sql:<övningsId>` (= `"solved"` | `"solved-with-help"`),
-`examreg:<examId>` (= `true`, nyckeln tas bort vid avbockning).
+`answers`, `exams`, `essays`, `settings`, `lasSegment`, `delkurs`, `schemaVy`
+(= `"lista"` | `"kalender"`), `read:<kurs>:<kapitel>`, `sql:<övningsId>`
+(= `"solved"` | `"solved-with-help"`), `examreg:<examId>` (= `true`, nyckeln
+tas bort vid avbockning).
 "Nollställ min data" i Statistik rensar allt. Progress är per webbläsare och domän
 — ingen synk, medvetet val.
 

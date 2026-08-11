@@ -9,6 +9,7 @@ export const KEYS = {
   settings: "settings", // { timerOn, timerMinutes, practiceTopics, practiceDifficulty }
   readSegment: "lasSegment", // "kompendium" | "begrepp" | "ordlista"
   course: "delkurs", // senast valda delkursen
+  scheduleView: "schemaVy", // "lista" | "kalender"
 };
 
 // Lösta SQL-övningar: sysb23:sql:<övningsId> = "solved" | "solved-with-help"

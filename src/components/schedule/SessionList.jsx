@@ -1,13 +1,24 @@
 import { useMemo, useState } from "react";
 import CourseDot from "./CourseDot.jsx";
+import MonthCalendar from "./MonthCalendar.jsx";
+import SegmentedControl from "../SegmentedControl.jsx";
 import { sessionsByWeek, subcoursesById } from "../../lib/scheduleInfo.js";
 import { formatShort, formatRange, isPast, today } from "../../lib/dates.js";
+import { load, save, KEYS } from "../../lib/storage.js";
 
 export default function SessionList({ schedule, defaultForwardOnly, now: nowProp }) {
   const byId = useMemo(() => subcoursesById(schedule), [schedule]);
   const [topics, setTopics] = useState([]);
   const [onlyExams, setOnlyExams] = useState(false);
   const [forwardOnly, setForwardOnly] = useState(defaultForwardOnly);
+  // Lista eller månadskalender — filtren ovanför gäller båda. Valet sparas.
+  const [view, setView] = useState(() =>
+    load(KEYS.scheduleView, "lista") === "kalender" ? "kalender" : "lista",
+  );
+  function changeView(id) {
+    setView(id);
+    save(KEYS.scheduleView, id);
+  }
 
   const filtered = useMemo(() => {
     const now = nowProp || today();
@@ -32,11 +43,23 @@ export default function SessionList({ schedule, defaultForwardOnly, now: nowProp
 
   return (
     <section>
-      <h2 className="font-display text-xl">Kalender</h2>
+      <h2 className="font-display text-xl">Alla pass</h2>
       <p className="mt-1 text-[15px] text-ink/70">
         {schedule.sessions.length} bokade pass vid avläsningen. Delkurserna i november
         har färre pass inlagda än de sannolikt får.
       </p>
+
+      <div className="mt-3 max-w-xs">
+        <SegmentedControl
+          label="Visning av passen"
+          value={view}
+          onChange={changeView}
+          segments={[
+            { id: "lista", label: "Lista" },
+            { id: "kalender", label: "Kalender" },
+          ]}
+        />
+      </div>
 
       <div className="mt-3 flex flex-wrap gap-2">
         <button
@@ -85,7 +108,15 @@ export default function SessionList({ schedule, defaultForwardOnly, now: nowProp
         </span>
       </div>
 
-      {groups.length === 0 ? (
+      {view === "kalender" ? (
+        <MonthCalendar
+          sessions={filtered}
+          byId={byId}
+          now={nowProp || today()}
+          termStart={schedule.termStart}
+          termEnd={schedule.termEnd}
+        />
+      ) : groups.length === 0 ? (
         <p className="card mt-3 p-5 text-[15px] text-ink/70">
           Inga pass matchar filtret.
         </p>
