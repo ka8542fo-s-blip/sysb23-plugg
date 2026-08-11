@@ -92,6 +92,21 @@ för brödtext — sekundär text i rubriker sätts i Inter, inte Fraunces.
   ur knappens läge, kläms innanför skärmen.
 - Vald delkurs sparas (`sysb23:delkurs`) och återställs vid omladdning.
 
+## Schemabevakning (GitHub Actions)
+
+`.github/workflows/schema-check.yml` kör måndagar 06:00 UTC + manuellt
+(workflow_dispatch). Hämtar repovariabeln `TIMEEDIT_URL` (ri-URL:en med .json),
+normaliserar via `scripts/timeedit-parse.mjs` (enhetstester + verklig fixtur i
+`scripts/fixtures/`, kör `npm test`), jämför delpass från idag med
+`schedule.sessions` — sammanslagna poster (grupp-tider "A / B", `dateEnd`)
+vecklas ut till TimeEdits granularitet — och öppnar ett issue märkt
+`schemabevakning` vid skillnader. Jobbet ändrar ALDRIG schemadata automatiskt;
+enda skrivningen är stämpeln `lastChecked` i `schedule.js` (visas i Schema-vyns
+fotnot), och efter den pushen triggas deploy-workflowet uttryckligen (pushar
+med GITHUB_TOKEN startar det inte själva). Parsern felar högt och tydligt vid
+formatändringar — gissa aldrig i den, och uppdatera fixturen + förväntansfilen
+ihop om TimeEdit ändrar format.
+
 ## Lagringsnycklar
 
 `answers`, `exams`, `essays`, `settings`, `lasSegment`, `delkurs`,

@@ -1,0 +1,1378 @@
+{
+  "columnheaders": [
+    "Kurs",
+    "Delkurs",
+    "Studentgrupp, Studentgrupp, Undergrupp",
+    "Undervisningstyp, Tentaaktivitet",
+    "Platskommentar, Plats",
+    "Personal, Externa lärare",
+    "Kommentar, Publik kommentar",
+    "URL"
+  ],
+  "info": {
+    "reservationlimit": 1000,
+    "reservationcount": 80
+  },
+  "reservations": [
+    {
+      "id": "5645726",
+      "startdate": "2026-08-31",
+      "starttime": "13:00",
+      "enddate": "2026-08-31",
+      "endtime": "15:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Strategi och ekonomistyrning",
+        "SYSB23-26H",
+        "Introduktion, Obligatoriskt",
+        "MA 5",
+        "Björn Svensson",
+        "Introduktionsmöte, obligatorisk",
+        ""
+      ]
+    },
+    {
+      "id": "5645737",
+      "startdate": "2026-09-01",
+      "starttime": "13:00",
+      "enddate": "2026-09-01",
+      "endtime": "15:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 3",
+        "Björn Svensson",
+        "Föreläsning 1",
+        ""
+      ]
+    },
+    {
+      "id": "5645738",
+      "startdate": "2026-09-02",
+      "starttime": "08:00",
+      "enddate": "2026-09-02",
+      "endtime": "10:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 3",
+        "Björn Svensson",
+        "Föreläsning 2",
+        ""
+      ]
+    },
+    {
+      "id": "5645741",
+      "startdate": "2026-09-02",
+      "starttime": "13:00",
+      "enddate": "2026-09-02",
+      "endtime": "15:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.1, SYSB23-26H.2",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 1 Grupp 1 & 2",
+        ""
+      ]
+    },
+    {
+      "id": "5645742",
+      "startdate": "2026-09-02",
+      "starttime": "15:00",
+      "enddate": "2026-09-02",
+      "endtime": "17:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.3, SYSB23-26H.4",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 1 Grupp 3 & 4",
+        ""
+      ]
+    },
+    {
+      "id": "5645745",
+      "startdate": "2026-09-03",
+      "starttime": "10:00",
+      "enddate": "2026-09-03",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Strategi och ekonomistyrning",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 3",
+        "Benjamin Weaver",
+        "Föreläsning 1",
+        ""
+      ]
+    },
+    {
+      "id": "5645747",
+      "startdate": "2026-09-04",
+      "starttime": "10:00",
+      "enddate": "2026-09-04",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 3",
+        "Björn Svensson",
+        "Föreläsning 3",
+        ""
+      ]
+    },
+    {
+      "id": "5645751",
+      "startdate": "2026-09-07",
+      "starttime": "10:00",
+      "enddate": "2026-09-07",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 5",
+        "Björn Svensson",
+        "Föreläsning 4",
+        ""
+      ]
+    },
+    {
+      "id": "5645757",
+      "startdate": "2026-09-08",
+      "starttime": "08:00",
+      "enddate": "2026-09-08",
+      "endtime": "10:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Strategi och ekonomistyrning",
+        "SYSB23-26H",
+        "Föreläsning",
+        "EC1:Crafoordsalen",
+        "Benjamin Weaver",
+        "Föreläsning 2",
+        ""
+      ]
+    },
+    {
+      "id": "5645762",
+      "startdate": "2026-09-08",
+      "starttime": "13:00",
+      "enddate": "2026-09-08",
+      "endtime": "15:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.1, SYSB23-26H.2",
+        "Lektion",
+        "EC2:101",
+        "Björn Svensson",
+        "Lektion 1 - Grupp 1 & 2",
+        ""
+      ]
+    },
+    {
+      "id": "5645763",
+      "startdate": "2026-09-08",
+      "starttime": "15:00",
+      "enddate": "2026-09-08",
+      "endtime": "17:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.3, SYSB23-26H.4",
+        "Lektion",
+        "EC2:101",
+        "Björn Svensson",
+        "Lektion 1 - Grupp 3 & 4",
+        ""
+      ]
+    },
+    {
+      "id": "5646384",
+      "startdate": "2026-09-09",
+      "starttime": "10:00",
+      "enddate": "2026-09-09",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.1, SYSB23-26H.2",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 2 Grupp 1 & 2",
+        ""
+      ]
+    },
+    {
+      "id": "5646385",
+      "startdate": "2026-09-09",
+      "starttime": "13:00",
+      "enddate": "2026-09-09",
+      "endtime": "15:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.3, SYSB23-26H.4",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 2 Grupp 3 & 4",
+        ""
+      ]
+    },
+    {
+      "id": "5646388",
+      "startdate": "2026-09-11",
+      "starttime": "10:00",
+      "enddate": "2026-09-11",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Strategi och ekonomistyrning",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 5",
+        "Benjamin Weaver",
+        "Föreläsning 3",
+        ""
+      ]
+    },
+    {
+      "id": "5646387",
+      "startdate": "2026-09-11",
+      "starttime": "13:00",
+      "enddate": "2026-09-11",
+      "endtime": "15:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 3",
+        "Björn Svensson",
+        "Föreläsning 5",
+        ""
+      ]
+    },
+    {
+      "id": "5646390",
+      "startdate": "2026-09-14",
+      "starttime": "08:00",
+      "enddate": "2026-09-14",
+      "endtime": "10:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 5",
+        "Björn Svensson",
+        "Föreläsning 6",
+        ""
+      ]
+    },
+    {
+      "id": "5646834",
+      "startdate": "2026-09-16",
+      "starttime": "10:00",
+      "enddate": "2026-09-16",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.1, SYSB23-26H.2",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 3 Grupp 1 & 2",
+        ""
+      ]
+    },
+    {
+      "id": "5646835",
+      "startdate": "2026-09-16",
+      "starttime": "15:00",
+      "enddate": "2026-09-16",
+      "endtime": "17:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.3, SYSB23-26H.4",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 3 Grupp 3 & 4",
+        ""
+      ]
+    },
+    {
+      "id": "5646837",
+      "startdate": "2026-09-17",
+      "starttime": "10:00",
+      "enddate": "2026-09-17",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 3",
+        "Björn Svensson",
+        "Föreläsning 7",
+        ""
+      ]
+    },
+    {
+      "id": "5646843",
+      "startdate": "2026-09-21",
+      "starttime": "08:00",
+      "enddate": "2026-09-21",
+      "endtime": "11:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Strategi och ekonomistyrning, skriftlig salstentamen",
+        "SYSB23-26H",
+        "Digital tentamen",
+        "Skrivsal MA 9",
+        "Benjamin Weaver",
+        "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+        ""
+      ]
+    },
+    {
+      "id": "5646848",
+      "startdate": "2026-09-22",
+      "starttime": "10:00",
+      "enddate": "2026-09-22",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Processorienterad verksamhetsutveckling",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 3",
+        "Benjamin Weaver",
+        "Föreläsning 1 - Introduktion",
+        ""
+      ]
+    },
+    {
+      "id": "5646851",
+      "startdate": "2026-09-23",
+      "starttime": "10:00",
+      "enddate": "2026-09-23",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.1, SYSB23-26H.2",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 4 Grupp 1 & 2",
+        ""
+      ]
+    },
+    {
+      "id": "5646852",
+      "startdate": "2026-09-23",
+      "starttime": "13:00",
+      "enddate": "2026-09-23",
+      "endtime": "15:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.3, SYSB23-26H.4",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 4 Grupp 3 & 4",
+        ""
+      ]
+    },
+    {
+      "id": "5646855",
+      "startdate": "2026-09-25",
+      "starttime": "10:00",
+      "enddate": "2026-09-25",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Processorienterad verksamhetsutveckling",
+        "SYSB23-26H",
+        "Föreläsning",
+        "EC1:Crafoordsalen",
+        "Benjamin Weaver",
+        "Föreläsning 2",
+        ""
+      ]
+    },
+    {
+      "id": "5646854",
+      "startdate": "2026-09-25",
+      "starttime": "15:00",
+      "enddate": "2026-09-25",
+      "endtime": "17:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 3",
+        "Björn Svensson",
+        "Föreläsning 8",
+        ""
+      ]
+    },
+    {
+      "id": "5646859",
+      "startdate": "2026-09-29",
+      "starttime": "10:00",
+      "enddate": "2026-09-29",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Processorienterad verksamhetsutveckling",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 3",
+        "Benjamin Weaver",
+        "Föreläsning 3",
+        ""
+      ]
+    },
+    {
+      "id": "5646860",
+      "startdate": "2026-09-30",
+      "starttime": "08:00",
+      "enddate": "2026-09-30",
+      "endtime": "10:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.1, SYSB23-26H.2",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 5 Grupp 1 & 2",
+        ""
+      ]
+    },
+    {
+      "id": "5646861",
+      "startdate": "2026-09-30",
+      "starttime": "10:00",
+      "enddate": "2026-09-30",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.3, SYSB23-26H.4",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 5 Grupp 3 & 4",
+        ""
+      ]
+    },
+    {
+      "id": "5646857",
+      "startdate": "2026-09-30",
+      "starttime": "13:00",
+      "enddate": "2026-09-30",
+      "endtime": "15:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 3",
+        "Björn Svensson",
+        "Föreläsning 9",
+        ""
+      ]
+    },
+    {
+      "id": "5646865",
+      "startdate": "2026-10-01",
+      "starttime": "08:00",
+      "enddate": "2026-10-01",
+      "endtime": "10:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Processorienterad verksamhetsutveckling",
+        "SYSB23-26H",
+        "Handledning",
+        "EC2:241 Verona",
+        "Benjamin Weaver",
+        "Handledning 1",
+        ""
+      ]
+    },
+    {
+      "id": "5646867",
+      "startdate": "2026-10-02",
+      "starttime": "10:00",
+      "enddate": "2026-10-02",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 3",
+        "Björn Svensson",
+        "Föreläsning 10",
+        ""
+      ]
+    },
+    {
+      "id": "5646869",
+      "startdate": "2026-10-05",
+      "starttime": "10:00",
+      "enddate": "2026-10-05",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Processorienterad verksamhetsutveckling",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 3",
+        "Benjamin Weaver",
+        "Föreläsning 4",
+        ""
+      ]
+    },
+    {
+      "id": "5646875",
+      "startdate": "2026-10-07",
+      "starttime": "10:00",
+      "enddate": "2026-10-07",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.1, SYSB23-26H.2",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 6 Grupp 1 & 2",
+        ""
+      ]
+    },
+    {
+      "id": "5646876",
+      "startdate": "2026-10-07",
+      "starttime": "13:00",
+      "enddate": "2026-10-07",
+      "endtime": "15:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.3, SYSB23-26H.4",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 6 Grupp 3 & 4",
+        ""
+      ]
+    },
+    {
+      "id": "5646877",
+      "startdate": "2026-10-08",
+      "starttime": "13:00",
+      "enddate": "2026-10-08",
+      "endtime": "17:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Processorienterad verksamhetsutveckling",
+        "SYSB23-26H",
+        "Handledning",
+        "EC2:241 Verona",
+        "Benjamin Weaver",
+        "Handledning 2",
+        ""
+      ]
+    },
+    {
+      "id": "5646879",
+      "startdate": "2026-10-12",
+      "starttime": "13:00",
+      "enddate": "2026-10-12",
+      "endtime": "15:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Processorienterad verksamhetsutveckling",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 3",
+        "Benjamin Weaver",
+        "Föreläsning 5",
+        ""
+      ]
+    },
+    {
+      "id": "5646881",
+      "startdate": "2026-10-13",
+      "starttime": "15:00",
+      "enddate": "2026-10-13",
+      "endtime": "17:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 5",
+        "Björn Svensson",
+        "Föreläsning 11",
+        ""
+      ]
+    },
+    {
+      "id": "5646883",
+      "startdate": "2026-10-14",
+      "starttime": "08:00",
+      "enddate": "2026-10-14",
+      "endtime": "10:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.1, SYSB23-26H.2",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 7 Grupp 1 & 2",
+        ""
+      ]
+    },
+    {
+      "id": "5646872",
+      "startdate": "2026-10-14",
+      "starttime": "10:00",
+      "enddate": "2026-10-14",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.1, SYSB23-26H.2",
+        "Lektion",
+        "EC2:101",
+        "Björn Svensson",
+        "Lektion 2 - Grupp 1 & 2",
+        ""
+      ]
+    },
+    {
+      "id": "5646884",
+      "startdate": "2026-10-14",
+      "starttime": "10:00",
+      "enddate": "2026-10-14",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.3, SYSB23-26H.4",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 7 Grupp 3 & 4",
+        ""
+      ]
+    },
+    {
+      "id": "5646873",
+      "startdate": "2026-10-14",
+      "starttime": "15:00",
+      "enddate": "2026-10-14",
+      "endtime": "17:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.3, SYSB23-26H.4",
+        "Lektion",
+        "EC2:101",
+        "Björn Svensson",
+        "Lektion 2 - Grupp 3 & 4",
+        ""
+      ]
+    },
+    {
+      "id": "5646886",
+      "startdate": "2026-10-15",
+      "starttime": "08:00",
+      "enddate": "2026-10-15",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Processorienterad verksamhetsutveckling",
+        "SYSB23-26H",
+        "Handledning",
+        "EC2:241 Verona",
+        "Benjamin Weaver",
+        "Handledning 3",
+        ""
+      ]
+    },
+    {
+      "id": "5646894",
+      "startdate": "2026-10-20",
+      "starttime": "10:00",
+      "enddate": "2026-10-20",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Processorienterad verksamhetsutveckling",
+        "SYSB23-26H",
+        "Workshop",
+        "MA 3",
+        "Benjamin Weaver",
+        "Workshop - processmodellering",
+        ""
+      ]
+    },
+    {
+      "id": "5646899",
+      "startdate": "2026-10-21",
+      "starttime": "13:00",
+      "enddate": "2026-10-21",
+      "endtime": "15:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.1, SYSB23-26H.2",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 8 Grupp 1 & 2",
+        ""
+      ]
+    },
+    {
+      "id": "5646900",
+      "startdate": "2026-10-21",
+      "starttime": "15:00",
+      "enddate": "2026-10-21",
+      "endtime": "17:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.3, SYSB23-26H.4",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 8 Grupp 3 & 4",
+        ""
+      ]
+    },
+    {
+      "id": "5646906",
+      "startdate": "2026-10-23",
+      "starttime": "08:00",
+      "enddate": "2026-10-23",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Processorienterad verksamhetsutveckling",
+        "SYSB23-26H",
+        "Handledning",
+        "EC2:207 Bilbao",
+        "Benjamin Weaver",
+        "Handledning 4",
+        ""
+      ]
+    },
+    {
+      "id": "5646913",
+      "startdate": "2026-10-27",
+      "starttime": "10:00",
+      "enddate": "2026-10-27",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Processorienterad verksamhetsutveckling",
+        "SYSB23-26H",
+        "Seminarium",
+        "MA 3",
+        "Benjamin Weaver",
+        "Gruppuppgift - avstämning",
+        ""
+      ]
+    },
+    {
+      "id": "5646916",
+      "startdate": "2026-10-28",
+      "starttime": "13:00",
+      "enddate": "2026-10-28",
+      "endtime": "15:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.1, SYSB23-26H.2",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 9 Grupp 1 & 2",
+        ""
+      ]
+    },
+    {
+      "id": "5646917",
+      "startdate": "2026-10-28",
+      "starttime": "15:00",
+      "enddate": "2026-10-28",
+      "endtime": "17:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H.3, SYSB23-26H.4",
+        "Laboration",
+        "EC2:PC011, EC2:PC015, EC2:PC059",
+        "Nils Törnqvist",
+        "Laboration 9 Grupp 3 & 4",
+        ""
+      ]
+    },
+    {
+      "id": "5647636",
+      "startdate": "2026-11-06",
+      "starttime": "08:00",
+      "enddate": "2026-11-06",
+      "endtime": "11:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Strategi och ekonomistyrning, skriftlig salstentamen",
+        "SYSB23-26H",
+        "Digital tentamen, Omtentamen",
+        "Skrivsal MA 9",
+        "Benjamin Weaver",
+        "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+        ""
+      ]
+    },
+    {
+      "id": "5647464",
+      "startdate": "2026-11-09",
+      "starttime": "10:00",
+      "enddate": "2026-11-09",
+      "endtime": "17:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H",
+        "Redovisning",
+        "EC2:PC059",
+        "Björn Svensson",
+        "Redovisning av projektuppgift för databaser - Enligt bokad redovisningstid",
+        ""
+      ]
+    },
+    {
+      "id": "5647465",
+      "startdate": "2026-11-10",
+      "starttime": "10:00",
+      "enddate": "2026-11-10",
+      "endtime": "17:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H",
+        "Redovisning",
+        "EC2:PC059",
+        "Björn Svensson",
+        "Redovisning av projektuppgift för databaser - Enligt bokad redovisningstid",
+        ""
+      ]
+    },
+    {
+      "id": "5647472",
+      "startdate": "2026-11-11",
+      "starttime": "10:00",
+      "enddate": "2026-11-11",
+      "endtime": "17:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H",
+        "Redovisning",
+        "EC2:PC059",
+        "Björn Svensson",
+        "Redovisning av projektuppgift för databaser - Enligt bokad redovisningstid",
+        ""
+      ]
+    },
+    {
+      "id": "5647473",
+      "startdate": "2026-11-12",
+      "starttime": "10:00",
+      "enddate": "2026-11-12",
+      "endtime": "17:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser",
+        "SYSB23-26H",
+        "Redovisning",
+        "EC2:PC059",
+        "Björn Svensson",
+        "Redovisning av projektuppgift för databaser - Enligt bokad redovisningstid",
+        ""
+      ]
+    },
+    {
+      "id": "5647477",
+      "startdate": "2026-11-13",
+      "starttime": "08:00",
+      "enddate": "2026-11-13",
+      "endtime": "13:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Processorienterad verksamhetsutveckling, skriftlig salstentamen",
+        "SYSB23-26H",
+        "Digital tentamen",
+        "Skrivsal MA 10",
+        "Benjamin Weaver",
+        "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+        ""
+      ]
+    },
+    {
+      "id": "5647486",
+      "startdate": "2026-11-17",
+      "starttime": "08:00",
+      "enddate": "2026-11-17",
+      "endtime": "13:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser, skriftlig tentamen",
+        "SYSB23-26H",
+        "Digital tentamen",
+        "Skrivsal MA 9",
+        "Björn Svensson",
+        "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+        ""
+      ]
+    },
+    {
+      "id": "5647542",
+      "startdate": "2026-11-18",
+      "starttime": "14:00",
+      "enddate": "2026-11-18",
+      "endtime": "16:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Verksamhetsarkitektur",
+        "SYSB23-26H",
+        "Föreläsning",
+        "EC1:Crafoordsalen",
+        "Umberto Fiaccadori",
+        "Föreläsning 1 - Introduktion",
+        ""
+      ]
+    },
+    {
+      "id": "5647543",
+      "startdate": "2026-11-19",
+      "starttime": "14:00",
+      "enddate": "2026-11-19",
+      "endtime": "16:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Säkerhet i informationssystem",
+        "SYSB23-26H",
+        "Föreläsning",
+        "EC1:Crafoordsalen",
+        "Miranda Kajtazi",
+        "Introduktionsföreläsning",
+        ""
+      ]
+    },
+    {
+      "id": "5647544",
+      "startdate": "2026-11-20",
+      "starttime": "10:00",
+      "enddate": "2026-11-20",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Verksamhetsarkitektur",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 3",
+        "Umberto Fiaccadori",
+        "Föreläsning 2",
+        ""
+      ]
+    },
+    {
+      "id": "5647547",
+      "startdate": "2026-11-25",
+      "starttime": "08:00",
+      "enddate": "2026-11-25",
+      "endtime": "10:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Ansvarsfull verksamhetsutveckling",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 5",
+        "Miranda Kajtazi",
+        "Föreläsning 1 - Introduktion",
+        ""
+      ]
+    },
+    {
+      "id": "5715318",
+      "startdate": "2026-11-25",
+      "starttime": "12:00",
+      "enddate": "2026-11-25",
+      "endtime": "14:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Verksamhetsarkitektur",
+        "SYSB23-26H",
+        "Föreläsning",
+        "EC1:Crafoordsalen",
+        "Umberto Fiaccadori",
+        "Föreläsning 3",
+        ""
+      ]
+    },
+    {
+      "id": "5647545",
+      "startdate": "2026-11-25",
+      "starttime": "15:00",
+      "enddate": "2026-11-25",
+      "endtime": "17:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Säkerhet i informationssystem",
+        "SYSB23-26H",
+        "Föreläsning",
+        "MA 5",
+        "Miranda Kajtazi",
+        "Föreläsning 2",
+        ""
+      ]
+    },
+    {
+      "id": "5647559",
+      "startdate": "2026-11-26",
+      "starttime": "10:00",
+      "enddate": "2026-11-26",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Ansvarsfull verksamhetsutveckling",
+        "SYSB23-26H",
+        "Workshop",
+        "EHL:Online",
+        "Miranda Kajtazi",
+        "Harvard Business Simulation Game",
+        ""
+      ]
+    },
+    {
+      "id": "5647576",
+      "startdate": "2026-11-27",
+      "starttime": "14:00",
+      "enddate": "2026-11-27",
+      "endtime": "19:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Verksamhetsarkitektur, skriftlig tentamen",
+        "SYSB23-26H",
+        "Digital tentamen",
+        "Skrivsal MA 10",
+        "Umberto Fiaccadori",
+        "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+        ""
+      ]
+    },
+    {
+      "id": "5647603",
+      "startdate": "2026-12-01",
+      "starttime": "13:00",
+      "enddate": "2026-12-01",
+      "endtime": "15:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Ansvarsfull verksamhetsutveckling",
+        "SYSB23-26H.1, SYSB23-26H.2",
+        "Seminarium",
+        "EC2:101",
+        "Miranda Kajtazi",
+        "Seminarium 1 - Klassgrupp 1 & 2",
+        ""
+      ]
+    },
+    {
+      "id": "5647605",
+      "startdate": "2026-12-01",
+      "starttime": "15:00",
+      "enddate": "2026-12-01",
+      "endtime": "17:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Ansvarsfull verksamhetsutveckling",
+        "SYSB23-26H.3, SYSB23-26H.4",
+        "Seminarium",
+        "EC2:101",
+        "Miranda Kajtazi",
+        "Seminarium 1 - Klassgrupp 3 & 4",
+        ""
+      ]
+    },
+    {
+      "id": "5647609",
+      "startdate": "2026-12-03",
+      "starttime": "08:00",
+      "enddate": "2026-12-03",
+      "endtime": "13:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Säkerhet i informationssystem, skriftlig salstentamen",
+        "SYSB23-26H",
+        "Digital tentamen",
+        "Skrivsal MA 10",
+        "Miranda Kajtazi",
+        "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+        ""
+      ]
+    },
+    {
+      "id": "5647614",
+      "startdate": "2026-12-08",
+      "starttime": "14:00",
+      "enddate": "2026-12-08",
+      "endtime": "15:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Informationssystemsprojekt, rapport",
+        "SYSB23-26H",
+        "Föreläsning",
+        "EC1:Crafoordsalen",
+        "Benjamin Weaver, Miranda Kajtazi, Umberto Fiaccadori",
+        "Föreläsning 1 - Introduktion till IS-projektet och uppgiften",
+        ""
+      ]
+    },
+    {
+      "id": "5647624",
+      "startdate": "2026-12-15",
+      "starttime": "09:00",
+      "enddate": "2026-12-15",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Informationssystemsprojekt, rapport",
+        "SYSB23-26H",
+        "Handledning",
+        "EC2:241 Verona",
+        "Benjamin Weaver, Miranda Kajtazi, Umberto Fiaccadori",
+        "Handledning 1",
+        ""
+      ]
+    },
+    {
+      "id": "5647625",
+      "startdate": "2026-12-15",
+      "starttime": "13:00",
+      "enddate": "2026-12-15",
+      "endtime": "16:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Informationssystemsprojekt, rapport",
+        "SYSB23-26H",
+        "Handledning",
+        "EC2:241 Verona",
+        "Benjamin Weaver, Miranda Kajtazi, Umberto Fiaccadori",
+        "Handledning 1",
+        ""
+      ]
+    },
+    {
+      "id": "5647627",
+      "startdate": "2026-12-16",
+      "starttime": "09:00",
+      "enddate": "2026-12-16",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Informationssystemsprojekt, rapport",
+        "SYSB23-26H",
+        "Handledning",
+        "EC2:241 Verona",
+        "Benjamin Weaver, Miranda Kajtazi, Umberto Fiaccadori",
+        "Handledning 1",
+        ""
+      ]
+    },
+    {
+      "id": "5647628",
+      "startdate": "2026-12-16",
+      "starttime": "13:00",
+      "enddate": "2026-12-16",
+      "endtime": "16:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Informationssystemsprojekt, rapport",
+        "SYSB23-26H",
+        "Handledning",
+        "EC2:241 Verona",
+        "Benjamin Weaver, Miranda Kajtazi, Umberto Fiaccadori",
+        "Handledning 1",
+        ""
+      ]
+    },
+    {
+      "id": "5647631",
+      "startdate": "2027-01-05",
+      "starttime": "08:00",
+      "enddate": "2027-01-05",
+      "endtime": "13:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Databaser, skriftlig tentamen",
+        "SYSB23-26H",
+        "Digital tentamen, Omtentamen",
+        "Skrivsal MA 10",
+        "Björn Svensson",
+        "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+        ""
+      ]
+    },
+    {
+      "id": "5647619",
+      "startdate": "2027-01-07",
+      "starttime": "08:00",
+      "enddate": "2027-01-07",
+      "endtime": "13:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Processorienterad verksamhetsutveckling, skriftlig salstentamen",
+        "SYSB23-26H",
+        "Digital tentamen, Omtentamen",
+        "Skrivsal MA 9",
+        "Benjamin Weaver",
+        "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+        ""
+      ]
+    },
+    {
+      "id": "5647660",
+      "startdate": "2027-01-11",
+      "starttime": "09:00",
+      "enddate": "2027-01-11",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Informationssystemsprojekt, rapport",
+        "SYSB23-26H",
+        "Handledning",
+        "EC2:241 Verona",
+        "Benjamin Weaver, Miranda Kajtazi, Umberto Fiaccadori",
+        "Handledning 2",
+        ""
+      ]
+    },
+    {
+      "id": "5647662",
+      "startdate": "2027-01-11",
+      "starttime": "13:00",
+      "enddate": "2027-01-11",
+      "endtime": "16:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Informationssystemsprojekt, rapport",
+        "SYSB23-26H",
+        "Handledning",
+        "EC2:241 Verona",
+        "Benjamin Weaver, Miranda Kajtazi, Umberto Fiaccadori",
+        "Handledning 2",
+        ""
+      ]
+    },
+    {
+      "id": "5647663",
+      "startdate": "2027-01-12",
+      "starttime": "09:00",
+      "enddate": "2027-01-12",
+      "endtime": "12:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Informationssystemsprojekt, rapport",
+        "SYSB23-26H",
+        "Handledning",
+        "EC2:241 Verona",
+        "Benjamin Weaver, Miranda Kajtazi, Umberto Fiaccadori",
+        "Handledning 2",
+        ""
+      ]
+    },
+    {
+      "id": "5647664",
+      "startdate": "2027-01-12",
+      "starttime": "13:00",
+      "enddate": "2027-01-12",
+      "endtime": "16:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Informationssystemsprojekt, rapport",
+        "SYSB23-26H",
+        "Handledning",
+        "EC2:241 Verona",
+        "Benjamin Weaver, Miranda Kajtazi, Umberto Fiaccadori",
+        "Handledning 2",
+        ""
+      ]
+    },
+    {
+      "id": "5647667",
+      "startdate": "2027-01-13",
+      "starttime": "14:00",
+      "enddate": "2027-01-13",
+      "endtime": "19:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Verksamhetsarkitektur, skriftlig tentamen",
+        "SYSB23-26H",
+        "Digital tentamen, Omtentamen",
+        "Skrivsal MA 10",
+        "Umberto Fiaccadori",
+        "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+        ""
+      ]
+    },
+    {
+      "id": "5647686",
+      "startdate": "2027-01-14",
+      "starttime": "08:00",
+      "enddate": "2027-01-14",
+      "endtime": "13:00",
+      "columns": [
+        "Informationssystems- och verksamhetsutveckling",
+        "Säkerhet i informationssystem, skriftlig salstentamen",
+        "SYSB23-26H",
+        "Digital tentamen, Omtentamen",
+        "Skrivsal Sparta",
+        "Miranda Kajtazi",
+        "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Sparta, adress: Tunavägen 39. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+        ""
+      ]
+    }
+  ]
+}

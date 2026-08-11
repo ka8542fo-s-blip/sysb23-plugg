@@ -1,0 +1,722 @@
+[
+  {
+    "date": "2026-08-31",
+    "start": "13:00",
+    "end": "15:00",
+    "subcourse": "strategi",
+    "kind": "obligatorisk",
+    "title": "Introduktionsmöte, obligatorisk",
+    "place": "MA 5"
+  },
+  {
+    "date": "2026-09-01",
+    "start": "13:00",
+    "end": "15:00",
+    "subcourse": "databaser",
+    "kind": "föreläsning",
+    "title": "Föreläsning 1",
+    "place": "MA 3"
+  },
+  {
+    "date": "2026-09-02",
+    "start": "08:00",
+    "end": "10:00",
+    "subcourse": "databaser",
+    "kind": "föreläsning",
+    "title": "Föreläsning 2",
+    "place": "MA 3"
+  },
+  {
+    "date": "2026-09-02",
+    "start": "13:00",
+    "end": "15:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 1 Grupp 1 & 2",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-09-02",
+    "start": "15:00",
+    "end": "17:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 1 Grupp 3 & 4",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-09-03",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "strategi",
+    "kind": "föreläsning",
+    "title": "Föreläsning 1",
+    "place": "MA 3"
+  },
+  {
+    "date": "2026-09-04",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "databaser",
+    "kind": "föreläsning",
+    "title": "Föreläsning 3",
+    "place": "MA 3"
+  },
+  {
+    "date": "2026-09-07",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "databaser",
+    "kind": "föreläsning",
+    "title": "Föreläsning 4",
+    "place": "MA 5"
+  },
+  {
+    "date": "2026-09-08",
+    "start": "08:00",
+    "end": "10:00",
+    "subcourse": "strategi",
+    "kind": "föreläsning",
+    "title": "Föreläsning 2",
+    "place": "EC1:Crafoordsalen"
+  },
+  {
+    "date": "2026-09-08",
+    "start": "13:00",
+    "end": "15:00",
+    "subcourse": "databaser",
+    "kind": "lektion",
+    "title": "Lektion 1 - Grupp 1 & 2",
+    "place": "EC2:101"
+  },
+  {
+    "date": "2026-09-08",
+    "start": "15:00",
+    "end": "17:00",
+    "subcourse": "databaser",
+    "kind": "lektion",
+    "title": "Lektion 1 - Grupp 3 & 4",
+    "place": "EC2:101"
+  },
+  {
+    "date": "2026-09-09",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 2 Grupp 1 & 2",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-09-09",
+    "start": "13:00",
+    "end": "15:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 2 Grupp 3 & 4",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-09-11",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "strategi",
+    "kind": "föreläsning",
+    "title": "Föreläsning 3",
+    "place": "MA 5"
+  },
+  {
+    "date": "2026-09-11",
+    "start": "13:00",
+    "end": "15:00",
+    "subcourse": "databaser",
+    "kind": "föreläsning",
+    "title": "Föreläsning 5",
+    "place": "MA 3"
+  },
+  {
+    "date": "2026-09-14",
+    "start": "08:00",
+    "end": "10:00",
+    "subcourse": "databaser",
+    "kind": "föreläsning",
+    "title": "Föreläsning 6",
+    "place": "MA 5"
+  },
+  {
+    "date": "2026-09-16",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 3 Grupp 1 & 2",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-09-16",
+    "start": "15:00",
+    "end": "17:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 3 Grupp 3 & 4",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-09-17",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "databaser",
+    "kind": "föreläsning",
+    "title": "Föreläsning 7",
+    "place": "MA 3"
+  },
+  {
+    "date": "2026-09-21",
+    "start": "08:00",
+    "end": "11:00",
+    "subcourse": "strategi",
+    "kind": "tenta",
+    "title": "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+    "place": "Skrivsal MA 9"
+  },
+  {
+    "date": "2026-09-22",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "process",
+    "kind": "föreläsning",
+    "title": "Föreläsning 1 - Introduktion",
+    "place": "MA 3"
+  },
+  {
+    "date": "2026-09-23",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 4 Grupp 1 & 2",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-09-23",
+    "start": "13:00",
+    "end": "15:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 4 Grupp 3 & 4",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-09-25",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "process",
+    "kind": "föreläsning",
+    "title": "Föreläsning 2",
+    "place": "EC1:Crafoordsalen"
+  },
+  {
+    "date": "2026-09-25",
+    "start": "15:00",
+    "end": "17:00",
+    "subcourse": "databaser",
+    "kind": "föreläsning",
+    "title": "Föreläsning 8",
+    "place": "MA 3"
+  },
+  {
+    "date": "2026-09-29",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "process",
+    "kind": "föreläsning",
+    "title": "Föreläsning 3",
+    "place": "MA 3"
+  },
+  {
+    "date": "2026-09-30",
+    "start": "08:00",
+    "end": "10:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 5 Grupp 1 & 2",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-09-30",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 5 Grupp 3 & 4",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-09-30",
+    "start": "13:00",
+    "end": "15:00",
+    "subcourse": "databaser",
+    "kind": "föreläsning",
+    "title": "Föreläsning 9",
+    "place": "MA 3"
+  },
+  {
+    "date": "2026-10-01",
+    "start": "08:00",
+    "end": "10:00",
+    "subcourse": "process",
+    "kind": "handledning",
+    "title": "Handledning 1",
+    "place": "EC2:241 Verona"
+  },
+  {
+    "date": "2026-10-02",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "databaser",
+    "kind": "föreläsning",
+    "title": "Föreläsning 10",
+    "place": "MA 3"
+  },
+  {
+    "date": "2026-10-05",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "process",
+    "kind": "föreläsning",
+    "title": "Föreläsning 4",
+    "place": "MA 3"
+  },
+  {
+    "date": "2026-10-07",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 6 Grupp 1 & 2",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-10-07",
+    "start": "13:00",
+    "end": "15:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 6 Grupp 3 & 4",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-10-08",
+    "start": "13:00",
+    "end": "17:00",
+    "subcourse": "process",
+    "kind": "handledning",
+    "title": "Handledning 2",
+    "place": "EC2:241 Verona"
+  },
+  {
+    "date": "2026-10-12",
+    "start": "13:00",
+    "end": "15:00",
+    "subcourse": "process",
+    "kind": "föreläsning",
+    "title": "Föreläsning 5",
+    "place": "MA 3"
+  },
+  {
+    "date": "2026-10-13",
+    "start": "15:00",
+    "end": "17:00",
+    "subcourse": "databaser",
+    "kind": "föreläsning",
+    "title": "Föreläsning 11",
+    "place": "MA 5"
+  },
+  {
+    "date": "2026-10-14",
+    "start": "08:00",
+    "end": "10:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 7 Grupp 1 & 2",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-10-14",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "databaser",
+    "kind": "lektion",
+    "title": "Lektion 2 - Grupp 1 & 2",
+    "place": "EC2:101"
+  },
+  {
+    "date": "2026-10-14",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 7 Grupp 3 & 4",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-10-14",
+    "start": "15:00",
+    "end": "17:00",
+    "subcourse": "databaser",
+    "kind": "lektion",
+    "title": "Lektion 2 - Grupp 3 & 4",
+    "place": "EC2:101"
+  },
+  {
+    "date": "2026-10-15",
+    "start": "08:00",
+    "end": "12:00",
+    "subcourse": "process",
+    "kind": "handledning",
+    "title": "Handledning 3",
+    "place": "EC2:241 Verona"
+  },
+  {
+    "date": "2026-10-20",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "process",
+    "kind": "workshop",
+    "title": "Workshop - processmodellering",
+    "place": "MA 3"
+  },
+  {
+    "date": "2026-10-21",
+    "start": "13:00",
+    "end": "15:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 8 Grupp 1 & 2",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-10-21",
+    "start": "15:00",
+    "end": "17:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 8 Grupp 3 & 4",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-10-23",
+    "start": "08:00",
+    "end": "12:00",
+    "subcourse": "process",
+    "kind": "handledning",
+    "title": "Handledning 4",
+    "place": "EC2:207 Bilbao"
+  },
+  {
+    "date": "2026-10-27",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "process",
+    "kind": "seminarium",
+    "title": "Gruppuppgift - avstämning",
+    "place": "MA 3"
+  },
+  {
+    "date": "2026-10-28",
+    "start": "13:00",
+    "end": "15:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 9 Grupp 1 & 2",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-10-28",
+    "start": "15:00",
+    "end": "17:00",
+    "subcourse": "databaser",
+    "kind": "laboration",
+    "title": "Laboration 9 Grupp 3 & 4",
+    "place": "EC2:PC011, EC2:PC015, EC2:PC059"
+  },
+  {
+    "date": "2026-11-06",
+    "start": "08:00",
+    "end": "11:00",
+    "subcourse": "strategi",
+    "kind": "tenta",
+    "title": "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+    "place": "Skrivsal MA 9"
+  },
+  {
+    "date": "2026-11-09",
+    "start": "10:00",
+    "end": "17:00",
+    "subcourse": "databaser",
+    "kind": "redovisning",
+    "title": "Redovisning av projektuppgift för databaser - Enligt bokad redovisningstid",
+    "place": "EC2:PC059"
+  },
+  {
+    "date": "2026-11-10",
+    "start": "10:00",
+    "end": "17:00",
+    "subcourse": "databaser",
+    "kind": "redovisning",
+    "title": "Redovisning av projektuppgift för databaser - Enligt bokad redovisningstid",
+    "place": "EC2:PC059"
+  },
+  {
+    "date": "2026-11-11",
+    "start": "10:00",
+    "end": "17:00",
+    "subcourse": "databaser",
+    "kind": "redovisning",
+    "title": "Redovisning av projektuppgift för databaser - Enligt bokad redovisningstid",
+    "place": "EC2:PC059"
+  },
+  {
+    "date": "2026-11-12",
+    "start": "10:00",
+    "end": "17:00",
+    "subcourse": "databaser",
+    "kind": "redovisning",
+    "title": "Redovisning av projektuppgift för databaser - Enligt bokad redovisningstid",
+    "place": "EC2:PC059"
+  },
+  {
+    "date": "2026-11-13",
+    "start": "08:00",
+    "end": "13:00",
+    "subcourse": "process",
+    "kind": "tenta",
+    "title": "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+    "place": "Skrivsal MA 10"
+  },
+  {
+    "date": "2026-11-17",
+    "start": "08:00",
+    "end": "13:00",
+    "subcourse": "databaser",
+    "kind": "tenta",
+    "title": "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+    "place": "Skrivsal MA 9"
+  },
+  {
+    "date": "2026-11-18",
+    "start": "14:00",
+    "end": "16:00",
+    "subcourse": "arkitektur",
+    "kind": "föreläsning",
+    "title": "Föreläsning 1 - Introduktion",
+    "place": "EC1:Crafoordsalen"
+  },
+  {
+    "date": "2026-11-19",
+    "start": "14:00",
+    "end": "16:00",
+    "subcourse": "sakerhet",
+    "kind": "föreläsning",
+    "title": "Introduktionsföreläsning",
+    "place": "EC1:Crafoordsalen"
+  },
+  {
+    "date": "2026-11-20",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "arkitektur",
+    "kind": "föreläsning",
+    "title": "Föreläsning 2",
+    "place": "MA 3"
+  },
+  {
+    "date": "2026-11-25",
+    "start": "08:00",
+    "end": "10:00",
+    "subcourse": "ansvarsfull",
+    "kind": "föreläsning",
+    "title": "Föreläsning 1 - Introduktion",
+    "place": "MA 5"
+  },
+  {
+    "date": "2026-11-25",
+    "start": "12:00",
+    "end": "14:00",
+    "subcourse": "arkitektur",
+    "kind": "föreläsning",
+    "title": "Föreläsning 3",
+    "place": "EC1:Crafoordsalen"
+  },
+  {
+    "date": "2026-11-25",
+    "start": "15:00",
+    "end": "17:00",
+    "subcourse": "sakerhet",
+    "kind": "föreläsning",
+    "title": "Föreläsning 2",
+    "place": "MA 5"
+  },
+  {
+    "date": "2026-11-26",
+    "start": "10:00",
+    "end": "12:00",
+    "subcourse": "ansvarsfull",
+    "kind": "workshop",
+    "title": "Harvard Business Simulation Game",
+    "place": "EHL:Online"
+  },
+  {
+    "date": "2026-11-27",
+    "start": "14:00",
+    "end": "19:00",
+    "subcourse": "arkitektur",
+    "kind": "tenta",
+    "title": "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+    "place": "Skrivsal MA 10"
+  },
+  {
+    "date": "2026-12-01",
+    "start": "13:00",
+    "end": "15:00",
+    "subcourse": "ansvarsfull",
+    "kind": "seminarium",
+    "title": "Seminarium 1 - Klassgrupp 1 & 2",
+    "place": "EC2:101"
+  },
+  {
+    "date": "2026-12-01",
+    "start": "15:00",
+    "end": "17:00",
+    "subcourse": "ansvarsfull",
+    "kind": "seminarium",
+    "title": "Seminarium 1 - Klassgrupp 3 & 4",
+    "place": "EC2:101"
+  },
+  {
+    "date": "2026-12-03",
+    "start": "08:00",
+    "end": "13:00",
+    "subcourse": "sakerhet",
+    "kind": "tenta",
+    "title": "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+    "place": "Skrivsal MA 10"
+  },
+  {
+    "date": "2026-12-08",
+    "start": "14:00",
+    "end": "15:00",
+    "subcourse": "isprojekt",
+    "kind": "föreläsning",
+    "title": "Föreläsning 1 - Introduktion till IS-projektet och uppgiften",
+    "place": "EC1:Crafoordsalen"
+  },
+  {
+    "date": "2026-12-15",
+    "start": "09:00",
+    "end": "12:00",
+    "subcourse": "isprojekt",
+    "kind": "handledning",
+    "title": "Handledning 1",
+    "place": "EC2:241 Verona"
+  },
+  {
+    "date": "2026-12-15",
+    "start": "13:00",
+    "end": "16:00",
+    "subcourse": "isprojekt",
+    "kind": "handledning",
+    "title": "Handledning 1",
+    "place": "EC2:241 Verona"
+  },
+  {
+    "date": "2026-12-16",
+    "start": "09:00",
+    "end": "12:00",
+    "subcourse": "isprojekt",
+    "kind": "handledning",
+    "title": "Handledning 1",
+    "place": "EC2:241 Verona"
+  },
+  {
+    "date": "2026-12-16",
+    "start": "13:00",
+    "end": "16:00",
+    "subcourse": "isprojekt",
+    "kind": "handledning",
+    "title": "Handledning 1",
+    "place": "EC2:241 Verona"
+  },
+  {
+    "date": "2027-01-05",
+    "start": "08:00",
+    "end": "13:00",
+    "subcourse": "databaser",
+    "kind": "tenta",
+    "title": "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+    "place": "Skrivsal MA 10"
+  },
+  {
+    "date": "2027-01-07",
+    "start": "08:00",
+    "end": "13:00",
+    "subcourse": "process",
+    "kind": "tenta",
+    "title": "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+    "place": "Skrivsal MA 9"
+  },
+  {
+    "date": "2027-01-11",
+    "start": "09:00",
+    "end": "12:00",
+    "subcourse": "isprojekt",
+    "kind": "handledning",
+    "title": "Handledning 2",
+    "place": "EC2:241 Verona"
+  },
+  {
+    "date": "2027-01-11",
+    "start": "13:00",
+    "end": "16:00",
+    "subcourse": "isprojekt",
+    "kind": "handledning",
+    "title": "Handledning 2",
+    "place": "EC2:241 Verona"
+  },
+  {
+    "date": "2027-01-12",
+    "start": "09:00",
+    "end": "12:00",
+    "subcourse": "isprojekt",
+    "kind": "handledning",
+    "title": "Handledning 2",
+    "place": "EC2:241 Verona"
+  },
+  {
+    "date": "2027-01-12",
+    "start": "13:00",
+    "end": "16:00",
+    "subcourse": "isprojekt",
+    "kind": "handledning",
+    "title": "Handledning 2",
+    "place": "EC2:241 Verona"
+  },
+  {
+    "date": "2027-01-13",
+    "start": "14:00",
+    "end": "19:00",
+    "subcourse": "arkitektur",
+    "kind": "tenta",
+    "title": "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Matteannexet, adress: Sölvegatan 20. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+    "place": "Skrivsal MA 10"
+  },
+  {
+    "date": "2027-01-14",
+    "start": "08:00",
+    "end": "13:00",
+    "subcourse": "sakerhet",
+    "kind": "tenta",
+    "title": "ANMÄLAN KRÄVS! Anmälan görs i Ladok senast en vecka innan tentamen. Lokal: Sparta, adress: Tunavägen 39. OBS: Viktigt att ta med egen laptop pga digital tentamen.",
+    "place": "Skrivsal Sparta"
+  }
+]

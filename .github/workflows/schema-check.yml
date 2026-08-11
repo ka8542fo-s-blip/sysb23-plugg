@@ -1,0 +1,71 @@
+name: Schemabevakning mot TimeEdit
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # måndagar 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  actions: write
+
+concurrency:
+  group: schema-check
+  cancel-in-progress: false
+
+jobs:
+  kontrollera:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # Formatändringar hos TimeEdit ska upptäckas som testfel/parsefel,
+      # aldrig som tyst skräpdata — därför tester före kontrollen.
+      - name: Enhetstester för parsern
+        run: node --test scripts/*.test.mjs
+
+      - name: Hämta TimeEdit och jämför med schedule.js
+        id: kontroll
+        env:
+          TIMEEDIT_URL: ${{ vars.TIMEEDIT_URL }}
+        run: node scripts/schema-check.mjs
+
+      - name: Skapa issue vid skillnader
+        if: steps.kontroll.outputs.changes == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create schemabevakning --color BFD4F2 \
+            --description "Automatiskt upptäckta schemaändringar i TimeEdit" --force
+          gh issue create \
+            --title "Schemaändringar i TimeEdit ($(date -u +%F))" \
+            --label schemabevakning \
+            --body-file "${{ steps.kontroll.outputs.report }}"
+
+      # Enda automatiska ändringen i schedule.js är lastChecked-stämpeln.
+      - name: Committa lastChecked
+        id: stampel
+        run: |
+          if git diff --quiet -- src/data/schedule.js; then
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add src/data/schedule.js
+            git commit -m "Stämpla lastChecked efter schemakontroll"
+            git pull --rebase origin main
+            git push
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Pushar med GITHUB_TOKEN triggar inte deploy-workflowet av sig
+      # självt — starta det uttryckligen så sajten visar nya datumet.
+      - name: Bygg om sajten
+        if: steps.stampel.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main

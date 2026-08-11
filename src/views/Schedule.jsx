@@ -93,8 +93,9 @@ export default function Schedule({ answers, exams: examHistory, navigate, onSele
 
       <section className="border-t border-line pt-5">
         <p className="text-sm leading-relaxed text-ink/65">
-          Verifierat mot TimeEdit {formatFullDate(schedule.verifiedOn)}. Kontrollera alltid
-          aktuell vecka i TimeEdit — salar och tider kan ändras.
+          Verifierat mot TimeEdit {formatFullDate(schedule.verifiedOn)}. Schemat kontrollerades
+          senast {formatFullDate(schedule.lastChecked)}. Kontrollera alltid aktuell vecka i
+          TimeEdit — salar och tider kan ändras.
         </p>
         <p className="mt-2 text-sm leading-relaxed text-ink/65">{schedule.note}</p>
       </section>
