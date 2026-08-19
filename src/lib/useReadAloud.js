@@ -113,8 +113,9 @@ export function useReadAloud(containerRef) {
     }
     clearHighlight();
     const el = blocks[index];
+    // Ingen autoscroll — läsaren bestämmer själv var på sidan stycket är;
+    // markeringen räcker för att hitta det aktuella stycket.
     el.classList.add(HIGHLIGHT_CLASS);
-    el.scrollIntoView({ block: "center", behavior: "smooth" });
 
     const utterance = new SpeechSynthesisUtterance(el.textContent.trim());
     utterance.lang = "sv-SE";

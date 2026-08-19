@@ -55,7 +55,8 @@ summerar till 20, inte 30 — medvetet orört).
   mäts i **kapitel och procent, aldrig minuter** (per kapitel står "ca X min").
   Tangentbord i kapitel: J/K/N/P/Esc. **Uppläsning** (`lib/useReadAloud.js`):
   webbläsarens talsyntes läser kapitlet styckvis (svensk röst väljs via
-  `lang: sv-SE`), markerar aktuellt stycke (`.tts-aktuell`) och scrollar med;
+  `lang: sv-SE`) och markerar aktuellt stycke (`.tts-aktuell`) — medvetet
+  UTAN autoscroll, läsaren styr själv var på sidan stycket är;
   `data-tts-skip` undantar menyer/metarader; hastighet sparas i
   `upplasningstakt`, valt röstnamn i `upplasningsrost` (naturliga röster
   à la Edge "Natural/Online" föredras automatiskt, InfoTip förklarar hur
