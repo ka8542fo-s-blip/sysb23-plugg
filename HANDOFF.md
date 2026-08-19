@@ -62,7 +62,10 @@ summerar till 20, inte 30 — medvetet orört).
   man får bättre gratisröster); kapitelbyte/avmontering stoppar alltid
   rösten. Vid uppläsning ersätts headerkontrollerna av en flytande pill
   (fixed bottom) med paus/stopp/hastighet; mellanslag pausar (utom när
-  fokus står på knapp/fält).
+  fokus står på knapp/fält). Styckena blir klickbara under uppläsning
+  (`.tts-block`, pekare + hover) — klick hoppar dit direkt, även ur paus.
+  OBS: vid hopp nollas den pågående utterancens onend/onerror FÖRE
+  cancel() — de avfyras asynkront och tolkar annars hoppet som stopp.
 - **Öva** — viktad repetition (fel 3×, osedd 2×, rätt 1×), sidopanel med filter på desktop.
 - **Prov** — +6/−1/0, balanserad dragning (max 2/ämne), deadline-baserad timer,
   provet lever i App-state (överlever flikbyte, medvetet INTE omladdning),

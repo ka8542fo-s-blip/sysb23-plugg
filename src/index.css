@@ -77,6 +77,18 @@
     box-shadow: 0 0 0 6px color-mix(in srgb, var(--pine) 8%, transparent);
     border-radius: 4px;
   }
+
+  /* Under uppläsning är styckena klickbara — klick hoppar dit direkt. */
+  .tts-block {
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 150ms, box-shadow 150ms;
+  }
+
+  .tts-block:hover {
+    background: color-mix(in srgb, var(--pine) 5%, transparent);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--pine) 5%, transparent);
+  }
 }
 
 @layer components {

@@ -434,7 +434,7 @@ export default function ChapterView({
             </button>
             <RateSelect tts={tts} compact />
             <span className="hidden text-xs text-ink/65 sm:inline">
-              mellanslag pausar
+              mellanslag pausar · klicka på ett stycke för att hoppa dit
             </span>
           </div>
         )}
