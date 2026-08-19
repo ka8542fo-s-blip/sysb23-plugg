@@ -1,12 +1,17 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { load, save, KEYS } from "./storage.js";
 
 // Uppläsning med webbläsarens inbyggda talsyntes (Web Speech API) —
-// ingen backend, rösterna kommer från systemet/webbläsaren. Texten läses
-// stycke för stycke: dels för att markera och skrolla med i det som
-// läses, dels för att Chrome tystnar mitt i långa utterances. Vilka
-// element som läses bestäms av anroparen via en container-ref; allt
-// märkt data-tts-skip hoppas över (menyer, metarader, tangentbordstips).
+// ingen backend, rösterna kommer gratis från systemet/webbläsaren.
+// Texten läses stycke för stycke: dels för att markera och skrolla med i
+// det som läses, dels för att Chrome tystnar mitt i långa utterances.
+// Vilka element som läses bestäms av anroparen via en container-ref;
+// allt märkt data-tts-skip hoppas över (menyer, metarader, tips).
+//
+// Röstkvaliteten varierar per system: Edge har neurala svenska röster,
+// macOS/iOS kan ladda ner "förbättrade" röster som dyker upp här. Därför
+// föredras naturliga röster automatiskt, och användaren kan välja själv
+// (valet sparas per röstnamn).
 
 const HIGHLIGHT_CLASS = "tts-aktuell";
 const BLOCK_SELECTOR = "h1, h2, h3, p, li, blockquote";
@@ -14,12 +19,6 @@ export const TTS_RATES = [0.85, 1, 1.15, 1.3, 1.5];
 
 export function ttsSupported() {
   return typeof window !== "undefined" && "speechSynthesis" in window;
-}
-
-function swedishVoice() {
-  const voices = window.speechSynthesis.getVoices();
-  const sv = voices.filter((v) => v.lang?.toLowerCase().startsWith("sv"));
-  return sv.find((v) => v.localService) || sv[0] || null;
 }
 
 // Blocken i läsordning: element som själva innehåller ett annat kandidat-
@@ -45,11 +44,44 @@ export function useReadAloud(containerRef) {
     const saved = load(KEYS.ttsRate, 1);
     return TTS_RATES.includes(saved) ? saved : 1;
   });
-  const [noSwedishVoice, setNoSwedishVoice] = useState(false);
+  const [voiceLists, setVoiceLists] = useState({ total: 0, swedish: [] });
+  const [voiceName, setVoiceNameState] = useState(() => load(KEYS.ttsVoice, null));
   const blocksRef = useRef([]);
-  const indexRef = useRef(0);
   const rateRef = useRef(rate);
+  const voiceRef = useRef(null);
   const stoppedRef = useRef(true);
+
+  // Röstlistan laddas asynkront i Chrome — lyssna tills den finns.
+  useEffect(() => {
+    if (!ttsSupported()) return undefined;
+    const update = () => {
+      const all = window.speechSynthesis.getVoices();
+      setVoiceLists({
+        total: all.length,
+        swedish: all.filter((v) => v.lang?.toLowerCase().startsWith("sv")),
+      });
+    };
+    update();
+    window.speechSynthesis.addEventListener("voiceschanged", update);
+    return () => window.speechSynthesis.removeEventListener("voiceschanged", update);
+  }, []);
+
+  // Vald röst: sparat namn om rösten finns kvar, annars den naturligaste
+  // tillgängliga (Edge kallar sina neurala röster "Natural"/"Online"),
+  // annars en lokal, annars första bästa svenska.
+  const voice = useMemo(() => {
+    const sv = voiceLists.swedish;
+    return (
+      sv.find((v) => v.name === voiceName) ||
+      sv.find((v) => /natural|neural|online/i.test(v.name)) ||
+      sv.find((v) => v.localService) ||
+      sv[0] ||
+      null
+    );
+  }, [voiceLists, voiceName]);
+  useEffect(() => {
+    voiceRef.current = voice;
+  }, [voice]);
 
   const clearHighlight = () => {
     for (const el of blocksRef.current) el.classList.remove(HIGHLIGHT_CLASS);
@@ -73,7 +105,6 @@ export function useReadAloud(containerRef) {
       stop();
       return;
     }
-    indexRef.current = index;
     clearHighlight();
     const el = blocks[index];
     el.classList.add(HIGHLIGHT_CLASS);
@@ -81,8 +112,7 @@ export function useReadAloud(containerRef) {
 
     const utterance = new SpeechSynthesisUtterance(el.textContent.trim());
     utterance.lang = "sv-SE";
-    const voice = swedishVoice();
-    if (voice) utterance.voice = voice;
+    if (voiceRef.current) utterance.voice = voiceRef.current;
     utterance.rate = rateRef.current;
     utterance.onend = () => speakBlock(index + 1);
     // cancel() ger error-event i vissa webbläsare — bara ett fel mitt i
@@ -96,17 +126,10 @@ export function useReadAloud(containerRef) {
   const play = useCallback(() => {
     if (!ttsSupported() || !containerRef.current) return;
     window.speechSynthesis.cancel();
-    // Chrome laddar röstlistan asynkront; anropet i sig triggar laddningen,
-    // och utterance.lang låter motorn välja svensk röst även innan listan
-    // är synlig här.
-    window.speechSynthesis.getVoices();
     const blocks = collectBlocks(containerRef.current);
     if (blocks.length === 0) return;
     blocksRef.current = blocks;
     stoppedRef.current = false;
-    setNoSwedishVoice(
-      window.speechSynthesis.getVoices().length > 0 && !swedishVoice(),
-    );
     setStatus("playing");
     speakBlock(0);
   }, [containerRef]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -121,6 +144,11 @@ export function useReadAloud(containerRef) {
     setStatus("playing");
   }, []);
 
+  const toggle = useCallback(() => {
+    if (status === "playing") pause();
+    else if (status === "paused") resume();
+  }, [status, pause, resume]);
+
   const setRate = useCallback((value) => {
     rateRef.current = value;
     setRateState(value);
@@ -128,5 +156,24 @@ export function useReadAloud(containerRef) {
     // Pågående block behåller sin takt; nästa block tar den nya.
   }, []);
 
-  return { status, play, pause, resume, stop, rate, setRate, noSwedishVoice };
+  const setVoice = useCallback((name) => {
+    setVoiceNameState(name);
+    save(KEYS.ttsVoice, name);
+    // Pågående block behåller sin röst; nästa block tar den nya.
+  }, []);
+
+  return {
+    status,
+    play,
+    pause,
+    resume,
+    toggle,
+    stop,
+    rate,
+    setRate,
+    voices: voiceLists.swedish,
+    voice,
+    setVoice,
+    noSwedishVoice: voiceLists.total > 0 && voiceLists.swedish.length === 0,
+  };
 }

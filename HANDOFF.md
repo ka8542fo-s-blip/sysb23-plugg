@@ -57,7 +57,12 @@ summerar till 20, inte 30 — medvetet orört).
   webbläsarens talsyntes läser kapitlet styckvis (svensk röst väljs via
   `lang: sv-SE`), markerar aktuellt stycke (`.tts-aktuell`) och scrollar med;
   `data-tts-skip` undantar menyer/metarader; hastighet sparas i
-  `upplasningstakt`; kapitelbyte/avmontering stoppar alltid rösten.
+  `upplasningstakt`, valt röstnamn i `upplasningsrost` (naturliga röster
+  à la Edge "Natural/Online" föredras automatiskt, InfoTip förklarar hur
+  man får bättre gratisröster); kapitelbyte/avmontering stoppar alltid
+  rösten. Vid uppläsning ersätts headerkontrollerna av en flytande pill
+  (fixed bottom) med paus/stopp/hastighet; mellanslag pausar (utom när
+  fokus står på knapp/fält).
 - **Öva** — viktad repetition (fel 3×, osedd 2×, rätt 1×), sidopanel med filter på desktop.
 - **Prov** — +6/−1/0, balanserad dragning (max 2/ämne), deadline-baserad timer,
   provet lever i App-state (överlever flikbyte, medvetet INTE omladdning),
@@ -132,7 +137,8 @@ ihop om TimeEdit ändrar format.
 ## Lagringsnycklar
 
 `answers`, `exams`, `essays`, `settings`, `lasSegment`, `delkurs`, `schemaVy`
-(= `"lista"` | `"kalender"`), `upplasningstakt`, `read:<kurs>:<kapitel>`, `sql:<övningsId>`
+(= `"lista"` | `"kalender"`), `upplasningstakt`, `upplasningsrost`,
+`read:<kurs>:<kapitel>`, `sql:<övningsId>`
 (= `"solved"` | `"solved-with-help"`), `examreg:<examId>` (= `true`, nyckeln
 tas bort vid avbockning).
 "Nollställ min data" i Statistik rensar allt. Progress är per webbläsare och domän

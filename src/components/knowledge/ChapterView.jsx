@@ -3,7 +3,28 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { topicLookup } from "../../lib/topicLookup.js";
 import { useReadAloud, ttsSupported, TTS_RATES } from "../../lib/useReadAloud.js";
+import InfoTip from "../InfoTip.jsx";
 import { ExamAreaTag } from "./ChapterList.jsx";
+
+function RateSelect({ tts, compact = false }) {
+  return (
+    <label className="flex items-center gap-1.5 text-sm text-ink/65">
+      {!compact && "Hastighet"}
+      <select
+        value={tts.rate}
+        onChange={(event) => tts.setRate(Number(event.target.value))}
+        aria-label="Uppläsningshastighet"
+        className="rounded-lg border border-line bg-white px-2 py-1.5 text-sm"
+      >
+        {TTS_RATES.map((rate) => (
+          <option key={rate} value={rate}>
+            {String(rate).replace(".", ",")}×
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
 
 export function slugify(text) {
   return String(text)
@@ -158,11 +179,18 @@ export default function ChapterView({
       } else if (event.key === "Escape") {
         event.preventDefault();
         onBack();
+      } else if (event.key === " " && tts.status !== "idle") {
+        // Mellanslag pausar/återupptar uppläsningen — men bara när den är
+        // igång (annars ska mellanslag scrolla som vanligt), och inte när
+        // fokus står på en knapp (då är mellanslag knapptryck).
+        if (tag === "BUTTON") return;
+        event.preventDefault();
+        tts.toggle();
       }
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [onNext, onPrev, onBack]);
+  }, [onNext, onPrev, onBack, tts.status, tts.toggle]);
 
   return (
     <div>
@@ -205,40 +233,32 @@ export default function ChapterView({
               />
             </p>
 
-            {ttsSupported() && (
+            {ttsSupported() && tts.status === "idle" && (
               <div className="mt-4 flex flex-wrap items-center gap-2" data-tts-skip>
-                {tts.status === "idle" ? (
-                  <button type="button" className="btn-secondary" onClick={tts.play}>
-                    ▶ Lyssna på kapitlet
-                  </button>
-                ) : (
-                  <>
-                    <button
-                      type="button"
-                      className="btn-secondary"
-                      onClick={tts.status === "playing" ? tts.pause : tts.resume}
+                <button type="button" className="btn-secondary" onClick={tts.play}>
+                  ▶ Lyssna på kapitlet
+                </button>
+                <RateSelect tts={tts} />
+                {tts.voices.length > 1 && (
+                  <label className="flex items-center gap-1.5 text-sm text-ink/65">
+                    Röst
+                    <select
+                      value={tts.voice?.name || ""}
+                      onChange={(event) => tts.setVoice(event.target.value)}
+                      className="max-w-56 rounded-lg border border-line bg-white px-2 py-1.5 text-sm"
                     >
-                      {tts.status === "playing" ? "❚❚ Pausa" : "▶ Fortsätt"}
-                    </button>
-                    <button type="button" className="btn-secondary" onClick={tts.stop}>
-                      ◼ Stoppa
-                    </button>
-                  </>
+                      {tts.voices.map((voice) => (
+                        <option key={voice.name} value={voice.name}>
+                          {voice.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
                 )}
-                <label className="flex items-center gap-1.5 text-sm text-ink/65">
-                  Hastighet
-                  <select
-                    value={tts.rate}
-                    onChange={(event) => tts.setRate(Number(event.target.value))}
-                    className="rounded-lg border border-line bg-white px-2 py-1.5 text-sm"
-                  >
-                    {TTS_RATES.map((rate) => (
-                      <option key={rate} value={rate}>
-                        {String(rate).replace(".", ",")}×
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                <InfoTip
+                  term="Naturligare röst"
+                  text="Rösterna kommer gratis från din webbläsare och ditt system. Naturligast idag: Microsoft Edge har neurala svenska röster inbyggda. På macOS och iOS kan du ladda ner en förbättrad svensk röst under Inställningar → Hjälpmedel → Uppläst innehåll → Röster — den dyker sedan upp i röstvalet här. Uppläsningen sker helt lokalt, inget skickas någonstans."
+                />
                 {tts.noSwedishVoice && (
                   <span className="text-sm text-ink/65">
                     Ingen svensk röst hittades i webbläsaren — uttalet kan bli fel.
@@ -391,9 +411,33 @@ export default function ChapterView({
 
           <p className="mt-4 text-sm text-ink/65" data-tts-skip>
             Tangentbord: J/K scrollar, N/P byter kapitel, Esc tar dig tillbaka till
-            innehållsförteckningen.
+            innehållsförteckningen. Mellanslag pausar uppläsningen.
           </p>
         </div>
+
+        {/* Flytande uppläsningskontroller — följer med när man skrollar. */}
+        {tts.status !== "idle" && (
+          <div className="fixed bottom-4 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2 rounded-full border border-line bg-white py-2 pl-3 pr-4 shadow-lg">
+            <button
+              type="button"
+              className="btn-secondary px-3 py-1.5 text-sm"
+              onClick={tts.toggle}
+            >
+              {tts.status === "playing" ? "❚❚ Pausa" : "▶ Fortsätt"}
+            </button>
+            <button
+              type="button"
+              className="btn-secondary px-3 py-1.5 text-sm"
+              onClick={tts.stop}
+            >
+              ◼ Stoppa
+            </button>
+            <RateSelect tts={tts} compact />
+            <span className="hidden text-xs text-ink/65 sm:inline">
+              mellanslag pausar
+            </span>
+          </div>
+        )}
 
         {headings.length > 0 && (
           <nav
