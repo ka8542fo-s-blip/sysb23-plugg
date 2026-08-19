@@ -67,13 +67,15 @@ export function useReadAloud(containerRef) {
   }, []);
 
   // Vald röst: sparat namn om rösten finns kvar, annars den naturligaste
-  // tillgängliga (Edge kallar sina neurala röster "Natural"/"Online"),
-  // annars en lokal, annars första bästa svenska.
+  // tillgängliga — Edge kallar sina neurala röster "Natural"/"Online",
+  // macOS/iOS kallar nedladdade bättre röster "Förbättrad"/"Enhanced"/
+  // "Premium" — annars en lokal, annars första bästa svenska.
   const voice = useMemo(() => {
     const sv = voiceLists.swedish;
     return (
       sv.find((v) => v.name === voiceName) ||
       sv.find((v) => /natural|neural|online/i.test(v.name)) ||
+      sv.find((v) => /förbättrad|enhanced|premium/i.test(v.name)) ||
       sv.find((v) => v.localService) ||
       sv[0] ||
       null

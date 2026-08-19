@@ -257,7 +257,7 @@ export default function ChapterView({
                 )}
                 <InfoTip
                   term="Naturligare röst"
-                  text="Rösterna kommer gratis från din webbläsare och ditt system. Naturligast idag: Microsoft Edge har neurala svenska röster inbyggda. På macOS och iOS kan du ladda ner en förbättrad svensk röst under Inställningar → Hjälpmedel → Uppläst innehåll → Röster — den dyker sedan upp i röstvalet här. Uppläsningen sker helt lokalt, inget skickas någonstans."
+                  text="Rösterna kommer gratis från din webbläsare och ditt system. Naturligast idag: Microsoft Edge har neurala svenska röster inbyggda. På macOS och iOS kan du ladda ner en förbättrad svensk röst under Inställningar → Hjälpmedel → Uppläst innehåll → Systemröst/Röster — starta sedan om webbläsaren så dyker den upp i röstvalet här och väljs automatiskt. Uppläsningen sker helt lokalt, inget skickas någonstans."
                 />
                 {tts.noSwedishVoice && (
                   <span className="text-sm text-ink/65">
