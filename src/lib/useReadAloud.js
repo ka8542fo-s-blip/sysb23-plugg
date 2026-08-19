@@ -75,7 +75,8 @@ export function useReadAloud(containerRef) {
     return (
       sv.find((v) => v.name === voiceName) ||
       sv.find((v) => /natural|neural|online/i.test(v.name)) ||
-      sv.find((v) => /förbättrad|enhanced|premium/i.test(v.name)) ||
+      sv.find((v) => /premium/i.test(v.name)) ||
+      sv.find((v) => /förbättrad|enhanced/i.test(v.name)) ||
       sv.find((v) => v.localService) ||
       sv[0] ||
       null
