@@ -53,7 +53,11 @@ summerar till 20, inte 30 — medvetet orört).
   `examArea`-etiketter per kapitel + tentabanner + filter "Visa bara tentarelevanta
   kapitel" (fältet saknas = ingen etikett alls; null = "Utanför tentan"). Läsprogress
   mäts i **kapitel och procent, aldrig minuter** (per kapitel står "ca X min").
-  Tangentbord i kapitel: J/K/N/P/Esc.
+  Tangentbord i kapitel: J/K/N/P/Esc. **Uppläsning** (`lib/useReadAloud.js`):
+  webbläsarens talsyntes läser kapitlet styckvis (svensk röst väljs via
+  `lang: sv-SE`), markerar aktuellt stycke (`.tts-aktuell`) och scrollar med;
+  `data-tts-skip` undantar menyer/metarader; hastighet sparas i
+  `upplasningstakt`; kapitelbyte/avmontering stoppar alltid rösten.
 - **Öva** — viktad repetition (fel 3×, osedd 2×, rätt 1×), sidopanel med filter på desktop.
 - **Prov** — +6/−1/0, balanserad dragning (max 2/ämne), deadline-baserad timer,
   provet lever i App-state (överlever flikbyte, medvetet INTE omladdning),
@@ -128,7 +132,7 @@ ihop om TimeEdit ändrar format.
 ## Lagringsnycklar
 
 `answers`, `exams`, `essays`, `settings`, `lasSegment`, `delkurs`, `schemaVy`
-(= `"lista"` | `"kalender"`), `read:<kurs>:<kapitel>`, `sql:<övningsId>`
+(= `"lista"` | `"kalender"`), `upplasningstakt`, `read:<kurs>:<kapitel>`, `sql:<övningsId>`
 (= `"solved"` | `"solved-with-help"`), `examreg:<examId>` (= `true`, nyckeln
 tas bort vid avbockning).
 "Nollställ min data" i Statistik rensar allt. Progress är per webbläsare och domän

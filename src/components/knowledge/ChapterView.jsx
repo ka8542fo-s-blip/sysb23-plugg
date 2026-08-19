@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { topicLookup } from "../../lib/topicLookup.js";
+import { useReadAloud, ttsSupported, TTS_RATES } from "../../lib/useReadAloud.js";
 import { ExamAreaTag } from "./ChapterList.jsx";
 
 export function slugify(text) {
@@ -99,6 +100,12 @@ export default function ChapterView({
   const [tocOpen, setTocOpen] = useState(false);
   const headings = useMemo(() => headingsIn(chapter.body), [chapter.body]);
 
+  const readColumnRef = useRef(null);
+  const tts = useReadAloud(readColumnRef);
+  const ttsStop = tts.stop;
+  // Byter man kapitel ska inte förra kapitlets röst fortsätta.
+  useEffect(() => ttsStop, [chapter.id, ttsStop]);
+
   // sources är en lista i datat, men kan vara en sträng i äldre delkurser.
   const sources = Array.isArray(chapter.sources)
     ? chapter.sources.join(" · ")
@@ -175,7 +182,7 @@ export default function ChapterView({
       </button>
 
       <div className="mt-4 lg:mx-auto lg:flex lg:max-w-5xl lg:gap-10">
-        <div className="min-w-0 flex-1">
+        <div ref={readColumnRef} className="min-w-0 flex-1">
           <header>
             <p className="tabular text-[11px] font-medium uppercase tracking-[0.14em] text-brass">
               Kapitel {number} av {total}
@@ -188,7 +195,7 @@ export default function ChapterView({
                 {chapter.lead}
               </p>
             )}
-            <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1">
+            <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1" data-tts-skip>
               <span className="tabular text-sm text-ink/65">
                 {chapter.readingMinutes} min läsning
                 {sources ? ` · ${sources}` : ""}
@@ -198,8 +205,50 @@ export default function ChapterView({
               />
             </p>
 
+            {ttsSupported() && (
+              <div className="mt-4 flex flex-wrap items-center gap-2" data-tts-skip>
+                {tts.status === "idle" ? (
+                  <button type="button" className="btn-secondary" onClick={tts.play}>
+                    ▶ Lyssna på kapitlet
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      className="btn-secondary"
+                      onClick={tts.status === "playing" ? tts.pause : tts.resume}
+                    >
+                      {tts.status === "playing" ? "❚❚ Pausa" : "▶ Fortsätt"}
+                    </button>
+                    <button type="button" className="btn-secondary" onClick={tts.stop}>
+                      ◼ Stoppa
+                    </button>
+                  </>
+                )}
+                <label className="flex items-center gap-1.5 text-sm text-ink/65">
+                  Hastighet
+                  <select
+                    value={tts.rate}
+                    onChange={(event) => tts.setRate(Number(event.target.value))}
+                    className="rounded-lg border border-line bg-white px-2 py-1.5 text-sm"
+                  >
+                    {TTS_RATES.map((rate) => (
+                      <option key={rate} value={rate}>
+                        {String(rate).replace(".", ",")}×
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                {tts.noSwedishVoice && (
+                  <span className="text-sm text-ink/65">
+                    Ingen svensk röst hittades i webbläsaren — uttalet kan bli fel.
+                  </span>
+                )}
+              </div>
+            )}
+
             {chapter.topics?.length > 0 && (
-              <div className="mt-4 flex flex-wrap items-center gap-2">
+              <div className="mt-4 flex flex-wrap items-center gap-2" data-tts-skip>
                 <span className="text-sm text-ink/65">Ämnen i kapitlet:</span>
                 {chapter.topics.map((topicId) => (
                   <button
@@ -217,7 +266,7 @@ export default function ChapterView({
 
           {/* "I detta kapitel" — utfällbar på mobil, kolumn på desktop */}
           {headings.length > 0 && (
-            <div className="mt-6 lg:hidden">
+            <div className="mt-6 lg:hidden" data-tts-skip>
               <button
                 type="button"
                 className="btn-secondary w-full"
@@ -340,7 +389,7 @@ export default function ChapterView({
             </button>
           </div>
 
-          <p className="mt-4 text-sm text-ink/65">
+          <p className="mt-4 text-sm text-ink/65" data-tts-skip>
             Tangentbord: J/K scrollar, N/P byter kapitel, Esc tar dig tillbaka till
             innehållsförteckningen.
           </p>

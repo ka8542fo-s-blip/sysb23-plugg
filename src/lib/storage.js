@@ -10,6 +10,7 @@ export const KEYS = {
   readSegment: "lasSegment", // "kompendium" | "begrepp" | "ordlista"
   course: "delkurs", // senast valda delkursen
   scheduleView: "schemaVy", // "lista" | "kalender"
+  ttsRate: "upplasningstakt", // uppläsningens hastighet (t.ex. 1.15)
 };
 
 // Lösta SQL-övningar: sysb23:sql:<övningsId> = "solved" | "solved-with-help"

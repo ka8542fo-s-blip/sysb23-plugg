@@ -70,6 +70,13 @@
     outline-offset: 2px;
     border-radius: 4px;
   }
+
+  /* Stycket som just nu läses upp (useReadAloud sätter klassen). */
+  .tts-aktuell {
+    background: color-mix(in srgb, var(--pine) 8%, transparent);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--pine) 8%, transparent);
+    border-radius: 4px;
+  }
 }
 
 @layer components {
