@@ -12,7 +12,7 @@ import {
 } from "../lib/scheduleInfo.js";
 import { readinessFor, pacingFor } from "../lib/readiness.js";
 import { studyTargetFor, startStudying, STUDY_LABEL } from "../lib/studyPlan.js";
-import { daysUntil, formatFullDate, formatSwedish } from "../lib/dates.js";
+import { daysUntil, formatDayMonth, formatFullDate, formatSwedish } from "../lib/dates.js";
 import { loadExamRegistrations, saveExamRegistration } from "../lib/storage.js";
 import { useToday } from "../lib/useToday.js";
 
@@ -85,6 +85,17 @@ export default function Schedule({ answers, exams: examHistory, navigate, onSele
           nedräkning till nästa tenta.
         </p>
       </section>
+
+      {/* Pågår en tät period ska det synas direkt, inte först i översikten
+          längre ned. */}
+      {period?.warning && (
+        <section className="rounded-card border-l-2 border-brass bg-brass/[0.07] p-4">
+          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-brass">
+            Tät period · {formatDayMonth(period.from)} – {formatDayMonth(period.to)}
+          </p>
+          <p className="mt-1 text-[15px] leading-relaxed">{period.label}</p>
+        </section>
+      )}
 
       <ExamCountdown
         schedule={schedule}

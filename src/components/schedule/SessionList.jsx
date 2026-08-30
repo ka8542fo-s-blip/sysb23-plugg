@@ -45,8 +45,8 @@ export default function SessionList({ schedule, defaultForwardOnly, now: nowProp
     <section>
       <h2 className="font-display text-xl">Alla pass</h2>
       <p className="mt-1 text-[15px] text-ink/70">
-        {schedule.sessions.length} bokade pass vid avläsningen. Delkurserna i november
-        har färre pass inlagda än de sannolikt får.
+        {schedule.sessions.length} bokade pass vid senaste avläsningen. Schemat
+        kontrolleras automatiskt mot TimeEdit varje måndag.
       </p>
 
       <div className="mt-3 max-w-xs">

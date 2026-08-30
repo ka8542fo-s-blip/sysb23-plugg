@@ -78,8 +78,12 @@ summerar till 20, inte 30 — medvetet orört).
   i webbläsarbygget — binärerna är gitignorerade). Kör-knappen är `btn-emphasis`
   längst till höger. Schemapanelen har InfoTip på varje tabell/kolumn (beskrivningarna
   i `schemaGlossary.js` är lästa ur seeden — hitta inte på egenskaper).
-- **Schema (Pluggkalender)** — data i `src/data/schedule.js` (avläst ur TimeEdit
-  2026-08-01, inte levande). Passlistan har vyväxling Lista/Kalender
+- **Schema (Pluggkalender)** — data i `src/data/schedule.js` (avläst ur TimeEdit,
+  senast 2026-08-30; bevakningen larmar om ändringar). Fem perioder varav två
+  med `warning: true` (9–17 nov och 18 nov–3 dec — Säkerhet flyttade sin start
+  till 10 nov, mitt i redovisningsveckan). Tunga sträckan tonas i gult i
+  terminsöversiktens tidslinje, varningsperioder får brass-tonade kort, och
+  pågår en varningsperiod visas en banner överst i Schema-vyn. Passlistan har vyväxling Lista/Kalender
   (SegmentedControl, sparas i `schemaVy`); månadskalendern (`MonthCalendar.jsx`)
   delar filtren med listan, börjar veckor på måndag, visar flerdagarspass på
   varje täckt dag och är låst till terminens månader. Google Kalender-stil:

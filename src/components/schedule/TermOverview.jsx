@@ -20,6 +20,13 @@ export default function TermOverview({ schedule, exams, currentPeriod }) {
   const todayInRange = todayIndex >= 0 && todayIndex < totalDays;
   const todayLeft = `${((todayIndex + 0.5) / totalDays) * 100}%`;
 
+  // Tyngsta sträckan tonas i tidslinjen så att den syns där blicken är,
+  // inte bara i texten under.
+  const stretchFrom = dayIndex(schedule.heaviestStretch.from);
+  const stretchTo = dayIndex(schedule.heaviestStretch.to);
+  const stretchLeft = `${(stretchFrom / totalDays) * 100}%`;
+  const stretchWidth = `${((stretchTo - stretchFrom + 1) / totalDays) * 100}%`;
+
   // Månadsetiketter: en cell per månad i intervallet.
   const months = [];
   for (let i = 0; i < totalDays; i++) {
@@ -68,6 +75,11 @@ export default function TermOverview({ schedule, exams, currentPeriod }) {
               <div key={subcourse.id} className="contents">
                 <div className="truncate py-1 pr-3 text-sm">{subcourse.short}</div>
                 <div className="relative py-1">
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-y-0 bg-brass/15"
+                    style={{ left: stretchLeft, width: stretchWidth }}
+                  />
                   <div className="grid" style={{ gridTemplateColumns: columns }}>
                     <div
                       className="h-3 rounded-full"
@@ -111,8 +123,9 @@ export default function TermOverview({ schedule, exams, currentPeriod }) {
         )}
       </div>
 
-      <p className="mt-3 rounded-card border-l-2 border-brass bg-white p-4 text-[15px] leading-relaxed">
-        {schedule.heaviestStretch.label}
+      <p className="mt-3 rounded-card border-l-2 border-brass bg-brass/[0.07] p-4 text-[15px] leading-relaxed">
+        {schedule.heaviestStretch.label}{" "}
+        <span className="text-ink/65">Sträckan är gultonad i tidslinjen ovan.</span>
       </p>
 
       <ul className="mt-3 space-y-2">
@@ -121,7 +134,13 @@ export default function TermOverview({ schedule, exams, currentPeriod }) {
           return (
             <li
               key={period.from}
-              className={`card p-4 ${active ? "border-pine bg-pine/[0.04]" : ""}`}
+              className={`card p-4 ${
+                active
+                  ? "border-pine bg-pine/[0.04]"
+                  : period.warning
+                    ? "border-brass/60 bg-brass/[0.05]"
+                    : ""
+              }`}
             >
               <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <span className="tabular text-sm font-medium">
