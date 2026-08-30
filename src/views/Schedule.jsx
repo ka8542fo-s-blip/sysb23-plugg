@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import ExamCountdown from "../components/schedule/ExamCountdown.jsx";
+import ExamTimeline from "../components/schedule/ExamTimeline.jsx";
 import TermOverview from "../components/schedule/TermOverview.jsx";
 import SessionList from "../components/schedule/SessionList.jsx";
 import { schedule } from "../data/schedule.js";
@@ -110,6 +111,8 @@ export default function Schedule({ answers, exams: examHistory, navigate, onSele
         registrations={registrations}
         onToggleRegistration={toggleRegistration}
       />
+
+      <ExamTimeline exams={exams} />
 
       <SessionList
         schedule={schedule}

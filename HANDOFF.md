@@ -107,6 +107,11 @@ summerar till 20, inte 30 — medvetet orört).
   deadline på okryssad kommande tenta = neutral text, aldrig rött larm. Hem-raden
   visar närmaste okryssade deadline i stället för tentan när den är närmast
   (kan tillhöra en senare tenta — novembertentorna ligger tätare än sju dagar).
+- **Tentaöversikt** (`ExamTimeline.jsx`, i Schema efter nedräkningskortet) —
+  vertikal tidslinje med tentorna i följd: glappet i dagar utskrivet mellan
+  varje par, linjelängden skalad efter glappet (20–88 px), ≤ 7 dagar ger
+  brass-linje + "Tätt"-chip. Ordinarie som standard, omtentor via chip-toggle
+  (glappen räknas om). Passerade tentor tonas ned med ✓ avklarad.
 - **Statistik** — InfoTips (frågetecken) förklarar varje term; texterna i
   `data/statTerms.js` är skrivna mot koden och måste följa med om beräkningar ändras.
 
