@@ -271,7 +271,7 @@ export default function MonthCalendar({ sessions, byId, now, termStart, termEnd 
         <>
           <div
             aria-hidden="true"
-            className="fixed inset-0 z-50 bg-ink/25"
+            className="dagdialog-bakgrund fixed inset-0 z-50 bg-ink/25"
             onClick={closeDay}
           />
           <div
@@ -280,10 +280,10 @@ export default function MonthCalendar({ sessions, byId, now, termStart, termEnd 
             aria-modal="true"
             aria-labelledby="dagdialog-rubrik"
             tabIndex={-1}
-            className="fixed left-1/2 top-1/2 z-50 max-h-[80vh] w-[min(26rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-card border border-line bg-white p-5 shadow-xl"
+            className="dagdialog fixed left-1/2 top-1/2 z-50 max-h-[82vh] w-[min(30rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-card border border-line bg-white p-6 shadow-xl"
           >
             <div className="flex items-start justify-between gap-3">
-              <h3 id="dagdialog-rubrik" className="font-display text-xl">
+              <h3 id="dagdialog-rubrik" className="font-display text-2xl">
                 {formatSwedish(open.date)}
                 {open.isToday && (
                   <span className="ml-2 font-sans text-[15px] text-brass">idag</span>
