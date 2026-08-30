@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import CourseDot from "./CourseDot.jsx";
 import { addDays, formatSwedish, monthName, weekNumber } from "../../lib/dates.js";
 
@@ -66,7 +66,39 @@ export default function MonthCalendar({ sessions, byId, now, termStart, termEnd 
   const homeMonth = clampMonth(monthOf(now));
 
   const [month, setMonth] = useState(homeMonth);
-  const [picked, setPicked] = useState(null);
+  // Klickad dag öppnas som dialogruta — snabbaste vägen till dagens tider,
+  // och samma väg på mobil där cellerna bara rymmer prickar.
+  const [openDate, setOpenDate] = useState(null);
+  const dialogRef = useRef(null);
+  const triggerRef = useRef(null);
+
+  function openDay(event, date) {
+    triggerRef.current = event.currentTarget;
+    setOpenDate(date);
+  }
+  function closeDay() {
+    setOpenDate(null);
+    triggerRef.current?.focus?.();
+  }
+
+  // Esc stänger, fokus flyttas in i dialogen, och sidan bakom skrollåses.
+  useEffect(() => {
+    if (!openDate) return undefined;
+    dialogRef.current?.focus();
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeDay();
+      }
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [openDate]);
 
   // Hela veckor: från måndagen i månadens första vecka till söndagen i
   // den sista. Angränsande månaders dagar visas nedtonade, som i Google.
@@ -95,18 +127,7 @@ export default function MonthCalendar({ sessions, byId, now, termStart, termEnd 
   }, [month, sessions, now]);
 
   const gridDays = weeks.flatMap((week) => week.days);
-
-  // Öppen dag: senast klickad om den syns i rutnätet, annars idag om
-  // något händer då, annars månadens första dag med pass.
-  const inMonth = gridDays.filter((day) => day.inMonth);
-  const openDate = gridDays.some((day) => day.date === picked)
-    ? picked
-    : (
-        inMonth.find((day) => day.isToday && day.sessions.length > 0) ||
-        inMonth.find((day) => day.sessions.length > 0) ||
-        inMonth.find((day) => day.isToday)
-      )?.date || null;
-  const open = gridDays.find((day) => day.date === openDate) || null;
+  const open = openDate ? gridDays.find((day) => day.date === openDate) || null : null;
 
   return (
     <div className="card mt-3 p-4 sm:p-5">
@@ -174,8 +195,8 @@ export default function MonthCalendar({ sessions, byId, now, termStart, termEnd 
                   <button
                     key={day.date}
                     type="button"
-                    onClick={() => setPicked(day.date)}
-                    aria-pressed={selected}
+                    onClick={(event) => openDay(event, day.date)}
+                    aria-haspopup="dialog"
                     aria-label={`${formatSwedish(day.date)}, ${
                       day.sessions.length === 0
                         ? "inget inbokat"
@@ -242,42 +263,83 @@ export default function MonthCalendar({ sessions, byId, now, termStart, termEnd 
         </div>
       </div>
 
-      <div className="mt-3 border-t border-line pt-3">
-        {open ? (
-          <>
-            <p className="text-sm font-medium">
-              {formatSwedish(open.date)}
-              {open.isToday && <span className="text-brass"> · idag</span>}
-            </p>
+      <p className="mt-2 text-sm text-ink/65">
+        Klicka på en dag för att se dagens tider.
+      </p>
+
+      {open && (
+        <>
+          <div
+            aria-hidden="true"
+            className="fixed inset-0 z-50 bg-ink/25"
+            onClick={closeDay}
+          />
+          <div
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="dagdialog-rubrik"
+            tabIndex={-1}
+            className="fixed left-1/2 top-1/2 z-50 max-h-[80vh] w-[min(26rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-card border border-line bg-white p-5 shadow-xl"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <h3 id="dagdialog-rubrik" className="font-display text-xl">
+                {formatSwedish(open.date)}
+                {open.isToday && (
+                  <span className="ml-2 font-sans text-[15px] text-brass">idag</span>
+                )}
+              </h3>
+              <button
+                type="button"
+                className="btn-quiet -mr-2 -mt-1 px-2 text-lg leading-none"
+                onClick={closeDay}
+                aria-label="Stäng"
+              >
+                ✕
+              </button>
+            </div>
+
             {open.sessions.length === 0 ? (
-              <p className="mt-1 text-[15px] text-ink/65">Inget inbokat.</p>
+              <p className="mt-3 text-[15px] text-ink/65">Inget inbokat den här dagen.</p>
             ) : (
-              <ul className="mt-1 space-y-1.5">
+              <ul className="mt-3 divide-y divide-line">
                 {open.sessions.map((session, index) => {
                   const subcourse = byId[session.subcourse];
                   const exam = session.kind === "tenta";
                   return (
-                    <li key={`${session.date}-${session.time}-${index}`}>
-                      <span
-                        className={`block text-[15px] ${exam ? "font-medium text-wrong" : ""}`}
+                    <li
+                      key={`${session.date}-${session.time}-${index}`}
+                      className="py-3 pl-3 first:pt-1 last:pb-1"
+                      style={{ borderLeft: `3px solid var(${subcourse?.color})` }}
+                    >
+                      <p className="tabular text-sm text-ink/65">{session.time}</p>
+                      <p
+                        className={`mt-0.5 text-[15px] ${exam ? "font-medium text-wrong" : ""}`}
                       >
-                        <span className="tabular text-ink/65">{session.time}</span>{" "}
                         {session.title}
-                      </span>
-                      <span className="flex flex-wrap items-center gap-x-2 text-sm text-ink/65">
+                      </p>
+                      <p className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink/65">
                         <CourseDot subcourse={subcourse} />
-                        <span>· {session.place}</span>
-                      </span>
+                        <span>{session.place}</span>
+                        {exam && (
+                          <span className="chip border-wrong py-0 text-xs text-wrong">
+                            Tenta
+                          </span>
+                        )}
+                        {session.kind === "obligatorisk" && (
+                          <span className="chip border-brass py-0 text-xs text-brass">
+                            Obligatorisk
+                          </span>
+                        )}
+                      </p>
                     </li>
                   );
                 })}
               </ul>
             )}
-          </>
-        ) : (
-          <p className="text-[15px] text-ink/65">Inga pass i den här månaden.</p>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

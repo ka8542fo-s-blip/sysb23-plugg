@@ -89,9 +89,12 @@ summerar till 20, inte 30 — medvetet orört).
   varje täckt dag och är låst till terminens månader. Google Kalender-stil:
   hela veckor med angränsande månaders dagar nedtonade men klickbara,
   hårlinjerutnät (gap-px på `--line`), chips med tid+titel i cellerna på
-  desktop (fyllt rött = tenta, delkurständ vänsterkant annars), prickar +
-  detaljpanel på mobil, veckonummer i vänsterkanten ≥ sm, "idag"-knapp när
-  man bläddrat bort. Vald dag = fylld pine-cirkel på dagnumret, idag = mässing. Datumlogik i `lib/dates.js`: Europe/Stockholm,
+  desktop (fyllt rött = tenta, delkurständ vänsterkant annars), prickar på
+  mobil, veckonummer i vänsterkanten ≥ sm, "idag"-knapp när man bläddrat
+  bort. Dagklick öppnar en dialogruta med dagens pass (tid, titel, sal,
+  tenta-/obligatorisk-chips) — stängs med Esc, kryss eller klick utanför,
+  fokus återvänder till dagcellen, sidan bakom skrollåses. Öppen dag =
+  fylld pine-cirkel på dagnumret, idag = mässing. Datumlogik i `lib/dates.js`: Europe/Stockholm,
   UTC-midnattsdiffar (sommartidssäkert), ISO-veckor. `lib/useToday.js` gör datumet
   reaktivt (minutkoll + fokus) så öppna flikar slår över vid midnatt.
   "Plugga till denna tenta" väljer ALDRIG läge åt användaren — den byter delkurs
