@@ -3,7 +3,7 @@ export const schedule = {
   termStart: "2026-08-31",
   termEnd: "2027-01-17",
   verifiedOn: "2026-08-30",
-  lastChecked: "2026-08-30",
+  lastChecked: "2026-08-31",
   source: "TimeEdit, sökning \"Informationssystems- och verksamhetsutveckling, SYSB23\", intervall 2026-08-31 – 2027-02-28.",
   note: "Samtliga tentor är digitala och kräver egen laptop samt anmälan i Ladok senast en vecka innan. MA-skrivsalarna ligger i Matteannexet, Sölvegatan 20. Sparta ligger på Tunavägen 39.",
 
