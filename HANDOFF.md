@@ -50,8 +50,11 @@ summerar till 20, inte 30 — medvetet orört).
   statusrutor, genvägar byggda ur `views`.
 - **Läs (KnowledgeHub)** — tre segment: Kompendium/Begrepp/Ordlista + gemensam
   sökning. Ordlistan sorteras per kapitel som standard, A–Ö som val. Databaser har
-  `examArea`-etiketter per kapitel + tentabanner + filter "Visa bara tentarelevanta
-  kapitel" (fältet saknas = ingen etikett alls; null = "Utanför tentan"). Läsprogress
+  `examArea`-etiketter per kapitel + tentabanner (fältet saknas = ingen etikett
+  alls; null = "Utanför tentan"). Sedan föreläsarens besked 2026-08-31 görs
+  tentan om och väntas täcka det mesta — alla kapitel har områdesetikett
+  (kap1 = "Grund"), och filtret "Visa bara tentarelevanta kapitel" döljer sig
+  självt eftersom det bara visas när något kapitel är utanför (hasBackground). Läsprogress
   mäts i **kapitel och procent, aldrig minuter** (per kapitel står "ca X min").
   Tangentbord i kapitel: J/K/N/P/Esc. **Uppläsning** (`lib/useReadAloud.js`):
   webbläsarens talsyntes läser kapitlet styckvis (svensk röst väljs via

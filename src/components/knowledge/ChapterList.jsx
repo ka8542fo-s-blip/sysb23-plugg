@@ -70,10 +70,13 @@ export default function ChapterList({
       {examNote && (
         <div className="card max-w-reading border-brass/40 p-4">
           <p className="text-[15px] leading-relaxed">{examNote.text}</p>
-          <p className="mt-1 text-sm text-ink/65">
-            Källa: {examNote.source}
-            {examNote.sqlHint ? ` · ${examNote.sqlHint}` : ""}
-          </p>
+          {(examNote.source || examNote.sqlHint) && (
+            <p className="mt-1 text-sm text-ink/65">
+              {[examNote.source ? `Källa: ${examNote.source}` : null, examNote.sqlHint]
+                .filter(Boolean)
+                .join(" · ")}
+            </p>
+          )}
         </div>
       )}
 

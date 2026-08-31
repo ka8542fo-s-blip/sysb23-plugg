@@ -688,10 +688,13 @@ export const CHAPTER_TOPICS = {
   kap8: { topics: ["fysisk", "nycklar"], primaryTopics: ["fysisk"] },
 };
 
-// Tentans område per kapitel. null = bakgrund som är nyttig att läsa men
-// inte tentas direkt. SQL-området motsvaras av SQL-verkstaden.
+// Tentans område per kapitel. Sedan föreläsarens besked 2026-08-31 (tentan
+// görs om och väntas täcka det mesta av föreläsningsinnehållet) räknas alla
+// kapitel som relevanta — inget märks som utanför tentan. Mekaniken finns
+// kvar: null = utanför tentan, saknat fält = ingen områdesindelning alls.
+// SQL-området motsvaras av SQL-verkstaden.
 export const EXAM_AREAS = {
-  kap1: null,
+  kap1: "Grund",
   kap2: "Grund",
   kap3: "Grund",
   kap4: "ER-modellering",
@@ -702,8 +705,7 @@ export const EXAM_AREAS = {
 };
 
 export const examNote = {
-  text: "Tentan täcker fyra områden: ER-modellering, transformation av konceptuell till fysisk datamodell, normalformer och normalisering, samt SQL. Frågeformatet kan variera.",
-  source: "Föreläsning 1",
+  text: "Tentan 17 november görs om jämfört med tidigare år och väntas täcka det mesta av föreläsningsinnehållet. Exakt omfattning meddelas under delkursen.",
   sqlHint: "SQL-området tränas i SQL-verkstaden.",
 };
 
