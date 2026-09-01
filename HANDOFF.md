@@ -27,7 +27,7 @@ delkursvillkor utspridda i koden.
 | Delkurs | Status | Har |
 |---|---|---|
 | strategi | komplett | 10 kapitel, 13 ämnen, 90 termer, 49 frågor (omskrivna 2026-08-07 så längd/position inte läcker svaret), 4 essäer |
-| databaser | delvis | 8 kapitel, 8 ämnen, 64 termer, SQL-verkstad (32 övningar), **`questions.js` är en tom array** — frågebanken kommer i en egen prompt; Öva/Prov visar tomlägen och "Öva på detta"-knappar i Läs är dolda tills den fylls |
+| databaser | delvis | 8 kapitel, 8 ämnen, 64 termer, SQL-verkstad (53 övningar i 9 nivåer, utökad 2026-09-02 efter SQL-föreläsningen), **`questions.js` är en tom array** — frågebanken kommer i en egen prompt; Öva/Prov visar tomlägen och "Öva på detta"-knappar i Läs är dolda tills den fylls |
 | process, arkitektur, sakerhet | kommande | platshållare i manifestet |
 
 **Dataregeln (helig):** `topics.js` äger alla korta punkter (`keyPoints`, `pitfalls`).
@@ -81,6 +81,11 @@ summerar till 20, inte 30 — medvetet orört).
   i webbläsarbygget — binärerna är gitignorerade). Kör-knappen är `btn-emphasis`
   längst till höger. Schemapanelen har InfoTip på varje tabell/kolumn (beskrivningarna
   i `schemaGlossary.js` är lästa ur seeden — hitta inte på egenskaper).
+  53 övningar i 9 nivåer (nivå 9 = korrelerade frågor/EXISTS hard mode);
+  fältet `bjorn` renderas som mässingsetikett "Björn säger:" under uppgiften.
+  sql.js bundlar SQLite 3.49.1, så RIGHT/FULL OUTER JOIN (sql-43/44) körs på
+  riktigt. Heltalsdivision verifierad (25000/12 = 2083) och dubbletträkningen
+  gör att UNION nekas där UNION ALL krävs (sql-51).
 - **Schema (Pluggkalender)** — data i `src/data/schedule.js` (avläst ur TimeEdit,
   senast 2026-08-30; bevakningen larmar om ändringar). Fem perioder varav två
   med `warning: true` (9–17 nov och 18 nov–3 dec — Säkerhet flyttade sin start

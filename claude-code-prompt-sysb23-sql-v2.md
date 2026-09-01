@@ -1,9 +1,36 @@
-export const levels = [
-  {
-    id: "n1",
-    number: 1,
-    name: "SELECT, FROM, WHERE",
-    lesson: `
+# PROMPT TILL CLAUDE CODE — SQL-verkstaden v2: täck hela SQL-föreläsningen
+
+## Varför
+
+Föreläsaren (Björn Svensson) meddelade 1 september att SQL är tentans viktigaste område och gick igenom **samtliga exempel** i sin SQL-föreläsning (166 slides). Verkstadens 32 övningar täcker grunderna, men en genomgång slide för slide visar att ett tjugotal konstruktioner han demonstrerar saknas. Den här prompten fyller luckorna med **21 nya övningar** (sql-33 till sql-53), utökade lektionstexter och en ny nivå för de svåraste frågorna.
+
+Alla lösningar är körda och verifierade mot databasen. Ändra dem inte.
+
+## Struktur
+
+Nivåerna 1–8 behålls. Övningarna nedan **läggs till** i respektive nivå. En **ny nivå 9** införs för korrelerade frågor och "EXISTS hard mode". Nivåernas `lesson` **ersätts** för nivå 1, 2, 5, 6, 7 och 8 med texterna nedan (nivå 3 och 4 behålls som de är).
+
+Ordningen inom en nivå ska vara: befintliga övningar först, sedan de nya i id-ordning.
+
+## Rättningsdetaljer att verifiera
+
+Tre av de nya övningarna kräver att rättningen hanterar saker den kanske inte gör idag:
+
+1. **sql-33 och sql-36:** lösningen innehåller uttryck (`EmpSalary / 12`, `SUBSTR(...)`). Kolumnnamn jämförs redan inte, men kontrollera att **heltalsdivision** ger samma resultat i sql.js som i lösningen (25000 / 12 ska ge 2083, inte 2083.33). SQLite gör heltalsdivision när båda operanderna är heltal — verifiera.
+2. **sql-43 och sql-44 (RIGHT och FULL OUTER JOIN):** kräver SQLite ≥ 3.39. Kontrollera vilken version sql.js bundlar (`SELECT sqlite_version()`). Är den äldre: behåll övningarna men markera dem med fältet `unsupported: true`, visa dem i listan med etiketten "Kräver SQL Server — läs lektionen" och gör redigeraren skrivskyddad med lösningen synlig. Rapportera versionen i din sammanfattning.
+3. **sql-47:** UNION ALL ger 12 rader varav flera identiska. Rättningen räknar dubbletter — verifiera att exakt 12 krävs, så att en lösning med UNION (6 rader) nekas.
+
+## Nytt fält: `bjorn`
+
+Vissa övningar har fältet `bjorn` med en kort text om föreläsarens uttalade hållning i frågan. Visas som en liten mässingsetikett "Björn säger:" under uppgiften. Det är information från föreläsningen, inte från oss — ändra inte formuleringarna.
+
+---
+
+# INNEHÅLL A — Ersatta lektionstexter
+
+```js
+// Ersätt lesson för nivå n1:
+`
 En SQL-fråga börjar alltid med vad du vill se och varifrån:
 
     SELECT kolumn1, kolumn2 FROM Tabell;
@@ -30,12 +57,9 @@ Ett **uttryck utan AS** får inget namn alls — SQL Server visar "(No column na
 
 Avsluta satser med semikolon. Nyckelord är inte skiftlägeskänsliga, men var konsekvent — versaler för nyckelord är kursens standard.
 `
-  },
-  {
-    id: "n2",
-    number: 2,
-    name: "Predikat: BETWEEN, LIKE, IN, NULL",
-    lesson: `
+
+// Ersätt lesson för nivå n2:
+`
 Logiska operatorer kombinerar villkor i WHERE.
 
 **AND** — båda villkoren måste stämma. **OR** — minst ett. **NOT** — vänder villkoret. De kan blandas fritt, men då avgör parenteser vad som hör ihop:
@@ -61,48 +85,9 @@ Utan parenteserna binder AND hårdare än OR, och frågan betyder något annat �
 
 **Begränsa antal rader:** SQL Server använder \`SELECT TOP 3 ...\` eller \`SET ROWCOUNT 3\`. SQLite använder \`LIMIT 3\` sist i frågan.
 `
-  },
-  {
-    id: "n3",
-    number: 3,
-    name: "Aggregatfunktioner",
-    lesson: `
-Aggregatfunktioner räknar ihop många rader till ett värde:
 
-- \`COUNT(*)\` — antal rader
-- \`COUNT(kolumn)\` — antal rader där kolumnen **inte** är NULL
-- \`SUM\`, \`AVG\`, \`MIN\`, \`MAX\`
-
-Skillnaden mellan \`COUNT(*)\` och \`COUNT(kolumn)\` är en tentafälla värd att minnas: har fem bilar men bara tre en ägare, ger \`COUNT(*)\` fem och \`COUNT(EmployeeID)\` tre.
-
-Aggregat ignorerar NULL. \`AVG(EmpSalary)\` räknar bara på rader som har en lön — den behandlar inte saknade löner som nollor, vilket är rätt beteende men lätt att glömma.
-
-Du kan ge resultatet ett läsbart namn med alias: \`SELECT AVG(EmpSalary) AS Medellon FROM Employee\`.
+// Ersätt lesson för nivå n5:
 `
-  },
-  {
-    id: "n4",
-    number: 4,
-    name: "GROUP BY och HAVING",
-    lesson: `
-**GROUP BY** delar raderna i grupper och kör aggregatet per grupp:
-
-    SELECT Brand, SUM(Price) FROM Car GROUP BY Brand;
-
-Regeln som orsakar flest felmeddelanden: **varje kolumn i SELECT måste antingen finnas i GROUP BY eller vara inuti en aggregatfunktion.** Skriver du \`SELECT Brand, LicenseNo, SUM(Price) ... GROUP BY Brand\` är det ologiskt — vilket av registreringsnumren i gruppen skulle visas? SQL Server ger fel; SQLite är slappare och plockar ett värde på måfå, vilket är värre eftersom felet blir tyst.
-
-**HAVING** filtrerar grupperna efter att de bildats:
-
-    SELECT Brand, COUNT(*) FROM Car GROUP BY Brand HAVING COUNT(*) > 2;
-
-Skillnaden mot WHERE: WHERE filtrerar **rader före** grupperingen, HAVING filtrerar **grupper efter**. Vill du bara räkna dyra bilar per märke använder du WHERE; vill du bara visa märken med många bilar använder du HAVING. Båda kan förekomma i samma fråga.
-`
-  },
-  {
-    id: "n5",
-    number: 5,
-    name: "Joins",
-    lesson: `
 Joins kopplar samman tabeller på en gemensam kolumn — nästan alltid en främmande nyckel mot en primärnyckel.
 
 **Kartesisk produkt** är utgångspunkten. \`SELECT * FROM Student, HasStudied\` ger varje rad i den första tabellen kombinerad med varje rad i den andra: 3 × 3 = 9 rader, 5 + 3 = 8 kolumner. Nästan alltid meningslöst som resultat, men det är vad en join *filtrerar*.
@@ -133,12 +118,9 @@ En **rekursiv self join** kopplar en rad till en annan rad i samma tabell via en
 
 **Alias** i joins gör frågan läsbar. Förkorta konsekvent: \`e\` för Employee, \`u\` för Unit.
 `
-  },
-  {
-    id: "n6",
-    number: 6,
-    name: "Underfrågor",
-    lesson: `
+
+// Ersätt lesson för nivå n6:
+`
 En underfråga (subquery) är en fråga inuti en fråga. Vanligast i WHERE:
 
     SELECT EmpName FROM Employee
@@ -163,12 +145,9 @@ Tre former:
 
 **UPDATE** och **DELETE** kan använda underfrågor i WHERE precis som SELECT: \`WHERE EmployeeID IN (SELECT ...)\` eller \`WHERE NOT EXISTS (...)\`.
 `
-  },
-  {
-    id: "n7",
-    number: 7,
-    name: "EXISTS och mängdoperatorer",
-    lesson: `
+
+// Ersätt lesson för nivå n7:
+`
 **EXISTS** testar om en underfråga returnerar minst en rad. Föreläsarens formulering: "Finns det någon?"
 
     SELECT PatientName FROM Patient p
@@ -193,12 +172,9 @@ Skillnaderna: IN och EXISTS visar bara kolumner från den yttre tabellen; JOIN k
 
 **Union compatibility** krävs: frågorna måste ha **samma antal kolumner** och kolumnerna måste ha **jämförbara datatyper**. Fel antal ger "All queries combined using a UNION ... must have an equal number of expressions". Olika typer ger "Error converting data type varchar to numeric". Kolumnnamnen i resultatet tas från den första frågan.
 `
-  },
-  {
-    id: "n8",
-    number: 8,
-    name: "INSERT, UPDATE, DELETE och vyer",
-    lesson: `
+
+// Ersätt lesson för nivå n8:
+`
 Hittills har du läst. Nu ändrar du.
 
     INSERT INTO Unit (UnitNo, UnitName, UnitAddress)
@@ -227,181 +203,54 @@ Vyn lagrar ingen data — den kör sin fråga varje gång. Tre regler: en vy exp
 
 **Namngivning:** undvik reserverade ord som tabellnamn — skriv \`ShopOrder\` i stället för \`Order\`, \`StudentNo\` i stället för \`No\`. Tabellnamn i singular. Surrogatnyckelkolumnen döps efter tabellen: \`StudentCopyID\` i tabellen StudentCopy.
 `
-  },
-  {
-    id: "n9",
-    number: 9,
-    name: "Korrelerade frågor och EXISTS hard mode",
-    lesson: `
-  Det här är nivån föreläsaren kallar "hard mode", och den ägnar tolv slides åt en enda fråga: **Vem har läst alla kurser?**
+```
 
-  Frågan är svår för att SQL inte har någon "alla"-operator. Två lösningar finns.
+# INNEHÅLL B — Ny nivå 9
 
-  **Lösning 1: räkna.** Räkna kurser per student med GROUP BY och jämför med totala antalet kurser i HAVING:
+Lägg till sist i `levels`:
 
-      SELECT s.StudentNo, COUNT(*) AS Nbr
-      FROM Student s JOIN HasStudied hs ON s.StudentID = hs.StudentID
-      GROUP BY s.StudentNo
-      HAVING COUNT(hs.CourseID) = (SELECT COUNT(*) FROM Course);
+```js
+{
+  id: "n9",
+  number: 9,
+  name: "Korrelerade frågor och EXISTS hard mode",
+  lesson: `
+Det här är nivån föreläsaren kallar "hard mode", och den ägnar tolv slides åt en enda fråga: **Vem har läst alla kurser?**
 
-  Enkel att förstå. Fungerar bara om samma student inte kan ha läst samma kurs två gånger — annars behövs \`COUNT(DISTINCT ...)\`.
+Frågan är svår för att SQL inte har någon "alla"-operator. Två lösningar finns.
 
-  **Lösning 2: dubbel NOT EXISTS.** Formulera om frågan: "Vilka studenter är det så att det **inte finns** någon kurs som studenten **inte har** läst?"
+**Lösning 1: räkna.** Räkna kurser per student med GROUP BY och jämför med totala antalet kurser i HAVING:
 
-      SELECT s.StudentNo FROM Student s
-      WHERE NOT EXISTS (
-          SELECT 1 FROM Course c
-          WHERE NOT EXISTS (
-              SELECT 1 FROM HasStudied hs
-              WHERE hs.StudentID = s.StudentID AND hs.CourseID = c.CourseID
-          )
-      );
+    SELECT s.StudentNo, COUNT(*) AS Nbr
+    FROM Student s JOIN HasStudied hs ON s.StudentID = hs.StudentID
+    GROUP BY s.StudentNo
+    HAVING COUNT(hs.CourseID) = (SELECT COUNT(*) FROM Course);
 
-  Läs inifrån och ut. Innersta frågan: "har studenten s läst kursen c?" Mellersta: "finns det någon kurs c som s *inte* läst?" Yttersta: "ta med de studenter där svaret är nej". Dubbla negationen är just det som uttrycker "alla".
+Enkel att förstå. Fungerar bara om samma student inte kan ha läst samma kurs två gånger — annars behövs \`COUNT(DISTINCT ...)\`.
 
-  Det här mönstret kallas **relationell division**, och det är den svåraste standardfrågan i SQL. Kan du den kan du EXISTS.
+**Lösning 2: dubbel NOT EXISTS.** Formulera om frågan: "Vilka studenter är det så att det **inte finns** någon kurs som studenten **inte har** läst?"
 
-  **Korrelerade underfrågor i allmänhet** körs en gång per rad i den yttre frågan och kan referera till dess kolumner. "Anställda som tjänar mer än snittet *på sin egen enhet*" kräver en korrelerad underfråga — snittet är olika för varje rad.
-  `
-  }
-];
+    SELECT s.StudentNo FROM Student s
+    WHERE NOT EXISTS (
+        SELECT 1 FROM Course c
+        WHERE NOT EXISTS (
+            SELECT 1 FROM HasStudied hs
+            WHERE hs.StudentID = s.StudentID AND hs.CourseID = c.CourseID
+        )
+    );
 
-export const sqlExercises = [
-  { id: "sql-01", level: "n1", task: "Visa alla kolumner för samtliga enheter i sjukhuset.",
-    solution: "SELECT * FROM Unit;", starter: "SELECT ", reviewed: true },
+Läs inifrån och ut. Innersta frågan: "har studenten s läst kursen c?" Mellersta: "finns det någon kurs c som s *inte* läst?" Yttersta: "ta med de studenter där svaret är nej". Dubbla negationen är just det som uttrycker "alla".
 
-  { id: "sql-02", level: "n1", task: "Visa namnen på alla anställda.",
-    solution: "SELECT EmpName FROM Employee;", reviewed: true },
+Det här mönstret kallas **relationell division**, och det är den svåraste standardfrågan i SQL. Kan du den kan du EXISTS.
 
-  { id: "sql-03", level: "n1", task: "Visa namn och adress för alla patienter som bor i Lund.",
-    solution: "SELECT PatientName, PatientAddress FROM Patient WHERE PatientAddress = 'Lund';",
-    hint: "Textvärden omges av enkla citattecken.", reviewed: true },
+**Korrelerade underfrågor i allmänhet** körs en gång per rad i den yttre frågan och kan referera till dess kolumner. "Anställda som tjänar mer än snittet *på sin egen enhet*" kräver en korrelerad underfråga — snittet är olika för varje rad.
+`
+}
+```
 
-  { id: "sql-04", level: "n1", task: "Visa varje förnamn som förekommer bland de anställda, men bara en gång per namn.",
-    solution: "SELECT DISTINCT EmpName FROM Employee;",
-    hint: "Två anställda heter Anna och två heter Eva.", reviewed: true },
+# INNEHÅLL C — Nya övningar (lägg till i `sqlExercises`)
 
-  { id: "sql-05", level: "n1", ordered: true,
-    task: "Visa namn och lön för alla anställda, sorterade med högsta lönen först.",
-    solution: "SELECT EmpName, EmpSalary FROM Employee ORDER BY EmpSalary DESC;",
-    hint: "ORDER BY med DESC. Den här övningen kontrollerar radordningen.", reviewed: true },
-
-  { id: "sql-06", level: "n2", task: "Visa namn och lön för de anställda som tjänar mer än 30 000.",
-    solution: "SELECT EmpName, EmpSalary FROM Employee WHERE EmpSalary > 30000;", reviewed: true },
-
-  { id: "sql-07", level: "n2", task: "Visa registreringsnummer, märke och pris för alla bilar som kostar mellan 30 000 och 50 000 kronor, gränserna inkluderade.",
-    solution: "SELECT LicenseNo, Brand, Price FROM Car WHERE Price BETWEEN 30000 AND 50000;",
-    tsql: "Identiskt i SQL Server.", reviewed: true },
-
-  { id: "sql-08", level: "n2", task: "Visa namnen på alla patienter vars namn börjar på bokstaven A.",
-    solution: "SELECT PatientName FROM Patient WHERE PatientName LIKE 'A%';",
-    hint: "LIKE med jokertecknet %.", reviewed: true },
-
-  { id: "sql-09", level: "n2", task: "Visa registreringsnummer och märke för de bilar som inte tillhör någon anställd.",
-    solution: "SELECT LicenseNo, Brand FROM Car WHERE EmployeeID IS NULL;",
-    hint: "EmployeeID = NULL fungerar inte — fundera på varför.",
-    tsql: "Identiskt i SQL Server. NULL-hanteringen är standard-SQL.", reviewed: true },
-
-  { id: "sql-10", level: "n3", task: "Hur många patienter finns registrerade? Svara med en enda kolumn.",
-    solution: "SELECT COUNT(*) FROM Patient;", reviewed: true },
-
-  { id: "sql-11", level: "n3", task: "Vad är medellönen bland de anställda?",
-    solution: "SELECT AVG(EmpSalary) FROM Employee;",
-    hint: "Svaret blir ett decimaltal — det är väntat.", reviewed: true },
-
-  { id: "sql-12", level: "n3", task: "Visa den lägsta och den högsta lönen i samma resultatrad, i den ordningen.",
-    solution: "SELECT MIN(EmpSalary), MAX(EmpSalary) FROM Employee;", reviewed: true },
-
-  { id: "sql-13", level: "n4", task: "Visa varje bilmärke tillsammans med det totala värdet av bilarna i det märket.",
-    solution: "SELECT Brand, SUM(Price) FROM Car GROUP BY Brand;", reviewed: true },
-
-  { id: "sql-14", level: "n4", task: "Visa varje patientadress tillsammans med antalet patienter som bor där.",
-    solution: "SELECT PatientAddress, COUNT(*) FROM Patient GROUP BY PatientAddress;", reviewed: true },
-
-  { id: "sql-15", level: "n4", task: "Visa de bilmärken som det finns fler än två bilar av, tillsammans med antalet.",
-    solution: "SELECT Brand, COUNT(*) FROM Car GROUP BY Brand HAVING COUNT(*) > 2;",
-    hint: "Filtret gäller grupper, inte rader.", reviewed: true },
-
-  { id: "sql-16", level: "n5", task: "Visa varje anställds namn tillsammans med namnet på den enhet personen arbetar på.",
-    solution: "SELECT e.EmpName, u.UnitName FROM Employee e INNER JOIN Unit u ON e.UnitID = u.UnitID;",
-    starter: "SELECT e.EmpName, u.UnitName\nFROM Employee e\n", reviewed: true },
-
-  { id: "sql-17", level: "n5", task: "Visa namnen på de patienter som ligger på enheten Trauma.",
-    solution: "SELECT p.PatientName FROM Patient p INNER JOIN Unit u ON p.UnitID = u.UnitID WHERE u.UnitName = 'Trauma';",
-    hint: "Du behöver joina för att kunna filtrera på enhetens namn i stället för dess id.", reviewed: true },
-
-  { id: "sql-18", level: "n5", task: "Visa varje anställds namn tillsammans med märket på personens bil. Anställda utan bil ska också med, med tomt värde för märket.",
-    solution: "SELECT e.EmpName, c.Brand FROM Employee e LEFT JOIN Car c ON e.EmployeeID = c.EmployeeID;",
-    hint: "\"Ska också med\" är signalordet för LEFT JOIN.",
-    tsql: "Identiskt i SQL Server. Observera däremot att RIGHT JOIN och FULL OUTER JOIN finns i SQL Server men inte i alla SQLite-versioner — kan du inte köra dem här betyder det inte att de är fel på tentan.", reviewed: true },
-
-  { id: "sql-19", level: "n5", task: "Visa vilka anställda som undersöker vilka patienter. Två kolumner: den anställdes namn och patientens namn.",
-    solution: "SELECT e.EmpName, p.PatientName FROM Employee e INNER JOIN Examines x ON e.EmployeeID = x.EmployeeID INNER JOIN Patient p ON x.PatientID = p.PatientID;",
-    hint: "Examines är en mellantabell — du behöver två joins.", reviewed: true },
-
-  { id: "sql-20", level: "n5", task: "Visa vilka sjukdomar patienten med patientnummer PP1 lider av just nu, tillsammans med startdatum.",
-    solution: "SELECT i.IllnessName, s.StartDate FROM Suffers s INNER JOIN Illness i ON s.IllnessID = i.IllnessID INNER JOIN Patient p ON s.PatientID = p.PatientID WHERE p.PatientNo = 'PP1';",
-    reviewed: true },
-
-  { id: "sql-21", level: "n5", task: "Visa varje enhets namn tillsammans med antalet anställda på enheten. Enheter utan anställda ska visas med noll.",
-    solution: "SELECT u.UnitName, COUNT(e.EmployeeID) FROM Unit u LEFT JOIN Employee e ON u.UnitID = e.UnitID GROUP BY u.UnitName;",
-    hint: "COUNT(*) skulle ge 1 för en tom enhet. Räkna på den anställdes nyckel i stället.", reviewed: true },
-
-  { id: "sql-22", level: "n5", ordered: true,
-    task: "Visa varje patients namn tillsammans med antalet sjukdomar personen lider av just nu, med flest sjukdomar först. Patienter utan sjukdom ska med.",
-    solution: "SELECT p.PatientName, COUNT(s.IllnessID) FROM Patient p LEFT JOIN Suffers s ON p.PatientID = s.PatientID GROUP BY p.PatientID, p.PatientName ORDER BY COUNT(s.IllnessID) DESC;",
-    hint: "Gruppera på patientens id, inte bara namnet — flera patienter heter Anna.", reviewed: true },
-
-  { id: "sql-23", level: "n5", task: "Visa alla par av anställda som arbetar på samma enhet. Varje par ska bara förekomma en gång, och ingen ska paras med sig själv.",
-    solution: "SELECT e1.EmpName, e2.EmpName FROM Employee e1 INNER JOIN Employee e2 ON e1.UnitID = e2.UnitID AND e1.EmployeeID < e2.EmployeeID;",
-    hint: "Joina tabellen mot sig själv med två alias, och använd < mellan nycklarna.", reviewed: true },
-
-  { id: "sql-24", level: "n6", task: "Visa namn och lön för de anställda som tjänar mer än medellönen.",
-    solution: "SELECT EmpName, EmpSalary FROM Employee WHERE EmpSalary > (SELECT AVG(EmpSalary) FROM Employee);",
-    hint: "Medellönen måste beräknas i en underfråga — aggregat får inte stå direkt i WHERE.", reviewed: true },
-
-  { id: "sql-25", level: "n6", task: "Visa namn och antal för de anställda som undersöker minst tre patienter.",
-    solution: "SELECT e.EmpName, COUNT(*) FROM Employee e INNER JOIN Examines x ON e.EmployeeID = x.EmployeeID GROUP BY e.EmployeeID, e.EmpName HAVING COUNT(*) >= 3;",
-    reviewed: true },
-
-  { id: "sql-26", level: "n7", task: "Visa namnen på de patienter som inte lider av någon sjukdom just nu.",
-    solution: "SELECT PatientName FROM Patient p WHERE NOT EXISTS (SELECT 1 FROM Suffers s WHERE s.PatientID = p.PatientID);",
-    hint: "NOT EXISTS med en korrelerad underfråga.", reviewed: true },
-
-  { id: "sql-27", level: "n7", task: "Visa namnen på de sjukdomar som ingen patient lider av just nu.",
-    solution: "SELECT IllnessName FROM Illness EXCEPT SELECT i.IllnessName FROM Illness i INNER JOIN Suffers s ON i.IllnessID = s.IllnessID;",
-    hint: "Alla sjukdomar minus de som förekommer i Suffers.",
-    tsql: "EXCEPT finns i SQL Server med samma syntax. I Oracle heter operatorn MINUS.", reviewed: true },
-
-  { id: "sql-28", level: "n7", task: "Visa namnen på de sjukdomar som både någon lider av just nu och som någon har lidit av tidigare.",
-    solution: "SELECT IllnessName FROM Illness WHERE IllnessID IN (SELECT IllnessID FROM Suffers) INTERSECT SELECT IllnessName FROM Illness WHERE IllnessID IN (SELECT IllnessID FROM HasSuffered);",
-    hint: "INTERSECT mellan två frågor som var för sig ger en lista av sjukdomsnamn.", reviewed: true },
-
-  { id: "sql-29", level: "n8", kind: "dml",
-    task: "Lägg till en ny enhet med enhetsnummer U4, namnet Radiology och adressen Care road.",
-    solution: "INSERT INTO Unit (UnitNo, UnitName, UnitAddress) VALUES ('U4', 'Radiology', 'Care road');",
-    check: "SELECT UnitNo, UnitName, UnitAddress FROM Unit ORDER BY UnitNo;",
-    hint: "Ange inte UnitID — den sätts av databasen.",
-    tsql: "Identiskt i SQL Server.", reviewed: true },
-
-  { id: "sql-30", level: "n8", kind: "dml",
-    task: "Höj lönen med 2 000 kronor för alla anställda på enheten med enhetsnummer U1.",
-    solution: "UPDATE Employee SET EmpSalary = EmpSalary + 2000 WHERE UnitID = (SELECT UnitID FROM Unit WHERE UnitNo = 'U1');",
-    check: "SELECT EmpNo, EmpSalary FROM Employee ORDER BY EmpNo;",
-    hint: "Du kan använda en underfråga i WHERE för att slå upp enhetens id.", reviewed: true },
-
-  { id: "sql-31", level: "n8", kind: "dml",
-    task: "Radera alla bilar som inte tillhör någon anställd.",
-    solution: "DELETE FROM Car WHERE EmployeeID IS NULL;",
-    check: "SELECT LicenseNo FROM Car ORDER BY LicenseNo;",
-    hint: "Glöm inte WHERE. Utan den raderas allt.", reviewed: true },
-
-  { id: "sql-32", level: "n8", kind: "dml",
-    task: "Skapa en vy som heter HighEarner och som visar namn och lön för de anställda som tjänar mer än 30 000.",
-    solution: "CREATE VIEW HighEarner AS SELECT EmpName, EmpSalary FROM Employee WHERE EmpSalary > 30000;",
-    check: "SELECT * FROM HighEarner ORDER BY EmpName;",
-    tsql: "Identiskt i SQL Server. Där kan du dessutom lägga till WITH SCHEMABINDING för att hindra att tabellerna bakom vyn ändras.", reviewed: true },
-
+```js
   // ---- Nivå 1 ----
   { id: "sql-33", level: "n1", task: "Visa varje anställds namn som Namn, lön som Lon, och månadslön (lönen delat med 12) som Manadslon.",
     solution: "SELECT EmpName AS Namn, EmpSalary AS Lon, EmpSalary / 12 AS Manadslon FROM Employee;",
@@ -518,4 +367,29 @@ export const sqlExercises = [
     solution: "SELECT e.EmpName FROM Employee e WHERE NOT EXISTS (SELECT 1 FROM Patient p INNER JOIN Unit u ON p.UnitID = u.UnitID WHERE u.UnitName = 'Trauma' AND NOT EXISTS (SELECT 1 FROM Examines x WHERE x.EmployeeID = e.EmployeeID AND x.PatientID = p.PatientID));",
     hint: "Dubbel NOT EXISTS: anställda där det inte finns någon Trauma-patient som de inte undersöker. Alternativet är COUNT(DISTINCT p.PatientID) i HAVING jämfört med antalet Trauma-patienter — båda ger samma svar.",
     bjorn: "Föreläsarens 'EXISTS hard mode'. Kan du den här kan du EXISTS.", reviewed: true }
-];
+```
+
+# INNEHÅLL D — Tillägg till `dialectNotes`
+
+```js
+  { topic: "Kolumnalias", sqlite: "AS Namn — samma", tsql: "AS Namn. Uttryck utan AS visas som '(No column name)'" },
+  { topic: "Strängfunktioner", sqlite: "SUBSTR(text, start, längd), LOWER, UPPER", tsql: "SUBSTRING(text, start, längd), LOWER, UPPER, LEN" },
+  { topic: "RIGHT / FULL OUTER JOIN", sqlite: "Stöds från 3.39", tsql: "Fullt stöd" },
+  { topic: "Radbegränsning", sqlite: "LIMIT n sist i frågan", tsql: "SELECT TOP n ..., eller SET ROWCOUNT n före frågan" },
+  { topic: "ORDER BY i vy", sqlite: "Tillåtet", tsql: "Inte tillåtet i CREATE VIEW" }
+```
+
+## Acceptanskriterier
+
+- [ ] `npm run build` går igenom. Alla 53 övningar syns i listan, de nya sist inom sin nivå. Nivå 9 finns med sin lektion.
+- [ ] Alla 21 nya lösningar ger "Rätt" när de klistras in — testa var och en.
+- [ ] `SELECT sqlite_version()` rapporterad. Är den < 3.39: sql-43 och sql-44 har `unsupported: true` och visas som lektionsövningar. Är den ≥ 3.39: de fungerar som vanliga övningar.
+- [ ] sql-33: heltalsdivisionen ger 2083 för E1, inte 2083.33.
+- [ ] sql-51: en lösning med UNION i stället för UNION ALL nekas med radantalsmeddelandet (6 mot 12).
+- [ ] sql-50: en lösning utan DISTINCT nekas (11 rader mot 5).
+- [ ] sql-53: COUNT-varianten ur ledtråden godkänns också (samma resultatmängd).
+- [ ] `bjorn`-fältet renderas som mässingsetikett under uppgiften på de övningar som har det.
+- [ ] De sex ersatta lektionstexterna renderas med markdown, kodblock som kodblock.
+- [ ] Statistik räknar nu "X av 53".
+
+Bygg klart, kör alla 21 nya lösningarna plus de fyra specifika testfallen, och sammanfatta kort med SQLite-versionen först.

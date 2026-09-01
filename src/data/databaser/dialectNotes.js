@@ -1,12 +1,15 @@
 export const dialectNotes = [
-  { topic: "Begränsa antal rader", sqlite: "SELECT ... LIMIT 5", tsql: "SELECT TOP 5 ..." },
+  { topic: "Radbegränsning", sqlite: "LIMIT n sist i frågan", tsql: "SELECT TOP n ..., eller SET ROWCOUNT n före frågan" },
   { topic: "Slå samman text", sqlite: "'a' || 'b'", tsql: "'a' + 'b' eller CONCAT('a','b')" },
   { topic: "Ersätt NULL", sqlite: "IFNULL(kolumn, 0) eller COALESCE", tsql: "ISNULL(kolumn, 0) eller COALESCE" },
   { topic: "Dagens datum", sqlite: "date('now')", tsql: "GETDATE() eller SYSDATETIME()" },
   { topic: "Identitetskolumn", sqlite: "INTEGER PRIMARY KEY AUTOINCREMENT", tsql: "INTEGER IDENTITY(1,1)" },
   { topic: "Datatyper", sqlite: "Typerna är rådgivande — text kan hamna i en INT-kolumn", tsql: "Typerna kontrolleras strikt" },
-  { topic: "RIGHT och FULL OUTER JOIN", sqlite: "Stöds först från version 3.39 — kan saknas här", tsql: "Stöds fullt ut" },
+  { topic: "RIGHT / FULL OUTER JOIN", sqlite: "Stöds från 3.39", tsql: "Fullt stöd" },
   { topic: "GROUP BY-regeln", sqlite: "Tillåter kolumner utanför GROUP BY och väljer ett värde på måfå", tsql: "Ger fel — varje kolumn måste vara i GROUP BY eller i ett aggregat" },
   { topic: "Strängjämförelse", sqlite: "LIKE är skiftlägesokänsligt för ASCII", tsql: "Beror på databasens collation" },
-  { topic: "Radera tabellinnehåll", sqlite: "DELETE FROM Tabell", tsql: "DELETE FROM Tabell eller TRUNCATE TABLE Tabell" }
+  { topic: "Radera tabellinnehåll", sqlite: "DELETE FROM Tabell", tsql: "DELETE FROM Tabell eller TRUNCATE TABLE Tabell" },
+  { topic: "Kolumnalias", sqlite: "AS Namn — samma", tsql: "AS Namn. Uttryck utan AS visas som '(No column name)'" },
+  { topic: "Strängfunktioner", sqlite: "SUBSTR(text, start, längd), LOWER, UPPER", tsql: "SUBSTRING(text, start, längd), LOWER, UPPER, LEN" },
+  { topic: "ORDER BY i vy", sqlite: "Tillåtet", tsql: "Inte tillåtet i CREATE VIEW" },
 ];
