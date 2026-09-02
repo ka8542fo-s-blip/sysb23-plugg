@@ -403,7 +403,7 @@ export const sqlExercises = [
     tsql: "Identiskt i SQL Server. Där kan du dessutom lägga till WITH SCHEMABINDING för att hindra att tabellerna bakom vyn ändras.", reviewed: true },
 
   // ---- Nivå 1 ----
-  { id: "sql-33", level: "n1", task: "Visa varje anställds namn som Namn, lön som Lon, och månadslön (lönen delat med 12) som Manadslon.",
+  { id: "sql-33", level: "n1", names: true, task: "Visa varje anställds namn som Namn, lön som Lon, och månadslön (lönen delat med 12) som Manadslon.",
     solution: "SELECT EmpName AS Namn, EmpSalary AS Lon, EmpSalary / 12 AS Manadslon FROM Employee;",
     hint: "AS ger alias. Uttrycket EmpSalary / 12 behöver ett alias för att få ett kolumnnamn.",
     tsql: "Identiskt. Notera att INT / INT ger heltalsdivision i både SQL Server och SQLite — 25000 / 12 blir 2083.", reviewed: true },
@@ -429,21 +429,21 @@ export const sqlExercises = [
     solution: "SELECT PatientName, PatientAddress FROM Patient WHERE NOT PatientAddress = 'Lund';",
     hint: "NOT vänder villkoret. <> 'Lund' ger samma resultat.", reviewed: true },
 
-  { id: "sql-38", level: "n2", task: "Visa registreringsnummer som RegNr och den fasta texten Tjanstebil som Typ, för alla bilar som har en ägare.",
+  { id: "sql-38", level: "n2", names: true, task: "Visa registreringsnummer som RegNr och den fasta texten Tjanstebil som Typ, för alla bilar som har en ägare.",
     solution: "SELECT LicenseNo AS RegNr, 'Tjanstebil' AS Typ FROM Car WHERE EmployeeID IS NOT NULL;",
     hint: "En literal i SELECT upprepas på varje rad. Kom ihåg IS NOT NULL, inte <> NULL.", reviewed: true },
 
-  { id: "sql-39", level: "n2", task: "Visa en kolumn Etikett som slår ihop anställningsnummer, ett bindestreck och namn, t.ex. E1-Anna, för alla anställda.",
+  { id: "sql-39", level: "n2", names: true, task: "Visa en kolumn Etikett som slår ihop anställningsnummer, ett bindestreck och namn, t.ex. E1-Anna, för alla anställda.",
     solution: "SELECT EmpNo || '-' || EmpName AS Etikett FROM Employee;",
     hint: "I SQLite slås strängar ihop med ||.",
     tsql: "I SQL Server: EmpNo + '-' + EmpName, eller CONCAT(EmpNo, '-', EmpName).", reviewed: true },
 
-  { id: "sql-40", level: "n2", task: "Visa varje patients namn i gemener som Gemener, och namnets två första tecken som Kort.",
+  { id: "sql-40", level: "n2", names: true, task: "Visa varje patients namn i gemener som Gemener, och namnets två första tecken som Kort.",
     solution: "SELECT LOWER(PatientName) AS Gemener, SUBSTR(PatientName, 1, 2) AS Kort FROM Patient;",
     hint: "LOWER() och SUBSTR(text, startposition, antal tecken). Positioner räknas från 1.",
     tsql: "I SQL Server heter funktionen SUBSTRING, med samma argument.", reviewed: true },
 
-  { id: "sql-41", level: "n2", task: "Visa registreringsnummer och ägarens EmployeeID som Agare för alla bilar — men visa 0 i stället för tomt värde för bilar utan ägare.",
+  { id: "sql-41", level: "n2", names: true, task: "Visa registreringsnummer och ägarens EmployeeID som Agare för alla bilar — men visa 0 i stället för tomt värde för bilar utan ägare.",
     solution: "SELECT LicenseNo, IFNULL(EmployeeID, 0) AS Agare FROM Car;",
     hint: "IFNULL(kolumn, ersättning) ger ersättningen där kolumnen är NULL.",
     tsql: "I SQL Server: ISNULL(EmployeeID, 0). COALESCE fungerar i båda.", reviewed: true },
@@ -454,7 +454,7 @@ export const sqlExercises = [
     hint: "FROM A, B utan villkor ger varje rad i A kombinerad med varje rad i B: 3 × 6.",
     reviewed: true },
 
-  { id: "sql-43", level: "n5", task: "Visa registreringsnummer och ägarens namn med RIGHT JOIN från Car till Employee, så att alla anställda kommer med även utan bil.",
+  { id: "sql-43", level: "n5", requires: ["RIGHT JOIN"], task: "Visa registreringsnummer och ägarens namn med RIGHT JOIN från Car till Employee, så att alla anställda kommer med även utan bil.",
     solution: "SELECT c.LicenseNo, e.EmpName FROM Car c RIGHT JOIN Employee e ON c.EmployeeID = e.EmployeeID;",
     hint: "RIGHT JOIN behåller alla rader från tabellen till höger om JOIN. Samma resultat som LEFT JOIN med tabellerna i omvänd ordning.",
     tsql: "Fullt stöd i SQL Server. SQLite stöder RIGHT JOIN först från version 3.39.", reviewed: true },
@@ -486,21 +486,21 @@ export const sqlExercises = [
     reviewed: true },
 
   // ---- Nivå 7 ----
-  { id: "sql-48", level: "n7", task: "Visa patientnummer och namn för alla patienter som undersöks av minst en anställd. Skriv den med IN.",
+  { id: "sql-48", level: "n7", requires: ["IN"], task: "Visa patientnummer och namn för alla patienter som undersöks av minst en anställd. Skriv den med IN.",
     solution: "SELECT PatientNo, PatientName FROM Patient WHERE PatientID IN (SELECT PatientID FROM Examines);",
     hint: "Underfrågan ger listan över patient-id som förekommer i Examines.", reviewed: true },
 
-  { id: "sql-49", level: "n7", task: "Samma fråga som föregående — patienter som undersöks av minst en anställd — men skriv den med EXISTS.",
+  { id: "sql-49", level: "n7", requires: ["EXISTS"], task: "Samma fråga som föregående — patienter som undersöks av minst en anställd — men skriv den med EXISTS.",
     solution: "SELECT PatientNo, PatientName FROM Patient p WHERE EXISTS (SELECT 1 FROM Examines x WHERE x.PatientID = p.PatientID);",
     hint: "Korrelerad underfråga: x.PatientID = p.PatientID kopplar till den yttre raden.",
     reviewed: true },
 
-  { id: "sql-50", level: "n7", task: "Samma fråga en tredje gång — patienter som undersöks av minst en anställd — men skriv den med INNER JOIN. Varje patient ska visas en gång.",
+  { id: "sql-50", level: "n7", requires: ["JOIN"], task: "Samma fråga en tredje gång — patienter som undersöks av minst en anställd — men skriv den med INNER JOIN. Varje patient ska visas en gång.",
     solution: "SELECT DISTINCT p.PatientNo, p.PatientName FROM Patient p INNER JOIN Examines x ON p.PatientID = x.PatientID;",
     hint: "Joinen ger en rad per undersökning, så patienter med flera undersökningar dubbleras. DISTINCT löser det — men på patientnummer, inte bara namn, eftersom två patienter heter Anna.",
     reviewed: true },
 
-  { id: "sql-51", level: "n7", task: "Visa alla adresser som förekommer bland anställda OCH patienter i en enda kolumn Ort, med dubbletter kvar.",
+  { id: "sql-51", level: "n7", names: true, task: "Visa alla adresser som förekommer bland anställda OCH patienter i en enda kolumn Ort, med dubbletter kvar.",
     solution: "SELECT EmpAddress AS Ort FROM Employee UNION ALL SELECT PatientAddress FROM Patient;",
     hint: "UNION ALL behåller dubbletter — resultatet ska ha 12 rader. UNION skulle ge 6.",
     reviewed: true },

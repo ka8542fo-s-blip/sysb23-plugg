@@ -4,12 +4,18 @@
 export default function ResultBanner({ result, onDismiss }) {
   if (!result) return null;
 
+  // Rätt resultat men fel form (semikolon, alias, konstruktion) är "nästan",
+  // inte fel — brasston i stället för rött, så att man ser skillnaden.
+  const formOnly = ["semicolon", "names", "requires"].includes(result.reason);
+
   const tone =
     result.status === "correct"
       ? { box: "border-correct/30 bg-correct-bg", text: "text-correct" }
       : result.status === "empty-input"
         ? { box: "border-line bg-white", text: "text-ink/80" }
-        : { box: "border-wrong/30 bg-wrong-bg", text: "text-wrong" };
+        : formOnly
+          ? { box: "border-brass/50 bg-brass/[0.07]", text: "text-brass" }
+          : { box: "border-wrong/30 bg-wrong-bg", text: "text-wrong" };
 
   const heading =
     result.status === "correct"
@@ -18,7 +24,9 @@ export default function ResultBanner({ result, onDismiss }) {
         ? "Frågan kunde inte köras"
         : result.status === "empty-input"
           ? "Ingen fråga att köra"
-          : "Inte riktigt.";
+          : formOnly
+            ? "Nästan."
+            : "Inte riktigt.";
 
   const detail =
     result.status === "correct"

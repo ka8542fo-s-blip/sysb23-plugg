@@ -263,6 +263,7 @@ const FAMILIES = [
         solution: `SELECT ${columns.join(", ")} FROM ${table} WHERE ${column} IN (${list});`,
         hint: "IN ersätter en kedja av OR.",
         tables: [table],
+        requires: ["IN"],
       };
     },
   },
@@ -497,11 +498,13 @@ const FAMILIES = [
           task: "Visa namnen på de patienter som har lidit av minst en sjukdom tidigare. Använd EXISTS.",
           solution: "SELECT PatientName FROM Patient p WHERE EXISTS (SELECT 1 FROM HasSuffered h WHERE h.PatientID = p.PatientID);",
           tables: ["Patient", "HasSuffered"],
+          requires: ["EXISTS"],
         },
         {
           task: "Visa namnen på de enheter som har minst en patient. Använd IN.",
           solution: "SELECT UnitName FROM Unit WHERE UnitID IN (SELECT UnitID FROM Patient);",
           tables: ["Unit", "Patient"],
+          requires: ["IN"],
         },
       ];
       const choice = pick(rng, options);

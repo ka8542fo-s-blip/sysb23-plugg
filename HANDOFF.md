@@ -77,8 +77,14 @@ summerar till 20, inte 30 — medvetet orört).
   provet lever i App-state (överlever flikbyte, medvetet INTE omladdning),
   dubbelinlämningsspärr, Betygsmätare (SVG, gränser 50/55/65/75/85).
 - **SQL** (Databaser) — sql.js/WASM. Lazy-laddad, **färsk databas per körning**.
-  Rättning i `lib/sqlCheck.js`: alias ok, radordning ignoreras utom `ordered: true`,
-  dubbletter räknas, DML rättas via `check`-frågan. WASM kopieras av
+  Rättning i `lib/sqlCheck.js`: radordning ignoreras utom `ordered: true`,
+  dubbletter räknas, DML rättas via `check`-frågan. **Formkrav** (2026-09-02)
+  ger "Nästan." (brasston, räknas inte som löst) när resultatet stämmer men
+  formen inte: avslutande semikolon krävs alltid; `names: true` kräver att
+  kolumnnamnen matchar facit (uppgifter som säger "som Namn"); `requires:
+  ["EXISTS"]` kräver att konstruktionen förekommer (uppgifter som säger
+  "skriv den med …"). Flaggorna sätts per övning i datat och i generatorns
+  familjer — testade i `scripts/sql-check.test.mjs`. WASM kopieras av
   `scripts/copy-sql-wasm.mjs` (pre-dev/-build; filen heter `sql-wasm-browser.wasm`
   i webbläsarbygget — binärerna är gitignorerade). Kör-knappen är `btn-emphasis`
   längst till höger. Schemapanelen har InfoTip på varje tabell/kolumn (beskrivningarna
