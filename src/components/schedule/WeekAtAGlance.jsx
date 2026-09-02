@@ -15,6 +15,8 @@ import {
   formatLongDate,
   formatRange,
   relativeDays,
+  startOfWeek,
+  weekNumber,
 } from "../../lib/dates.js";
 import { useToday } from "../../lib/useToday.js";
 
@@ -58,10 +60,11 @@ export default function WeekAtAGlance({ navigate, onSelectCourse }) {
   const showReg = Boolean(next && regNext && regNext.regDays <= next.days);
   const shown = showReg ? regNext : next;
 
-  // Före terminsstart är de sju kommande dagarna tomma — visa terminens
-  // första vecka i stället, så raden säger något.
+  // Veckan går måndag–söndag, inte sju dagar framåt från idag: raden ska
+  // svara på "hur ser den här veckan ut", och då måste måndagen finnas kvar
+  // när det är onsdag. Före terminsstart visas terminens första vecka.
   const beforeTerm = state === "before";
-  const windowStart = beforeTerm ? schedule.termStart : now;
+  const windowStart = startOfWeek(beforeTerm ? schedule.termStart : now);
 
   const days = useMemo(() => {
     return Array.from({ length: DAY_COUNT }, (_, i) => {
@@ -73,6 +76,7 @@ export default function WeekAtAGlance({ navigate, onSelectCourse }) {
         date,
         sessions,
         isToday: date === now,
+        past: date < now,
         hasExam: sessions.some((session) => session.kind === "tenta"),
       };
     });
@@ -84,7 +88,9 @@ export default function WeekAtAGlance({ navigate, onSelectCourse }) {
   const [openDate, setOpenDate] = useState(
     () =>
       days.find((day) => day.isToday && day.sessions.length > 0)?.date ||
+      days.find((day) => !day.past && day.sessions.length > 0)?.date ||
       days.find((day) => day.sessions.length > 0)?.date ||
+      days.find((day) => day.isToday)?.date ||
       days[0].date,
   );
   const open = days.find((day) => day.date === openDate) || days[0];
@@ -182,7 +188,7 @@ export default function WeekAtAGlance({ navigate, onSelectCourse }) {
             {beforeTerm ? "Terminens första vecka" : "Den här veckan"}
           </h2>
           <span className="tabular text-sm text-ink/65">
-            {formatRange(days[0].date, days[days.length - 1].date)} ·{" "}
+            v.{weekNumber(days[0].date)} · {formatRange(days[0].date, days[days.length - 1].date)} ·{" "}
             {total === 0 ? "inget inbokat" : `${total} pass`}
           </span>
         </div>
@@ -206,7 +212,7 @@ export default function WeekAtAGlance({ navigate, onSelectCourse }) {
                   selected
                     ? "border-pine bg-pine text-paper"
                     : "border-line bg-white hover:border-pine hover:bg-pine/[0.06] active:bg-pine/[0.12]"
-                }`}
+                } ${day.past && !selected ? "opacity-50" : ""}`}
               >
                 <span
                   className={`block text-[11px] uppercase ${

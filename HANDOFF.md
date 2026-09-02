@@ -46,8 +46,10 @@ summerar till 20, inte 30 — medvetet orört).
 
 ## Vyer och särdrag
 
-- **Hem** — WeekAtAGlance (nedräkning + kompakt 7-dagarsrad, klicka fram en dag),
-  statusrutor, genvägar byggda ur `views`.
+- **Hem** — WeekAtAGlance (nedräkning + kompakt veckorad, klicka fram en dag),
+  statusrutor, genvägar byggda ur `views`. Veckoraden visar **innevarande
+  vecka måndag–söndag** (`startOfWeek` i `lib/dates.js`), inte sju dagar
+  framåt: passerade dagar tonas ned, rubriken bär veckonumret.
 - **Läs (KnowledgeHub)** — tre segment: Kompendium/Begrepp/Ordlista + gemensam
   sökning. Ordlistan sorteras per kapitel som standard, A–Ö som val. Databaser har
   `examArea`-etiketter per kapitel + tentabanner (fältet saknas = ingen etikett

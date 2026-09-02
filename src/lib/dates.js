@@ -113,6 +113,13 @@ export function formatRange(fromIso, toIso) {
   return `${formatDayMonth(fromIso)} – ${formatDayMonth(toIso)}`;
 }
 
+// Måndagen i samma ISO-vecka som datumet. Veckan börjar på måndag i
+// Sverige, så veckovyer ska alltid ankras här och inte i "idag".
+export function startOfWeek(isoDate) {
+  const weekday = (new Date(`${String(isoDate).slice(0, 10)}T00:00:00Z`).getUTCDay() + 6) % 7;
+  return addDays(isoDate, -weekday);
+}
+
 export function addDays(isoDate, days) {
   const date = new Date(utcMidnight(isoDate) + days * 86400000);
   return date.toISOString().slice(0, 10);
