@@ -10,7 +10,7 @@ import PracticeMode from "../components/sql/PracticeMode.jsx";
 import LessonText from "../components/sql/LessonText.jsx";
 import { loadEngine, newDatabase, runSelect, runScript } from "../lib/sqlEngine.js";
 import { checkExercise, splitStatements, interpretError } from "../lib/sqlCheck.js";
-import { dialectNotes } from "../data/databaser/dialectNotes.js";
+import { checkTsqlRules, toSqlite } from "../lib/tsql.js";
 
 const MODES = [
   { id: "ovningar", label: "Övningar" },
@@ -46,7 +46,6 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
   const [freeCode, setFreeCode] = useState("SELECT * FROM Employee;");
   const [freeResult, setFreeResult] = useState(null);
   const [freeError, setFreeError] = useState(null);
-  const [notesOpen, setNotesOpen] = useState(false);
 
   const exercise = exercises.find((item) => item.id === currentId) || exercises[0];
   const level = levels.find((item) => item.id === exercise?.level);
@@ -136,15 +135,22 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
     setFreeError(null);
     const sql = freeCode.trim();
     if (!sql) return;
+    const rule = checkTsqlRules(sql);
+    if (rule) {
+      setFreeResult(null);
+      setFreeError({ raw: rule.raw, message: rule.message });
+      return;
+    }
+    const prepared = toSqlite(sql);
     try {
       if (!freeDb.current) freeDb.current = await newDatabase();
       const statements = splitStatements(sql);
       let shown = null;
 
       if (statements.length === 1 && /^\s*(select|with)\b/i.test(sql)) {
-        shown = runSelect(freeDb.current, sql);
+        shown = runSelect(freeDb.current, prepared);
       } else {
-        const results = freeDb.current.exec(sql);
+        const results = freeDb.current.exec(prepared);
         const last = results[results.length - 1];
         if (last) shown = { columns: last.columns, values: last.values };
       }
@@ -179,7 +185,8 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
       <section>
         <h1 className="font-display text-2xl">SQL-verkstad</h1>
         <p className="mt-1 max-w-reading text-[15px] text-ink/70">
-          En riktig databas i webbläsaren. Skriv frågan, kör den och få svaret rättat mot
+          En riktig databas i webbläsaren, i kursens dialekt: du skriver T-SQL som i SQL
+          Server och Azure. Skriv frågan, kör den och få svaret rättat mot
           en referenslösning. Databasen byggs om före varje körning, så inget du gör kan
           förstöra den.
         </p>
@@ -382,12 +389,6 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
                 </div>
               )}
 
-              {exercise.tsql && (
-                <div className="mt-4 rounded-card border-l-2 border-brass bg-paper p-4">
-                  <h4 className="font-display text-base">Skillnad mot SQL Server</h4>
-                  <p className="mt-1 text-[15px] leading-relaxed">{exercise.tsql}</p>
-                </div>
-              )}
             </section>
           </div>
 
@@ -483,53 +484,11 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
             </div>
           </section>
 
-          <section className="card p-5">
-            <button
-              type="button"
-              className="flex w-full items-center justify-between gap-3 text-left"
-              aria-expanded={notesOpen}
-              onClick={() => setNotesOpen(!notesOpen)}
-            >
-              <span className="font-display text-lg text-pine">
-                Kör du i SQLite här — men SQL Server på tentan
-              </span>
-              <span aria-hidden="true" className="text-ink/65">
-                {notesOpen ? "−" : "+"}
-              </span>
-            </button>
-            {notesOpen && (
-              <div className="mt-3 overflow-x-auto">
-                <table className="w-full border-collapse text-[14px]">
-                  <thead>
-                    <tr>
-                      {["Detta", "SQLite (här)", "SQL Server (tentan)"].map((heading) => (
-                        <th
-                          key={heading}
-                          scope="col"
-                          className="border border-line bg-white p-2 text-left font-medium"
-                        >
-                          {heading}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dialectNotes.map((note) => (
-                      <tr key={note.topic}>
-                        <td className="border border-line p-2 align-top">{note.topic}</td>
-                        <td className="border border-line p-2 align-top font-mono text-[13px]">
-                          {note.sqlite}
-                        </td>
-                        <td className="border border-line p-2 align-top font-mono text-[13px]">
-                          {note.tsql}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </section>
+          <p className="text-sm leading-relaxed text-ink/65">
+            Du skriver SQL Server-dialekten (T-SQL) precis som i kursen. Motorn under huven
+            är SQLite i webbläsaren, och det du skriver översätts innan det körs — kursens
+            SQL fungerar som i SQL Server, men enstaka exotiska funktioner kan saknas.
+          </p>
         </div>
       )}
     </div>

@@ -1,16 +1,15 @@
 export const hospitalSeed = `
-PRAGMA foreign_keys = ON;
-
 CREATE TABLE Unit (
-    UnitID      INTEGER PRIMARY KEY AUTOINCREMENT,
+    UnitID      INTEGER IDENTITY(1,1),
     UnitNo      CHAR(5) NOT NULL,
     UnitName    VARCHAR(50),
     UnitAddress VARCHAR(100),
-    CONSTRAINT UQ_Unit_UnitNo UNIQUE(UnitNo)
+    CONSTRAINT UQ_Unit_UnitNo UNIQUE(UnitNo),
+    CONSTRAINT PK_UnitID PRIMARY KEY (UnitID)
 );
 
 CREATE TABLE Employee (
-    EmployeeID      INTEGER PRIMARY KEY AUTOINCREMENT,
+    EmployeeID      INTEGER IDENTITY(1,1),
     EmpNo           CHAR(11) NOT NULL,
     EmpName         VARCHAR(50),
     EmpAddress      VARCHAR(100),
@@ -18,24 +17,27 @@ CREATE TABLE Employee (
     EmpSalary       INT,
     UnitID          INTEGER,
     CONSTRAINT UQ_Employee_EmpNo UNIQUE(EmpNo),
-    CONSTRAINT FK_Employee_Unit_UnitID FOREIGN KEY(UnitID) REFERENCES Unit(UnitID)
+    CONSTRAINT FK_Employee_Unit_UnitID FOREIGN KEY(UnitID) REFERENCES Unit(UnitID),
+    CONSTRAINT PK_EmployeeID PRIMARY KEY (EmployeeID)
 );
 
 CREATE TABLE Patient (
-    PatientID       INTEGER PRIMARY KEY AUTOINCREMENT,
+    PatientID       INTEGER IDENTITY(1,1),
     PatientNo       CHAR(11) NOT NULL,
     PatientName     VARCHAR(50) NOT NULL,
     PatientAddress  VARCHAR(100),
     PatientPhoneNumber CHAR(10),
     UnitID          INTEGER,
     CONSTRAINT UQ_Patient_PatientNo UNIQUE(PatientNo),
-    CONSTRAINT FK_Patient_Unit_UnitID FOREIGN KEY(UnitID) REFERENCES Unit(UnitID)
+    CONSTRAINT FK_Patient_Unit_UnitID FOREIGN KEY(UnitID) REFERENCES Unit(UnitID),
+    CONSTRAINT PK_PatientID PRIMARY KEY (PatientID)
 );
 
 CREATE TABLE Illness (
-    IllnessID       INTEGER PRIMARY KEY AUTOINCREMENT,
+    IllnessID       INTEGER IDENTITY(1,1),
     IllnessName     NVARCHAR(50) NOT NULL,
-    CONSTRAINT UQ_Illness_IllnessName UNIQUE(IllnessName)
+    CONSTRAINT UQ_Illness_IllnessName UNIQUE(IllnessName),
+    CONSTRAINT PK_IllnessID PRIMARY KEY (IllnessID)
 );
 
 CREATE TABLE Examines (
@@ -64,13 +66,14 @@ CREATE TABLE HasSuffered (
 );
 
 CREATE TABLE Car (
-    CarID           INTEGER PRIMARY KEY AUTOINCREMENT,
+    CarID           INTEGER IDENTITY(1,1),
     LicenseNo       CHAR(10) NOT NULL,
     Brand           VARCHAR(50),
     Price           INT,
     EmployeeID      INTEGER NULL,
     CONSTRAINT UQ_Car_LicenseNo UNIQUE(LicenseNo),
-    CONSTRAINT FK_Car_Employee FOREIGN KEY(EmployeeID) REFERENCES Employee(EmployeeID)
+    CONSTRAINT FK_Car_Employee FOREIGN KEY(EmployeeID) REFERENCES Employee(EmployeeID),
+    CONSTRAINT PK_CarID PRIMARY KEY (CarID)
 );
 
 INSERT INTO Unit (UnitNo, UnitName, UnitAddress) VALUES

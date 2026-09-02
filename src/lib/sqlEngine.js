@@ -5,6 +5,7 @@
 // DELETE i ett svar inte förstör resten av passet.
 
 import { hospitalSeed } from "../data/databaser/hospitalSeed.js";
+import { sqliteSeed } from "./tsql.js";
 
 let enginePromise = null;
 
@@ -25,7 +26,8 @@ export function loadEngine() {
 export async function newDatabase() {
   const SQL = await loadEngine();
   const db = new SQL.Database();
-  db.run(hospitalSeed);
+  // Seeden är skriven i T-SQL (som kursen) och översätts till SQLite här.
+  db.run(sqliteSeed(hospitalSeed));
   return db;
 }
 

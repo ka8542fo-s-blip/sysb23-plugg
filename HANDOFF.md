@@ -77,6 +77,19 @@ summerar till 20, inte 30 — medvetet orört).
   provet lever i App-state (överlever flikbyte, medvetet INTE omladdning),
   dubbelinlämningsspärr, Betygsmätare (SVG, gränser 50/55/65/75/85).
 - **SQL** (Databaser) — sql.js/WASM. Lazy-laddad, **färsk databas per körning**.
+  **T-SQL först (2026-09-02, användarbeslut):** kursen kör SQL Server/Azure SQL,
+  så användaren ser och skriver bara T-SQL. `lib/tsql.js` översätter till
+  SQLite precis före körning (TOP/SET ROWCOUNT → LIMIT, ISNULL/SUBSTRING/LEN/
+  GETDATE, `+` → `||` när en operand är text enligt schemat eller en
+  strängliteral, IDENTITY(1,1)+PK-constraint → AUTOINCREMENT, [hakparenteser],
+  TRUNCATE, GO) och `checkTsqlRules` stoppar GROUP BY-brott med SQL Servers
+  eget felmeddelande, eftersom SQLite annars är slapp. Seeden i
+  `hospitalSeed.js` är skriven i T-SQL och översätts av `sqliteSeed()`
+  (textkolumner får COLLATE NOCASE = SQL Servers standardcollation, så
+  `= 'lund'` matchar). Facit, ledtrådar och lektioner nämner aldrig SQLite;
+  dialektrutorna och `dialectNotes.js` är borta, en fotnot i Fritt läge
+  förklarar motorn. Nya testmotorer MÅSTE bygga databasen med
+  `sqliteSeed(hospitalSeed)`. Tester: `scripts/tsql.test.mjs`.
   Rättning i `lib/sqlCheck.js`: radordning ignoreras utom `ordered: true`,
   dubbletter räknas, DML rättas via `check`-frågan. **Formkrav** (2026-09-02)
   ger "Nästan." (brasston, räknas inte som löst) när resultatet stämmer men

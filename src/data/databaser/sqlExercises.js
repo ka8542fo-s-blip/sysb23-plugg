@@ -57,9 +57,9 @@ Utan parenteserna binder AND hårdare än OR, och frågan betyder något annat �
 
 **Literaler i SELECT.** Du kan välja ut ett konstant värde: \`SELECT LicenseNo, 'Tjanstebil' AS Typ FROM Car\` ger texten Tjanstebil på varje rad. Nyttigt för att märka rader i en UNION.
 
-**Strängar kan sättas ihop.** I SQL Server med \`+\`: \`EmpNo + '-' + EmpName\`. I SQLite (här) med \`||\`. Funktionerna \`LOWER()\` och \`SUBSTRING(text, start, längd)\` (i SQLite \`SUBSTR\`) omvandlar text. \`ISNULL(kolumn, ersättning)\` i SQL Server, \`IFNULL\` i SQLite, ger ett annat värde där kolumnen är NULL — \`ISNULL(StudentAddress, 'Unknown')\`.
+**Strängar kan sättas ihop** med \`+\`: \`EmpNo + '-' + EmpName\` (eller \`CONCAT(EmpNo, '-', EmpName)\`). Funktionerna \`LOWER()\` och \`SUBSTRING(text, start, längd)\` omvandlar text. \`ISNULL(kolumn, ersättning)\` ger ett annat värde där kolumnen är NULL — \`ISNULL(StudentAddress, 'Unknown')\`.
 
-**Begränsa antal rader:** SQL Server använder \`SELECT TOP 3 ...\` eller \`SET ROWCOUNT 3\`. SQLite använder \`LIMIT 3\` sist i frågan.
+**Begränsa antal rader:** \`SELECT TOP 3 ...\`, eller \`SET ROWCOUNT 3\` före frågan.
 `
   },
   {
@@ -89,7 +89,7 @@ Du kan ge resultatet ett läsbart namn med alias: \`SELECT AVG(EmpSalary) AS Med
 
     SELECT Brand, SUM(Price) FROM Car GROUP BY Brand;
 
-Regeln som orsakar flest felmeddelanden: **varje kolumn i SELECT måste antingen finnas i GROUP BY eller vara inuti en aggregatfunktion.** Skriver du \`SELECT Brand, LicenseNo, SUM(Price) ... GROUP BY Brand\` är det ologiskt — vilket av registreringsnumren i gruppen skulle visas? SQL Server ger fel; SQLite är slappare och plockar ett värde på måfå, vilket är värre eftersom felet blir tyst.
+Regeln som orsakar flest felmeddelanden: **varje kolumn i SELECT måste antingen finnas i GROUP BY eller vara inuti en aggregatfunktion.** Skriver du \`SELECT Brand, LicenseNo, SUM(Price) ... GROUP BY Brand\` är det ologiskt — vilket av registreringsnumren i gruppen skulle visas? SQL Server ger fel — och det gör verkstaden här också eftersom felet blir tyst.
 
 **HAVING** filtrerar grupperna efter att de bildats:
 
@@ -291,7 +291,7 @@ export const sqlExercises = [
 
   { id: "sql-07", level: "n2", task: "Visa registreringsnummer, märke och pris för alla bilar som kostar mellan 30 000 och 50 000 kronor, gränserna inkluderade.",
     solution: "SELECT LicenseNo, Brand, Price FROM Car WHERE Price BETWEEN 30000 AND 50000;",
-    tsql: "Identiskt i SQL Server.", reviewed: true },
+    reviewed: true },
 
   { id: "sql-08", level: "n2", task: "Visa namnen på alla patienter vars namn börjar på bokstaven A.",
     solution: "SELECT PatientName FROM Patient WHERE PatientName LIKE 'A%';",
@@ -300,7 +300,7 @@ export const sqlExercises = [
   { id: "sql-09", level: "n2", task: "Visa registreringsnummer och märke för de bilar som inte tillhör någon anställd.",
     solution: "SELECT LicenseNo, Brand FROM Car WHERE EmployeeID IS NULL;",
     hint: "EmployeeID = NULL fungerar inte — fundera på varför.",
-    tsql: "Identiskt i SQL Server. NULL-hanteringen är standard-SQL.", reviewed: true },
+    reviewed: true },
 
   { id: "sql-10", level: "n3", task: "Hur många patienter finns registrerade? Svara med en enda kolumn.",
     solution: "SELECT COUNT(*) FROM Patient;", reviewed: true },
@@ -333,7 +333,7 @@ export const sqlExercises = [
   { id: "sql-18", level: "n5", task: "Visa varje anställds namn tillsammans med märket på personens bil. Anställda utan bil ska också med, med tomt värde för märket.",
     solution: "SELECT e.EmpName, c.Brand FROM Employee e LEFT JOIN Car c ON e.EmployeeID = c.EmployeeID;",
     hint: "\"Ska också med\" är signalordet för LEFT JOIN.",
-    tsql: "Identiskt i SQL Server. Observera däremot att RIGHT JOIN och FULL OUTER JOIN finns i SQL Server men inte i alla SQLite-versioner — kan du inte köra dem här betyder det inte att de är fel på tentan.", reviewed: true },
+    reviewed: true },
 
   { id: "sql-19", level: "n5", task: "Visa vilka anställda som undersöker vilka patienter. Två kolumner: den anställdes namn och patientens namn.",
     solution: "SELECT e.EmpName, p.PatientName FROM Employee e INNER JOIN Examines x ON e.EmployeeID = x.EmployeeID INNER JOIN Patient p ON x.PatientID = p.PatientID;",
@@ -371,7 +371,7 @@ export const sqlExercises = [
   { id: "sql-27", level: "n7", task: "Visa namnen på de sjukdomar som ingen patient lider av just nu.",
     solution: "SELECT IllnessName FROM Illness EXCEPT SELECT i.IllnessName FROM Illness i INNER JOIN Suffers s ON i.IllnessID = s.IllnessID;",
     hint: "Alla sjukdomar minus de som förekommer i Suffers.",
-    tsql: "EXCEPT finns i SQL Server med samma syntax. I Oracle heter operatorn MINUS.", reviewed: true },
+    reviewed: true },
 
   { id: "sql-28", level: "n7", task: "Visa namnen på de sjukdomar som både någon lider av just nu och som någon har lidit av tidigare.",
     solution: "SELECT IllnessName FROM Illness WHERE IllnessID IN (SELECT IllnessID FROM Suffers) INTERSECT SELECT IllnessName FROM Illness WHERE IllnessID IN (SELECT IllnessID FROM HasSuffered);",
@@ -382,7 +382,7 @@ export const sqlExercises = [
     solution: "INSERT INTO Unit (UnitNo, UnitName, UnitAddress) VALUES ('U4', 'Radiology', 'Care road');",
     check: "SELECT UnitNo, UnitName, UnitAddress FROM Unit ORDER BY UnitNo;",
     hint: "Ange inte UnitID — den sätts av databasen.",
-    tsql: "Identiskt i SQL Server.", reviewed: true },
+    reviewed: true },
 
   { id: "sql-30", level: "n8", kind: "dml",
     task: "Höj lönen med 2 000 kronor för alla anställda på enheten med enhetsnummer U1.",
@@ -400,13 +400,13 @@ export const sqlExercises = [
     task: "Skapa en vy som heter HighEarner och som visar namn och lön för de anställda som tjänar mer än 30 000.",
     solution: "CREATE VIEW HighEarner AS SELECT EmpName, EmpSalary FROM Employee WHERE EmpSalary > 30000;",
     check: "SELECT * FROM HighEarner ORDER BY EmpName;",
-    tsql: "Identiskt i SQL Server. Där kan du dessutom lägga till WITH SCHEMABINDING för att hindra att tabellerna bakom vyn ändras.", reviewed: true },
+    reviewed: true },
 
   // ---- Nivå 1 ----
   { id: "sql-33", level: "n1", names: true, task: "Visa varje anställds namn som Namn, lön som Lon, och månadslön (lönen delat med 12) som Manadslon.",
     solution: "SELECT EmpName AS Namn, EmpSalary AS Lon, EmpSalary / 12 AS Manadslon FROM Employee;",
-    hint: "AS ger alias. Uttrycket EmpSalary / 12 behöver ett alias för att få ett kolumnnamn.",
-    tsql: "Identiskt. Notera att INT / INT ger heltalsdivision i både SQL Server och SQLite — 25000 / 12 blir 2083.", reviewed: true },
+    hint: "AS ger alias. Uttrycket EmpSalary / 12 behöver ett alias för att få ett kolumnnamn. INT / INT ger heltalsdivision — 25000 / 12 blir 2083.",
+    reviewed: true },
 
   { id: "sql-34", level: "n1", ordered: true,
     task: "Visa märke och pris för alla bilar, sorterade på märke i stigande ordning och inom varje märke på pris i fallande ordning.",
@@ -416,8 +416,8 @@ export const sqlExercises = [
 
   { id: "sql-35", level: "n1", task: "Visa namnen på de anställda vars namn kommer efter 'Eva' i bokstavsordning.",
     solution: "SELECT EmpName FROM Employee WHERE EmpName > 'Eva';",
-    hint: "Text jämförs lexikografiskt, tecken för tecken. 'Hans' > 'Eva' eftersom H kommer efter E.",
-    tsql: "Identiskt. I SQL Server kan resultatet bero på databasens collation (skiftlägeskänslighet).", reviewed: true },
+    hint: "Text jämförs lexikografiskt, tecken för tecken. 'Hans' > 'Eva' eftersom H kommer efter E. Skiftläget spelar ingen roll med SQL Servers standardcollation.",
+    reviewed: true },
 
   // ---- Nivå 2 ----
   { id: "sql-36", level: "n2", task: "Visa namn, adress och lön för de anställda som bor i Lund eller Eslöv OCH tjänar mer än 20 000.",
@@ -434,19 +434,19 @@ export const sqlExercises = [
     hint: "En literal i SELECT upprepas på varje rad. Kom ihåg IS NOT NULL, inte <> NULL.", reviewed: true },
 
   { id: "sql-39", level: "n2", names: true, task: "Visa en kolumn Etikett som slår ihop anställningsnummer, ett bindestreck och namn, t.ex. E1-Anna, för alla anställda.",
-    solution: "SELECT EmpNo || '-' || EmpName AS Etikett FROM Employee;",
-    hint: "I SQLite slås strängar ihop med ||.",
-    tsql: "I SQL Server: EmpNo + '-' + EmpName, eller CONCAT(EmpNo, '-', EmpName).", reviewed: true },
+    solution: "SELECT EmpNo + '-' + EmpName AS Etikett FROM Employee;",
+    hint: "Strängar slås ihop med +, eller med CONCAT(EmpNo, '-', EmpName).",
+    reviewed: true },
 
   { id: "sql-40", level: "n2", names: true, task: "Visa varje patients namn i gemener som Gemener, och namnets två första tecken som Kort.",
-    solution: "SELECT LOWER(PatientName) AS Gemener, SUBSTR(PatientName, 1, 2) AS Kort FROM Patient;",
-    hint: "LOWER() och SUBSTR(text, startposition, antal tecken). Positioner räknas från 1.",
-    tsql: "I SQL Server heter funktionen SUBSTRING, med samma argument.", reviewed: true },
+    solution: "SELECT LOWER(PatientName) AS Gemener, SUBSTRING(PatientName, 1, 2) AS Kort FROM Patient;",
+    hint: "LOWER() och SUBSTRING(text, startposition, antal tecken). Positioner räknas från 1.",
+    reviewed: true },
 
   { id: "sql-41", level: "n2", names: true, task: "Visa registreringsnummer och ägarens EmployeeID som Agare för alla bilar — men visa 0 i stället för tomt värde för bilar utan ägare.",
-    solution: "SELECT LicenseNo, IFNULL(EmployeeID, 0) AS Agare FROM Car;",
-    hint: "IFNULL(kolumn, ersättning) ger ersättningen där kolumnen är NULL.",
-    tsql: "I SQL Server: ISNULL(EmployeeID, 0). COALESCE fungerar i båda.", reviewed: true },
+    solution: "SELECT LicenseNo, ISNULL(EmployeeID, 0) AS Agare FROM Car;",
+    hint: "ISNULL(kolumn, ersättning) ger ersättningen där kolumnen är NULL. COALESCE fungerar också.",
+    reviewed: true },
 
   // ---- Nivå 5 ----
   { id: "sql-42", level: "n5", task: "Hur många rader ger den kartesiska produkten av Unit och Illness? Svara med en enda kolumn med antalet.",
@@ -457,20 +457,20 @@ export const sqlExercises = [
   { id: "sql-43", level: "n5", requires: ["RIGHT JOIN"], task: "Visa registreringsnummer och ägarens namn med RIGHT JOIN från Car till Employee, så att alla anställda kommer med även utan bil.",
     solution: "SELECT c.LicenseNo, e.EmpName FROM Car c RIGHT JOIN Employee e ON c.EmployeeID = e.EmployeeID;",
     hint: "RIGHT JOIN behåller alla rader från tabellen till höger om JOIN. Samma resultat som LEFT JOIN med tabellerna i omvänd ordning.",
-    tsql: "Fullt stöd i SQL Server. SQLite stöder RIGHT JOIN först från version 3.39.", reviewed: true },
+    reviewed: true },
 
   { id: "sql-44", level: "n5", task: "Visa anställdas namn och bilars registreringsnummer så att BÅDE anställda utan bil och bilar utan ägare kommer med.",
     solution: "SELECT e.EmpName, c.LicenseNo FROM Employee e FULL OUTER JOIN Car c ON e.EmployeeID = c.EmployeeID;",
     hint: "FULL OUTER JOIN behåller alla rader från båda sidor. Resultatet ska ha 8 rader: 6 anställda plus 2 ägarlösa bilar.",
-    tsql: "Fullt stöd i SQL Server. SQLite först från 3.39.", reviewed: true },
+    reviewed: true },
 
   // ---- Nivå 6 ----
   { id: "sql-45", level: "n6", kind: "dml",
     task: "Skapa en tabell PatientCopy med kolumnerna PatientCopyID (surrogatnyckel), PatientNo och PatientName, och kopiera in alla patienter som bor i Lund från Patient.",
-    solution: "CREATE TABLE PatientCopy (PatientCopyID INTEGER PRIMARY KEY AUTOINCREMENT, PatientNo CHAR(11) NOT NULL, PatientName VARCHAR(50)); INSERT INTO PatientCopy (PatientNo, PatientName) SELECT PatientNo, PatientName FROM Patient WHERE PatientAddress = 'Lund';",
+    solution: "CREATE TABLE PatientCopy (PatientCopyID INTEGER IDENTITY(1,1), PatientNo CHAR(11) NOT NULL, PatientName VARCHAR(50), CONSTRAINT PK_PatientCopy_PatientCopyID PRIMARY KEY (PatientCopyID)); INSERT INTO PatientCopy (PatientNo, PatientName) SELECT PatientNo, PatientName FROM Patient WHERE PatientAddress = 'Lund';",
     check: "SELECT PatientNo, PatientName FROM PatientCopy ORDER BY PatientNo;",
-    hint: "INSERT INTO ... SELECT kopierar rader från en fråga. Surrogatnyckeln ska inte anges i INSERT.",
-    tsql: "I SQL Server: PatientCopyID INTEGER IDENTITY(1,1) plus CONSTRAINT PK_PatientCopy_PatientCopyID PRIMARY KEY.", reviewed: true },
+    hint: "INSERT INTO ... SELECT kopierar rader från en fråga. IDENTITY(1,1) skapar surrogatnyckeln, så den ska inte anges i INSERT.",
+    reviewed: true },
 
   { id: "sql-46", level: "n6", kind: "dml",
     task: "Höj lönen med 1 000 för alla anställda som undersöker minst en patient.",

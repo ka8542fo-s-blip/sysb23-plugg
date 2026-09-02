@@ -173,7 +173,7 @@ export const topics = [
       "Fem constrainttyper: PRIMARY KEY (unik och NOT NULL, en per tabell), FOREIGN KEY (referensintegritet), UNIQUE (unikt men tillåter NULL), CHECK (villkor på värden), DEFAULT (värde när inget anges).",
       "CHECK-constraints är där kapitel 2:s domänbegrepp får sin tekniska motsvarighet.",
       "Namnge alltid constraints. Kursens prefix: PK_, FK_, UQ_, CK_, DF_ följt av tabell och kolumn. Ger begripliga felmeddelanden och något att referera till i ALTER TABLE.",
-      "Surrogatnyckel skapas med IDENTITY(1,1) i SQL Server och AUTOINCREMENT i SQLite. Motiv: nyckelstabilitet och prestanda vid join och indexering.",
+      "Surrogatnyckel skapas med IDENTITY(1,1) i SQL Server. Motiv: nyckelstabilitet och prestanda vid join och indexering.",
       "Priset för surrogatnycklar: raden går inte att identifiera meningsfullt utan uppslag, och den naturliga nyckeln måste behållas som UNIQUE för att affärsregeln inte ska förloras.",
       "Datatyper i SQL Server: INT/BIGINT för heltal, DECIMAL(p,s) för exakta decimaltal och belopp (aldrig FLOAT till pengar), VARCHAR(n)/NVARCHAR(n) för text där N klarar unicode, CHAR(n) för fast längd, DATE/DATETIME/DATETIME2 för tid, BIT för booleskt.",
       "Kodstandard v2.0: tabellnamn i PascalCase och singular (Employee, inte employees), kolumnnamn i PascalCase ofta med tabellprefix, camelCase för Java-variabler och metoder, PascalCase för Java-klasser, SCREAMING_SNAKE_CASE för miljövariabler.",

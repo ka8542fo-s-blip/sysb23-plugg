@@ -645,7 +645,7 @@ Namnge dem alltid. Kursens kodstandard föreskriver prefixen \`PK_\`, \`FK_\`, \
 
 Kapitel 3 slog fast att surrogatnycklar hör till fysisk design. Här är de.
 
-En **surrogatnyckel** är ett artificiellt, databasgenererat värde utan affärsbetydelse. I SQL Server skapas den med \`IDENTITY(1,1)\`, i SQLite med \`AUTOINCREMENT\`.
+En **surrogatnyckel** är ett artificiellt, databasgenererat värde utan affärsbetydelse. I SQL Server skapas den med \`IDENTITY(1,1)\`.
 
 Motiven är fysiska: **nyckelstabilitet** (ett anställningsnummer kan ändras vid omorganisation, ett löpnummer aldrig) och **prestanda** (ett heltal joinar och indexerar effektivare än en sammansatt textnyckel).
 
@@ -723,7 +723,6 @@ export const glossary = [
   { term: "3NF (tredje normalformen)", definition: "En relation är i 3NF om och endast om den är i 2NF och varje icke-primärattribut är icke-transitivt beroende av varje kandidatnyckel i relationen.", chapter: "kap7" },
   { term: "Atomärt värde", definition: "Ett odelbart värde i en cell. Kravet på atomära värden är både en av relationens egenskaper och innehållet i 1NF.", chapter: "kap2" },
   { term: "Attribut (attribute)", definition: "Formellt: ett namn parat med en domän. Informellt en kolumn eller ett fält.", chapter: "kap2" },
-  { term: "AUTOINCREMENT", definition: "SQLites sätt att generera surrogatnyckelvärden. Motsvarar IDENTITY(1,1) i SQL Server.", chapter: "kap8" },
   { term: "Binär relation", definition: "En relation mellan två entitetstyper, med namn och multipliciteter på båda sidor. Förekommer som 1:1, 1:M och M:N.", chapter: "kap5" },
   { term: "CHECK-constraint", definition: "Villkor på tillåtna värden i en kolumn, t.ex. CHECK (EmpSalary >= 0). Domänbegreppets tekniska motsvarighet.", chapter: "kap8" },
   { term: "Chen-notation", definition: "ER-notation där entiteter ritas som rektanglar, relationer som romber och attribut som ellipser, med understrykning för identifierare.", chapter: "kap4" },

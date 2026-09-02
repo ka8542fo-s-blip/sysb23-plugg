@@ -4,6 +4,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import initSqlJs from "sql.js";
 import { hospitalSeed } from "../src/data/databaser/hospitalSeed.js";
+import { sqliteSeed } from "../src/lib/tsql.js";
 import { sqlExercises } from "../src/data/databaser/sqlExercises.js";
 import { checkExercise } from "../src/lib/sqlCheck.js";
 
@@ -11,7 +12,7 @@ const SQL = await initSqlJs();
 const engine = {
   newDatabase: async () => {
     const db = new SQL.Database();
-    db.run(hospitalSeed);
+    db.run(sqliteSeed(hospitalSeed));
     return db;
   },
   runSelect(db, sql) {
