@@ -148,10 +148,7 @@ export default function MonthCalendar({ sessions, byId, now, termStart, termEnd 
             <button
               type="button"
               className="btn-secondary px-3 py-1 text-sm"
-              onClick={() => {
-                setMonth(homeMonth);
-                setPicked(now);
-              }}
+              onClick={() => setMonth(homeMonth)}
             >
               idag
             </button>
@@ -202,9 +199,9 @@ export default function MonthCalendar({ sessions, byId, now, termStart, termEnd 
                         ? "inget inbokat"
                         : `${day.sessions.length} pass`
                     }${day.isToday ? ", idag" : ""}`}
-                    className={`flex min-h-[3.25rem] min-w-0 flex-col items-stretch bg-white px-1 py-1 text-left transition-colors duration-150 hover:bg-pine/[0.06] active:bg-pine/[0.12] sm:min-h-[6.5rem] sm:px-1.5 sm:py-1.5 ${
-                      day.inMonth ? "" : "opacity-45"
-                    }`}
+                    className={`flex min-h-[3.25rem] min-w-0 flex-col items-stretch px-1 py-1 text-left transition-colors duration-150 hover:bg-pine/[0.06] active:bg-pine/[0.12] sm:min-h-[6.5rem] sm:px-1.5 sm:py-1.5 ${
+                      day.isToday ? "bg-brass/[0.12]" : "bg-white"
+                    } ${day.inMonth ? "" : "opacity-45"}`}
                   >
                     <span className="flex items-center gap-1.5">
                       <span
@@ -212,14 +209,14 @@ export default function MonthCalendar({ sessions, byId, now, termStart, termEnd 
                           selected
                             ? "bg-pine text-paper"
                             : day.isToday
-                              ? "text-brass"
+                              ? "bg-brass font-semibold text-paper"
                               : ""
                         }`}
                       >
                         {Number(day.date.slice(8))}
                       </span>
                       {day.isToday && (
-                        <span className="hidden text-[10px] uppercase tracking-wide text-brass sm:inline">
+                        <span className="hidden text-[10px] font-semibold uppercase tracking-wide text-brass sm:inline">
                           idag
                         </span>
                       )}
