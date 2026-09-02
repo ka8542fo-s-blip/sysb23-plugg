@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import SegmentedControl from "../components/SegmentedControl.jsx";
 import SqlEditor from "../components/sql/SqlEditor.jsx";
 import ResultPanel from "../components/sql/ResultPanel.jsx";
+import ResultBanner from "../components/sql/ResultBanner.jsx";
 import ResultTable from "../components/sql/ResultTable.jsx";
 import SchemaPanel from "../components/sql/SchemaPanel.jsx";
 import ExerciseList from "../components/sql/ExerciseList.jsx";
@@ -17,7 +18,7 @@ const MODES = [
 
 const engine = { newDatabase, runSelect, runScript };
 
-export default function SqlWorkshop({ course, sqlProgress, onSolve }) {
+export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
   const levels = course.sqlLevels || [];
   const exercises = course.sqlExercises || [];
 
@@ -33,7 +34,9 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve }) {
   const [lessonOpen, setLessonOpen] = useState(true);
   const [schemaOpen, setSchemaOpen] = useState(false);
   const [confirmSolution, setConfirmSolution] = useState(false);
+  const [bannerHidden, setBannerHidden] = useState(false);
   const editorRef = useRef(null);
+  const bannerRef = useRef(null);
 
   // Fritt läge behåller sin databas mellan körningar, så att en DELETE
   // syns tills man trycker Återställ.
@@ -85,6 +88,18 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve }) {
     wasRunning.current = running;
   }, [running]);
 
+  // Kör man med Ctrl+Enter längst ned i editorn kan bannern hamna utanför
+  // rutan — skrolla in den, men bara när den faktiskt inte syns.
+  useEffect(() => {
+    if (!result || bannerHidden) return;
+    const box = bannerRef.current?.getBoundingClientRect();
+    if (!box) return;
+    const visible = box.top >= 0 && box.bottom <= window.innerHeight;
+    if (!visible) {
+      bannerRef.current.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+  }, [result, bannerHidden]);
+
   const solvedCount = useMemo(
     () => exercises.filter((item) => sqlProgress[item.id]).length,
     [exercises, sqlProgress],
@@ -92,6 +107,7 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve }) {
 
   async function runExercise() {
     if (!exercise || running) return;
+    setBannerHidden(false);
     setRunning(true);
     try {
       const outcome = await checkExercise({ exercise, userSql: code, engine });
@@ -218,12 +234,38 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve }) {
             )}
 
             <section className="card mt-4 p-5">
-              <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-brass">
-                Övning {levelIndex + 1}.
-                {exercises
-                  .filter((item) => item.level === exercise.level)
-                  .findIndex((item) => item.id === exercise.id) + 1}
-              </p>
+              <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+                <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-brass">
+                  Övning {levelIndex + 1}.
+                  {exercises
+                    .filter((item) => item.level === exercise.level)
+                    .findIndex((item) => item.id === exercise.id) + 1}
+                </p>
+                {/* Statusen ska gå att tjäna tillbaka när man lärt sig. */}
+                {sqlProgress[exercise.id] && (
+                  <span className="flex items-center gap-2 text-sm">
+                    <span
+                      className={
+                        sqlProgress[exercise.id] === "solved-with-help"
+                          ? "text-brass"
+                          : "text-correct"
+                      }
+                    >
+                      ✓{" "}
+                      {sqlProgress[exercise.id] === "solved-with-help"
+                        ? "Löst med hjälp"
+                        : "Löst"}
+                    </span>
+                    <button
+                      type="button"
+                      className="btn-quiet text-sm"
+                      onClick={() => onReset(exercise.id)}
+                    >
+                      Nollställ
+                    </button>
+                  </span>
+                )}
+              </div>
               <h3 className="mt-1 font-display text-xl">{exercise.task}</h3>
 
               {/* Föreläsarens uttalade hållning, direkt ur föreläsningen. */}
@@ -273,6 +315,7 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve }) {
                   onClick={() => {
                     setCode("");
                     setResult(null);
+                    setBannerHidden(false);
                     editorRef.current?.focus();
                   }}
                 >
@@ -323,6 +366,12 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve }) {
                   {running ? "Kör…" : "Kör ▸"}
                 </button>
               </div>
+
+              {result && !bannerHidden && (
+                <div className="mt-4" ref={bannerRef}>
+                  <ResultBanner result={result} onDismiss={() => setBannerHidden(true)} />
+                </div>
+              )}
 
               {schemaOpen && (
                 <div className="mt-4 border-t border-line pt-4">

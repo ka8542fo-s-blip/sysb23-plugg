@@ -19,6 +19,7 @@ import {
   saveReadChapter,
   loadSqlProgress,
   saveSqlResult,
+  clearSqlResult,
 } from "./lib/storage.js";
 
 export default function App() {
@@ -124,6 +125,15 @@ export default function App() {
     setSqlProgress((prev) => ({ ...prev, [exerciseId]: status }));
   }
 
+  function resetSqlExercise(exerciseId) {
+    clearSqlResult(exerciseId);
+    setSqlProgress((prev) => {
+      const next = { ...prev };
+      delete next[exerciseId];
+      return next;
+    });
+  }
+
   function resetAll() {
     setAnswers({});
     setExams([]);
@@ -206,6 +216,7 @@ export default function App() {
             course={course}
             sqlProgress={sqlProgress}
             onSolve={solveSqlExercise}
+            onReset={resetSqlExercise}
           />
         )}
         {view === "schema" && (

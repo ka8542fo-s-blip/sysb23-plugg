@@ -32,6 +32,16 @@ export function saveSqlResult(exerciseId, status) {
   if (status) save(sqlKey(exerciseId), status);
 }
 
+// Nollställer en enskild övning — statusen ska gå att tjäna tillbaka när
+// man lärt sig, inte fastna på "löst med hjälp" för alltid.
+export function clearSqlResult(exerciseId) {
+  try {
+    localStorage.removeItem(PREFIX + sqlKey(exerciseId));
+  } catch {
+    /* privat läge — sidan fungerar ändå */
+  }
+}
+
 // Tentaanmälan i Ladok: sysb23:examreg:<examId> = true (nyckeln tas
 // bort vid avbockning, precis som lästa kapitel).
 export function examRegKey(examId) {
