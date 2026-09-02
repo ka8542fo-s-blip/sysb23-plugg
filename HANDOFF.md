@@ -97,7 +97,8 @@ summerar till 20, inte 30 — medvetet orört).
   nollställas (`clearSqlResult`), och Tab i redigeraren gör indrag (Esc
   lämnar fältet).
   53 övningar i 9 nivåer (nivå 9 = korrelerade frågor/EXISTS hard mode);
-  fältet `bjorn` renderas som mässingsetikett "Björn säger:" under uppgiften.
+  ("Björn säger"-fälten ur v2-prompten togs bort 2026-09-02 på användarens
+  begäran — det viktiga ska stå i lektionerna och ledtrådarna).
   sql.js bundlar SQLite 3.49.1, så RIGHT/FULL OUTER JOIN (sql-43/44) körs på
   riktigt. Heltalsdivision verifierad (25000/12 = 2083) och dubbletträkningen
   gör att UNION nekas där UNION ALL krävs (sql-51).

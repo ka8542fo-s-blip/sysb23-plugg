@@ -406,14 +406,13 @@ export const sqlExercises = [
   { id: "sql-33", level: "n1", task: "Visa varje anställds namn som Namn, lön som Lon, och månadslön (lönen delat med 12) som Manadslon.",
     solution: "SELECT EmpName AS Namn, EmpSalary AS Lon, EmpSalary / 12 AS Manadslon FROM Employee;",
     hint: "AS ger alias. Uttrycket EmpSalary / 12 behöver ett alias för att få ett kolumnnamn.",
-    bjorn: "Ett uttryck utan AS visas som '(No column name)' i SQL Server. Ge alltid uttryck ett namn.",
     tsql: "Identiskt. Notera att INT / INT ger heltalsdivision i både SQL Server och SQLite — 25000 / 12 blir 2083.", reviewed: true },
 
   { id: "sql-34", level: "n1", ordered: true,
     task: "Visa märke och pris för alla bilar, sorterade på märke i stigande ordning och inom varje märke på pris i fallande ordning.",
     solution: "SELECT Brand, Price FROM Car ORDER BY Brand ASC, Price DESC;",
     hint: "ORDER BY tar flera kolumner, var och en med egen riktning.",
-    bjorn: "Skriv ut kolumnnamnen i ORDER BY. ORDER BY 2 fungerar men avråds — det går sönder när kolumnordningen ändras.", reviewed: true },
+    reviewed: true },
 
   { id: "sql-35", level: "n1", task: "Visa namnen på de anställda vars namn kommer efter 'Eva' i bokstavsordning.",
     solution: "SELECT EmpName FROM Employee WHERE EmpName > 'Eva';",
@@ -453,7 +452,7 @@ export const sqlExercises = [
   { id: "sql-42", level: "n5", task: "Hur många rader ger den kartesiska produkten av Unit och Illness? Svara med en enda kolumn med antalet.",
     solution: "SELECT COUNT(*) FROM Unit, Illness;",
     hint: "FROM A, B utan villkor ger varje rad i A kombinerad med varje rad i B: 3 × 6.",
-    bjorn: "Kartesisk produkt är det en join filtrerar. Nästan aldrig ett resultat du vill ha — men det du måste förstå för att förstå joins.", reviewed: true },
+    reviewed: true },
 
   { id: "sql-43", level: "n5", task: "Visa registreringsnummer och ägarens namn med RIGHT JOIN från Car till Employee, så att alla anställda kommer med även utan bil.",
     solution: "SELECT c.LicenseNo, e.EmpName FROM Car c RIGHT JOIN Employee e ON c.EmployeeID = e.EmployeeID;",
@@ -463,7 +462,6 @@ export const sqlExercises = [
   { id: "sql-44", level: "n5", task: "Visa anställdas namn och bilars registreringsnummer så att BÅDE anställda utan bil och bilar utan ägare kommer med.",
     solution: "SELECT e.EmpName, c.LicenseNo FROM Employee e FULL OUTER JOIN Car c ON e.EmployeeID = c.EmployeeID;",
     hint: "FULL OUTER JOIN behåller alla rader från båda sidor. Resultatet ska ha 8 rader: 6 anställda plus 2 ägarlösa bilar.",
-    bjorn: "Skillnaden mot LEFT: LEFT tappar bilarna utan ägare, FULL behåller dem.",
     tsql: "Fullt stöd i SQL Server. SQLite först från 3.39.", reviewed: true },
 
   // ---- Nivå 6 ----
@@ -472,7 +470,6 @@ export const sqlExercises = [
     solution: "CREATE TABLE PatientCopy (PatientCopyID INTEGER PRIMARY KEY AUTOINCREMENT, PatientNo CHAR(11) NOT NULL, PatientName VARCHAR(50)); INSERT INTO PatientCopy (PatientNo, PatientName) SELECT PatientNo, PatientName FROM Patient WHERE PatientAddress = 'Lund';",
     check: "SELECT PatientNo, PatientName FROM PatientCopy ORDER BY PatientNo;",
     hint: "INSERT INTO ... SELECT kopierar rader från en fråga. Surrogatnyckeln ska inte anges i INSERT.",
-    bjorn: "Surrogatnyckelkolumnen döps efter tabellen: PatientCopyID, inte PatientID.",
     tsql: "I SQL Server: PatientCopyID INTEGER IDENTITY(1,1) plus CONSTRAINT PK_PatientCopy_PatientCopyID PRIMARY KEY.", reviewed: true },
 
   { id: "sql-46", level: "n6", kind: "dml",
@@ -496,7 +493,7 @@ export const sqlExercises = [
   { id: "sql-49", level: "n7", task: "Samma fråga som föregående — patienter som undersöks av minst en anställd — men skriv den med EXISTS.",
     solution: "SELECT PatientNo, PatientName FROM Patient p WHERE EXISTS (SELECT 1 FROM Examines x WHERE x.PatientID = p.PatientID);",
     hint: "Korrelerad underfråga: x.PatientID = p.PatientID kopplar till den yttre raden.",
-    bjorn: "IN, EXISTS och INNER JOIN kan ge samma svar. EXISTS är ofta snabbast; JOIN kan visa kolumner från båda tabellerna.", reviewed: true },
+    reviewed: true },
 
   { id: "sql-50", level: "n7", task: "Samma fråga en tredje gång — patienter som undersöks av minst en anställd — men skriv den med INNER JOIN. Varje patient ska visas en gång.",
     solution: "SELECT DISTINCT p.PatientNo, p.PatientName FROM Patient p INNER JOIN Examines x ON p.PatientID = x.PatientID;",
@@ -506,7 +503,7 @@ export const sqlExercises = [
   { id: "sql-51", level: "n7", task: "Visa alla adresser som förekommer bland anställda OCH patienter i en enda kolumn Ort, med dubbletter kvar.",
     solution: "SELECT EmpAddress AS Ort FROM Employee UNION ALL SELECT PatientAddress FROM Patient;",
     hint: "UNION ALL behåller dubbletter — resultatet ska ha 12 rader. UNION skulle ge 6.",
-    bjorn: "Union compatibility: båda frågorna måste ha samma antal kolumner med jämförbara typer. Kolumnnamnet tas från den första frågan.", reviewed: true },
+    reviewed: true },
 
   // ---- Nivå 9 ----
   { id: "sql-52", level: "n9", task: "Visa namn och lön för de anställda som tjänar mer än medellönen PÅ SIN EGEN ENHET.",
@@ -517,5 +514,5 @@ export const sqlExercises = [
   { id: "sql-53", level: "n9", task: "Vilka anställda undersöker ALLA patienter på enheten Trauma? Visa namnen.",
     solution: "SELECT e.EmpName FROM Employee e WHERE NOT EXISTS (SELECT 1 FROM Patient p INNER JOIN Unit u ON p.UnitID = u.UnitID WHERE u.UnitName = 'Trauma' AND NOT EXISTS (SELECT 1 FROM Examines x WHERE x.EmployeeID = e.EmployeeID AND x.PatientID = p.PatientID));",
     hint: "Dubbel NOT EXISTS: anställda där det inte finns någon Trauma-patient som de inte undersöker. Alternativet är COUNT(DISTINCT p.PatientID) i HAVING jämfört med antalet Trauma-patienter — båda ger samma svar.",
-    bjorn: "Föreläsarens 'EXISTS hard mode'. Kan du den här kan du EXISTS.", reviewed: true }
+    reviewed: true }
 ];

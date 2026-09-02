@@ -270,16 +270,6 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
               </div>
               <h3 className="mt-1 font-display text-xl">{exercise.task}</h3>
 
-              {/* Föreläsarens uttalade hållning, direkt ur föreläsningen. */}
-              {exercise.bjorn && (
-                <p className="mt-2 max-w-reading text-[15px] leading-relaxed text-ink/80">
-                  <span className="mr-2 text-[11px] font-medium uppercase tracking-[0.14em] text-brass">
-                    Björn säger:
-                  </span>
-                  {exercise.bjorn}
-                </p>
-              )}
-
               {exercise.hint && (
                 <div className="mt-3">
                   <button
