@@ -6,6 +6,7 @@ import ResultBanner from "../components/sql/ResultBanner.jsx";
 import ResultTable from "../components/sql/ResultTable.jsx";
 import SchemaPanel from "../components/sql/SchemaPanel.jsx";
 import ExerciseList from "../components/sql/ExerciseList.jsx";
+import PracticeMode from "../components/sql/PracticeMode.jsx";
 import LessonText from "../components/sql/LessonText.jsx";
 import { loadEngine, newDatabase, runSelect, runScript } from "../lib/sqlEngine.js";
 import { checkExercise, splitStatements, interpretError } from "../lib/sqlCheck.js";
@@ -13,6 +14,7 @@ import { dialectNotes } from "../data/databaser/dialectNotes.js";
 
 const MODES = [
   { id: "ovningar", label: "Övningar" },
+  { id: "slump", label: "Slumpövningar" },
   { id: "fritt", label: "Fritt läge" },
 ];
 
@@ -409,6 +411,10 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
             />
           </div>
         </div>
+      )}
+
+      {engineState === "ready" && mode === "slump" && (
+        <PracticeMode engine={engine} courseExercises={exercises} />
       )}
 
       {engineState === "ready" && mode === "fritt" && (

@@ -81,6 +81,19 @@ summerar till 20, inte 30 — medvetet orört).
   i webbläsarbygget — binärerna är gitignorerade). Kör-knappen är `btn-emphasis`
   längst till höger. Schemapanelen har InfoTip på varje tabell/kolumn (beskrivningarna
   i `schemaGlossary.js` är lästa ur seeden — hitta inte på egenskaper).
+  Tre lägen: Övningar · **Slumpövningar** · Fritt läge. Slumpläget
+  (`components/sql/PracticeMode.jsx`) bygger uppgifter ur schemat med
+  `lib/sqlGenerator.js` (20 mallfamiljer, deterministiskt frö) och
+  `lib/sqlPractice.js`, som läser verkliga värden ur databasen och **kör
+  varje kandidats lösning innan den visas** — tomma, degenererade (filtret
+  släpper igenom allt), för stora och kursidentiska frågor kastas och
+  slumpas om. Rör aldrig kursövningarnas progress; egen räknare i `sqlSlump`.
+  Testat i `scripts/sql-generator.test.mjs` (200 genererade övningar rättas
+  som rätt) — kör `npm test` efter ändringar i generatorn.
+  Domslutet efter en körning visas i `ResultBanner` ovanför tabellerna och
+  går att kryssa bort; `ResultPanel` bär bara detaljerna. Varje övning kan
+  nollställas (`clearSqlResult`), och Tab i redigeraren gör indrag (Esc
+  lämnar fältet).
   53 övningar i 9 nivåer (nivå 9 = korrelerade frågor/EXISTS hard mode);
   fältet `bjorn` renderas som mässingsetikett "Björn säger:" under uppgiften.
   sql.js bundlar SQLite 3.49.1, så RIGHT/FULL OUTER JOIN (sql-43/44) körs på
@@ -161,7 +174,7 @@ ihop om TimeEdit ändrar format.
 ## Lagringsnycklar
 
 `answers`, `exams`, `essays`, `settings`, `lasSegment`, `delkurs`, `schemaVy`
-(= `"lista"` | `"kalender"`), `upplasningstakt`, `upplasningsrost`,
+(= `"lista"` | `"kalender"`), `upplasningstakt`, `upplasningsrost`, `sqlSlump` (antal lösta slumpövningar),
 `read:<kurs>:<kapitel>`, `sql:<övningsId>`
 (= `"solved"` | `"solved-with-help"`), `examreg:<examId>` (= `true`, nyckeln
 tas bort vid avbockning).
