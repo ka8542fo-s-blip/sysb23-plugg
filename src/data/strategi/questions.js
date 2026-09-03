@@ -496,5 +496,175 @@ export const questions = [
       { text: "Eftersom IT-infrastrukturen kräver löpande underhåll för att förbli funktionsduglig.", explain: "Tekniskt underhåll är något annat än strategisk anpassning mellan domänerna." },
       { text: "Eftersom verksamhetens och IT-funktionens företrädare behöver mötas regelbundet.", explain: "Möten är ett medel; det är förändringstakten som gör processen kontinuerlig." }
     ],
-    correct: 0, source: "Henderson & Venkatraman / föreläsning", reviewed: true }
+    correct: 0, source: "Henderson & Venkatraman / föreläsning", reviewed: true },
+
+  { id: "str-q50", topic: "mal", difficulty: 1,
+    question: "Hur betraktas företaget i den neoklassiska teorin?",
+    options: [
+      { text: "Som ett öppet system med intressenter", explain: "Det är intressentmodellens bild, inte den neoklassiska." },
+      { text: "Som en svart låda som omvandlar resurser", explain: "Rätt. Inflöde omvandlas till utflöde; hur det sker bortses från." },
+      { text: "Som en koalition av olika intressegrupper", explain: "Det är beteendeteoriernas bild av företaget." },
+      { text: "Som en samling perfekt rationella individer", explain: "Individerna bortses från helt i den neoklassiska modellen." }
+    ],
+    correct: 1, source: "Weaver, fö 1 / quiz F1", reviewed: true },
+
+  { id: "str-q51", topic: "mal", difficulty: 1,
+    question: "Vad är företagets mål enligt neoklassisk teori?",
+    options: [
+      { text: "Att maximera företagets vinst", explain: "Rätt. Vinsten är det enda målet och enda måttet på effektivitet." },
+      { text: "Att optimera sina kassaflöden", explain: "Det är de kassaflödesbaserade modellernas mål." },
+      { text: "Att nå en godtagbar vinstnivå", explain: "Det är satisfieringsmodellens mål." },
+      { text: "Att balansera intressenters krav", explain: "Det är intressentmodellens mål." }
+    ],
+    correct: 0, source: "Weaver, fö 1 / quiz F1", reviewed: true },
+
+  { id: "str-q52", topic: "mal", difficulty: 1,
+    question: "Vilken teori säger att företag söker en tillfredsställande snarare än maximal vinst?",
+    options: [
+      { text: "Den neoklassiska teorin", explain: "Den antar tvärtom vinstmaximering." },
+      { text: "Kassaflödesbaserad modell", explain: "Den maximerar nuvärdet av framtida kassaflöden." },
+      { text: "Transaktionskostnadsteorin", explain: "Den förklarar företagets gränser, inte dess vinstmål." },
+      { text: "Satisfieringsmodellen", explain: "Rätt. Simon: begränsad rationalitet ger en anspråksnivå i stället för maximum." }
+    ],
+    correct: 3, source: "Weaver, fö 1 / quiz F1", reviewed: true },
+
+  { id: "str-q53", topic: "mal", difficulty: 1,
+    question: "Vad är företagets huvudsakliga mål enligt intressentmodellen?",
+    options: [
+      { text: "Att minimera verksamhetens kostnader", explain: "Kostnadsminimering är inte modellens mål." },
+      { text: "Att maximera försäljningsvolymen", explain: "Det är Baumols modell." },
+      { text: "Att balansera intressenters krav", explain: "Rätt. Målet är en kompromiss som ger långsiktig stabilitet." },
+      { text: "Att maximera ägarnas avkastning", explain: "Ägarna är en av flera intressenter, inte den enda." }
+    ],
+    correct: 2, source: "Weaver, fö 1 / quiz F1", reviewed: true },
+
+  { id: "str-q54", topic: "it", difficulty: 1,
+    question: "Vilken är en möjlig förklaring till produktivitetsparadoxen?",
+    options: [
+      { text: "Ny teknik ger alltid omedelbar effektivitetsvinst", explain: "Om det stämde skulle paradoxen inte finnas." },
+      { text: "Anpassning av processer och organisation tar tid", explain: "Rätt. Vinsten kommer först när arbetssätten ändras." },
+      { text: "Ny teknik påverkar bara små och medelstora företag", explain: "Paradoxen observerades i hela ekonomin." },
+      { text: "Innovationer höjer lönsamheten helt automatiskt", explain: "Automatik är precis vad paradoxen motsäger." }
+    ],
+    correct: 1, source: "Weaver, fö 1 / quiz F1", reviewed: true },
+
+  { id: "str-q55", topic: "mal", difficulty: 1,
+    question: "Vad innebär den neoklassiska teorin om vinstmaximering?",
+    options: [
+      { text: "Företag strävar efter att maximera försäljningen", explain: "Försäljningsmaximering är Baumols modell." },
+      { text: "Företag strävar efter att optimera kundnöjdhet", explain: "Kundnöjdhet är ett icke-finansiellt mål, inte modellens." },
+      { text: "Företag strävar efter att minimera sina kostnader", explain: "Kostnader är ena sidan; målet är vinsten som helhet." },
+      { text: "Företag strävar efter att maximera sin vinst", explain: "Rätt. Intäkt minus kostnad ska bli så stor som möjligt." }
+    ],
+    correct: 3, source: "Weaver, fö 1 / quiz F1", reviewed: true },
+
+  { id: "str-q56", topic: "mal", difficulty: 1,
+    question: "Vad fokuserar intressentmodellen på?",
+    options: [
+      { text: "Ett stabilt kassaflöde över tid", explain: "Kassaflödet hör till en annan modell." },
+      { text: "Att begränsa ledningens inflytande", explain: "Ledningen är en intressent bland flera, inget som ska begränsas." },
+      { text: "Att maximera ägarnas avkastning", explain: "Ägarna är bara en av intressenterna." },
+      { text: "Balans mellan intressenternas krav", explain: "Rätt. Balansen ger företaget långsiktig stabilitet." }
+    ],
+    correct: 3, source: "Weaver, fö 1 / quiz F1", reviewed: true },
+
+  { id: "str-q57", topic: "digital", difficulty: 2,
+    question: "Vad kännetecknade de tidiga enterprise-systemen på 1960-talet?",
+    options: [
+      { text: "Standardsystem köpta färdiga från leverantörer och anpassade till verksamheten.", explain: "COTS-systemens genomslag kom först på 90-talet efter Clinger Cohen." },
+      { text: "Egenutvecklade applikationer som hanterade en process i taget, var för sig.", explain: "Rätt. Lön, redovisning, lager — varje system för sig, hos storföretag och myndigheter." },
+      { text: "Integrerade affärssystem som band samman företagets alla huvudprocesser.", explain: "Integrerade ERP-system är en 90-talslösning på det tidigare kaoset." },
+      { text: "Persondatorbaserade lösningar som spreds snabbt till små och medelstora företag.", explain: "PC:n kom på 80-talet; de tidiga systemen körde på stordatorer." }
+    ],
+    correct: 1, source: "Weaver, fö 1", reviewed: true },
+
+  { id: "str-q58", topic: "digital", difficulty: 2,
+    question: "Vilken orsak anger föreläsningen till 80- och 90-talets 'enterprise application spaghetti'?",
+    options: [
+      { text: "Att företagen leddes av en generation som inte såg IT som en strategisk fråga.", explain: "Rätt. IT hamnade i en silo utan koppling till kärnaffären." },
+      { text: "Att lagstiftningen krävde separata system för olika typer av affärsdata.", explain: "Reglering var inte drivkraften bakom systemkaoset." },
+      { text: "Att stordatorernas kapacitet inte räckte för integrerade lösningar.", explain: "Problemet var organisatoriskt, inte tekniskt." },
+      { text: "Att leverantörerna medvetet byggde system som inte kunde kommunicera.", explain: "Inlåsning fanns, men föreläsningen pekar på företagens egna satsningar." }
+    ],
+    correct: 0, source: "Weaver, fö 1", reviewed: true },
+
+  { id: "str-q59", topic: "digital", difficulty: 2,
+    question: "Vem formulerade 1987 att datoråldern syns överallt utom i produktivitetsstatistiken?",
+    options: [
+      { text: "Michael Porter, i samband med analysen av branschers konkurrenskrafter.", explain: "Porter arbetade med positionering, inte med produktivitetsstatistik." },
+      { text: "Alfred Chandler, i argumentet om att struktur följer strategi.", explain: "Chandlers bidrag rör organisationens struktur, inte IT-produktivitet." },
+      { text: "Robert Solow, som sammanfattade produktivitetsparadoxen i en mening.", explain: "Rätt. Citatet är föreläsningens illustration av paradoxen." },
+      { text: "Henderson och Venkatraman, i modellen om strategic alignment.", explain: "Deras bidrag kom 1993 och handlade om lösningen, inte problemet." }
+    ],
+    correct: 2, source: "Weaver, fö 1", reviewed: true },
+
+  { id: "str-q60", topic: "digital", difficulty: 2,
+    question: "Vilka tre idéer pekar föreläsningen ut som lösningen på produktivitetsparadoxen?",
+    options: [
+      { text: "Outsourcing, standardisering och centraliserad IT-avdelning.", explain: "Outsourcing var en av metoderna, men inte en av de tre bärande idéerna." },
+      { text: "Kärnkompetens, strategic alignment och IT governance.", explain: "Rätt. IT kopplades till affärsstrategin genom dessa tre." },
+      { text: "Moores lag, persondatorn och internet som infrastruktur.", explain: "Det är teknikens utveckling, som snarare skapade paradoxen." },
+      { text: "Balanserat styrkort, benchmarking och målkostnadskalkyl.", explain: "Detta är styrmetoder ur AJK, inte föreläsningens svar." }
+    ],
+    correct: 1, source: "Weaver, fö 1", reviewed: true },
+
+  { id: "str-q61", topic: "digital", difficulty: 2,
+    question: "Vad innebar Clinger Cohen Act 1996 enligt föreläsningen?",
+    options: [
+      { text: "Att amerikanska myndigheter förbjöds använda standardsystem från privata leverantörer.", explain: "Tvärtom: COTS-system fick stort genomslag." },
+      { text: "Att CIO-rollen legitimerades och Enterprise Architecture etablerades som disciplin.", explain: "Rätt. Dessutom IT governance, COTS och strategic alignment som centralt koncept." },
+      { text: "Att EU och USA enades om gemensamma regler för dataskydd i offentlig sektor.", explain: "Lagen var amerikansk och rörde IT-styrning, inte dataskydd." },
+      { text: "Att IT-avdelningar skulle rapportera till ekonomichefen i stället för till vd.", explain: "Poängen var det motsatta: IT lyftes till strategisk ledningsnivå." }
+    ],
+    correct: 1, source: "Weaver, fö 1", reviewed: true },
+
+  { id: "str-q62", topic: "digital", difficulty: 3,
+    question: "Vilka fyra delar ingår i 'the AI factory' enligt Iansiti och Lakhani?",
+    options: [
+      { text: "Data pipeline, algorithm development, experimentation platform, IT infrastructure.", explain: "Rätt. Tillsammans gör de beslutsfattande till en industriell process." },
+      { text: "Data defense, data offense, single source of truth, multiple versions of the truth.", explain: "Det är begrepp ur datastrategin och den AI-anpassade organisationen." },
+      { text: "Affärsstrategi, IT-strategi, organisationsinfrastruktur, IT-infrastruktur.", explain: "Det är Strategic Alignment Models fyra domäner." },
+      { text: "Datainsamling, regelefterlevnad, modellträning, kundgränssnitt och support.", explain: "Regelefterlevnad och kundgränssnitt ingår inte i modellen." }
+    ],
+    correct: 0, source: "Weaver, fö 1 / Iansiti & Lakhani", reviewed: true },
+
+  { id: "str-q63", topic: "digital", difficulty: 2,
+    question: "Vad hör till data defense i DalleMule och Davenports datastrategi?",
+    options: [
+      { text: "Data mining, BI och maskininlärning för att maximera avkastningen på data.", explain: "Det är data offense — att maximera datans ROI." },
+      { text: "Datainsamlingsstrategier och integration av externa datakällor i analysen.", explain: "Datainsamling hör till offense-sidan." },
+      { text: "Multiple versions of the truth anpassade för olika delar av verksamheten.", explain: "MVoT är offense; defense bygger på single source of truth." },
+      { text: "Regelefterlevnad, intrångsskydd och dataintegritet via en gemensam sanning.", explain: "Rätt. Defense minimerar datarisk; SSoT är dess grund." }
+    ],
+    correct: 3, source: "Weaver, fö 1 / DalleMule & Davenport", reviewed: true },
+
+  { id: "str-q64", topic: "digital", difficulty: 3,
+    question: "Vilken sektor ligger enligt föreläsningen i high-stakes-änden av datastrategins riskspektrum?",
+    options: [
+      { text: "Detaljhandel och onlinetjänster, där kunddata utgör kärnan i hela affären.", explain: "Detaljhandel ligger i low-stakes-änden där offense väger tyngre." },
+      { text: "Sjukvård, rättsväsende och socialtjänst, där felaktig data får allvarliga följder.", explain: "Rätt. Här dominerar data defense." },
+      { text: "Media och underhållning, där personuppgifter används för rekommendationer.", explain: "Media räknas till low stakes tillsammans med detaljhandel." },
+      { text: "Tillverkningsindustrin, där produktionsdata styr automatiserade processer.", explain: "Tillverkning nämns inte som high-stakes-exempel i föreläsningen." }
+    ],
+    correct: 1, source: "Weaver, fö 1", reviewed: true },
+
+  { id: "str-q65", topic: "mal", difficulty: 3,
+    question: "Vad förklarar transaktionskostnadsteorin?",
+    options: [
+      { text: "Varför företag existerar och var gränsen mellan företag och marknad dras.", explain: "Rätt. Marknadens transaktionskostnader gör intern samordning effektivare — till en gräns." },
+      { text: "Varför företagsledningen maximerar sin egen nytta snarare än vinsten.", explain: "Det är företagsledarmodellernas fråga." },
+      { text: "Varför företag söker en tillfredsställande i stället för maximal vinst.", explain: "Det är satisfieringsmodellen." },
+      { text: "Varför marknaden självreglerar när individer följer sitt egenintresse.", explain: "Det är den neoklassiska osynliga handen." }
+    ],
+    correct: 0, source: "Weaver, fö 1", reviewed: true },
+
+  { id: "str-q66", topic: "digital", difficulty: 3,
+    question: "Vad menar föreläsningen med att komplexiteten i IT-landskapet är kumulativ?",
+    options: [
+      { text: "Att kostnaden för IT-projekt ökar exponentiellt med antalet inblandade leverantörer.", explain: "Kostnadsutveckling är inte det som avses med kumulativ." },
+      { text: "Att varje ny teknikepok lägger ett lager ovanpå de tidigare, som ligger kvar.", explain: "Rätt. Spagetti, ERP, SOA, moln, AI — inget försvinner, allt ska integreras." },
+      { text: "Att allt fler användare gör systemen svårare att administrera och säkra.", explain: "Användarantal är inte föreläsningens poäng." },
+      { text: "Att äldre system måste ersättas helt innan nya kan införas i verksamheten.", explain: "Tvärtom: legacysystemen blir kvar och skapar komplexiteten." }
+    ],
+    correct: 1, source: "Weaver, fö 1", reviewed: true }
 ];

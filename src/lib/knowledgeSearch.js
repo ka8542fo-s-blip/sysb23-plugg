@@ -46,7 +46,7 @@ export function searchKnowledge({ query, chapters, topics, glossary }) {
     chapterHits.push({
       kind: "chapter",
       id: chapter.id,
-      number: index + 1,
+      number: chapters[index].number ?? index + 1,
       title: chapter.title,
       where: excerpt ? "träff i löptext" : "träff i rubrik",
       excerpt,

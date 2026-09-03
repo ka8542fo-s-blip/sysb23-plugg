@@ -26,7 +26,7 @@ delkursvillkor utspridda i koden.
 
 | Delkurs | Status | Har |
 |---|---|---|
-| strategi | komplett | 10 kapitel, 13 ämnen, 90 termer, 49 frågor (omskrivna 2026-08-07 så längd/position inte läcker svaret), 4 essäer |
+| strategi | komplett | 11 kapitel (kap `digital` = nr 9, infogat 2026-09-03 ur Weavers föreläsning 1; kap9/kap10 är nr 10/11 — **id ≠ nummer**, allt UI läser `chapter.number`), 14 ämnen, 117 termer, 66 frågor (designregler i filens kommentar; mätskript `scripts/check-fragebank.mjs`), 4 essäer |
 | databaser | delvis | 8 kapitel, 8 ämnen, 64 termer, SQL-verkstad (53 övningar i 9 nivåer, utökad 2026-09-02 efter SQL-föreläsningen), **`questions.js` är en tom array** — frågebanken kommer i en egen prompt; Öva/Prov visar tomlägen och "Öva på detta"-knappar i Läs är dolda tills den fylls |
 | process, arkitektur, sakerhet | kommande | platshållare i manifestet |
 

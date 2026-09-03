@@ -142,7 +142,7 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
             (current ? (
               <ChapterView
                 chapter={current}
-                number={index + 1}
+                number={chapters[index].number ?? index + 1}
                 total={chapters.length}
                 course={course}
                 isRead={Boolean(readChapters[current.id])}

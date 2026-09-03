@@ -43,7 +43,7 @@ export default function ConceptCards({
 
   const chapterNumber = (chapterId) => {
     const index = chapters.findIndex((chapter) => chapter.id === chapterId);
-    return index === -1 ? null : index + 1;
+    return index === -1 ? null : chapters[index].number ?? index + 1;
   };
 
   return (

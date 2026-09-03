@@ -62,7 +62,14 @@ export const topics = [
       "Krav som inte kan tillgodoses samtidigt hanteras 'seriekopplat' över tid — kortsiktigt nollsummespel ersätts av långsiktigt plussummespel.",
       "Kassaflödesbaserade modeller: målet är att maximera nuvärdet av framtida nettokassaflöden (aktieägarperspektiv); kräver kalkylränta bestämd av alternativkostnaden för kapital; teoretiskt starkt stöd men svårt bokstavligt i praktiken.",
       "I praktiken: lönsamhet är högst rankade målet, ofta uttryckt som räntabilitet, med andra mål (likviditet, soliditet, kapitalbindning, icke-finansiella mål) som delmål eller restriktioner.",
-      "Offentlig verksamhet: ekonomiska principer gäller ändå. 'Värde för pengarna' markerar att resurser ska ge så stor nytta som möjligt, inklusive medborgarnas upplevelse av servicen."
+      "Offentlig verksamhet: ekonomiska principer gäller ändå. 'Värde för pengarna' markerar att resurser ska ge så stor nytta som möjligt, inklusive medborgarnas upplevelse av servicen.",
+      "Neoklassisk teori analyserar företag och marknader på samhällsnivå: marknadens osynliga hand, laissez-faire, självreglerande marknad som belönar effektiva företag. Antaganden: perfekt information, perfekt rationalitet, resursallokering som inte är ett problem.",
+      "Transaktionskostnadsteori: företag finns för att marknadens transaktionskostnader gör det effektivare att utföra vissa aktiviteter internt; växande företag får i stället interna transaktionskostnader. Praktisk fråga: make or buy, med fokus på kontrakt.",
+      "Managementrevolutionen (Chandler, The Visible Hand 1977): företagsledares initiativ, inte marknaden, skapade storföretagen. Separation mellan ägande och styrning; tillväxt genom skalfördelar och vertikal integration.",
+      "Föreläsningens namn: Baumol = Managerial Utility Maximization Theory, Williamson = Managerial Discretion Theory. Båda: ledningen fokuserar på egen nytta.",
+      "Beteendeteorier (Cyert & March 1963): företaget som koalition av intressenter med olika motiv, imperfekt information, intern politik och kompromisser — visar behovet av tydliga visioner, strategier och styrsystem för alignment.",
+      "Simons anspråksnivå beror på yttre faktorer, tradition/ägarpreferenser och kultur. Nobelpris 1978. Intressentmodellen förknippas med Eric Rhenman.",
+      "Kalkylräntan i nuvärdesanalys tar hänsyn till inflation, alternativa investeringsmöjligheter och risk. I praktiken samma som räntabilitet/avkastning; svår att tillämpa när förutsättningar ändras snabbt."
     ],
     pitfalls: [
       "Satisfiering betyder inte låg ambition — det är en konsekvens av begränsad rationalitet.",
@@ -249,6 +256,36 @@ export const topics = [
     ]
   },
   {
+    id: "digital",
+    name: "Enterprise IT och digital transformation",
+    chapter: "digital",
+    examWeight: "hög",
+    summary: "Föreläsning 1: IT gick från räknemaskiner med ett syfte, via PC-revolutionens systemkaos och produktivitetsparadoxen, till att kopplas till affärsstrategin genom strategic alignment, IT governance och 90-talets managementmetoder. Idag ställer AI, data och reglering nya krav på datastrategin — och paradoxen upprepar sig i varje nytt område som digitaliseras.",
+    keyPoints: [
+      "Strategi är utgångspunkten för all ekonomisk aktivitet: strukturer, processer och informationssystem utformas för att genomföra strategin. Chandler: 'structure follows strategy', men samspelet är kontinuerligt.",
+      "Historik: ENIAC 1946 och Apollo Guidance Computer 1966 var räknemaskiner med specifika syften. Tidiga enterprise-system (banker, myndigheter, storföretag) körde en process i taget: lön, redovisning, lager, batchanalys, processkontroll.",
+      "Moores lag möjliggjorde bredare datorisering: IBM System/360 (60–70-tal), DEC minidator (70-tal), PC (80-tal).",
+      "80–90-tal: 'enterprise application spaghetti'. Orsaker: ostrukturerade IT-satsningar, en icke-digital ledargeneration som inte såg IT som strategiskt, IT i organisatorisk silo ('vaktmästare'). Samtidigt tog Japan ledningen inom högteknologi.",
+      "Produktivitetsparadoxen: IT-investeringar syntes inte i produktivitetsstatistiken. Solow 1987: 'You can see the computer age everywhere but in the productivity statistics.' NIST 1989 (Appleton): integrationens paradox.",
+      "Förklaringen som prövas på tentan: det tar tid för företag att anpassa sina processer och organisationer till ny teknik. Inte: att tekniken bara påverkar små företag, alltid ger omedelbar effekt eller automatiskt ökar lönsamheten.",
+      "Lösningen: koppla IT till affärsstrategin via kärnkompetens, strategic alignment och IT governance. 90-talets IT-drivna managementmetoder som 'löste' paradoxen: TQM, Kaizen/Lean/Six Sigma, JIT/Kanban, BPR, ERP, CRM, supply chain management, knowledge management, data warehousing, outsourcing.",
+      "Clinger Cohen Act 1996 (USA, offentlig sektor): legitimerade CIO-rollen som strategisk ledningsfunktion, etablerade Enterprise Architecture som managementdisciplin, införde IT governance (IT som strategisk investering), gav COTS-system genomslag, gjorde strategic alignment centralt.",
+      "Henderson & Venkatraman (1993): ingen enskild IT-applikation kan ge uthållig konkurrensfördel; fördelen kommer av organisationens förmåga att kontinuerligt utnyttja IT. IT-strategin ska både stödja och forma affärsstrategin.",
+      "AI factory (Iansiti & Lakhani 2020): data pipeline, algorithm development, experimentation platform, IT infrastructure. Beslutsfattande som industriell process — inga mänskliga auktionsförrättare hos Google, inga dispatchers hos Uber.",
+      "AI-anpassad organisation (Fountaine, McCarthy & Saleh 2019) kräver ny verksamhetsarkitektur: SSoT (single source of truth) för kärndata och MVoT (multiple versions of the truth) för lokala vyer.",
+      "Datastrategi (DalleMule & Davenport 2017): data defense (regelefterlevnad, bedrägeri, intrång, SSoT) mot data offense (datainsamling, analys, BI/AI/ML, MVoT). Balansen beror på riskkontext: high stakes (rättsväsende, sjukvård, utbildning) → banker/försäkring → low stakes (detaljhandel, media, hotell).",
+      "USA är 'vilda västern' med lite reglering, EU har regleringsfokus: GDPR har gjort de flesta sektorer high stakes för personuppgifter, AI Act är riskbaserad. Data resilience (backuper) är verksamhetskritiskt för AI-drivna organisationer.",
+      "IT-problemen är inte lösta: spektakulära misslyckanden fortsätter och komplexiteten är kumulativ (spagetti → ERP/CRM/legacy → SOA/API → SaaS/moln → big data/AI → cybersäkerhet → agentisk AI). Paradoxen upprepar sig i varje nytt digitaliserat område.",
+      "Drivkrafter mot kontinuerlig systemförbättring: global konkurrens (internet, produktcykler, logistik), nya regleringar (SOX, GDPR, CSRD, AI Act), frivillig efterlevnad (standarder, certifieringar, upphandlingskrav), accelererande teknik (IoT, cloud, SaaS, AI)."
+    ],
+    pitfalls: [
+      "Produktivitetsparadoxens förklaring är organisatorisk anpassning som tar tid — inte tekniska brister och inte att paradoxen bara gäller små företag.",
+      "'Löste' i föreläsningen står med citattecken: 90-talsmetoderna löste den dåvarande paradoxen, men den återkommer i varje ny teknikvåg.",
+      "Data defense och offense är en balans, inte ett val — och var balansen ligger beror på sektorns riskkontext.",
+      "Blanda inte ihop SSoT (en gemensam sanning för kärndata) med MVoT (anpassade lokala vyer) — organisationen behöver båda."
+    ]
+  },
+  {
     id: "it",
     name: "IT & strategi: alignment och produktivitetsparadoxen",
     chapter: "kap9",
@@ -261,7 +298,9 @@ export const topics = [
       "Relationen går i båda riktningarna: IT ska inte bara stödja affärsstrategin utan kan också möjliggöra och forma den.",
       "Varför viktigt: IT-investeringar utan koppling till strategi och organisation ger inte effekt (jfr produktivitetsparadoxen).",
       "Långsiktig konkurrensfördel med IT: inte tekniken i sig (den kan köpas, licensieras och kopieras) utan kombinationen av IT med organisation, processer, kompetens och kultur — komplementära, svårimiterade resurser (kopplar till RBV och Barney).",
-      "Produktivitetsparadoxens lösning: omorganisering av arbetsflöden och processer för att bättre utnyttja ny teknologi — inte mer teknik, inte bromsad utveckling, inte status quo."
+      "Produktivitetsparadoxens lösning: omorganisering av arbetsflöden och processer för att bättre utnyttja ny teknologi — inte mer teknik, inte bromsad utveckling, inte status quo.",
+      "Solow 1987: 'You can see the computer age everywhere but in the productivity statistics.' Föreläsningens förklaring: det tar tid att anpassa processer och organisation till ny teknik — och paradoxen upprepar sig i varje nytt digitaliserat område.",
+      "Henderson & Venkatraman: ingen enskild IT-applikation ger uthållig fördel; fördelen ligger i förmågan att kontinuerligt utnyttja IT. IT-strategin ska både stödja och forma affärsstrategin."
     ],
     pitfalls: [
       "SAM:s fyra domäner förväxlas gärna med distraktorer som 'marknadsföring', 'personal', 'leveranskedja' eller 'riskhantering'.",

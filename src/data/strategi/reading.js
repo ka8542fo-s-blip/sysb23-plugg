@@ -26,6 +26,7 @@ export const CHAPTER_TOPICS = {
   },
   kap7: { topics: ["bsc", "matt"], primaryTopics: ["bsc", "matt"] },
   kap8: { topics: ["tbl"], primaryTopics: ["tbl"] },
+  digital: { topics: ["digital", "it"], primaryTopics: ["digital"] },
   kap9: { topics: ["it", "rbv"], primaryTopics: ["it", "rbv"] },
   kap10: {
     topics: ["nyamatt", "grunder", "bsc", "tbl"],
@@ -174,6 +175,18 @@ Kritiken är omfattande och du bör kunna den:
 
 Till detta kommer observationer av praktiken: företag arbetar ofta med tumregler och rutiner som inte följer teorins antaganden. Modellen har dock försvarare, som menar att den aldrig syftat till att förutsäga eller förklara hur företag faktiskt arbetar — den är en konstruktion för att belysa prisbildning och resursfördelning på marknads- och branschnivå. Med det syftet är den tillräckligt realistisk.
 
+## Marknadens osynliga hand
+
+Neoklassisk teori analyserar främst företag och marknader på **samhällsnivå**. Grundtanken är att ekonomin fungerar optimalt när människor kan agera fritt efter sitt egenintresse på öppna marknader; staten bör minimera sin reglering (laissez-faire); marknaden är självreglerande eftersom pris och efterfrågan belönar effektiva företag och straffar sämre; och samhället gynnas genom tillväxt och innovation. Modellens antaganden — perfekt information, perfekt rationella människor, resursallokering som inte är ett problem — är precis de som kritiken riktar in sig på.
+
+## Transaktionskostnadsteori: marknad eller hierarki?
+
+Varför finns företag över huvud taget — varför inte en enda stor marknad av individer? Transaktionskostnadsteorins svar är att **marknadens transaktionskostnader** (att söka, förhandla, skriva kontrakt, övervaka) gör det mer effektivt för ett företag att själv utföra vissa aktiviteter. Men efterhand som företag växer uppstår **interna** transaktionskostnader i stället. Gränsen mellan företag och marknad dras där kostnaderna möts, och den praktiska frågan är **make or buy** — tillverka själv eller köpa på marknaden? Fokus i praktiken: kontrakt.
+
+## Managementrevolutionen
+
+Chandler beskrev i *The Visible Hand* (1977) hur det var företagsledares initiativ, inte marknadens osynliga hand, som ledde till allt större företag. Med **separationen mellan ägande och styrning** kontrollerar ledningen företagets strategi, utnyttjar effektiviserings- och skalfördelar för att växa, och ersätter marknaden med **vertikal integration** och administrativa mekanismer. Det är bakgrunden till företagsledarmodellerna: när ledningen har kontrollen uppstår frågan vad ledningen egentligen maximerar.
+
 ## Företagsledarmodeller
 
 Här skiljs **ägande och drift** åt. När de skiljs minskar ägarnas möjlighet att kontrollera driften, och det uppstår utrymme för företagsledningen att arbeta mot egna mål. Två klassiker:
@@ -182,9 +195,15 @@ Här skiljs **ägande och drift** åt. När de skiljs minskar ägarnas möjlighe
 
 **Williamsons modell:** företagsledningen maximerar sin **egen nytta** istället för företagets vinst, med en viss ägartillfredsställande vinst som förutsättning. Nyttan påverkas av lön, makt, status och prestige, och skapas genom att spendera medel på löner, administration (det anses prestigefyllt att ha en stor administration under sig), förmåner (flotta kontor, tjänstebilar, representation) och prioriterade investeringar som inte krävs för den normala driften.
 
+Föreläsningen använder de engelska beteckningarna: Baumols **Managerial Utility Maximization Theory** och Williamsons **Managerial Discretion Theory**. Gemensamt är att ledningen fokuserar på sin egen nytta — Baumol genom försäljning och tillväxt (prestige och ersättning växer med storlek snarare än vinst), Williamson genom höga löner, stor administrativ personal och investeringar i lyx som kontor, inredning och resor.
+
+## Beteendeteorier om företaget
+
+Cyert & March (1963) ser företaget som **en koalition av olika intressenter med olika behov och motiv**. Beslutsprocesserna blir komplexa eftersom många intressenter måste tillgodoses; perfekt information om marknaden är orealistiskt, så allt beslutsfattande baseras på imperfekt information; och företagets agerande är resultatet av intern politik, konflikter och kompromisser mellan ägare, ledning och anställda. Föreläsningens poäng: detta **påvisar behovet av tydliga interna visioner, strategier och styrsystem** för att skapa samsyn och alignment — vilket är exakt vad kapitel 2 och 5 handlar om. Både satisfieringsmodellen och intressentmodellen hör hit.
+
 ## Satisfieringsmodellen
 
-Nobelpristagaren **Herbert Simon** avviker från båda ovanstående. Företag strävar efter en **tillfredsställande** (satisfierande) vinst snarare än maximal. Vad som är tillfredsställande fastställs alltid i förhållande till en **anspråksnivå** — det finns ingen given vinstnivå, utan den beror på företagets situation och de vinstmöjligheter som existerar. Vinsten måste dock vara tillräckligt hög för att företaget ska överleva, och över tiden bli minst lika hög som tidigare perioder.
+Nobelpristagaren **Herbert Simon** avviker från båda ovanstående. Företag strävar efter en **tillfredsställande** (satisfierande) vinst snarare än maximal. Vad som är tillfredsställande fastställs alltid i förhållande till en **anspråksnivå** — det finns ingen given vinstnivå, utan den beror på företagets situation och de vinstmöjligheter som existerar. Vinsten måste dock vara tillräckligt hög för att företaget ska överleva, och över tiden bli minst lika hög som tidigare perioder. Föreläsningen preciserar vad anspråksnivån beror på: **yttre faktorer** i företagets omvärld, **tradition och ägarpreferenser**, och **kultur**. Simon fick Nobelpriset 1978.
 
 Bakom detta ligger **begränsad rationalitet**: beslutsfattare känner inte till samtliga tänkbara alternativ, det bästa alternativet kan på förhand endast svårligen eller inte alls fastställas, och beslutsfattaren måste aktivt skaffa sig information. Därför är man nöjd när man funnit ett alternativ som uppfyller ett preciserat minimikrav.
 
@@ -192,7 +211,7 @@ Viktigt: **satisfiering ska inte tolkas som lägre ambitionsnivå** än vinstmax
 
 ## Intressentmodellen
 
-De tidigare modellerna betraktar företaget som ett **slutet system** utan kopplingar till omgivningen. Kritiken mot det ledde till det **öppna systemsynsättet**, och intressentmodellen är dess mest genomslagskraftiga uttryck. Liksom Simons modell bygger den på en tillfredsställande vinst utifrån en anspråksnivå; båda hör till de så kallade beteendeteorierna om företaget.
+Modellen förknippas i Sverige med **Eric Rhenman**. De tidigare modellerna betraktar företaget som ett **slutet system** utan kopplingar till omgivningen. Kritiken mot det ledde till det **öppna systemsynsättet**, och intressentmodellen är dess mest genomslagskraftiga uttryck. Liksom Simons modell bygger den på en tillfredsställande vinst utifrån en anspråksnivå; båda hör till de så kallade beteendeteorierna om företaget.
 
 Utgångspunkten är att företaget strävar efter ett stabilt förhållande till sin omgivning — en **jämvikt**. Varje företag har ett antal intressenter som det står i beroendeförhållande till, och mellan företaget och intressenterna krävs balans mellan de **bidrag** intressenterna lämnar och de **belöningar** företaget lämnar. Intressenterna kräver belöningar som överstiger deras bidrag; annars vill de inte tillhöra intressentgruppen.
 
@@ -215,7 +234,7 @@ Dessa bygger på ett kapitalmarknadssynsätt med investerarperspektiv. Målet ä
 
 Synsättet har mycket starkt stöd och är troligen det mest accepterade företagsmålet inom företagsekonomin — det ligger till grund för beslutsfattande, produktkalkylering och investeringskalkylering. Men det ska inte tolkas bokstavligt praktiskt: att verkligen maximera nuvärdet är mycket svårt, för att inte säga omöjligt. Företag arbetar i praktiken med flera mål och gör avvägningar, och invändningarna mot vinstmaximeringsmodellen gäller i princip även här. Många företag strävar snarare efter en avkastning som möter eller överträffar den förväntade vid given risknivå — alltså en för ägarna tillfredsställande avkastning, precis som i satisfieringsmodellen.
 
-Två skäl till att nuvärdesberäkna: en krona idag är värd mer än en krona i morgon (den kan placeras och ge avkastning), och en riskfri krona är värd mer än en riskfylld (investerare undviker risk om de inte kompenseras). Beräkningen kräver en **kalkylränta**, vars nivå bestäms av alternativkostnaden för kapital.
+Två skäl till att nuvärdesberäkna: en krona idag är värd mer än en krona i morgon (den kan placeras och ge avkastning), och en riskfri krona är värd mer än en riskfylld (investerare undviker risk om de inte kompenseras). Beräkningen kräver en **kalkylränta**, vars nivå bestäms av alternativkostnaden för kapital. Kalkylräntan tar hänsyn till skillnaden mellan pengars värde idag och i framtiden genom tre komponenter: **inflation, alternativa investeringsmöjligheter och risk**. Föreläsningen påpekar att nuvärdesanalysen ger beslutsstöd för enskilda investeringar och kan användas för att beräkna ett företags nuvarande värde, att den i praktiken motsvarar räntabilitet/avkastning, och att den är svår att tillämpa när förutsättningarna förändras snabbt.
 
 ## Och i praktiken?
 
@@ -636,8 +655,124 @@ Sorteringsövningen är den vanliga tentaformen: löner och kompetensutveckling 
   },
 
   {
-    id: "kap9",
+    id: "digital",
     number: 9,
+    title: "Enterprise IT och digital transformation",
+    readingMinutes: 12,
+    lead: "Från ENIAC till AI-strategi: hur IT gick från räknemaskin till strategisk fråga, varför produktivitetsparadoxen uppstod, och vad som krävs av datastrategin idag.",
+    sources: ["Weaver, föreläsning 1"],
+    body: `
+Det här kapitlet är föreläsningens egen berättelse, och den förklarar varför informatikprogrammet läser strategi över huvud taget. Utgångspunkten är att **strategi är grunden för all ekonomisk aktivitet**: strukturer och processer utformas för att genomföra strategin, och ekonomistyrning omfattar de styrmedel som används för att implementera strategin över tid. Chandlers klassiska formulering är **"structure follows strategy"** — men samspelet är kontinuerligt, strategi och struktur utvecklas och förändras tillsammans. Samma logik gäller informationssystem: de ska utformas med strategin som utgångspunkt.
+
+## De första datorerna: en process i taget
+
+De första datorerna var avancerade räknemaskiner med mycket specifika syften — ENIAC 1946, Apollo Guidance Computer 1966. De tidiga enterprise-systemen byggdes av stora företag, banker och statliga myndigheter som utvecklade sina egna applikationer: lönehantering, redovisning, lagerhantering, batchbaserad dataanalys, processkontroll. **En sak i taget**, varje system för sig.
+
+**Moores lag** skapade efterhand förutsättningar för datorisering av fler företag och processer: IBM System/360 mainframe på 60- och 70-talet, DEC minidatorer på 70-talet, PC:n från 80-talet.
+
+## 80- och 90-talet: IT-explosion och kaos
+
+PC-revolutionen ledde till att alla företag satsade stort på IT — ofta **ostrukturerat och ogenomtänkt**. Resultatet var system- och informationskaos, det som brukar kallas **enterprise application spaghetti**: en härva av system utan sammanhang.
+
+Föreläsningen pekar ut tre orsaker. Företagen leddes av en generation som inte var digital, så IT sågs inte som en strategisk aktivitet och det fanns ingen strategisk koppling mellan IT och företagens kärnaffärer. IT befann sig i en **organisatorisk silo** — IT-avdelningen sågs som "vaktmästare". Och samtidigt tog Japan över som världsledare inom högteknologi och elektronik.
+
+## Produktivitetsparadoxen
+
+Trots enorma IT-investeringar syntes ingen produktivitetsökning i statistiken. Robert Solows formulering från 1987 är den som citeras:
+
+> "You can see the computer age everywhere but in the productivity statistics."
+
+NIST beskrev 1989 samma sak som **integrationens paradox** (Appleton): systemen fanns, men de hängde inte ihop.
+
+Förklaringen som föreläsningen ger — och som Weaver prövar på tentan — är att **det tar tid för företag att anpassa sina processer och organisationer till nya teknologier**. Tekniken i sig ger ingen vinst; vinsten kommer när arbetssätten ändras. Notera vad som *inte* är svaret: att tekniken bara påverkar små företag, att teknisk utveckling alltid ger omedelbar effekt, eller att innovation automatiskt ökar lönsamheten.
+
+## Lösningen: IT kopplas till affärsstrategin
+
+Svaret på paradoxen blev att koppla IT till affärsstrategin genom tre idéer: **kärnkompetens, strategic alignment och IT governance**. På 90-talet kom en våg av IT-drivna managementmetoder som till slut "löste" paradoxen — citattecknen är föreläsningens egna:
+
+- Total Quality Management (TQM)
+- Kaizen, Lean manufacturing, Six Sigma
+- Just-in-time (JIT) och Kanban
+- Business Process Reengineering (BPR)
+- ERP — Enterprise Resource Planning
+- CRM — Customer Relationship Management
+- Supply chain management
+- Knowledge management
+- Data warehousing
+- Outsourcing
+
+Lägg märke till att flera av dessa är exakt de metoder AJK kapitel 3 nämner som svar på omvärldsförändringarna — kursens två halvor beskriver samma decennium från var sitt håll.
+
+## Clinger Cohen Act 1996
+
+En reform av IT-arbetet inom amerikansk offentlig sektor (Information Technology Management Reform Act) som enligt föreläsningen skapade förutsättningarna för den moderna IT-industrin:
+
+- **CIO-rollen** legitimerades som en strategisk ledningsfunktion.
+- **Enterprise Architecture (EA)** etablerades som managementdisciplin.
+- **IT governance:** IT började styras som en strategisk investering.
+- **COTS** (commercial off-the-shelf) fick stort genomslag — färdiga system som ERP och CRM i stället för egenutveckling.
+- **Strategic alignment** blev ett centralt managementkoncept.
+
+## Strategic Alignment Model
+
+Henderson & Venkatramans modell från 1993 (kapitel 10 går igenom domänerna) sammanfattas i föreläsningen med ett citat som är värt att kunna, eftersom det förenar alignment med det resursbaserade synsättet:
+
+> "No single IT application — however sophisticated and state of the art it may be — could deliver a sustained competitive advantage. Rather, advantage is obtained through the capability of an organization to exploit IT functionality on a continuous basis."
+
+Det kräver, fortsätter de, en grundläggande förändring i hur ledningen tänker om IT:s roll i organisatorisk transformation, och en förståelse av IT-strategins roll i att både **stödja och forma** affärsstrategiska beslut. Databaser är föreläsningens eget exempel på alignment i praktiken: en databasarkitektur ska utformas efter vad verksamheten behöver kunna svara på.
+
+## AI-strategi: data som bränsle
+
+Föreläsningen tar berättelsen fram till idag med tre ramverk.
+
+**The AI factory** (Iansiti & Lakhani 2020) beskriver AI-driven verksamhet som en industriell process med fyra delar:
+
+1. **Data pipeline** — samlar in, rensar och lagrar data.
+2. **Algorithm development** — konstruktion och (offline-)träning av ML-modeller.
+3. **Experimentation platform** — A/B-testning av olika modeller för att se vad som fungerar.
+4. **IT infrastructure** — systemets generella arkitektur.
+
+Deras exempel: ingen mänsklig auktionsförrättare deltar i Googles miljontals dagliga annonsauktioner, ingen dispatcher väljer bil hos Uber, ingen banktjänsteman godkänner varje lån hos Ant Financial. Processerna är digitaliserade och möjliggjorda av en AI-fabrik som behandlar beslutsfattande som en industriell process.
+
+**Den AI-anpassade organisationen** (Fountaine, McCarthy & Saleh 2019) kräver en ny verksamhetsarkitektur med data i fokus. Två begrepp: **SSoT** — single source of truth, en gemensam sanning för organisationens kärndata — och **MVoT** — multiple versions of the truth, lokala vyer anpassade för olika verksamhetsdelar.
+
+**Datastrategi** (DalleMule & Davenport 2017) är en balans mellan två inriktningar:
+
+- **Data defense** — minimera datarisk: regelefterlevnad, upptäcka och begränsa bedrägerier, förhindra intrång och datastöld, intern dataintegritet genom single source of truth.
+- **Data offense** — maximera avkastningen på data: datainsamlingsstrategier, dataintegration och analys, data mining, BI och AI/ML, realtidsupptäckt av bedrägerier, multiple versions of the truth.
+
+Var balansen ska ligga beror på **riskkontexten**. I ena änden av spektrumet finns high-stakes-sektorer — rättsväsende, polis, sjukvård, socialtjänst, utbildning — där defense dominerar. I mitten banker, finansinstitut och försäkring. I andra änden detaljhandel, onlinetjänster, media och hotell, där offense väger tyngre.
+
+Skillnaden mellan USA och EU är stor: USA är "vilda västern" med lite reglering, medan EU har regleringsfokus. **GDPR** har redan gjort de flesta sektorer high-stakes vad gäller personuppgifter, och **AI Act** inför en riskbaserad ansats. Externa krav — dataskydd, personuppgifter, datasäkerhet — skapar juridiska utmaningar, gör efterlevnad alltmer komplex och kostsam, och gör **data resilience** (backuper med mera) verksamhetskritisk för AI-drivna organisationer.
+
+## Löste vi alla IT-problem?
+
+Nej. Trots alla metoder förekommer ständiga, ofta spektakulära IT-misslyckanden. Ökande komplexitet — inklusive IT och mjukvara — leder till ökad risk för misslyckande.
+
+På **makronivå** skapar varje ny IT-epok nya utmaningar som kräver nya integrationer och en ny helhetssyn. Komplexiteten är **kumulativ**: spagettiarkitektur, sedan ERP/CRM och legacysystem, sedan SOA/API/webbtjänster, sedan SaaS/mobilt/moln, sedan big data/ML/AI, sedan cybersäkerhet och integritet, och nu agentisk AI. Varje lager ligger kvar under nästa.
+
+På **mikronivå** tenderar produktivitetsparadoxen att **upprepa sig inom varje nytt område som digitaliseras**. Det vi idag kallar digital transformation eller AI-transformation är samma mönster som PC-revolutionen: tekniken finns före förmågan att använda den.
+
+## Drivkrafter mot kontinuerlig systemförbättring
+
+Fyra drivkrafter gör att databaser, enterprise architecture, processer och säkerhet aldrig blir "klara":
+
+- **Ökad konkurrens på globala marknader** — internet, snabbare produktcykler, distribution och logistik.
+- **Nya regleringar** — SOX, GDPR, CSRD, AI Act.
+- **Frivillig efterlevnad** — standarder, certifieringar, miljömärkning; kan vara krav i upphandlingar.
+- **Accelererande teknikutveckling** — IoT, cloud, SaaS, AI.
+
+## Föreläsningens egen sammanfattning
+
+Datorer användes initialt för en process åt gången. PC-revolutionen skapade en omfattande datorisering av företag och processer på 70- och 80-talet. Produktivitetsparadoxen: ogenomtänkta IT-investeringar skapade IT-kaos och brist på strategisk integration med verksamheten. Från 1990 och framåt har managementtrender för att uppnå strategic alignment "löst" paradoxen. Men ständig utveckling av samhälle, marknader, verksamheter och teknik kräver konstant förändring och anpassning av IS-system.
+
+Slutsatsen för dig som läser informatik: framtidens IT-arbetsmarknad kräver **holistisk kunskap om verksamheter, informationssystem och strategi**. När AI tar över traditionella färdigheter krävs en förflyttning uppåt i tech-stacken — från att utföra till att förstå varför.
+`
+  },
+
+  {
+    id: "kap9",
+    number: 10,
     title: "IT, AI och strategi",
     readingMinutes: 11,
     lead: "Strategic alignment, produktivitetsparadoxen och Barneys argument om varför AI inte ger dig någon ny konkurrensfördel.",
@@ -648,6 +783,8 @@ Här möts kursens två halvor: IT är kärnan i informatikprogrammet, och strat
 ## Produktivitetsparadoxen
 
 Fenomenet är känt sedan 1980-talet: företag och hela ekonomier investerade enorma summor i informationsteknologi utan att produktivitetsstatistiken visade motsvarande uppgång. Tekniken fanns, men vinsterna syntes inte.
+
+Solows formulering från 1987 är den som brukar citeras: "You can see the computer age everywhere but in the productivity statistics." Kapitel 9 ger hela bakgrunden. Väsentligt för tentan: föreläsningens förklaring är att **det tar tid för företag att anpassa sina processer och organisationer** till ny teknik, och att paradoxen **upprepar sig i varje nytt område som digitaliseras** — senast med AI.
 
 Förklaringen — och lösningen — som kursen lyfter fram är organisatorisk. Produktivitetsvinsterna realiseras först när **arbetsflöden och processer omorganiseras** så att den nya teknologin faktiskt utnyttjas. Att lägga ny teknik ovanpå gamla arbetssätt ger kostnaden utan nyttan.
 
@@ -668,6 +805,8 @@ Modellen arbetar i två dimensioner:
 - **Funktionell integration** — den horisontella kopplingen mellan verksamhet och IT. IT-strategin måste hänga ihop med affärsstrategin, och IT-infrastrukturen med organisationsinfrastrukturen.
 
 Två saker gör modellen prövningsbar på tenta. Först: **alignment är en kontinuerlig process, inte ett engångsprojekt.** Affärsstrategi, teknik och omvärld förändras löpande, så ett läge som var i samklang i fjol kan vara i otakt i år. Sedan: relationen går i **båda riktningarna** — IT ska inte bara stödja affärsstrategin, den kan också möjliggöra och forma den (nya affärsmodeller som bara är tänkbara med viss teknik).
+
+Modellens egna upphovsmän formulerar slutsatsen så här: ingen enskild IT-applikation, hur avancerad den än är, kan ge uthållig konkurrensfördel; fördelen kommer av organisationens förmåga att kontinuerligt utnyttja IT. Det är samma slutsats som Barney drar om AI trettio år senare.
 
 ## Var kommer den långsiktiga fördelen ifrån?
 
@@ -736,7 +875,7 @@ Då blir AI mer än ett program för att förbättra affärsmodellen — den mö
 
   {
     id: "kap10",
-    number: 10,
+    number: 11,
     title: "Så hänger allt ihop — och så skriver du tentan",
     readingMinutes: 8,
     lead: "Syntesen av kursens delar, temat 'nya mått' som knyter ihop dem, och konkret tentataktik för både flervals- och essädelen.",
@@ -866,7 +1005,6 @@ export const glossary = [
   { term: "Organisationsstruktur", definition: "Styrmedelskategori som omfattar organisationsform, ansvarsfördelning och belöningssystem.", chapter: "kap1" },
   { term: "Porters fem krafter", definition: "Befintlig konkurrens, hot från nya aktörer, substitut, kundernas förhandlingsstyrka och leverantörernas förhandlingsstyrka. Lagar och regleringar ingår inte.", chapter: "kap6" },
   { term: "Produktivitet", definition: "Kvantitet utflöde i förhållande till kvantitet inflöde; samma förhållande som effektivitet men i fysiska termer.", chapter: "kap4" },
-  { term: "Produktivitetsparadoxen", definition: "Att stora IT-investeringar inte automatiskt syns i produktiviteten. Lösningen anses vara omorganisering av arbetsflöden och processer.", chapter: "kap9" },
   { term: "Påverkbarhetsprincipen", definition: "Principen att den som ansvarar för något ska kunna påverka det.", chapter: "kap5" },
   { term: "Rent resultatansvar", definition: "Resultatansvar där intäkterna kommer från externa kunder och enheten har full beslutsrätt över intäkter och kostnader.", chapter: "kap5" },
   { term: "Resultat", definition: "Intäkter minus kostnader för en period; ett absolut tal.", chapter: "kap4" },
@@ -894,5 +1032,33 @@ export const glossary = [
   { term: "Värde för pengarna", definition: "Uttryck för att resurser i offentlig verksamhet ska utnyttjas så att de skapar så stor nytta som möjligt.", chapter: "kap3" },
   { term: "Williamsons modell", definition: "Företagsledarmodell där ledningen maximerar sin egen nytta i form av lön, makt, status och prestige.", chapter: "kap3" },
   { term: "Yttre effektivitet", definition: "Att göra rätt saker: relationen till omvärlden i form av kundvärde, tillväxt, kvalitet och service.", chapter: "kap4" },
-  { term: "Öppet systemsynsätt", definition: "Synsättet att företag har kopplingar till och relationer med sin omgivning; grunden för intressentmodellen.", chapter: "kap3" }
+  { term: "Öppet systemsynsätt", definition: "Synsättet att företag har kopplingar till och relationer med sin omgivning; grunden för intressentmodellen.", chapter: "kap3" },
+  { term: "AI Act", definition: "EU:s reglering av artificiell intelligens med en riskbaserad ansats. En av de nya regleringar som driver kontinuerlig systemförbättring.", chapter: "digital" },
+  { term: "AI factory", definition: "Iansiti & Lakhanis modell för AI-driven verksamhet i fyra delar: data pipeline, algorithm development, experimentation platform och IT infrastructure. Beslutsfattande som industriell process.", chapter: "digital" },
+  { term: "Beteendeteorier om företaget", definition: "Cyert & March (1963): företaget som en koalition av intressenter med olika motiv, imperfekt information och intern politik. Grunden för satisfierings- och intressentmodellen.", chapter: "kap3" },
+  { term: "BPR (Business Process Reengineering)", definition: "90-talsmetod för radikal omdesign av affärsprocesser; en av de IT-drivna managementmetoder som 'löste' produktivitetsparadoxen.", chapter: "digital" },
+  { term: "CIO", definition: "Chief Information Officer. Rollen legitimerades som strategisk ledningsfunktion genom Clinger Cohen Act 1996.", chapter: "digital" },
+  { term: "Clinger Cohen Act", definition: "Amerikansk IT-reform 1996 för offentlig sektor som legitimerade CIO-rollen, etablerade Enterprise Architecture, införde IT governance och gav COTS-system genomslag.", chapter: "digital" },
+  { term: "COTS", definition: "Commercial off-the-shelf: färdiga standardsystem som ERP och CRM i stället för egenutvecklade applikationer.", chapter: "digital" },
+  { term: "CRM", definition: "Customer Relationship Management. Standardsystem för kundhantering; typiskt COTS.", chapter: "digital" },
+  { term: "Data defense", definition: "Datastrategins riskminimerande sida: regelefterlevnad, bedrägeribekämpning, intrångsskydd och intern dataintegritet via single source of truth.", chapter: "digital" },
+  { term: "Data offense", definition: "Datastrategins avkastningsmaximerande sida: datainsamling, integration och analys, BI och AI/ML, multiple versions of the truth.", chapter: "digital" },
+  { term: "Data resilience", definition: "Förmågan att skydda och återställa data (backuper m.m.); verksamhetskritisk för AI-drivna organisationer.", chapter: "digital" },
+  { term: "Datastrategi", definition: "DalleMule & Davenport (2017): balansen mellan data defense och data offense, avgjord av verksamhetens riskkontext.", chapter: "digital" },
+  { term: "Digital transformation", definition: "Dagens beteckning på den genomgripande digitaliseringen av verksamheter; enligt föreläsningen samma mönster som PC-revolutionen, inklusive en upprepad produktivitetsparadox.", chapter: "digital" },
+  { term: "Enterprise application spaghetti", definition: "80–90-talets härva av osammanhängande system som följde av ostrukturerade IT-satsningar utan strategisk koppling.", chapter: "digital" },
+  { term: "Enterprise Architecture (EA)", definition: "Managementdisciplin för att beskriva och styra verksamhetens samlade struktur av processer, information och IT. Etablerades genom Clinger Cohen Act.", chapter: "digital" },
+  { term: "ERP", definition: "Enterprise Resource Planning: integrerat affärssystem för ekonomi, produktion, lager m.m.; typiskt COTS och en av 90-talets lösningar på systemkaoset.", chapter: "digital" },
+  { term: "GDPR", definition: "EU:s dataskyddsförordning. Har enligt föreläsningen gjort de flesta sektorer 'high stakes' vad gäller personuppgifter.", chapter: "digital" },
+  { term: "IT governance", definition: "Att styra IT som en strategisk investering, med tydligt ansvar och koppling till verksamhetens mål.", chapter: "digital" },
+  { term: "Kumulativ komplexitet", definition: "Att varje ny IT-epok lägger ett lager ovanpå de tidigare — spagettiarkitektur, ERP/legacy, SOA/API, moln, AI, säkerhet, agentisk AI — och därmed ökar risken för misslyckanden.", chapter: "digital" },
+  { term: "Make or buy", definition: "Transaktionskostnadsteorins praktiska fråga: tillverka själv eller köpa på marknaden.", chapter: "kap3" },
+  { term: "Managementrevolutionen", definition: "Chandlers beskrivning (The Visible Hand, 1977) av hur företagsledares initiativ skapade storföretagen genom skalfördelar och vertikal integration, med separation mellan ägande och styrning.", chapter: "kap3" },
+  { term: "Moores lag", definition: "Att datorkraften fördubblas med jämna mellanrum; skapade förutsättningarna för datorisering av allt fler företag och processer.", chapter: "digital" },
+  { term: "MVoT (multiple versions of the truth)", definition: "Lokala datavyer anpassade för olika verksamhetsdelar; komplement till SSoT i en AI-anpassad organisation.", chapter: "digital" },
+  { term: "Osynliga handen", definition: "Neoklassisk idé att marknaden självreglerar när individer agerar fritt efter egenintresse; motiverar laissez-faire.", chapter: "kap3" },
+  { term: "Produktivitetsparadoxen", definition: "Att IT-investeringar inte syns i produktivitetsstatistiken (Solow 1987). Förklaring: det tar tid att anpassa processer och organisation till ny teknik. Upprepar sig i varje nytt digitaliserat område.", chapter: "digital" },
+  { term: "SSoT (single source of truth)", definition: "En gemensam, auktoritativ källa för organisationens kärndata; grunden för intern dataintegritet.", chapter: "digital" },
+  { term: "Structure follows strategy", definition: "Chandlers tes att organisationens struktur ska följa av dess strategi; i föreläsningen kompletterad med att samspelet är kontinuerligt.", chapter: "digital" },
+  { term: "Transaktionskostnadsteori", definition: "Förklarar företagets existens och gränser med att marknadens transaktionskostnader gör intern samordning effektivare — tills interna transaktionskostnader tar över.", chapter: "kap3" }
 ];

@@ -39,7 +39,7 @@ export default function Glossary({ glossary, chapters, onOpenChapter, highlightT
 
   const chapterNumber = (chapterId) => {
     const index = chapters.findIndex((chapter) => chapter.id === chapterId);
-    return index === -1 ? null : index + 1;
+    return index === -1 ? null : chapters[index].number ?? index + 1;
   };
 
   const isHighlighted = (entry) =>
@@ -51,7 +51,7 @@ export default function Glossary({ glossary, chapters, onOpenChapter, highlightT
     return chapters
       .map((chapter, index) => ({
         chapter,
-        number: index + 1,
+        number: chapter.number ?? index + 1,
         terms: matches.filter((entry) => entry.chapter === chapter.id),
       }))
       .filter((group) => group.terms.length > 0);
