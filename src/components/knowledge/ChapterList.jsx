@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { withReadingTime } from "../../lib/readingTime.js";
+import PriorityTag from "./PriorityTag.jsx";
+import { chapterPriority, hasPriorities, isFastTrack } from "../../lib/examPriority.js";
+import { formatReadingTime, totalReadingMinutes, withReadingTime } from "../../lib/readingTime.js";
 
 const STATUS = {
   read: { label: "Läst", className: "border-correct text-correct" },
@@ -26,13 +28,23 @@ export default function ChapterList({
   onOpen,
   intro,
   examNote,
+  topics = [],
 }) {
   const [onlyExam, setOnlyExam] = useState(false);
+  const [fastTrack, setFastTrack] = useState(false);
   const hasExamAreas = chapters.some((chapter) => "examArea" in chapter);
   const hasBackground = chapters.some((chapter) => !chapter.examArea);
   const shown = onlyExam
     ? chapters.filter((chapter) => chapter.examArea)
     : chapters;
+  // Snabbspåret döljer ingenting — bakgrundskapitlen tonas bara ned.
+  const showFastTrack = hasPriorities(topics);
+  const priorities = new Map(
+    chapters.map((chapter) => [chapter.id, chapterPriority(chapter, topics)]),
+  );
+  const fastChapters = chapters.filter((chapter) =>
+    isFastTrack(priorities.get(chapter.id) || []),
+  );
   const readCount = chapters.filter((chapter) => readChapters[chapter.id]).length;
   const next = chapters.find((chapter) => !readChapters[chapter.id]) || chapters[0];
   const percent = chapters.length
@@ -111,6 +123,24 @@ export default function ChapterList({
         )}
       </div>
 
+      {showFastTrack && (
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <button
+            type="button"
+            onClick={() => setFastTrack(!fastTrack)}
+            aria-pressed={fastTrack}
+            className={`chip ${fastTrack ? "chip-on" : ""}`}
+          >
+            Snabbspår
+          </button>
+          <span className="text-sm text-ink/65">
+            {fastTrack
+              ? `${fastChapters.length} kapitel som prövats på tenta · ungefär ${formatReadingTime(totalReadingMinutes(fastChapters))}`
+              : "Framhäv kapitlen som prövats på tidigare tentor"}
+          </span>
+        </div>
+      )}
+
       {hasExamAreas && hasBackground && (
         <button
           type="button"
@@ -129,12 +159,14 @@ export default function ChapterList({
             : chapter.id === currentId
               ? "reading"
               : "unread";
+          const levels = priorities.get(chapter.id) || [];
+          const dimmed = fastTrack && !isFastTrack(levels);
           return (
             <li key={chapter.id}>
               <button
                 type="button"
                 onClick={() => onOpen(chapter.id)}
-                className="card-action flex gap-4 p-4"
+                className={`card-action flex gap-4 p-4 ${dimmed ? "opacity-60" : ""}`}
               >
                 <span className="tabular mt-0.5 font-display text-xl text-brass">
                   {chapter.number ?? index + 1}
@@ -149,6 +181,8 @@ export default function ChapterList({
                       ca {chapter.readingMinutes} min
                     </span>
                     <ExamAreaTag area={"examArea" in chapter ? chapter.examArea : undefined} />
+                    <PriorityTag levels={levels} />
+                    {dimmed && <span className="text-sm text-ink/65">Läs om tid finns</span>}
                   </span>
                 </span>
                 <span

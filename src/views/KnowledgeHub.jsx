@@ -162,6 +162,7 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
                 onOpen={openChapter}
                 intro={course.readingIntro || ""}
                 examNote={course.examNote}
+                topics={course.topics}
               />
             ))}
 

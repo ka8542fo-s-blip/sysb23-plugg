@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import PriorityTag from "./PriorityTag.jsx";
+import { evidenceSentence, priorityOf } from "../../lib/examPriority.js";
 
 const WEIGHT_LABEL = { hög: "Hög tentavikt", medel: "Medel tentavikt", låg: "Låg tentavikt" };
 
@@ -79,6 +81,8 @@ export default function ConceptCards({
         {half.map((topic) => {
           const open = openId === topic.id;
           const number = chapterNumber(topic.chapter);
+          const levels = priorityOf(topic);
+          const evidence = evidenceSentence(topic.examEvidence);
           return (
             <article
               key={topic.id}
@@ -102,6 +106,16 @@ export default function ConceptCards({
                       {WEIGHT_LABEL[topic.examWeight] || topic.examWeight} ·{" "}
                       {topic.keyPoints.length} nyckelpunkter
                     </span>
+                    {levels.length > 0 && (
+                      <span className="mt-1.5 flex flex-wrap items-center gap-2">
+                        <PriorityTag levels={levels} />
+                      </span>
+                    )}
+                    {evidence && (
+                      <span className="mt-1 block font-sans text-sm text-ink/65">
+                        {evidence}
+                      </span>
+                    )}
                   </span>
                   <span aria-hidden="true" className="shrink-0 text-ink/65">
                     {open ? "−" : "+"}

@@ -128,6 +128,7 @@ export const defaultSettings = {
   timerMinutes: 20,
   practiceTopics: [], // tom lista = alla ämnen
   practiceDifficulty: 0, // 0 = alla
+  practiceExamFocus: false, // viktar upp tentaprövade ämnen i Öva
 };
 
 // Registrerar ett svar på en fråga i historiken.

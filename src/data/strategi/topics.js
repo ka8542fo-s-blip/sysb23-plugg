@@ -4,6 +4,7 @@ export const topics = [
     name: "Ekonomistyrningens grunder & styrmedel",
     chapter: "kap1",
     examWeight: "hög",
+    examPriority: ["bakgrund"],
     summary: "Ekonomistyrning definieras (NE) som avsiktlig påverkan på en verksamhet och dess befattningshavare mot vissa ekonomiska mål. Målen kan vara finansiella (resultat, lönsamhet, kassaflöde, soliditet, likviditet) eller icke-finansiella (nöjda kunder, kvalitet, nöjda medarbetare). Traditionellt dominerar finansiella mål, men icke-finansiella blir allt viktigare eftersom de anses driva de finansiella. Ekonomistyrningens övergripande syfte är att hjälpa till att uppnå strategiska mål — den är ett medel för strategiimplementering och ska anpassas till vald strategi.",
     keyPoints: [
       "Företag i företagsekonomisk mening = en sammanslutning av personer som medvetet arbetar för att uppnå ett eller flera mål; även offentlig verksamhet och föreningar räknas in. Ekonomi = hushållning med begränsade eller knappa resurser.",
@@ -28,6 +29,7 @@ export const topics = [
     name: "Vision, affärsidé, strategi & verksamhetsplaner",
     chapter: "kap2",
     examWeight: "hög",
+    examPriority: ["karna"],
     summary: "Vision = ett önskvärt framtida tillstånd; anger vart företaget är på väg och hur det vill uppfattas. Affärsidé = vad företaget ägnar sig åt och tjänar pengar på, och vad som skiljer det från andra. Strategi = hur affärsidén ska uppnås — en plan för hur företaget ska arbeta. Verksamhetsplanering = nedbrytning av huvudmål till delmål, handlingsplaner och riktlinjer.",
     keyPoints: [
       "Visionens tre funktioner: legitimerande (roll i samhället, socialt och samhälleligt berättigande), ambition & fokus (ambitionsnivå som sätter ramar för affärsidé och strategi), identifikation & motivation (engagemang och delaktighet hos anställda).",
@@ -50,6 +52,8 @@ export const topics = [
     name: "Företagets mål — teorier och modeller",
     chapter: "kap3",
     examWeight: "hög",
+    examPriority: ["karna"],
+    examEvidence: { quiz: 6 },
     summary: "Det finns ingen enskild teori som ger ett entydigt svar på vad företags mål är. Fem centrala modeller: vinstmaximeringsmodellen, företagsledarmodeller, satisfieringsmodellen, intressentmodellen och kassaflödesbaserade modeller. Vilken som passar beror på perspektiv, sammanhang och tidsaspekt.",
     keyPoints: [
       "Fyra skäl till att svaret inte är entydigt: olika sammanhang kräver olika modeller, företag och omgivning förändras, mål skiljer sig mellan och inom företag, och det finns olika synsätt av politiska, ideologiska och moraliska skäl.",
@@ -82,6 +86,7 @@ export const topics = [
     name: "Effektivitet, produktivitet & lönsamhet",
     chapter: "kap4",
     examWeight: "hög",
+    examPriority: ["karna"],
     summary: "Effektivitet = grad av måluppfyllelse, bestäms som värdet av utflödet i förhållande till värdet av inflödet mot ett mål. Produktivitet är samma kvot men i fysiska termer (kvantiteter). Total effektivitet = inre + yttre effektivitet, och båda krävs på lång sikt.",
     keyPoints: [
       "Inre effektivitet = 'att göra saker rätt': hög produktivitet, kostnadseffektivitet, ordning och reda, väl utvecklade rutiner. Internt perspektiv.",
@@ -106,6 +111,8 @@ export const topics = [
     name: "Organisationsformer, ansvar & mjuka styrmedel",
     chapter: "kap5",
     examWeight: "medel",
+    examPriority: ["karna", "essa"],
+    examEvidence: { essay: true },
     summary: "Organisationsstruktur är ett styrmedel. Vanliga organisationsformer: funktionsorganisation (indelning efter funktioner som marknadsföring, produktion, ekonomi), divisionsorganisation (indelning efter produkter/tjänster eller geografi) och matrisorganisation (kombination av vertikalt funktionsansvar och horisontellt process-/kundansvar). Hit hör också ansvarsfördelning, belöningssystem och den mindre formaliserade styrningen genom kultur, lärande och medarbetarskap.",
     keyPoints: [
       "Funktionsorganisation: strukturerad efter funktioner — marknadsföring, produktion, ekonomi, inköp. Samlar specialistkompetens.",
@@ -132,6 +139,7 @@ export const topics = [
     name: "Strategiämnets utveckling & Mintzberg",
     chapter: "kap6",
     examWeight: "hög",
+    examPriority: ["karna"],
     summary: "Herrmann (2005) beskriver strategiämnets utveckling som evolutionscykler av variation (genombrott/diskontinuiteter), selektion (en dominant design väljs) och retention (inkrementell förfining). Fältet har gått från omvärldsfokus, via Porters positioneringsskola, till resursbaserat synsätt, och är nu inne i en era fokuserad på kunskap, lärande och innovation.",
     keyPoints: [
       "Cykeln: variation drivs av tekniska diskontinuiteter och inleder en jäsningsperiod (era of ferment) med osäkerhet, produktfokus och kamp om branschdominans; selektion av en dominant design avgörs av sociala, politiska och organisatoriska dynamiker — inte teknisk logik; retention innebär inkrementell förändring med fokus på processteknik.",
@@ -154,6 +162,7 @@ export const topics = [
     name: "Porters five forces & positionering",
     chapter: "kap6",
     examWeight: "medel",
+    examPriority: ["karna"],
     summary: "Porters femkraftsmodell analyserar en branschs lönsamhetspotential och konkurrensintensitet. Används t.ex. när ett företag överväger att gå in i en ny bransch eller vill förstå sin branschs struktur.",
     keyPoints: [
       "De fem krafterna: (1) konkurrens mellan existerande företag i branschen, (2) hot från nya aktörer, (3) hot från substitutprodukter, (4) kundernas förhandlingsstyrka, (5) leverantörernas förhandlingsstyrka.",
@@ -172,6 +181,8 @@ export const topics = [
     name: "Resursbaserat synsätt & Barney om AI",
     chapter: "kap9",
     examWeight: "hög",
+    examPriority: ["essa"],
+    examEvidence: { essay: true },
     summary: "RBV: uthålliga konkurrensfördelar kommer från resurser och förmågor som är värdefulla, sällsynta och svåra att imitera, och som företaget är organiserat för att utnyttja. Barney (HBR 2024) tillämpar logiken på generativ AI: AI ger dig ingen NY konkurrensfördel — men kan förstärka dem du redan har.",
     keyPoints: [
       "Historisk parallell: ångmaskinen, elmotorn och persondatorn skapade enormt värde men blev sällan källor till uthållig fördel — just för att alla tvingades införa dem. De raderade ofta etablerade företags försprång och släppte in nya konkurrenter.",
@@ -194,6 +205,7 @@ export const topics = [
     name: "Balanced Scorecard (Kaplan & Norton)",
     chapter: "kap7",
     examWeight: "hög",
+    examPriority: ["karna"],
     summary: "Kaplan & Norton (1993): företag har traditionellt förlitat sig för mycket på finansiella mått. Problemet: finansiella mått är historiska — de rapporterar vad som hände förra perioden utan att visa vägen framåt. BSC kompletterar det finansiella perspektivet med tre till: kund, interna processer samt innovation/lärande, och kopplar måtten till strategin.",
     keyPoints: [
       "Fyra perspektiv: finansiellt, kund, interna processer, innovation & lärande.",
@@ -216,6 +228,7 @@ export const topics = [
     name: "Icke-finansiella mått i praktiken (Ittner & Larcker)",
     chapter: "kap7",
     examWeight: "medel",
+    examPriority: ["bakgrund"],
     summary: "Ittner & Larcker (2003): icke-finansiella mått (kundlojalitet, medarbetarnöjdhet m.m.) lovar en fylligare bild och tidigare signaler än redovisningen — men få företag lyckas, eftersom de gör fyra typiska misstag.",
     keyPoints: [
       "Misstag 1 — kopplar inte måtten till strategin: ingen orsak-verkan-modell (kausalmodell) som länkar icke-finansiella drivare till finansiella utfall; man mäter för mycket och fel saker. Positivt exempel: snabbmatskedjans kedja 'bättre rekrytering → nöjdare personal → nöjdare kunder → köpfrekvens och återköp → tillväxt, resultat och kassaflöde'.",
@@ -237,6 +250,8 @@ export const topics = [
     name: "Hållbarhet: Triple Bottom Line & ESG",
     chapter: "kap8",
     examWeight: "hög",
+    examPriority: ["karna"],
+    examEvidence: { mcq: 1 },
     summary: "TBL (Elkington; Rogers & Hudson 2011) balanserar företagets resultat inom tre områden: socialt ansvar (People), miljömässig hållbarhet (Planet) och ekonomisk framgång (Profit/Prosperity). ESG är ett närliggande ramverk för att bedöma företag utifrån Environmental, Social och Governance.",
     keyPoints: [
       "TBL:s tre P: People = socialt ansvar och välbefinnande för anställda, samhälle och kunder; Planet = miljö; Profit/Prosperity = ekonomi. ('Purpose' är en distraktor.)",
@@ -260,6 +275,7 @@ export const topics = [
     name: "Enterprise IT och digital transformation",
     chapter: "digital",
     examWeight: "hög",
+    examPriority: ["bakgrund"],
     summary: "Föreläsning 1: IT gick från räknemaskiner med ett syfte, via PC-revolutionens systemkaos och produktivitetsparadoxen, till att kopplas till affärsstrategin genom strategic alignment, IT governance och 90-talets managementmetoder. Idag ställer AI, data och reglering nya krav på datastrategin — och paradoxen upprepar sig i varje nytt område som digitaliseras.",
     keyPoints: [
       "Strategi är utgångspunkten för all ekonomisk aktivitet: strukturer, processer och informationssystem utformas för att genomföra strategin. Chandler: 'structure follows strategy', men samspelet är kontinuerligt.",
@@ -290,6 +306,8 @@ export const topics = [
     name: "IT & strategi: alignment och produktivitetsparadoxen",
     chapter: "kap9",
     examWeight: "hög",
+    examPriority: ["karna", "essa"],
+    examEvidence: { mcq: 1, quiz: 1, essay: true },
     summary: "Strategic Alignment Model (Henderson & Venkatraman 1993): IT skapar värde först när fyra domäner är i samklang — affärsstrategi, IT-strategi, organisationsinfrastruktur (och processer) samt IT-infrastruktur (och processer). Produktivitetsparadoxen: stora IT-investeringar syns inte automatiskt i produktivitetsstatistiken; lösningen anses vara att omorganisera arbetsflöden och processer så att tekniken faktiskt utnyttjas.",
     keyPoints: [
       "SAM:s fyra domäner: Affärsstrategi (marknad, erbjudande, konkurrensfördelar), IT-strategi (teknikomfång, systemkompetenser, IT-styrning), Organisationsinfrastruktur & processer (struktur, processer, kompetenser, roller), IT-infrastruktur & processer (arkitektur, system, IT-processer, IT-kompetens).",
@@ -312,6 +330,8 @@ export const topics = [
     name: "Nya mått: hållbarhet & digitalisering",
     chapter: "kap10",
     examWeight: "medel",
+    examPriority: ["essa"],
+    examEvidence: { essay: true },
     summary: "Omvärldsförändringar — hållbarhetsmedvetenhet och digitalisering — driver fram nya typer av mått vid sidan av de traditionella finansiella. Temat knyter ihop BSC, TBL/ESG och Ittner & Larcker och är typiskt essästoff.",
     keyPoints: [
       "Drivkrafterna: ökad hållbarhetsmedvetenhet (konsumenter, investerare, reglering) och digitalisering (mer data, snabbare återkoppling, nya affärsmodeller).",

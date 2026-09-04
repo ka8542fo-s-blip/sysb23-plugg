@@ -3,6 +3,7 @@ import QuestionCard from "../components/QuestionCard.jsx";
 import TopicFilter from "../components/TopicFilter.jsx";
 import { shuffleQuestion } from "../lib/shuffle.js";
 import { weightedPick, weightFor } from "../lib/weightedPick.js";
+import { hasPriorities, priorityOf } from "../lib/examPriority.js";
 
 const DIFFICULTIES = [
   { value: 0, label: "Alla" },
@@ -36,6 +37,19 @@ export default function Practice({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [presetKey]);
   const difficulty = settings.practiceDifficulty;
+  // Tentafokus viktar upp de ämnen som prövats som flervalsfrågor. Det
+  // ändrar bara dragningsordningen — inga frågor tas bort ur urvalet.
+  const examFocus = settings.practiceExamFocus === true;
+  const showExamFocus = hasPriorities(course.topics);
+  const coreTopics = useMemo(
+    () =>
+      new Set(
+        course.topics
+          .filter((topic) => priorityOf(topic).includes("karna"))
+          .map((topic) => topic.id),
+      ),
+    [course],
+  );
 
   const filtered = useMemo(() => {
     return course.questions.filter((question) => {
@@ -73,7 +87,8 @@ export default function Practice({
       const snapshot = answersRef.current;
       setQueue(
         weightedPick(questions, questions.length, (question) =>
-          weightFor(question.id, snapshot),
+          weightFor(question.id, snapshot) *
+          (examFocus && coreTopics.has(question.topic) ? 2 : 1),
         ),
       );
       setIndex(0);
@@ -81,7 +96,7 @@ export default function Practice({
       setRevealed(false);
       setPassStats({ correct: 0, wrong: 0 });
     },
-    [],
+    [examFocus, coreTopics],
   );
 
   useEffect(() => {
@@ -173,6 +188,26 @@ export default function Practice({
         >
           {filterOpen ? "Dölj urval" : "Välj ämne och nivå"}
         </button>
+
+        {showExamFocus && (
+          <div className={filterOpen ? "mt-5" : "mt-5 hidden"}>
+            <h3 className="mb-2 font-display text-lg">Förval</h3>
+            <button
+              type="button"
+              onClick={() =>
+                setSettings((prev) => ({ ...prev, practiceExamFocus: !examFocus }))
+              }
+              aria-pressed={examFocus}
+              className={`chip ${examFocus ? "chip-on" : ""}`}
+            >
+              Tentafokus
+            </button>
+            <p className="mt-2 text-sm text-ink/65">
+              Ämnen som prövats som flervalsfrågor kommer dubbelt så ofta. Inga frågor
+              tas bort ur urvalet.
+            </p>
+          </div>
+        )}
 
         <div className={filterOpen ? "mt-5" : "mt-5 hidden"}>
           <TopicFilter

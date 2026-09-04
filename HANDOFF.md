@@ -76,6 +76,20 @@ summerar till 20, inte 30 — medvetet orört).
   (`.tts-block`, pekare + hover) — klick hoppar dit direkt, även ur paus.
   OBS: vid hopp nollas den pågående utterancens onend/onerror FÖRE
   cancel() — de avfyras asynkront och tolkar annars hoppet som stopp.
+- **Tentaprioritet** (Strategi, `lib/examPriority.js`) — varje ämne har
+  `examPriority`: `karna` (prövat som flervalsfråga HT24/quiz F1), `essa`
+  (prövat som essä) eller `bakgrund` (aldrig prövat); ett ämne kan ha både
+  karna och essa. Kapitel ärver unionen av sina `primaryTopics` — bakgrund
+  bara när inget ämne prövats. Etiketter (konturchips: Kärna pine, Essä brass,
+  Bakgrund dämpad) visas på begreppskort och kapitelrader. `examEvidence`
+  ({ mcq, quiz, essay }) ger raden "Prövat HT24: N flervalsfrågor" och är
+  **bara ifylld där repot dokumenterar underlaget** (HT24-märkta frågor, quiz
+  F1-frågor, de fyra HT24-essäerna) — hitta aldrig på siffror; saknas
+  underlag uteblir raden. Prioriteten informerar, den styr inte: Snabbspår i
+  kompendiets TOC tonar ned bakgrundskapitel ("Läs om tid finns") men döljer
+  inget och räknar om lästiden, och Tentafokus i Öva viktar kärnämnen ×2 utan
+  att ta bort frågor. Delkurser utan `examPriority` (Databaser) ser ut som
+  förut. Tester: `scripts/exam-priority.test.mjs`.
 - **Öva** — viktad repetition (fel 3×, osedd 2×, rätt 1×), sidopanel med filter på desktop.
 - **Prov** — +6/−1/0, balanserad dragning (max 2/ämne), deadline-baserad timer,
   provet lever i App-state (överlever flikbyte, medvetet INTE omladdning),
