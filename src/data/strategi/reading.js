@@ -36,7 +36,7 @@ export const CHAPTER_TOPICS = {
 
 export const CHAPTER_ORDER = Object.keys(CHAPTER_TOPICS);
 
-export const intro = "Den här delkursen handlar om två saker som hänger ihop tätare än man först tror: hur företag bestämmer vart de ska (strategi) och hur de får verksamheten att faktiskt röra sig dit (ekonomistyrning). Kompendiet är skrivet för att läsas i ordning — varje kapitel bygger på det förra, och de sista kapitlen knyter ihop hela bilden. Räkna med ungefär en och en halv timme för hela texten. Läs först, öva sedan. Begreppen sitter mycket bättre när du redan sett dem i sitt sammanhang.";
+export const intro = "Den här delkursen handlar om två saker som hänger ihop tätare än man först tror: hur företag bestämmer vart de ska (strategi) och hur de får verksamheten att faktiskt röra sig dit (ekonomistyrning). Kompendiet är skrivet för att läsas i ordning — varje kapitel bygger på det förra, och de sista kapitlen knyter ihop hela bilden. Räkna med ungefär {lästid} för hela texten. Läs först, öva sedan. Begreppen sitter mycket bättre när du redan sett dem i sitt sammanhang.";
 
 const rawChapters = [
   {

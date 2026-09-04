@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { withReadingTime } from "../../lib/readingTime.js";
 
 const STATUS = {
   read: { label: "Läst", className: "border-correct text-correct" },
@@ -64,7 +65,9 @@ export default function ChapterList({
   return (
     <div className="space-y-5">
       {intro && (
-        <p className="max-w-reading text-[17px] leading-relaxed text-ink/80">{intro}</p>
+        <p className="max-w-reading text-[17px] leading-relaxed text-ink/80">
+          {withReadingTime(intro, chapters)}
+        </p>
       )}
 
       {examNote && (

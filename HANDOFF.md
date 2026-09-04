@@ -58,6 +58,10 @@ summerar till 20, inte 30 — medvetet orört).
   (kap1 = "Grund"), och filtret "Visa bara tentarelevanta kapitel" döljer sig
   självt eftersom det bara visas när något kapitel är utanför (hasBackground). Läsprogress
   mäts i **kapitel och procent, aldrig minuter** (per kapitel står "ca X min").
+  Kompendiets intro innehåller platshållaren `{lästid}` som `ChapterList` byter
+  mot summan av `readingMinutes`, avrundad till närmaste tio minuter
+  (`lib/readingTime.js`, t.ex. "1 timme och 50 minuter") — skriv aldrig in
+  lästiden som fast text igen.
   Tangentbord i kapitel: J/K/N/P/Esc. **Uppläsning** (`lib/useReadAloud.js`):
   webbläsarens talsyntes läser kapitlet styckvis (svensk röst väljs via
   `lang: sv-SE`) och markerar aktuellt stycke (`.tts-aktuell`) — medvetet
