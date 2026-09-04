@@ -191,47 +191,46 @@ Byggstenarna är:
 - Vanlig entitetstyp (regular entity type)
 - Svag entitetstyp (weak entity type)
 - Vanlig relationstyp (regular relationship type)
-- Svag relationstyp (weak relationship type)
+- Identifierande relationstyp (identifying relationship type — kallas även svag relationstyp)
 - Attribut: enkelt, sammansatt, flervärdes- och härlett
 
 ## En modell är en abstraktion
 
-En konceptuell datamodell är en **abstraktion av verkligheten**. Den är en abstraktion just därför att vi medvetet tagit med vissa attribut och uteslutit andra. En verklig student har ett närmast oändligt antal egenskaper som skulle kunna lagras — modellen väljer de som verksamheten behöver.
+En konceptuell datamodell är en **abstraktion av verkligheten**. Den är en abstraktion just därför att vi medvetet tagit med vissa attribut och uteslutit andra. En verklig anställd har ett närmast oändligt antal egenskaper som skulle kunna lagras — modellen väljer de som verksamheten behöver.
 
 ## Notationer
 
 ER-diagram kan ritas i olika notationer, som skiljer sig både visuellt och i vilka byggstenar de erbjuder. Kursen fokuserar på **Chen-notation** och **Crow's foot-notation**.
 
-En viktig avgränsning: ER-diagram kan visuellt likna **UML-klassdiagram** men är begreppsmässigt något helt annat. ER-diagram är för design av relationsdatabaser; UML-klassdiagram är för design av objektorienterade lösningar. UML används ibland som notation för ER-modellering eftersom notationen är välkänd, men det medför problem. **Principerna för ER-modellering är däremot desamma oavsett notation** — det är dem du ska förstå, inte en enskild ritteknik.
+**Principerna för ER-modellering är desamma oavsett notation** — det är dem du ska förstå, inte en enskild ritteknik.
 
 ## Entitetstyp
 
 > **Entitetstyp (entity type):** en mängd saker med samma egenskaper, vilka identifieras av en användare eller organisation som havande självständig existens.
 
-Informellt sägs bara "entitet". Entiteter kan ha **fysisk existens** (Student) eller **begreppslig existens** (Course) — båda är fullt giltiga.
+Informellt sägs bara "entitet". Entiteter kan ha **fysisk existens** (Employee) eller **begreppslig existens** (Project) — båda är fullt giltiga.
 
 I Chen-notation ritas entiteten som en rektangel. Tänk inte på attributen som kolumner i en tabell ännu; på den här nivån är de egenskaper hos en informationsentitet.
 
 ## De fyra attributtyperna
 
-**Enkelt attribut (simple):** ett odelbart värde. \`StudentNo\`, \`PhoneNumber\`.
+**Enkelt attribut (simple):** ett odelbart värde. \`employeeNo\`, \`name\`.
 
-**Sammansatt attribut (composite):** ett attribut som består av flera delattribut. \`Name\` bestående av \`FirstName\` och \`LastName\`, eller \`Address\` bestående av \`StreetName\` och \`StreetNumber\`. Ritas som ett attribut med underattribut hängande under.
+**Sammansatt attribut (composite):** ett attribut som består av flera delattribut. \`address\` bestående av \`streetName\`, \`streetNumber\`, \`postalCode\` och \`city\`. Ritas som ett attribut med underattribut hängande under.
 
-**Flervärdesattribut (multivalued):** ett attribut som kan ha flera värden för samma entitetsinstans — en student med flera adresser. Ritas med dubbel ellips.
+**Flervärdesattribut (multivalued):** ett attribut som kan ha flera värden för samma entitetsinstans — en anställd med flera telefonnummer (\`phoneNumber\`). Ritas med dubbel ellips.
 
-**Härlett attribut (derived):** ett attribut vars värde kan beräknas ur ett annat. \`Age\` kan härledas ur \`DateOfBirth\`. Ritas med streckad ellips. Härledda attribut lagras normalt inte, just för att de kan räknas fram — och för att lagrade härledda värden riskerar att bli inkonsekventa.
+**Härlett attribut (derived):** ett attribut vars värde kan beräknas ur ett annat. \`yearsEmployed\` kan härledas ur \`hireDate\`. Ritas med streckad ellips. Härledda attribut lagras normalt inte, just för att de kan räknas fram — och för att lagrade härledda värden riskerar att bli inkonsekventa.
 
 ## Identifierande attribut
 
 Identifierande attribut **stryks under**. Det är så unikhet uttrycks i Chen-notation.
 
-Här finns en subtilitet som föreläsningen ägnar flera bilder åt. Betrakta en student med studentnummer, ett namn bestående av för- och efternamn, och en adress. Beroende på vilka verksamhetsregler som gäller kan olika saker vara unika:
+Här finns en subtilitet som föreläsningen ägnar flera bilder åt. Betrakta en anställd med anställningsnummer, namn och arbetsmejl, och ett projekt vars nummer består av registreringsår och löpnummer. Beroende på vilka verksamhetsregler som gäller kan olika saker vara unika:
 
-- Bara \`StudentNo\` är unikt → bara det stryks under.
-- Kombinationen \`{FirstName, LastName}\` är unik men inte \`StudentNo\` → delattributen stryks under, inte studentnummer.
-- Både \`StudentNo\` och kombinationen \`{FirstName, LastName}\` är unika → båda markeras, alltså två kandidatnycklar.
-- Även \`Address\` är unik → tre kandidatnycklar.
+- Bara \`employeeNo\` är unikt → bara det stryks under.
+- Både \`employeeNo\` och \`workEmail\` är unika var för sig → två separata understrykningar, alltså två identifierare — inte en kombinerad.
+- \`projectNo\` är sammansatt av \`registrationYear\` och \`sequenceNo\` och unikt som helhet → den sammansatta föräldern stryks under, inte delarna. Identifikationen använder det kompletta värdet.
 
 Kravtexten avgör alltså diagrammet, och exakt hur understrykningarna sätts är det som senare bestämmer relationens kandidatnycklar. När du löser en tentauppgift: läs kravtexten mening för mening och markera unikheten i takt med att den nämns.
 
@@ -252,48 +251,48 @@ Vilket som är rätt beror på verksamhetsregeln. Att kunna motivera valet är p
     number: 5,
     title: "Relationer, kardinalitet och svaga entiteter",
     readingMinutes: 12,
-    lead: "Binära relationer i alla tre former, obligatoriskt deltagande, relationsattribut, unära och ternära relationer, samt svaga entitetstyper.",
+    lead: "Binära relationer i alla tre former, total och partiell participation, relationsattribut, unära och ternära relationer, samt svaga entitetstyper.",
     sources: ["Föreläsning 4"],
     body: `
 Entiteter utan relationer är bara lösa listor. Det är relationerna som gör modellen till en modell.
 
 ## Binär relation
 
-En **binär relation** kopplar två entitetstyper och har alltid två saker: ett **namn** och **multipliciteter** (även kallade kardinaliteter). I Chen-notation ritas relationen som en romb mellan entiteterna.
+En **binär relation** kopplar två entitetstyper och har alltid två saker: ett **namn** och ett **cardinality ratio** — i vardagligt tal multipliciteter. I Chen-notation ritas relationen som en romb mellan entiteterna.
 
-    Student ---M--- (Study) ---1--- Course
+    Employee ---1--- (Leads) ---N--- Project
 
-Multipliciteten anges på vardera sidan och kan vara 1, M eller N. Tre former förekommer:
+Etiketten anges på vardera sidan och kan vara 1, M eller N. Den anger **endast maxima**: \`1\` betyder *högst en*, inte *exakt en*. Tre former förekommer:
 
-**Ett-till-många (1:M).** En kurs kan ha många studenter, en student läser en kurs.
-**Ett-till-ett (1:1).** En student läser exakt en kurs och en kurs har exakt en student.
-**Många-till-många (M:N).** En student kan läsa många kurser, en kurs kan ha många studenter.
+**Ett-till-många (1:N).** \`Employee — Leads — Project\`: en anställd får leda noll, ett eller många projekt; ett projekt leds av högst en anställd.
+**Ett-till-ett (1:1).** \`Employee — ResponsibleFor — Project\`: en anställd får vara ansvarig för högst ett projekt, och ett projekt har högst en ansvarig anställd.
+**Många-till-många (M:N).** \`Employee — WorksOn — Project\`: en anställd får arbeta på många projekt, och ett projekt får ha många anställda.
 
-En detalj som föreläsningen uttryckligen påpekar: **skriv alltid M:N, aldrig M:M.** Skriver du M:M påstår du att båda sidor har exakt samma multiplicitet, vilket inte är vad du menar.
+M och N betyder båda "många" — bokstäverna skiljer bara de två positionerna åt, och därför skrivs formen M:N. Äldre material och transformationskapitlet skriver 1:M för ett-till-många; det betyder samma sak som 1:N.
 
-## Obligatoriskt deltagande
+## Deltagande: total eller partiell
 
 Det här är den vanligaste felkällan i modelleringsuppgifter, och det som skiljer ett godkänt diagram från ett korrekt.
 
-**Dubbla linjer betyder obligatoriskt deltagande (mandatory participation).** En enkel linje betyder frivilligt deltagande.
+**Dubbla linjer betyder total participation (totalt deltagande):** varje instans måste delta i relationen minst en gång. **En enkel linje betyder partial participation (partiellt deltagande):** en instans får stå utanför relationen.
 
 Frågan att ställa vid varje relation är: **vilken entitet måste delta?**
 
-- "En student **måste** läsa en kurs" → dubbel linje på studentsidan. Studenten måste delta i relationen Study.
-- "En student måste läsa en kurs, **och** en kurs måste ha minst en student" → dubbla linjer på båda sidor.
-- "En student **kan** läsa en kurs, en kurs **kan** ha studenter" → enkla linjer på båda sidor.
+- "Ett projekt **måste** ha en ledare" → dubbel linje på projektsidan. Projektet måste delta i relationen Leads.
+- "Ett projekt måste ha en ledare, **och** en anställd måste leda minst ett projekt" → dubbla linjer på båda sidor.
+- "En anställd **kan** leda projekt, ett projekt **kan** ha en ledare" → enkla linjer på båda sidor.
 
 Alla tre kombinationerna är möjliga för alla tre relationsformerna, vilket ger nio varianter. Kravtextens hjälpverb — *måste*, *kan*, *får* — är det som avgör.
 
-I UML uttrycks samma sak med intervall: \`1..1\` eller bara \`1\` betyder obligatoriskt, \`0..*\` betyder frivilligt. Det är värt att kunna översätta mellan notationerna, eftersom kursen visar båda.
+**Kardinalitet och deltagande läses i olika riktningar.** Ratio-etiketten läses *tvärs över* relationen: talet bredvid Employee säger hur många anställda varje projekt får ha. Deltagandelinjen läses *vid sin egen ände*: dubbellinjen vid Project säger något om projekten. De två sätts oberoende av varandra, och det är kombinationen som ger "exakt en" — \`1\` tvärs över plus dubbel linje betyder minst en och högst en.
 
 ## Flera relationer mellan samma entiteter
 
-Det kan finnas mer än en binär relation mellan två entitetstyper. Student och Course kan vara kopplade både genom \`Study\` (läser nu) och \`HasStudied\` (har läst) — två skilda relationer med egna multipliciteter.
+Det kan finnas mer än en binär relation mellan två entitetstyper. Employee och Project är i föreläsningens exempel kopplade genom tre: \`Leads\`, \`ResponsibleFor\` och \`WorksOn\` — skilda relationer med egna multipliciteter och egna deltagandekrav.
 
 ## Relationsattribut
 
-**Relationsattribut** representerar data som uppstår **som en följd av relationen**. Betyget \`Grade\` hör inte till studenten och inte till kursen, utan till kombinationen: bara en student som läst en kurs får ett betyg på den kursen.
+**Relationsattribut** representerar data som uppstår **som en följd av relationen**. \`allocationPercentage\` hör inte till den anställda och inte till projektet, utan till paret: värdet beskriver hur stor del av sin tid en viss anställd lägger på ett visst projekt, och samma anställd kan ha olika värden för olika projekt.
 
 Relationsattribut används mest för M:N-relationer men kan också förekomma på 1:M och 1:1. Ritas som ett attribut hängande från relationsromben.
 
@@ -301,13 +300,13 @@ Att kunna känna igen när ett attribut hör till relationen och inte till någo
 
 ## Unär eller rekursiv relation
 
-En **unär** (rekursiv) relation kopplar en entitetstyp till sig själv. En student kan mentorera andra studenter, och mentoreras av en student.
+En **unär** (rekursiv) relation kopplar en entitetstyp till sig själv. En anställd kan handleda andra anställda och handleds själv av en anställd: \`Employee — Supervises\`.
 
-Unära relationer har ofta **rollnamn** på vardera sidan, eftersom relationen betyder olika saker beroende på riktning: \`mentors\` och \`is_mentored\`.
+Unära relationer har ofta **rollnamn** på vardera sidan, eftersom relationen betyder olika saker beroende på riktning: \`supervisor\` och \`report\`.
 
-Föreläsningens eget tips för att tänka klart: **rita den unära relationen som om den vore binär**, med samma entitet i två kopior. Då blir det uppenbart att en student kan mentorera många andra (M-sidan) och mentoreras av en (1-sidan), alltså 1:M.
+Föreläsningens eget tips för att tänka klart: **rita den unära relationen som om den vore binär**, med samma entitet i två kopior. Då blir det uppenbart att en anställd kan handleda många andra (N-sidan) och handledas av högst en (1-sidan), alltså 1:N.
 
-Notera att en unär 1:M-relation tillåter att någon inte mentoreras alls — det är inget fel i diagrammet.
+Notera att en unär 1:N-relation med enkla linjer tillåter att någon inte handleds alls — det är inget fel i diagrammet.
 
 ## Ternär relation
 
@@ -317,21 +316,21 @@ Frestelsen är att modellera detta som tre binära M:N-relationer. Det går inte
 
 Lösningen är en relation som binder alla tre samtidigt, vilket vid transformationen blir en relation med en trippelsammansatt primärnyckel: \`Delivery(supplierName, productName, customerName)\`.
 
-## Svag entitetstyp och svag relationstyp
+## Svag entitetstyp och identifierande relation
 
 En **svag entitetstyp (weak entity type)** är en entitet som inte kan identifieras med sina egna attribut ensamma — den behöver ägarentitetens nyckel.
 
-Föreläsningens exempel är utmärkt eftersom det är verkligt: ett universitet har ett unikt namn och en budget. En kurs har en kurskod, ett namn och ett antal poäng. Men **kurskoden är unik inom det universitet som ger kursen**, inte nationellt. Lunds universitet ger SYSB23 om 30 poäng; Uppsala kan ge en helt annan kurs som också heter SYSB23.
+Föreläsningens exempel: ett projekt har ett eget projektnummer och kan finnas utan uppgifter. En projektuppgift (\`ProjectTask\`) har ett uppgiftsnummer \`taskNo\` och ett namn. Men **\`taskNo\` är unikt bara inom det projekt som äger uppgiften**: P101 och P205 kan båda ha en uppgift 1.
 
-Alltså går kursens namn och poäng inte att identifiera med kurskoden ensam — det krävs även universitetets namn.
+Alltså går en projektuppgift inte att identifiera med \`taskNo\` ensamt — den kompletta identiteten är \`{projectNo, taskNo}\`.
 
 Notationen:
 
 - **Svag entitet** ritas med **dubbel ram**.
-- **Svag relation** — relationen till ägarentiteten — ritas med **dubbel romb**.
-- Kurskoden är en **partiell identifierare (partial key)**, markerad med streckad understrykning i stället för hel.
+- **Identifierande relation (identifying relationship)** — relationen till ägarentiteten, här \`Contains\` — ritas med **dubbel romb**. Den kallas även svag relationstyp.
+- \`taskNo\` är en **partiell identifierare (partial identifier)**, markerad med streckad understrykning i stället för hel.
 
-En svag entitet kan ha andra, vanliga relationer också: en lärare kan undervisa flera kurser, och en kurs måste ha en lärare — den relationen är helt vanlig även om Course är svag.
+En svag entitet kan ha andra, vanliga relationer också: en projektuppgift kan tilldelas en anställd genom \`AssignedTo\` — den relationen är helt vanlig även om ProjectTask är svag.
 
 Att känna igen svaga entiteter i en kravtext handlar om att leta efter formuleringar av typen "X är unikt **inom** Y" eller "det kan finnas två X med samma kod hos olika Y".
 `
@@ -723,7 +722,7 @@ export const glossary = [
   { term: "3NF (tredje normalformen)", definition: "En relation är i 3NF om och endast om den är i 2NF och varje icke-primärattribut är icke-transitivt beroende av varje kandidatnyckel i relationen.", chapter: "kap7" },
   { term: "Atomärt värde", definition: "Ett odelbart värde i en cell. Kravet på atomära värden är både en av relationens egenskaper och innehållet i 1NF.", chapter: "kap2" },
   { term: "Attribut (attribute)", definition: "Formellt: ett namn parat med en domän. Informellt en kolumn eller ett fält.", chapter: "kap2" },
-  { term: "Binär relation", definition: "En relation mellan två entitetstyper, med namn och multipliciteter på båda sidor. Förekommer som 1:1, 1:M och M:N.", chapter: "kap5" },
+  { term: "Binär relation", definition: "En relation mellan två entitetstyper, med namn och ett cardinality ratio. Förekommer som 1:1, 1:N och M:N.", chapter: "kap5" },
   { term: "CHECK-constraint", definition: "Villkor på tillåtna värden i en kolumn, t.ex. CHECK (EmpSalary >= 0). Domänbegreppets tekniska motsvarighet.", chapter: "kap8" },
   { term: "Chen-notation", definition: "ER-notation där entiteter ritas som rektanglar, relationer som romber och attribut som ellipser, med understrykning för identifierare.", chapter: "kap4" },
   { term: "Crow's foot-notation", definition: "Alternativ ER-notation där multipliciteter markeras med symboler vid linjeändarna. Används i kursen jämte Chen.", chapter: "kap4" },
@@ -737,7 +736,7 @@ export const glossary = [
   { term: "Främmande nyckel (foreign key)", definition: "Ett attribut som refererar till primärnyckeln i en annan eller samma relation, och därmed upprätthåller referensintegritet.", chapter: "kap3" },
   { term: "Funktionellt beroende", definition: "X bestämmer funktionellt Y om och endast om varje X-värde i relationen är associerat med precis ett Y-värde. Skrivs X → Y.", chapter: "kap7" },
   { term: "Grad (degree)", definition: "Antalet attribut i en relation.", chapter: "kap2" },
-  { term: "Härlett attribut (derived)", definition: "Attribut vars värde kan beräknas ur ett annat, t.ex. Age ur DateOfBirth. Ritas streckat och lagras normalt inte.", chapter: "kap4" },
+  { term: "Härlett attribut (derived)", definition: "Attribut vars värde kan beräknas ur ett annat, t.ex. yearsEmployed ur hireDate. Ritas streckat och lagras normalt inte.", chapter: "kap4" },
   { term: "Icke-primärattribut (non-prime)", definition: "Ett attribut som inte är medlem i någon kandidatnyckel.", chapter: "kap3" },
   { term: "IDENTITY(1,1)", definition: "SQL Servers sätt att generera surrogatnyckelvärden automatiskt.", chapter: "kap8" },
   { term: "Kandidatnyckel (candidate key)", definition: "Ett attribut eller en uppsättning attribut som kan användas för att unikt identifiera vilken tupel som helst i en relation. En relation kan ha flera.", chapter: "kap3" },
@@ -746,12 +745,13 @@ export const glossary = [
   { term: "Konceptuell databasdesign", definition: "Första steget i designprocessen: verksamhetskraven blir ett ER-diagram.", chapter: "kap1" },
   { term: "Logisk databasdesign", definition: "Andra steget: den konceptuella modellen transformeras till relationer i textform och normaliseras om nödvändigt.", chapter: "kap1" },
   { term: "Lossless join", definition: "Att originalrelationen kan återskapas exakt genom join av delrelationerna, utan spurious tuples. Icke-förhandlingsbart krav på en dekomposition.", chapter: "kap7" },
-  { term: "Mandatory participation", definition: "Obligatoriskt deltagande i en relation, markerat med dubbla linjer i Chen-notation.", chapter: "kap5" },
-  { term: "M:N-relation", definition: "Många-till-många-relation. Transformeras till en ny relation med sammansatt primärnyckel bestående av båda entiteternas primärnycklar. Skrivs M:N, aldrig M:M.", chapter: "kap5" },
-  { term: "Multiplicitet", definition: "Anger hur många instanser av en entitet som kan delta i en relation. Kallas även kardinalitet.", chapter: "kap5" },
+  { term: "Total participation (totalt deltagande)", definition: "Varje instans av entitetstypen måste delta i relationen minst en gång. Markeras med dubbla linjer i Chen-notation och läses vid sin egen ände.", chapter: "kap5" },
+  { term: "Partial participation (partiellt deltagande)", definition: "En instans av entitetstypen får finnas utan att delta i relationen. Markeras med enkel linje i Chen-notation.", chapter: "kap5" },
+  { term: "M:N-relation", definition: "Många-till-många-relation. Transformeras till en ny relation med sammansatt primärnyckel bestående av båda entiteternas primärnycklar. M och N betyder båda många; bokstäverna skiljer positionerna åt.", chapter: "kap5" },
+  { term: "Multiplicitet", definition: "Vardagligt ord för ratio-etiketten (1, M eller N) vid en relationsände; kursens term är cardinality ratio. Anger endast maxima och läses tvärs över relationen: talet bredvid A säger hur många A varje B får ha.", chapter: "kap5" },
   { term: "Naturlig nyckel", definition: "Nyckel med affärsbetydelse, t.ex. anställningsnummer eller ISBN. Motsats till surrogatnyckel.", chapter: "kap3" },
   { term: "NoSQL", definition: "Dokumentorienterade databaser, ett alternativ till relationsdatabaser för persistent lagring.", chapter: "kap1" },
-  { term: "Partiell identifierare (partial key)", definition: "En svag entitets egen identifierare, unik bara i kombination med ägarens nyckel. Markeras med streckad understrykning.", chapter: "kap5" },
+  { term: "Partiell identifierare (partial identifier)", definition: "En svag entitets egen identifierare, unik bara inom sin ägare — taskNo inom ett Project. Markeras med streckad understrykning. Kallas även partial key.", chapter: "kap5" },
   { term: "Partiellt beroende", definition: "Ett icke-primärattribut som beror på en äkta delmängd av en kandidatnyckel. Bryter mot 2NF och kan bara uppstå vid sammansatt nyckel.", chapter: "kap7" },
   { term: "Persistent lagring", definition: "Lagring som överlever att programmet stängs: filer, kalkylblad, RDBMS, NoSQL. Motsats till volatil lagring i RAM.", chapter: "kap1" },
   { term: "Primärattribut (prime)", definition: "Ett attribut som är medlem i någon kandidatnyckel.", chapter: "kap3" },
@@ -759,16 +759,16 @@ export const glossary = [
   { term: "RDBMS", definition: "Relational Database Management System. Lagrar data i tabeller och frågas med SQL. Kursens system är Microsoft SQL Server.", chapter: "kap1" },
   { term: "Referensintegritet", definition: "Att främmande nycklar alltid pekar på existerande rader. Databasen vägrar operationer som skulle bryta det.", chapter: "kap3" },
   { term: "Relation", definition: "Formellt en mängd tupler där varje element tillhör en domän. Visuellt en tabell. Bygger på mängdlära och första ordningens logik.", chapter: "kap2" },
-  { term: "Relationsattribut", definition: "Attribut som representerar data som uppstår som en följd av en relation, t.ex. betyg på en kurs. Ingår inte i primärnyckeln vid M:N-transformation.", chapter: "kap5" },
-  { term: "Rollnamn", definition: "Namn per riktning i en unär relation, t.ex. mentors och is_mentored.", chapter: "kap5" },
-  { term: "Sammansatt attribut (composite)", definition: "Attribut som består av flera delattribut, t.ex. Name av FirstName och LastName. Följer inte självt med till relationen vid transformation.", chapter: "kap4" },
+  { term: "Relationsattribut", definition: "Attribut som ägs av relationstypen eftersom det beskriver paret, t.ex. allocationPercentage på WorksOn. Ingår inte i primärnyckeln vid M:N-transformation.", chapter: "kap5" },
+  { term: "Rollnamn", definition: "Namn på ett deltagande i en relation, nödvändigt i unära relationer där samma entitetstyp deltar två gånger: supervisor och report i Supervises.", chapter: "kap5" },
+  { term: "Sammansatt attribut (composite)", definition: "Attribut som består av flera delattribut, t.ex. address av streetName, streetNumber, postalCode och city. Följer inte självt med till relationen vid transformation.", chapter: "kap4" },
   { term: "Sammansatt nyckel (composite key)", definition: "Flera attribut som tillsammans identifierar en tupel unikt utan att göra det var för sig.", chapter: "kap3" },
   { term: "Server", definition: "I praktiken en dator som aldrig stängs av, och som betjänar klienter med data ur en databas.", chapter: "kap1" },
   { term: "Spurious tuples", definition: "Rader som uppstår vid join men inte fanns i originalrelationen. Tecken på att en dekomposition inte är lossless.", chapter: "kap7" },
   { term: "SQL (Structured Query Language)", definition: "Språket för att skapa, läsa, uppdatera och radera data samt administrera relationsdatabaser.", chapter: "kap1" },
   { term: "Surrogatnyckel", definition: "Artificiellt, databasgenererat nyckelvärde utan affärsbetydelse. Införs i fysisk design av skäl som nyckelstabilitet och prestanda.", chapter: "kap3" },
   { term: "Svag entitetstyp (weak entity)", definition: "Entitet som inte kan identifieras av sina egna attribut ensamma utan behöver ägarentitetens nyckel. Ritas med dubbel ram.", chapter: "kap5" },
-  { term: "Svag relationstyp (weak relationship)", definition: "Relationen mellan en svag entitet och dess ägarentitet. Ritas med dubbel romb.", chapter: "kap5" },
+  { term: "Identifying relationship (identifierande relation)", definition: "Relationen mellan en svag entitet och dess ägarentitet, t.ex. Contains mellan Project och ProjectTask. Ritas med dubbel romb. Connolly & Begg kallar den svag relationstyp (weak relationship type).", chapter: "kap5" },
   { term: "Ternär relation", definition: "Relation som kopplar tre entitetstyper samtidigt. Kan inte ersättas av tre binära M:N-relationer utan att information förloras.", chapter: "kap5" },
   { term: "Transitivt beroende", definition: "Ett funktionellt beroende där X → Z indirekt, i kraft av X → Y och Y → Z, och där det inte gäller att Y → X. Bryter mot 3NF.", chapter: "kap7" },
   { term: "Tupel (tuple)", definition: "Formellt en mängd attributvärden där inga två skilda element har samma attributnamn. Informellt en rad eller post.", chapter: "kap2" },
@@ -779,6 +779,6 @@ export const glossary = [
   { term: "Fysisk databasdesign", definition: "Tredje steget: den logiska modellen implementeras som DDL-satser, med surrogatnycklar, datatyper och constraints.", chapter: "kap1" },
   { term: "Raderingsanomali", definition: "Att radering av information om en entitet leder till att information om en separat entitet förloras.", chapter: "kap7" },
   { term: "Äkta delmängd (proper subset)", definition: "En delmängd av en mängd som inte är lika med mängden själv. Både A och B är äkta delmängder av {A,B}.", chapter: "kap7" },
-  { term: "1:M-relation", definition: "Ett-till-många-relation. Transformeras genom att ett-sidans primärnyckel läggs som främmande nyckel i många-sidans relation.", chapter: "kap5" },
+  { term: "1:N-relation (även 1:M)", definition: "Ett-till-många-relation. Transformeras genom att ett-sidans primärnyckel läggs som främmande nyckel i många-sidans relation.", chapter: "kap5" },
   { term: "1:1-relation", definition: "Ett-till-ett-relation. Transformationen beror på deltagandet: från frivillig till obligatorisk sida, valfri riktning när båda är frivilliga, och möjlig sammanslagning när båda är obligatoriska.", chapter: "kap5" }
 ];

@@ -70,17 +70,16 @@ export const topics = [
     examWeight: "hög",
     summary: "ER-modellering är konstruktionen av ER-diagram för att fånga verksamhetens krav på persistent datalagring, som underlag för relationsdatabasdesign. En konceptuell datamodell är en abstraktion av verkligheten — vissa attribut är medvetet inkluderade, andra uteslutna.",
     keyPoints: [
-      "Byggstenar: vanlig entitetstyp, svag entitetstyp, vanlig relationstyp, svag relationstyp, samt attribut i fyra former.",
-      "Entitetstyp (entity type): en mängd saker med samma egenskaper som identifieras av en användare eller organisation som havande självständig existens. Kan ha fysisk existens (Student) eller begreppslig (Course).",
-      "Enkelt attribut (simple): odelbart värde. Sammansatt (composite): består av delattribut, t.ex. Name av FirstName och LastName. Flervärdes (multivalued): flera värden per instans, ritas med dubbel ellips. Härlett (derived): kan beräknas ur annat attribut, ritas streckat.",
+      "Byggstenar: vanlig entitetstyp, svag entitetstyp, vanlig relationstyp, identifierande relationstyp (även kallad svag relationstyp), samt attribut i fyra former.",
+      "Entitetstyp (entity type): en mängd saker med samma egenskaper som identifieras av en användare eller organisation som havande självständig existens. Kan ha fysisk existens (Employee) eller begreppslig (Project).",
+      "Enkelt attribut (simple): odelbart värde. Sammansatt (composite): består av delattribut, t.ex. address av streetName, streetNumber, postalCode och city. Flervärdes (multivalued): flera värden per instans, ritas med dubbel ellips. Härlett (derived): kan beräknas ur annat attribut, ritas streckat.",
       "Identifierande attribut stryks under. Vad som stryks under följer direkt av kravtextens unikhetsregler, och avgör senare relationens kandidatnycklar.",
-      "Kursens notationer är Chen och Crow's foot. ER-diagram är för relationsdatabasdesign; UML-klassdiagram är för objektorienterad design — de liknar varandra visuellt men är begreppsmässigt olika. Principerna för ER-modellering är desamma oavsett notation.",
+      "Kursens notationer är Chen och Crow's foot. Principerna för ER-modellering är desamma oavsett notation — rektanglar, romber och linjer är notationens val, inte ER-begreppen.",
       "Flervärdesattribut kontra egen entitet är ett designval med konsekvenser: som flervärdesattribut kan två anställda dela adress, som egen entitet i 1:M kan de inte."
     ],
     pitfalls: [
       "Härledda attribut lagras normalt inte — de beräknas, just för att lagrade härledda värden riskerar att bli inkonsekventa.",
-      "Ett sammansatt attribut självt följer inte med till relationen vid transformation — bara dess atomära delattribut.",
-      "UML är inte ER-notation, även om läroböcker använder den så."
+      "Ett sammansatt attribut självt följer inte med till relationen vid transformation — bara dess atomära delattribut."
     ]
   },
   {
@@ -88,22 +87,23 @@ export const topics = [
     name: "Relationer, kardinalitet och svaga entiteter",
     chapter: "kap5",
     examWeight: "hög",
-    summary: "Binära relationer har namn och multipliciteter och förekommer som 1:1, 1:M och M:N. Dubbla linjer markerar obligatoriskt deltagande. Svaga entitetstyper kan inte identifieras utan ägarentitetens nyckel och ritas med dubbel ram.",
+    summary: "Binära relationer har namn och ett cardinality ratio (1:1, 1:N eller M:N) vars etiketter bara anger maxima. Dubbla linjer markerar total participation. Svaga entitetstyper kan inte identifieras utan ägarentitetens nyckel och ritas med dubbel ram.",
     keyPoints: [
-      "En binär relation har alltid ett namn och multipliciteter (kardinaliteter) på båda sidor.",
-      "Skriv M:N, aldrig M:M — M:M skulle påstå att båda sidor har exakt samma multiplicitet.",
-      "Dubbla linjer = obligatoriskt deltagande (mandatory participation), enkel linje = frivilligt. Frågan att ställa är 'vilken entitet måste delta?', och kravtextens hjälpverb (måste/kan/får) avgör.",
-      "Alla tre relationsformerna kan kombineras med obligatoriskt deltagande på ena sidan, båda sidor eller ingen sida.",
-      "I UML uttrycks samma sak med intervall: 1..1 (eller 1) för obligatoriskt, 0..* för frivilligt.",
-      "Det kan finnas flera olika binära relationer mellan samma två entiteter, t.ex. Study och HasStudied.",
-      "Relationsattribut representerar data som uppstår som en följd av relationen — betyg finns bara för en student som läst en kurs. Vanligast på M:N men möjligt även på 1:M och 1:1.",
-      "Unär (rekursiv) relation kopplar en entitet till sig själv och har ofta rollnamn per riktning (mentors / is_mentored). Tips: rita den som binär med två kopior av entiteten för att avgöra multipliciteten.",
+      "En binär relation har alltid ett namn och ett cardinality ratio med en etikett (1, M eller N) på vardera sidan. Etiketterna anger endast maxima: 1 betyder högst en, inte exakt en.",
+      "M och N betyder båda 'många' — bokstäverna skiljer bara de två positionerna åt, därför skrivs formen M:N.",
+      "Dubbla linjer = total participation (varje instans deltar minst en gång), enkel linje = partial participation (instansen får stå utanför). Frågan att ställa är 'vilken entitet måste delta?', och kravtextens hjälpverb (måste/kan/får) avgör.",
+      "Alla tre relationsformerna kan kombineras med total participation på ena sidan, båda sidor eller ingen sida.",
+      "Ratio-etiketter läses tvärs över relationen (talet bredvid A säger hur många A varje B får ha); deltagandelinjer läses vid sin egen ände. 'Exakt en' är kombinationen 1 tvärs över plus dubbel linje.",
+      "Alternativ Chen-variant: min–max-tupler som (0,N) och (1,1) läses vid sin egen entitet, med enkla linjer genomgående. Använd en komplett konvention per diagram — blanda aldrig tupler med dubbellinjer.",
+      "Det kan finnas flera olika binära relationer mellan samma två entiteter, t.ex. Leads, ResponsibleFor och WorksOn mellan Employee och Project.",
+      "Relationsattribut ägs av relationstypen eftersom de beskriver paret — allocationPercentage finns bara för ett visst par av anställd och projekt. Vanligast på M:N men möjligt även på 1:N och 1:1.",
+      "Unär (rekursiv) relation kopplar en entitet till sig själv och har rollnamn per deltagande (supervisor / report i Supervises). Tips: rita den som binär med två kopior av entiteten för att avgöra multipliciteten.",
       "Ternär relation kopplar tre entiteter samtidigt. Den kan inte ersättas av tre binära M:N-relationer — då förloras informationen om vilken trippel som hör samman.",
-      "Svag entitetstyp (weak entity): kan inte identifieras av sina egna attribut ensamma. Ritas med dubbel ram, dess relation till ägaren med dubbel romb, och dess partiella identifierare (partial key) med streckad understrykning.",
-      "Typexempel på svag entitet: kurskoden är unik inom det universitet som ger kursen, men inte nationellt — så kursens namn och poäng kräver även universitetets namn för att identifieras."
+      "Svag entitetstyp (weak entity): kan inte identifieras av sina egna attribut ensamma. Ritas med dubbel ram, dess identifierande relation (identifying relationship) till ägaren med dubbel romb, och dess partiella identifierare (partial identifier) med streckad understrykning.",
+      "Typexempel på svag entitet: taskNo är unikt inom det projekt som äger uppgiften, inte globalt — ProjectTask identifieras av projectNo + taskNo."
     ],
     pitfalls: [
-      "Obligatoriskt deltagande glöms oftast bort. Läs kravtexten mening för mening och sätt dubbla linjer där det står 'måste'.",
+      "Total participation glöms oftast bort. Läs kravtexten mening för mening och sätt dubbla linjer där det står 'måste'.",
       "Tre binära M:N-relationer är inte samma sak som en ternär relation.",
       "En svag entitet kan ha vanliga relationer också — dubbelrombens dubbelhet gäller bara relationen till ägaren."
     ]
