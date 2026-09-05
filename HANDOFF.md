@@ -333,6 +333,13 @@ tas bort vid avbockning).
   04_Labs-and-Exercises/sysb23-database-exercises.pdf). Läs dem med pdf-parse
   installerad i scratchpad (Read-verktyget saknar poppler). Publicera aldrig
   materialet i repot.
+- **Kapitel 7 (transformation) är granskat mot Fö5-decket (05-logical-database-design.pdf)
+  och häftets uppgift 4–9 med facit 2026-09-05.** Kursens notation i facit:
+  primärnyckel = hel understrykning, främmande nyckel = prickad — inte kursiv.
+  Fö5-decket är fortfarande den gamla trions (Svensson/Hultman/Uçan) och har
+  generalisering/specialisering + UML-transformation (slide 58–63) som kapitlet
+  medvetet saknar sedan nya Fö4 tog bort EER; avvakta nya Fö5 innan något
+  läggs till.
 - **Kapitel 8 (normalformer) är granskat mot Fö6-decket och facit 2026-09-05.**
   Kursen har bara 1NF–3NF — inför inte BCNF. "Spurious tuples" är inte kursens
   term; lossless join definieras som att naturlig join av delrelationerna ger

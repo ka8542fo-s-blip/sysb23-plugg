@@ -534,7 +534,7 @@ Kursens konvention, sammanfattad: en konceptuell Information Engineering-variant
     body: `
 Det här är tentans andra område och det mest mekaniska i hela delkursen — vilket är goda nyheter, för mekaniska saker går att lära sig säkert. Reglerna nedan är kursens egna, och de ska tillämpas i ordning.
 
-Notationen för en relation i logisk modell: relationsnamn följt av attributen i parentes, med **primärnyckeln understruken**. Främmande nycklar markeras vanligen med kursiv eller anges separat. Eftersom kompendiet är i text skrivs primärnyckeln här inom \`__dubbelt understruket__\` — i dina egna anteckningar stryker du under.
+Notationen för en relation i logisk modell: relationsnamn följt av attributen i parentes, med **primärnyckeln understruken med hel linje** och **främmande nycklar understrukna med prickad linje**. Ett attribut som är både primär- och främmande nyckel, som \`EmployeeNo\` i en kopplingsrelation, får båda strecken. Så ser facit i övningshäftet ut, och så ska du skriva på tentan. Eftersom kompendiet är i text står primärnyckeln först i attributlistan här, sammansatta primärnycklar anges i en kommentar (\`-- PK:\`), och främmande nycklar känns igen på att de bär en annan relations primärnyckel.
 
 ## Regel 1 — Vanlig entitet
 
