@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import PriorityTag from "./PriorityTag.jsx";
+import LeadIn from "./LeadIn.jsx";
 import { evidenceSentence, priorityOf } from "../../lib/examPriority.js";
 
 const WEIGHT_LABEL = { hög: "Hög tentavikt", medel: "Medel tentavikt", låg: "Låg tentavikt" };
@@ -138,7 +139,7 @@ export default function ConceptCards({
                           aria-hidden="true"
                           className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-pine"
                         />
-                        <span>{point}</span>
+                        <span><LeadIn text={point} /></span>
                       </li>
                     ))}
                   </ul>

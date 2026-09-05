@@ -31,6 +31,12 @@ delkursvillkor utspridda i koden.
 | process, arkitektur, sakerhet | kommande | platshållare i manifestet |
 
 **Dataregeln (helig):** `topics.js` äger alla korta punkter (`keyPoints`, `pitfalls`).
+**Kärnpunkternas form (2026-09-05, användarkrav):** en punkt = ett begrepp,
+skriven som "Begrepp: förklaring". `LeadIn.jsx` fetar inledningen före det
+första kolonet (högst 48 tecken, ingen mening) i "Kärnan i korthet" och på
+begreppskorten, så listan går att skumma. Punkter som fortsätter varandra
+slås ihop — aldrig en fortsättning som egen punkt. Databaser är omgjord så;
+Strategis punkter renderas med samma regel men är inte omskrivna.
 `reading.js` äger löptexten och har ALDRIG egna recap-arrayer — kapitelavsluten
 ("Kärnan i korthet"/"Se upp för") renderas ur kapitlets `primaryTopics` via
 `lib/topicLookup.js`. `topics` = allt kapitlet berör (styr "Öva på detta kapitel"),

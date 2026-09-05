@@ -5,6 +5,7 @@ import { topicLookup } from "../../lib/topicLookup.js";
 import { useReadAloud, ttsSupported, TTS_RATES } from "../../lib/useReadAloud.js";
 import InfoTip from "../InfoTip.jsx";
 import { ExamAreaTag } from "./ChapterList.jsx";
+import LeadIn from "./LeadIn.jsx";
 import { Diagram, DIAGRAM_RE } from "./diagrams/index.jsx";
 
 function RateSelect({ tts, compact = false }) {
@@ -347,7 +348,7 @@ export default function ChapterView({
                           aria-hidden="true"
                           className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-correct"
                         />
-                        <span>{point}</span>
+                        <span><LeadIn text={point} /></span>
                       </li>
                     ))}
                   </ul>
