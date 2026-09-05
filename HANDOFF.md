@@ -27,7 +27,7 @@ delkursvillkor utspridda i koden.
 | Delkurs | Status | Har |
 |---|---|---|
 | strategi | komplett | 11 kapitel (kap `digital` = nr 9, infogat 2026-09-03 ur Weavers föreläsning 1; kap9/kap10 är nr 10/11 — **id ≠ nummer**, allt UI läser `chapter.number`), 14 ämnen, 117 termer, 66 frågor (designregler i filens kommentar; mätskript `scripts/check-fragebank.mjs`), 4 essäer |
-| databaser | delvis | 9 kapitel (Fö4 = `kap4`, `kap5`, `svaga` = nr 4–6, omskrivna 2026-09-05 efter HT2026 års Fö4-deck; `kap6`–`kap8` är nr 7–9 — **id ≠ nummer**), 11 ämnen, 90 termer, 11 inline-SVG-figurer i kapitel 4–6, SQL-verkstad (53 övningar i 9 nivåer, utökad 2026-09-02 efter SQL-föreläsningen), **54 övningsfrågor** (Fö1 + Fö4, inlagda 2026-09-05 ur `databaser-fragebank-fo1-fo4.js`; leveransen ligger ordagrant överst i `questions.js` och anpassas till appens schema i kod), **Prov-fliken är medvetet borttagen ur manifestet** (tentan är konstruktionsbaserad, Öva prövar förståelse av läsmaterialet — inget poängsystem) — "Öva på detta"-knappar visas bara för kapitel/ämnen som har frågor (kap1, kap4, kap5, svaga) |
+| databaser | delvis | 9 kapitel (Fö4 = `kap4`, `kap5`, `svaga` = nr 4–6, omskrivna 2026-09-05 efter HT2026 års Fö4-deck; `kap6`–`kap8` är nr 7–9 — **id ≠ nummer**), 11 ämnen, 90 termer, 11 inline-SVG-figurer i kapitel 4–6, SQL-verkstad (53 övningar i 9 nivåer, utökad 2026-09-02 efter SQL-föreläsningen), **57 övningsfrågor som speglar Läs** (`practiceBy: "chapter"`: nio kapitel = nio kvizzar, 6–7 frågor var, omgjort 2026-09-05 enligt `CC-prompt-ova-speglar-las.md`), 6 SQL-frågor parkerade i `questions-pending.js` i väntan på ett kapitel om frågespråket, **Prov-fliken är medvetet borttagen ur manifestet** (tentan är konstruktionsbaserad, Öva prövar förståelse av läsmaterialet — inget poängsystem) |
 | process, arkitektur, sakerhet | kommande | platshållare i manifestet |
 
 **Dataregeln (helig):** `topics.js` äger alla korta punkter (`keyPoints`, `pitfalls`).
@@ -91,24 +91,29 @@ summerar till 20, inte 30 — medvetet orört).
   att ta bort frågor. Delkurser utan `examPriority` (Databaser) ser ut som
   förut. Tester: `scripts/exam-priority.test.mjs`.
 - **Öva** — viktad repetition (fel 3×, osedd 2×, rätt 1×), sidopanel med filter på desktop.
-  Två bankformat samsas: Strategi har `options[].explain` per alternativ,
-  `difficulty`, `source`; Databaser har en `explanation` per fråga och
-  ingen svårighetsgrad. `ExplanationPanel` visar genomgången "Varför är de
-  andra fel?" bara när alternativen har egna förklaringar, `QuestionCard`
-  visar svårighetsgrad bara när den finns, och Practice döljer
-  svårighetsväljaren för banker utan grader. Inställningarna
-  `practiceTopics`/`practiceDifficulty` är globala — ämnesval som hör till
-  en annan delkurs ignoreras. **Databaser-banken** (`data/databaser/questions.js`):
-  leveransens tolv ämnen (`databaserTopicLabels`) mappas till topics.js via
-  `QUESTION_TOPIC_MAP` (grundbegrepp/designkedjan/sql → grunder; entiteter/
-  attribut/identifierare → er; relationer/kardinalitet → relationstyper;
-  associativa → svaga; metamodell, svaga, crowsfoot → samma id) — det styr
-  filter, kapitelknappar och statistik; det finare ämnet visas på kortet
-  som `subtopicLabel`. **Ändra aldrig frågeformuleringar eller alternativ** —
-  balansen är mätt (positioner 14/14/13/13, längdkvot 0,96, unikt längst
-  20 %, spridning snitt 1,24 max 1,69) och `scripts/fragebank-balans.test.mjs`
-  låser måtten (positioner inom 0,65–1,35 × n/4, kvot 0,9–1,1, unikt längst
-  ≤ 25 %, spridning < 2). Sakfel i frågor rapporteras, rättas inte.
+  **Gruppering (`lib/practiceAxis.js`):** Öva filtrerar per ämne (Strategi)
+  eller per kapitel (Databaser, manifestets `practiceBy: "chapter"` — "Öva
+  speglar Läs": ett kapitel i Läs = en kvizz i Öva, samma ordning och namn).
+  Frågorna bär alltid `topic`; i kapitelläget härleds kapitlet ur ämnets
+  `chapter`, så topics.js och Begrepp (elva kort) är orörda. Allt som
+  grupperar — filtret, räknarna, "Öva på detta"-knapparna, Statistik/Hem —
+  går via `practiceGroups`/`groupKeyFor`/`groupsForTopics`, aldrig via
+  `question.topic` direkt. Inställningarna `practiceTopics`/`practiceDifficulty`
+  är globala — val som hör till en annan delkurs ignoreras. Banker utan
+  `explain` per alternativ eller utan `difficulty` stöds fortfarande
+  (`ExplanationPanel`/`QuestionCard` anpassar sig), men **Databaser-banken
+  följer nu mallens format rakt av** (`data/databaser/questions.js`):
+  57 frågor, 6 per kapitel utom kap4/kap5/svaga som har 7 (godkända sjunde
+  frågor db4-13, db4-25, db4-34), alla besvarbara enbart ur kapiteltexten,
+  `reviewed: false` på de 30 som skrevs mot kapiteltexten 2026-09-05 (dbq-)
+  tills användaren granskat dem. Regeln vid tillägg: 5–8 frågor per kapitel,
+  principer inte exempel, inget som saknar kapitel i Läs (SQL-frågespråket
+  och application development saknar kapitel — parkerade SQL-frågor ligger i
+  `questions-pending.js`). `LENGTH_FLAGGED` listar behållna frågor där en
+  distraktor är längst med spridning > 1,25 (får stå); balanstestet
+  `scripts/fragebank-balans.test.mjs` låser spegling (5–8 per kapitel),
+  spridning ≤ 1,25 utom flaggade, positioner, kvot 0,9–1,1 och unikt längst
+  ≤ 25 %. Sakfel i frågor rapporteras, rättas inte utan beslut.
   Prov-beroende ytor (Hem "Så räknas tentan", Statistik "Provhistorik") visas
   bara när delkursen har `prov` i `views`.
 - **Prov** — +6/−1/0, balanserad dragning (max 2/ämne), deadline-baserad timer,
@@ -326,11 +331,12 @@ tas bort vid avbockning).
 
 ## Närmast väntat
 
-Fler frågor till Databaser (Fö2–3 och 5–9 saknar frågor): lägg dem i
-`databaserQuestions` i samma leveransformat (`options` som strängar,
-`correctIndex`, en `explanation`), ge nya finämnen ett visningsnamn i
-`databaserTopicLabels` och en koppling i `QUESTION_TOPIC_MAP`, och kör
-`npm test` — balanstestet ska hålla för hela banken. Prov ska inte
+Beslut om ett Läs-kapitel om SQL-frågespråket (och ev. application
+development): får Databaser ett sådant kapitel skrivs de parkerade
+SQL-frågorna om till mallens format och kapitlet får sina sex frågor —
+resonemangsfrågor (vad returnerar frågan, IN mot EXISTS vid NULL, <> i
+self-join, vy utan ORDER BY), inte skrivövningar (verkstaden har dem).
+Nya kapitel i Läs får alltid sex frågor mot kapiteltexten. Prov ska inte
 tillbaka för Databaser om inte tentaformatet visar sig vara flerval.
 Därefter sannolikt fler delkurser enligt samma mall (data + manifestrad,
 ingen ny kod).
