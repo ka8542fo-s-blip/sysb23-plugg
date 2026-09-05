@@ -438,7 +438,7 @@ export const questions = [
     options: [
       { text: "I den frivilliga sidans relation, så att NULL blir tillåtet där det behövs", explain: "Då blir kolumnen NULL för alla som inte deltar — precis det man vill undvika." },
       { text: "I en ny relation, eftersom 1:1 alltid transformeras med en kopplingstabell", explain: "1:1 kräver ingen ny relation; det är M:N-regelns lösning." },
-      { text: "I valfri riktning — vid 1:1 väljer arkitekten oavsett deltagandet", explain: "Fri riktning gäller bara när båda sidor deltar frivilligt." },
+      { text: "I valfri riktning — vid 1:1 väljer arkitekten oavsett deltagandet", explain: "Fri riktning finns bara när båda sidor deltar lika: båda frivilliga, eller båda obligatoriska." },
       { text: "I den obligatoriska sidans relation, så att kolumnen aldrig blir NULL", explain: "Rätt. Den obligatoriska sidan har alltid en motpart, så nyckeln från den frivilliga sidan läggs där." }
     ],
     correct: 3, source: "Kompendiet kap. 7", reviewed: false },
@@ -482,6 +482,16 @@ export const questions = [
       { text: "Inte alls — unära relationer representeras inte i den logiska modellens relationer", explain: "Den binära regeln av samma form tillämpas, med samma entitet på båda sidor." }
     ],
     correct: 2, source: "Kompendiet kap. 7", reviewed: false },
+
+  { id: "dbq-31", topic: "transformation", difficulty: 3,
+    question: "Häftets uppgift 8: Department identifieras av det sammansatta attributet Id med delarna Name och Address, och har dessutom Description. Hur ser facit ut för Department?",
+    options: [
+      { text: "Department(Name, Address, Description) med primärnyckel {Name, Address}", explain: "Rätt. Det sammansatta Id följer inte med, bara delarna, och de bildar tillsammans nyckeln. Facit: uppgift 8." },
+      { text: "Department(Id, Name, Address, Description) med primärnyckel Id", explain: "Regel 1: ett sammansatt attribut ingår inte självt i relationen, bara dess atomära delar." },
+      { text: "Department(Id, Description) med Name och Address i en egen relation", explain: "Delarna ska in i samma relation som entiteten — en egen relation är flervärdesregeln, och Id är inte flervärt." },
+      { text: "Department(Name, Address, Description) med primärnyckel Name ensamt", explain: "Identifieraren är hela kombinationen; Name ensamt är inte unikt enligt modellen." }
+    ],
+    correct: 0, source: "Kompendiet kap. 7 · övningshäftet uppgift 8", reviewed: false },
 
   { id: "dbq-19", topic: "normalisering", difficulty: 2,
     question: "Varför blir en M:N-relation tre relationer och inte en enda?",
