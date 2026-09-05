@@ -27,7 +27,7 @@ delkursvillkor utspridda i koden.
 | Delkurs | Status | Har |
 |---|---|---|
 | strategi | komplett | 11 kapitel (kap `digital` = nr 9, infogat 2026-09-03 ur Weavers föreläsning 1; kap9/kap10 är nr 10/11 — **id ≠ nummer**, allt UI läser `chapter.number`), 14 ämnen, 117 termer, 66 frågor (designregler i filens kommentar; mätskript `scripts/check-fragebank.mjs`), 4 essäer |
-| databaser | delvis | 8 kapitel, 8 ämnen, 64 termer, SQL-verkstad (53 övningar i 9 nivåer, utökad 2026-09-02 efter SQL-föreläsningen), **`questions.js` är en tom array** — frågebanken kommer i en egen prompt; Öva/Prov visar tomlägen och "Öva på detta"-knappar i Läs är dolda tills den fylls |
+| databaser | delvis | 9 kapitel (Fö4 = `kap4`, `kap5`, `svaga` = nr 4–6, omskrivna 2026-09-05 efter HT2026 års Fö4-deck; `kap6`–`kap8` är nr 7–9 — **id ≠ nummer**), 11 ämnen, 90 termer, 11 inline-SVG-figurer i kapitel 4–6, SQL-verkstad (53 övningar i 9 nivåer, utökad 2026-09-02 efter SQL-föreläsningen), **`questions.js` är en tom array** och **Prov-fliken är medvetet borttagen ur manifestet** (tentan är konstruktionsbaserad, tomläge är sämre än ingen flik) — Öva visar tomläge och "Öva på detta"-knappar i Läs är dolda tills en frågebank finns |
 | process, arkitektur, sakerhet | kommande | platshållare i manifestet |
 
 **Dataregeln (helig):** `topics.js` äger alla korta punkter (`keyPoints`, `pitfalls`).
@@ -176,6 +176,60 @@ summerar till 20, inte 30 — medvetet orört).
 - **Statistik** — InfoTips (frågetecken) förklarar varje term; texterna i
   `data/statTerms.js` är skrivna mot koden och måste följa med om beräkningar ändras.
 
+## Databaser Fö4 (HT2026) — konventioner som ska hålla
+
+Kapitel 4–6 (`kap4`, `kap5`, `svaga`) är skrivna efter Björns nya
+116-slidesdeck. Källorna `cc-prompt-fo4-ht2026-uppdatering.md` och
+`fo4-conceptual-database-design-ht2026.md` kom i `files.zip`, som ligger
+ospårad i reporoten och INTE är incheckad (prompten vill inte publicera
+Björns material). Regler för allt Fö4-innehåll (kap4–6, ämnena metamodell/
+er/relationstyper/svaga/crowsfoot och deras ordlistetermer):
+
+- **Termer:** total/partial participation (aldrig mandatory/non-mandatory),
+  identifying relationship (svag relationstyp bara som alias), partial
+  identifier, cardinality ratio. Ratio-etiketter anger ENDAST maxima (1 =
+  högst en) och läses tvärs över; deltagandelinjer läses vid egen ände —
+  "exakt en" = 1 plus dubbel linje. Fö4-kapitlen skriver 1:N; 1:M lever
+  kvar i transformationskapitlet (annan föreläsning) och texten säger att
+  det betyder samma sak.
+- **Exempel:** Employee/Project/ProjectTask/Assignment med WorksOn, Leads,
+  ResponsibleFor, Supervises (supervisor/report), Contains, AssignedTo.
+  Student/Course finns inte i Fö4-innehållet — MEN SQL-verkstadens
+  Student/Course/HasStudied är SQL-föreläsningens egna exempel och ska vara
+  kvar. Kap1:s kravtext "exakt en avdelning" är en verksamhetsregel, inte
+  en ratio-läsning; lämna.
+- **Ute ur kursen:** UML-jämförelsen och EER/specialisering — lägg inte
+  tillbaka. Min–max-tupler är en Chen-variant, inte UML.
+- **Ordagrant** ur decket: Chens entity-definition, identifier-definitionen,
+  partial identifier, value set, femfrågetabellen (slide 37) och slide
+  111-listan över vad Crow's Foot kodar direkt/indirekt. Övrig prosa är
+  fritt skriven kring exakt terminologi (användarbeslut 2026-09-05 — sy
+  inte ihop sammanfattningens formuleringar med bindetext).
+- Ternär relation är kvar, förankrad i metamodellens 2..* deltaganden och
+  degree. "Flervärdesattribut eller egen entitet" är kvar från förra året
+  (inte motsagt av decket).
+- Grep-gate som ska ge noll i `reading.js` och `topics.js`:
+  `mandatory participation|non-mandatory|\bUML\b|\bEER\b|specialis|generalis|disjoint|overlapping|\bStudent|\bCourse|\bUniversity|\bOffer|\bTeacher|HasStudied|\bGrade\b|\bmentor|lärare`
+  ("mandatory attribute" är däremot en riktig term från slide 31).
+
+**Diagram** (`src/components/knowledge/diagrams/`): `erPrimitives.jsx`
+(EntityBox, RelationshipDiamond, AttributeOval, Connector, Ratio, Role,
+Note, Arrow, CrowEntity/CrowMarks/CrowLine, PopulationSet, Figure) och
+`erFigures.jsx` (11 namngivna figurer). Kapiteltexten bäddar in en figur
+med raden `[[diagram:namn]]` som ensamt stycke — `ChapterView`s
+p-renderare byter ut den, `knowledgeSearch` rensar den ur utdrag och
+uppläsningen hoppar över figuren (`data-tts-skip`). **Namnen i `ids.js`
+är ett API mot reading.js** — byt aldrig ett namn utan att byta
+platshållaren; `scripts/diagram-ids.test.mjs` låser att varje
+platshållare har en figur, att varje figur används och att platshållaren
+står ensam på raden. Färger via tokens (`--pine`/`--brass`/`--ink`), inte
+currentColor — appen har ett ljust tema. Populationsvyer märks "inte
+Chen-notation" i bildtexten. Visuell kontroll när browserpanelen är tom:
+bundla `erFigures.jsx` med esbuild (`NODE_PATH=node_modules`,
+`--platform=node --format=cjs --jsx=automatic`), rendera med
+`react-dom/server`, byt tokens mot hex och skärmdumpa SVG:erna med headless
+Chrome (`--headless=new --screenshot`) — gjort 2026-09-05.
+
 ## Design ("Läsesalen") och användarens uttalade preferenser
 
 Tokens i `src/index.css` (+ 7 delkursfärger `--c-*`). Fraunces för rubriker, Inter
@@ -239,8 +293,9 @@ tas bort vid avbockning).
 ## Kända egenheter (inte buggar)
 
 - Provet försvinner vid omladdning — avsiktligt (en tenta pausas inte).
-- Kapitel 6 i Databaser har inga egna ordlistetermer (transformationstermerna hör
-  till kap 5 i datat) — gruppen utelämnas korrekt i kapitelsorterad ordlista.
+- Kapitlet `kap6` (nr 7, Transformation) i Databaser har inga egna ordlistetermer
+  (1:1/1:N/M:N-termerna hör till kap5 i datat) — gruppen utelämnas korrekt i
+  kapitelsorterad ordlista.
 - Prompt-md-filerna ligger publikt i repot (användaren informerad).
 - `DELETE FROM Patient` stoppas av FK i fritt läge — korrekt beteende.
 - Skärmdumpar i browserpanelen kan vara eftersläpande/tomma; DOM-verifiering gäller.
@@ -249,8 +304,9 @@ tas bort vid avbockning).
 
 Frågebank för Databaser (egen prompt kommer): fyll
 `src/data/databaser/questions.js` enligt schemat i `strategi/questions.js`
-(4 alternativ, `explain` per alternativ, `reviewed`), så vaknar Öva/Prov och
-"Öva på detta"-knapparna av sig själva. Frågorna ska följa designreglerna i
+(4 alternativ, `explain` per alternativ, `reviewed`), så vaknar Öva och
+"Öva på detta"-knapparna av sig själva (Prov får läggas tillbaka i
+Databaser-manifestet bara om en frågebank motiverar det). Frågorna ska följa designreglerna i
 kommentaren överst i `strategi/questions.js` (jämnlånga alternativ, jämn
 positionsfördelning, inga skämtdistraktorer) och verifieras med
 `node scripts/check-fragebank.mjs src/data/databaser/questions.js`.
