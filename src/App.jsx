@@ -15,6 +15,8 @@ import {
   save,
   defaultSettings,
   recordAnswer,
+  recordSeen,
+  clearAnswersFor,
   loadReadChapters,
   saveReadChapter,
   loadSqlProgress,
@@ -96,6 +98,14 @@ export default function App() {
 
   function handleAnswer(questionId, wasCorrect) {
     setAnswers((prev) => recordAnswer(prev, questionId, wasCorrect));
+  }
+
+  // Visningar är ren statistik; nollställning tar bara delkursens frågor.
+  function handleSeen(questionId) {
+    setAnswers((prev) => recordSeen(prev, questionId));
+  }
+  function handleResetPractice(questionIds) {
+    setAnswers((prev) => clearAnswersFor(prev, questionIds));
   }
 
   function handleExamFinished(result) {
@@ -198,7 +208,13 @@ export default function App() {
           />
         )}
         {view === "ova" && (
-          <Practice {...shared} params={viewParams} onAnswer={handleAnswer} />
+          <Practice
+            {...shared}
+            params={viewParams}
+            onAnswer={handleAnswer}
+            onSeen={handleSeen}
+            onResetPractice={handleResetPractice}
+          />
         )}
         {view === "prov" && (
           <Exam

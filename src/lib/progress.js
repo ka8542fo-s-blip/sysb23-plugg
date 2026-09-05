@@ -1,5 +1,6 @@
 import { accuracy } from "./scoring.js";
 import { groupKeyFor, practiceGroups } from "./practiceAxis.js";
+import { isDone } from "./practiceQueue.js";
 
 // Sammanställer svarshistoriken per ämne — eller per kapitel för delkurser
 // där Öva speglar Läs — för Hem och Statistik.
@@ -10,10 +11,12 @@ export function topicStats(course, answers) {
     let correct = 0;
     let wrong = 0;
     let touched = 0;
+    let done = 0;
 
     for (const question of questions) {
       const stat = answers[question.id];
       if (!stat) continue;
+      if (isDone(stat)) done++;
       correct += stat.correct;
       wrong += stat.wrong;
       if (stat.correct + stat.wrong > 0) touched++;
@@ -26,6 +29,7 @@ export function topicStats(course, answers) {
       examWeight: topic.examWeight,
       questionCount: questions.length,
       touched,
+      done,
       answered,
       correct,
       wrong,
@@ -39,9 +43,11 @@ export function overallStats(course, answers) {
   let correct = 0;
   let wrong = 0;
   let seen = 0;
+  let done = 0;
 
   for (const [questionId, stat] of Object.entries(answers)) {
     if (!ids.has(questionId)) continue;
+    if (isDone(stat)) done++;
     correct += stat.correct;
     wrong += stat.wrong;
     if (stat.correct + stat.wrong > 0) seen++;
@@ -52,6 +58,7 @@ export function overallStats(course, answers) {
     correct,
     wrong,
     uniqueSeen: seen,
+    done,
     total: course.questions.length,
     accuracy: accuracy({ correct, wrong }),
   };

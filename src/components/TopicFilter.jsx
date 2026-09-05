@@ -1,4 +1,5 @@
 // Multival av ämnen eller kapitel (practiceAxis). Tom lista tolkas som "Allt".
+// counts[id] är antingen ett tal eller { done, total } — då visas "klara/totalt".
 export default function TopicFilter({ topics, selected, onChange, counts, label = "Ämnen" }) {
   function toggle(id) {
     onChange(
@@ -29,7 +30,9 @@ export default function TopicFilter({ topics, selected, onChange, counts, label 
         </button>
         {topics.map((topic) => {
           const on = selected.includes(topic.id);
-          const count = counts?.[topic.id] ?? 0;
+          const raw = counts?.[topic.id] ?? 0;
+          const count = typeof raw === "object" ? raw.total : raw;
+          const label = typeof raw === "object" ? `${raw.done}/${raw.total}` : raw;
           return (
             <button
               key={topic.id}
@@ -42,7 +45,7 @@ export default function TopicFilter({ topics, selected, onChange, counts, label 
               }`}
             >
               {topic.name}
-              <span className="tabular ml-2 text-xs opacity-70">{count}</span>
+              <span className="tabular ml-2 text-xs opacity-70">{label}</span>
             </button>
           );
         })}

@@ -37,6 +37,9 @@ export const courses = [
     name: "Strategi och ekonomistyrning",
     status: "aktiv",
     views: ["las", "ova", "prov", "essa", "statistik"],
+    // Öva speglar Läs även här: elva kapitel i stället för fjorton ämnen med
+    // andra namn än kapiteltitlarna (och ett ämne utan frågor).
+    practiceBy: "chapter",
     topics: strategiTopics,
     questions: strategiQuestions,
     essays: strategiEssays,

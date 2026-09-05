@@ -37,6 +37,23 @@ första kolonet (högst 48 tecken, ingen mening) i "Kärnan i korthet" och på
 begreppskorten, så listan går att skumma. Punkter som fortsätter varandra
 slås ihop — aldrig en fortsättning som egen punkt. Databaser är omgjord så;
 Strategis punkter renderas med samma regel men är inte omskrivna.
+
+**Öva utan pass (2026-09-05, användarkrav):** allt tillstånd ligger per fråga
+i `sysb23:answers` — `{ seen, correct, wrong, last, lastAt, recent }` — och
+skrivs vid varje svar (`recordAnswer`) resp. visning (`recordSeen`). Klar =
+de två senaste svaren rätt (`lib/practiceQueue.js: isDone`). "Fortsätt öva"
+serverar nästa ofärdiga fråga: fel som senaste svar först, sedan OBESVARADE
+(inte "osedda" — visningar är ren statistik, annars försvinner en visad men
+obesvarad fråga ur kön), sedan de med ett rätt; inom grupp äldst besvarad
+först, obesvarade i kapitelordning eller blandat. Karens: en fråga
+återkommer inte förrän COOLDOWN = 8 andra serverats (`settings.practiceRecent`
+per delkurs), regeln viker när kön är kortare. Ingen pass-längd, inget slut,
+ingen viktad slump, inget svårighetsfilter, inga poäng, inga streaks, ingen
+spaced repetition med dagsintervall. Nollställning bara via knappen
+"Nollställ övningsläget för <delkurs>" (per delkurs) eller "Nollställ min
+data" i Statistik. Tentafokus (Strategi) betyder kärnämnen först inom varje
+grupp. Båda delkurserna kör `practiceBy: "chapter"` sedan 2026-09-05.
+Test: `scripts/practice-queue.test.mjs`.
 `reading.js` äger löptexten och har ALDRIG egna recap-arrayer — kapitelavsluten
 ("Kärnan i korthet"/"Se upp för") renderas ur kapitlets `primaryTopics` via
 `lib/topicLookup.js`. `topics` = allt kapitlet berör (styr "Öva på detta kapitel"),
@@ -98,7 +115,7 @@ summerar till 20, inte 30 — medvetet orört).
   inget och räknar om lästiden, och Tentafokus i Öva viktar kärnämnen ×2 utan
   att ta bort frågor. Delkurser utan `examPriority` (Databaser) ser ut som
   förut. Tester: `scripts/exam-priority.test.mjs`.
-- **Öva** — viktad repetition (fel 3×, osedd 2×, rätt 1×), sidopanel med filter på desktop.
+- **Öva** — nästa ofärdiga fråga tills den är klar (två rätt i rad), sidopanel med kapitelval på desktop; se "Öva utan pass" nedan.
   **Gruppering (`lib/practiceAxis.js`):** Öva filtrerar per ämne (Strategi)
   eller per kapitel (Databaser, manifestets `practiceBy: "chapter"` — "Öva
   speglar Läs": ett kapitel i Läs = en kvizz i Öva, samma ordning och namn).
@@ -107,8 +124,8 @@ summerar till 20, inte 30 — medvetet orört).
   grupperar — filtret, räknarna, "Öva på detta"-knapparna, Statistik/Hem —
   går via `practiceGroups`/`groupKeyFor`/`groupsForTopics`, aldrig via
   `question.topic` direkt. **Ordning** (`practiceOrder` i settings): "Blandat"
-  = viktad repetition som förut, "Kapitel för kapitel"/"Ämne för ämne" =
-  `orderByGroup` — passet följer Läs-ordningen och bankens ordning inom
+  = obesvarade frågor blandat, "Kapitel för kapitel"/"Ämne för ämne" =
+  obesvarade i Läs-ordningen och bankens ordning inom
   gruppen, utan viktning. Testat i `scripts/practice-axis.test.mjs`. Inställningarna `practiceTopics`/`practiceDifficulty`
   är globala — val som hör till en annan delkurs ignoreras. Banker utan
   `explain` per alternativ eller utan `difficulty` stöds fortfarande

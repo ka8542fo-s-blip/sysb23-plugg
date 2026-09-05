@@ -1,5 +1,5 @@
-// Öva-axeln: Databaser grupperar per kapitel (Öva speglar Läs), Strategi per
-// ämne, och "kapitel för kapitel" sorterar passet i Läs-ordning.
+// Öva-axeln: båda delkurserna grupperar per kapitel (Öva speglar Läs), och
+// "kapitel för kapitel" sorterar i Läs-ordning.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { getCourse } from "../src/data/index.js";
@@ -10,13 +10,13 @@ import {
 const databaser = getCourse("databaser");
 const strategi = getCourse("strategi");
 
-test("Databaser grupperar per kapitel i Läs-ordning, Strategi per ämne", () => {
+test("båda delkurserna grupperar per kapitel i Läs-ordning", () => {
   assert.deepEqual(
     practiceGroups(databaser).map((g) => g.id),
     databaser.chapters.map((c) => c.id),
   );
   assert.equal(practiceGroups(databaser)[3].name, "Modell, entiteter och attribut");
-  assert.deepEqual(practiceGroups(strategi).map((g) => g.id), strategi.topics.map((t) => t.id));
+  assert.deepEqual(practiceGroups(strategi).map((g) => g.id), strategi.chapters.map((c) => c.id));
 });
 
 test("frågans grupp härleds ur ämnets kapitel utan att frågan bär kapitel", () => {
@@ -24,7 +24,7 @@ test("frågans grupp härleds ur ämnets kapitel utan att frågan bär kapitel",
   const q = databaser.questions.find((x) => x.topic === "crowsfoot");
   assert.equal(keyOf(q), "svaga");
   assert.deepEqual(groupsForTopics(databaser, ["metamodell", "er"]), ["kap4"]);
-  assert.deepEqual(groupsForTopics(strategi, ["bsc", "matt"]), ["bsc", "matt"]);
+  assert.deepEqual(groupsForTopics(strategi, ["bsc", "matt"]), ["kap7"]);
   const svaga = databaser.chapters.find((c) => c.id === "svaga");
   assert.deepEqual(chapterPracticeGroups(databaser, svaga), ["svaga"]);
   assert.equal(practicedGroupIds(databaser).size, databaser.chapters.length);

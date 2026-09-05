@@ -3,7 +3,7 @@
 const PREFIX = "sysb23:";
 
 export const KEYS = {
-  answers: "answers", // { [questionId]: { correct: n, wrong: n, last: "correct"|"wrong", lastAt: iso } }
+  answers: "answers", // { [questionId]: { seen, correct, wrong, last: "correct"|"wrong", lastAt: iso, recent: [bool, bool] } }
   exams: "exams", // [ { id, date, courseId, points, percent, grade, questions: [...] } ]
   essays: "essays", // { [essayId]: { draft: "…", checked: [bool], updatedAt: iso } }
   settings: "settings", // { timerOn, timerMinutes, practiceTopics, practiceDifficulty }
@@ -128,19 +128,46 @@ export const defaultSettings = {
   timerMinutes: 20,
   practiceTopics: [], // tom lista = alla ämnen
   practiceDifficulty: 0, // 0 = alla
-  practiceExamFocus: false, // viktar upp tentaprövade ämnen i Öva
+  practiceExamFocus: false, // kärnämnen först i varje grupp i Öva
+  practiceRecent: {}, // { [courseId]: [senast serverade fråge-id] } — karensen i Öva
 };
 
 // Registrerar ett svar på en fråga i historiken.
+// Per fråga: visningar (ren statistik), rätt, fel, senaste resultat med
+// tidsstämpel och de två senaste svaren — "klar" = två rätt i rad
+// (lib/practiceQueue.js). Skrivs vid varje svar, aldrig vid passets slut.
+// Äldre poster utan seen/recent tolkas av normalizeStat i practiceQueue.
 export function recordAnswer(answers, questionId, wasCorrect) {
   const prev = answers[questionId] || { correct: 0, wrong: 0 };
+  const recent = Array.isArray(prev.recent)
+    ? prev.recent
+    : prev.last
+      ? [prev.last === "correct"]
+      : [];
   return {
     ...answers,
     [questionId]: {
+      seen: prev.seen ?? prev.correct + prev.wrong,
       correct: prev.correct + (wasCorrect ? 1 : 0),
       wrong: prev.wrong + (wasCorrect ? 0 : 1),
       last: wasCorrect ? "correct" : "wrong",
       lastAt: new Date().toISOString(),
+      recent: [...recent, wasCorrect].slice(-2),
     },
   };
+}
+
+// En visning: frågan serverades. Rör inte svarsstatistiken.
+export function recordSeen(answers, questionId) {
+  const prev = answers[questionId] || { correct: 0, wrong: 0 };
+  return {
+    ...answers,
+    [questionId]: { ...prev, seen: (prev.seen ?? prev.correct + prev.wrong) + 1 },
+  };
+}
+
+// Nollställ övningsläget för en delkurs: bara dess frågor.
+export function clearAnswersFor(answers, questionIds) {
+  const drop = new Set(questionIds);
+  return Object.fromEntries(Object.entries(answers).filter(([id]) => !drop.has(id)));
 }

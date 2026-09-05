@@ -77,8 +77,8 @@ export default function Stats({
                 tip="traffsakerhet"
               />
               <StatTile
-                label="Frågor du sett"
-                value={`${overall.uniqueSeen}/${overall.total}`}
+                label="Klara frågor"
+                value={`${overall.done}/${overall.total}`}
                 tip="fragorSedda"
               />
             </>
