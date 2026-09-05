@@ -3,3 +3,7 @@ dist
 .DS_Store
 *.local
 public/*.wasm
+
+# Björns föreläsningsmaterial (Fö4) — hålls utanför det publika repot
+cc-prompt-fo4-ht2026-uppdatering.md
+fo4-conceptual-database-design-ht2026.md
