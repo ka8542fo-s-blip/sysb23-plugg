@@ -598,7 +598,7 @@ export const questions = [
     options: [
       { text: "Exakta typer tar betydligt mindre lagringsutrymme än approximativa för samma antal siffror", explain: "Lagringsutrymmet är inte skälet." },
       { text: "Exakta typer indexeras betydligt snabbare än approximativa typer i SQL Server", explain: "Indexering är inte skälet." },
-      { text: "Belopp tål inga avrundningsfel; approximativa typer är till när precisionen är mindre viktig", explain: "Rätt. Exakta numeriska typer används när avrundningsfel inte accepteras, och det gäller pengar." },
+      { text: "Belopp tål inga avrundningsfel; approximativa typer är till när precisionen får vara lägre", explain: "Rätt. Exakta numeriska typer används när avrundningsfel inte accepteras, och det gäller pengar." },
       { text: "Approximativa typer tillåter inte negativa värden, vilket belopp kan kräva", explain: "Approximativa typer tillåter negativa tal; det är precisionen som brister." }
     ],
     correct: 2, source: "Kompendiet kap. 9", reviewed: false },
