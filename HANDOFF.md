@@ -316,6 +316,10 @@ tas bort vid avbockning).
 - Kapitlet `kap6` (nr 7, Transformation) i Databaser har inga egna ordlistetermer
   (1:1/1:N/M:N-termerna hör till kap5 i datat) — gruppen utelämnas korrekt i
   kapitelsorterad ordlista.
+- Kompendiets kapitel 3 (ur gamla Fö5/Fö7) placerar surrogatnycklar i fysisk
+  design; nya Fö1 (slide 73–74) säger logisk och fysisk, och fråga db1-07
+  följer Fö1. Skillnaden är känd och medvetet orörd i kapitel 3 — nya Fö5 kan
+  komma och säga annat. Rätta inte på eget initiativ.
 - Prompt-md-filerna ligger publikt i repot (användaren informerad).
 - `DELETE FROM Patient` stoppas av FK i fritt läge — korrekt beteende.
 - Skärmdumpar i browserpanelen kan vara eftersläpande/tomma; DOM-verifiering gäller.

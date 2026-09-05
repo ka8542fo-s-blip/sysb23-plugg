@@ -109,7 +109,7 @@ export const databaserQuestions = [
       "Först i den fysiska modellen, eftersom de skapas av IDENTITY i SQL Server",
     ],
     correctIndex: 1,
-    explanation: "På det konceptuella stadiet är employeeNo och departmentName identifierare. Surrogate IDs dyker upp först i logisk och fysisk design.",
+    explanation: "På det konceptuella stadiet är employeeNo och departmentName identifierare. Surrogate IDs dyker upp först i logisk och fysisk design (Fö1, slide 73–74). Observera att kompendiets kapitel 3 bygger på äldre material och placerar dem i fysisk design — den skillnaden är inte utredd.",
   },
   {
     id: "db1-08",
@@ -538,7 +538,7 @@ export const databaserQuestions = [
       "M avser ägande, N beroende sidan",
     ],
     correctIndex: 1,
-    explanation: "M och N betyder båda \"many\". Bokstäverna skiljer bara de två positionerna åt. Skriv M:N och inte M:M, som skulle antyda samma antal på båda sidor.",
+    explanation: "M och N betyder båda \"many\". Bokstäverna skiljer bara de två positionerna åt — de anger inte olika antal.",
   },
   {
     id: "db4-23",
