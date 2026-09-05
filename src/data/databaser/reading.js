@@ -784,7 +784,7 @@ Att dela upp en relation är inte gratis. Två egenskaper avgör om uppdelningen
     id: "kap8",
     number: 9,
     title: "Fysisk design: DDL, constraints och kodstandard",
-    readingMinutes: 9,
+    readingMinutes: 12,
     lead: "Från logisk modell till körbar CREATE TABLE — datatyper, de fem constrainttyperna, surrogatnycklar och kursens namngivningsregler.",
     sources: ["Föreläsning 7", "Kodstandard v2.0"],
     body: `
@@ -816,7 +816,7 @@ En relation ur den logiska modellen blir en \`CREATE TABLE\`-sats:
             FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
     );
 
-## De fem constrainttyperna
+## Constrainttyperna
 
 Constraints är hur affärsregler flyttas från applikationskoden in i databasen, där de gäller för alla som ansluter.
 
@@ -825,6 +825,7 @@ Constraints är hur affärsregler flyttas från applikationskoden in i databasen
 - **UNIQUE** — unikt men tillåter NULL. Här hamnar de naturliga nycklarna när en surrogatnyckel tagit över primärnyckelrollen.
 - **CHECK** — villkor på värden, exempelvis \`CHECK (EmpSalary >= 0)\`. Det är här domänen ur kapitel 2 äntligen får en teknisk motsvarighet.
 - **DEFAULT** — värde som sätts när inget anges.
+- **NOT NULL** — kolumnen måste ha ett värde. Skrivs på kolumnen, utan eget namn. Vad den gör för naturliga nycklar och för deltagande står i avsnittet om facit nedan.
 
 Namnge dem alltid. Kursens kodstandard föreskriver prefixen \`PK_\`, \`FK_\`, \`UQ_\`, \`CK_\` och \`DF_\` följt av tabell och kolumn. Skälet är praktiskt: ett namngivet constraint ger ett felmeddelande du kan förstå, och ett du kan referera till i en \`ALTER TABLE\`.
 
@@ -837,6 +838,56 @@ En **surrogatnyckel** är ett artificiellt, databasgenererat värde utan affärs
 Motiven är fysiska: **nyckelstabilitet** (ett anställningsnummer kan ändras vid omorganisation, ett löpnummer aldrig) och **prestanda** (ett heltal joinar och indexerar effektivare än en sammansatt textnyckel).
 
 Priset är att raden inte längre går att identifiera meningsfullt utan uppslag, och att du måste behålla den naturliga nyckeln som \`UNIQUE\` — annars förlorar databasen affärsregeln att anställningsnummer är unika. Det mönstret ser du i \`hospital-ddl.sql\`: \`EmployeeID\` är surrogat primärnyckel, \`EmpNo\` är naturlig nyckel med \`UQ_\`-constraint.
+
+## Från logisk modell till DDL: vad facit kräver
+
+Tentans DDL-uppgift ger ett ER-diagram och ber om körbar kod med alla constraints, där alla kolumner får antas vara \`INTEGER\`. Övningshäftets uppgift 18 till 22 har den formen, och facit följer fyra regler som avgör poängen.
+
+**1. NOT NULL är också en constraint.** Den skrivs på kolumnen, utan eget namn, och gör två jobb. Den naturliga nyckeln ska vara både \`NOT NULL\` och \`UNIQUE\` — annars kan en rad utan anställningsnummer, eller två rader med samma, ta sig in, och det är just den **entitetsintegritet (entity integrity)** som surrogatnyckeln inte längre skyddar. En primärnyckel på en naturlig nyckel gav det gratis; med surrogatnyckel måste båda anges. Det andra jobbet gäller deltagandet: en främmande nyckel som är \`NOT NULL\` tvingar fram **totalt deltagande (total participation)** — varje anställd måste ha en avdelning — medan en främmande nyckel som får vara NULL uttrycker partiellt deltagande. Facit kommenterar varje sådan kolumn: *Foreign key column for R3 relationship. Total participation.*
+
+    CREATE TABLE Employee (
+        EmployeeID    INTEGER IDENTITY(1,1),      -- surrogatnyckel
+        EmpNo         VARCHAR(10) NOT NULL,       -- naturlig nyckel: NOT NULL + UNIQUE
+        DepartmentID  INTEGER NOT NULL,           -- totalt deltagande
+        CONSTRAINT PK_Employee_EmployeeID PRIMARY KEY (EmployeeID),
+        CONSTRAINT UQ_Employee_EmpNo UNIQUE (EmpNo),
+        CONSTRAINT FK_Employee_Department_DepartmentID
+            FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
+    );
+
+**2. Vilka tabeller får surrogatnyckel.** Tabeller som motsvarar vanliga och svaga entiteter — det är de som refereras av andra tabeller. En **kopplingstabell (junction table)** ur en M:N-relation får ingen egen surrogatnyckel: dess primärnyckel är kombinationen av de två främmande nycklarna, som nu pekar på de refererade tabellernas surrogatnycklar. Samma sak gäller tabellen för ett flervärdesattribut: primärnyckeln är ägarens främmande nyckel plus värdet.
+
+    CREATE TABLE Work (
+        EmployeeID    INTEGER,
+        DepartmentID  INTEGER,
+        StartDate     DATE,
+        CONSTRAINT PK_Work_EmployeeID_DepartmentID PRIMARY KEY (EmployeeID, DepartmentID),
+        CONSTRAINT FK_Work_Employee_EmployeeID FOREIGN KEY (EmployeeID) REFERENCES Employee(EmployeeID),
+        CONSTRAINT FK_Work_Department_DepartmentID FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID)
+    );
+
+**3. Svag entitet.** Den svaga entiteten får en egen surrogatnyckel som primärnyckel. Beroendet av ägaren uttrycks på två sätt: ägarens surrogatnyckel som främmande nyckel med \`NOT NULL\`, och ett \`UNIQUE\` över den partiella nyckeln **tillsammans med** ägarens främmande nyckel — rumsnumret är unikt bara inom hotellet, precis som i den logiska modellen.
+
+    CREATE TABLE Room (
+        RoomID      INTEGER IDENTITY(1,1),
+        RoomNumber  VARCHAR(10) NOT NULL,
+        HotelID     INTEGER NOT NULL,              -- ägaren, totalt deltagande
+        CONSTRAINT PK_Room_RoomID PRIMARY KEY (RoomID),
+        CONSTRAINT UQ_Room_RoomNumber_HotelID UNIQUE (RoomNumber, HotelID),
+        CONSTRAINT FK_Room_Hotel_HotelID FOREIGN KEY (HotelID) REFERENCES Hotel(HotelID)
+    );
+
+**4. Unära relationer.** Främmande nyckeln refererar tabellens egen surrogatnyckel. Vid 1:M läggs den som kolumn i samma tabell, namngiven efter rollen — facit skriver till exempel \`AIDR1\` för relationen R1 på tabellen A — och får vara NULL om deltagandet är partiellt: den högsta chefen har ingen chef. Vid M:N blir det en kopplingstabell med två kolumner som båda refererar samma tabell och som tillsammans är primärnyckel.
+
+    CREATE TABLE R4 (
+        DID     INTEGER,
+        R4DID   INTEGER,
+        CONSTRAINT PK_R4_DID_R4DID PRIMARY KEY (DID, R4DID),
+        CONSTRAINT FK_R4_D_DID FOREIGN KEY (DID) REFERENCES D(DID),
+        CONSTRAINT FK_R4_D_R4DID FOREIGN KEY (R4DID) REFERENCES D(DID)
+    );
+
+Tre rader till. En främmande nyckel kan få \`ON DELETE CASCADE\` eller \`ON UPDATE CASCADE\`, så att ändringar i den refererade raden följer med till de refererande — föreläsningen visar det, men facit för uppgift 18 till 22 använder det inte. Surrogatkolumnen namnges tabellnamn plus \`ID\`: \`EmployeeID\`, \`RoomID\`. Och SQL-nyckelord skrivs med versaler enligt kodstandarden: \`CREATE TABLE\`, inte \`create table\`.
 
 ## Datatyper
 
@@ -995,5 +1046,9 @@ export const glossary = [
   { term: "Associativ entitet (associative entity)", definition: "En entitetstyp som representerar ett par, t.ex. Assignment för Employee–Project. Byggs av vanliga Chen-konstruktioner utan särskild symbol. I Crow's Foot är den obligatorisk för relationer med attribut.", chapter: "svaga" },
   { term: "Reifiering (reification)", definition: "Att göra om en relation till en sak: WorksOn blir Assignment med Holds och Concerns. Görs när paret behöver egen identitet, egen livscykel eller ska delta i andra relationer — inte bara för att relationen har attribut. Skapar ett datahanteringsansvar, som assignmentNo.", chapter: "svaga" },
   { term: "Crow's foot-notation", definition: "Familj av besläktade notationer (Information Engineering, Martin) där relationsnamnet står på linjen och ändsymbolerna cirkel, streck och fork anger optional/required och one/many. Kursen använder den konceptuella common IE-varianten.", chapter: "svaga" },
+  { term: "NOT NULL", definition: "Kolumnconstraint utan eget namn som kräver ett värde. På en naturlig nyckel ger den tillsammans med UNIQUE entitetsintegritet; på en främmande nyckel tvingar den fram totalt deltagande.", chapter: "kap8" },
+  { term: "Entitetsintegritet (entity integrity)", definition: "Att varje rad har en unik och icke-tom identifierare. En naturlig primärnyckel ger det automatiskt; med surrogatnyckel krävs UNIQUE och NOT NULL på den naturliga nyckeln.", chapter: "kap8" },
+  { term: "Kopplingstabell (junction table)", definition: "Tabellen ur en M:N-relation, som Work och HasStudied. Primärnyckeln är de två främmande nycklarna tillsammans; ingen egen surrogatnyckel.", chapter: "kap8" },
+  { term: "ON DELETE CASCADE", definition: "Tillägg på en främmande nyckel som låter en radering i den refererade tabellen ta de refererande raderna med sig. Visas i föreläsningen; facit för DDL-uppgifterna använder det inte.", chapter: "kap8" },
   { term: "Ändpunktsmönster (endpoint patterns)", definition: "Crow's Foots fyra kombinationer: yttre märke cirkel = optional, streck = required; inre märke streck = one, fork = many. Markörerna sitter vid den ändpunkt vars instanser de räknar.", chapter: "svaga" }
 ];

@@ -259,22 +259,28 @@ export const topics = [
     name: "Fysisk design: DDL, constraints och kodstandard",
     chapter: "kap8",
     examWeight: "medel",
-    summary: "Den logiska modellen blir körbar SQL. Här införs surrogatnycklar, datatyper väljs och affärsregler flyttas in i databasen som namngivna constraints enligt kursens kodstandard.",
+    summary: "Den logiska modellen blir körbar SQL. Här införs surrogatnycklar, datatyper väljs och affärsregler flyttas in i databasen som namngivna constraints enligt kursens kodstandard. Facit kräver dessutom NOT NULL på naturliga nycklar och vid totalt deltagande.",
     keyPoints: [
       "DDL (Data Definition Language) definierar strukturer: CREATE, ALTER, DROP. DML (Data Manipulation Language) hanterar data: SELECT, INSERT, UPDATE, DELETE.",
-      "Fem constrainttyper: PRIMARY KEY (unik och NOT NULL, en per tabell), FOREIGN KEY (referensintegritet), UNIQUE (unikt men tillåter NULL), CHECK (villkor på värden), DEFAULT (värde när inget anges).",
+      "Constrainttyper: PRIMARY KEY (unik och NOT NULL, en per tabell), FOREIGN KEY (referensintegritet), UNIQUE (unikt men tillåter NULL), CHECK (villkor på värden), DEFAULT (värde när inget anges) — och NOT NULL på kolumnen, utan eget namn.",
       "CHECK-constraints är där kapitel 2:s domänbegrepp får sin tekniska motsvarighet.",
       "Namnge alltid constraints. Kursens prefix: PK_, FK_, UQ_, CK_, DF_ följt av tabell och kolumn. Ger begripliga felmeddelanden och något att referera till i ALTER TABLE.",
       "Surrogatnyckel skapas med IDENTITY(1,1) i SQL Server. Motiv: nyckelstabilitet och prestanda vid join och indexering.",
-      "Priset för surrogatnycklar: raden går inte att identifiera meningsfullt utan uppslag, och den naturliga nyckeln måste behållas som UNIQUE för att affärsregeln inte ska förloras.",
+      "Priset för surrogatnycklar: raden går inte att identifiera meningsfullt utan uppslag, och den naturliga nyckeln måste behållas som UNIQUE och NOT NULL — annars förloras entitetsintegriteten.",
       "Datatyper i SQL Server: INT/BIGINT för heltal, DECIMAL(p,s) för exakta decimaltal och belopp (approximativa numeriska typer bara när exakt precision är mindre viktig), VARCHAR(n)/NVARCHAR(n) för text där N klarar unicode, CHAR(n) för fast längd, DATE/DATETIME/DATETIME2 för tid, BIT för booleskt.",
       "Kodstandard v2.0: tabellnamn i PascalCase och singular (Employee, inte employees), kolumnnamn i PascalCase ofta med tabellprefix, camelCase för Java-variabler och metoder, PascalCase för Java-klasser, SCREAMING_SNAKE_CASE för miljövariabler.",
-      "Inga hemligheter i repot — anslutningsuppgifter och lösenord i miljövariabler eller konfiguration utanför versionshanteringen. Detta prövas i databasprojektet."
+      "Inga hemligheter i repot — anslutningsuppgifter och lösenord i miljövariabler eller konfiguration utanför versionshanteringen. Detta prövas i databasprojektet.",
+      "NOT NULL på en främmande nyckel tvingar fram totalt deltagande; får den vara NULL är deltagandet partiellt. Facit kommenterar varje sådan kolumn.",
+      "Surrogatnyckel får tabeller för vanliga och svaga entiteter. Kopplingstabeller och flervärdestabeller får ingen egen — primärnyckeln är de två främmande nycklarna respektive ägarens nyckel plus värdet.",
+      "Svag entitet i DDL: egen surrogatnyckel som primärnyckel, ägarens surrogatnyckel som främmande nyckel med NOT NULL, och UNIQUE över partiell nyckel plus ägarens främmande nyckel.",
+      "Unär relation i DDL: främmande nyckel mot tabellens egen surrogatnyckel, namngiven efter rollen (AIDR1), NULL tillåtet vid partiellt deltagande. Unär M:N ger en kopplingstabell med två kolumner mot samma tabell."
     ],
     pitfalls: [
       "UNIQUE tillåter NULL, PRIMARY KEY gör det inte.",
       "Belopp lagras med en exakt numerisk typ som DECIMAL — approximativa typer ger avrundningsfel.",
-      "Tabellnamn ska vara singular enligt kursens standard."
+      "Tabellnamn ska vara singular enligt kursens standard.",
+      "Naturlig nyckel med bara UNIQUE släpper igenom NULL — NOT NULL måste också anges.",
+      "Kopplingstabeller får ingen egen surrogatnyckel; primärnyckeln är de två främmande nycklarna."
     ]
   }
 ];

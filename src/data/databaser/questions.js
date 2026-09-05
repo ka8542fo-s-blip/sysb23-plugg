@@ -589,7 +589,7 @@ export const questions = [
       { text: "Den naturliga nyckeln tas bort, eftersom två nycklar ger redundans", explain: "Då förloras affärsregeln att till exempel anställningsnummer är unika." },
       { text: "Den naturliga nyckeln görs till främmande nyckel mot surrogatnyckeln", explain: "En kolumn i samma tabell refererar inte sin egen rad." },
       { text: "Surrogatnyckeln får ett CHECK-villkor som binder den till den naturliga", explain: "CHECK uttrycker domäner, inte kopplingen mellan två nycklar." },
-      { text: "Den naturliga nyckeln behålls som UNIQUE, annars förloras affärsregeln om unikhet", explain: "Rätt. EmployeeID är surrogat primärnyckel och EmpNo naturlig nyckel med UQ-constraint." }
+      { text: "Den naturliga nyckeln behålls som UNIQUE, annars förloras affärsregeln om unikhet", explain: "Rätt. EmployeeID är surrogat primärnyckel; EmpNo behålls som naturlig nyckel med UNIQUE och NOT NULL, så att entitetsintegriteten bevaras." }
     ],
     correct: 3, source: "Kompendiet kap. 9", reviewed: false },
 
@@ -614,12 +614,12 @@ export const questions = [
     correct: 3, source: "Kompendiet kap. 9", reviewed: false },
 
   { id: "dbq-32", topic: "fysisk", difficulty: 3,
-    question: "Häftets uppgift 18: entiteten B har den sammansatta identifieraren {b1, b2} och attributet b3, och tabellen ska använda surrogatnyckel. Hur ser facit ut för nycklarna i B?",
+    question: "Häftets uppgift 18: entiteten B har den sammansatta identifieraren {b1, b2} och attributet b3, och tabellen ska använda surrogatnyckel. Vilka PRIMARY KEY- och UNIQUE-constraints har facit för B?",
     options: [
       { text: "PRIMARY KEY (B1, B2) direkt på den naturliga nyckeln; ingen surrogatnyckel behövs", explain: "Uppgiften kräver surrogatnyckel för varje entitetstabell; den naturliga nyckeln bevaras som UNIQUE." },
       { text: "BID INTEGER IDENTITY(1,1) som PRIMARY KEY, plus UNIQUE (B1) och UNIQUE (B2) var för sig", explain: "Två separata UNIQUE förbjuder upprepade b1-värden, men identifieraren är kombinationen — ett UNIQUE per nyckel." },
       { text: "BID INTEGER IDENTITY(1,1) som PRIMARY KEY och UNIQUE (BID); B1 och B2 som vanliga kolumner", explain: "Då förloras affärsregeln att kombinationen b1, b2 är unik, och UNIQUE på surrogatnyckeln tillför inget." },
-      { text: "BID INTEGER IDENTITY(1,1) som PRIMARY KEY, plus UNIQUE (B1, B2) som ett enda constraint", explain: "Rätt. Facit: PK_B_BID PRIMARY KEY (BID) och UQ_B_B1_B2 UNIQUE (B1, B2) — den sammansatta naturliga nyckeln bevaras med ett UNIQUE över båda." }
+      { text: "BID INTEGER IDENTITY(1,1) som PRIMARY KEY, plus UNIQUE (B1, B2) som ett enda constraint", explain: "Rätt. Facit: PK_B_BID PRIMARY KEY (BID) och UQ_B_B1_B2 UNIQUE (B1, B2) — den sammansatta naturliga nyckeln bevaras med ett UNIQUE över båda, och B1 och B2 är dessutom NOT NULL." }
     ],
     correct: 3, source: "Kompendiet kap. 9 · övningshäftet uppgift 18", reviewed: false },
 ];

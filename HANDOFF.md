@@ -336,11 +336,11 @@ tas bort vid avbockning).
 - **Kapitel 9 (fysisk design) är granskat mot Fö7-decket, coding-standards.pdf och
   häftets uppgift 18–22 med DDL-facit 2026-09-05.** FLOAT finns inte i
   kursmaterialet — decket säger exakta mot approximativa numeriska typer; använd
-  de orden. Kända hål (väntar på beslut): NOT NULL som constraint (naturlig
-  nyckel NOT NULL + UNIQUE, FK NOT NULL vid totalt deltagande), vilka tabeller
-  som får surrogatnyckel (entiteter ja, kopplingstabeller nej), svag entitets
-  DDL (UNIQUE över partiell nyckel + ägar-FK), unära FK-kolumner, ON DELETE/
-  UPDATE CASCADE, versaler för SQL-nyckelord.
+  de orden. Hålen mot DDL-uppgiften är fyllda 2026-09-05 med avsnittet "Från
+  logisk modell till DDL: vad facit kräver" (NOT NULL för entitetsintegritet
+  och totalt deltagande, vilka tabeller som får surrogatnyckel, svag entitets
+  DDL, unära FK-kolumner; CASCADE, versaler och Table+ID på en rad var).
+  Granskningen av Databaser är pausad efter kapitel 7–9; kapitel 1–6 återstår.
 - **Kapitel 7 (transformation) är granskat mot Fö5-decket (05-logical-database-design.pdf)
   och häftets uppgift 4–9 med facit 2026-09-05.** Kursens notation i facit:
   primärnyckel = hel understrykning, främmande nyckel = prickad — inte kursiv.
