@@ -61,6 +61,13 @@ test("balansmåtten håller mallens regler", () => {
       assert.ok(spread <= 1.25, `${q.id}: längdspridning ${spread.toFixed(2)} (> 1,25)`);
     }
   }
+  // Listan är låst till beslutet 2026-09-05. Ett nytt längdfel ska rättas i
+  // alternativen, inte tystas med en ny rad här.
+  assert.deepEqual(
+    [...LENGTH_FLAGGED].sort(),
+    ["db4-12", "db4-14", "db4-16", "db4-20", "db4-21", "db4-23", "db4-26"],
+    "LENGTH_FLAGGED får inte ändras — rätta längden i stället",
+  );
   for (const id of LENGTH_FLAGGED) assert.ok(questions.some((q) => q.id === id), `flaggad ${id} finns inte`);
   const lo = Math.ceil((n / 4) * 0.65);
   const hi = Math.floor((n / 4) * 1.35);
