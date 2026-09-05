@@ -594,12 +594,12 @@ export const questions = [
     correct: 3, source: "Kompendiet kap. 9", reviewed: false },
 
   { id: "dbq-29", topic: "fysisk", difficulty: 1,
-    question: "Varför ska belopp lagras som DECIMAL(p,s) och inte som FLOAT?",
+    question: "Varför lagras belopp med en exakt numerisk typ som DECIMAL(p,s)?",
     options: [
-      { text: "FLOAT tar mer lagringsutrymme än DECIMAL för samma antal siffror", explain: "Utrymmet är inte skälet." },
-      { text: "DECIMAL indexeras betydligt snabbare än FLOAT i SQL Server", explain: "Indexering är inte skälet." },
-      { text: "DECIMAL är exakt, medan FLOAT ger avrundningsfel i beloppen", explain: "Rätt. Pengar kräver exakta decimaler; FLOAT är en approximation." },
-      { text: "FLOAT tillåter inte negativa värden, vilket belopp kan kräva", explain: "FLOAT tillåter negativa tal; det är precisionen som brister." }
+      { text: "Exakta typer tar betydligt mindre lagringsutrymme än approximativa för samma antal siffror", explain: "Lagringsutrymmet är inte skälet." },
+      { text: "Exakta typer indexeras betydligt snabbare än approximativa typer i SQL Server", explain: "Indexering är inte skälet." },
+      { text: "Belopp tål inga avrundningsfel; approximativa typer är till när precisionen är mindre viktig", explain: "Rätt. Exakta numeriska typer används när avrundningsfel inte accepteras, och det gäller pengar." },
+      { text: "Approximativa typer tillåter inte negativa värden, vilket belopp kan kräva", explain: "Approximativa typer tillåter negativa tal; det är precisionen som brister." }
     ],
     correct: 2, source: "Kompendiet kap. 9", reviewed: false },
 
@@ -612,4 +612,14 @@ export const questions = [
       { text: "Felmeddelanden blir begripliga och constrainten kan refereras i ALTER TABLE", explain: "Rätt. Praktiska skäl: förstå felet och kunna peka på constrainten senare." }
     ],
     correct: 3, source: "Kompendiet kap. 9", reviewed: false },
+
+  { id: "dbq-32", topic: "fysisk", difficulty: 3,
+    question: "Häftets uppgift 18: entiteten B har den sammansatta identifieraren {b1, b2} och attributet b3, och tabellen ska använda surrogatnyckel. Hur ser facit ut för nycklarna i B?",
+    options: [
+      { text: "PRIMARY KEY (B1, B2) direkt på den naturliga nyckeln; ingen surrogatnyckel behövs", explain: "Uppgiften kräver surrogatnyckel för varje entitetstabell; den naturliga nyckeln bevaras som UNIQUE." },
+      { text: "BID INTEGER IDENTITY(1,1) som PRIMARY KEY, plus UNIQUE (B1) och UNIQUE (B2) var för sig", explain: "Två separata UNIQUE förbjuder upprepade b1-värden, men identifieraren är kombinationen — ett UNIQUE per nyckel." },
+      { text: "BID INTEGER IDENTITY(1,1) som PRIMARY KEY och UNIQUE (BID); B1 och B2 som vanliga kolumner", explain: "Då förloras affärsregeln att kombinationen b1, b2 är unik, och UNIQUE på surrogatnyckeln tillför inget." },
+      { text: "BID INTEGER IDENTITY(1,1) som PRIMARY KEY, plus UNIQUE (B1, B2) som ett enda constraint", explain: "Rätt. Facit: PK_B_BID PRIMARY KEY (BID) och UQ_B_B1_B2 UNIQUE (B1, B2) — den sammansatta naturliga nyckeln bevaras med ett UNIQUE över båda." }
+    ],
+    correct: 3, source: "Kompendiet kap. 9 · övningshäftet uppgift 18", reviewed: false },
 ];

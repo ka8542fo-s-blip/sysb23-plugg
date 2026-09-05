@@ -333,6 +333,14 @@ tas bort vid avbockning).
   04_Labs-and-Exercises/sysb23-database-exercises.pdf). Läs dem med pdf-parse
   installerad i scratchpad (Read-verktyget saknar poppler). Publicera aldrig
   materialet i repot.
+- **Kapitel 9 (fysisk design) är granskat mot Fö7-decket, coding-standards.pdf och
+  häftets uppgift 18–22 med DDL-facit 2026-09-05.** FLOAT finns inte i
+  kursmaterialet — decket säger exakta mot approximativa numeriska typer; använd
+  de orden. Kända hål (väntar på beslut): NOT NULL som constraint (naturlig
+  nyckel NOT NULL + UNIQUE, FK NOT NULL vid totalt deltagande), vilka tabeller
+  som får surrogatnyckel (entiteter ja, kopplingstabeller nej), svag entitets
+  DDL (UNIQUE över partiell nyckel + ägar-FK), unära FK-kolumner, ON DELETE/
+  UPDATE CASCADE, versaler för SQL-nyckelord.
 - **Kapitel 7 (transformation) är granskat mot Fö5-decket (05-logical-database-design.pdf)
   och häftets uppgift 4–9 med facit 2026-09-05.** Kursens notation i facit:
   primärnyckel = hel understrykning, främmande nyckel = prickad — inte kursiv.

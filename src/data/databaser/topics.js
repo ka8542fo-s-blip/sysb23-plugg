@@ -267,13 +267,13 @@ export const topics = [
       "Namnge alltid constraints. Kursens prefix: PK_, FK_, UQ_, CK_, DF_ följt av tabell och kolumn. Ger begripliga felmeddelanden och något att referera till i ALTER TABLE.",
       "Surrogatnyckel skapas med IDENTITY(1,1) i SQL Server. Motiv: nyckelstabilitet och prestanda vid join och indexering.",
       "Priset för surrogatnycklar: raden går inte att identifiera meningsfullt utan uppslag, och den naturliga nyckeln måste behållas som UNIQUE för att affärsregeln inte ska förloras.",
-      "Datatyper i SQL Server: INT/BIGINT för heltal, DECIMAL(p,s) för exakta decimaltal och belopp (aldrig FLOAT till pengar), VARCHAR(n)/NVARCHAR(n) för text där N klarar unicode, CHAR(n) för fast längd, DATE/DATETIME/DATETIME2 för tid, BIT för booleskt.",
+      "Datatyper i SQL Server: INT/BIGINT för heltal, DECIMAL(p,s) för exakta decimaltal och belopp (approximativa numeriska typer bara när exakt precision är mindre viktig), VARCHAR(n)/NVARCHAR(n) för text där N klarar unicode, CHAR(n) för fast längd, DATE/DATETIME/DATETIME2 för tid, BIT för booleskt.",
       "Kodstandard v2.0: tabellnamn i PascalCase och singular (Employee, inte employees), kolumnnamn i PascalCase ofta med tabellprefix, camelCase för Java-variabler och metoder, PascalCase för Java-klasser, SCREAMING_SNAKE_CASE för miljövariabler.",
       "Inga hemligheter i repot — anslutningsuppgifter och lösenord i miljövariabler eller konfiguration utanför versionshanteringen. Detta prövas i databasprojektet."
     ],
     pitfalls: [
       "UNIQUE tillåter NULL, PRIMARY KEY gör det inte.",
-      "FLOAT till penningbelopp ger avrundningsfel — DECIMAL är rätt val.",
+      "Belopp lagras med en exakt numerisk typ som DECIMAL — approximativa typer ger avrundningsfel.",
       "Tabellnamn ska vara singular enligt kursens standard."
     ]
   }
