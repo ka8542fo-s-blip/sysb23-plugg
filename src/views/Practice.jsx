@@ -4,6 +4,7 @@ import TopicFilter from "../components/TopicFilter.jsx";
 import { shuffleQuestion } from "../lib/shuffle.js";
 import { weightedPick, weightFor } from "../lib/weightedPick.js";
 import { hasPriorities, priorityOf } from "../lib/examPriority.js";
+import { groupKeyFor, practiceGroups, practiceMode } from "../lib/practiceAxis.js";
 
 const DIFFICULTIES = [
   { value: 0, label: "Alla" },
@@ -21,11 +22,15 @@ export default function Practice({
   onAnswer,
 }) {
   const selectedTopics = settings.practiceTopics;
-  // Inställningarna delas mellan delkurserna: ämnesval som hör till en annan
-  // delkurs ignoreras, och en bank utan svårighetsgrader filtreras inte på dem.
+  // Öva grupperar per ämne (Strategi) eller per kapitel (Databaser: "Öva
+  // speglar Läs") — practiceAxis avgör. Inställningarna delas mellan
+  // delkurserna: val som hör till en annan delkurs ignoreras, och en bank
+  // utan svårighetsgrader filtreras inte på dem.
+  const groups = useMemo(() => practiceGroups(course), [course]);
+  const keyOf = useMemo(() => groupKeyFor(course), [course]);
   const activeTopics = useMemo(
-    () => selectedTopics.filter((id) => course.topics.some((topic) => topic.id === id)),
-    [selectedTopics, course],
+    () => selectedTopics.filter((id) => groups.some((group) => group.id === id)),
+    [selectedTopics, groups],
   );
   const hasDifficulties = course.questions.some((question) => question.difficulty);
 
@@ -35,7 +40,7 @@ export default function Practice({
     const preset = params?.topics;
     // En tom lista är ett giltigt val — den betyder "alla ämnen".
     if (!Array.isArray(preset)) return;
-    const valid = preset.filter((id) => course.topics.some((topic) => topic.id === id));
+    const valid = preset.filter((id) => groups.some((group) => group.id === id));
     setSettings((prev) => ({
       ...prev,
       practiceTopics: valid,
@@ -61,20 +66,21 @@ export default function Practice({
   const filtered = useMemo(() => {
     return course.questions.filter((question) => {
       const topicOk =
-        activeTopics.length === 0 || activeTopics.includes(question.topic);
+        activeTopics.length === 0 || activeTopics.includes(keyOf(question));
       const difficultyOk = difficulty === 0 || question.difficulty === difficulty;
       return topicOk && difficultyOk;
     });
-  }, [course, activeTopics, difficulty]);
+  }, [course, activeTopics, difficulty, keyOf]);
 
   const countsPerTopic = useMemo(() => {
     const counts = {};
     for (const question of course.questions) {
       if (difficulty !== 0 && question.difficulty !== difficulty) continue;
-      counts[question.topic] = (counts[question.topic] || 0) + 1;
+      const key = keyOf(question);
+      counts[key] = (counts[key] || 0) + 1;
     }
     return counts;
-  }, [course, difficulty]);
+  }, [course, difficulty, keyOf]);
 
   // Filtret tar mycket plats på mobil — där är det hopfällt tills man vill åt det.
   const [filterOpen, setFilterOpen] = useState(
@@ -117,12 +123,9 @@ export default function Practice({
     [current, index],
   );
 
-  // Databaser-banken har ett finare ämne per fråga med eget visningsnamn.
   const topicName = useMemo(
-    () =>
-      current?.subtopicLabel ??
-      course.topics.find((topic) => topic.id === current?.topic)?.name,
-    [course, current],
+    () => (current ? groups.find((group) => group.id === keyOf(current))?.name : undefined),
+    [groups, keyOf, current],
   );
 
   const confirm = useCallback(() => {
@@ -221,7 +224,8 @@ export default function Practice({
 
         <div className={filterOpen ? "mt-5" : "mt-5 hidden"}>
           <TopicFilter
-            topics={course.topics}
+            topics={groups}
+            label={practiceMode(course) === "chapter" ? "Kapitel" : "Ämnen"}
             selected={activeTopics}
             counts={countsPerTopic}
             onChange={(topics) =>

@@ -99,12 +99,12 @@ export default function Home({
         <p className="mt-4 text-[15px] text-ink/70">
           {focus ? (
             <>
-              Svagaste ämnet just nu:{" "}
+              Svagaste {course.practiceBy === "chapter" ? "kapitlet" : "ämnet"} just nu:{" "}
               <span className="font-medium text-ink">{focus.name}</span> (
               <span className="tabular">{focus.accuracy} %</span> rätt).
             </>
           ) : (
-            "Svara på minst fem frågor i ett ämne så pekar sidan ut vad du bör fokusera på."
+            `Svara på minst fem frågor i ett ${course.practiceBy === "chapter" ? "kapitel" : "ämne"} så pekar sidan ut vad du bör fokusera på.`
           )}
         </p>
         )}

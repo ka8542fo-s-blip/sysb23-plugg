@@ -10,6 +10,7 @@ import { decoratedExams } from "../lib/scheduleInfo.js";
 import { relativeDays } from "../lib/dates.js";
 import { accuracy } from "../lib/scoring.js";
 import { useToday } from "../lib/useToday.js";
+import { practiceMode } from "../lib/practiceAxis.js";
 
 export default function Stats({
   course,
@@ -22,6 +23,8 @@ export default function Stats({
 }) {
   const [confirming, setConfirming] = useState(false);
   const now = useToday();
+  // Databaser grupperar Öva per kapitel; texterna följer med.
+  const byChapter = practiceMode(course) === "chapter";
   // Ämnen utan frågor (t.ex. Databaser-kapitel som väntar på frågor) hålls utanför.
   const perTopic = useMemo(
     () => topicStats(course, answers).filter((topic) => topic.questionCount > 0),
@@ -113,11 +116,12 @@ export default function Stats({
         {focus ? (
           <>
             <p className="mt-2 text-[15px] leading-relaxed">
-              <span className="font-medium">{focus.name}</span> är ditt svagaste
-              ämne med <span className="tabular">{focus.accuracy} %</span> rätt på{" "}
+              <span className="font-medium">{focus.name}</span> är ditt svagaste{" "}
+              {byChapter ? "kapitel" : "ämne"} med{" "}
+              <span className="tabular">{focus.accuracy} %</span> rätt på{" "}
               <span className="tabular">{focus.answered}</span> svar. Läs
-              tentafällorna under Läs → Begrepp och kör ett övningspass med bara
-              det ämnet valt.
+              tentafällorna under Läs → Begrepp och kör ett övningspass med bara{" "}
+              {byChapter ? "det kapitlet" : "det ämnet"} valt.
             </p>
             <button
               type="button"
@@ -168,7 +172,7 @@ export default function Stats({
       {perTopic.length > 0 && (
       <section>
         <h2 className="flex items-center gap-2 font-display text-xl">
-          Träffsäkerhet per ämne <InfoTip id="traffsakerhetAmne" />
+          Träffsäkerhet per {byChapter ? "kapitel" : "ämne"} <InfoTip id="traffsakerhetAmne" />
         </h2>
         <div className="card mt-3 grid gap-4 p-5 lg:grid-cols-2 lg:gap-x-10">
           {perTopic.map((topic) => (

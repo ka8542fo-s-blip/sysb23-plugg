@@ -1,9 +1,12 @@
 import { accuracy } from "./scoring.js";
+import { groupKeyFor, practiceGroups } from "./practiceAxis.js";
 
-// Sammanställer svarshistoriken per ämne för Hem och Statistik.
+// Sammanställer svarshistoriken per ämne — eller per kapitel för delkurser
+// där Öva speglar Läs — för Hem och Statistik.
 export function topicStats(course, answers) {
-  return course.topics.map((topic) => {
-    const questions = course.questions.filter((q) => q.topic === topic.id);
+  const keyOf = groupKeyFor(course);
+  return practiceGroups(course).map((topic) => {
+    const questions = course.questions.filter((q) => keyOf(q) === topic.id);
     let correct = 0;
     let wrong = 0;
     let touched = 0;

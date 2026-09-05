@@ -1,763 +1,595 @@
-// Frågebank Databaser — föreläsning 1 och 4 (HT2026).
-// Syfte: förståelsekontroll av läsmaterialet, INTE tentasimulering.
-// Balans (verifierad): 54 frågor, positionsfördelning 14/14/13/13,
-// längdkvot rätt/distraktor 0.96, rätt svar unikt längst i 20 % (slumpnivå 25 %).
-// Distraktorerna är skrivna först och bygger på verkliga missförstånd.
+// Frågebank Databaser — Öva speglar Läs: ett kapitel i Läs = en kvizz i Öva.
+// Nio kapitel, 6–7 frågor var, alla besvarbara enbart ur kapiteltexten.
+// Syfte: förståelsekontroll av läsmaterialet, inte tentasimulering.
+//
+// Samma designregler som strategi/questions.js: fyra jämnlånga alternativ
+// (längsta högst 25 % längre än kortaste), inga skämtdistraktorer, jämn
+// positionsfördelning, rätt svar inte det enda nyanserade, explain per
+// alternativ. Låses av scripts/fragebank-balans.test.mjs.
+//
+// `topic` är ämnet i topics.js; Öva grupperar per kapitel via ämnets
+// kapitel (manifestets practiceBy: "chapter"), så varje fråga hamnar i sitt
+// kapitels kvizz. Frågor med id db1-/db4- är behållna ur leveransen
+// 2026-09-05 (formuleringar och alternativ oförändrade, utom tre
+// längdrättningar där det längsta alternativet var det rätta); dbq- är
+// skrivna mot kapiteltexten och märkta reviewed: false tills de granskats.
+//
+// SQL-frågespråket saknar kapitel i Läs; de sex SQL-frågorna ur leveransen
+// väntar i questions-pending.js.
 
-export const databaserTopicLabels = {
-  grundbegrepp: "Databaser, servrar och persistens (Fö1)",
-  designkedjan: "Designkedjan och nycklar (Fö1)",
-  sql: "SQL-grunder (Fö1)",
-  metamodell: "Metamodell och modellnivåer (Fö4)",
-  entiteter: "Entiteter, typ och instans (Fö4)",
-  attribut: "Attribut och value domains (Fö4)",
-  identifierare: "Identifierare (Fö4)",
-  relationer: "Relationer och roller (Fö4)",
-  kardinalitet: "Kardinalitet och deltagande (Fö4)",
-  svaga: "Svaga entiteter (Fö4)",
-  associativa: "Associativa entiteter (Fö4)",
-  crowsfoot: "Crow's Foot-notation (Fö4)",
-};
+// Behållna frågor där det längsta alternativet är en distraktor och
+// spridningen överstiger 1,25 — får stå enligt beslut 2026-09-05, eftersom
+// längden där inte avslöjar facit. Balanstestet undantar dem.
+export const LENGTH_FLAGGED = ["db4-12","db4-14","db4-16","db4-20","db4-21","db4-23","db4-26"];
 
-export const databaserQuestions = [
-  {
-    id: "db1-01",
-    topic: "grundbegrepp",
+export const questions = [
+  { id: "db1-01", topic: "grunder", difficulty: 1,
     question: "Vad är skillnaden mellan TimeEdit-applikationen och TimeEdit-databasen?",
     options: [
-      "Applikationen och databasen är samma sak, beskrivna på två olika abstraktionsnivåer",
-      "Applikationen är databasen sedd genom en webbläsare i stället för genom ett program",
-      "Applikationen lagrar data lokalt, medan databasen bara är en säkerhetskopia av den",
-      "Applikationen är gränssnittet du ser och använder; databasen är den lagrade schemadatan",
+      { text: "Applikationen och databasen är samma sak, beskrivna på två olika abstraktionsnivåer", explain: "Två abstraktionsnivåer av samma sak blandar ihop gränssnittet med den lagrade datan." },
+      { text: "Applikationen är databasen sedd genom en webbläsare i stället för genom ett program", explain: "Webbläsaren är också bara ett gränssnitt; databasen visas aldrig direkt för dig." },
+      { text: "Applikationen lagrar data lokalt, medan databasen bara är en säkerhetskopia av den", explain: "Applikationen lagrar inte schemat lokalt, och databasen är ingen säkerhetskopia." },
+      { text: "Applikationen är gränssnittet du ser och använder; databasen är den lagrade schemadatan", explain: "Rätt. Det du ser är applikationens gränssnitt; databasen är den lagrade datan bakom det." }
     ],
-    correctIndex: 3,
-    explanation: "Skärmen är ett applikationsgränssnitt. En databas är strukturerad elektronisk data, utformad så att information kan lagras, hämtas och hanteras effektivt. Att se data på en skärm betyder inte att man ser databasen.",
-  },
-  {
-    id: "db1-02",
-    topic: "grundbegrepp",
+    correct: 3, source: "Kompendiet kap. 1", reviewed: true },
+
+  { id: "db1-02", topic: "grunder", difficulty: 1,
     question: "I klient–server-bilden: vad är det som faktiskt hämtar data ur databasen?",
     options: [
-      "Servern hämtar data ur sin databas och skickar svaret tillbaka till klienten",
-      "Internet hämtar data och skickar den vidare till både klient och server",
-      "Klienten hämtar direkt ur databasen och servern vidarebefordrar bara svaret",
-      "Databasen skickar data till klienten utan att någon server är inblandad",
+      { text: "Servern hämtar data ur sin databas och skickar svaret tillbaka till klienten", explain: "Rätt. Klienten pratar med servern över internet, och servern hämtar ur sin databas." },
+      { text: "Internet hämtar data och skickar den vidare till både klient och server", explain: "Internet är bara transportvägen mellan klient och server; det hämtar ingenting självt." },
+      { text: "Klienten hämtar direkt ur databasen och servern vidarebefordrar bara svaret", explain: "Klienten når aldrig databasen direkt — att hämta data är serverns uppgift." },
+      { text: "Databasen skickar data till klienten utan att någon server är inblandad", explain: "Utan server finns ingen som tar emot förfrågan, hämtar ur databasen och svarar." }
     ],
-    correctIndex: 0,
-    explanation: "Klienten kommunicerar över Internet med en server. Servern hämtar schema- eller betygsdata ur sin databas och skickar svaret tillbaka till applikationen på din enhet.",
-  },
-  {
-    id: "db1-03",
-    topic: "grundbegrepp",
-    question: "Björn kallar en server \"a computer that is never turned off\". Hur ska den beskrivningen förstås?",
-    options: [
-      "Som ett minnesstöd — servrar kan stoppas och startas om",
-      "Som en teknisk garanti som skiljer serverhårdvara från klientdatorer i drift",
-      "Som ett krav i de SLA-avtal som molnleverantörer förbinder sig att uppfylla",
-      "Som ett historiskt uttryck som slutade gälla när virtuella maskiner kom",
-    ],
-    correctIndex: 0,
-    explanation: "Slidet säger uttryckligen att frasen är ett minnesstöd (memory aid) och inte en bokstavlig regel. En server är fortfarande bara en dator.",
-  },
-  {
-    id: "db1-04",
-    topic: "grundbegrepp",
-    question: "Vad är ett rack i ett datacenter?",
-    options: [
-      "En server med särskilt hög kapacitet och redundant strömförsörjning",
-      "En nätverksenhet som fördelar förfrågningar mellan flera servrar",
-      "En samling virtuella maskiner som delar samma fysiska hårdvara",
-      "En infrastruktur som håller, strömförsörjer och organiserar utrustning",
-    ],
-    correctIndex: 3,
-    explanation: "Ett rack håller, strömförsörjer, kopplar samman och organiserar utrustning. Racket är infrastruktur — det är inte i sig en server.",
-  },
-  {
-    id: "db1-05",
-    topic: "grundbegrepp",
-    question: "Vad gör en hypervisor på en fysisk server?",
-    options: [
-      "Den flyttar automatiskt virtuella maskiner till molnet vid hög belastning",
-      "Den ersätter operativsystemet på servern med ett lättare alternativ",
-      "Den delar upp databasen i flera fysiska filer för snabbare åtkomst",
-      "Den kopplar varje isolerad gäst till värdens CPU, minne, lagring och nätverk",
-    ],
-    correctIndex: 3,
-    explanation: "Hypervisorn mappar varje isolerad guest till värddatorns CPU, minne, lagring och nätverk. Flera VM:ar kan därmed dela en och samma fysiska dator.",
-  },
-  {
-    id: "db1-06",
-    topic: "grundbegrepp",
+    correct: 0, source: "Kompendiet kap. 1", reviewed: true },
+
+  { id: "db1-06", topic: "grunder", difficulty: 1,
     question: "Vad händer med en `ArrayList<Employee>` när programmet avslutas?",
     options: [
-      "Den skrivs automatiskt till disk och läses in igen vid nästa start",
-      "Den ligger kvar i RAM tills operativsystemet startas om nästa gång",
-      "Den försvinner, eftersom RAM är flyktig lagring (volatile storage)",
-      "Den behålls om klassen deklarerat kollektionsfältet som `final`",
+      { text: "Den skrivs automatiskt till disk och läses in igen vid nästa start", explain: "Ingenting skrivs till disk av sig självt; persistens kräver ett explicit skrivsteg." },
+      { text: "Den ligger kvar i RAM tills operativsystemet startas om nästa gång", explain: "RAM töms när processen avslutas; ingenting ligger kvar till nästa körning." },
+      { text: "Den försvinner, eftersom RAM är flyktig lagring (volatile storage)", explain: "Rätt. Data i RAM är volatil lagring och försvinner när programmet stängs." },
+      { text: "Den behålls om klassen deklarerat kollektionsfältet som `final`", explain: "final låser referensen i koden, inte innehållet i minnet när processen dör." }
     ],
-    correctIndex: 2,
-    explanation: "Att stoppa processen kastar bort tillståndet. En senare körning skapar en ny tom kollektion om inte programmet uttryckligen läser in lagrad data. Persistens kräver ett explicit skrivsteg.",
-  },
-  {
-    id: "db1-07",
-    topic: "designkedjan",
-    question: "Var i designkedjan introduceras surrogate IDs?",
-    options: [
-      "Redan i business requirements, eftersom de är en del av verksamhetens regler",
-      "I den logiska och den fysiska modellen, inte i den konceptuella",
-      "I den konceptuella modellen, som ersättning för verksamhetens identifierare",
-      "Först i den fysiska modellen, eftersom de skapas av IDENTITY i SQL Server",
-    ],
-    correctIndex: 1,
-    explanation: "På det konceptuella stadiet är employeeNo och departmentName identifierare. Surrogate IDs dyker upp först i logisk och fysisk design (Fö1, slide 73–74). Observera att kompendiets kapitel 3 bygger på äldre material och placerar dem i fysisk design — den skillnaden är inte utredd.",
-  },
-  {
-    id: "db1-08",
-    topic: "designkedjan",
+    correct: 2, source: "Kompendiet kap. 1", reviewed: true },
+
+  { id: "db1-08", topic: "grunder", difficulty: 2,
     question: "Vad är normalisering enligt föreläsningens beskrivning?",
     options: [
-      "En städning av rader som körs efter att databasen har implementerats",
-      "Ett obligatoriskt steg som alltid leder till dekomposition av relationer",
-      "En designkontroll av den logiska modellen innan DDL skrivs",
-      "En optimering som DBMS:et utför automatiskt vid varje INSERT",
+      { text: "En städning av rader som körs efter att databasen har implementerats", explain: "Normalisering är ett designsteg i logisk design, inte en städning av rader i efterhand." },
+      { text: "Ett obligatoriskt steg som alltid leder till dekomposition av relationer", explain: "Dekomposition görs bara när kontrollen visar undvikbar redundans — inte alltid." },
+      { text: "En designkontroll av den logiska modellen innan DDL skrivs", explain: "Rätt. Den hör till logisk design: efter transformationen, innan DDL-koden skrivs." },
+      { text: "En optimering som DBMS:et utför automatiskt vid varje INSERT", explain: "DBMS:et normaliserar ingenting automatiskt — normalformen är designerns beslut." }
     ],
-    correctIndex: 2,
-    explanation: "Man anger grain, candidate keys och beroenden, testar mot avsedd normalform, och dekomponerar endast när ett misslyckat test avslöjar undvikbar redundans. Slidet säger uttryckligen att det inte är en städoperation på rader efter implementation.",
-  },
-  {
-    id: "db1-09",
-    topic: "designkedjan",
+    correct: 2, source: "Kompendiet kap. 1", reviewed: true },
+
+  { id: "dbq-01", topic: "grunder", difficulty: 1,
+    question: "Vem avgör vad databasen ska lagra data om?",
+    options: [
+      { text: "Databasadministratören ensam, eftersom det är ett tekniskt beslut", explain: "Kapitlet säger uttryckligen att administratören inte bestämmer ensam." },
+      { text: "Verksamhetssidan i dialog med IT, utifrån vad processerna kräver", explain: "Rätt. Frågan är vad verksamheten behöver lagra för att fungera, och verksamheten konsulteras alltid." },
+      { text: "Systemleverantören, som levererar en färdig och generell datamodell", explain: "En generell modell svarar inte på vad just den här verksamheten kräver." },
+      { text: "Utvecklarna, som vet vilka tabeller applikationens kod behöver", explain: "Tabellerna följer av verksamhetens behov, inte tvärtom." }
+    ],
+    correct: 1, source: "Kompendiet kap. 1", reviewed: false },
+
+  { id: "dbq-02", topic: "grunder", difficulty: 2,
+    question: "Vad producerar den logiska databasdesignen?",
+    options: [
+      { text: "Ett ER-diagram som abstraherar verksamhetens krav", explain: "Det är det konceptuella stegets resultat, före transformationen." },
+      { text: "Körbara CREATE TABLE-satser för den valda databashanteraren", explain: "DDL-koden hör till fysisk design, det sista steget." },
+      { text: "En kravlista i löpande text, avstämd med verksamheten", explain: "Kravtexten är designprocessens utgångspunkt, inte ett resultat." },
+      { text: "Relationer i textform, normaliserade om det behövs", explain: "Rätt. Den konceptuella modellen transformeras till relationer i textform och normaliseras vid behov." }
+    ],
+    correct: 3, source: "Kompendiet kap. 1", reviewed: false },
+
+  { id: "dbq-03", topic: "relationsmodellen", difficulty: 2,
+    question: "Raden E1 | Alice | 20000 | Engineering | 500000 pekar framåt mot normalisering. Varför?",
+    options: [
+      { text: "Den berättar två saker samtidigt — en om en anställd och en om en avdelning", explain: "Rätt. Att en rad bär två fakta är just det som ger upphov till anomalierna." },
+      { text: "Den innehåller både text och tal, vilket bryter mot kravet på en domän per attribut", explain: "Olika attribut får ha olika domäner; det är inom ett attribut domänen ska vara en." },
+      { text: "Den saknar en surrogatnyckel, så raden går inte att identifiera entydigt", explain: "E1 identifierar raden; surrogatnycklar hör till fysisk design." },
+      { text: "Den har fler än fyra attribut, vilket relationsmodellen inte tillåter", explain: "Graden är fri — relationsmodellen sätter ingen gräns för antalet attribut." }
+    ],
+    correct: 0, source: "Kompendiet kap. 2", reviewed: false },
+
+  { id: "dbq-04", topic: "relationsmodellen", difficulty: 2,
+    question: "Vad skiljer en domän från en datatyp?",
+    options: [
+      { text: "Datatypen är snävare än domänen och anger det tillåtna intervallet", explain: "Omvänt: datatypen säger bara INT, domänen lägger till intervallet." },
+      { text: "Domänen gäller bara textattribut, datatypen bara numeriska attribut", explain: "Båda gäller alla slags attribut; skillnaden ligger i vad de uttrycker." },
+      { text: "Domänen bär affärsregeln, datatypen anger bara hur värdet lagras", explain: "Rätt. SalaryType kan kräva 10 000–30 000; datatypen säger bara INT." },
+      { text: "De är synonymer — domän är relationsmodellens ord för datatyp", explain: "De överlappar men är inte samma sak; domänen är det snävare begreppet." }
+    ],
+    correct: 2, source: "Kompendiet kap. 2", reviewed: false },
+
+  { id: "dbq-05", topic: "relationsmodellen", difficulty: 1,
+    question: "Vad anger en relations grad respektive kardinalitet?",
+    options: [
+      { text: "Grad är antalet tupler och kardinalitet är antalet attribut i relationen", explain: "Termerna är omkastade." },
+      { text: "Grad är antalet attribut och kardinalitet är antalet tupler i relationen", explain: "Rätt. Grad räknar kolumner, kardinalitet räknar rader." },
+      { text: "Grad är antalet nycklar och kardinalitet är antalet relationer i databasen", explain: "Ingen av termerna räknar nycklar eller relationer." },
+      { text: "Grad är antalet domäner och kardinalitet är antalet distinkta värden", explain: "Domäner och distinkta värden är inte vad termerna mäter." }
+    ],
+    correct: 1, source: "Kompendiet kap. 2", reviewed: false },
+
+  { id: "dbq-06", topic: "relationsmodellen", difficulty: 2,
+    question: "Varför saknar en SQL-fråga utan ORDER BY garanterad radordning?",
+    options: [
+      { text: "Därför att databasen sparar raderna i slumpmässig ordning på disken", explain: "Lagringsordningen är inte poängen; ordningen är odefinierad i modellen." },
+      { text: "Därför att primärnyckeln bara ger en sortering när den är numerisk", explain: "Primärnyckeln definierar ingen radordning över huvud taget." },
+      { text: "Därför att SQL Server alltid sorterar efter tidpunkten för senaste ändring", explain: "Ingen sådan regel finns; utan ORDER BY är ordningen inte garanterad." },
+      { text: "Därför att tuplernas ordning saknar betydelse i relationsmodellen", explain: "Rätt. Egenskap 6: tuplernas ordning har ingen betydelse, så ingen ordning kan förutsättas." }
+    ],
+    correct: 3, source: "Kompendiet kap. 2", reviewed: false },
+
+  { id: "dbq-07", topic: "relationsmodellen", difficulty: 3,
+    question: "Vad gäller för dubblettupler?",
+    options: [
+      { text: "Relationsmodellen tillåter dem, men SQL Server avvisar dem alltid", explain: "Omvänt: modellen förbjuder dem, SQL-tabellen kan innehålla dem." },
+      { text: "Relationsmodellen förbjuder dem, men en SQL-tabell kan innehålla dem utan nyckel", explain: "Rätt. Egenskap 7 är ett ideal som SQL bara upprätthåller om en nyckel hindrar dubbletter." },
+      { text: "Både modellen och SQL tillåter dem så länge raderna får olika radnummer", explain: "Radnummer finns inte i modellen, och identiska rader är ändå dubbletter." },
+      { text: "Varken modellen eller SQL tillåter dem, oberoende av vilka nycklar som finns", explain: "SQL-tabeller utan nyckel tar emot identiska rader utan protest." }
+    ],
+    correct: 1, source: "Kompendiet kap. 2", reviewed: false },
+
+  { id: "dbq-08", topic: "relationsmodellen", difficulty: 2,
+    question: "Varför är första normalformen sällan ett problem i praktiken?",
+    options: [
+      { text: "Därför att SQL Server delar upp listvärden automatiskt vid varje INSERT", explain: "Ingen databas delar upp Alice, Bob åt dig — det är designerns ansvar." },
+      { text: "Därför att 1NF bara gäller relationer som har en sammansatt kandidatnyckel", explain: "1NF handlar om atomära värden och gäller alla relationer." },
+      { text: "Därför att kravet på atomära värden först ställs i den fysiska designen", explain: "Kravet ligger redan i relationsbegreppet, långt före fysisk design." },
+      { text: "Därför att en tabell med icke-atomära värden inte är en relation till att börja med", explain: "Rätt. Egenskap 2 kräver atomära värden, så 1NF är uppfyllt av varje riktig relation." }
+    ],
+    correct: 3, source: "Kompendiet kap. 2", reviewed: false },
+
+  { id: "dbq-09", topic: "nycklar", difficulty: 1,
+    question: "Vad skiljer en primärnyckel från en kandidatnyckel?",
+    options: [
+      { text: "Primärnyckeln är den kandidatnyckel som databasarkitekten väljer", explain: "Rätt. Kandidatnycklarna är alla som kan användas; primärnyckeln är valet bland dem." },
+      { text: "Primärnyckeln består alltid av ett attribut, kandidatnyckeln kan vara sammansatt", explain: "Båda kan vara sammansatta; skillnaden ligger i valet, inte i formen." },
+      { text: "Kandidatnyckeln genereras av databasen, primärnyckeln är den naturliga", explain: "Generering hör till surrogatnycklar och har inget med indelningen att göra." },
+      { text: "Kandidatnyckeln får innehålla NULL, primärnyckeln får det aldrig", explain: "Unik identifiering utesluter NULL för båda; det är inte skillnaden." }
+    ],
+    correct: 0, source: "Kompendiet kap. 3", reviewed: false },
+
+  { id: "dbq-10", topic: "nycklar", difficulty: 3,
+    question: "En relation har två kandidatnycklar. Vilka attribut är primärattribut?",
+    options: [
+      { text: "Bara attributen i den kandidatnyckel som har valts till primärnyckel", explain: "Definitionen säger någon kandidatnyckel, inte den valda." },
+      { text: "Bara de attribut som ingår i båda kandidatnycklarna samtidigt", explain: "Det räcker att ingå i en av dem." },
+      { text: "Alla attribut i relationen, eftersom två nycklar tillsammans täcker allt", explain: "Attribut utanför båda nycklarna är icke-primära." },
+      { text: "Alla attribut som ingår i någon av de två kandidatnycklarna", explain: "Rätt. Primärattribut är medlem i någon kandidatnyckel — attribut ur båda räknas." }
+    ],
+    correct: 3, source: "Kompendiet kap. 3", reviewed: false },
+
+  { id: "db1-09", topic: "nycklar", difficulty: 2,
     question: "I Patient-tabellen finns både `PatientId` och `PatientNo`. Vad skiljer dem?",
     options: [
-      "PatientId är verksamhetens identifierare, PatientNo genereras av databasen",
-      "PatientId identifierar raden, PatientNo identifierar den avdelning patienten tillhör",
-      "PatientId är genererad surrogate primary key, PatientNo är verksamhetens identifierare",
-      "PatientId används i JOIN, PatientNo används enbart i WHERE-villkor",
+      { text: "PatientId är verksamhetens identifierare, PatientNo genereras av databasen", explain: "Omvänt: det är PatientNo som är verksamhetens nummer och PatientId som genereras." },
+      { text: "PatientId identifierar raden, PatientNo identifierar den avdelning patienten tillhör", explain: "PatientNo pekar inte på någon avdelning; det är patientens eget nummer i verksamheten." },
+      { text: "PatientId är en genererad surrogatnyckel, PatientNo är verksamhetens identifierare", explain: "Rätt. Surrogatnyckeln genereras av databasen, den naturliga nyckeln kommer från verksamheten." },
+      { text: "PatientId används bara i JOIN-villkor, PatientNo används enbart i WHERE-villkor", explain: "Var en nyckel används i en fråga säger ingenting om vilken sorts nyckel den är." }
     ],
-    correctIndex: 2,
-    explanation: "PatientId är den genererade surrogate primary key. PatientNo är en separat unik business identifier. En surrogate key har ingen nödvändig verksamhetsbetydelse.",
-  },
-  {
-    id: "db1-10",
-    topic: "designkedjan",
+    correct: 2, source: "Kompendiet kap. 3", reviewed: true },
+
+  { id: "db1-10", topic: "nycklar", difficulty: 3,
     question: "Vad gäller för en surrogate key i förhållande till foreign keys?",
     options: [
-      "Den är alltid en foreign key om samma kolumnnamn finns i en annan tabell",
-      "Den blir en FK så snart tabellen ingår i en JOIN med en annan tabell",
-      "Den kan aldrig refereras av en FK, eftersom den saknar verksamhetsbetydelse",
-      "Den kan refereras av en FK, men är inte i sig en FK — namnet bevisar ingenting",
+      { text: "Den är alltid en foreign key om samma kolumnnamn finns i en annan tabell", explain: "Samma kolumnnamn i två tabeller bevisar ingen koppling alls." },
+      { text: "Den blir en FK så snart tabellen ingår i en JOIN med en annan tabell", explain: "En JOIN skapar inga nycklar; den använder de som redan finns deklarerade." },
+      { text: "Den kan aldrig refereras av en FK, eftersom den saknar verksamhetsbetydelse", explain: "Surrogatnycklar refereras av främmande nycklar hela tiden — det är normalfallet." },
+      { text: "Den kan refereras av en FK, men är inte i sig en FK — namnet bevisar ingenting", explain: "Rätt. En surrogatnyckel kan refereras av en FK men är inte själv en FK." }
     ],
-    correctIndex: 3,
-    explanation: "En surrogate key får refereras av en FK, men är inte i sig en FK, och stavningen bevisar ingenting. Två kolumner som heter UnitId är inte relaterade bara därför.",
-  },
-  {
-    id: "db1-11",
-    topic: "sql",
-    question: "Vad gör nyckelordet `AS` i en select list?",
+    correct: 3, source: "Kompendiet kap. 3", reviewed: true },
+
+  { id: "dbq-11", topic: "nycklar", difficulty: 2,
+    question: "Vad innebär referensintegritet i praktiken?",
     options: [
-      "Det byter namn på kolumnerna i den lagrade tabellen permanent",
-      "Det namnger de härledda resultatkolumnerna i just den här frågan",
-      "Det skapar en vy som andra frågor sedan kan referera till",
-      "Det konverterar kolumnens datatyp till den typ som anges efter aliaset",
+      { text: "Databasen kopierar automatiskt den refererade raden in i den refererande tabellen", explain: "Ingenting kopieras; referensen är en pekare som måste hålla." },
+      { text: "Databasen vägrar rader som pekar på något som saknas, och radering av det som refereras", explain: "Rätt. Ingen anställd på ett projekt som saknas, ingen radering av ett projekt med anställda." },
+      { text: "Databasen kräver att den främmande nyckeln heter samma sak som primärnyckeln", explain: "Namnen är fria; det är referensen som deklareras." },
+      { text: "Databasen tillåter radering men sätter den främmande nyckeln till NULL automatiskt efteråt", explain: "Kapitlet beskriver vägran, inte automatisk nollställning." }
     ],
-    correctIndex: 1,
-    explanation: "AS namnger derived result columns. Det byter inte namn på kolumner som är lagrade i dbo.Patient.",
-  },
-  {
-    id: "db1-12",
-    topic: "sql",
-    question: "Vad innebär projection i en SQL-fråga?",
+    correct: 1, source: "Kompendiet kap. 3", reviewed: false },
+
+  { id: "dbq-12", topic: "nycklar", difficulty: 2,
+    question: "När får en främmande nyckel vara NULL?",
     options: [
-      "Att tabellen kopieras till en ny relation som innehåller färre kolumner än förut",
-      "Att resultatets rubrik ändras, inte den lagrade tabellen",
-      "Att raderna sorteras enligt de kolumner som anges i select list",
-      "Att attribut som inte behövs raderas permanent ur den lagrade tabellen på servern",
+      { text: "När den refererade relationen saknar en egen primärnyckel", explain: "En främmande nyckel refererar alltid en primärnyckel; det är förutsättningen." },
+      { text: "När den ingår i en sammansatt primärnyckel i sin egen relation", explain: "Primärnyckelattribut får aldrig vara NULL." },
+      { text: "När deltagandet i relationen är frivilligt, som bilen utan ägare", explain: "Rätt. Frivilligt deltagande ger NULL; obligatoriskt deltagande ger NOT NULL." },
+      { text: "Aldrig — en främmande nyckel måste alltid peka på en existerande rad", explain: "Vid frivilligt deltagande får den vara NULL." }
     ],
-    correctIndex: 1,
-    explanation: "Projection ändrar result heading. Den tar inte bort attribut ur den lagrade tabellen — de finns kvar, de syns bara inte i det här resultatet.",
-  },
-  {
-    id: "db1-13",
-    topic: "sql",
-    question: "Frågan `SELECT PatientName, UnitAddress FROM dbo.Patient` ger felet \"Invalid column name 'UnitAddress'\". Varför?",
-    options: [
-      "UnitAddress är felstavat i förhållande till kolumnnamnet i dbo.Unit",
-      "Endast dbo.Patient är angiven efter FROM, så dbo.Unit ligger utanför frågans scope",
-      "UnitAddress kräver ett tabellprefix eftersom kolumnnamnet finns i två tabeller",
-      "Kolumnen är skyddad och kräver att man anger schemat dbo explicit",
-    ],
-    correctIndex: 1,
-    explanation: "PatientName tillhör dbo.Patient och UnitAddress tillhör dbo.Unit. Att bara namnge dbo.Patient efter FROM lämnar dbo.Unit utanför frågans scope. Frågan måste introducera båda relationerna.",
-  },
-  {
-    id: "db1-14",
-    topic: "sql",
-    question: "I `SELECT p.*, u.*` med en JOIN mellan Patient och Unit förekommer `UnitId` två gånger. Varför?",
-    options: [
-      "Därför att ON-villkoret duplicerar den kolumn som ingår i jämförelsen",
-      "Därför att ORDER BY kräver att sorteringskolumnen finns med två gånger",
-      "Därför att JOIN alltid lägger till en extra kolumn för matchningsnyckeln",
-      "Därför att varje matchat par innehåller båda hela tuplerna",
-    ],
-    correctIndex: 3,
-    explanation: "Varje matchat par innehåller fortfarande hela Patient-tupeln och hela Unit-tupeln. Projection har ännu inte tagit bort eller döpt om någonting.",
-  },
-  {
-    id: "db1-15",
-    topic: "sql",
-    question: "Vad räknar `COUNT(*)`?",
-    options: [
-      "Antalet unika värden i tabellens primärnyckelkolumn",
-      "Antalet rader i indata, oavsett vilka attribut som finns",
-      "Antalet kolumner som ingår i den aktuella select list",
-      "Antalet rader där samtliga attribut har ett värde skilt från NULL",
-    ],
-    correctIndex: 1,
-    explanation: "COUNT(*) räknar de sex indataraderna och returnerar ett värde. Den räknar rader, inte ett utvalt attribut.",
-  },
-  {
-    id: "db1-16",
-    topic: "sql",
-    question: "Varför är det fel att slå upp E2:s lön och sedan skriva `WHERE EmpSalary = 55000` i en andra fråga?",
-    options: [
-      "Därför att literalen måste anges som N'55000' för att jämförelsen ska bli giltig",
-      "Därför att jämförelser mot decimaltal alltid kräver en explicit CAST i T-SQL",
-      "Därför att 55000 är kopierat från dagens data och blir inaktuellt",
-      "Därför att två frågor alltid är långsammare än en enda fråga med subquery",
-    ],
-    correctIndex: 2,
-    explanation: "Frågan ställer \"vem tjänar 55000?\" i stället för att härleda E2:s lön. Ändras E2:s lön blir den kopierade literalen tyst inaktuell. En scalar subquery uttrycker beroendet direkt.",
-  },
-  {
-    id: "db1-17",
-    topic: "grundbegrepp",
-    question: "Vad skiljer RDP-inloggningen från anslutningen i VS Code i kursens uppsättning?",
-    options: [
-      "RDP använder ett Windows login, mssql-tillägget ett SQL Login",
-      "Båda använder samma Windows-konto, men över två olika portar i brandväggen",
-      "RDP använder ett SQL Login medan VS Code använder ett vanligt Windows-konto",
-      "RDP krävs varje gång, eftersom VS Code inte kan nå servern på egen hand",
-    ],
-    correctIndex: 0,
-    explanation: "RDP använder ett Windows login till den virtuella maskinen. VS Code-tillägget mssql använder ett separat SQL Login för att ansluta direkt till Microsoft SQL Server.",
-  },
-  {
-    id: "db1-18",
-    topic: "grundbegrepp",
-    question: "Vad kännetecknar SQL som språk?",
-    options: [
-      "Det är procedurellt och kräver explicita loopar över raderna",
-      "Det är imperativt — man anger stegen som ska utföras i tur och ordning",
-      "Det är objektorienterat och bygger på klasser och metoder",
-      "Det är deklarativt — man anger vilket resultat man vill ha",
-    ],
-    correctIndex: 3,
-    explanation: "SQL är ett declarative language för relationsdatabaser. I den här kursinstansen körs frågorna på Microsoft SQL Server och använder dialekten T-SQL.",
-  },
-  {
-    id: "db4-01",
-    topic: "metamodell",
-    question: "Vad bestämmer en metamodell?",
-    options: [
-      "Vilka delar av verkligheten som är relevanta för verksamheten",
-      "Hur många instanser en modell tillåts innehålla samtidigt",
-      "Vilken notation som ska användas när modellen ritas upp",
-      "Vilka påståenden en modell över huvud taget får uttrycka",
-    ],
-    correctIndex: 3,
-    explanation: "Metamodellen är vokabulären. I tunnelbaneexemplet tillåter den bara Line, Stop och \"Line has stops\". Central Line och namngivna stopp hör till modellen, inte till metamodellen.",
-  },
-  {
-    id: "db4-02",
-    topic: "metamodell",
+    correct: 2, source: "Kompendiet kap. 3", reviewed: false },
+
+  { id: "db4-02", topic: "metamodell", difficulty: 2,
     question: "Vad är förhållandet mellan en modell och ett diagram av den?",
     options: [
-      "Diagrammet är en representation av modellen, inte modellen självt",
-      "Diagrammet är modellen, uttryckt i grafisk i stället för textuell form",
-      "Diagrammet är en förenklad modell där vissa fakta har utelämnats",
-      "Diagrammet är en instans av modellen på samma sätt som data är det",
+      { text: "Diagrammet är en representation av modellen, inte modellen självt", explain: "Rätt. Samma modell kan ritas, skrivas som text eller XML — ingen representation är modellen." },
+      { text: "Diagrammet är modellen, uttryckt i grafisk i stället för textuell form", explain: "Diagrammet är ett sätt att visa modellen, inte modellen i grafisk form." },
+      { text: "Diagrammet är en förenklad modell där vissa fakta har utelämnats", explain: "Ett diagram utelämnar inte fakta; det representerar samma modell som texten." },
+      { text: "Diagrammet är en instans av modellen på samma sätt som data är det", explain: "Instanser hör till populationen — diagrammet visar typerna, inte data." }
     ],
-    correctIndex: 0,
-    explanation: "Samma modell kan representeras som plain text, som XML eller som en ritning. Ingen av representationerna är modellen. Ett diagram är en grafisk representation som använder en notation.",
-  },
-  {
-    id: "db4-03",
-    topic: "metamodell",
+    correct: 0, source: "Kompendiet kap. 4", reviewed: true },
+
+  { id: "db4-03", topic: "metamodell", difficulty: 2,
     question: "Ett nytt stopp läggs till på linjen. Vad förändras?",
     options: [
-      "Endast modellen — metamodellens begrepp är desamma som förut",
-      "Varken modellen eller metamodellen, bara diagrammets utseende",
-      "Endast metamodellen, som måste tillåta det nya elementet",
-      "Både modellen och metamodellen, eftersom vokabulären utökas",
+      { text: "Endast modellen — metamodellens begrepp är desamma som förut", explain: "Rätt. Stop C är två nya fakta i modellen; metamodellens begrepp är desamma." },
+      { text: "Varken modellen eller metamodellen, bara diagrammets utseende", explain: "Ett nytt stopp är ett nytt faktum, alltså en ändring i modellen." },
+      { text: "Endast metamodellen, som måste tillåta det nya elementet", explain: "Metamodellen tillåter redan Stop; vokabulären behöver inte utökas." },
+      { text: "Både modellen och metamodellen, eftersom vokabulären utökas", explain: "Bara modellen växer — metamodellen säger fortfarande Line, Stop och Line has stops." }
     ],
-    correctIndex: 0,
-    explanation: "Stop C lägger till två nya facts i modellen. Metamodellen är oförändrad: Line, Stop och \"Line has stops\" är fortfarande de tillåtna begreppen.",
-  },
-  {
-    id: "db4-04",
-    topic: "attribut",
-    question: "Vad gäller för vem som äger ett attribute i ER-metamodellen?",
-    options: [
-      "Ett attribute ägs av en entity type eller en relationship type, aldrig av båda",
-      "Ett attribute kan delas mellan två entity types om värdet är detsamma",
-      "Ett attribute ägs alltid av en entity type; relationships kan inte ha attributes",
-      "Ett attribute ägs av den participation som förbinder de två elementen",
-    ],
-    correctIndex: 0,
-    explanation: "Metamodellen på slide 16 är explicit: varje attribute ägs av antingen en entity type eller en relationship type — aldrig båda.",
-  },
-  {
-    id: "db4-05",
-    topic: "entiteter",
-    question: "Vad är ett entity set?",
-    options: [
-      "Samlingen av alla entities av en entity type vid en viss tidpunkt",
-      "Definitionen av kategorin och de egenskaper som är gemensamma",
-      "En grupp entity types som hör ihop tematiskt i samma modell",
-      "Mängden av alla tillåtna värden som ett attribute kan anta",
-    ],
-    correctIndex: 0,
-    explanation: "Entity set är den nuvarande populationen. Den kan växa, krympa eller vara tom. Motsvarigheten i objektorienterad programmering är alla objekt av en klass som existerar just nu.",
-  },
-  {
-    id: "db4-06",
-    topic: "entiteter",
-    question: "Vad kännetecknar en strong entity type?",
-    options: [
-      "Den kan identifiera varje entity utan att bero på annan type",
-      "Den deltar obligatoriskt i minst en av modellens relationship types",
-      "Den har fler attributes än de entity types som den är kopplad till i modellen",
-      "Den ritas alltid först i diagrammet och styr läsriktningen",
-    ],
-    correctIndex: 0,
-    explanation: "En strong entity type kan identifiera varje entity utan att bero på en entity av annan typ. Den ritas som en enkel rectangle.",
-  },
-  {
-    id: "db4-07",
-    topic: "attribut",
+    correct: 0, source: "Kompendiet kap. 4", reviewed: true },
+
+  { id: "db4-07", topic: "er", difficulty: 2,
     question: "Hur skiljer man ett mandatory från ett optional attribute i Chen-notation?",
     options: [
-      "Man kan inte se skillnaden — båda använder vanlig oval",
-      "Mandatory ritas med heldragen linje, optional med streckad linje",
-      "Mandatory understryks, optional lämnas utan markering",
-      "Mandatory ritas med dubbel oval, optional med enkel oval",
+      { text: "Man kan inte se skillnaden — båda använder vanlig oval", explain: "Rätt. Chen saknar symbol för skillnaden; villkoret skrivs ut explicit." },
+      { text: "Mandatory ritas med heldragen linje, optional med streckad linje", explain: "Streckad oval betyder härlett attribut, inte frivilligt." },
+      { text: "Mandatory understryks, optional lämnas utan markering", explain: "Understrykning markerar identifierare, inte obligatoriskhet." },
+      { text: "Mandatory ritas med dubbel oval, optional med enkel oval", explain: "Dubbel oval betyder flervärdesattribut, inte obligatoriskt." }
     ],
-    correctIndex: 0,
-    explanation: "Båda använder vanlig oval. Chen-varianter har ingen gemensam symbol för skillnaden, så constrainten måste skrivas ut explicit och konventionen hållas konsekvent.",
-  },
-  {
-    id: "db4-08",
-    topic: "attribut",
-    question: "Vad betyder det att ett attribute är derived?",
-    options: [
-      "Att det beräknas av DBMS:et med hjälp av en trigger vid varje UPDATE",
-      "Att det aldrig får lagras fysiskt utan måste beräknas vid varje läsning",
-      "Att det ärvts från en annan entity type via en relationship",
-      "Att det beskriver ett konceptuellt beroende av andra data i modellen",
-    ],
-    correctIndex: 3,
-    explanation: "Derived beskriver ett konceptuellt beroende. Det föreskriver ingen fysisk lagringsstrategi. Ritas som streckad oval, till exempel yearsEmployed ur hireDate.",
-  },
-  {
-    id: "db4-09",
-    topic: "attribut",
-    question: "Kan ett derived attribute bero på något utanför sin egen entity type?",
-    options: [
-      "Nej, det måste beräknas ur attributes som ligger i samma entity type",
-      "Ja, men bara om de två entity types delar samma identifying attribute",
-      "Ja, det kan beräknas via en relationship till andra instanser",
-      "Nej, sådana beräkningar hör hemma i den fysiska modellen i stället",
-    ],
-    correctIndex: 2,
-    explanation: "numberOfEmployees på Project kan beräknas genom att räkna de Employee-instanser som är kopplade via WorksOn. Beroendet behöver alltså inte ligga inom samma entity type.",
-  },
-  {
-    id: "db4-10",
-    topic: "attribut",
+    correct: 0, source: "Kompendiet kap. 4", reviewed: true },
+
+  { id: "db4-10", topic: "er", difficulty: 2,
     question: "Var dokumenteras ett value domain i ett vanligt Chen-diagram?",
     options: [
-      "I en separat specifikation utanför diagrammet",
-      "Inuti ovalen, tillsammans med attributets namn",
-      "I en egen oval som kopplas till attributets oval",
-      "I relationship-romben som attributet hör till",
+      { text: "I en separat specifikation utanför diagrammet", explain: "Rätt. Ovalen namnger bara attributet; domänen dokumenteras separat." },
+      { text: "Inuti ovalen, tillsammans med attributets namn", explain: "Ovalen rymmer bara namnet, inte de tillåtna värdena." },
+      { text: "I en egen oval som kopplas till attributets oval", explain: "Chen har ingen egen oval för värdemängder." },
+      { text: "I relationship-romben som attributet hör till", explain: "Romben är relationstypen, inte attributets värdemängd." }
     ],
-    correctIndex: 0,
-    explanation: "I diagrammet syns bara att Employee har ett attribute som heter employmentStatus. Domänspecifikationen (permits {active, leave, ended}) hålls separat.",
-  },
-  {
-    id: "db4-11",
-    topic: "attribut",
-    question: "Kan ett value set innehålla värden som ingen entity använder just nu?",
-    options: [
-      "Nej, då är värdet inte längre en del av value settet",
-      "Nej, ett value set definieras av de värden som förekommer i populationen",
-      "Ja, men bara om attributet är deklarerat som optional",
-      "Ja, ett tillåtet värde kan vara oanvänt vid en given tidpunkt",
-    ],
-    correctIndex: 3,
-    explanation: "Värdet ended tillhör value settet även om ingen Employee har det just nu. Value settet anger vilka värden som är tillåtna, inte vilka som råkar förekomma.",
-  },
-  {
-    id: "db4-12",
-    topic: "identifierare",
+    correct: 0, source: "Kompendiet kap. 4", reviewed: true },
+
+  { id: "db4-12", topic: "er", difficulty: 3,
     question: "En kolumn råkar ha unika värden i all data som finns i dag. Är den en identifier?",
     options: [
-      "Ja, unika värden i populationen är precis vad en identifier innebär i modellen",
-      "Ja, så länge inga dubbletter har uppstått är identifieringsregeln uppfylld",
-      "Nej, en identifier måste dessutom vara en simple attribute",
-      "Nej, regeln måste hålla för varje giltig population",
+      { text: "Ja, unika värden i populationen är precis vad en identifier innebär i modellen", explain: "Unika värden just nu är data, inte en regel som håller för varje giltig population." },
+      { text: "Ja, så länge inga dubbletter har uppstått är identifieringsregeln uppfylld", explain: "Att dubbletter inte uppstått ännu är ingen garanti för nästa population." },
+      { text: "Nej, en identifier måste dessutom vara en simple attribute", explain: "En identifierare får vara sammansatt; enkelhet är inget krav." },
+      { text: "Nej, regeln måste hålla för varje giltig population", explain: "Rätt. Identifikation är en modellnivåregel som måste hålla för varje giltig population." }
     ],
-    correctIndex: 3,
-    explanation: "Identifikation är en constraint på model level. Att data råkar vara unik just nu gör den inte till en identifier. På slide 40 heter två employees Sam — name är därför inte en identifier.",
-  },
-  {
-    id: "db4-13",
-    topic: "identifierare",
+    correct: 3, source: "Kompendiet kap. 4", reviewed: true },
+
+  { id: "db4-13", topic: "er", difficulty: 3,
     question: "Hur markeras ett composite attribute som fungerar som identifier?",
     options: [
-      "Man understryker både parent och samtliga komponenter",
-      "Man understryker varje komponent för sig",
-      "Man understryker the composite parent, inte komponenterna",
-      "Man ringar in komponenterna med en gemensam streckad ram",
+      { text: "Man understryker både parent och samtliga komponenter", explain: "Föräldern och delarna stryks inte under samtidigt — det vore två identifierare." },
+      { text: "Man understryker varje komponent för sig, inte föräldern", explain: "Delarna identifierar inte var för sig; 2026-1 och 2026-2 delar år." },
+      { text: "Man understryker the composite parent, inte delarna", explain: "Rätt. Den sammansatta föräldern stryks under; identifikationen använder hela värdet." },
+      { text: "Man ringar in komponenterna med en gemensam streckad ram", explain: "Streckad ram finns inte; streckat markerar partiell identifierare." }
     ],
-    correctIndex: 2,
-    explanation: "projectNo understryks, medan registrationYear och sequenceNo inte gör det. Identifikationen använder det kompletta värdet: 2026-1 och 2026-2 delar årtal men skiljer sig som helhet.",
-  },
-  {
-    id: "db4-14",
-    topic: "identifierare",
+    correct: 2, source: "Kompendiet kap. 4", reviewed: true },
+
+  { id: "db4-14", topic: "er", difficulty: 2,
     question: "Vad betyder två separata understrykningar i samma entity type?",
     options: [
-      "Att de två attributen tillsammans bildar en composite identifier för entityn",
-      "Att det finns två identifiers som var för sig räcker",
-      "Att attributen är kandidater, men att ingen av dem har valts ännu",
-      "Att det ena identifierar entityn och det andra dess owner",
+      { text: "Att de två attributen tillsammans bildar en composite identifier för entityn", explain: "En sammansatt identifierare stryks under som en helhet, inte som två." },
+      { text: "Att det finns två identifiers som var för sig räcker", explain: "Rätt. employeeNo och workEmail identifierar var för sig — två identifierare." },
+      { text: "Att attributen är kandidater, men att ingen av dem har valts ännu", explain: "Understrykningen är själva regeln, inte en lista över kandidater." },
+      { text: "Att det ena identifierar entityn och det andra dess owner", explain: "Ägarberoende markeras med streckad understrykning, inte en andra hel." }
     ],
-    correctIndex: 1,
-    explanation: "employeeNo identifierar Employee på egen hand, och det gör även workEmail. Separata understrykningar betyder två olika identifiers, inte en kombinerad.",
-  },
-  {
-    id: "db4-15",
-    topic: "relationer",
-    question: "Vad är en relationship instance?",
-    options: [
-      "Ett par entity types som är förbundna med en romb",
-      "Ett attribute som beskriver kopplingen mellan två entities",
-      "En tupel med en entity per deltagande roll",
-      "Ett namn på den roll en entity spelar i relationen",
-    ],
-    correctIndex: 2,
-    explanation: "r1 = ⟨e1, p1⟩ har Mary som worker och Atlas som project. Rollordningen spelar roll, vilket blir avgörande för unary relationships.",
-  },
-  {
-    id: "db4-16",
-    topic: "relationer",
+    correct: 1, source: "Kompendiet kap. 4", reviewed: true },
+
+  { id: "db4-16", topic: "relationstyper", difficulty: 2,
     question: "När blir role names nödvändiga?",
     options: [
-      "När relationen har fler än två deltagande entity types i modellen",
-      "När samma entity type deltar mer än en gång",
-      "När relationen äger ett eget attribute utöver de deltagandes",
-      "När multipliciteten är M:N i stället för 1:N",
+      { text: "När relationen har fler än två deltagande entity types i modellen", explain: "Antalet deltagande typer avgör inte; rollerna behövs när samma typ deltar två gånger." },
+      { text: "När samma entity type deltar mer än en gång", explain: "Rätt. I Supervises deltar Employee två gånger — utan roller är ändarna tvetydiga." },
+      { text: "När relationen äger ett eget attribute utöver de deltagandes", explain: "Ett relationsattribut gör inte rollerna tvetydiga." },
+      { text: "När multipliciteten är M:N i stället för 1:N", explain: "Multipliciteten påverkar inte om rollnamnen behövs." }
     ],
-    correctIndex: 1,
-    explanation: "I Supervises deltar Employee två gånger. Utan role names skulle relationens två ändar vara tvetydiga — man kan inte se vem som handleder vem.",
-  },
-  {
-    id: "db4-17",
-    topic: "relationer",
-    question: "När hör ett attribute hemma på relationship typen i stället för på en entity type?",
-    options: [
-      "När relationen har många-till-många som multiplicitet",
-      "När värdet förekommer i båda de deltagande entity types",
-      "När värdet beskriver ett enskilt par av deltagande entities",
-      "När attributet kan härledas ur de deltagande entities attributes",
-    ],
-    correctIndex: 2,
-    explanation: "allocationPercentage tillhör WorksOn eftersom värdet beskriver ett Employee–Project-par. Ownership follows meaning: samma Employee kan ha olika värden för olika Projects.",
-  },
-  {
-    id: "db4-18",
-    topic: "kardinalitet",
+    correct: 1, source: "Kompendiet kap. 5", reviewed: true },
+
+  { id: "db4-18", topic: "relationstyper", difficulty: 2,
     question: "Hur förhåller sig maximum cardinality och participation till varandra?",
     options: [
-      "Participation följer av multipliciteten och sätts därför inte separat",
-      "De sätts oberoende av varandra och besvarar olika frågor",
-      "Maximum cardinality anger minimum och participation anger maximum",
-      "De är två namn på samma constraint i olika Chen-varianter",
+      { text: "Participation följer av multipliciteten och sätts därför inte separat", explain: "Deltagandet följer inte av kardinaliteten; de sätts var för sig." },
+      { text: "De sätts oberoende av varandra och besvarar olika frågor", explain: "Rätt. Kardinalitet svarar på hur många, deltagande på om man måste delta alls." },
+      { text: "Maximum cardinality anger minimum och participation anger maximum", explain: "Kardinalitetsetiketten anger maxima, inte minimum." },
+      { text: "De är två namn på samma constraint i olika Chen-varianter", explain: "De är två olika constraints med olika symboler, inte två namn på en." }
     ],
-    correctIndex: 1,
-    explanation: "Ratio svarar på hur många som får vara relaterade. Participation svarar på om en entity får existera utan att delta alls. Ingen av dem bestämmer den andra — det är den vanligaste förväxlingen.",
-  },
-  {
-    id: "db4-19",
-    topic: "kardinalitet",
+    correct: 1, source: "Kompendiet kap. 5", reviewed: true },
+
+  { id: "db4-19", topic: "relationstyper", difficulty: 3,
     question: "I `Employee — Leads — Project` står `1` bredvid Employee. Vad betyder det?",
     options: [
-      "Att varje Project får ha högst en Employee kopplad till sig",
-      "Att exakt en Employee finns för varje Project i modellen",
-      "Att varje Employee får leda högst ett Project",
-      "Att Employee måste delta i relationen minst en gång",
+      { text: "Att varje Project får ha högst en Employee kopplad", explain: "Rätt. Ratio-etiketten läses tvärs över: talet vid Employee gäller varje Project." },
+      { text: "Att exakt en Employee finns för varje Project i modellen", explain: "Exakt en kräver också dubbel linje — etiketten anger bara ett maximum." },
+      { text: "Att varje Employee får leda högst ett Project i modellen", explain: "Det vore att läsa etiketten vid sin egen ände; den läses tvärs över." },
+      { text: "Att Employee måste delta i relationen Leads minst en gång", explain: "Deltagande uttrycks av linjen, inte av ratio-etiketten." }
     ],
-    correctIndex: 0,
-    explanation: "Ratio labels läses across. Talet bredvid Employee beskriver hur många Employees varje Project får ha, inte tvärtom.",
-  },
-  {
-    id: "db4-20",
-    topic: "kardinalitet",
+    correct: 0, source: "Kompendiet kap. 5", reviewed: true },
+
+  { id: "db4-20", topic: "relationstyper", difficulty: 2,
     question: "Vad betyder ratio-etiketten `1` i kursens Chen-konvention?",
     options: [
-      "At least one — den kräver minst ett deltagande",
-      "Exactly one — den anger både minimum och maximum",
-      "At most one — den anger enbart ett maximum",
-      "One only if the participation line is doubled as well",
+      { text: "At least one — den kräver minst ett deltagande", explain: "Minst en uttrycks av dubbel linje, inte av etiketten." },
+      { text: "Exactly one — den anger både minimum och maximum", explain: "Etiketten anger bara maximum; exakt en kräver dubbel linje därtill." },
+      { text: "At most one — den anger enbart ett maximum", explain: "Rätt. Ratio-etiketterna anger endast maxima — 1 betyder högst en." },
+      { text: "One only if the participation line is doubled as well", explain: "Etiketten betyder högst en oavsett linje; linjen lägger till minst en." }
     ],
-    correctIndex: 2,
-    explanation: "En ratio anger maxima only. 1 betyder at most one, inte exactly one. \"Exakt en\" uppstår först i kombination med en total participation line.",
-  },
-  {
-    id: "db4-21",
-    topic: "kardinalitet",
+    correct: 2, source: "Kompendiet kap. 5", reviewed: true },
+
+  { id: "db4-21", topic: "relationstyper", difficulty: 1,
     question: "Vad betyder en dubbel linje mellan en entity och en romb?",
     options: [
-      "Att relationen är identifying och entityn därmed är weak",
-      "Att entityn deltar minst en gång — total participation",
-      "Att multipliciteten i den änden är exakt ett",
-      "Att entityn deltar i två olika relationships samtidigt",
+      { text: "Att relationen är identifying och entityn därmed är weak", explain: "Identifierande relation ritas med dubbel romb, inte dubbel linje." },
+      { text: "Att entityn deltar minst en gång — total participation", explain: "Rätt. Dubbel linje är total participation, läst vid sin egen ände." },
+      { text: "Att multipliciteten i den änden är exakt ett", explain: "Multipliciteten sätts av ratio-etiketten, inte av linjen." },
+      { text: "Att entityn deltar i två olika relationships samtidigt", explain: "Linjen hör till en relation; den säger inget om andra relationer." }
     ],
-    correctIndex: 1,
-    explanation: "Participation lines läses vid sin egen ände. Enkel linje är partial participation, dubbel linje är total participation. Ratiot påverkas inte.",
-  },
-  {
-    id: "db4-22",
-    topic: "kardinalitet",
-    question: "Vad skiljer M från N i en M:N-relation?",
-    options: [
-      "M anger minimum och N anger maximum",
-      "Ingenting — båda betyder \"många\"",
-      "M betyder \"många\", N \"obestämt antal\"",
-      "M avser ägande, N beroende sidan",
-    ],
-    correctIndex: 1,
-    explanation: "M och N betyder båda \"many\". Bokstäverna skiljer bara de två positionerna åt — de anger inte olika antal.",
-  },
-  {
-    id: "db4-23",
-    topic: "kardinalitet",
+    correct: 1, source: "Kompendiet kap. 5", reviewed: true },
+
+  { id: "db4-23", topic: "relationstyper", difficulty: 3,
     question: "Vad gäller när min–max-notation `(0,N)` används?",
     options: [
-      "Tuplerna läses across, precis som vanliga ratio labels alltid gör",
-      "Tuplerna ersätter ratio labels, medan dubbellinjerna behålls som förut",
-      "Tuplerna läses vid sin egen entity, utan dubbellinjer",
-      "Tuplerna anger enbart maxima, precis som ratio labels gör",
+      { text: "Tuplerna läses across, precis som vanliga ratio labels alltid gör", explain: "Min–max-tupler läses vid sin egen entitet, inte tvärs över." },
+      { text: "Tuplerna ersätter ratio labels, medan dubbellinjerna behålls som förut", explain: "Dubbellinjerna används inte alls när tuplerna bär deltagandekravet." },
+      { text: "Tuplerna läses vid sin egen entity, utan dubbellinjer", explain: "Rätt. Tuplerna läses vid egen entitet, med enkla linjer genomgående." },
+      { text: "Tuplerna anger enbart maxima, precis som ratio labels gör", explain: "Tupelns första värde är ett minimum, inte bara ett maximum." }
     ],
-    correctIndex: 2,
-    explanation: "Min–max-tupler läses vid sin egen entity, och det är första värdet som bär participation-kravet. Sådana diagram använder enkla linjer genomgående — blanda aldrig de två konventionerna.",
-  },
-  {
-    id: "db4-24",
-    topic: "relationer",
-    question: "Vad är degree hos en unary relationship?",
-    options: [
-      "Det beror på hur många instanser som finns i relationship settet",
-      "Två, eftersom två roller är inblandade",
-      "Noll, eftersom ingen extern entity type deltar",
-      "Ett, eftersom den har en deltagande entity type",
-    ],
-    correctIndex: 3,
-    explanation: "En unary relationship har en deltagande entity type och därmed degree ett. Den kallas också recursive, eftersom båda rollerna spelas av instanser av samma type.",
-  },
-  {
-    id: "db4-25",
-    topic: "relationer",
+    correct: 2, source: "Kompendiet kap. 5", reviewed: true },
+
+  { id: "db4-25", topic: "relationstyper", difficulty: 3,
     question: "Ratiot 1:N med enkla linjer används för Supervises. Vad tillåter modellen fortfarande?",
     options: [
-      "Att en Employee har flera supervisors samtidigt",
-      "Att en Employee handleder sig själv och att cykler uppstår",
-      "Att en Employee saknar både supervisor och reports",
-      "Att relationen läses i motsatt riktning mot rollnamnen",
+      { text: "Att en Employee har flera supervisors samtidigt", explain: "1 vid supervisor begränsar varje underställd till högst en handledare." },
+      { text: "Att en Employee handleder sig själv och att cykler uppstår", explain: "Rätt. Basic Chen saknar symbol för supervisor ≠ report och för acyklicitet." },
+      { text: "Att en Employee saknar både supervisor och reports", explain: "Det tillåts av enkla linjer, men det är inget fel — frågan gäller ogiltiga populationer." },
+      { text: "Att relationen läses i motsatt riktning mot rollnamnen", explain: "Läsriktningen styrs av rollnamnen och kan inte vändas godtyckligt." }
     ],
-    correctIndex: 1,
-    explanation: "Både self-links (Sam handleder sig själv) och cykler (Sam och Mary handleder varandra) är tillåtna. Reglerna supervisor ≠ report och acyclic måste anges som textual business rules — basic Chen har ingen symbol för dem.",
-  },
-  {
-    id: "db4-26",
-    topic: "svaga",
+    correct: 1, source: "Kompendiet kap. 5", reviewed: true },
+
+  { id: "db4-26", topic: "svaga", difficulty: 3,
     question: "Vad krävs för att en entity type ska vara weak?",
     options: [
-      "Att den deltar obligatoriskt i minst en relationship",
-      "Att den saknar egna attributes utöver sin partial identifier",
-      "Att den har färre instanser än den entity type den är kopplad till",
-      "Att dess identitet är beroende av en entity av annan type",
+      { text: "Att den deltar obligatoriskt i minst en relationship", explain: "Total participation gör inte en entitet svag — Project i Leads förblir stark." },
+      { text: "Att den saknar egna attributes utöver sin partial identifier", explain: "Svaghet handlar om identitet, inte om antalet attribut." },
+      { text: "Att den har färre instanser än den entity type den är kopplad till", explain: "Antalet instanser har inget med svaghet att göra." },
+      { text: "Att dess identitet är beroende av en entity av annan type", explain: "Rätt. Svaghet kräver identitetsberoende av en entitet av annan typ." }
     ],
-    correctIndex: 3,
-    explanation: "Weakness kräver identity dependence. På slide 78 har Project total participation i Leads men förblir strong, eftersom projectNo identifierar det på egen hand.",
-  },
-  {
-    id: "db4-27",
-    topic: "svaga",
+    correct: 3, source: "Kompendiet kap. 6", reviewed: true },
+
+  { id: "db4-27", topic: "svaga", difficulty: 3,
     question: "Två relationship types kring ProjectTask har båda multipliciteten 1:N. Vilken är owner?",
     options: [
-      "Den som har total participation på ProjectTask-sidan",
-      "Den vars entity type har flest attributes av de två",
-      "Det går inte att avgöra — double diamond avgör",
-      "Den som står till vänster enligt diagrammets läsordning",
+      { text: "Den som har total participation på ProjectTask-sidan", explain: "Total participation pekar inte ut ägaren." },
+      { text: "Den vars entity type har flest attributes av de två", explain: "Antalet attribut säger ingenting om vem som äger." },
+      { text: "Det går inte att avgöra — double diamond avgör", explain: "Rätt. Multipliciteterna avslöjar inte ägaren — dubbel romb och dubbel rektangel gör det." },
+      { text: "Den som står till vänster enligt diagrammets läsordning", explain: "Diagrammets placering är bara schematisk." }
     ],
-    correctIndex: 2,
-    explanation: "Multipliciteter avslöjar inte vem som är owner. Det är double diamond och double rectangle som pekar ut den identifying relationship.",
-  },
-  {
-    id: "db4-28",
-    topic: "svaga",
-    question: "Vilka tre markeringar visar att ProjectTask är weak?",
-    options: [
-      "Double rectangle, double line och heldragen understrykning",
-      "Double rectangle, double diamond och dashed underline",
-      "Dashed rectangle, double diamond och dubbel oval",
-      "Double diamond, dubbel oval och dashed underline",
-    ],
-    correctIndex: 1,
-    explanation: "Double rectangle på ProjectTask, double diamond på Contains, och dashed underline på taskNo som partial identifier.",
-  },
-  {
-    id: "db4-29",
-    topic: "svaga",
-    question: "Vad utgör den kompletta identiteten för en ProjectTask?",
-    options: [
-      "taskNo ensamt, eftersom det är unikt inom sitt Project",
-      "taskNo tillsammans med relationens namn Contains",
-      "projectNo tillsammans med taskNo",
-      "projectNo ensamt, eftersom owner bestämmer identiteten",
-    ],
-    correctIndex: 2,
-    explanation: "taskNo kan upprepas mellan olika Projects: (P101, 1) och (P205, 1) är olika tasks. Owner completes the identity.",
-  },
-  {
-    id: "db4-30",
-    topic: "associativa",
+    correct: 2, source: "Kompendiet kap. 6", reviewed: true },
+
+  { id: "db4-30", topic: "svaga", difficulty: 2,
     question: "När bör ett par reifieras till en egen entity type?",
     options: [
-      "När paret behöver egen identitet eller eget lifecycle",
-      "Så snart relationen äger minst ett eget attribute i modellen",
-      "När multipliciteten är M:N i stället för 1:N mellan de två",
-      "När de deltagande entity types hör till olika verksamhetsdelar",
+      { text: "När paret behöver egen identitet eller eget lifecycle", explain: "Rätt. Reifiera när paret ska refereras, delta i andra relationer eller ha egen livscykel." },
+      { text: "Så snart relationen äger minst ett eget attribute i modellen", explain: "Relationsattribut i sig tvingar inte fram reifiering." },
+      { text: "När multipliciteten är M:N i stället för 1:N mellan de två", explain: "Multipliciteten avgör inte; ett M:N-par kan förbli en relation." },
+      { text: "När de deltagande entity types hör till olika verksamhetsdelar", explain: "Organisatorisk hemvist är inget skäl i modellen." }
     ],
-    correctIndex: 0,
-    explanation: "Relationship attributes tvingar i sig inte fram reification. Man reifierar när paret måste kunna refereras som ett begrepp, delta i andra relationships, eller ha egen identity och lifecycle.",
-  },
-  {
-    id: "db4-31",
-    topic: "associativa",
-    question: "Vad medför det att lägga till `assignmentNo` som identifier på Assignment?",
-    options: [
-      "Att organisationen får ansvar för att tilldela, lagra och bevara värdet",
-      "Att modellen blir enklare eftersom identiteten inte längre är sammansatt",
-      "Att relationen till Employee och Project kan tas bort ur modellen",
-      "Att Assignment automatiskt blir en weak entity med Employee som owner",
-    ],
-    correctIndex: 0,
-    explanation: "Understrykningen deklarerar assignmentNo som candidate identifier, men skapar samtidigt en verklig data responsibility. Syftet är ett stabilt värde som går att referera till och följa.",
-  },
-  {
-    id: "db4-32",
-    topic: "crowsfoot",
+    correct: 0, source: "Kompendiet kap. 6", reviewed: true },
+
+  { id: "db4-32", topic: "crowsfoot", difficulty: 2,
     question: "Varför måste ett Employee–Project-par bli en associative entity i Crow's Foot?",
     options: [
-      "Därför att Crow's Foot inte tillåter M:N-relationer alls",
-      "Därför att romben saknas och relationer därför måste bli entities",
-      "Därför att notationen kräver en identifier på varje relation",
-      "Därför att en relationship line inte har utrymme för attributes",
+      { text: "Därför att Crow's Foot inte tillåter M:N-relationer alls", explain: "Crow's Foot uttrycker M:N; det är attributen som inte får plats på linjen." },
+      { text: "Därför att romben saknas och relationer därför måste bli entities", explain: "Att romben saknas gör inte relationer till entiteter i sig." },
+      { text: "Därför att notationen kräver en identifier på varje relation", explain: "Notationen kräver ingen identifierare på relationer." },
+      { text: "Därför att en relationship line inte har utrymme för attributes", explain: "Rätt. En Crow's Foot-linje kan inte bära attribut, så paret blir en associativ entitet." }
     ],
-    correctIndex: 3,
-    explanation: "Chen kan hänga allocationPercentage direkt på romben. En Crow's Foot-linje kan inte bära attributes, så paret måste representeras som en associative entity. Här tvingar notationen fram det som i Chen var ett val.",
-  },
-  {
-    id: "db4-33",
-    topic: "crowsfoot",
+    correct: 3, source: "Kompendiet kap. 6", reviewed: true },
+
+  { id: "db4-33", topic: "crowsfoot", difficulty: 2,
     question: "Hur läses de två märkena vid en endpoint i common IE?",
     options: [
-      "Det yttre visar one eller many, det inre visar optional eller required",
-      "Det yttre visar optional eller required, det inre visar one eller many",
-      "Det yttre visar minimum och det inre visar maximum antal",
-      "Båda visar samma sak och det ena är enbart en förstärkning",
+      { text: "Det yttre visar one eller many, det inre visar optional eller required", explain: "Omvänt: det yttre märket är optional/required, det inre one/many." },
+      { text: "Det yttre visar optional eller required, det inre visar one eller many", explain: "Rätt. Yttre: cirkel = optional, streck = required. Inre: streck = one, fork = many." },
+      { text: "Det yttre visar minimum och det inre visar maximum antal", explain: "Märkena anger inte minimum och maximum som tal." },
+      { text: "Båda visar samma sak och det ena är enbart en förstärkning", explain: "De två märkena betyder olika saker och ger tillsammans fyra mönster." }
     ],
-    correctIndex: 1,
-    explanation: "Yttre märket: circle = optional, bar = required. Märket närmast boxen: bar = one, crow's foot = many. Fyra kombinationer totalt.",
-  },
-  {
-    id: "db4-34",
-    topic: "crowsfoot",
+    correct: 1, source: "Kompendiet kap. 6", reviewed: true },
+
+  { id: "db4-34", topic: "crowsfoot", difficulty: 3,
     question: "Vad kan en heldragen linje betyda i olika Crow's Foot-verktyg?",
     options: [
-      "Alltid required participation, oavsett vilket verktyg",
-      "Alltid en identifying relationship, oavsett verktyg",
-      "Antingen \"must\" eller identifying — läs legenden",
-      "Alltid many i den ände där linjen är som tjockast",
+      { text: "Alltid required participation, oavsett vilket verktyg", explain: "I vissa verktyg betyder heldragen linje identifying, inte required." },
+      { text: "Alltid en identifying relationship, oavsett verktyg", explain: "I Barker/Oracle betyder heldragen halvlinje must, inte identifying." },
+      { text: "Antingen \"must\" eller identifying — läs legenden", explain: "Rätt. Samma linjestil betyder olika saker i olika dialekter — läs legenden." },
+      { text: "Alltid many i den ände där linjen är som tjockast", explain: "Många visas med fork, inte med linjens tjocklek." }
     ],
-    correctIndex: 2,
-    explanation: "I Barker/Oracle kodar linjestilen may och must. I vissa modelleringsverktyg identifierar den i stället dependency och kodar då inte participation alls. Samma streck kan betyda olika saker.",
-  },
-  {
-    id: "db4-35",
-    topic: "crowsfoot",
+    correct: 2, source: "Kompendiet kap. 6", reviewed: true },
+
+  { id: "db4-35", topic: "crowsfoot", difficulty: 2,
     question: "Hur visar Crow's Foot att en ProjectTask identifieras av sitt Project?",
     options: [
-      "Med upprepade ID-markörer som bildar en composite identifier",
-      "Med en dubbel ram runt entity boxen och streckad understrykning",
-      "Med en särskild symbol för identifying relationship vid linjen",
-      "Det går inte att visa i Crow's Foot och måste dokumenteras separat",
+      { text: "Med upprepade ID-markörer som bildar en composite identifier", explain: "Rätt. Upprepade ID-markörer gör project_no och task_no till en sammansatt identifierare." },
+      { text: "Med en dubbel ram runt entity boxen och streckad understrykning", explain: "Dubbel ram och streckad understrykning är Chens symboler, inte Crow's Foots." },
+      { text: "Med en särskild symbol för identifying relationship vid linjen", explain: "Crow's Foot har ingen särskild symbol för identifierande relation." },
+      { text: "Det går inte att visa i Crow's Foot och måste dokumenteras separat", explain: "Det går att visa — direkt i identifieraren med två ID-markörer." }
     ],
-    correctIndex: 0,
-    explanation: "Ordinary entity box räcker. Upprepade ID-markörer gör project_no och task_no till en sammansatt identifier, och project_no binder därmed varje tasks identitet till ett Project.",
-  },
-  {
-    id: "db4-36",
-    topic: "crowsfoot",
-    question: "Hur hanterar Crow's Foot ett multivalued attribute som phoneNumber?",
+    correct: 0, source: "Kompendiet kap. 6", reviewed: true },
+
+  { id: "dbq-13", topic: "transformation", difficulty: 1,
+    question: "Var hamnar den främmande nyckeln vid en binär 1:M-relation?",
     options: [
-      "Med dubbel oval, precis som i Chen-notation",
-      "Som relaterade entities i en 1:N relationship",
-      "Med ett upprepat attributnamn inuti entity boxen",
-      "Med en kommaseparerad lista i attributets värdefält",
+      { text: "I ett-sidans relation, som referens till många-sidans primärnyckel", explain: "Ett projekt har många anställda — det går inte att lagra i en cell på ett-sidan." },
+      { text: "I många-sidans relation, som referens till ett-sidans primärnyckel", explain: "Rätt. En anställd har ett projekt, så projektets nyckel får plats i den anställdas rad." },
+      { text: "I en ny kopplingsrelation som får båda primärnycklarna", explain: "Kopplingsrelationen är M:N-regeln; 1:M behöver ingen ny relation." },
+      { text: "I båda relationerna, så att kopplingen kan följas åt båda hållen", explain: "En främmande nyckel räcker; joinen går åt båda hållen ändå." }
     ],
-    correctIndex: 1,
-    explanation: "Chen behåller telefonnumren i ett multivalued attribute. Crow's Foot representerar dem i stället som relaterade PHONE NUMBER-entities. Samma regel, olika construct.",
-  },
+    correct: 1, source: "Kompendiet kap. 7", reviewed: false },
+
+  { id: "dbq-14", topic: "transformation", difficulty: 3,
+    question: "En 1:1-relation har ett obligatoriskt och ett frivilligt deltagande. Var läggs den främmande nyckeln?",
+    options: [
+      { text: "I den frivilliga sidans relation, så att NULL blir tillåtet där det behövs", explain: "Då blir kolumnen NULL för alla som inte deltar — precis det man vill undvika." },
+      { text: "I en ny relation, eftersom 1:1 alltid transformeras med en kopplingstabell", explain: "1:1 kräver ingen ny relation; det är M:N-regelns lösning." },
+      { text: "I valfri riktning — vid 1:1 väljer arkitekten oavsett deltagandet", explain: "Fri riktning gäller bara när båda sidor deltar frivilligt." },
+      { text: "I den obligatoriska sidans relation, så att kolumnen aldrig blir NULL", explain: "Rätt. Den obligatoriska sidan har alltid en motpart, så nyckeln från den frivilliga sidan läggs där." }
+    ],
+    correct: 3, source: "Kompendiet kap. 7", reviewed: false },
+
+  { id: "dbq-15", topic: "transformation", difficulty: 2,
+    question: "Work(EmployeeNo, ProjectNo, Hours) uppstår ur en M:N-relation. Vad gäller för Hours?",
+    options: [
+      { text: "Det är ett icke-nyckelattribut utanför den sammansatta primärnyckeln", explain: "Rätt. Ingick Hours i nyckeln kunde samma par förekomma två gånger med olika timmar." },
+      { text: "Det ingår i primärnyckeln, eftersom det kommer från relationen själv", explain: "Då skulle samma anställd kunna finnas på samma projekt flera gånger." },
+      { text: "Det blir en främmande nyckel mot en ny relation som lagrar timmarna", explain: "Relationsattribut läggs direkt i kopplingsrelationen som vanliga attribut." },
+      { text: "Det flyttas till Employee, eftersom timmarna beskriver den anställda", explain: "Timmarna beskriver paret anställd–projekt, inte den anställda ensam." }
+    ],
+    correct: 0, source: "Kompendiet kap. 7", reviewed: false },
+
+  { id: "dbq-16", topic: "transformation", difficulty: 2,
+    question: "Hur bildas primärnyckeln i relationen för en svag entitet?",
+    options: [
+      { text: "Av den partiella nyckeln ensam, eftersom den är unik inom sin ägare", explain: "Unik inom ägaren räcker inte — RoomNo upprepas mellan hotellen." },
+      { text: "Av ägarens primärnyckel ensam, eftersom den svaga entiteten saknar egen nyckel", explain: "Ägarens nyckel skiljer inte två rum på samma hotell åt." },
+      { text: "Av ägarens primärnyckel som främmande nyckel tillsammans med den partiella nyckeln", explain: "Rätt. Kombinationen HotelName + RoomNo är unik och speglar beroendet i ER-modellen." },
+      { text: "Av ett nytt löpnummer, eftersom kombinationen inte kan vara nyckel", explain: "Löpnummer är fysisk design; kombinationen är precis vad regeln föreskriver." }
+    ],
+    correct: 2, source: "Kompendiet kap. 7", reviewed: false },
+
+  { id: "dbq-17", topic: "transformation", difficulty: 2,
+    question: "Address som flervärdesattribut ger EmployeeAddress(EmployeeNo, Address). Vilken konsekvens har det?",
+    options: [
+      { text: "Varje adress kan bara höra till en anställd, eftersom den är en egen entitet", explain: "Det hade gällt om adressen modellerats som entitet — inte som attribut." },
+      { text: "Adressen måste vara unik i hela databasen, eftersom den ingår i nyckeln", explain: "Nyckeln är kombinationen; samma adress får förekomma med olika EmployeeNo." },
+      { text: "Anställda utan adress kan inte lagras, eftersom nyckeln då blir NULL", explain: "En anställd utan adress får helt enkelt ingen rad i EmployeeAddress." },
+      { text: "Två anställda kan dela samma adress, eftersom adressen bara är ett värde", explain: "Rätt. Vill man hindra det ska adressen modelleras som en egen entitet." }
+    ],
+    correct: 3, source: "Kompendiet kap. 7", reviewed: false },
+
+  { id: "dbq-18", topic: "transformation", difficulty: 2,
+    question: "Hur transformeras en unär 1:M-relation som chef–anställd?",
+    options: [
+      { text: "Som en ny relation med två attribut som båda refererar till Employee", explain: "Det är lösningen för unär M:N, inte för 1:M." },
+      { text: "Som en kopia av Employee-relationen med namnet Manager och samma attribut", explain: "Chefer är anställda; ingen ny entitetsrelation behövs." },
+      { text: "Som en främmande nyckel i samma relation, med rollnamnet som attributnamn", explain: "Rätt. ManagerNo i Employee refererar tillbaka till EmployeeNo; högsta chefen har NULL." },
+      { text: "Inte alls — unära relationer representeras inte i den logiska modellens relationer", explain: "Den binära regeln av samma form tillämpas, med samma entitet på båda sidor." }
+    ],
+    correct: 2, source: "Kompendiet kap. 7", reviewed: false },
+
+  { id: "dbq-19", topic: "normalisering", difficulty: 2,
+    question: "Varför blir en M:N-relation tre relationer och inte en enda?",
+    options: [
+      { text: "En relation som lagrar två saker samtidigt får uppdaterings- och raderingsanomalier", explain: "Rätt. Budgeten måste ändras på flera rader, och sista anställda tar projektet med sig." },
+      { text: "Relationsmodellen tillåter högst ett främmande nyckelattribut i varje relation", explain: "Ingen sådan gräns finns; kopplingsrelationen har två." },
+      { text: "SQL Server kan inte skapa en primärnyckel som sträcker sig över fler än två attribut", explain: "Sammansatta nycklar över flera attribut är helt tillåtna." },
+      { text: "Tre relationer ger alltid snabbare frågor än en enda, oavsett vad de innehåller", explain: "Prestanda är inte skälet — det är redundansen och dess anomalier." }
+    ],
+    correct: 0, source: "Kompendiet kap. 8", reviewed: false },
+
+  { id: "dbq-20", topic: "normalisering", difficulty: 2,
+    question: "En relation i 1NF har en enkel kandidatnyckel. Vad gäller om 2NF?",
+    options: [
+      { text: "Den kan bryta mot 2NF om något icke-primärattribut beror på ett annat", explain: "Beroende mellan icke-primära attribut är ett 3NF-problem, inte 2NF." },
+      { text: "Den är automatiskt i 2NF — en enkel nyckel har inga äkta delmängder", explain: "Rätt. Partiellt beroende kräver en sammansatt nyckel att vara delmängd av." },
+      { text: "Den måste först dekomponeras i två relationer innan 2NF kan prövas", explain: "Dekomposition görs bara när ett test misslyckas." },
+      { text: "Den är i 2NF bara om alla attribut är atomära och dessutom unika", explain: "Unikhet är inget 2NF-krav; atomära värden är 1NF." }
+    ],
+    correct: 1, source: "Kompendiet kap. 8", reviewed: false },
+
+  { id: "dbq-21", topic: "normalisering", difficulty: 3,
+    question: "A → B, B → A och B → C gäller. Är C transitivt beroende av A?",
+    options: [
+      { text: "Ja, eftersom A bestämmer B och B bestämmer C", explain: "Kedjan finns, men B → A gör att undantaget i definitionen slår till." },
+      { text: "Ja, eftersom C inte ingår i någon kandidatnyckel", explain: "Att C är icke-primärt räcker inte; mellanledet får inte vara en nyckel." },
+      { text: "Nej, eftersom C beror direkt på B och inte på A", explain: "C beror visserligen av B, men skälet är ett annat." },
+      { text: "Nej, eftersom B → A gör B till en kandidatnyckel", explain: "Rätt. Definitionen undantar fallet Y → X; då är Y själv en kandidatnyckel." }
+    ],
+    correct: 3, source: "Kompendiet kap. 8", reviewed: false },
+
+  { id: "dbq-22", topic: "normalisering", difficulty: 3,
+    question: "Vad kräver 3NF utöver 2NF?",
+    options: [
+      { text: "Att inget icke-primärattribut beror på en äkta delmängd av någon kandidatnyckel", explain: "Det är 2NF-kravet, som redan förutsätts." },
+      { text: "Att relationen har exakt en kandidatnyckel som består av ett attribut", explain: "3NF ställer inga krav på antalet eller formen på nycklarna." },
+      { text: "Att alla värden är atomära och att primärnyckeln är ett enda attribut", explain: "Atomära värden är 1NF; nyckelns form spelar ingen roll." },
+      { text: "Att varje icke-primärattribut är icke-transitivt beroende av varje kandidatnyckel", explain: "Rätt. Ordagrant: varje icke-primärattribut, varje kandidatnyckel." }
+    ],
+    correct: 3, source: "Kompendiet kap. 8", reviewed: false },
+
+  { id: "dbq-23", topic: "normalisering", difficulty: 2,
+    question: "Hur härleds kandidatnyckeln ur de funktionella beroendena?",
+    options: [
+      { text: "Som det attribut som förekommer i flest beroenden på vänster sida av pilen", explain: "Antal förekomster säger inget om vad attributet bestämmer." },
+      { text: "Som den minimala attributuppsättning som bestämmer alla övriga attribut", explain: "Rätt. I exemplet bestämmer {EmployeeNo, ProjectNo} tillsammans allt annat." },
+      { text: "Som det attribut som har flest distinkta värden i den exempeldata som finns", explain: "Distinkta värden i data är inte en regel på modellnivå." },
+      { text: "Som det första attributet i relationen, eftersom det brukar vara nyckeln", explain: "Attributens ordning saknar betydelse i relationsmodellen." }
+    ],
+    correct: 1, source: "Kompendiet kap. 8", reviewed: false },
+
+  { id: "dbq-24", topic: "normalisering", difficulty: 3,
+    question: "Vad innebär det att en dekomposition är lossless?",
+    options: [
+      { text: "Inga rader går förlorade när man raderar i någon av delrelationerna", explain: "Lossless handlar om join, inte om radering." },
+      { text: "Originalrelationen kan återskapas exakt genom join, utan spurious tuples", explain: "Rätt. Ger joinen rader som inte fanns i originalet är dekompositionen felaktig." },
+      { text: "Alla funktionella beroenden kan kontrolleras inom en enskild delrelation", explain: "Det är dependency preservation, det andra kvalitetskravet." },
+      { text: "Delrelationerna tar tillsammans mindre lagringsutrymme än originalet", explain: "Lagringsutrymme är inte kriteriet." }
+    ],
+    correct: 1, source: "Kompendiet kap. 8", reviewed: false },
+
+  { id: "dbq-25", topic: "fysisk", difficulty: 1,
+    question: "Vilka satser hör till DDL?",
+    options: [
+      { text: "SELECT, INSERT och UPDATE", explain: "Det är DML — satserna som hanterar data." },
+      { text: "CREATE, ALTER och DROP", explain: "Rätt. DDL definierar strukturer; DML hanterar data." },
+      { text: "PRIMARY KEY och UNIQUE", explain: "Det är constrainttyper, inte satser." },
+      { text: "INT, DECIMAL och VARCHAR", explain: "Det är datatyper, inte satser." }
+    ],
+    correct: 1, source: "Kompendiet kap. 9", reviewed: false },
+
+  { id: "dbq-26", topic: "fysisk", difficulty: 2,
+    question: "Vad skiljer UNIQUE från PRIMARY KEY?",
+    options: [
+      { text: "UNIQUE gäller bara textkolumner, PRIMARY KEY bara heltalskolumner", explain: "Datatypen har inget med constrainttypen att göra." },
+      { text: "UNIQUE upprätthåller referensintegritet, PRIMARY KEY gör det inte", explain: "Referensintegritet är FOREIGN KEY:s uppgift." },
+      { text: "UNIQUE tillåter NULL; PRIMARY KEY är NOT NULL och det finns bara en per tabell", explain: "Rätt. Därför hamnar naturliga nycklar som UNIQUE när surrogatnyckeln tagit över." },
+      { text: "UNIQUE kontrolleras bara vid INSERT, PRIMARY KEY även vid UPDATE", explain: "Båda gäller alltid, oavsett operation." }
+    ],
+    correct: 2, source: "Kompendiet kap. 9", reviewed: false },
+
+  { id: "dbq-27", topic: "fysisk", difficulty: 2,
+    question: "Vilken constraint ger domänbegreppet ur kapitel 2 sin tekniska motsvarighet?",
+    options: [
+      { text: "CHECK, som villkorar vilka värden kolumnen får innehålla", explain: "Rätt. CHECK (EmpSalary >= 0) är domänregeln uttryckt i DDL." },
+      { text: "DEFAULT, som sätter ett värde när inget anges vid INSERT", explain: "DEFAULT fyller i ett värde; den begränsar inte vilka som är tillåtna." },
+      { text: "UNIQUE, som hindrar att samma värde förekommer två gånger", explain: "Unikhet är en nyckelegenskap, inte en domän." },
+      { text: "FOREIGN KEY, som kopplar kolumnen till en annan tabells nyckel", explain: "Referensintegritet gäller kopplingar, inte tillåtna värden." }
+    ],
+    correct: 0, source: "Kompendiet kap. 9", reviewed: false },
+
+  { id: "dbq-28", topic: "fysisk", difficulty: 3,
+    question: "Vad måste följa med när en surrogatnyckel blir primärnyckel?",
+    options: [
+      { text: "Den naturliga nyckeln tas bort, eftersom två nycklar ger redundans", explain: "Då förloras affärsregeln att till exempel anställningsnummer är unika." },
+      { text: "Den naturliga nyckeln görs till främmande nyckel mot surrogatnyckeln", explain: "En kolumn i samma tabell refererar inte sin egen rad." },
+      { text: "Surrogatnyckeln får ett CHECK-villkor som binder den till den naturliga", explain: "CHECK uttrycker domäner, inte kopplingen mellan två nycklar." },
+      { text: "Den naturliga nyckeln behålls som UNIQUE, annars förloras affärsregeln om unikhet", explain: "Rätt. EmployeeID är surrogat primärnyckel och EmpNo naturlig nyckel med UQ-constraint." }
+    ],
+    correct: 3, source: "Kompendiet kap. 9", reviewed: false },
+
+  { id: "dbq-29", topic: "fysisk", difficulty: 1,
+    question: "Varför ska belopp lagras som DECIMAL(p,s) och inte som FLOAT?",
+    options: [
+      { text: "FLOAT tar mer lagringsutrymme än DECIMAL för samma antal siffror", explain: "Utrymmet är inte skälet." },
+      { text: "DECIMAL indexeras betydligt snabbare än FLOAT i SQL Server", explain: "Indexering är inte skälet." },
+      { text: "DECIMAL är exakt, medan FLOAT ger avrundningsfel i beloppen", explain: "Rätt. Pengar kräver exakta decimaler; FLOAT är en approximation." },
+      { text: "FLOAT tillåter inte negativa värden, vilket belopp kan kräva", explain: "FLOAT tillåter negativa tal; det är precisionen som brister." }
+    ],
+    correct: 2, source: "Kompendiet kap. 9", reviewed: false },
+
+  { id: "dbq-30", topic: "fysisk", difficulty: 2,
+    question: "Varför ska constraints namnges enligt kodstandarden, som PK_Employee_EmployeeID?",
+    options: [
+      { text: "SQL Server vägrar att skapa constraints som saknar ett explicit angivet namn", explain: "Servern hittar på ett namn själv — men ett obegripligt." },
+      { text: "Namnet avgör i vilken ordning constraints kontrolleras vid varje INSERT", explain: "Kontrollordningen styrs inte av namnen." },
+      { text: "Namnet gör att constrainten indexeras automatiskt av databashanteraren", explain: "Namngivning skapar inga index." },
+      { text: "Felmeddelanden blir begripliga och constrainten kan refereras i ALTER TABLE", explain: "Rätt. Praktiska skäl: förstå felet och kunna peka på constrainten senare." }
+    ],
+    correct: 3, source: "Kompendiet kap. 9", reviewed: false },
 ];
-
-// ---------------------------------------------------------------------------
-// Anpassning till appens frågeschema (samma som Strategi: options[].text,
-// correct). Banken ovan är leveransen ordagrant och rörs inte — formuleringar
-// och alternativ är balansmätta (se scripts/fragebank-balans.test.mjs).
-//
-// Bankens tolv ämnen är finare än topics.js. `topic` blir topics.js-ämnet,
-// som styr ämnesfiltret i Öva, "Öva på detta"-knapparna i Läs och
-// statistiken; det finare ämnet följer med som `subtopic` och visas på
-// frågekortet med sitt visningsnamn.
-export const QUESTION_TOPIC_MAP = {
-  grundbegrepp: "grunder",
-  designkedjan: "grunder",
-  sql: "grunder",
-  metamodell: "metamodell",
-  entiteter: "er",
-  attribut: "er",
-  identifierare: "er",
-  relationer: "relationstyper",
-  kardinalitet: "relationstyper",
-  svaga: "svaga",
-  associativa: "svaga",
-  crowsfoot: "crowsfoot",
-};
-
-// Ingen svårighetsgrad, ingen källrad och ingen förklaring per alternativ:
-// Öva prövar förståelse av läsmaterialet och visar rätt/fel plus
-// förklaringen en gång.
-export const questions = databaserQuestions.map((item) => ({
-  id: item.id,
-  topic: QUESTION_TOPIC_MAP[item.topic],
-  subtopic: item.topic,
-  subtopicLabel: databaserTopicLabels[item.topic],
-  question: item.question,
-  options: item.options.map((text) => ({ text })),
-  correct: item.correctIndex,
-  explanation: item.explanation,
-}));

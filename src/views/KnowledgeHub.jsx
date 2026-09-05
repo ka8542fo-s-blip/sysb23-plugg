@@ -6,6 +6,7 @@ import ConceptCards from "../components/knowledge/ConceptCards.jsx";
 import Glossary from "../components/knowledge/Glossary.jsx";
 import SearchResults from "../components/knowledge/SearchResults.jsx";
 import { searchKnowledge } from "../lib/knowledgeSearch.js";
+import { chapterPracticeGroups, groupsForTopics, practicedGroupIds } from "../lib/practiceAxis.js";
 import { KEYS, load, save } from "../lib/storage.js";
 
 const SEGMENTS = [
@@ -19,11 +20,19 @@ const SEGMENTS = [
 export default function KnowledgeHub({ course, params, navigate, readChapters, onToggleRead }) {
   const chapters = course.chapters || [];
   const glossary = course.glossary || [];
-  // "Öva på detta"-knapparna visas bara där ämnet faktiskt har frågor —
-  // kapitel utan täckta ämnen får ingen knapp.
+  // "Öva på detta"-knapparna visas bara där det finns frågor. Öva grupperar
+  // per ämne eller per kapitel (practiceAxis); knappen förväljer gruppen.
+  const practicableGroups = useMemo(() => practicedGroupIds(course), [course]);
   const practicableTopics = useMemo(
-    () => new Set((course.questions || []).map((question) => question.topic)),
-    [course],
+    () =>
+      new Set(
+        (course.topics || [])
+          .filter((topic) =>
+            groupsForTopics(course, [topic.id]).some((id) => practicableGroups.has(id)),
+          )
+          .map((topic) => topic.id),
+      ),
+    [course, practicableGroups],
   );
 
   const [segment, setSegment] = useState(() => {
@@ -152,8 +161,10 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
                 isRead={Boolean(readChapters[current.id])}
                 onToggleRead={onToggleRead}
                 onOpenTopic={openTopic}
-                onPractice={practice}
-                canPractice={(current.topics || []).some((id) => practicableTopics.has(id))}
+                onPractice={() => practice(chapterPracticeGroups(course, current))}
+                canPractice={chapterPracticeGroups(course, current).some((id) =>
+                  practicableGroups.has(id),
+                )}
                 onBack={() => setChapterId(null)}
                 onPrev={() => step(-1)}
                 onNext={() => step(1)}
@@ -176,7 +187,7 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
               chapters={chapters}
               openTopicId={openTopicId}
               onOpenChapter={openChapter}
-              onPractice={practice}
+              onPractice={(topicIds) => practice(groupsForTopics(course, topicIds))}
               practicableTopics={practicableTopics}
             />
           )}

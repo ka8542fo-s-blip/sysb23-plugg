@@ -1,5 +1,5 @@
-// Multival av ämnen. Tom lista tolkas som "Allt".
-export default function TopicFilter({ topics, selected, onChange, counts }) {
+// Multival av ämnen eller kapitel (practiceAxis). Tom lista tolkas som "Allt".
+export default function TopicFilter({ topics, selected, onChange, counts, label = "Ämnen" }) {
   function toggle(id) {
     onChange(
       selected.includes(id)
@@ -11,7 +11,7 @@ export default function TopicFilter({ topics, selected, onChange, counts }) {
   return (
     <div>
       <div className="mb-2 flex items-baseline justify-between">
-        <h3 className="font-display text-lg">Ämnen</h3>
+        <h3 className="font-display text-lg">{label}</h3>
         {selected.length > 0 && (
           <button type="button" className="btn-quiet px-0 text-sm" onClick={() => onChange([])}>
             Välj allt
