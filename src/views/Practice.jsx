@@ -20,6 +20,7 @@ export default function Practice({
   setSettings,
   params,
   onAnswer,
+  navigate,
 }) {
   const selectedTopics = settings.practiceTopics;
   // Öva grupperar per ämne (Strategi) eller per kapitel (Databaser: "Öva
@@ -314,13 +315,34 @@ export default function Practice({
             {passStats.correct} rätt och {passStats.wrong} fel på {queue.length}{" "}
             frågor.
           </p>
-          <button
-            type="button"
-            className="btn-primary mt-5"
-            onClick={() => startPass(filtered)}
-          >
-            Kör ett nytt pass
-          </button>
+          {/* Nytt pass är huvudåtgärden; genvägen till Läs går till kapitlet
+              om passet gällde ett enda kapitel, annars till
+              innehållsförteckningen. */}
+          <div className="mt-5 flex flex-wrap justify-center gap-3">
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={() => startPass(filtered)}
+            >
+              Kör ett nytt pass
+            </button>
+            {navigate && (
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() =>
+                  navigate("las", {
+                    segment: "kompendium",
+                    chapterId: byChapter && activeTopics.length === 1 ? activeTopics[0] : null,
+                  })
+                }
+              >
+                {byChapter && activeTopics.length === 1
+                  ? "Tillbaka till kapitlet"
+                  : "Tillbaka till Läs"}
+              </button>
+            )}
+          </div>
         </section>
       )}
 
