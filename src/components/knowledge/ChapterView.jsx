@@ -5,6 +5,7 @@ import { topicLookup } from "../../lib/topicLookup.js";
 import { useReadAloud, ttsSupported, TTS_RATES } from "../../lib/useReadAloud.js";
 import InfoTip from "../InfoTip.jsx";
 import { ExamAreaTag } from "./ChapterList.jsx";
+import { Diagram, DIAGRAM_RE } from "./diagrams/index.jsx";
 
 function RateSelect({ tts, compact = false }) {
   return (
@@ -62,7 +63,14 @@ const markdownComponents = {
       {children}
     </h3>
   ),
-  p: ({ children }) => <p className="mt-4">{children}</p>,
+  // Ett stycke som bara innehåller [[diagram:namn]] byts mot figuren —
+  // det är så kapiteltexterna bäddar in SVG-diagrammen.
+  p: ({ children }) => {
+    const only = Array.isArray(children) && children.length === 1 ? children[0] : children;
+    const match = typeof only === "string" ? DIAGRAM_RE.exec(only.trim()) : null;
+    if (match) return <Diagram id={match[1]} />;
+    return <p className="mt-4">{children}</p>;
+  },
   strong: ({ children }) => (
     <strong className="font-semibold text-pine">{children}</strong>
   ),

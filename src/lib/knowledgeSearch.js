@@ -26,6 +26,7 @@ export function excerptAround(text, needle) {
 function plain(markdown) {
   return (markdown || "")
     .replace(/```[\s\S]*?```/g, " ")
+    .replace(/\[\[diagram:[^\]]*\]\]/g, " ")
     .replace(/[#>*_`|-]+/g, " ")
     .replace(/\s+/g, " ")
     .trim();
