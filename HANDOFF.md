@@ -98,7 +98,10 @@ summerar till 20, inte 30 — medvetet orört).
   `chapter`, så topics.js och Begrepp (elva kort) är orörda. Allt som
   grupperar — filtret, räknarna, "Öva på detta"-knapparna, Statistik/Hem —
   går via `practiceGroups`/`groupKeyFor`/`groupsForTopics`, aldrig via
-  `question.topic` direkt. Inställningarna `practiceTopics`/`practiceDifficulty`
+  `question.topic` direkt. **Ordning** (`practiceOrder` i settings): "Blandat"
+  = viktad repetition som förut, "Kapitel för kapitel"/"Ämne för ämne" =
+  `orderByGroup` — passet följer Läs-ordningen och bankens ordning inom
+  gruppen, utan viktning. Testat i `scripts/practice-axis.test.mjs`. Inställningarna `practiceTopics`/`practiceDifficulty`
   är globala — val som hör till en annan delkurs ignoreras. Banker utan
   `explain` per alternativ eller utan `difficulty` stöds fortfarande
   (`ExplanationPanel`/`QuestionCard` anpassar sig), men **Databaser-banken

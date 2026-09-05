@@ -4,7 +4,7 @@ import TopicFilter from "../components/TopicFilter.jsx";
 import { shuffleQuestion } from "../lib/shuffle.js";
 import { weightedPick, weightFor } from "../lib/weightedPick.js";
 import { hasPriorities, priorityOf } from "../lib/examPriority.js";
-import { groupKeyFor, practiceGroups, practiceMode } from "../lib/practiceAxis.js";
+import { groupKeyFor, orderByGroup, practiceGroups, practiceMode } from "../lib/practiceAxis.js";
 
 const DIFFICULTIES = [
   { value: 0, label: "Alla" },
@@ -28,6 +28,10 @@ export default function Practice({
   // utan svårighetsgrader filtreras inte på dem.
   const groups = useMemo(() => practiceGroups(course), [course]);
   const keyOf = useMemo(() => groupKeyFor(course), [course]);
+  const byChapter = practiceMode(course) === "chapter";
+  // Ordning: blandat med viktad repetition, eller grupp för grupp i Läs-ordning
+  // så att man kan gå igenom ett område i taget.
+  const order = settings.practiceOrder === "grupp" ? "grupp" : "blandat";
   const activeTopics = useMemo(
     () => selectedTopics.filter((id) => groups.some((group) => group.id === id)),
     [selectedTopics, groups],
@@ -99,17 +103,19 @@ export default function Practice({
     (questions) => {
       const snapshot = answersRef.current;
       setQueue(
-        weightedPick(questions, questions.length, (question) =>
-          weightFor(question.id, snapshot) *
-          (examFocus && coreTopics.has(question.topic) ? 2 : 1),
-        ),
+        order === "grupp"
+          ? orderByGroup(course, questions)
+          : weightedPick(questions, questions.length, (question) =>
+              weightFor(question.id, snapshot) *
+              (examFocus && coreTopics.has(question.topic) ? 2 : 1),
+            ),
       );
       setIndex(0);
       setChosen(null);
       setRevealed(false);
       setPassStats({ correct: 0, wrong: 0 });
     },
-    [examFocus, coreTopics],
+    [examFocus, coreTopics, order, course],
   );
 
   useEffect(() => {
@@ -199,7 +205,7 @@ export default function Practice({
           aria-expanded={filterOpen}
           className="btn-secondary mt-4 sm:hidden"
         >
-          {filterOpen ? "Dölj urval" : "Välj ämne och nivå"}
+          {filterOpen ? "Dölj urval" : byChapter ? "Välj kapitel, ordning och nivå" : "Välj ämne, ordning och nivå"}
         </button>
 
         {showExamFocus && (
@@ -225,13 +231,38 @@ export default function Practice({
         <div className={filterOpen ? "mt-5" : "mt-5 hidden"}>
           <TopicFilter
             topics={groups}
-            label={practiceMode(course) === "chapter" ? "Kapitel" : "Ämnen"}
+            label={byChapter ? "Kapitel" : "Ämnen"}
             selected={activeTopics}
             counts={countsPerTopic}
             onChange={(topics) =>
               setSettings((prev) => ({ ...prev, practiceTopics: topics }))
             }
           />
+        </div>
+
+        <div className={filterOpen ? "mt-5" : "mt-5 hidden"}>
+          <h3 className="mb-2 font-display text-lg">Ordning</h3>
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Ordning">
+            {[
+              { id: "blandat", label: "Blandat" },
+              { id: "grupp", label: byChapter ? "Kapitel för kapitel" : "Ämne för ämne" },
+            ].map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setSettings((prev) => ({ ...prev, practiceOrder: item.id }))}
+                aria-pressed={order === item.id}
+                className={`chip ${order === item.id ? "chip-on" : "hover:border-pine"}`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+          <p className="mt-2 text-sm text-ink/65">
+            {order === "grupp"
+              ? `Frågorna kommer i samma ordning som ${byChapter ? "kapitlen i Läs" : "ämnena"}.`
+              : "Blandat, och frågor du svarat fel på återkommer oftare."}
+          </p>
         </div>
 
         {hasDifficulties && (

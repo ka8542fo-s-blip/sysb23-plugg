@@ -44,3 +44,17 @@ export function practicedGroupIds(course) {
   const keyOf = groupKeyFor(course);
   return new Set((course.questions || []).map(keyOf).filter(Boolean));
 }
+
+// Frågorna i gruppernas visningsordning (kapitel för kapitel), och inom en
+// grupp i bankens ordning. Används när passet ska följa Läs i stället för
+// att blandas.
+export function orderByGroup(course, questions) {
+  const keyOf = groupKeyFor(course);
+  const position = new Map(practiceGroups(course).map((group, index) => [group.id, index]));
+  const bankIndex = new Map((course.questions || []).map((question, index) => [question.id, index]));
+  return [...questions].sort(
+    (a, b) =>
+      (position.get(keyOf(a)) ?? Infinity) - (position.get(keyOf(b)) ?? Infinity) ||
+      (bankIndex.get(a.id) ?? 0) - (bankIndex.get(b.id) ?? 0),
+  );
+}
