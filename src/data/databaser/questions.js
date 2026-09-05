@@ -529,7 +529,7 @@ export const questions = [
       { text: "1NF, eftersom nyckeln {A,B} är sammansatt och C beror på den", explain: "C beror på hela nyckeln {A,B}, inte på en äkta delmängd — inget partiellt beroende." },
       { text: "2NF, eftersom D och E beror transitivt på nyckeln via C", explain: "Rätt. Kandidatnyckel {A,B}; C beror på hela nyckeln, men {A,B} → C → D → E är transitivt. Facit: 2NF." },
       { text: "3NF, eftersom inget attribut beror på en äkta delmängd av nyckeln", explain: "Det ger bara 2NF. 3NF kräver dessutom att inget icke-primärattribut beror transitivt." },
-      { text: "3NF, eftersom C, D och E alla beror på ett enda attribut var", explain: "Att determinanten är enkel spelar ingen roll; C och D är inte kandidatnycklar, så kedjan är transitiv." }
+      { text: "3NF, eftersom D och E beror var för sig på ett enda attribut", explain: "Att determinanten är enkel spelar ingen roll; C och D är inte kandidatnycklar, så kedjan är transitiv." }
     ],
     correct: 1, source: "Kompendiet kap. 8 · övningshäftet uppgift 10:3", reviewed: false },
 
