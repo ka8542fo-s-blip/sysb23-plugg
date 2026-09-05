@@ -29,7 +29,7 @@ export const questions = [
       { text: "Applikationen och databasen är samma sak, beskrivna på två olika abstraktionsnivåer", explain: "Två abstraktionsnivåer av samma sak blandar ihop gränssnittet med den lagrade datan." },
       { text: "Applikationen är databasen sedd genom en webbläsare i stället för genom ett program", explain: "Webbläsaren är också bara ett gränssnitt; databasen visas aldrig direkt för dig." },
       { text: "Applikationen lagrar data lokalt, medan databasen bara är en säkerhetskopia av den", explain: "Applikationen lagrar inte schemat lokalt, och databasen är ingen säkerhetskopia." },
-      { text: "Applikationen är gränssnittet du ser och använder; databasen är den lagrade schemadatan", explain: "Rätt. Det du ser är applikationens gränssnitt; databasen är den lagrade datan bakom det." }
+      { text: "Applikationen är gränssnittet du ser och använder; databasen är den lagrade bokningsdatan", explain: "Rätt. Det du ser är applikationens gränssnitt; databasen är den lagrade datan bakom det." }
     ],
     correct: 3, source: "Kompendiet kap. 1", reviewed: true },
 
@@ -37,7 +37,7 @@ export const questions = [
     question: "I klient–server-bilden: vad är det som faktiskt hämtar data ur databasen?",
     options: [
       { text: "Servern hämtar data ur sin databas och skickar svaret tillbaka till klienten", explain: "Rätt. Klienten pratar med servern över internet, och servern hämtar ur sin databas." },
-      { text: "Internet hämtar data och skickar den vidare till både klient och server", explain: "Internet är bara transportvägen mellan klient och server; det hämtar ingenting självt." },
+      { text: "Klienten hämtar en kopia av databasen till telefonen och läser ur den lokalt", explain: "Ingen kopia laddas ner; klienten skickar en förfrågan och får ett svar från servern." },
       { text: "Klienten hämtar direkt ur databasen och servern vidarebefordrar bara svaret", explain: "Klienten når aldrig databasen direkt — att hämta data är serverns uppgift." },
       { text: "Databasen skickar data till klienten utan att någon server är inblandad", explain: "Utan server finns ingen som tar emot förfrågan, hämtar ur databasen och svarar." }
     ],
@@ -54,12 +54,12 @@ export const questions = [
     correct: 2, source: "Kompendiet kap. 1", reviewed: true },
 
   { id: "db1-08", topic: "grunder", difficulty: 2,
-    question: "Vad är normalisering enligt föreläsningens beskrivning?",
+    question: "Vad är normalisering, och var i designkedjan hör den hemma?",
     options: [
-      { text: "En städning av rader som körs efter att databasen har implementerats", explain: "Normalisering är ett designsteg i logisk design, inte en städning av rader i efterhand." },
-      { text: "Ett obligatoriskt steg som alltid leder till dekomposition av relationer", explain: "Dekomposition görs bara när kontrollen visar undvikbar redundans — inte alltid." },
-      { text: "En designkontroll av den logiska modellen innan DDL skrivs", explain: "Rätt. Den hör till logisk design: efter transformationen, innan DDL-koden skrivs." },
-      { text: "En optimering som DBMS:et utför automatiskt vid varje INSERT", explain: "DBMS:et normaliserar ingenting automatiskt — normalformen är designerns beslut." }
+      { text: "En städning av tabellernas rader, efter att databasen implementerats", explain: "Normalisering är ett designsteg före implementationen, inte en städning av rader efteråt." },
+      { text: "Ett obligatoriskt steg i konceptuell design, före ER-diagrammet ritas", explain: "Den hör till logisk design och görs bara om det behövs — inte alltid, inte före ER-diagrammet." },
+      { text: "En kontroll av den logiska modellen, före den fysiska designens DDL", explain: "Rätt. Steg två: transformation till relationer, följt av normalisering om det behövs, före DDL." },
+      { text: "En optimering som databashanteraren utför automatiskt vid varje INSERT", explain: "Databashanteraren normaliserar ingenting automatiskt — normalformen är designerns beslut." }
     ],
     correct: 2, source: "Kompendiet kap. 1", reviewed: true },
 
@@ -167,9 +167,9 @@ export const questions = [
     question: "I Patient-tabellen finns både `PatientId` och `PatientNo`. Vad skiljer dem?",
     options: [
       { text: "PatientId är verksamhetens identifierare, PatientNo genereras av databasen", explain: "Omvänt: det är PatientNo som är verksamhetens nummer och PatientId som genereras." },
-      { text: "PatientId identifierar raden, PatientNo identifierar den avdelning patienten tillhör", explain: "PatientNo pekar inte på någon avdelning; det är patientens eget nummer i verksamheten." },
-      { text: "PatientId är en genererad surrogatnyckel, PatientNo är verksamhetens identifierare", explain: "Rätt. Surrogatnyckeln genereras av databasen, den naturliga nyckeln kommer från verksamheten." },
-      { text: "PatientId används bara i JOIN-villkor, PatientNo används enbart i WHERE-villkor", explain: "Var en nyckel används i en fråga säger ingenting om vilken sorts nyckel den är." }
+      { text: "PatientId identifierar raden, PatientNo den avdelning patienten tillhör", explain: "PatientNo pekar inte på någon avdelning; det är patientens eget nummer i verksamheten." },
+      { text: "PatientId är genererad surrogate primary key, PatientNo en naturlig nyckel", explain: "Rätt. Surrogatnyckeln genereras av databasen, den naturliga nyckeln kommer från verksamheten." },
+      { text: "PatientId används i JOIN, PatientNo används enbart i WHERE-villkor", explain: "Var en nyckel används i en fråga säger ingenting om vilken sorts nyckel den är." }
     ],
     correct: 2, source: "Kompendiet kap. 3", reviewed: true },
 
@@ -258,7 +258,7 @@ export const questions = [
     options: [
       { text: "Man understryker både parent och samtliga komponenter", explain: "Föräldern och delarna stryks inte under samtidigt — det vore två identifierare." },
       { text: "Man understryker varje komponent för sig, inte föräldern", explain: "Delarna identifierar inte var för sig; 2026-1 och 2026-2 delar år." },
-      { text: "Man understryker the composite parent, inte delarna", explain: "Rätt. Den sammansatta föräldern stryks under; identifikationen använder hela värdet." },
+      { text: "Man understryker the composite parent, inte komponenterna", explain: "Rätt. Den sammansatta föräldern stryks under; identifikationen använder hela värdet." },
       { text: "Man ringar in komponenterna med en gemensam streckad ram", explain: "Streckad ram finns inte; streckat markerar partiell identifierare." }
     ],
     correct: 2, source: "Kompendiet kap. 4", reviewed: true },
