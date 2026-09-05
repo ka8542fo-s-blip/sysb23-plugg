@@ -441,7 +441,7 @@ export const questions = [
       { text: "I valfri riktning — vid 1:1 väljer arkitekten oavsett deltagandet", explain: "Fri riktning finns bara när båda sidor deltar lika: båda frivilliga, eller båda obligatoriska." },
       { text: "I den obligatoriska sidans relation, så att kolumnen aldrig blir NULL", explain: "Rätt. Den obligatoriska sidan har alltid en motpart, så nyckeln från den frivilliga sidan läggs där." }
     ],
-    correct: 3, source: "Kompendiet kap. 7", reviewed: false },
+    correct: 3, source: "Kompendiet kap. 7", reviewed: true },
 
   { id: "dbq-15", topic: "transformation", difficulty: 2,
     question: "Work(EmployeeNo, ProjectNo, Hours) uppstår ur en M:N-relation. Vad gäller för Hours?",
@@ -451,7 +451,7 @@ export const questions = [
       { text: "Det blir en främmande nyckel mot en ny relation som lagrar timmarna", explain: "Relationsattribut läggs direkt i kopplingsrelationen som vanliga attribut." },
       { text: "Det flyttas till Employee, eftersom timmarna beskriver den anställda", explain: "Timmarna beskriver paret anställd–projekt, inte den anställda ensam." }
     ],
-    correct: 0, source: "Kompendiet kap. 7", reviewed: false },
+    correct: 0, source: "Kompendiet kap. 7", reviewed: true },
 
   { id: "dbq-16", topic: "transformation", difficulty: 2,
     question: "Hur bildas primärnyckeln i relationen för en svag entitet?",
@@ -461,7 +461,7 @@ export const questions = [
       { text: "Av ägarens primärnyckel som främmande nyckel tillsammans med den partiella nyckeln", explain: "Rätt. Kombinationen HotelName + RoomNo är unik och speglar beroendet i ER-modellen." },
       { text: "Av ett nytt löpnummer, eftersom kombinationen inte kan vara nyckel", explain: "Löpnummer är fysisk design; kombinationen är precis vad regeln föreskriver." }
     ],
-    correct: 2, source: "Kompendiet kap. 7", reviewed: false },
+    correct: 2, source: "Kompendiet kap. 7", reviewed: true },
 
   { id: "dbq-17", topic: "transformation", difficulty: 2,
     question: "Address som flervärdesattribut ger EmployeeAddress(EmployeeNo, Address). Vilken konsekvens har det?",
@@ -471,7 +471,7 @@ export const questions = [
       { text: "Anställda utan adress kan inte lagras, eftersom nyckeln då blir NULL", explain: "En anställd utan adress får helt enkelt ingen rad i EmployeeAddress." },
       { text: "Två anställda kan dela samma adress, eftersom adressen bara är ett värde", explain: "Rätt. Vill man hindra det ska adressen modelleras som en egen entitet." }
     ],
-    correct: 3, source: "Kompendiet kap. 7", reviewed: false },
+    correct: 3, source: "Kompendiet kap. 7", reviewed: true },
 
   { id: "dbq-18", topic: "transformation", difficulty: 2,
     question: "Hur transformeras en unär 1:M-relation som chef–anställd?",
@@ -481,7 +481,7 @@ export const questions = [
       { text: "Som en främmande nyckel i samma relation, med rollnamnet som attributnamn", explain: "Rätt. ManagerNo i Employee refererar tillbaka till EmployeeNo; högsta chefen har NULL." },
       { text: "Inte alls — unära relationer representeras inte i den logiska modellens relationer", explain: "Den binära regeln av samma form tillämpas, med samma entitet på båda sidor." }
     ],
-    correct: 2, source: "Kompendiet kap. 7", reviewed: false },
+    correct: 2, source: "Kompendiet kap. 7", reviewed: true },
 
   { id: "dbq-31", topic: "transformation", difficulty: 3,
     question: "Häftets uppgift 8: Department identifieras av det sammansatta attributet Id med delarna Name och Address, och har dessutom Description. Hur ser facit ut för Department?",
@@ -491,7 +491,7 @@ export const questions = [
       { text: "Department(Id, Description) med Name och Address i en egen relation", explain: "Delarna ska in i samma relation som entiteten — en egen relation är flervärdesregeln, och Id är inte flervärt." },
       { text: "Department(Name, Address, Description) med primärnyckel Name ensamt", explain: "Identifieraren är hela kombinationen; Name ensamt är inte unikt enligt modellen." }
     ],
-    correct: 0, source: "Kompendiet kap. 7 · övningshäftet uppgift 8", reviewed: false },
+    correct: 0, source: "Kompendiet kap. 7 · övningshäftet uppgift 8", reviewed: true },
 
   { id: "dbq-19", topic: "normalisering", difficulty: 2,
     question: "Varför blir en M:N-relation tre relationer och inte en enda?",
@@ -501,7 +501,7 @@ export const questions = [
       { text: "SQL Server kan inte skapa en primärnyckel som sträcker sig över fler än två attribut", explain: "Sammansatta nycklar över flera attribut är helt tillåtna." },
       { text: "Tre relationer ger alltid snabbare frågor än en enda, oavsett vad de innehåller", explain: "Prestanda är inte skälet — det är redundansen och dess anomalier." }
     ],
-    correct: 0, source: "Kompendiet kap. 8", reviewed: false },
+    correct: 0, source: "Kompendiet kap. 8", reviewed: true },
 
   { id: "dbq-20", topic: "normalisering", difficulty: 2,
     question: "En relation i 1NF har en enda kandidatnyckel, och den består av ett attribut. Vad gäller om 2NF?",
@@ -511,7 +511,7 @@ export const questions = [
       { text: "Den måste först dekomponeras i två relationer innan 2NF kan prövas", explain: "Dekomposition görs bara när ett test misslyckas." },
       { text: "Den är i 2NF bara om alla attribut är atomära och dessutom unika", explain: "Unikhet är inget 2NF-krav; atomära värden är 1NF." }
     ],
-    correct: 1, source: "Kompendiet kap. 8", reviewed: false },
+    correct: 1, source: "Kompendiet kap. 8", reviewed: true },
 
   { id: "dbq-21", topic: "normalisering", difficulty: 3,
     question: "A → B, B → A och B → C gäller. Är C transitivt beroende av A?",
@@ -521,7 +521,7 @@ export const questions = [
       { text: "Nej, eftersom C beror direkt på B och inte på A", explain: "C beror visserligen av B, men skälet är ett annat." },
       { text: "Nej, eftersom B → A gör B till en kandidatnyckel", explain: "Rätt. Definitionen undantar fallet Y → X; då är Y själv en kandidatnyckel." }
     ],
-    correct: 3, source: "Kompendiet kap. 8", reviewed: false },
+    correct: 3, source: "Kompendiet kap. 8", reviewed: true },
 
   { id: "dbq-22", topic: "normalisering", difficulty: 3,
     question: "Vad kräver 3NF utöver 2NF?",
@@ -531,7 +531,7 @@ export const questions = [
       { text: "Att alla värden är atomära och att primärnyckeln är ett enda attribut", explain: "Atomära värden är 1NF; nyckelns form spelar ingen roll." },
       { text: "Att varje icke-primärattribut är icke-transitivt beroende av varje kandidatnyckel", explain: "Rätt. Ordagrant: varje icke-primärattribut, varje kandidatnyckel." }
     ],
-    correct: 3, source: "Kompendiet kap. 8", reviewed: false },
+    correct: 3, source: "Kompendiet kap. 8", reviewed: true },
 
   { id: "dbq-23", topic: "normalisering", difficulty: 3,
     question: "R(A, B, C, D, E) har beroendena {A,B} → C, C → D och D → E. Vilken är den högsta normalformen?",
@@ -541,7 +541,7 @@ export const questions = [
       { text: "3NF, eftersom inget attribut beror på en äkta delmängd av nyckeln", explain: "Det ger bara 2NF. 3NF kräver dessutom att inget icke-primärattribut beror transitivt." },
       { text: "3NF, eftersom D och E beror var för sig på ett enda attribut", explain: "Att determinanten är enkel spelar ingen roll; C och D är inte kandidatnycklar, så kedjan är transitiv." }
     ],
-    correct: 1, source: "Kompendiet kap. 8 · övningshäftet uppgift 10:3", reviewed: false },
+    correct: 1, source: "Kompendiet kap. 8 · övningshäftet uppgift 10:3", reviewed: true },
 
   { id: "dbq-24", topic: "normalisering", difficulty: 3,
     question: "Vad innebär det att en dekomposition är lossless?",
@@ -551,7 +551,7 @@ export const questions = [
       { text: "Alla funktionella beroenden kan kontrolleras inom en enskild delrelation", explain: "Det är dependency preservation, det andra kvalitetskravet." },
       { text: "Delrelationerna tar tillsammans mindre lagringsutrymme än originalet", explain: "Lagringsutrymme är inte kriteriet." }
     ],
-    correct: 1, source: "Kompendiet kap. 8", reviewed: false },
+    correct: 1, source: "Kompendiet kap. 8", reviewed: true },
 
   { id: "dbq-25", topic: "fysisk", difficulty: 1,
     question: "Vilka satser hör till DDL?",
@@ -561,7 +561,7 @@ export const questions = [
       { text: "PRIMARY KEY och UNIQUE", explain: "Det är constrainttyper, inte satser." },
       { text: "INT, DECIMAL och VARCHAR", explain: "Det är datatyper, inte satser." }
     ],
-    correct: 1, source: "Kompendiet kap. 9", reviewed: false },
+    correct: 1, source: "Kompendiet kap. 9", reviewed: true },
 
   { id: "dbq-26", topic: "fysisk", difficulty: 2,
     question: "Vad skiljer UNIQUE från PRIMARY KEY?",
@@ -571,7 +571,7 @@ export const questions = [
       { text: "UNIQUE tillåter NULL; PRIMARY KEY är NOT NULL och det finns bara en per tabell", explain: "Rätt. Därför hamnar naturliga nycklar som UNIQUE när surrogatnyckeln tagit över." },
       { text: "UNIQUE kontrolleras bara vid INSERT, PRIMARY KEY även vid UPDATE", explain: "Båda gäller alltid, oavsett operation." }
     ],
-    correct: 2, source: "Kompendiet kap. 9", reviewed: false },
+    correct: 2, source: "Kompendiet kap. 9", reviewed: true },
 
   { id: "dbq-27", topic: "fysisk", difficulty: 2,
     question: "Vilken constraint ger domänbegreppet ur kapitel 2 sin tekniska motsvarighet?",
@@ -581,7 +581,7 @@ export const questions = [
       { text: "UNIQUE, som hindrar att samma värde förekommer två gånger", explain: "Unikhet är en nyckelegenskap, inte en domän." },
       { text: "FOREIGN KEY, som kopplar kolumnen till en annan tabells nyckel", explain: "Referensintegritet gäller kopplingar, inte tillåtna värden." }
     ],
-    correct: 0, source: "Kompendiet kap. 9", reviewed: false },
+    correct: 0, source: "Kompendiet kap. 9", reviewed: true },
 
   { id: "dbq-28", topic: "fysisk", difficulty: 3,
     question: "Vad måste följa med när en surrogatnyckel blir primärnyckel?",
@@ -591,7 +591,7 @@ export const questions = [
       { text: "Surrogatnyckeln får ett CHECK-villkor som binder den till den naturliga", explain: "CHECK uttrycker domäner, inte kopplingen mellan två nycklar." },
       { text: "Den naturliga nyckeln behålls som UNIQUE, annars förloras affärsregeln om unikhet", explain: "Rätt. EmployeeID är surrogat primärnyckel; EmpNo behålls som naturlig nyckel med UNIQUE och NOT NULL, så att entitetsintegriteten bevaras." }
     ],
-    correct: 3, source: "Kompendiet kap. 9", reviewed: false },
+    correct: 3, source: "Kompendiet kap. 9", reviewed: true },
 
   { id: "dbq-29", topic: "fysisk", difficulty: 1,
     question: "Varför lagras belopp med en exakt numerisk typ som DECIMAL(p,s)?",
@@ -601,7 +601,7 @@ export const questions = [
       { text: "Belopp tål inga avrundningsfel; approximativa typer är till när precisionen får vara lägre", explain: "Rätt. Exakta numeriska typer används när avrundningsfel inte accepteras, och det gäller pengar." },
       { text: "Approximativa typer tillåter inte negativa värden, vilket belopp kan kräva", explain: "Approximativa typer tillåter negativa tal; det är precisionen som brister." }
     ],
-    correct: 2, source: "Kompendiet kap. 9", reviewed: false },
+    correct: 2, source: "Kompendiet kap. 9", reviewed: true },
 
   { id: "dbq-30", topic: "fysisk", difficulty: 2,
     question: "Varför ska constraints namnges enligt kodstandarden, som PK_Employee_EmployeeID?",
@@ -611,7 +611,7 @@ export const questions = [
       { text: "Namnet gör att constrainten indexeras automatiskt av databashanteraren", explain: "Namngivning skapar inga index." },
       { text: "Felmeddelanden blir begripliga och constrainten kan refereras i ALTER TABLE", explain: "Rätt. Praktiska skäl: förstå felet och kunna peka på constrainten senare." }
     ],
-    correct: 3, source: "Kompendiet kap. 9", reviewed: false },
+    correct: 3, source: "Kompendiet kap. 9", reviewed: true },
 
   { id: "dbq-32", topic: "fysisk", difficulty: 3,
     question: "Häftets uppgift 18: entiteten B har den sammansatta identifieraren {b1, b2} och attributet b3, och tabellen ska använda surrogatnyckel. Vilka PRIMARY KEY- och UNIQUE-constraints har facit för B?",
@@ -621,5 +621,5 @@ export const questions = [
       { text: "BID INTEGER IDENTITY(1,1) som PRIMARY KEY och UNIQUE (BID); B1 och B2 som vanliga kolumner", explain: "Då förloras affärsregeln att kombinationen b1, b2 är unik, och UNIQUE på surrogatnyckeln tillför inget." },
       { text: "BID INTEGER IDENTITY(1,1) som PRIMARY KEY, plus UNIQUE (B1, B2) som ett enda constraint", explain: "Rätt. Facit: PK_B_BID PRIMARY KEY (BID) och UQ_B_B1_B2 UNIQUE (B1, B2) — den sammansatta naturliga nyckeln bevaras med ett UNIQUE över båda, och B1 och B2 är dessutom NOT NULL." }
     ],
-    correct: 3, source: "Kompendiet kap. 9 · övningshäftet uppgift 18", reviewed: false },
+    correct: 3, source: "Kompendiet kap. 9 · övningshäftet uppgift 18", reviewed: true },
 ];
