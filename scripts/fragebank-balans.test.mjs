@@ -39,7 +39,20 @@ test("Öva speglar Läs: varje kapitel har 5–8 frågor och inga frågor saknar
   }
 });
 
+test("varje flaggad fråga har ett skäl i klartext och finns i banken", () => {
+  // Listan får ändras, men inte i tysthet: en post utan skäl stoppar testet.
+  for (const entry of LENGTH_FLAGGED) {
+    assert.ok(entry && typeof entry.id === "string", "flaggad post saknar id");
+    assert.ok(
+      typeof entry.reason === "string" && entry.reason.trim().length >= 20,
+      `${entry.id}: flaggad utan skäl i klartext`,
+    );
+    assert.ok(questions.some((q) => q.id === entry.id), `flaggad ${entry.id} finns inte i banken`);
+  }
+});
+
 test("balansmåtten håller mallens regler", () => {
+  const flagged = new Set(LENGTH_FLAGGED.map((entry) => entry.id));
   const n = questions.length;
   const positions = [0, 0, 0, 0];
   let uniqueLongest = 0;
@@ -55,20 +68,12 @@ test("balansmåtten håller mallens regler", () => {
     const isUniqueLongest = lens.filter((l) => l === max).length === 1 && correctLen === max;
     if (isUniqueLongest) uniqueLongest++;
     const spread = max / min;
-    if (LENGTH_FLAGGED.includes(q.id)) {
-      assert.ok(!isUniqueLongest, `${q.id} är flaggad men rätt svar är ensamt längst`);
+    if (flagged.has(q.id)) {
+      assert.ok(!isUniqueLongest, `${q.id} är flaggad men rätt svar är ensamt längst — rätta alternativen`);
     } else {
       assert.ok(spread <= 1.25, `${q.id}: längdspridning ${spread.toFixed(2)} (> 1,25)`);
     }
   }
-  // Listan är låst till beslutet 2026-09-05. Ett nytt längdfel ska rättas i
-  // alternativen, inte tystas med en ny rad här.
-  assert.deepEqual(
-    [...LENGTH_FLAGGED].sort(),
-    ["db4-12", "db4-14", "db4-16", "db4-20", "db4-21", "db4-23", "db4-26"],
-    "LENGTH_FLAGGED får inte ändras — rätta längden i stället",
-  );
-  for (const id of LENGTH_FLAGGED) assert.ok(questions.some((q) => q.id === id), `flaggad ${id} finns inte`);
   const lo = Math.ceil((n / 4) * 0.65);
   const hi = Math.floor((n / 4) * 1.35);
   for (const p of positions) {

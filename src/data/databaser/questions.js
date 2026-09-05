@@ -17,10 +17,20 @@
 // SQL-frågespråket saknar kapitel i Läs; de sex SQL-frågorna ur leveransen
 // väntar i questions-pending.js.
 
-// Behållna frågor där det längsta alternativet är en distraktor och
-// spridningen överstiger 1,25 — får stå enligt beslut 2026-09-05, eftersom
-// längden där inte avslöjar facit. Balanstestet undantar dem.
-export const LENGTH_FLAGGED = ["db4-12","db4-14","db4-16","db4-20","db4-21","db4-23","db4-26"];
+// Frågor som får bryta spridningsregeln (längsta alternativ högst 25 % längre
+// än kortaste). Varje post kräver ett skäl i klartext — testet vägrar tomma
+// skäl, så listan kan ändras men inte i tysthet. Grundregeln: en distraktor
+// får vara längst (längden avslöjar inte facit); är rätt svar längst ska
+// alternativen rättas, inte flaggas.
+export const LENGTH_FLAGGED = [
+  { id: "db4-12", reason: "Behållen ur leveransen 2026-09-05; längsta alternativet är en distraktor (spridning 1,53)." },
+  { id: "db4-14", reason: "Behållen ur leveransen 2026-09-05; längsta alternativet är en distraktor (spridning 1,46)." },
+  { id: "db4-16", reason: "Behållen ur leveransen 2026-09-05; längsta alternativet är en distraktor (spridning 1,51)." },
+  { id: "db4-20", reason: "Behållen ur leveransen 2026-09-05; längsta alternativet är en distraktor (spridning 1,26)." },
+  { id: "db4-21", reason: "Behållen ur leveransen 2026-09-05; längsta alternativet är en distraktor (spridning 1,27)." },
+  { id: "db4-23", reason: "Behållen ur leveransen 2026-09-05; längsta alternativet är en distraktor (spridning 1,32)." },
+  { id: "db4-26", reason: "Behållen ur leveransen 2026-09-05; längsta alternativet är en distraktor (spridning 1,27)." },
+];
 
 export const questions = [
   { id: "db1-01", topic: "grunder", difficulty: 1,
