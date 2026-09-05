@@ -49,8 +49,9 @@ export const courses = [
     id: "databaser",
     name: "Databaser",
     status: "aktiv",
-    // Öva och Prov visar tomlägen tills frågebanken är inlagd.
-    views: ["las", "sql", "ova", "prov", "statistik"],
+    // Öva visar tomläge tills en frågebank finns. Prov är medvetet borta:
+    // tentan är konstruktionsbaserad, och ett tomläge är sämre än ingen flik.
+    views: ["las", "sql", "ova", "statistik"],
     topics: databaserTopics,
     questions: databaserQuestions,
     chapters: databaserChapters,
