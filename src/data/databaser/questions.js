@@ -431,7 +431,7 @@ export const questions = [
       { text: "I en ny kopplingsrelation som får båda primärnycklarna", explain: "Kopplingsrelationen är M:N-regeln; 1:M behöver ingen ny relation." },
       { text: "I båda relationerna, så att kopplingen kan följas åt båda hållen", explain: "En främmande nyckel räcker; joinen går åt båda hållen ändå." }
     ],
-    correct: 1, source: "Kompendiet kap. 7", reviewed: false },
+    correct: 1, source: "Kompendiet kap. 7", reviewed: true },
 
   { id: "dbq-14", topic: "transformation", difficulty: 3,
     question: "En 1:1-relation har ett obligatoriskt och ett frivilligt deltagande. Var läggs den främmande nyckeln?",
