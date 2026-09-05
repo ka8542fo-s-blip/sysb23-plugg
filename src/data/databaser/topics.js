@@ -241,11 +241,11 @@ export const topics = [
       "2NF: en relation är i 2NF om och endast om den är i 1NF och inget icke-primärattribut är funktionellt beroende av någon äkta delmängd av någon kandidatnyckel i relationen.",
       "3NF: en relation är i 3NF om och endast om den är i 2NF och varje icke-primärattribut är icke-transitivt beroende av varje kandidatnyckel i relationen.",
       "Normalformerna bygger på varandra — 3NF förutsätter 2NF, som förutsätter 1NF. Högre normalform betyder mindre redundans och mindre risk för anomalier.",
-      "En relation i 1NF med en ENKEL kandidatnyckel är automatiskt i 2NF, eftersom en enkel nyckel inte har några äkta delmängder.",
+      "En relation i 1NF vars kandidatnycklar alla är enkla är automatiskt i 2NF, eftersom en enkel nyckel inte har några äkta delmängder — föreläsningens beslutssteg: är kandidatnyckeln sammansatt? Nej → 2NF kan inte brytas.",
       "Arbetsgång: bestäm kandidatnycklarna → lista primär- och icke-primärattribut → testa 2NF (partiella beroenden) → testa 3NF (transitiva beroenden).",
       "Normalisering sker genom dekomposition: bryt ned relationen i mindre relationer som uppfyller den önskade normalformen. Transformationsreglerna producerar redan relationer i 3NF — de är normaliseringsteorins resultat i praktisk form.",
-      "Lossless join: originalrelationen måste kunna återskapas exakt genom join av delrelationerna, utan spurious tuples. Icke-förhandlingsbart krav.",
-      "Dependency preservation: alla funktionella beroenden ska kunna kontrolleras inom en enskild delrelation utan join. Önskvärt men inte alltid möjligt samtidigt som 3NF."
+      "Lossless join: en naturlig join av delrelationerna ska ge tillbaka originalrelationen. Saknar delrelationerna gemensamt attribut går det inte — då behövs kopplingsrelationen. Icke-förhandlingsbart krav.",
+      "Dependency preservation: ett funktionellt beroende är bevarat om dess båda attribut finns i samma relation. Kontrollera beroende för beroende; ett förlorat beroende kan inte upprätthållas med en enkel constraint."
     ],
     pitfalls: [
       "2NF-definitionen säger 'någon äkta delmängd av NÅGON kandidatnyckel' — flera kandidatnycklar måste alla prövas.",

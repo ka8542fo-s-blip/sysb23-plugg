@@ -731,7 +731,7 @@ Eftersom relationsmodellen redan kräver atomära värden (kapitel 2, egenskap 2
 
 Exempelrelationen bryter mot 2NF. Kandidatnyckeln är \`{EmployeeNo, ProjectNo}\`. Det icke-primära attributet \`Name\` är funktionellt beroende av \`EmployeeNo\`, som är en **äkta delmängd** av kandidatnyckeln. Alltså inte 2NF.
 
-Detta kallas ofta **partiellt beroende**. Notera att problemet bara kan uppstå när kandidatnyckeln är sammansatt — en relation med enkel kandidatnyckel som är i 1NF är automatiskt i 2NF, eftersom en enkel nyckel inte har några äkta delmängder att vara beroende av.
+Detta kallas ofta **partiellt beroende**. Notera att problemet bara kan uppstå när någon kandidatnyckel är sammansatt — en relation i 1NF vars kandidatnycklar alla är enkla är automatiskt i 2NF, eftersom en enkel nyckel inte har några äkta delmängder att vara beroende av. Föreläsningen gör det till ett beslutssteg i varje uppgift: *Is the candidate key a composite key? No → 2NF can't be broken.* Så löses uppgifterna, och så ser facit ut.
 
 ### 3NF i praktiken
 
@@ -772,11 +772,11 @@ Och där kommer svaret på kapitlets inledande fråga: **transformationsreglerna
 
 ## Två kvalitetskrav på en dekomposition
 
-Att dela upp en relation är inte gratis. Två egenskaper avgör om uppdelningen är godtagbar, och båda förekommer i övningshäftets sant/falskt-frågor:
+Att dela upp en relation är inte gratis. Två egenskaper avgör om uppdelningen är godtagbar.
 
-**Lossless join (förlustfri join).** Kan originalrelationen återskapas exakt genom att joina delrelationerna? Om joinen producerar rader som inte fanns i originalet — så kallade spurious tuples — är dekompositionen förlustbringande och därmed felaktig. Detta är det icke-förhandlingsbara kravet.
+**Lossless join (förlustfri join, även non-additive join).** En dekomposition har egenskapen om en **naturlig join** av delrelationerna ger tillbaka originalrelationen. En naturlig join matchar automatiskt kolumner med samma namn, utan ON-villkor. Föreläsningens exempel: \`R(A,B,C,D,E,F)\` med \`A → {B,C}\` och \`D → {E,F}\` delas upp i \`R1(A,B,C)\` och \`R2(D,E,F)\`. Båda ser ut att vara i 3NF, men de har inget gemensamt attribut, så den naturliga joinen kan inte återskapa \`R\`. I Employee–Project-exemplet betyder det att ingen längre vet vem som arbetar i vilket projekt. Lösningen är kopplingsrelationen \`Work(EmployeeNo, ProjectNo)\`, precis den M:N-regeln föreskriver: med den på plats kan de tre relationerna joinas tillbaka till originalet. Detta är det icke-förhandlingsbara kravet.
 
-**Dependency preservation (beroendebevarande).** Kan alla funktionella beroenden från originalrelationen kontrolleras inom en enskild delrelation, utan att man behöver joina? Går ett beroende förlorat kan databasen inte längre upprätthålla den affärsregeln med en enkel constraint. Detta är önskvärt men går inte alltid att uppnå samtidigt som 3NF.
+**Dependency preservation (beroendebevarande).** Utöver lossless join kan en dekomposition ha egenskapen att beroendena bevaras. Regeln är operativ: **ett funktionellt beroende är bevarat om dess båda attribut finns i samma relation.** Gå igenom beroendena ett i taget och se var attributen hamnat. Föreläsningens exempel på förlust: \`EmployeeProject\` med \`EmployeeNo → {Name, Address, ProjectNo, ProjectName}\`, \`ProjectNo → {ProjectName, Budget}\` och \`ProjectName → {ProjectNo, Budget}\` delas upp i \`Employee(EmployeeNo, Name, Address, ProjectNo)\` och \`Project(ProjectNo, Name, Budget)\`. Alla beroenden utom ett återfinns i någon av delrelationerna — \`EmployeeNo → ProjectName\` har gått förlorat, eftersom attributen hamnat i olika relationer. Ett förlorat beroende kan databasen inte längre upprätthålla med en enkel constraint inom en tabell. Just den kontrollen, beroende för beroende, är vad övningshäftets sant/falskt-frågor om dekompositioner prövar (uppgift 16 och 17).
 `
   },
 
@@ -915,7 +915,7 @@ export const glossary = [
   { term: "CHECK-constraint", definition: "Villkor på tillåtna värden i en kolumn, t.ex. CHECK (EmpSalary >= 0). Domänbegreppets tekniska motsvarighet.", chapter: "kap8" },
   { term: "DDL (Data Definition Language)", definition: "Den del av SQL som definierar strukturer: CREATE, ALTER, DROP.", chapter: "kap8" },
   { term: "Dekomposition", definition: "Att bryta ned en relation i mindre relationer som uppfyller en önskad normalform.", chapter: "kap7" },
-  { term: "Dependency preservation", definition: "Att alla funktionella beroenden i originalrelationen kan kontrolleras inom en enskild delrelation, utan join. Önskvärt men inte alltid möjligt samtidigt som 3NF.", chapter: "kap7" },
+  { term: "Dependency preservation", definition: "Att varje funktionellt beroende i originalrelationen har sina båda attribut i samma delrelation, så att det kan kontrolleras utan join. Prövas i övningshäftets sant/falskt-frågor.", chapter: "kap7" },
   { term: "DML (Data Manipulation Language)", definition: "Den del av SQL som hanterar data: SELECT, INSERT, UPDATE, DELETE.", chapter: "kap8" },
   { term: "Domän (domain)", definition: "Alla värden som ett dataelement kan innehålla. Snävare än datatyp och bär affärsregeln.", chapter: "kap2" },
   { term: "Främmande nyckel (foreign key)", definition: "Ett attribut som refererar till primärnyckeln i en annan eller samma relation, och därmed upprätthåller referensintegritet.", chapter: "kap3" },
@@ -928,7 +928,7 @@ export const glossary = [
   { term: "Kodstandard", definition: "Kursens namngivningsregler: PascalCase och singular för tabeller, PascalCase för kolumner, constraintprefixen PK_, FK_, UQ_, CK_, DF_, camelCase för Java-variabler.", chapter: "kap8" },
   { term: "Konceptuell databasdesign", definition: "Första steget i designprocessen: verksamhetskraven blir ett ER-diagram.", chapter: "kap1" },
   { term: "Logisk databasdesign", definition: "Andra steget: den konceptuella modellen transformeras till relationer i textform och normaliseras om nödvändigt.", chapter: "kap1" },
-  { term: "Lossless join", definition: "Att originalrelationen kan återskapas exakt genom join av delrelationerna, utan spurious tuples. Icke-förhandlingsbart krav på en dekomposition.", chapter: "kap7" },
+  { term: "Lossless join", definition: "Att en naturlig join av delrelationerna ger tillbaka originalrelationen. Saknar delrelationerna gemensamt attribut går det inte. Icke-förhandlingsbart krav på en dekomposition.", chapter: "kap7" },
   { term: "Naturlig nyckel", definition: "Nyckel med affärsbetydelse, t.ex. anställningsnummer eller ISBN. Motsats till surrogatnyckel.", chapter: "kap3" },
   { term: "NoSQL", definition: "Dokumentorienterade databaser, ett alternativ till relationsdatabaser för persistent lagring.", chapter: "kap1" },
   { term: "Partiellt beroende", definition: "Ett icke-primärattribut som beror på en äkta delmängd av en kandidatnyckel. Bryter mot 2NF och kan bara uppstå vid sammansatt nyckel.", chapter: "kap7" },
@@ -940,7 +940,6 @@ export const glossary = [
   { term: "Relation", definition: "Formellt en mängd tupler där varje element tillhör en domän. Visuellt en tabell. Bygger på mängdlära och första ordningens logik.", chapter: "kap2" },
   { term: "Sammansatt nyckel (composite key)", definition: "Flera attribut som tillsammans identifierar en tupel unikt utan att göra det var för sig.", chapter: "kap3" },
   { term: "Server", definition: "I praktiken en dator som aldrig stängs av, och som betjänar klienter med data ur en databas.", chapter: "kap1" },
-  { term: "Spurious tuples", definition: "Rader som uppstår vid join men inte fanns i originalrelationen. Tecken på att en dekomposition inte är lossless.", chapter: "kap7" },
   { term: "SQL (Structured Query Language)", definition: "Språket för att skapa, läsa, uppdatera och radera data samt administrera relationsdatabaser.", chapter: "kap1" },
   { term: "Surrogatnyckel", definition: "Artificiellt, databasgenererat nyckelvärde utan affärsbetydelse. Införs i fysisk design av skäl som nyckelstabilitet och prestanda.", chapter: "kap3" },
   { term: "Transitivt beroende", definition: "Ett funktionellt beroende där X → Z indirekt, i kraft av X → Y och Y → Z, och där det inte gäller att Y → X. Bryter mot 3NF.", chapter: "kap7" },

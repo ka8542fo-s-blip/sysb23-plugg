@@ -328,6 +328,20 @@ tas bort vid avbockning).
   design; nya Fö1 (slide 73–74) säger logisk och fysisk, och fråga db1-07
   följer Fö1. Skillnaden är känd och medvetet orörd i kapitel 3 — nya Fö5 kan
   komma och säga annat. Rätta inte på eget initiativ.
+- **Kursmaterialet ligger lokalt, inte i repot:** decks och övningshäfte med facit
+  i `~/Desktop/Skola/SKOLA T3/Databaser Kursfiler/` (02_Lectures/*.pdf,
+  04_Labs-and-Exercises/sysb23-database-exercises.pdf). Läs dem med pdf-parse
+  installerad i scratchpad (Read-verktyget saknar poppler). Publicera aldrig
+  materialet i repot.
+- **Kapitel 8 (normalformer) är granskat mot Fö6-decket och facit 2026-09-05.**
+  Kursen har bara 1NF–3NF — inför inte BCNF. "Spurious tuples" är inte kursens
+  term; lossless join definieras som att naturlig join av delrelationerna ger
+  tillbaka originalet (slide 61). Dependency preservation: ett beroende är
+  bevarat om båda attributen finns i samma relation (slide 63) — decket gör
+  inget generellt påstående om 3NF. 2NF-genvägen "är kandidatnyckeln
+  sammansatt? nej → 2NF kan inte brytas" (slide 41/45) är hur uppgifterna
+  löses; kapitlet säger "alla kandidatnycklar enkla". Frågeformatet
+  "högsta normalform (1NF–3NF)" är tentans (häftets uppgift 10–13).
 - Prompt-md-filerna ligger publikt i repot (användaren informerad).
 - `DELETE FROM Patient` stoppas av FK i fritt läge — korrekt beteende.
 - Skärmdumpar i browserpanelen kan vara eftersläpande/tomma; DOM-verifiering gäller.

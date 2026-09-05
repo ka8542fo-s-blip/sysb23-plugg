@@ -494,10 +494,10 @@ export const questions = [
     correct: 0, source: "Kompendiet kap. 8", reviewed: false },
 
   { id: "dbq-20", topic: "normalisering", difficulty: 2,
-    question: "En relation i 1NF har en enkel kandidatnyckel. Vad gäller om 2NF?",
+    question: "En relation i 1NF har en enda kandidatnyckel, och den består av ett attribut. Vad gäller om 2NF?",
     options: [
       { text: "Den kan bryta mot 2NF om något icke-primärattribut beror på ett annat", explain: "Beroende mellan icke-primära attribut är ett 3NF-problem, inte 2NF." },
-      { text: "Den är automatiskt i 2NF — en enkel nyckel har inga äkta delmängder", explain: "Rätt. Partiellt beroende kräver en sammansatt nyckel att vara delmängd av." },
+      { text: "Den är automatiskt i 2NF — en enkel nyckel har inga äkta delmängder", explain: "Rätt. Partiellt beroende kräver en sammansatt kandidatnyckel att vara delmängd av, och här finns ingen." },
       { text: "Den måste först dekomponeras i två relationer innan 2NF kan prövas", explain: "Dekomposition görs bara när ett test misslyckas." },
       { text: "Den är i 2NF bara om alla attribut är atomära och dessutom unika", explain: "Unikhet är inget 2NF-krav; atomära värden är 1NF." }
     ],
@@ -523,21 +523,21 @@ export const questions = [
     ],
     correct: 3, source: "Kompendiet kap. 8", reviewed: false },
 
-  { id: "dbq-23", topic: "normalisering", difficulty: 2,
-    question: "Hur härleds kandidatnyckeln ur de funktionella beroendena?",
+  { id: "dbq-23", topic: "normalisering", difficulty: 3,
+    question: "R(A, B, C, D, E) har beroendena {A,B} → C, C → D och D → E. Vilken är den högsta normalformen?",
     options: [
-      { text: "Som det attribut som förekommer i flest beroenden på vänster sida av pilen", explain: "Antal förekomster säger inget om vad attributet bestämmer." },
-      { text: "Som den minimala attributuppsättning som bestämmer alla övriga attribut", explain: "Rätt. I exemplet bestämmer {EmployeeNo, ProjectNo} tillsammans allt annat." },
-      { text: "Som det attribut som har flest distinkta värden i den exempeldata som finns", explain: "Distinkta värden i data är inte en regel på modellnivå." },
-      { text: "Som det första attributet i relationen, eftersom det brukar vara nyckeln", explain: "Attributens ordning saknar betydelse i relationsmodellen." }
+      { text: "1NF, eftersom nyckeln {A,B} är sammansatt och C beror på den", explain: "C beror på hela nyckeln {A,B}, inte på en äkta delmängd — inget partiellt beroende." },
+      { text: "2NF, eftersom D och E beror transitivt på nyckeln via C", explain: "Rätt. Kandidatnyckel {A,B}; C beror på hela nyckeln, men {A,B} → C → D → E är transitivt. Facit: 2NF." },
+      { text: "3NF, eftersom inget attribut beror på en äkta delmängd av nyckeln", explain: "Det ger bara 2NF. 3NF kräver dessutom att inget icke-primärattribut beror transitivt." },
+      { text: "3NF, eftersom C, D och E alla beror på ett enda attribut var", explain: "Att determinanten är enkel spelar ingen roll; C och D är inte kandidatnycklar, så kedjan är transitiv." }
     ],
-    correct: 1, source: "Kompendiet kap. 8", reviewed: false },
+    correct: 1, source: "Kompendiet kap. 8 · övningshäftet uppgift 10:3", reviewed: false },
 
   { id: "dbq-24", topic: "normalisering", difficulty: 3,
     question: "Vad innebär det att en dekomposition är lossless?",
     options: [
       { text: "Inga rader går förlorade när man raderar i någon av delrelationerna", explain: "Lossless handlar om join, inte om radering." },
-      { text: "Originalrelationen kan återskapas exakt genom join, utan spurious tuples", explain: "Rätt. Ger joinen rader som inte fanns i originalet är dekompositionen felaktig." },
+      { text: "Naturlig join av delrelationerna ger tillbaka originalrelationen", explain: "Rätt. Saknar delrelationerna gemensamt attribut, som R1(A,B,C) och R2(D,E,F), kan joinen inte återskapa R." },
       { text: "Alla funktionella beroenden kan kontrolleras inom en enskild delrelation", explain: "Det är dependency preservation, det andra kvalitetskravet." },
       { text: "Delrelationerna tar tillsammans mindre lagringsutrymme än originalet", explain: "Lagringsutrymme är inte kriteriet." }
     ],
