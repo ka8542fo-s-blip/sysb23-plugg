@@ -127,8 +127,8 @@ export function ReificationFigure() {
   return (
     <Figure
       viewBox="0 0 640 350"
-      label="Före: Employee — WorksOn — Project (M:N) med attributen allocationPercentage och assignmentStartDate på relationen. Efter: entitetstypen Assignment mellan Employee (Holds, 1:N) och Project (Concerns, N:1), med assignmentNo understruket och de två attributen flyttade till Assignment."
-      caption="Före: attributen sitter på relationstypen WorksOn. Efter: paret har blivit entiteten Assignment — vanliga Chen-konstruktioner, ingen särskild symbol — och assignmentNo är ett nytt ansvar att tilldela, lagra och bevara."
+      label="Före: Employee — WorksOn — Project (M:N) med attributen allocationPercentage och assignmentStartDate på relationen. Efter: entitetstypen Assignment mellan Employee (Holds, 1:N) och Project (Concerns, N:1) med dubbla linjer på Assignments sidor, assignmentNo understruket och de två attributen flyttade till Assignment."
+      caption="Före: attributen sitter på relationstypen WorksOn. Efter: paret har blivit entiteten Assignment — vanliga Chen-konstruktioner, ingen särskild symbol. Dubbellinjerna vid Assignment betyder att varje uppdrag måste ha en anställd och ett projekt; assignmentNo är ett nytt ansvar att tilldela, lagra och bevara."
       maxWidth={640}
     >
       <Note x={12} y={18} bold color="var(--pine)" text="Före" />
@@ -153,10 +153,10 @@ export function ReificationFigure() {
       <Connector x1={106} y1={y2} x2={142} y2={y2} />
       <Ratio x={124} y={y2 - 10} text="1" />
       <RelationshipDiamond cx={182} cy={y2} w={80} h={48} label="Holds" />
-      <Connector x1={222} y1={y2} x2={258} y2={y2} />
+      <Connector x1={222} y1={y2} x2={258} y2={y2} total />
       <Ratio x={240} y={y2 - 10} text="N" />
       <EntityBox x={258} y={y2 - 22} w={110} label="Assignment" />
-      <Connector x1={368} y1={y2} x2={404} y2={y2} />
+      <Connector x1={368} y1={y2} x2={404} y2={y2} total />
       <Ratio x={386} y={y2 - 10} text="N" />
       <RelationshipDiamond cx={446} cy={y2} w={84} h={48} label="Concerns" />
       <Connector x1={488} y1={y2} x2={524} y2={y2} />
@@ -301,17 +301,33 @@ export function EntityPopulationFigure() {
 }
 
 export function RelationshipPopulationFigure() {
+  // Rader i mängderna: y = ramens y + 38 + 20·i. Linjerna går mellan
+  // ramarnas kanter och binder varje relationsinstans till sina två entiteter.
+  const row = (i) => 4 + 38 + i * 20;
+  const links = [
+    { r: 0, e: 0, p: 0 }, // r1 = ⟨e1, p1⟩
+    { r: 1, e: 1, p: 0 }, // r2 = ⟨e2, p1⟩
+    { r: 2, e: 2, p: 1 }, // r3 = ⟨e3, p2⟩
+  ];
   return (
     <Figure
       viewBox="0 0 640 116"
-      label="Tre mängder: entitetsmängden Employee med e1, e2, e3; relationsmängden WorksOn med r1 = ⟨e1, p1⟩ (60 %), r2 och r3; entitetsmängden Project med p1 Atlas."
-      caption="Relationsmängden vid tid t innehåller r1, r2 och r3. Varje relationsinstans är en tupel med en entitet per roll — r1 = ⟨e1, p1⟩ — och attributet allocationPercentage mappar r1 till 60 %."
+      label="Tre mängder vid tid t: entitetsmängden Employee med e1 Mary, e2 Gary, e3 Sam; relationsmängden WorksOn med r1 = ⟨e1, p1⟩, r2 = ⟨e2, p1⟩, r3 = ⟨e3, p2⟩; entitetsmängden Project med p1 Atlas och p2 Beacon. Linjer binder varje relationsinstans till sina två entiteter."
+      caption="Vid tid t: linjer visar deltagande, ramar markerar sets."
       notChen
       maxWidth={640}
     >
-      <PopulationSet x={6} y={4} w={196} h={106} title="Employee" items={["e1 · Mary", "e2 · Gary", "e3 · Sam"]} />
-      <PopulationSet x={222} y={4} w={196} h={106} title="WorksOn" items={["r1 = ⟨e1, p1⟩ · 60 %", "r2 = ⟨…⟩", "r3 = ⟨…⟩"]} />
-      <PopulationSet x={438} y={4} w={196} h={106} title="Project" items={["p1 · Atlas"]} />
+      <PopulationSet x={6} y={4} w={176} h={106} title="Employee" items={["e1 · Mary", "e2 · Gary", "e3 · Sam"]} />
+      <PopulationSet x={232} y={4} w={176} h={106} title="WorksOn" items={["r1 = ⟨e1, p1⟩", "r2 = ⟨e2, p1⟩", "r3 = ⟨e3, p2⟩"]} />
+      <PopulationSet x={458} y={4} w={176} h={106} title="Project" items={["p1 · Atlas", "p2 · Beacon"]} />
+      <g stroke="var(--pine)" strokeWidth={1.2}>
+        {links.map(({ r, e, p }) => (
+          <g key={r}>
+            <line x1={182} y1={row(e)} x2={232} y2={row(r)} />
+            <line x1={408} y1={row(r)} x2={458} y2={row(p)} />
+          </g>
+        ))}
+      </g>
     </Figure>
   );
 }
