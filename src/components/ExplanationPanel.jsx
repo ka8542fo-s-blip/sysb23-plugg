@@ -1,11 +1,15 @@
 import { useState } from "react";
 
-// Visar alltid förklaringen för det valda alternativet, plus en utfällbar
-// genomgång av övriga alternativ.
-export default function ExplanationPanel({ options, chosen, correct, source }) {
+// Visar förklaringen för det valda alternativet plus en utfällbar genomgång
+// av övriga alternativ när banken har en förklaring per alternativ
+// (Strategi). Banker med en förklaring per fråga (Databaser) visar den en
+// gång, utan genomgång.
+export default function ExplanationPanel({ options, chosen, correct, source, explanation }) {
   const [open, setOpen] = useState(false);
   const wasCorrect = chosen === correct;
-  const shown = chosen === null || chosen === undefined ? correct : chosen;
+  const skipped = chosen === null || chosen === undefined;
+  const shown = skipped ? correct : chosen;
+  const perOption = options.some((option) => option.explain);
   const others = options
     .map((option, index) => ({ ...option, index }))
     .filter((option) => option.index !== shown);
@@ -23,15 +27,19 @@ export default function ExplanationPanel({ options, chosen, correct, source }) {
             : "Fel — så här ligger det till:"}
       </p>
 
-      <p className="mt-2 text-[15px] leading-relaxed">{options[shown].explain}</p>
+      <p className="mt-2 text-[15px] leading-relaxed">
+        {perOption ? options[shown].explain : explanation}
+      </p>
 
-      {!wasCorrect && chosen !== null && chosen !== undefined && (
+      {!wasCorrect && !skipped && (
         <p className="mt-3 rounded-lg bg-correct-bg p-3 text-[15px] leading-relaxed">
           <span className="font-medium text-correct">Rätt svar: </span>
-          {options[correct].text} — {options[correct].explain}
+          {options[correct].text}
+          {perOption && ` — ${options[correct].explain}`}
         </p>
       )}
 
+      {perOption && (
       <button
         type="button"
         onClick={() => setOpen(!open)}
@@ -40,8 +48,9 @@ export default function ExplanationPanel({ options, chosen, correct, source }) {
       >
         {open ? "Dölj de andra alternativen" : "Varför är de andra fel?"}
       </button>
+      )}
 
-      {open && (
+      {perOption && open && (
         <ul className="mt-2 space-y-2">
           {others.map((option) => (
             <li

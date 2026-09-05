@@ -19,8 +19,12 @@ const SEGMENTS = [
 export default function KnowledgeHub({ course, params, navigate, readChapters, onToggleRead }) {
   const chapters = course.chapters || [];
   const glossary = course.glossary || [];
-  // "Öva på detta"-knapparna kräver en frågebank.
-  const canPractice = (course.questions || []).length > 0;
+  // "Öva på detta"-knapparna visas bara där ämnet faktiskt har frågor —
+  // kapitel utan täckta ämnen får ingen knapp.
+  const practicableTopics = useMemo(
+    () => new Set((course.questions || []).map((question) => question.topic)),
+    [course],
+  );
 
   const [segment, setSegment] = useState(() => {
     const saved = load(KEYS.readSegment, "kompendium");
@@ -149,7 +153,7 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
                 onToggleRead={onToggleRead}
                 onOpenTopic={openTopic}
                 onPractice={practice}
-                canPractice={canPractice}
+                canPractice={(current.topics || []).some((id) => practicableTopics.has(id))}
                 onBack={() => setChapterId(null)}
                 onPrev={() => step(-1)}
                 onNext={() => step(1)}
@@ -173,7 +177,7 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
               openTopicId={openTopicId}
               onOpenChapter={openChapter}
               onPractice={practice}
-              canPractice={canPractice}
+              practicableTopics={practicableTopics}
             />
           )}
 

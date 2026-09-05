@@ -12,7 +12,8 @@ export default function ConceptCards({
   openTopicId,
   onOpenChapter,
   onPractice,
-  canPractice = true,
+  // Ämnen som har frågor i banken; saknas mängden får alla kort knappen.
+  practicableTopics = null,
 }) {
   const [query, setQuery] = useState("");
   const [openId, setOpenId] = useState(openTopicId || course.topics[0]?.id || null);
@@ -155,7 +156,7 @@ export default function ConceptCards({
                   </ul>
 
                   <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-line pt-4">
-                    {canPractice && (
+                    {(!practicableTopics || practicableTopics.has(topic.id)) && (
                       <button
                         type="button"
                         className="btn-secondary"

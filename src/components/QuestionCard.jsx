@@ -26,8 +26,12 @@ export default function QuestionCard({
       <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink/65">
         {counter && <span className="tabular font-medium text-ink/70">{counter}</span>}
         {topicName && <span>{topicName}</span>}
-        <span aria-hidden="true">·</span>
-        <span>{DIFFICULTY[question.difficulty] || "Standard"}</span>
+        {question.difficulty && (
+          <>
+            <span aria-hidden="true">·</span>
+            <span>{DIFFICULTY[question.difficulty] || "Standard"}</span>
+          </>
+        )}
         {question.reviewed === false && (
           <span className="chip border-brass py-0 text-xs text-brass">Ogranskad</span>
         )}
@@ -56,6 +60,7 @@ export default function QuestionCard({
           chosen={chosen}
           correct={view.correct}
           source={question.source}
+          explanation={question.explanation}
         />
       )}
 

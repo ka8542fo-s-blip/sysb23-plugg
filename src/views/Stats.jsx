@@ -22,7 +22,11 @@ export default function Stats({
 }) {
   const [confirming, setConfirming] = useState(false);
   const now = useToday();
-  const perTopic = useMemo(() => topicStats(course, answers), [course, answers]);
+  // Ämnen utan frågor (t.ex. Databaser-kapitel som väntar på frågor) hålls utanför.
+  const perTopic = useMemo(
+    () => topicStats(course, answers).filter((topic) => topic.questionCount > 0),
+    [course, answers],
+  );
   const overall = useMemo(() => overallStats(course, answers), [course, answers]);
   const focus = useMemo(() => focusTopic(perTopic), [perTopic]);
   const courseExams = exams.filter((exam) => exam.courseId === course.id);
@@ -180,7 +184,7 @@ export default function Stats({
       </section>
       )}
 
-      {course.questions.length > 0 && (
+      {course.views?.includes("prov") && (
       <section>
         <h2 className="flex items-center gap-2 font-display text-xl">
           Provhistorik <InfoTip id="provhistorik" />

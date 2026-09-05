@@ -21,6 +21,13 @@ export default function Practice({
   onAnswer,
 }) {
   const selectedTopics = settings.practiceTopics;
+  // Inställningarna delas mellan delkurserna: ämnesval som hör till en annan
+  // delkurs ignoreras, och en bank utan svårighetsgrader filtreras inte på dem.
+  const activeTopics = useMemo(
+    () => selectedTopics.filter((id) => course.topics.some((topic) => topic.id === id)),
+    [selectedTopics, course],
+  );
+  const hasDifficulties = course.questions.some((question) => question.difficulty);
 
   // "Öva på detta" från Läs skickar med ett förvalt ämnesfilter.
   const presetKey = params?.nonce ?? null;
@@ -36,7 +43,7 @@ export default function Practice({
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [presetKey]);
-  const difficulty = settings.practiceDifficulty;
+  const difficulty = hasDifficulties ? settings.practiceDifficulty : 0;
   // Tentafokus viktar upp de ämnen som prövats som flervalsfrågor. Det
   // ändrar bara dragningsordningen — inga frågor tas bort ur urvalet.
   const examFocus = settings.practiceExamFocus === true;
@@ -54,11 +61,11 @@ export default function Practice({
   const filtered = useMemo(() => {
     return course.questions.filter((question) => {
       const topicOk =
-        selectedTopics.length === 0 || selectedTopics.includes(question.topic);
+        activeTopics.length === 0 || activeTopics.includes(question.topic);
       const difficultyOk = difficulty === 0 || question.difficulty === difficulty;
       return topicOk && difficultyOk;
     });
-  }, [course, selectedTopics, difficulty]);
+  }, [course, activeTopics, difficulty]);
 
   const countsPerTopic = useMemo(() => {
     const counts = {};
@@ -110,8 +117,11 @@ export default function Practice({
     [current, index],
   );
 
+  // Databaser-banken har ett finare ämne per fråga med eget visningsnamn.
   const topicName = useMemo(
-    () => course.topics.find((topic) => topic.id === current?.topic)?.name,
+    () =>
+      current?.subtopicLabel ??
+      course.topics.find((topic) => topic.id === current?.topic)?.name,
     [course, current],
   );
 
@@ -212,7 +222,7 @@ export default function Practice({
         <div className={filterOpen ? "mt-5" : "mt-5 hidden"}>
           <TopicFilter
             topics={course.topics}
-            selected={selectedTopics}
+            selected={activeTopics}
             counts={countsPerTopic}
             onChange={(topics) =>
               setSettings((prev) => ({ ...prev, practiceTopics: topics }))
@@ -220,6 +230,7 @@ export default function Practice({
           />
         </div>
 
+        {hasDifficulties && (
         <div className={filterOpen ? "mt-5" : "mt-5 hidden"}>
           <label
             htmlFor="difficulty"
@@ -245,6 +256,7 @@ export default function Practice({
             ))}
           </select>
         </div>
+        )}
 
         <p className="tabular mt-5 text-sm text-ink/65">
           {filtered.length} frågor i urvalet · rätt i passet: {passStats.correct} ·

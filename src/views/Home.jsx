@@ -39,7 +39,7 @@ export default function Home({
         <h1 className="mt-1 font-display text-3xl sm:text-4xl">{course.name}</h1>
         <p className="mt-3 max-w-reading text-[17px] leading-relaxed text-ink/80">
           {views.includes("sql")
-            ? "Läs kompendiet om designprocessen, relationsmodellen och normalisering, och skriv riktig SQL mot kursens sjukhusdatabas med automatisk rättning."
+            ? "Läs kompendiet om designprocessen, relationsmodellen och normalisering, öva förståelsefrågor på föreläsningarna, och skriv riktig SQL mot kursens sjukhusdatabas med automatisk rättning."
             : "Öva flervalsfrågor med förklaringar till varje alternativ, simulera tentans poängsystem med minuspoäng, och träna essäsvar mot en checklista. Allt innehåll kommer ur kurslitteraturen och gamla tentor."}
         </p>
         <p className="tabular mt-2 text-[15px] text-ink/65">
@@ -143,7 +143,7 @@ export default function Home({
 
       <div
         className={
-          course.questions.length > 0
+          views.includes("prov")
             ? "grid gap-8 lg:grid-cols-2 lg:items-start"
             : ""
         }
@@ -169,7 +169,7 @@ export default function Home({
         </ul>
       </section>
 
-      {course.questions.length > 0 && (
+      {views.includes("prov") && (
       <section className="card border-brass/40 p-5">
         <h2 className="font-display text-lg">Så räknas tentan</h2>
         <p className="mt-2 text-[15px] leading-relaxed text-ink/80">
