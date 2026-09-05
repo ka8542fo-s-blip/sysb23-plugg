@@ -46,7 +46,9 @@ summerar till 20, inte 30 — medvetet orört).
 
 ## Vyer och särdrag
 
-- **Hem** — WeekAtAGlance (nedräkning + kompakt veckorad, klicka fram en dag),
+- **Hem** — WeekAtAGlance (nedräkning + kompakt veckorad, klicka fram en dag;
+  vid laddning och vid midnatt är den öppna dagen alltid idag — aldrig
+  "mest intressanta dagen", användarkrav 2026-09-05),
   statusrutor, genvägar byggda ur `views`. Veckoraden visar **innevarande
   vecka måndag–söndag** (`startOfWeek` i `lib/dates.js`), inte sju dagar
   framåt: passerade dagar tonas ned, rubriken bär veckonumret.

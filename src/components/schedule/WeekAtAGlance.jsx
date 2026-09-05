@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { schedule } from "../../data/schedule.js";
 import {
   decoratedExams,
@@ -83,16 +83,13 @@ export default function WeekAtAGlance({ navigate, onSelectCourse }) {
   }, [windowStart, now]);
 
   const total = days.reduce((sum, day) => sum + day.sessions.length, 0);
-  // Öppna den dag som är mest intressant: idag om något händer, annars
-  // nästa dag med pass.
-  const [openDate, setOpenDate] = useState(
-    () =>
-      days.find((day) => day.isToday && day.sessions.length > 0)?.date ||
-      days.find((day) => !day.past && day.sessions.length > 0)?.date ||
-      days.find((day) => day.sessions.length > 0)?.date ||
-      days.find((day) => day.isToday)?.date ||
-      days[0].date,
-  );
+  // Öppna alltid idag när sidan laddas — inte "mest intressanta dagen"
+  // (det landade på måndagen när veckans pass låg bakom en). Före
+  // terminsstart finns inget idag i raden; då öppnas första dagen.
+  const todayInWeek = days.find((day) => day.isToday)?.date || days[0].date;
+  const [openDate, setOpenDate] = useState(todayInWeek);
+  // Slår datumet över vid midnatt i en öppen flik följer den öppna dagen med.
+  useEffect(() => setOpenDate(todayInWeek), [todayInWeek]);
   const open = days.find((day) => day.date === openDate) || days[0];
 
   const target = shown ? studyTargetFor(shown.subcourseData) : null;
