@@ -54,6 +54,11 @@ spaced repetition med dagsintervall. Nollställning bara via knappen
 data" i Statistik. Tentafokus (Strategi) betyder kärnämnen först inom varje
 grupp. Båda delkurserna kör `practiceBy: "chapter"` sedan 2026-09-05.
 Test: `scripts/practice-queue.test.mjs`.
+
+**`reviewed: false` syns inte i UI (2026-09-06):** flaggan finns kvar i
+datan som intern markering av vilka frågor som inte granskats mot decken
+och facit (Databaser kapitel 1–3: dbq-01…12), men chipen "Ogranskad" på
+frågekortet är borttagen — den kändes oprofessionell för den som pluggar.
 `reading.js` äger löptexten och har ALDRIG egna recap-arrayer — kapitelavsluten
 ("Kärnan i korthet"/"Se upp för") renderas ur kapitlets `primaryTopics` via
 `lib/topicLookup.js`. `topics` = allt kapitlet berör (styr "Öva på detta kapitel"),

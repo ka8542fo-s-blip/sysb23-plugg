@@ -3,6 +3,8 @@ import ExplanationPanel from "./ExplanationPanel.jsx";
 
 const DIFFICULTY = { 1: "Grund", 2: "Standard", 3: "Klurig" };
 
+// reviewed: false på en fråga är en intern markering (HANDOFF: granskning
+// mot kursmaterialet) och visas inte för den som pluggar.
 // view = { options, correct } från shuffleQuestion — index avser den
 // blandade ordningen, aldrig datafilens.
 export default function QuestionCard({
@@ -31,9 +33,6 @@ export default function QuestionCard({
             <span aria-hidden="true">·</span>
             <span>{DIFFICULTY[question.difficulty] || "Standard"}</span>
           </>
-        )}
-        {question.reviewed === false && (
-          <span className="chip border-brass py-0 text-xs text-brass">Ogranskad</span>
         )}
       </div>
 
