@@ -98,6 +98,14 @@ export default function Schedule({ answers, exams: examHistory, navigate, onSele
         </section>
       )}
 
+      {/* Schemat först — det är det man snabbt vill kolla; nedräkning och
+          tentaöversikt ligger under. */}
+      <SessionList
+        schedule={schedule}
+        defaultForwardOnly={state === "during"}
+        now={now}
+      />
+
       <ExamCountdown
         schedule={schedule}
         exams={exams}
@@ -113,12 +121,6 @@ export default function Schedule({ answers, exams: examHistory, navigate, onSele
       />
 
       <ExamTimeline exams={exams} />
-
-      <SessionList
-        schedule={schedule}
-        defaultForwardOnly={state === "during"}
-        now={now}
-      />
 
       <TermOverview schedule={schedule} exams={schedule.exams} currentPeriod={period} />
 
