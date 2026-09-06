@@ -339,7 +339,7 @@ export default function Practice({
               ) : allDone ? (
                 <>
                   <button type="button" className="btn-primary" onClick={() => serve(filtered, true)}>
-                    Öva ändå
+                    Fortsätt öva
                   </button>
                   {navigate && (
                     <button
@@ -356,7 +356,7 @@ export default function Practice({
                     </button>
                   )}
                   <span className="text-sm text-ink/65">
-                    Alla frågor i urvalet är klara. Att öva ändå ändrar ingen klar-status.
+                    Alla frågor i urvalet är klara. Att fortsätta ändrar ingen klar-status.
                   </span>
                 </>
               ) : (

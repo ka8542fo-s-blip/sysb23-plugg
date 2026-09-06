@@ -548,26 +548,6 @@ export const questions = [
     ],
     correct: 1, source: "Weaver, fö 1 / quiz F1", reviewed: true },
 
-  { id: "str-q55", topic: "mal", difficulty: 1,
-    question: "Vad innebär den neoklassiska teorin om vinstmaximering?",
-    options: [
-      { text: "Företag strävar efter att maximera försäljningen", explain: "Försäljningsmaximering är Baumols modell." },
-      { text: "Företag strävar efter att optimera kundnöjdhet", explain: "Kundnöjdhet är ett icke-finansiellt mål, inte modellens." },
-      { text: "Företag strävar efter att minimera sina kostnader", explain: "Kostnader är ena sidan; målet är vinsten som helhet." },
-      { text: "Företag strävar efter att maximera sin vinst", explain: "Intäkt minus kostnad ska bli så stor som möjligt." }
-    ],
-    correct: 3, source: "Weaver, fö 1 / quiz F1", reviewed: true },
-
-  { id: "str-q56", topic: "mal", difficulty: 1,
-    question: "Vad fokuserar intressentmodellen på?",
-    options: [
-      { text: "Ett stabilt kassaflöde över tid", explain: "Kassaflödet hör till en annan modell." },
-      { text: "Att begränsa ledningens inflytande", explain: "Ledningen är en intressent bland flera, inget som ska begränsas." },
-      { text: "Att maximera ägarnas avkastning", explain: "Ägarna är bara en av intressenterna." },
-      { text: "Balans mellan intressenternas krav", explain: "Balansen ger företaget långsiktig stabilitet." }
-    ],
-    correct: 3, source: "Weaver, fö 1 / quiz F1", reviewed: true },
-
   { id: "str-q57", topic: "digital", difficulty: 2,
     question: "Vad kännetecknade de tidiga enterprise-systemen på 1960-talet?",
     options: [
