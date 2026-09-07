@@ -9,6 +9,7 @@ import { questions, LENGTH_FLAGGED } from "../src/data/databaser/questions.js";
 import { pendingQuestions } from "../src/data/databaser/questions-pending.js";
 import { topics } from "../src/data/databaser/topics.js";
 import { chapters } from "../src/data/databaser/reading.js";
+import { DIAGRAM_IDS } from "../src/components/knowledge/diagrams/ids.js";
 
 const chapterOf = Object.fromEntries(topics.map((t) => [t.id, t.chapter]));
 
@@ -25,6 +26,22 @@ test("varje fråga är komplett: fyra alternativ med förklaring, ämne i topics
     assert.ok([1, 2, 3].includes(q.difficulty), `${q.id}: difficulty 1–3`);
     assert.ok(q.source, `${q.id}: källa`);
     assert.ok(chapterOf[q.topic], `${q.id}: ämnet ${q.topic} finns inte i topics.js`);
+    if (q.diagram) assert.ok(DIAGRAM_IDS.includes(q.diagram), `${q.id}: okänt diagram ${q.diagram}`);
+    if (q.context) assert.equal(typeof q.context, "string", `${q.id}: context ska vara text`);
+  }
+});
+
+test("påståenden mot diagram: under hälften sanna per diagram, som på tentan", () => {
+  const byDiagram = {};
+  for (const q of questions) {
+    if (!q.diagram) continue;
+    const truthy = /^Ja\b/.test(q.options[q.correct].text);
+    (byDiagram[q.diagram] ??= { total: 0, sanna: 0 }).total++;
+    if (truthy) byDiagram[q.diagram].sanna++;
+  }
+  for (const [id, c] of Object.entries(byDiagram)) {
+    assert.ok(c.total >= 2, `${id}: bara ${c.total} påstående`);
+    assert.ok(c.sanna / c.total < 0.5, `${id}: ${c.sanna} av ${c.total} sanna (ska vara under hälften)`);
   }
 });
 

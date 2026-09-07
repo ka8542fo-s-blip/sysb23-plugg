@@ -487,7 +487,10 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
           <p className="text-sm leading-relaxed text-ink/65">
             Du skriver SQL Server-dialekten (T-SQL) precis som i kursen. Motorn under huven
             är SQLite i webbläsaren, och det du skriver översätts innan det körs — kursens
-            SQL fungerar som i SQL Server, men enstaka exotiska funktioner kan saknas.
+            SQL fungerar som i SQL Server, men enstaka exotiska funktioner kan saknas. Tre
+            skillnader som verkstaden inte kan dölja: AVG över en INTEGER-kolumn ger decimaler
+            här men ett heltal i SQL Server (snittet av 7 och 8 är 7 på tentan), TOP n körs
+            som LIMIT n, och + mellan texter körs som ||.
           </p>
         </div>
       )}

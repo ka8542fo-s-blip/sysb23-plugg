@@ -1310,7 +1310,7 @@ Ett aggregat — COUNT, SUM, AVG, MIN, MAX — räknar ihop en mängd rader till
 
 Regeln som SQL Server upprätthåller och som avgör om frågan alls kör: **varje kolumn i SELECT måste antingen stå i GROUP BY eller inuti en aggregatfunktion.** Titel står i SELECT, alltså står den i GROUP BY, även om Isbn ensamt räcker för att skilja grupperna åt. Felmeddelandet är värt att känna igen: *Column 'Titel' is invalid in the select list because it is not contained in either an aggregate function or the GROUP BY clause.* Det är det första rättaren letar efter.
 
-Två detaljer som föreläsningen lyfter. COUNT(*) räknar rader i gruppen; COUNT(kolumn) räknar rader där kolumnen inte är NULL. Och AVG över en INTEGER-kolumn ger ett heltal i SQL Server: snittet av 7 och 8 blir 7, inte 7,5. Uppgiften ber om snittresultatet, inte om decimaler, så AVG(Betyg) är rätt svar — men vet att avrundningen sker.
+Två detaljer som föreläsningen lyfter. \`COUNT(*)\` räknar rader i gruppen; \`COUNT(kolumn)\` räknar rader där kolumnen inte är NULL. Och AVG över en INTEGER-kolumn ger ett heltal i SQL Server: snittet av 7 och 8 blir 7, inte 7,5. Uppgiften ber om snittresultatet, inte om decimaler, så \`AVG(Betyg)\` är rätt svar — men vet att avrundningen sker.
 
 ## HAVING mot WHERE
 
@@ -1319,7 +1319,7 @@ Båda filtrerar, men vid olika tidpunkter. SQL:s logiska utförandeordning är F
     SELECT
         l.LantagarNo,
         l.Namn,
-        COUNT(*) AS AntalBocker
+        \`COUNT(*)\` AS AntalBocker
     FROM
         Lantagare AS l
         INNER JOIN HarLanat AS hl ON hl.LantagarNo = l.LantagarNo
@@ -1327,7 +1327,7 @@ Båda filtrerar, men vid olika tidpunkter. SQL:s logiska utförandeordning är F
         l.LantagarNo,
         l.Namn
     HAVING
-        COUNT(*) >= 2;
+        \`COUNT(*)\` >= 2;
 
 "Har lånat minst två böcker" är ett villkor på gruppen — det går inte att veta för en enskild rad — alltså HAVING. "Betyg över 6" är ett villkor på raden, alltså WHERE, och det påverkar vad som sedan räknas: ett \`WHERE Betyg > 6\` före \`COUNT(*)\` räknar bara de högt betygsatta lånen. Läs uppgiftstexten och avgör för varje villkor: gäller det en rad eller en grupp?
 
@@ -1438,7 +1438,7 @@ Kolumner ut: LantagarNo och Namn ur Lantagare, högsta betyg ur HarLanat. Per va
         l.LantagarNo,
         l.Namn
     HAVING
-        COUNT(*) >= 2;
+        \`COUNT(*)\` >= 2;
 
 Läs igenom: tre kolumner, en rad per låntagare, åldersvillkoret filtrerar rader före grupperingen (och det gör inget, för alla en låntagares rader har samma ålder), antalet räknas per grupp efter grupperingen. Namn står i GROUP BY därför att det står i SELECT. Ingen ORDER BY, för uppgiften ber inte om ordning.
 

@@ -1,5 +1,6 @@
 import OptionButton from "./OptionButton.jsx";
 import ExplanationPanel from "./ExplanationPanel.jsx";
+import { Diagram } from "./knowledge/diagrams/index.jsx";
 
 const DIFFICULTY = { 1: "Grund", 2: "Standard", 3: "Klurig" };
 
@@ -36,6 +37,14 @@ export default function QuestionCard({
         )}
       </div>
 
+      {/* Underlag före stammen: ett av sajtens diagram (tentans uppgift 1) eller
+          ett förformaterat block — R med beroenden och scheman, eller SQL. */}
+      {question.diagram && <Diagram id={question.diagram} />}
+      {question.context && (
+        <pre className="mb-4 overflow-x-auto rounded-lg border border-line bg-paper px-4 py-3 font-mono text-[13.5px] leading-relaxed text-ink">
+          {question.context}
+        </pre>
+      )}
       <h2 className="font-display text-[22px] leading-snug text-ink sm:text-[26px]">
         {question.question}
       </h2>

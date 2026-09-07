@@ -75,7 +75,22 @@ BY/HAVING eller mängdskillnad + skalär subquery, en fråga, indenterad.
 Inte förekommit: application development (listas dock i nya Fö1 slide 16),
 logisk modell som eget svar, relationsalgebra, Crow's Foot som produktion.
 Läs kap 1 har avsnittet "Så ser tentan ut". Stor uppdatering pågår enligt
-prompten CC-prompt-stor-uppdatering-tentan.md (gitignorerad): punkt 1–6 klara.
+prompten CC-prompt-stor-uppdatering-tentan.md (gitignorerad): punkt 1–7 klara.
+Punkt 7 (2026-09-07): Öva omviktad mot tentan. Fördelning 4/4/5/7/7/7/5/
+10/7/9 (kap 1–10), 65 frågor, spann 4–10 i balanstestet. 28 igenkännings-
+frågor strukna (bl.a. TimeEdit, ArrayList, grad/kardinalitet, Crow's Foot
+ner till en: db4-33), 30 nya, alla reviewed: false. Nya former: frågor med
+`diagram` (ett av sajtens SVG-diagram som underlag, "Enligt diagrammet: …",
+distraktorer = de fyra felläsningarna; testet kräver under hälften "Ja"
+per diagram), frågor med `context` (förformaterat block: R med beroenden
+och scheman i tentans 3a–e-form, DDL, SQL). QuestionCard renderar båda.
+Kapitel 8: sex sant/falskt i tentans form (2NF, beroendebevarande, lossless,
+fler än en kandidatnyckel, alla i 3NF, primärattribut i delrelation) på
+egen R(A–G) med {A,B}→C, B→D, D→E, C→{F,G}, en dbq-23-typ (A↔B, D→E → 2NF),
+en övernormalisering. Varje svar härlett i explain. LENGTH_FLAGGED: db4-16,
+20, 21, 23 borta med frågorna. Verkstadens dialektnot nämner AVG över
+INTEGER, TOP och +. Kvar från prompten: punkt 8 (verkstadens tentaspår) och
+valfri punkt 9 (markera-alla-sanna-typ).
 Punkt 6 (2026-09-07): nytt kapitel 10 `kap9` "SQL: att resonera fram en
 fråga", byggt baklänges från uppgift 4 — schema med kopplingstabell, join
 över den, GROUP BY-regeln, HAVING mot WHERE, "X men inte Y" (NOT IN / NOT

@@ -25,44 +25,10 @@
 export const LENGTH_FLAGGED = [
   { id: "db4-12", reason: "Behållen ur leveransen 2026-09-05; längsta alternativet är en distraktor (spridning 1,53)." },
   { id: "db4-14", reason: "Behållen ur leveransen 2026-09-05; längsta alternativet är en distraktor (spridning 1,46)." },
-  { id: "db4-16", reason: "Behållen ur leveransen 2026-09-05; längsta alternativet är en distraktor (spridning 1,51)." },
-  { id: "db4-20", reason: "Behållen ur leveransen 2026-09-05; längsta alternativet är en distraktor (spridning 1,26)." },
-  { id: "db4-21", reason: "Behållen ur leveransen 2026-09-05; längsta alternativet är en distraktor (spridning 1,27)." },
-  { id: "db4-23", reason: "Behållen ur leveransen 2026-09-05; längsta alternativet är en distraktor (spridning 1,32)." },
   { id: "db4-26", reason: "Behållen ur leveransen 2026-09-05; längsta alternativet är en distraktor (spridning 1,27)." },
 ];
 
 export const questions = [
-  { id: "db1-01", topic: "grunder", difficulty: 1,
-    question: "Vad är skillnaden mellan TimeEdit-applikationen och TimeEdit-databasen?",
-    options: [
-      { text: "Applikationen och databasen är samma sak, beskrivna på två olika abstraktionsnivåer", explain: "Två abstraktionsnivåer av samma sak blandar ihop gränssnittet med den lagrade datan." },
-      { text: "Applikationen är databasen sedd genom en webbläsare i stället för genom ett program", explain: "Webbläsaren är också bara ett gränssnitt; databasen visas aldrig direkt för dig." },
-      { text: "Applikationen lagrar data lokalt, medan databasen bara är en säkerhetskopia av den", explain: "Applikationen lagrar inte schemat lokalt, och databasen är ingen säkerhetskopia." },
-      { text: "Applikationen är gränssnittet du ser och använder; databasen är den lagrade bokningsdatan", explain: "Det du ser är applikationens gränssnitt; databasen är den lagrade datan bakom det." }
-    ],
-    correct: 3, source: "Kompendiet kap. 1", reviewed: true },
-
-  { id: "db1-02", topic: "grunder", difficulty: 1,
-    question: "I klient–server-bilden: vad är det som faktiskt hämtar data ur databasen?",
-    options: [
-      { text: "Servern hämtar data ur sin databas och skickar svaret tillbaka till klienten", explain: "Klienten pratar med servern över internet, och servern hämtar ur sin databas." },
-      { text: "Klienten hämtar en kopia av databasen till telefonen och läser ur den lokalt", explain: "Ingen kopia laddas ner; klienten skickar en förfrågan och får ett svar från servern." },
-      { text: "Klienten hämtar direkt ur databasen och servern vidarebefordrar bara svaret", explain: "Klienten når aldrig databasen direkt — att hämta data är serverns uppgift." },
-      { text: "Databasen skickar data till klienten utan att någon server är inblandad", explain: "Utan server finns ingen som tar emot förfrågan, hämtar ur databasen och svarar." }
-    ],
-    correct: 0, source: "Kompendiet kap. 1", reviewed: true },
-
-  { id: "db1-06", topic: "grunder", difficulty: 1,
-    question: "Vad händer med en `ArrayList<Employee>` när programmet avslutas?",
-    options: [
-      { text: "Den skrivs automatiskt till disk och läses in igen vid nästa start", explain: "Ingenting skrivs till disk av sig självt; persistens kräver ett explicit skrivsteg." },
-      { text: "Den ligger kvar i RAM tills operativsystemet startas om nästa gång", explain: "RAM töms när processen avslutas; ingenting ligger kvar till nästa körning." },
-      { text: "Den försvinner, eftersom RAM är flyktig lagring (volatile storage)", explain: "Data i RAM är volatil lagring och försvinner när programmet stängs." },
-      { text: "Den behålls om klassen deklarerat kollektionsfältet som `final`", explain: "final låser referensen i koden, inte innehållet i minnet när processen dör." }
-    ],
-    correct: 2, source: "Kompendiet kap. 1", reviewed: true },
-
   { id: "db1-08", topic: "grunder", difficulty: 2,
     question: "Vad är normalisering, och var i designkedjan hör den hemma?",
     options: [
@@ -93,16 +59,6 @@ export const questions = [
     ],
     correct: 3, source: "Kompendiet kap. 1", reviewed: false },
 
-  { id: "dbq-03", topic: "relationsmodellen", difficulty: 2,
-    question: "Raden E1 | Alice | 20000 | Engineering | 500000 pekar framåt mot normalisering. Varför?",
-    options: [
-      { text: "Den berättar två saker samtidigt — en om en anställd och en om en avdelning", explain: "Att en rad bär två fakta är just det som ger upphov till anomalierna." },
-      { text: "Den innehåller både text och tal, vilket bryter mot kravet på en domän per attribut", explain: "Olika attribut får ha olika domäner; det är inom ett attribut domänen ska vara en." },
-      { text: "Den saknar en surrogatnyckel, så raden går inte att identifiera entydigt", explain: "E1 identifierar raden; surrogatnycklar hör till fysisk design." },
-      { text: "Den har fler än fyra attribut, vilket relationsmodellen inte tillåter", explain: "Graden är fri — relationsmodellen sätter ingen gräns för antalet attribut." }
-    ],
-    correct: 0, source: "Kompendiet kap. 2", reviewed: false },
-
   { id: "dbq-04", topic: "relationsmodellen", difficulty: 2,
     question: "Vad skiljer en domän från en datatyp?",
     options: [
@@ -113,26 +69,6 @@ export const questions = [
     ],
     correct: 2, source: "Kompendiet kap. 2", reviewed: false },
 
-  { id: "dbq-05", topic: "relationsmodellen", difficulty: 1,
-    question: "Vad anger en relations grad respektive kardinalitet?",
-    options: [
-      { text: "Grad är antalet tupler och kardinalitet är antalet attribut i relationen", explain: "Termerna är omkastade." },
-      { text: "Grad är antalet attribut och kardinalitet är antalet tupler i relationen", explain: "Grad räknar kolumner, kardinalitet räknar rader." },
-      { text: "Grad är antalet nycklar och kardinalitet är antalet relationer i databasen", explain: "Ingen av termerna räknar nycklar eller relationer." },
-      { text: "Grad är antalet domäner och kardinalitet är antalet distinkta värden", explain: "Domäner och distinkta värden är inte vad termerna mäter." }
-    ],
-    correct: 1, source: "Kompendiet kap. 2", reviewed: false },
-
-  { id: "dbq-06", topic: "relationsmodellen", difficulty: 2,
-    question: "Varför saknar en SQL-fråga utan ORDER BY garanterad radordning?",
-    options: [
-      { text: "Därför att databasen sparar raderna i slumpmässig ordning på disken", explain: "Lagringsordningen är inte poängen; ordningen är odefinierad i modellen." },
-      { text: "Därför att primärnyckeln bara ger en sortering när den är numerisk", explain: "Primärnyckeln definierar ingen radordning över huvud taget." },
-      { text: "Därför att SQL Server alltid sorterar efter tidpunkten för senaste ändring", explain: "Ingen sådan regel finns; utan ORDER BY är ordningen inte garanterad." },
-      { text: "Därför att tuplernas ordning saknar betydelse i relationsmodellen", explain: "Egenskap 6: tuplernas ordning har ingen betydelse, så ingen ordning kan förutsättas." }
-    ],
-    correct: 3, source: "Kompendiet kap. 2", reviewed: false },
-
   { id: "dbq-07", topic: "relationsmodellen", difficulty: 3,
     question: "Vad gäller för dubblettupler?",
     options: [
@@ -142,16 +78,6 @@ export const questions = [
       { text: "Varken modellen eller SQL tillåter dem, oberoende av vilka nycklar som finns", explain: "SQL-tabeller utan nyckel tar emot identiska rader utan protest." }
     ],
     correct: 1, source: "Kompendiet kap. 2", reviewed: false },
-
-  { id: "dbq-08", topic: "relationsmodellen", difficulty: 2,
-    question: "Varför är första normalformen sällan ett problem i praktiken?",
-    options: [
-      { text: "Därför att SQL Server delar upp listvärden automatiskt vid varje INSERT", explain: "Ingen databas delar upp Alice, Bob åt dig — det är designerns ansvar." },
-      { text: "Därför att 1NF bara gäller relationer som har en sammansatt kandidatnyckel", explain: "1NF handlar om atomära värden och gäller alla relationer." },
-      { text: "Därför att kravet på atomära värden först ställs i den fysiska designen", explain: "Kravet ligger redan i relationsbegreppet, långt före fysisk design." },
-      { text: "Därför att en tabell med icke-atomära värden inte är en relation till att börja med", explain: "Egenskap 2 kräver atomära värden, så 1NF är uppfyllt av varje riktig relation." }
-    ],
-    correct: 3, source: "Kompendiet kap. 2", reviewed: false },
 
   { id: "dbq-09", topic: "nycklar", difficulty: 1,
     question: "Vad skiljer en primärnyckel från en kandidatnyckel?",
@@ -172,36 +98,6 @@ export const questions = [
       { text: "Alla attribut som ingår i någon av de två kandidatnycklarna", explain: "Primärattribut är medlem i någon kandidatnyckel — attribut ur båda räknas." }
     ],
     correct: 3, source: "Kompendiet kap. 3", reviewed: false },
-
-  { id: "db1-09", topic: "nycklar", difficulty: 2,
-    question: "I Patient-tabellen finns både `PatientId` och `PatientNo`. Vad skiljer dem?",
-    options: [
-      { text: "PatientId är verksamhetens identifierare, PatientNo genereras av databasen", explain: "Omvänt: det är PatientNo som är verksamhetens nummer och PatientId som genereras." },
-      { text: "PatientId identifierar raden, PatientNo den avdelning patienten tillhör", explain: "PatientNo pekar inte på någon avdelning; det är patientens eget nummer i verksamheten." },
-      { text: "PatientId är genererad surrogate primary key, PatientNo en naturlig nyckel", explain: "Surrogatnyckeln genereras av databasen, den naturliga nyckeln kommer från verksamheten." },
-      { text: "PatientId används i JOIN, PatientNo används enbart i WHERE-villkor", explain: "Var en nyckel används i en fråga säger ingenting om vilken sorts nyckel den är." }
-    ],
-    correct: 2, source: "Kompendiet kap. 3", reviewed: true },
-
-  { id: "db1-10", topic: "nycklar", difficulty: 3,
-    question: "Vad gäller för en surrogate key i förhållande till foreign keys?",
-    options: [
-      { text: "Den är alltid en foreign key om samma kolumnnamn finns i en annan tabell", explain: "Samma kolumnnamn i två tabeller bevisar ingen koppling alls." },
-      { text: "Den blir en FK så snart tabellen ingår i en JOIN med en annan tabell", explain: "En JOIN skapar inga nycklar; den använder de som redan finns deklarerade." },
-      { text: "Den kan aldrig refereras av en FK, eftersom den saknar verksamhetsbetydelse", explain: "Surrogatnycklar refereras av främmande nycklar hela tiden — det är normalfallet." },
-      { text: "Den kan refereras av en FK, men är inte i sig en FK — namnet bevisar ingenting", explain: "En surrogatnyckel kan refereras av en FK men är inte själv en FK." }
-    ],
-    correct: 3, source: "Kompendiet kap. 3", reviewed: true },
-
-  { id: "dbq-11", topic: "nycklar", difficulty: 2,
-    question: "Vad innebär referensintegritet i praktiken?",
-    options: [
-      { text: "Databasen kopierar automatiskt den refererade raden in i den refererande tabellen", explain: "Ingenting kopieras; referensen är en pekare som måste hålla." },
-      { text: "Databasen vägrar rader som pekar på något som saknas, och radering av det som refereras", explain: "Ingen anställd på ett projekt som saknas, ingen radering av ett projekt med anställda." },
-      { text: "Databasen kräver att den främmande nyckeln heter samma sak som primärnyckeln", explain: "Namnen är fria; det är referensen som deklareras." },
-      { text: "Databasen tillåter radering men sätter den främmande nyckeln till NULL automatiskt efteråt", explain: "Kapitlet beskriver vägran, inte automatisk nollställning." }
-    ],
-    correct: 1, source: "Kompendiet kap. 3", reviewed: false },
 
   { id: "dbq-12", topic: "nycklar", difficulty: 2,
     question: "När får en främmande nyckel vara NULL?",
@@ -230,26 +126,6 @@ export const questions = [
       { text: "Varken modellen eller metamodellen, bara diagrammets utseende", explain: "Ett nytt stopp är ett nytt faktum, alltså en ändring i modellen." },
       { text: "Endast metamodellen, som måste tillåta det nya elementet", explain: "Metamodellen tillåter redan Stop; vokabulären behöver inte utökas." },
       { text: "Både modellen och metamodellen, eftersom vokabulären utökas", explain: "Bara modellen växer — metamodellen säger fortfarande Line, Stop och Line has stops." }
-    ],
-    correct: 0, source: "Kompendiet kap. 4", reviewed: true },
-
-  { id: "db4-07", topic: "er", difficulty: 2,
-    question: "Hur skiljer man ett mandatory från ett optional attribute i Chen-notation?",
-    options: [
-      { text: "Man kan inte se skillnaden — båda använder vanlig oval", explain: "Chen saknar symbol för skillnaden; villkoret skrivs ut explicit." },
-      { text: "Mandatory ritas med heldragen linje, optional med streckad linje", explain: "Streckad oval betyder härlett attribut, inte frivilligt." },
-      { text: "Mandatory understryks, optional lämnas utan markering", explain: "Understrykning markerar identifierare, inte obligatoriskhet." },
-      { text: "Mandatory ritas med dubbel oval, optional med enkel oval", explain: "Dubbel oval betyder flervärdesattribut, inte obligatoriskt." }
-    ],
-    correct: 0, source: "Kompendiet kap. 4", reviewed: true },
-
-  { id: "db4-10", topic: "er", difficulty: 2,
-    question: "Var dokumenteras ett value domain i ett vanligt Chen-diagram?",
-    options: [
-      { text: "I en separat specifikation utanför diagrammet", explain: "Ovalen namnger bara attributet; domänen dokumenteras separat." },
-      { text: "Inuti ovalen, tillsammans med attributets namn", explain: "Ovalen rymmer bara namnet, inte de tillåtna värdena." },
-      { text: "I en egen oval som kopplas till attributets oval", explain: "Chen har ingen egen oval för värdemängder." },
-      { text: "I relationship-romben som attributet hör till", explain: "Romben är relationstypen, inte attributets värdemängd." }
     ],
     correct: 0, source: "Kompendiet kap. 4", reviewed: true },
 
@@ -283,16 +159,6 @@ export const questions = [
     ],
     correct: 1, source: "Kompendiet kap. 4", reviewed: true },
 
-  { id: "db4-16", topic: "relationstyper", difficulty: 2,
-    question: "När blir role names nödvändiga?",
-    options: [
-      { text: "När relationen har fler än två deltagande entity types i modellen", explain: "Antalet deltagande typer avgör inte; rollerna behövs när samma typ deltar två gånger." },
-      { text: "När samma entity type deltar mer än en gång", explain: "I Supervises deltar Employee två gånger — utan roller är ändarna tvetydiga." },
-      { text: "När relationen äger ett eget attribute utöver de deltagandes", explain: "Ett relationsattribut gör inte rollerna tvetydiga." },
-      { text: "När multipliciteten är M:N i stället för 1:N", explain: "Multipliciteten påverkar inte om rollnamnen behövs." }
-    ],
-    correct: 1, source: "Kompendiet kap. 5", reviewed: true },
-
   { id: "db4-18", topic: "relationstyper", difficulty: 2,
     question: "Hur förhåller sig maximum cardinality och participation till varandra?",
     options: [
@@ -312,36 +178,6 @@ export const questions = [
       { text: "Att Employee måste delta i relationen Leads minst en gång", explain: "Deltagande uttrycks av linjen, inte av ratio-etiketten." }
     ],
     correct: 0, source: "Kompendiet kap. 5", reviewed: true },
-
-  { id: "db4-20", topic: "relationstyper", difficulty: 2,
-    question: "Vad betyder ratio-etiketten `1` i kursens Chen-konvention?",
-    options: [
-      { text: "At least one — den kräver minst ett deltagande", explain: "Minst en uttrycks av dubbel linje, inte av etiketten." },
-      { text: "Exactly one — den anger både minimum och maximum", explain: "Etiketten anger bara maximum; exakt en kräver dubbel linje därtill." },
-      { text: "At most one — den anger enbart ett maximum", explain: "Ratio-etiketterna anger endast maxima — 1 betyder högst en." },
-      { text: "One only if the participation line is doubled as well", explain: "Etiketten betyder högst en oavsett linje; linjen lägger till minst en." }
-    ],
-    correct: 2, source: "Kompendiet kap. 5", reviewed: true },
-
-  { id: "db4-21", topic: "relationstyper", difficulty: 1,
-    question: "Vad betyder en dubbel linje mellan en entity och en romb?",
-    options: [
-      { text: "Att relationen är identifying och entityn därmed är weak", explain: "Identifierande relation ritas med dubbel romb, inte dubbel linje." },
-      { text: "Att entityn deltar minst en gång — total participation", explain: "Dubbel linje är total participation, läst vid sin egen ände." },
-      { text: "Att multipliciteten i den änden är exakt ett", explain: "Multipliciteten sätts av ratio-etiketten, inte av linjen." },
-      { text: "Att entityn deltar i två olika relationships samtidigt", explain: "Linjen hör till en relation; den säger inget om andra relationer." }
-    ],
-    correct: 1, source: "Kompendiet kap. 5", reviewed: true },
-
-  { id: "db4-23", topic: "relationstyper", difficulty: 3,
-    question: "Vad gäller när min–max-notation `(0,N)` används?",
-    options: [
-      { text: "Tuplerna läses across, precis som vanliga ratio labels alltid gör", explain: "Min–max-tupler läses vid sin egen entitet, inte tvärs över." },
-      { text: "Tuplerna ersätter ratio labels, medan dubbellinjerna behålls som förut", explain: "Dubbellinjerna används inte alls när tuplerna bär deltagandekravet." },
-      { text: "Tuplerna läses vid sin egen entity, utan dubbellinjer", explain: "Tuplerna läses vid egen entitet, med enkla linjer genomgående." },
-      { text: "Tuplerna anger enbart maxima, precis som ratio labels gör", explain: "Tupelns första värde är ett minimum, inte bara ett maximum." }
-    ],
-    correct: 2, source: "Kompendiet kap. 5", reviewed: true },
 
   { id: "db4-25", topic: "relationstyper", difficulty: 3,
     question: "Ratiot 1:N med enkla linjer används för Supervises. Vad tillåter modellen fortfarande?",
@@ -383,16 +219,6 @@ export const questions = [
     ],
     correct: 0, source: "Kompendiet kap. 6", reviewed: true },
 
-  { id: "db4-32", topic: "crowsfoot", difficulty: 2,
-    question: "Varför måste ett Employee–Project-par bli en associative entity i Crow's Foot?",
-    options: [
-      { text: "Därför att Crow's Foot inte tillåter M:N-relationer alls", explain: "Crow's Foot uttrycker M:N; det är attributen som inte får plats på linjen." },
-      { text: "Därför att romben saknas och relationer därför måste bli entities", explain: "Att romben saknas gör inte relationer till entiteter i sig." },
-      { text: "Därför att notationen kräver en identifier på varje relation", explain: "Notationen kräver ingen identifierare på relationer." },
-      { text: "Därför att en relationship line inte har utrymme för attributes", explain: "En Crow's Foot-linje kan inte bära attribut, så paret blir en associativ entitet." }
-    ],
-    correct: 3, source: "Kompendiet kap. 6", reviewed: true },
-
   { id: "db4-33", topic: "crowsfoot", difficulty: 2,
     question: "Hur läses de två märkena vid en endpoint i common IE?",
     options: [
@@ -402,26 +228,6 @@ export const questions = [
       { text: "Båda visar samma sak och det ena är enbart en förstärkning", explain: "De två märkena betyder olika saker och ger tillsammans fyra mönster." }
     ],
     correct: 1, source: "Kompendiet kap. 6", reviewed: true },
-
-  { id: "db4-34", topic: "crowsfoot", difficulty: 3,
-    question: "Vad kan en heldragen linje betyda i olika Crow's Foot-verktyg?",
-    options: [
-      { text: "Alltid required participation, oavsett vilket verktyg", explain: "I vissa verktyg betyder heldragen linje identifying, inte required." },
-      { text: "Alltid en identifying relationship, oavsett verktyg", explain: "I Barker/Oracle betyder heldragen halvlinje must, inte identifying." },
-      { text: "Antingen \"must\" eller identifying — läs legenden", explain: "Samma linjestil betyder olika saker i olika dialekter — läs legenden." },
-      { text: "Alltid many i den ände där linjen är som tjockast", explain: "Många visas med fork, inte med linjens tjocklek." }
-    ],
-    correct: 2, source: "Kompendiet kap. 6", reviewed: true },
-
-  { id: "db4-35", topic: "crowsfoot", difficulty: 2,
-    question: "Hur visar Crow's Foot att en ProjectTask identifieras av sitt Project?",
-    options: [
-      { text: "Med upprepade ID-markörer som bildar en composite identifier", explain: "Upprepade ID-markörer gör project_no och task_no till en sammansatt identifierare." },
-      { text: "Med en dubbel ram runt entity boxen och streckad understrykning", explain: "Dubbel ram och streckad understrykning är Chens symboler, inte Crow's Foots." },
-      { text: "Med en särskild symbol för identifying relationship vid linjen", explain: "Crow's Foot har ingen särskild symbol för identifierande relation." },
-      { text: "Det går inte att visa i Crow's Foot och måste dokumenteras separat", explain: "Det går att visa — direkt i identifieraren med två ID-markörer." }
-    ],
-    correct: 0, source: "Kompendiet kap. 6", reviewed: true },
 
   { id: "dbq-13", topic: "transformation", difficulty: 1,
     question: "Var hamnar den främmande nyckeln vid en binär 1:M-relation?",
@@ -463,26 +269,6 @@ export const questions = [
     ],
     correct: 2, source: "Kompendiet kap. 7", reviewed: true },
 
-  { id: "dbq-17", topic: "transformation", difficulty: 2,
-    question: "Address som flervärdesattribut ger EmployeeAddress(EmployeeNo, Address). Vilken konsekvens har det?",
-    options: [
-      { text: "Varje adress kan bara höra till en anställd, eftersom den är en egen entitet", explain: "Det hade gällt om adressen modellerats som entitet — inte som attribut." },
-      { text: "Adressen måste vara unik i hela databasen, eftersom den ingår i nyckeln", explain: "Nyckeln är kombinationen; samma adress får förekomma med olika EmployeeNo." },
-      { text: "Anställda utan adress kan inte lagras, eftersom nyckeln då blir NULL", explain: "En anställd utan adress får helt enkelt ingen rad i EmployeeAddress." },
-      { text: "Två anställda kan dela samma adress, eftersom adressen bara är ett värde", explain: "Vill man hindra det ska adressen modelleras som en egen entitet." }
-    ],
-    correct: 3, source: "Kompendiet kap. 7", reviewed: true },
-
-  { id: "dbq-18", topic: "transformation", difficulty: 2,
-    question: "Hur transformeras en unär 1:M-relation som chef–anställd?",
-    options: [
-      { text: "Som en ny relation med två attribut som båda refererar till Employee", explain: "Det är lösningen för unär M:N, inte för 1:M." },
-      { text: "Som en kopia av Employee-relationen med namnet Manager och samma attribut", explain: "Chefer är anställda; ingen ny entitetsrelation behövs." },
-      { text: "Som en främmande nyckel i samma relation, med rollnamnet som attributnamn", explain: "ManagerNo i Employee refererar tillbaka till EmployeeNo; högsta chefen har NULL." },
-      { text: "Inte alls — unära relationer representeras inte i den logiska modellens relationer", explain: "Den binära regeln av samma form tillämpas, med samma entitet på båda sidor." }
-    ],
-    correct: 2, source: "Kompendiet kap. 7", reviewed: true },
-
   { id: "dbq-31", topic: "transformation", difficulty: 3,
     question: "Häftets uppgift 8: Department identifieras av det sammansatta attributet Id med delarna Name och Address, och har dessutom Description. Hur ser facit ut för Department?",
     options: [
@@ -493,26 +279,6 @@ export const questions = [
     ],
     correct: 0, source: "Kompendiet kap. 7 · övningshäftet uppgift 8", reviewed: true },
 
-  { id: "dbq-19", topic: "normalisering", difficulty: 2,
-    question: "Varför blir en M:N-relation tre relationer och inte en enda?",
-    options: [
-      { text: "En relation som lagrar två saker samtidigt får uppdaterings- och raderingsanomalier", explain: "Budgeten måste ändras på flera rader, och sista anställda tar projektet med sig." },
-      { text: "Relationsmodellen tillåter högst ett främmande nyckelattribut i varje relation", explain: "Ingen sådan gräns finns; kopplingsrelationen har två." },
-      { text: "SQL Server kan inte skapa en primärnyckel som sträcker sig över fler än två attribut", explain: "Sammansatta nycklar över flera attribut är helt tillåtna." },
-      { text: "Tre relationer ger alltid snabbare frågor än en enda, oavsett vad de innehåller", explain: "Prestanda är inte skälet — det är redundansen och dess anomalier." }
-    ],
-    correct: 0, source: "Kompendiet kap. 8", reviewed: true },
-
-  { id: "dbq-20", topic: "normalisering", difficulty: 2,
-    question: "En relation i 1NF har en enda kandidatnyckel, och den består av ett attribut. Vad gäller om 2NF?",
-    options: [
-      { text: "Den kan bryta mot 2NF om något icke-primärattribut beror på ett annat", explain: "Beroende mellan icke-primära attribut är ett 3NF-problem, inte 2NF." },
-      { text: "Den är automatiskt i 2NF — en enkel nyckel har inga äkta delmängder", explain: "Partiellt beroende kräver en sammansatt kandidatnyckel att vara delmängd av, och här finns ingen." },
-      { text: "Den måste först dekomponeras i två relationer innan 2NF kan prövas", explain: "Dekomposition görs bara när ett test misslyckas." },
-      { text: "Den är i 2NF bara om alla attribut är atomära och dessutom unika", explain: "Unikhet är inget 2NF-krav; atomära värden är 1NF." }
-    ],
-    correct: 1, source: "Kompendiet kap. 8", reviewed: true },
-
   { id: "dbq-21", topic: "normalisering", difficulty: 3,
     question: "A → B, B → A och B → C gäller. Är C transitivt beroende av A?",
     options: [
@@ -520,16 +286,6 @@ export const questions = [
       { text: "Ja, eftersom C inte ingår i någon kandidatnyckel", explain: "Att C är icke-primärt räcker inte; mellanledet får inte vara en nyckel." },
       { text: "Nej, eftersom C beror direkt på B och inte på A", explain: "C beror visserligen av B, men skälet är ett annat." },
       { text: "Nej, eftersom B → A gör B till en kandidatnyckel", explain: "Definitionen undantar fallet Y → X; då är Y själv en kandidatnyckel." }
-    ],
-    correct: 3, source: "Kompendiet kap. 8", reviewed: true },
-
-  { id: "dbq-22", topic: "normalisering", difficulty: 3,
-    question: "Vad kräver 3NF utöver 2NF?",
-    options: [
-      { text: "Att inget icke-primärattribut beror på en äkta delmängd av någon kandidatnyckel", explain: "Det är 2NF-kravet, som redan förutsätts." },
-      { text: "Att relationen har exakt en kandidatnyckel som består av ett attribut", explain: "3NF ställer inga krav på antalet eller formen på nycklarna." },
-      { text: "Att alla värden är atomära och att primärnyckeln är ett enda attribut", explain: "Atomära värden är 1NF; nyckelns form spelar ingen roll." },
-      { text: "Att varje icke-primärattribut är icke-transitivt beroende av varje kandidatnyckel", explain: "Ordagrant: varje icke-primärattribut, varje kandidatnyckel." }
     ],
     correct: 3, source: "Kompendiet kap. 8", reviewed: true },
 
@@ -543,26 +299,6 @@ export const questions = [
     ],
     correct: 1, source: "Kompendiet kap. 8 · övningshäftet uppgift 10:3", reviewed: true },
 
-  { id: "dbq-24", topic: "normalisering", difficulty: 3,
-    question: "Vad innebär det att en dekomposition är lossless?",
-    options: [
-      { text: "Inga rader går förlorade när man raderar i någon av delrelationerna", explain: "Lossless handlar om join, inte om radering." },
-      { text: "Naturlig join av delrelationerna ger tillbaka originalrelationen", explain: "Saknar delrelationerna gemensamt attribut, som R1(A,B,C) och R2(D,E,F), kan joinen inte återskapa R." },
-      { text: "Alla funktionella beroenden kan kontrolleras inom en enskild delrelation", explain: "Det är dependency preservation, det andra kvalitetskravet." },
-      { text: "Delrelationerna tar tillsammans mindre lagringsutrymme än originalet", explain: "Lagringsutrymme är inte kriteriet." }
-    ],
-    correct: 1, source: "Kompendiet kap. 8", reviewed: true },
-
-  { id: "dbq-25", topic: "fysisk", difficulty: 1,
-    question: "Vilka satser hör till DDL?",
-    options: [
-      { text: "SELECT, INSERT och UPDATE", explain: "Det är DML — satserna som hanterar data." },
-      { text: "CREATE, ALTER och DROP", explain: "DDL definierar strukturer; DML hanterar data." },
-      { text: "PRIMARY KEY och UNIQUE", explain: "Det är constrainttyper, inte satser." },
-      { text: "INT, DECIMAL och VARCHAR", explain: "Det är datatyper, inte satser." }
-    ],
-    correct: 1, source: "Kompendiet kap. 9", reviewed: true },
-
   { id: "dbq-26", topic: "fysisk", difficulty: 2,
     question: "Vad skiljer UNIQUE från PRIMARY KEY?",
     options: [
@@ -573,16 +309,6 @@ export const questions = [
     ],
     correct: 2, source: "Kompendiet kap. 9", reviewed: true },
 
-  { id: "dbq-27", topic: "fysisk", difficulty: 2,
-    question: "Vilken constraint ger domänbegreppet ur kapitel 2 sin tekniska motsvarighet?",
-    options: [
-      { text: "CHECK, som villkorar vilka värden kolumnen får innehålla", explain: "CHECK (EmpSalary >= 0) är domänregeln uttryckt i DDL." },
-      { text: "DEFAULT, som sätter ett värde när inget anges vid INSERT", explain: "DEFAULT fyller i ett värde; den begränsar inte vilka som är tillåtna." },
-      { text: "UNIQUE, som hindrar att samma värde förekommer två gånger", explain: "Unikhet är en nyckelegenskap, inte en domän." },
-      { text: "FOREIGN KEY, som kopplar kolumnen till en annan tabells nyckel", explain: "Referensintegritet gäller kopplingar, inte tillåtna värden." }
-    ],
-    correct: 0, source: "Kompendiet kap. 9", reviewed: true },
-
   { id: "dbq-28", topic: "fysisk", difficulty: 3,
     question: "Vad måste följa med när en surrogatnyckel blir primärnyckel?",
     options: [
@@ -592,16 +318,6 @@ export const questions = [
       { text: "Den naturliga nyckeln behålls som UNIQUE, annars förloras affärsregeln om unikhet", explain: "EmployeeID är surrogat primärnyckel; EmpNo behålls som naturlig nyckel med UNIQUE och NOT NULL, så att entitetsintegriteten bevaras." }
     ],
     correct: 3, source: "Kompendiet kap. 9", reviewed: true },
-
-  { id: "dbq-29", topic: "fysisk", difficulty: 1,
-    question: "Varför lagras belopp med en exakt numerisk typ som DECIMAL(p,s)?",
-    options: [
-      { text: "Exakta typer tar betydligt mindre lagringsutrymme än approximativa för samma antal siffror", explain: "Lagringsutrymmet är inte skälet." },
-      { text: "Exakta typer indexeras betydligt snabbare än approximativa typer i SQL Server", explain: "Indexering är inte skälet." },
-      { text: "Belopp tål inga avrundningsfel; approximativa typer är till när precisionen får vara lägre", explain: "Exakta numeriska typer används när avrundningsfel inte accepteras, och det gäller pengar." },
-      { text: "Approximativa typer tillåter inte negativa värden, vilket belopp kan kräva", explain: "Approximativa typer tillåter negativa tal; det är precisionen som brister." }
-    ],
-    correct: 2, source: "Kompendiet kap. 9", reviewed: true },
 
   { id: "dbq-30", topic: "fysisk", difficulty: 2,
     question: "Varför ska constraints namnges enligt kodstandarden, som PK_Employee_EmployeeID?",
@@ -663,4 +379,327 @@ export const questions = [
       { text: "Därför att två frågor alltid är långsammare än en enda fråga med en underfråga", explain: "Prestanda är inte skälet; en underfråga kan vara både snabbare och långsammare. Skälet är att svaret ska följa datan." },
     ],
     correct: 2, source: "Kompendiet kap. 10 · föreläsning 2–3", reviewed: false },
+
+  // Punkt 7 (2026-09-07): omviktning mot tentan — påståenden mot diagram, tentans sant/falskt-form, DDL- och SQL-frågor med underlag. Alla reviewed: false.
+  { id: "dbq-33", topic: "grunder", difficulty: 1,
+    question: "Uppgift 1 på tentan ger +5 per rätt markerat påstående och −3 per fel markerat. Vad följer av det?",
+    options: [
+      { text: "Markera bara påståenden du kan härleda ur notationen, och för resten bara om du är mer än ungefär 40 procent säker", explain: "Brytpunkten är 3/8: vid 40 procent säkerhet är väntevärdet 0,4 · 5 − 0,6 · 3 = 0. Ett omarkerat sant påstående kostar inget." },
+      { text: "Markera alla påståenden du inte kan utesluta — ett rätt är alltid värt mer än ett fel kostar", explain: "Ett rätt ger 5 och ett fel kostar 3; under 40 procents säkerhet förlorar du i snitt på att markera." },
+      { text: "Lämna uppgiften obesvarad om fler än hälften av påståendena känns osäkra, för då är väntevärdet negativt", explain: "Obesvarad uppgift ger 0, men de påståenden du kan härleda ger säkra poäng — markera dem." },
+      { text: "Markera exakt fem påståenden, eftersom fyra till sex alltid är sanna och fem är medelvärdet av dem", explain: "Antalet sanna är 4–6, men vilka de är avgörs av diagrammet, inte av statistik." },
+    ],
+    correct: 0, source: "Kompendiet kap. 1 · tentans uppgift 1", reviewed: false },
+
+  { id: "dbq-34", topic: "relationsmodellen", difficulty: 2,
+    question: "SELECT Name FROM Employee ger två identiska rader Mary från två olika anställda. Vad säger det om resultatet?",
+    options: [
+      { text: "Att SQL-resultatet är en bag som räknar upprepningar; relationen är en mängd och DISTINCT ger den", explain: "Med bara attributet Name är de två raderna samma kompletta tupel. SQL behåller båda — resultatet är en bag. DISTINCT tar bort dubblettraderna och ger mängden." },
+      { text: "Att tabellen bryter mot relationsmodellens förbud mot dubblettupler och måste normaliseras om", explain: "Tabellen Employee har inga dubbletter — de två anställda skiljer sig i EmployeeNo. Det är resultatet som är en bag." },
+      { text: "Att de två anställda är samma tupel i tabellen, eftersom alla värden i resultatet är lika", explain: "Resultatet visar bara Name. I tabellen är tuplerna olika, med olika EmployeeNo." },
+      { text: "Att frågan saknar ORDER BY, vilket gör att samma rad kan visas mer än en gång i resultatet", explain: "ORDER BY styr ordningen, inte antalet rader. Upprepningen kommer av att SQL-resultatet är en bag." },
+    ],
+    correct: 0, source: "Kompendiet kap. 2 · föreläsning 5", reviewed: false },
+
+  { id: "dbq-35", topic: "relationsmodellen", difficulty: 1,
+    question: "En fjärde anställd registreras i EMPLOYEE(EmployeeNo, Name, WorkEmail). Vad har ändrats?",
+    options: [
+      { text: "Både schemat och värdet, eftersom varje ny tupel lägger till en rad i schemat", explain: "Schemat har inga rader — det namnger relationen och attributen." },
+      { text: "Domänen för EmployeeNo, som nu måste rymma ytterligare ett tillåtet värde", explain: "Domänen är mängden tillåtna värden, inte de använda. E-422 var tillåtet redan innan tupeln fanns." },
+      { text: "Det aktuella relationsvärdet — en tupel till, samma tre attribut, oförändrat schema", explain: "Relationsschemat bestämmer formen; det aktuella värdet är tuplerna just nu. En ny anställd är en ny tupel: kardinaliteten går från tre till fyra, graden är fortfarande tre." },
+      { text: "Schemat, eftersom relationen nu har fler tupler än förut och graden ökar med en", explain: "Graden räknar attribut och ändras bara om schemat ändras. Fler tupler ändrar kardinaliteten." },
+    ],
+    correct: 2, source: "Kompendiet kap. 2 · föreläsning 5", reviewed: false },
+
+  { id: "dbq-36", topic: "nycklar", difficulty: 2,
+    question: "Regeln säger att EmployeeNo är unikt. Är {EmployeeNo, Name} en kandidatnyckel?",
+    options: [
+      { text: "Nej — Name kan tas bort utan att unikheten förloras, så mängden är inte minimal", explain: "Kandidatnyckel kräver både unikhet och minimalitet. {EmployeeNo, Name} är unik men inte minimal: EmployeeNo räcker ensamt." },
+      { text: "Ja — mängden är unik i varje giltig population, och mer än så kräver definitionen inte", explain: "Definitionen har två villkor. Unikhet är det ena; minimalitet är det andra, och det brister här." },
+      { text: "Ja, men bara om Name också är unikt; annars räknas det som en sammansatt nyckel", explain: "Om Name vore unikt vore {Name} en egen kandidatnyckel. Paret blir inte en kandidatnyckel av det." },
+      { text: "Nej — en kandidatnyckel får bara bestå av ett enda attribut, aldrig av två", explain: "Sammansatta kandidatnycklar finns, som {EmployeeNo, ProjectNo} i WORKS_ON. Felet här är minimaliteten." },
+    ],
+    correct: 0, source: "Kompendiet kap. 3 · föreläsning 5", reviewed: false },
+
+  { id: "dbq-37", topic: "nycklar", difficulty: 3,
+    question: "WORKS_ON har en giltig främmande nyckel mot PROJECT och alla referenser träffar. Project deltar totalt i WorksOn. Vad garanterar den främmande nyckeln?",
+    options: [
+      { text: "Att ett projekt bara kan förekomma en gång i WORKS_ON, eftersom nyckeln refererar primärnyckeln", explain: "Ett främmandenyckelvärde får upprepas. Flera anställda på samma projekt är giltigt." },
+      { text: "Att projekt inte kan raderas alls så länge tabellen WORKS_ON finns i databasen", explain: "Referensintegriteten hindrar radering av ett projekt som refereras — inte av alla projekt." },
+      { text: "Att varje WORKS_ON-rad pekar på ett existerande projekt — inte att varje projekt pekas på", explain: "Främmande nycklar tvingar inte fram deltagande. Ett projekt utan WORKS_ON-rad bryter mot det totala deltagandet men mot ingen constraint — regeln ligger utanför det främmande nycklar kan garantera." },
+      { text: "Att varje projekt förekommer i WORKS_ON minst en gång, eftersom deltagandet är totalt", explain: "Det totala deltagandet står i diagrammet, inte i den främmande nyckeln. Den kontrollerar bara referenserna." },
+    ],
+    correct: 2, source: "Kompendiet kap. 3 · föreläsning 5", reviewed: false },
+
+  { id: "dbq-38", topic: "er", difficulty: 1,
+    diagram: "pastaenden-forening",
+    question: "Enligt diagrammet: kan två föreningar ha samma namn?",
+    options: [
+      { text: "Nej — namn är ett attribut på Förening, och attribut identifierar sin entitet", explain: "Bara understrukna attribut identifierar. Vanliga attribut får upprepas mellan entiteter." },
+      { text: "Nej — föreningsNo och namn är tillsammans en sammansatt identifierare", explain: "En sammansatt identifierare ritas som en understruken förälder med delattribut. Här är bara föreningsNo understruket." },
+      { text: "Ja, men bara om föreningarna har olika lag, eftersom Har skiljer dem åt", explain: "Har säger inget om namnen. Frågan avgörs av understrykningen ensam." },
+      { text: "Ja — namn är inte understruket; bara föreningsNo identifierar en förening", explain: "'Två X kan ha samma Y' är sant när Y inte är understruket. Att föreningar sällan heter lika i verkligheten spelar ingen roll — diagrammet förbjuder det inte." },
+    ],
+    correct: 3, source: "Kompendiet kap. 6 · tentans uppgift 1", reviewed: false },
+
+  { id: "dbq-39", topic: "er", difficulty: 2,
+    diagram: "pastaenden-bibliotek",
+    question: "Enligt diagrammet: identifieras en låntagare av kombinationen av låntagarNo och bokens ISBN?",
+    options: [
+      { text: "Nej — låntagarNo är understruket med hel linje och identifierar låntagaren ensamt", explain: "Låntagare är en stark entitetstyp med egen identifierare. Att låntagaren deltar i Lånar gör inte böckerna till en del av identiteten — bara en svag entitet med streckad partiell nyckel identifieras via en annan entitet." },
+      { text: "Ja — Lånar kopplar varje låntagare till exemplar, så ISBN ingår i identiteten", explain: "Deltagande i en relation ändrar inte identiteten. Låntagare har enkel rektangel och hel understrykning." },
+      { text: "Ja — N bredvid Exemplar gör låntagarens identitet beroende av vad som lånats", explain: "Ratio-etiketter handlar om antal, inte om identitet." },
+      { text: "Nej — en låntagare identifieras av låntagarNo tillsammans med namn, båda attribut på Låntagare", explain: "Namn är inte understruket. Bara låntagarNo identifierar." },
+    ],
+    correct: 0, source: "Kompendiet kap. 6 · tentans uppgift 1", reviewed: false },
+
+  { id: "dbq-40", topic: "relationstyper", difficulty: 1,
+    diagram: "pastaenden-forening",
+    question: "Enligt diagrammet: måste en förening ha minst ett lag?",
+    options: [
+      { text: "Ja — Har är en identifierande relation, och den är alltid obligatorisk åt båda håll", explain: "Den identifierande relationen gör deltagandet obligatoriskt för den svaga sidan, inte för ägaren. Ett projekt utan uppgifter är tillåtet." },
+      { text: "Nej — 1 bredvid Förening betyder att en förening har högst ett lag, inte minst ett", explain: "1 bredvid Förening läses tvärs över: varje lag har högst en förening. Det är linjen vid Förening som avgör frågan." },
+      { text: "Nej — linjen vid Förening i Har är enkel, så en förening får finnas utan lag", explain: "'Måste' läses vid den egna änden: enkel linje vid Förening betyder partiellt deltagande. Dubbellinjen sitter vid Lag och säger något om lagen, inte om föreningarna." },
+      { text: "Ja — N bredvid Lag betyder att varje förening har många lag, alltså minst ett", explain: "N anger ett maximum, läst tvärs över: en förening får ha många lag. Det säger inget om minimum." },
+    ],
+    correct: 2, source: "Kompendiet kap. 6 · tentans uppgift 1", reviewed: false },
+
+  { id: "dbq-41", topic: "relationstyper", difficulty: 2,
+    diagram: "pastaenden-forening",
+    question: "Enligt diagrammet: kan ett lag ha hemmaarena på flera arenor?",
+    options: [
+      { text: "Ja — N bredvid Lag i Hemma betyder att lag får ha många arenor", explain: "N bredvid Lag läses tvärs över och säger hur många lag en arena får ha. Fel ände." },
+      { text: "Ja — linjen vid Lag i Hemma är enkel, och enkel linje betyder fritt antal", explain: "Linjen anger deltagande (noll eller minst en), aldrig antal. Antalet står i ratio-etiketten." },
+      { text: "Nej — dubbellinjen vid Arena tvingar varje lag till exakt en arena", explain: "Det finns ingen dubbellinje i Hemma. Svaret är rätt, men skälet läser fel symbol." },
+      { text: "Nej — 1 bredvid Arena, läst tvärs över, ger varje lag högst en arena", explain: "'Kan ha flera Y' avgörs av etiketten bredvid Y. Bredvid Arena står 1: varje lag får ha högst en arena. Enkel linje betyder bara att ett lag får sakna arena." },
+    ],
+    correct: 3, source: "Kompendiet kap. 6 · tentans uppgift 1", reviewed: false },
+
+  { id: "dbq-42", topic: "relationstyper", difficulty: 2,
+    diagram: "pastaenden-forening",
+    question: "Enligt diagrammet: måste en spelare vara medlem i exakt en förening?",
+    options: [
+      { text: "Ja — linjen vid Spelare i MedlemI är dubbel och 1 bredvid Förening ger högst en", explain: "'Exakt en' kräver båda: dubbellinjen vid den egna änden ger minst en, och 1 tvärs över ger högst en. Båda finns." },
+      { text: "Ja — men bara för att Förening deltar totalt i MedlemI, vilket dubbellinjen visar", explain: "Dubbellinjen sitter vid Spelare, inte vid Förening. Den säger något om spelarna." },
+      { text: "Nej — dubbellinjen ger minst en förening, och N bredvid Spelare tillåter flera", explain: "N bredvid Spelare läses tvärs över: en förening får ha många spelare. Antalet föreningar per spelare står bredvid Förening, och där står 1." },
+      { text: "Nej — spelaren måste vara medlem, men 1 bredvid Förening säger högst en, inte exakt en", explain: "Högst en tillsammans med minst en (dubbellinjen) är exakt en." },
+    ],
+    correct: 0, source: "Kompendiet kap. 6 · tentans uppgift 1", reviewed: false },
+
+  { id: "dbq-43", topic: "relationstyper", difficulty: 3,
+    diagram: "pastaenden-forening",
+    question: "Enligt diagrammet: måste alla spelare i ett lag vara medlemmar i lagets förening?",
+    options: [
+      { text: "Nej — spelare får inte vara medlemmar alls, eftersom MedlemI bara gäller föreningar", explain: "MedlemI är relationen mellan Spelare och Förening; dubbellinjen vid Spelare gör medlemskap obligatoriskt." },
+      { text: "Nej — ingen symbol binder ihop MedlemI och SpelarI; regeln skulle behöva stå i text", explain: "Flerstegspåstående. MedlemI binder spelaren till en förening, SpelarI till lag, Har lag till förening — men inget säger att vägarna ska sammanfalla. Ett 'måste' är sant bara om en restriktion kräver det." },
+      { text: "Ja — MedlemI och SpelarI går båda via Förening, så kopplingen följer av diagrammet", explain: "Att två vägar leder till Förening betyder inte att de leder till samma förening. Den kopplingen saknar symbol." },
+      { text: "Ja — dubbellinjen vid Spelare i MedlemI tvingar medlemskap i lagets förening", explain: "Dubbellinjen kräver medlemskap i någon förening, inte i en viss." },
+    ],
+    correct: 1, source: "Kompendiet kap. 6 · tentans uppgift 1", reviewed: false },
+
+  { id: "dbq-44", topic: "svaga", difficulty: 2,
+    diagram: "pastaenden-bibliotek",
+    question: "Enligt diagrammet: identifieras ett exemplar av exemplarnumret ensamt?",
+    options: [
+      { text: "Ja — Exemplar har egen rektangel och därmed egen identitet oberoende av Bok", explain: "Rektangeln är dubbel: svag entitetstyp. Identiteten beror på ägaren." },
+      { text: "Nej — ett exemplar identifieras av exNo tillsammans med låntagarnumret i Lånar", explain: "Lånar är en vanlig relation, inte identifierande (enkel romb). Ägaren är Bok, via dubbelromben FinnsSom." },
+      { text: "Nej — streckad understrykning är partiell: identiteten är {isbn, exNo} via FinnsSom", explain: "Dubbel rektangel, dubbel romb och streckad understrykning hör ihop: Exemplar är svag under Bok, och exNo skiljer bara exemplar av samma bok åt. Två böcker kan båda ha ett exemplar nummer 1." },
+      { text: "Ja — exNo är understruket, och varje understrykning i Chen-notation betyder identifierare", explain: "Hel understrykning betyder identifierare; streckad betyder partiell identifierare, som bara gäller inom ägaren." },
+    ],
+    correct: 2, source: "Kompendiet kap. 6 · tentans uppgift 1", reviewed: false },
+
+  { id: "dbq-45", topic: "svaga", difficulty: 2,
+    diagram: "pastaenden-bibliotek",
+    question: "Enligt diagrammet: måste en låntagare ha en fadder?",
+    options: [
+      { text: "Ja — 1 vid fadderrollen betyder att varje låntagare har exakt en fadder", explain: "1 är ett maximum: högst en fadder. Exakt en hade krävt en dubbellinje." },
+      { text: "Ja — en unär relation gäller alla instanser av entitetstypen, annars vore den meningslös", explain: "Unära relationer läses som binära: varje roll har sitt eget deltagande, och här är båda partiella." },
+      { text: "Nej — N vid adeptrollen betyder att bara några av låntagarna kan vara adepter", explain: "N säger att en fadder får ha många adepter. Det säger inget om vilka som deltar." },
+      { text: "Nej — linjerna i Fadder är enkla i båda rollerna, så en låntagare får sakna fadder", explain: "'Måste' avgörs av deltagandelinjen. Båda linjerna i den unära relationen är enkla: partiellt deltagande i båda rollerna. 1 vid fadderrollen anger högst en, inte minst en." },
+    ],
+    correct: 3, source: "Kompendiet kap. 6 · tentans uppgift 1", reviewed: false },
+
+  { id: "dbq-46", topic: "svaga", difficulty: 3,
+    diagram: "pastaenden-bibliotek",
+    question: "Enligt diagrammet: kan en låntagare vara sin egen fadder?",
+    options: [
+      { text: "Ja — Chen-notationen saknar symbol för regeln; finns den står den i uppgiftstexten", explain: "Ratio och deltagandelinjer hindrar varken självlänkar eller cykler i en unär relation. Regler som 'ingen är sin egen fadder' blir textuella verksamhetsregler — det som inte förbjuds i diagrammet är tillåtet." },
+      { text: "Nej — samma entitet kan aldrig fylla båda rollerna i en och samma unära relation", explain: "Inget i notationen hindrar att r = ⟨e1, e1⟩. Föreläsningen visar självlänken som ett giltigt, om än oönskat, fall." },
+      { text: "Nej — 1 vid fadderrollen utesluter att fadder och adept kan vara samma person", explain: "1 begränsar antalet faddrar per adept till högst en. Det säger inget om vem faddern är." },
+      { text: "Ja — dubbelrollen är just vad de två rollnamnen fadder och adept är till för att uttrycka", explain: "Rollnamnen skiljer ändarna åt så att diagrammet blir läsbart. Att samma person får inneha båda följer av att inget förbjuder det, inte av namnen." },
+    ],
+    correct: 0, source: "Kompendiet kap. 6 · tentans uppgift 1", reviewed: false },
+
+  { id: "dbq-47", topic: "normalisering", difficulty: 2,
+    context: "R(A, B, C, D, E, F, G)\n{A, B} → C\nB → D\nD → E\nC → {F, G}\n\nSchema 1: R(A, B, C, D, E, F, G)\nSchema 2: R1(A, B, C, F, G), R2(D, E)\nSchema 3: R1(A, B, C), R2(B, D), R3(D, E), R4(C, F, G)",
+    question: "Påstående: relation R i schema 1 är i 2NF eller högre.",
+    options: [
+      { text: "Falskt — F och G beror transitivt på kandidatnyckeln via C, vilket 2NF förbjuder", explain: "Transitiva beroenden prövas i 3NF, inte i 2NF. Slutsatsen är rätt men skälet är fel: det är B → D som bryter 2NF." },
+      { text: "Falskt — äkta delmängden B av kandidatnyckeln {A, B} bestämmer icke-primärattributet D", explain: "Kandidatnyckel {A, B} (A och B står inte till höger om någon pil). B → D: B är en äkta delmängd av nyckeln och D är icke-primärt. 2NF bryts; R är i 1NF." },
+      { text: "Sant — kandidatnyckeln {A, B} bestämmer alla attribut, direkt eller transitivt", explain: "Att nyckeln når allt är vad som gör den till nyckel. 2NF frågar om någon äkta delmängd av nyckeln bestämmer ett icke-primärattribut, och B → D gör det." },
+      { text: "Sant — alla attribut är atomära och inget icke-primärattribut beror på en annan kandidatnyckel", explain: "Atomära värden ger 1NF. Det finns bara en kandidatnyckel, och B → D är det partiella beroendet som fäller 2NF." },
+    ],
+    correct: 1, source: "Kompendiet kap. 8 · tentans uppgift 3a–e", reviewed: false },
+
+  { id: "dbq-48", topic: "normalisering", difficulty: 3,
+    context: "R(A, B, C, D, E, F, G)\n{A, B} → C\nB → D\nD → E\nC → {F, G}\n\nSchema 1: R(A, B, C, D, E, F, G)\nSchema 2: R1(A, B, C, F, G), R2(D, E)\nSchema 3: R1(A, B, C), R2(B, D), R3(D, E), R4(C, F, G)",
+    question: "Påstående: schema 2 är en nedbrytning av R där samtliga funktionella beroenden är bevarade.",
+    options: [
+      { text: "Sant — {A, B} → C och C → {F, G} står i R1 och D → E i R2, alltså är alla bevarade", explain: "Fyra av fem beroenden är bevarade. Det femte, B → D, är det inte, och ett räcker för att fälla påståendet." },
+      { text: "Falskt — ett beroende bevaras bara om hela R står kvar i en och samma relation", explain: "Då vore ingen nedbrytning beroendebevarande. Regeln gäller per beroende, inte per relation." },
+      { text: "Falskt — B → D har B i R1 och D i R2, så beroendet finns inte i någon relation", explain: "Ett beroende är bevarat om dess attribut finns i samma relation. Gå igenom dem: {A, B} → C i R1, C → F och C → G i R1, D → E i R2 — men B → D har attributen i olika relationer. Ett förlorat beroende gör påståendet falskt." },
+      { text: "Sant — varje attribut ur R återfinns i någon av de två relationerna, och det räcker", explain: "Att attributen finns kvar är ett annat krav. Bevarande kräver att båda attributen i ett beroende står i samma relation." },
+    ],
+    correct: 2, source: "Kompendiet kap. 8 · tentans uppgift 3a–e", reviewed: false },
+
+  { id: "dbq-49", topic: "normalisering", difficulty: 2,
+    context: "R(A, B, C, D, E, F, G)\n{A, B} → C\nB → D\nD → E\nC → {F, G}\n\nSchema 1: R(A, B, C, D, E, F, G)\nSchema 2: R1(A, B, C, F, G), R2(D, E)\nSchema 3: R1(A, B, C), R2(B, D), R3(D, E), R4(C, F, G)",
+    question: "Påstående: schema 2 har egenskapen lossless join.",
+    options: [
+      { text: "Sant — båda relationerna har en kandidatnyckel som bestämmer sina övriga attribut", explain: "Nycklar inom delrelationerna säger inget om nedbrytningen. Egenskapen gäller joinen mellan dem." },
+      { text: "Sant — R1 och R2 är disjunkta, så den naturliga joinen lägger inte till några extra rader", explain: "Utan gemensamt attribut blir joinen en kartesisk produkt av alla kombinationer — inte R." },
+      { text: "Falskt — lossless join kräver att varje relation i schemat är i 3NF, och R1 är det inte", explain: "Normalformen hos delrelationerna och nedbrytningens egenskaper är två olika saker. Skälet här är det saknade gemensamma attributet." },
+      { text: "Falskt — R1 och R2 saknar gemensamt attribut, så ingen naturlig join ger tillbaka R", explain: "Lossless join betyder att den naturliga joinen av delrelationerna ger tillbaka R. R1(A, B, C, F, G) och R2(D, E) har inget attribut gemensamt — precis föreläsningens exempel på när egenskapen saknas." },
+    ],
+    correct: 3, source: "Kompendiet kap. 8 · tentans uppgift 3a–e", reviewed: false },
+
+  { id: "dbq-50", topic: "normalisering", difficulty: 2,
+    context: "R(A, B, C, D)\nA → B\nB → A\nB → C\nC → D",
+    question: "Påstående: relation R har fler än en kandidatnyckel.",
+    options: [
+      { text: "Sant — A och B bestämmer varandra och når var för sig C och D, så båda är kandidatnycklar", explain: "A → B → C → D ger att A bestämmer allt; B → A ger att B gör detsamma. Båda är unika och minimala. Leta efter cykler som A → B, B → A — de ger flera kandidatnycklar." },
+      { text: "Falskt — bara A står först i en kedja som når alla attribut, så A är enda kandidatnyckeln", explain: "B når också allt: B → A, B → C, C → D. Att A står först i uppräkningen betyder inget." },
+      { text: "Falskt — B bestäms av A och kan därför inte själv vara kandidatnyckel; A är den enda", explain: "Att B bestäms av A hindrar inte att B är kandidatnyckel, så länge B själv bestämmer alla attribut — och det gör den." },
+      { text: "Sant — {A, B} tillsammans bildar en sammansatt kandidatnyckel utöver A, alltså två stycken", explain: "{A, B} är inte minimal: A ensamt räcker. Kandidatnycklarna är A och B var för sig." },
+    ],
+    correct: 0, source: "Kompendiet kap. 8 · tentans uppgift 3a–e", reviewed: false },
+
+  { id: "dbq-51", topic: "normalisering", difficulty: 3,
+    context: "R(A, B, C, D, E, F, G)\n{A, B} → C\nB → D\nD → E\nC → {F, G}\n\nSchema 1: R(A, B, C, D, E, F, G)\nSchema 2: R1(A, B, C, F, G), R2(D, E)\nSchema 3: R1(A, B, C), R2(B, D), R3(D, E), R4(C, F, G)",
+    question: "Påstående: samtliga relationer i schema 3 är i 3NF.",
+    options: [
+      { text: "Sant — varje relation har högst tre attribut, och relationer med så få attribut är alltid i 3NF", explain: "Antalet attribut avgör inget: R(A, B, C) med A → B och B → C är inte i 3NF." },
+      { text: "Sant — i varje relation bestämmer nyckeln allt annat direkt; inga partiella eller transitiva beroenden", explain: "Pröva var och en med dess egna beroenden: R1 har {A, B} → C, R2 har B → D, R3 har D → E, R4 har C → {F, G}. I ingen av dem bestämmer en äkta delmängd av nyckeln något, och inget icke-primärattribut nås via ett annat." },
+      { text: "Falskt — R4(C, F, G) har två beroende attribut, F och G, vilket ger ett transitivt beroende", explain: "F och G beror båda direkt på nyckeln C. Två attribut från samma nyckel är inte transitivitet." },
+      { text: "Falskt — R2(B, D) och R3(D, E) hänger ihop via D, så E beror transitivt på B i schemat som helhet", explain: "Normalformen prövas per relation. I R3 är D nyckeln och E beror direkt på den. Beroendet B → E finns inte inom någon relation." },
+    ],
+    correct: 1, source: "Kompendiet kap. 8 · tentans uppgift 3a–e", reviewed: false },
+
+  { id: "dbq-52", topic: "normalisering", difficulty: 3,
+    context: "R(A, B, C, D, E, F, G)\n{A, B} → C\nB → D\nD → E\nC → {F, G}\n\nSchema 1: R(A, B, C, D, E, F, G)\nSchema 2: R1(A, B, C, F, G), R2(D, E)\nSchema 3: R1(A, B, C), R2(B, D), R3(D, E), R4(C, F, G)",
+    question: "Påstående: attribut C är ett primärattribut i relation R4 i schema 3.",
+    options: [
+      { text: "Falskt — primärattribut avgörs av hela schemat, och där är bara A och B primära", explain: "Ett schema har inga kandidatnycklar; det har relationerna. Varje relation prövas för sig." },
+      { text: "Sant — C är primärattribut i alla relationer där det förekommer, eftersom det bestämmer F och G", explain: "I R1(A, B, C) är C icke-primärt: nyckeln där är {A, B}. Egenskapen gäller per relation." },
+      { text: "Sant — i R4(C, F, G) gäller C → {F, G}, så C är R4:s kandidatnyckel och därmed primärt där", explain: "Primärattribut avgörs av relationens egna kandidatnycklar. I R4 bestämmer C de två andra attributen och är ensam kandidatnyckel. Att C är icke-primärt i R spelar ingen roll — fråga alltid 'i vilken relation?'." },
+      { text: "Falskt — C är icke-primärt i R, eftersom kandidatnyckeln i R är {A, B}, och det ändras inte", explain: "Det ändras. Kandidatnycklar och primärattribut byter betydelse när relationen byter." },
+    ],
+    correct: 2, source: "Kompendiet kap. 8 · tentans uppgift 3a–e", reviewed: false },
+
+  { id: "dbq-53", topic: "normalisering", difficulty: 3,
+    context: "R(A, B, C, D, E)\nA → B\nB → A\nB → {C, D}\nD → E",
+    question: "Vilken är den högsta normalformen för R, och varför?",
+    options: [
+      { text: "1NF — C beror på B, som är en äkta delmängd av kandidatnyckeln {A, B}", explain: "{A, B} är inte kandidatnyckel — den är inte minimal, för A och B räcker var för sig. Enkla nycklar har inga äkta delmängder." },
+      { text: "3NF — A och B bestämmer varandra, så varje beroende går via någon kandidatnyckel", explain: "A → B → C är inte transitivt eftersom B → A gäller, men D → E är det: D är icke-primärt och D → A gäller inte." },
+      { text: "3NF — D → E är inte transitivt, eftersom D bestäms direkt av en kandidatnyckel", explain: "Att D bestäms av nyckeln är just första steget i transitiviteten: A → D, D → E, inte D → A." },
+      { text: "2NF — kandidatnycklarna A och B är enkla, men E beror transitivt på dem via D", explain: "A och B bestämmer varandra: två kandidatnycklar, båda enkla, så 2NF kan inte brytas. A → D och D → E, och D → A gäller inte: icke-primärattributet E är transitivt beroende av kandidatnyckeln A (och av B). Alltså 2NF." },
+    ],
+    correct: 3, source: "Kompendiet kap. 8 · tentans uppgift 3f–g", reviewed: false },
+
+  { id: "dbq-54", topic: "normalisering", difficulty: 2,
+    context: "R(A, B, C, D)\nA → {B, C, D}",
+    question: "R ska normaliseras till 3NF. Vilket är rätt svar på tentan?",
+    options: [
+      { text: "Ingen nedbrytning — R är redan i 3NF; att dela upp den är övernormalisering och ger poängavdrag", explain: "Kandidatnyckel A, enkel, så 2NF kan inte brytas; B, C och D beror direkt på A, inga transitiva beroenden. R är i 3NF. Uppgiften säger uttryckligen att övernormalisering ger avdrag." },
+      { text: "R1(A, B), R2(A, C), R3(A, D) — ett beroende per relation ger den renaste modellen", explain: "A → {B, C, D} är tre beroenden från samma nyckel och hör i samma relation. Tre relationer är tre joins utan att någon anomali försvinner." },
+      { text: "R1(A, B, C), R2(A, D) — två relationer räcker för att skilja beroendena åt och bevara nyckeln", explain: "Det finns inget att skilja åt. Nedbrytningen är lossless och beroendebevarande men onödig — övernormalisering." },
+      { text: "R1(A, B, C, D) plus en kopplingsrelation R2(A) för att garantera lossless join", explain: "Lossless join gäller nedbrytningar. En relation som inte bryts ned behöver ingen kopplingsrelation." },
+    ],
+    correct: 0, source: "Kompendiet kap. 8 · tentans uppgift 3f–g", reviewed: false },
+
+  { id: "dbq-55", topic: "fysisk", difficulty: 2,
+    context: "CREATE TABLE Lag (\n    LagID       INTEGER IDENTITY(1,1),\n    LagNo       INTEGER NOT NULL,\n    ForeningID  INTEGER NOT NULL,\n    PRIMARY KEY (LagID),\n    FOREIGN KEY (ForeningID) REFERENCES Forening(ForeningID)\n);",
+    question: "Lag är en svag entitet under Förening med lagNo som partiell nyckel. Vad saknas i tabellen enligt facit?",
+    options: [
+      { text: "NOT NULL ska tas bort från ForeningID — beroendet uttrycks redan av den främmande nyckeln", explain: "NOT NULL är just hur det totala deltagandet skrivs. Den främmande nyckeln ensam tillåter NULL." },
+      { text: "UNIQUE (LagNo, ForeningID) — lagnumret är unikt bara inom föreningen, och det ska koden säga", explain: "Facit för svaga entiteter: egen surrogatnyckel, ägarens främmande nyckel med NOT NULL, och UNIQUE över den partiella nyckeln tillsammans med ägarens främmande nyckel. Det sista saknas." },
+      { text: "IDENTITY ska tas bort — en svag entitet får ingen egen surrogatnyckel utan ärver ägarens", explain: "Tentan kräver surrogatnyckel på tabeller för både vanliga och svaga entiteter." },
+      { text: "UNIQUE (LagNo) — den partiella nyckeln är en naturlig nyckel och ska vara unik i hela tabellen", explain: "Två föreningar får båda ha ett lag nummer 1. Unikheten gäller inom ägaren, därför paret." },
+    ],
+    correct: 1, source: "Kompendiet kap. 9 · tentans uppgift 2", reviewed: false },
+
+  { id: "dbq-56", topic: "fysisk", difficulty: 2,
+    context: "CREATE TABLE SpelarI (\n    SpelarIID   INTEGER IDENTITY(1,1),\n    SpelareID   INTEGER,\n    LagID       INTEGER,\n    PRIMARY KEY (SpelarIID),\n    FOREIGN KEY (SpelareID) REFERENCES Spelare(SpelareID),\n    FOREIGN KEY (LagID) REFERENCES Lag(LagID)\n);",
+    question: "SpelarI är kopplingstabellen för M:N-relationen mellan Spelare och Lag. Vad är fel?",
+    options: [
+      { text: "Tabellen behöver NOT NULL på SpelarIID, annars kan IDENTITY generera NULL-värden", explain: "IDENTITY genererar alltid ett värde, och PRIMARY KEY innebär NOT NULL. Felet är att kolumnen finns alls." },
+      { text: "Inget — varje tabell i uppgiften ska ha en automatiskt inkrementerande surrogatnyckel", explain: "Kravet gäller tabeller för vanliga och svaga entiteter, inte kopplingstabeller." },
+      { text: "Kopplingstabellen ska inte ha egen surrogatnyckel; primärnyckeln är (SpelareID, LagID)", explain: "En kopplingstabell får ingen egen IDENTITY. Primärnyckeln är kombinationen av de två främmande nycklarna — det är vad som garanterar att varje par förekommer högst en gång." },
+      { text: "De främmande nycklarna ska peka på de naturliga nycklarna SpelarNo och LagNo, inte surrogaten", explain: "Referenser går mot surrogatnycklarna. Det är en av de vanliga avdragen att peka på den naturliga nyckeln." },
+    ],
+    correct: 2, source: "Kompendiet kap. 9 · tentans uppgift 2", reviewed: false },
+
+  { id: "dbq-57", topic: "fysisk", difficulty: 1,
+    question: "Varje spelare måste vara medlem i exakt en förening: dubbel linje vid Spelare, 1 vid Förening. Hur skrivs det i tabellen Spelare?",
+    options: [
+      { text: "ForeningID INTEGER, med en CHECK som kräver att värdet finns i Forening", explain: "Att värdet finns säkras av FOREIGN KEY, inte CHECK. Och utan NOT NULL får kolumnen vara tom." },
+      { text: "ForeningID INTEGER UNIQUE, så att varje spelare får en egen förening", explain: "UNIQUE skulle förbjuda två spelare i samma förening — det är 1:1, inte 1:N." },
+      { text: "En kopplingstabell MedlemI med SpelareID och ForeningID som sammansatt nyckel", explain: "Kopplingstabell är M:N-regeln. MedlemI är 1:N och blir en främmande nyckel i Spelare." },
+      { text: "ForeningID INTEGER NOT NULL som främmande nyckel mot Forening(ForeningID)", explain: "1:N ger främmande nyckel på många-sidan, och dubbellinjen vid Spelare blir NOT NULL på den kolumnen. Facit kommenterar varje sådan kolumn: total participation." },
+    ],
+    correct: 3, source: "Kompendiet kap. 9 · tentans uppgift 2", reviewed: false },
+
+  { id: "dbq-58", topic: "sql", difficulty: 2,
+    context: "SELECT\n    b.Titel,\n    AVG(hl.Betyg) AS Snitt\nFROM\n    Bok AS b\n    INNER JOIN HarLanat AS hl ON hl.Isbn = b.Isbn\nGROUP BY\n    b.Isbn;",
+    question: "Vad händer när frågan körs i SQL Server?",
+    options: [
+      { text: "Den stoppas: Titel står i SELECT utan att stå i GROUP BY eller i ett aggregat", explain: "GROUP BY-regeln: varje kolumn i SELECT måste stå i GROUP BY eller inuti en aggregatfunktion. Felmeddelandet: Column 'Titel' is invalid in the select list … Lägg b.Titel i GROUP BY." },
+      { text: "Den kör och ger en rad per bok, eftersom Isbn bestämmer Titel entydigt", explain: "SQL Server resonerar inte om funktionella beroenden. Regeln är syntaktisk: kolumnen måste stå i GROUP BY." },
+      { text: "Den kör men ger en rad per titel, eftersom SELECT-listan styr grupperingen", explain: "GROUP BY styr grupperingen, inte SELECT. Och frågan kör inte alls." },
+      { text: "Den stoppas: AVG kan inte användas på en kolumn ur en annan tabell än den grupperade", explain: "Aggregat får räkna över vilken kolumn som helst i den joinade radmängden." },
+    ],
+    correct: 0, source: "Kompendiet kap. 10 · föreläsning 2–3", reviewed: false },
+
+  { id: "dbq-59", topic: "sql", difficulty: 2,
+    question: "Uppgiften lyder: låntagare som har lånat minst tre böcker. Var hör villkoret hemma, och varför?",
+    options: [
+      { text: "I SELECT, som COUNT(*) >= 3 AS Villkor, så att varje rad visar om den uppfyller det", explain: "SELECT visar, filtrerar inte. Uppgiften vill ha bara de låntagare som uppfyller villkoret." },
+      { text: "I HAVING, som COUNT(*) >= 3 — antalet är ett villkor på gruppen och finns först efter GROUP BY", explain: "WHERE ser en rad i taget och får inte innehålla aggregat. Antalet lån per låntagare finns först när raderna grupperats, och villkor på grupper skrivs i HAVING." },
+      { text: "I WHERE, som COUNT(*) >= 3, eftersom WHERE filtrerar innan resultatet byggs upp av grupperna", explain: "WHERE får inte innehålla aggregat — SQL Server stoppar frågan. Antalet finns inte förrän efter grupperingen." },
+      { text: "I ON-villkoret för joinen, eftersom det är där raderna från HarLanat kommer in i frågan", explain: "ON avgör vilka rader som matchar, en i taget. Det kan inte räkna." },
+    ],
+    correct: 1, source: "Kompendiet kap. 10 · föreläsning 2–3", reviewed: false },
+
+  { id: "dbq-60", topic: "sql", difficulty: 3,
+    context: "SELECT Titel\nFROM Bok\nWHERE Isbn NOT IN (\n    SELECT Isbn\n    FROM HarLanat\n    WHERE LantagarNo = 'L2'\n);",
+    question: "Underfrågans lista innehåller ett NULL. Vad returnerar frågan?",
+    options: [
+      { text: "Alla böcker utom dem med NULL som ISBN, eftersom NULL aldrig matchar NOT IN", explain: "Det är NULL i listan som spelar roll, inte i Bok. Resultatet blir tomt för alla rader." },
+      { text: "Ett fel, eftersom NOT IN kräver att underfrågan bara returnerar icke-NULL-värden", explain: "Frågan kör utan fel. Det är det som gör fällan farlig: ett tyst tomt resultat." },
+      { text: "Ingen rad alls — NOT IN mot en lista med NULL blir aldrig sant; NOT EXISTS undgår det", explain: "x NOT IN (a, b, NULL) betyder x <> a AND x <> b AND x <> NULL, och en jämförelse med NULL är varken sann eller falsk. Villkoret blir aldrig sant, resultatet tomt. NOT EXISTS jämför rad för rad och har inte problemet." },
+      { text: "Alla böcker som L2 inte lånat, eftersom NULL ignoreras när listan jämförs", explain: "NULL ignoreras inte — det förgiftar jämförelsen. Det är hela poängen med IS NULL i stället för = NULL." },
+    ],
+    correct: 2, source: "Kompendiet kap. 10 · föreläsning 2–3", reviewed: false },
+
+  { id: "dbq-61", topic: "sql", difficulty: 2,
+    question: "Uppgiften lyder: låntagare som är äldre än låntagare L4. Hur skrivs villkoret?",
+    options: [
+      { text: "WHERE l.Alder > 33, efter att man slagit upp L4:s ålder och skrivit in den", explain: "Då svarar frågan på 'äldre än 33', inte på uppgiften, och blir tyst inaktuell när L4 fyller år." },
+      { text: "WHERE l.Alder > l4.Alder efter JOIN Lantagare AS l4 ON l4.LantagarNo = l.LantagarNo", explain: "Joinvillkoret parar varje låntagare med sig själv, så l4.Alder är alltid den egna åldern. Villkoret blir aldrig sant." },
+      { text: "HAVING MAX(l.Alder) > 'L4', eftersom jämförelsen gäller ett värde ur en annan rad", explain: "'L4' är ett låntagarnummer, inte en ålder, och HAVING är för villkor på grupper." },
+      { text: "WHERE l.Alder > (SELECT l4.Alder FROM Lantagare AS l4 WHERE l4.LantagarNo = 'L4')", explain: "Värdet hör till en annan rad än den som prövas. En skalär underfråga hämtar exakt ett värde på platsen där det behövs — en fråga per delfråga, och det fallet där JOIN inte räcker." },
+    ],
+    correct: 3, source: "Kompendiet kap. 10 · föreläsning 2–3", reviewed: false },
+
+  { id: "dbq-62", topic: "sql", difficulty: 3,
+    context: "HarLanat\nLantagarNo  Isbn  Betyg\nL1          B1    7\nL1          B2    8\nL2          B1    9\nL3          B2    5\n\nSELECT Isbn, COUNT(*) AS Antal\nFROM HarLanat\nWHERE Betyg > 6\nGROUP BY Isbn\nHAVING COUNT(*) >= 2;",
+    question: "Vad returnerar frågan?",
+    options: [
+      { text: "B1 2 — raden (L3, B2, 5) faller bort i WHERE innan grupperingen, så B2 får bara en", explain: "Logisk ordning: WHERE först, kvar är (L1, B1, 7), (L1, B2, 8), (L2, B1, 9). GROUP BY Isbn ger B1 med 2 och B2 med 1. HAVING >= 2 behåller bara B1." },
+      { text: "B1 2 och B2 2 — WHERE påverkar inte antalet, bara vilka rader som visas i resultatet", explain: "WHERE tar bort rader innan de räknas. B2:s andra rad har betyg 5 och räknas inte." },
+      { text: "B1 3 och B2 1 — HAVING filtrerar inte bort någon grupp utan visar antalet före WHERE", explain: "B1 har bara två rader totalt, och HAVING tar bort grupper som inte uppfyller villkoret." },
+      { text: "B2 2 — L3:s betyg 5 räknas, eftersom HAVING utvärderas före WHERE i logisk ordning", explain: "Ordningen är WHERE, GROUP BY, HAVING. Betyget 5 faller bort först av allt." },
+    ],
+    correct: 0, source: "Kompendiet kap. 10 · föreläsning 2–3", reviewed: false },
 ];
