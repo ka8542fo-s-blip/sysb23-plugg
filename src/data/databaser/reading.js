@@ -808,9 +808,9 @@ Skriv ut varje relation fullständigt med understruken primärnyckel. Poängen s
     id: "kap7",
     number: 8,
     title: "Funktionella beroenden och normalformer",
-    readingMinutes: 14,
-    lead: "Anomalierna som motiverar normalisering, funktionella beroenden, 1NF till 3NF med kursens exakta definitioner, och dekomposition.",
-    sources: ["Föreläsning 6"],
+    readingMinutes: 20,
+    lead: "Anomalierna som motiverar normalisering, funktionella beroenden, 1NF till 3NF med kursens exakta definitioner, dekomposition — och tentans två former: sant/falskt om ett schema, och högsta normalform med motivering.",
+    sources: ["Föreläsning 6", "Övningshäftet uppgift 10–17", "Extentorna HT25, uppgift 3", "Kursboken (lossless join-kontrollen)"],
     body: `
 Tentans tredje område, och det mest formella. Definitionerna nedan är kursens egna och återges ordagrant, eftersom det är formuleringarna som prövas.
 
@@ -939,6 +939,97 @@ Att dela upp en relation är inte gratis. Två egenskaper avgör om uppdelningen
 **Lossless join (förlustfri join, även non-additive join).** En dekomposition har egenskapen om en **naturlig join** av delrelationerna ger tillbaka originalrelationen. En naturlig join matchar automatiskt kolumner med samma namn, utan ON-villkor. Föreläsningens exempel: \`R(A,B,C,D,E,F)\` med \`A → {B,C}\` och \`D → {E,F}\` delas upp i \`R1(A,B,C)\` och \`R2(D,E,F)\`. Båda ser ut att vara i 3NF, men de har inget gemensamt attribut, så den naturliga joinen kan inte återskapa \`R\`. I Employee–Project-exemplet betyder det att ingen längre vet vem som arbetar i vilket projekt. Lösningen är kopplingsrelationen \`Work(EmployeeNo, ProjectNo)\`, precis den M:N-regeln föreskriver: med den på plats kan de tre relationerna joinas tillbaka till originalet. Detta är det icke-förhandlingsbara kravet.
 
 **Dependency preservation (beroendebevarande).** Utöver lossless join kan en dekomposition ha egenskapen att beroendena bevaras. Regeln är operativ: **ett funktionellt beroende är bevarat om dess båda attribut finns i samma relation.** Gå igenom beroendena ett i taget och se var attributen hamnat. Föreläsningens exempel på förlust: \`EmployeeProject\` med \`EmployeeNo → {Name, Address, ProjectNo, ProjectName}\`, \`ProjectNo → {ProjectName, Budget}\` och \`ProjectName → {ProjectNo, Budget}\` delas upp i \`Employee(EmployeeNo, Name, Address, ProjectNo)\` och \`Project(ProjectNo, Name, Budget)\`. Alla beroenden utom ett återfinns i någon av delrelationerna — \`EmployeeNo → ProjectName\` har gått förlorat, eftersom attributen hamnat i olika relationer. Ett förlorat beroende kan databasen inte längre upprätthålla med en enkel constraint inom en tabell. Just den kontrollen, beroende för beroende, är vad övningshäftets sant/falskt-frågor om dekompositioner prövar (uppgift 16 och 17).
+
+## Tentans form: sant eller falskt om ett schema
+
+Uppgift 3a–3e ger en relation R med sina beroenden och två eller tre scheman — nedbrytningar av R — och ställer fem påståenden, två poäng vardera, minus en vid fel. Påståendena kommer ur ett litet ordförråd, och varje ord har en operativ regel. Svara alltid; med två alternativ är även en gissning värd mer än ett blankt svar, och med beroendena framför dig behöver du sällan gissa.
+
+**"Relation R i schema 1 är i 2NF (eller högre)."** Bestäm kandidatnyckeln för just den relationen. Är den enkel kan 2NF inte brytas. Är den sammansatt: finns ett icke-primärattribut som beror på en äkta delmängd av den? Om ja är svaret falskt.
+
+**"Alla relationer i schema 2 är i 3NF."** Pröva varje relation för sig, med dess egna beroenden — de beroenden ur R vars attribut alla finns i relationen. En relation utan beroenden har hela attributmängden som kandidatnyckel, alla attribut är primära, och den är i 3NF. En enda relation som brister gör påståendet falskt.
+
+**"R i schema 2 har fler än en kandidatnyckel."** Två attribut som bestämmer varandra, A → B och B → A, ger två kandidatnycklar om vardera når alla övriga attribut. Leta efter cykler i beroendena. Ett attribut som inte står till höger om någon pil måste ingå i varje kandidatnyckel.
+
+**"Attribut C är ett primärattribut i relation R i schema 3."** Primärattribut är medlem i någon kandidatnyckel *i den relationen*. Det avgörs av relationens egna kandidatnycklar, inte av R:s. C kan vara icke-primärt i R och primärt i delrelationen — i en relation (C, D) med C → D är C nyckeln.
+
+**"Schema 3 är en nedbrytning där samtliga funktionella beroenden är bevarade."** Ett beroende är bevarat om dess attribut finns i samma relation. Gå igenom beroendena ett i taget — {A,B} → C är bevarat bara om A, B och C står i en och samma relation — och ett förlorat beroende gör påståendet falskt.
+
+**"Schema 3 har egenskapen lossless join."** Den naturliga joinen av delrelationerna ska ge tillbaka R. Kontrollen i praktiken, ur kursboken: se på nedbrytningen två relationer i taget. De två måste ha gemensamma attribut, och de gemensamma attributen ska vara kandidatnyckel i minst en av dem. Saknas gemensamt attribut någonstans i kedjan är svaret falskt.
+
+Två fällor att se upp med. Kandidatnycklar och primärattribut byter betydelse när relationen byter — fråga alltid "i vilken relation?". Och normalformen hos delrelationerna säger inget om nedbrytningens egenskaper: ett schema kan bestå av relationer i 3NF och ändå ha förlorat både ett beroende och lossless join.
+
+## Tentans form: högsta normalform med motivering
+
+Uppgift 3f och 3g ger en relation R med beroenden. Du ska ange högsta normalform, motivera med hänvisning till definitionerna och till specifika attribut, och normalisera till 3NF om R inte redan är där. Motivering krävs inte för en relation i 3NF. Tre ord i uppgiftstexten styr svaret: *bilagan* med definitionerna får användas, nedbrytningen ska *sträva efter* lossless join och dependency preservation, och *övernormalisering ger poängavdrag*.
+
+### Så ser en motivering ut
+
+Föreläsningen visar formen, och den räcker: en rad för normalformen, en rad för skälet, och skälet namnger definitionens begrepp och relationens attribut.
+
+    Normalform: 1NF
+    Skäl: äkta delmängden EmployeeNo av kandidatnyckeln {EmployeeNo, ProjectNo}
+          bestämmer funktionellt icke-primärattributet Name.
+
+    Normalform: 2NF
+    Skäl: icke-primärattributet D är transitivt beroende av kandidatnyckeln A
+          (A → C och C → D, och det gäller inte att C → A).
+
+Skriv alltid kandidatnycklarna, primärattributen och icke-primärattributen först. De är vad motiveringen hänvisar till, och de är vad rättaren letar efter. Ett skäl som säger "det finns ett partiellt beroende" utan attribut är inte en motivering i uppgiftens mening.
+
+### Vad övernormalisering är
+
+Målet är 3NF, inte så många relationer som möjligt. Övernormalisering är att dela upp mer än definitionerna kräver: att bryta ned en relation som redan är i 3NF, eller att dela {A,B} → {C, D} i (A, B, C) och (A, B, D) när (A, B, C, D) uppfyller allt. Det kostar poäng av två skäl. Varje extra relation är en join till för varje fråga, utan att någon anomali försvinner. Och varje extra snitt är en ny chans att förlora ett beroende eller lossless join. Gör nedbrytningen precis så långt att varje relation är i 3NF, och stanna.
+
+### Ett fullständigt exempel
+
+    R(A, B, C, D, E, F)
+    {A, B} → C
+    B → D
+    D → E
+    C → F
+
+**Kandidatnyckel.** A och B står inte till höger om någon pil, så båda måste ingå i varje kandidatnyckel. {A, B} bestämmer C direkt, D via B, E via D och F via C — alltså alla övriga attribut. Ingen mindre mängd gör det. Kandidatnyckel: {A, B}.
+
+**Primärattribut:** A, B. **Icke-primärattribut:** C, D, E, F.
+
+**2NF?** Kandidatnyckeln är sammansatt, så 2NF kan brytas. B → D: B är en äkta delmängd av {A, B} och D är icke-primärt. 2NF bryts.
+
+    Normalform: 1NF
+    Skäl: äkta delmängden B av kandidatnyckeln {A, B} bestämmer funktionellt
+          icke-primärattributet D.
+
+**Normalisering till 3NF.** Ett beroende, en relation, med beroendets vänsterled som primärnyckel:
+
+    R1(A, B, C)      {A, B} → C
+    R2(B, D)         B → D
+    R3(D, E)         D → E
+    R4(C, F)         C → F
+
+Primärnycklarna understrukna: {A, B} i R1, B i R2, D i R3, C i R4. Varje relation har en enkel eller sammansatt nyckel som bestämmer allt annat direkt, inga äkta delmängder bestämmer något, inga transitiva beroenden — alla fyra är i 3NF.
+
+**Dependency preservation:** {A, B} → C står i R1, B → D i R2, D → E i R3, C → F i R4. Alla fyra bevarade.
+
+**Lossless join:** R1 och R2 delar B, som är nyckel i R2. R2 och R3 delar D, nyckel i R3. R1 och R4 delar C, nyckel i R4. Kedjan hänger ihop och joinen ger tillbaka R.
+
+Hade man i stället stannat vid R1(A, B, C, F) med både {A, B} → C och C → F hade F varit transitivt beroende av nyckeln — inte 3NF. Hade man gått längre och delat R1 i (A, B) och (A, B, C) hade det varit övernormalisering: (A, B) bär ingen information som (A, B, C) inte redan bär.
+
+### När relationen har två kandidatnycklar
+
+    R(A, B, C, D)
+    A → B
+    B → A
+    B → C
+    C → D
+
+A och B bestämmer varandra, och var och en når C och D. Kandidatnycklar: A och B — två stycken, båda enkla. Primärattribut: A, B. Icke-primärattribut: C, D.
+
+**2NF:** ingen kandidatnyckel är sammansatt, så 2NF kan inte brytas. **3NF:** A → B → C, men B → A gäller, så C är inte transitivt beroende av A. Däremot A → C och C → D, och C → A gäller inte: D är transitivt beroende av kandidatnyckeln A.
+
+    Normalform: 2NF
+    Skäl: icke-primärattributet D är transitivt beroende av kandidatnyckeln A
+          (A → C, C → D, och det gäller inte att C → A).
+
+Nedbrytning: R1(A, B, C) med A som primärnyckel (B förblir kandidatnyckel), R2(C, D) med C som primärnyckel. Alla beroenden bevarade, C är nyckel i R2, lossless join. Att dela R1 vidare i (A, B) och (A, C) vore övernormalisering — R1 är redan i 3NF.
 `
   },
 
@@ -1144,8 +1235,9 @@ export const glossary = [
   { term: "Kodstandard", definition: "Kursens namngivningsregler: PascalCase och singular för tabeller, PascalCase för kolumner, constraintprefixen PK_, FK_, UQ_, CK_, DF_, camelCase för Java-variabler.", chapter: "kap8" },
   { term: "Konceptuell databasdesign", definition: "Första steget i designprocessen: verksamhetskraven blir ett ER-diagram.", chapter: "kap1" },
   { term: "Logisk databasdesign", definition: "Andra steget: den konceptuella modellen transformeras till relationer i textform och normaliseras om nödvändigt.", chapter: "kap1" },
-  { term: "Lossless join", definition: "Att en naturlig join av delrelationerna ger tillbaka originalrelationen. Saknar delrelationerna gemensamt attribut går det inte. Icke-förhandlingsbart krav på en dekomposition.", chapter: "kap7" },
+  { term: "Lossless join", definition: "Egenskap hos en nedbrytning: en naturlig join av delrelationerna ger tillbaka originalrelationen. Kontroll två relationer i taget: de måste dela attribut, och de gemensamma attributen ska vara kandidatnyckel i minst en av dem. Saknas gemensamt attribut är egenskapen bruten.", chapter: "kap7" },
   { term: "Minimalitet", definition: "Villkoret att inget attribut kan tas bort ur en kandidatnyckel utan att den garanterade unikheten går förlorad. {EmployeeNo, Name} är unik men inte minimal.", chapter: "kap3" },
+  { term: "Motivering (högsta normalform)", definition: "Tentans krav i 3f–3g: en rad för normalformen och en rad för skälet, som namnger definitionens begrepp och relationens attribut — 'äkta delmängden B av kandidatnyckeln {A,B} bestämmer funktionellt icke-primärattributet D'. Krävs inte för 3NF.", chapter: "kap7" },
   { term: "Naturlig nyckel", definition: "Nyckel med affärsbetydelse, t.ex. anställningsnummer eller ISBN. Motsats till surrogatnyckel.", chapter: "kap3" },
   { term: "NoSQL", definition: "Dokumentorienterade databaser, ett alternativ till relationsdatabaser för persistent lagring.", chapter: "kap1" },
   { term: "Nyckelnotation (CK, PK, FK)", definition: "Föreläsningens sätt att skriva nycklar under en relation: CK1 = {…} för varje kandidatnyckel, PK = CK1 för den valda, FK1 : (attribut) REF Relation(attribut) för varje referens. Häftets facit stryker i stället under: hel linje för PK, prickad för FK.", chapter: "kap3" },
@@ -1220,5 +1312,6 @@ export const glossary = [
   { term: "Entitetsintegritet (entity integrity)", definition: "Att varje rad har en unik och icke-tom identifierare. En naturlig primärnyckel ger det automatiskt; med surrogatnyckel krävs UNIQUE och NOT NULL på den naturliga nyckeln.", chapter: "kap8" },
   { term: "Kopplingstabell (junction table)", definition: "Tabellen ur en M:N-relation, som Work och HasStudied. Primärnyckeln är de två främmande nycklarna tillsammans; ingen egen surrogatnyckel.", chapter: "kap8" },
   { term: "ON DELETE CASCADE", definition: "Tillägg på en främmande nyckel som låter en radering i den refererade tabellen ta de refererande raderna med sig. Visas i föreläsningen; facit för DDL-uppgifterna använder det inte.", chapter: "kap8" },
-  { term: "Ändpunktsmönster (endpoint patterns)", definition: "Crow's Foots fyra kombinationer: yttre märke cirkel = optional, streck = required; inre märke streck = one, fork = many. Markörerna sitter vid den ändpunkt vars instanser de räknar.", chapter: "svaga" }
+  { term: "Ändpunktsmönster (endpoint patterns)", definition: "Crow's Foots fyra kombinationer: yttre märke cirkel = optional, streck = required; inre märke streck = one, fork = many. Markörerna sitter vid den ändpunkt vars instanser de räknar.", chapter: "svaga" },
+  { term: "Övernormalisering", definition: "Att dela upp mer än definitionerna kräver: bryta ned en relation som redan är i 3NF, eller dela {A,B} → {C,D} i två relationer. Ger poängavdrag på tentan — fler joins utan att någon anomali försvinner, och fler chanser att förlora beroenden eller lossless join.", chapter: "kap7" },
 ];

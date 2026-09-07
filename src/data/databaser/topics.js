@@ -229,13 +229,18 @@ export const topics = [
       "Arbetsgång: bestäm kandidatnycklarna → lista primär- och icke-primärattribut → testa 2NF (partiella beroenden) → testa 3NF (transitiva beroenden).",
       "Dekomposition: bryt ned relationen i mindre relationer som uppfyller den önskade normalformen. Transformationsreglerna producerar redan relationer i 3NF — de är normaliseringsteorins resultat i praktisk form.",
       "Lossless join: en naturlig join av delrelationerna ska ge tillbaka originalrelationen. Saknar delrelationerna gemensamt attribut går det inte — då behövs kopplingsrelationen. Icke-förhandlingsbart krav.",
-      "Dependency preservation: ett funktionellt beroende är bevarat om dess båda attribut finns i samma relation. Kontrollera beroende för beroende; ett förlorat beroende kan inte upprätthållas med en enkel constraint."
+      "Dependency preservation: ett funktionellt beroende är bevarat om dess båda attribut finns i samma relation. Kontrollera beroende för beroende; ett förlorat beroende kan inte upprätthållas med en enkel constraint.",
+      "Sant/falskt om ett schema (3a–e): svara alltid. 2NF i en relation — sammansatt nyckel? annars kan den inte brytas. Alla i 3NF — pröva varje relation med dess egna beroenden; en relation utan beroenden är i 3NF. Fler än en kandidatnyckel — leta cykler (A → B, B → A). Primärattribut — avgörs av DEN relationens kandidatnycklar, inte R:s. Beroendebevarande — varje beroendes attribut i samma relation. Lossless join — två i taget: gemensamma attribut som är kandidatnyckel i minst en av dem.",
+      "Motiveringens form (3f–g): kandidatnycklar, primär- och icke-primärattribut först; sedan 'Normalform: 1NF / Skäl: äkta delmängden B av kandidatnyckeln {A,B} bestämmer funktionellt icke-primärattributet D' eller 'icke-primärattributet D är transitivt beroende av kandidatnyckeln A (A → C, C → D, inte C → A)'. Motivering krävs inte för 3NF.",
+      "Övernormalisering ger poängavdrag: dela inte upp mer än definitionerna kräver — bryt inte ned en relation som redan är i 3NF, dela inte {A,B} → {C,D} i två. Nedbrytningen ska sträva efter både lossless join och dependency preservation: ett beroende per relation med vänsterledet som primärnyckel, understruken."
     ],
     pitfalls: [
       "2NF-definitionen säger 'någon äkta delmängd av NÅGON kandidatnyckel' — flera kandidatnycklar måste alla prövas.",
       "3NF-definitionen säger 'VARJE kandidatnyckel'. Nöj dig inte med att testa mot primärnyckeln.",
       "Ett beroende Y → Z är inte transitivt om även Y → X gäller, eftersom Y då själv är kandidatnyckel.",
-      "Lär definitionerna ordagrant — omskrivningar i egna ord tappar nästan alltid en kvantifierare."
+      "Lär definitionerna ordagrant — omskrivningar i egna ord tappar nästan alltid en kvantifierare.",
+      "Kandidatnycklar och primärattribut byter betydelse när relationen byter — 'är C primärattribut i R i schema 3?' avgörs av delrelationens nycklar, inte av R:s.",
+      "Delrelationer i 3NF säger inget om nedbrytningen: den kan ändå ha förlorat ett beroende eller lossless join. Kontrollera de två egenskaperna separat."
     ]
   },
   {

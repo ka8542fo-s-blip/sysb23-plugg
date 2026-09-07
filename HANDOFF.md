@@ -75,7 +75,16 @@ BY/HAVING eller mängdskillnad + skalär subquery, en fråga, indenterad.
 Inte förekommit: application development (listas dock i nya Fö1 slide 16),
 logisk modell som eget svar, relationsalgebra, Crow's Foot som produktion.
 Läs kap 1 har avsnittet "Så ser tentan ut". Stor uppdatering pågår enligt
-prompten CC-prompt-stor-uppdatering-tentan.md (gitignorerad): punkt 1–3 klara.
+prompten CC-prompt-stor-uppdatering-tentan.md (gitignorerad): punkt 1–4 klara.
+Punkt 4 (2026-09-07): kapitel 8 har två nya avsnitt, "Tentans form: sant
+eller falskt om ett schema" (de sex påståendetyperna med operativa regler)
+och "Tentans form: högsta normalform med motivering" (motiveringens form ur
+Fö6:s "Normal form / Reason"-rader, övernormalisering, ett fullständigt
+3f-exempel R(A–F) med {A,B}→C, B→D, D→E, C→F → 1NF → fyra relationer, och
+ett tvåkandidatnyckel-exempel A↔B, B→C, C→D → 2NF). Enda regel utanför
+decken: lossless-kontrollen "två i taget, gemensamma attribut som är
+kandidatnyckel i minst en av dem" kommer ur kursboken (Elmasri & Navathe),
+inte ur Fö6, som bara ger "inga gemensamma attribut → inte lossless".
 Punkt 3 (2026-09-07): kapitel 6 slutar med "Att läsa påståenden ur ett
 diagram" — tabellen påståendeform → notation, flerstegsregeln ("det som
 inte förbjuds är tillåtet", ur Fö4:s poäng att basic Chen saknar symbol
@@ -84,6 +93,8 @@ och två genomgångar på egna domäner (förening/lag/spelare/arena,
 bok/exemplar/låntagare/författare) med åtta påståenden och facit med skäl.
 Figurerna heter `pastaenden-forening` och `pastaenden-bibliotek`
 (erFigures.jsx) och är tänkta som underlag även för Öva-frågorna i punkt 7.
+Krav till punkt 7 (användare): andelen sanna påståenden per diagram ska
+ligga under hälften, som på tentan (4–6 sanna av 10–11).
 
 **Regel (2026-09-07, användarkrav): inga slidehänvisningar i det läsaren ser** —
 inte i kapiteltext, kärnpunkter, fallgropar eller ordlista. De hör hemma i
