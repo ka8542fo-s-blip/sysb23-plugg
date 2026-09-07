@@ -77,6 +77,13 @@ logisk modell som eget svar, relationsalgebra, Crow's Foot som produktion.
 Läs kap 1 har avsnittet "Så ser tentan ut". Stor uppdatering pågår enligt
 prompten CC-prompt-stor-uppdatering-tentan.md (gitignorerad): punkt 1–2 klara.
 
+**Regel (2026-09-07, användarkrav): inga slidehänvisningar i det läsaren ser** —
+inte i kapiteltext, kärnpunkter, fallgropar eller ordlista. De hör hemma i
+`sources`, i HANDOFF och i redovisningar. Princip för decken: läs dem som
+en föreläsning, inte som en specifikation — frågan är vad Björn ville få
+fram, inte vad som står på varje slide; extentorna visar vad som betyder
+något.
+
 **Nya Fö5 (HT26, 124 slides, "Logical Database Design") — vad som är inne
 (2026-09-07):** kapitel 2 (slide 3–21: schema/aktuellt värde, domän =
 tillåtna värden, grad/kardinalitet, ordning, dubbletter, bag/mängd/DISTINCT),

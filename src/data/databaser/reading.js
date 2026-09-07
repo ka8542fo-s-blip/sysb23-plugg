@@ -74,7 +74,7 @@ De två HT25-tentorna (omtentan 24 oktober 2025 och uppsamlingen 25 maj 2026) ha
 
 **Poängreglernas konsekvens — två gränser.** Uppgift 1: härled varje påstående ur notationen först. För det du inte kan härleda gäller brytpunkten 3/8: markera påståendet om du är mer än ungefär 40 procent säker på att det är sant (väntevärdet 0,4 · 5 − 0,6 · 3 är precis noll), annars lämna det omarkerat — ett omarkerat sant påstående kostar inget. Uppgift 3a–3e: svara alltid, lämna aldrig blankt. Med två alternativ och +2/−1 är även en ren gissning värd +0,5 poäng i snitt, och med beroendena framför dig behöver du sällan gissa. Uppgift 3f–3g: dela inte upp mer än definitionerna kräver — 3NF är målet, inte så många relationer som möjligt.
 
-**Det som inte har förekommit:** den logiska modellen som eget svar, relationsalgebra och Crow's Foot som produktionsnotation — Chen är det man ritar och läser. Nya Fö1 listar *application development* som ett av tentans fem områden (slide 16), men det har inte funnits på någon av de två tentorna.
+**Det som inte har förekommit:** den logiska modellen som eget svar, relationsalgebra och Crow's Foot som produktionsnotation — Chen är det man ritar och läser. Nya Fö1 listar *application development* som ett av tentans fem områden, men det har inte funnits på någon av de två tentorna.
 `
   },
 
@@ -86,13 +86,13 @@ De två HT25-tentorna (omtentan 24 oktober 2025 och uppsamlingen 25 maj 2026) ha
     lead: "Den formella grunden: relation, schema och aktuellt värde, domän, grad och kardinalitet — varför SQL ger en bag när relationen är en mängd, och de sju egenskaper varje relation måste uppfylla.",
     sources: ["Föreläsning 5 (HT26, slide 3–37)", "Föreläsning 6"],
     body: `
-En **relation** är ett matematiskt begrepp, byggt på mängdlära och första ordningens logik, som visuellt framställs som en tabell. Codd föreslog 1970 att data skulle representeras logiskt som relationer, så att datans innebörd och struktur skiljs från hur den lagras internt (Fö5 slide 4). Att relationsdatabaser vilar på matematik är inte en kuriositet — det är vad som gör att normalformerna kan bevisas och att frågeoptimerare kan skriva om dina frågor utan att ändra svaret.
+En **relation** är ett matematiskt begrepp, byggt på mängdlära och första ordningens logik, som visuellt framställs som en tabell. Codd föreslog 1970 att data skulle representeras logiskt som relationer, så att datans innebörd och struktur skiljs från hur den lagras internt. Att relationsdatabaser vilar på matematik är inte en kuriositet — det är vad som gör att normalformerna kan bevisas och att frågeoptimerare kan skriva om dina frågor utan att ändra svaret.
 
-Deckets utgångspunkt är enkel: **en relation samlar fakta av ett slag** (slide 5). Raden \`E-104 | Mary | mary@example.org\` säger att anställd E-104 heter Mary och har arbetsmejlen mary@example.org, och varje rad i EMPLOYEE säger samma sorts sak. Relationen är mängden av sådana fakta; tabellen är ett sätt att visa dess innehåll just nu.
+Deckets utgångspunkt är enkel: **en relation samlar fakta av ett slag**. Raden \`E-104 | Mary | mary@example.org\` säger att anställd E-104 heter Mary och har arbetsmejlen mary@example.org, och varje rad i EMPLOYEE säger samma sorts sak. Relationen är mängden av sådana fakta; tabellen är ett sätt att visa dess innehåll just nu.
 
 ## Terminologin
 
-Samma sak har flera namn beroende på hur formell man är. Fö5 använder de formella termerna tupel och attribut (slide 11):
+Samma sak har flera namn beroende på hur formell man är. Föreläsningen använder de formella termerna tupel och attribut:
 
 | Formell term | Tabellterm | Alternativ term |
 |---|---|---|
@@ -105,50 +105,50 @@ Definitionerna:
 
 > **Relation:** en mängd tupler där varje element tillhör en domän.
 > **Attribut:** ett namn parat med en domän.
-> **Tupel:** en mängd attributvärden där inga två skilda element har samma attributnamn — en komplett fakta, ett värde för varje attribut (slide 8).
+> **Tupel:** en mängd attributvärden där inga två skilda element har samma attributnamn — en komplett fakta, ett värde för varje attribut.
 > **Domän (domain):** alla värden som ett dataelement kan innehålla.
 > **Grad (degree):** antalet attribut i relationsschemat.
 > **Kardinalitet (cardinality):** antalet tupler i det aktuella relationsvärdet.
 
-En relation är inte samma sak som en ER-relationship (slide 9). EMPLOYEE och WORKS_ON är båda relationer — mängder av tupler — men EMPLOYEE lagrar entitetsfakta och WORKS_ON lagrar relationsfakta. Relationship är ett begrepp i den konceptuella modellen; relation är ett begrepp i den logiska.
+En relation är inte samma sak som en ER-relationship. EMPLOYEE och WORKS_ON är båda relationer — mängder av tupler — men EMPLOYEE lagrar entitetsfakta och WORKS_ON lagrar relationsfakta. Relationship är ett begrepp i den konceptuella modellen; relation är ett begrepp i den logiska.
 
 ## Schema och aktuellt värde
 
-Det här är den distinktion Fö5 bygger allt annat på (slide 12–13). **Relationsschemat** \`EMPLOYEE(EmployeeNo, Name, WorkEmail)\` namnger relationen och dess attribut och bestämmer formen på varje giltig tupel. Det **aktuella relationsvärdet** (relationsinstansen) är mängden av tupler som är registrerade just nu. Det kan växa, krympa, ändras eller vara tomt medan schemat är detsamma.
+Det här är den distinktion resten av kapitlet bygger på. **Relationsschemat** \`EMPLOYEE(EmployeeNo, Name, WorkEmail)\` namnger relationen och dess attribut och bestämmer formen på varje giltig tupel. Det **aktuella relationsvärdet** (relationsinstansen) är mängden av tupler som är registrerade just nu. Det kan växa, krympa, ändras eller vara tomt medan schemat är detsamma.
 
 Lägg till en fjärde anställd — E-422, som också heter Mary — och det finns fortfarande tre attribut men nu fyra tupler. En tupel har lagts till; inget attribut har lagts till. Schemat är oförändrat.
 
 ## Domän: tillåtna värden, inte förekommande
 
-En domän är mängden av tillåtna värden, angiven av schemat — **inte** listan över värden som redan används (slide 14). Om domänen för EmployeeNo är "E- följt av exakt tre siffror" är E-555 tillåtet även om ingen tupel innehåller det, medan EMP-104 (fel prefix) och E-12 (för få siffror) inte är det.
+En domän är mängden av tillåtna värden, angiven av schemat — **inte** listan över värden som redan används. Om domänen för EmployeeNo är "E- följt av exakt tre siffror" är E-555 tillåtet även om ingen tupel innehåller det, medan EMP-104 (fel prefix) och E-12 (för få siffror) inte är det.
 
 Domänen är inte heller samma sak som en datatyp, även om de överlappar. Domänen \`SalaryType\` kan definieras som numerisk i intervallet 10 000–30 000 — datatypen säger bara \`INT\`. Domänen bär alltså affärsregeln. I kapitel 9 får den sin tekniska motsvarighet i \`CHECK\`.
 
 ## Grad och kardinalitet
 
-**Graden** räknar attribut och ändras bara om schemat ändras (slide 15). **Kardinaliteten** räknar tuplerna i det aktuella värdet: den fjärde anställda höjer den från tre till fyra, graden är fortfarande tre, och ett tomt värde har kardinalitet noll (slide 16). Blanda inte ihop den med ER-modellens kardinalitetsvillkor, som begränsar tillåtet deltagande — samma ord, två betydelser.
+**Graden** räknar attribut och ändras bara om schemat ändras. **Kardinaliteten** räknar tuplerna i det aktuella värdet: den fjärde anställda höjer den från tre till fyra, graden är fortfarande tre, och ett tomt värde har kardinalitet noll. Blanda inte ihop den med ER-modellens kardinalitetsvillkor, som begränsar tillåtet deltagande — samma ord, två betydelser.
 
 ## Ordning saknar betydelse, dubbletter finns inte
 
-Två tabeller som visar samma fyra tupler i olika radordning visar **samma relationsvärde** — tupelordning är inte en del av relationen (slide 17). Detsamma gäller kolumnerna: flyttar man rubriken tillsammans med sin kolumn är E-104 fortfarande Marys EmployeeNo. Attributnamnen, inte positionen från vänster, knyter värdena till sina attribut (slide 18).
+Två tabeller som visar samma fyra tupler i olika radordning visar **samma relationsvärde** — tupelordning är inte en del av relationen. Detsamma gäller kolumnerna: flyttar man rubriken tillsammans med sin kolumn är E-104 fortfarande Marys EmployeeNo. Attributnamnen, inte positionen från vänster, knyter värdena till sina attribut.
 
-En relation är en mängd, och en mängd innehåller varje medlem bara en gång. Två rader som är identiska i **varje** attribut är samma kompletta tupel, och en tabell med två sådana rader representerar inte en giltig relation (slide 19). Enskilda värden får däremot upprepas — två olika anställda kan båda heta Mary. Det är den kompletta tupeln som inte får dubbleras.
+En relation är en mängd, och en mängd innehåller varje medlem bara en gång. Två rader som är identiska i **varje** attribut är samma kompletta tupel, och en tabell med två sådana rader representerar inte en giltig relation. Enskilda värden får däremot upprepas — två olika anställda kan båda heta Mary. Det är den kompletta tupeln som inte får dubbleras.
 
 ## SQL ger en bag, relationen är en mängd
 
-Här skiljer sig praktiken från teorin, och Fö5 gör en poäng av det (slide 20–21). Kör \`SELECT Name FROM employee\` mot fyra anställda där två heter Mary, och resultatet har fyra rader varav två identiska. SQL behåller båda: resultatet är en **bag**, som räknar upprepningar. Relationen NAMES med bara attributet Name har tre tupler, för de två Mary-raderna är samma kompletta tupel. \`DISTINCT\` tar bort dubblettraderna ur ett SQL-resultat. Varken en mängd eller en bag anger någon ordning — vill du ha en garanterad radordning behöver frågan \`ORDER BY\`.
+Här skiljer sig praktiken från teorin, och föreläsningen gör en poäng av det. Kör \`SELECT Name FROM employee\` mot fyra anställda där två heter Mary, och resultatet har fyra rader varav två identiska. SQL behåller båda: resultatet är en **bag**, som räknar upprepningar. Relationen NAMES med bara attributet Name har tre tupler, för de två Mary-raderna är samma kompletta tupel. \`DISTINCT\` tar bort dubblettraderna ur ett SQL-resultat. Varken en mängd eller en bag anger någon ordning — vill du ha en garanterad radordning behöver frågan \`ORDER BY\`.
 
 ## Relationens sju egenskaper
 
-Listan att kunna, nu med slide-hänvisningarna. En relation har:
+Listan att kunna. En relation har:
 
 1. **Unikt namn.** Två relationer i samma databas kan inte heta samma sak.
 2. **Atomära värden i varje cell.** \`Name = "Alice, Bob"\` är inte tillåtet — det ska vara två tupler. Detta är exakt vad första normalformen kräver, och det är därför 1NF sällan är ett problem i praktiken: en tabell som bryter mot det är inte en relation till att börja med.
-3. **Distinkta attributnamn** (slide 7). Repeterar man Name får man inte två attribut; skriv GivenName och FamilyName. Olika relationer får däremot återanvända samma attributnamn.
+3. **Distinkta attributnamn**. Repeterar man Name får man inte två attribut; skriv GivenName och FamilyName. Olika relationer får däremot återanvända samma attributnamn.
 4. **Samma datatyp och domän för alla värden i ett attribut.**
-5. **Attributens ordning saknar betydelse** (slide 18).
-6. **Tuplernas ordning saknar betydelse** (slide 17). Därför har en SQL-fråga utan \`ORDER BY\` ingen garanterad radordning.
-7. **Inga dubblettupler** (slide 19). En SQL-tabell kan innehålla dubbletter om ingen nyckel hindrar det, och ett SQL-resultat är en bag — att veta skillnaden mellan relationsmodellens ideal och SQL:s praktik är precis den sortens nyans en tenta gillar.
+5. **Attributens ordning saknar betydelse**.
+6. **Tuplernas ordning saknar betydelse**. Därför har en SQL-fråga utan \`ORDER BY\` ingen garanterad radordning.
+7. **Inga dubblettupler**. En SQL-tabell kan innehålla dubbletter om ingen nyckel hindrar det, och ett SQL-resultat är en bag — att veta skillnaden mellan relationsmodellens ideal och SQL:s praktik är precis den sortens nyans en tenta gillar.
 
 ## Från relation till information
 
@@ -170,25 +170,25 @@ Nycklar är det som gör att tupler går att skilja åt och relationer går att 
 
 ## Varför identifierare behövs
 
-Två giltiga tupler i EMPLOYEE kan båda ha Name = Mary och ändå vara olika anställda. Name kan därför inte identifiera varje tupel; schemat behöver ett eller flera attribut vars värden **garanterat** skiljer giltiga tupler åt (Fö5 slide 22).
+Två giltiga tupler i EMPLOYEE kan båda ha Name = Mary och ändå vara olika anställda. Name kan därför inte identifiera varje tupel; schemat behöver ett eller flera attribut vars värden **garanterat** skiljer giltiga tupler åt.
 
-Garantin är en **verksamhetsregel, inte en observation** (slide 23). Organisationen bestämmer: varje anställd har ett EmployeeNo som ingen annan får dela, varje anställd har en WorkEmail som ingen annan får dela, namn får upprepas. Reglerna gäller varje tillåten population, även framtida anställda. Aktuella rader kan **motbevisa** en föreslagen identifierare — två rader med samma värde räcker — men att värdena råkar vara unika i dag bevisar ingen regel för i morgon (slide 24). Läser du en tentauppgift: leta efter regeln i texten, inte efter mönster i exempeldatan.
+Garantin är en **verksamhetsregel, inte en observation**. Organisationen bestämmer: varje anställd har ett EmployeeNo som ingen annan får dela, varje anställd har en WorkEmail som ingen annan får dela, namn får upprepas. Reglerna gäller varje tillåten population, även framtida anställda. Aktuella rader kan **motbevisa** en föreslagen identifierare — två rader med samma värde räcker — men att värdena råkar vara unika i dag bevisar ingen regel för i morgon. Läser du en tentauppgift: leta efter regeln i texten, inte efter mönster i exempeldatan.
 
 ## Kandidatnyckel: unik och minimal
 
-> **Kandidatnyckel (candidate key, CK):** en mängd K av ett eller flera attribut i relationsschemat R är en kandidatnyckel om och endast om båda villkoren gäller. **Unikhet:** i varje giltigt relationsvärde av R har inga två skilda tupler samma värden för alla attribut i K. **Minimalitet:** inget attribut kan tas bort ur K utan att den garanterade unikheten går förlorad. (Fö5 slide 26)
+> **Kandidatnyckel (candidate key, CK):** en mängd K av ett eller flera attribut i relationsschemat R är en kandidatnyckel om och endast om båda villkoren gäller. **Unikhet:** i varje giltigt relationsvärde av R har inga två skilda tupler samma värden för alla attribut i K. **Minimalitet:** inget attribut kan tas bort ur K utan att den garanterade unikheten går förlorad.
 
-Minimaliteten är det villkor man glömmer (slide 25). Under regeln att EmployeeNo är unikt är {EmployeeNo} en kandidatnyckel, men {EmployeeNo, Name} är det inte: mängden är visserligen unik, men Name kan tas bort utan att något förloras. {Name} är ingen kandidatnyckel alls, för unikheten saknas. Fö6:s kortare formulering — "ett attribut eller en uppsättning attribut som kan användas för att unikt identifiera vilken tupel som helst" — säger samma sak; på tentan får du använda vilken av dem som helst, båda står i hjälpmedlen.
+Minimaliteten är det villkor man glömmer. Under regeln att EmployeeNo är unikt är {EmployeeNo} en kandidatnyckel, men {EmployeeNo, Name} är det inte: mängden är visserligen unik, men Name kan tas bort utan att något förloras. {Name} är ingen kandidatnyckel alls, för unikheten saknas. Den kortare formuleringen — "ett attribut eller en uppsättning attribut som kan användas för att unikt identifiera vilken tupel som helst" — säger samma sak; på tentan får du använda vilken av dem som helst, båda står i hjälpmedlen.
 
-Ibland behövs två attribut tillsammans (slide 27). I WORKS_ON(EmployeeNo, ProjectNo) upprepas E-104 och upprepas P-10, men paret är unikt och minimalt: CK1 = {EmployeeNo, ProjectNo}, en **sammansatt kandidatnyckel (composite candidate key)**. I skriftlig notation stryks alla attributen i den under.
+Ibland behövs två attribut tillsammans. I WORKS_ON(EmployeeNo, ProjectNo) upprepas E-104 och upprepas P-10, men paret är unikt och minimalt: CK1 = {EmployeeNo, ProjectNo}, en **sammansatt kandidatnyckel (composite candidate key)**. I skriftlig notation stryks alla attributen i den under.
 
-En relation kan ha **flera** kandidatnycklar (slide 28). Varje unikhetsregel ger en: EMPLOYEE(EmployeeNo, Name, WorkEmail) har CK1 = {EmployeeNo} och CK2 = {WorkEmail}. Name är inte garanterat unikt, och varje större mängd som innehåller EmployeeNo eller WorkEmail är inte minimal.
+En relation kan ha **flera** kandidatnycklar. Varje unikhetsregel ger en: EMPLOYEE(EmployeeNo, Name, WorkEmail) har CK1 = {EmployeeNo} och CK2 = {WorkEmail}. Name är inte garanterat unikt, och varje större mängd som innehåller EmployeeNo eller WorkEmail är inte minimal.
 
 ## Primärnyckel: en vald kandidatnyckel
 
-> **Primärnyckel (primary key, PK):** en utvald kandidatnyckel. Att välja den först listade skrivs PK = CK1. (Fö5 slide 29)
+> **Primärnyckel (primary key, PK):** en utvald kandidatnyckel. Att välja den först listade skrivs PK = CK1.
 
-Skillnaden mot kandidatnyckel är alltså **valet**. Att välja EmployeeNo som primärnyckel skapar ingen ny kandidatnyckel och tar inte bort någon: WorkEmail är fortfarande CK2 och måste fortfarande vara unik (slide 30). Kriterierna vid valet är att nyckeln bör vara stabil, minimal och semantiskt meningsfull.
+Skillnaden mot kandidatnyckel är alltså **valet**. Att välja EmployeeNo som primärnyckel skapar ingen ny kandidatnyckel och tar inte bort någon: WorkEmail är fortfarande CK2 och måste fortfarande vara unik. Kriterierna vid valet är att nyckeln bör vara stabil, minimal och semantiskt meningsfull.
 
 Det här är en klassisk tentafråga i formen "hur många kandidatnycklar har relationen R?" — 3d på HT25-tentorna — och svaret kräver att du kan läsa av funktionella beroenden, vilket kapitel 8 handlar om.
 
@@ -203,21 +203,21 @@ Notera "någon". Har relationen två kandidatnycklar räknas attribut ur båda s
 
 ## Främmande nyckel: en referens som måste träffa
 
-> **Främmande nyckel (foreign key, FK):** ett eller flera attribut i en relation vars värden måste matcha en kandidatnyckel — normalt primärnyckeln — i en annan (eller samma) relation. (Fö5 slide 31, 34)
+> **Främmande nyckel (foreign key, FK):** ett eller flera attribut i en relation vars värden måste matcha en kandidatnyckel — normalt primärnyckeln — i en annan (eller samma) relation.
 
-Regeln "varje projekt har en ledare som måste finnas i EMPLOYEE" ger PROJECT(ProjectNo, Title, LeaderEmployeeNo), där LeaderEmployeeNo lagrar E-104 och man hittar Mary genom att följa värdet (slide 31). Referensen lagrar en identifierare, inte en kopia av Marys tupel. Den refererade relationen kallas **parent**, **referenced** eller **master**.
+Regeln "varje projekt har en ledare som måste finnas i EMPLOYEE" ger PROJECT(ProjectNo, Title, LeaderEmployeeNo), där LeaderEmployeeNo lagrar E-104 och man hittar Mary genom att följa värdet. Referensen lagrar en identifierare, inte en kopia av Marys tupel. Den refererade relationen kallas **parent**, **referenced** eller **master**.
 
-Tre saker som decket lägger tid på:
+Tre saker som föreläsningen lägger tid på:
 
-- **Ett främmandenyckelvärde får förekomma flera gånger** (slide 32). Mary kan leda både Atlas och Nova, så E-104 upprepas i PROJECT medan det identifierar exakt en tupel i EMPLOYEE. En främmande nyckel kräver en matchande refererad nyckel; den kräver **inte** i sig unikhet i den refererande relationen. (Vill man ha unikhet, som i 1:1, måste den läggas till separat — kapitel 7.)
-- **Den refererade tupeln måste finnas** (slide 33). E-999 har rätt form, E-nnn, men ingen anställd har det numret, så tupeln bryter mot främmandenyckelvillkoret. Ett tillåtet domänvärde är inte automatiskt en giltig referens.
-- **Främmande nycklar tvingar inte fram deltagande** (slide 3 och 103). Att varje WORKS_ON-tupel pekar på ett existerande projekt hindrar inte att projekt P-30 saknar tupel i WORKS_ON, trots att Project deltar totalt i WorksOn. Minimideltagandet ligger utanför det främmande nycklar kan garantera — "FKs do not enforce minimum participation". I DDL kan \`NOT NULL\` på en främmande nyckel göra många-sidans deltagande obligatoriskt (kapitel 9), men ett-sidans eller M:N-sidans totala deltagande blir en verksamhetsregel utanför constraints.
+- **Ett främmandenyckelvärde får förekomma flera gånger**. Mary kan leda både Atlas och Nova, så E-104 upprepas i PROJECT medan det identifierar exakt en tupel i EMPLOYEE. En främmande nyckel kräver en matchande refererad nyckel; den kräver **inte** i sig unikhet i den refererande relationen. (Vill man ha unikhet, som i 1:1, måste den läggas till separat — kapitel 7.)
+- **Den refererade tupeln måste finnas**. E-999 har rätt form, E-nnn, men ingen anställd har det numret, så tupeln bryter mot främmandenyckelvillkoret. Ett tillåtet domänvärde är inte automatiskt en giltig referens.
+- **Främmande nycklar tvingar inte fram deltagande**. Att varje WORKS_ON-tupel pekar på ett existerande projekt hindrar inte att projekt P-30 saknar tupel i WORKS_ON, trots att Project deltar totalt i WorksOn. Minimideltagandet ligger utanför det främmande nycklar kan garantera — "FKs do not enforce minimum participation". I DDL kan \`NOT NULL\` på en främmande nyckel göra många-sidans deltagande obligatoriskt (kapitel 9), men ett-sidans eller M:N-sidans totala deltagande blir en verksamhetsregel utanför constraints.
 
 Främmande nycklar upprätthåller **referensintegritet**: databasen vägrar rader som pekar på något som inte finns, och vägrar radera det som fortfarande refereras. En främmande nyckel får vara **NULL** om deltagandet är frivilligt — en bil utan ägare har \`EmployeeID = NULL\`. Är deltagandet obligatoriskt sätts kolumnen till \`NOT NULL\`.
 
 ## Notationen: så skrivs nycklarna
 
-Fö5 skriver nycklarna explicit under varje relation (slide 34). Före REF står den refererande relationens attributlista, efter REF den refererade relationen och dess kandidatnyckel:
+Föreläsningen skriver nycklarna explicit under varje relation. Före REF står den refererande relationens attributlista, efter REF den refererade relationen och dess kandidatnyckel:
 
     EMPLOYEE(EmployeeNo, Name, WorkEmail)
       CK1 = {EmployeeNo}
@@ -597,17 +597,17 @@ Kursens konvention, sammanfattad: en konceptuell Information Engineering-variant
     lead: "Deckets sex regler i ordning med sina stegvisa nedbrytningar: vanliga och svaga entiteter, 1:1, 1:N, M:N och flervärdesattribut — kedjade svaga entiteter, sammansatta främmande nycklar och varför 1:1 kräver en kandidatnyckel.",
     sources: ["Föreläsning 5 (HT26, slide 38–122)", "Övningshäftets facit"],
     body: `
-Logisk design uttrycker samma domän som ER-diagrammet, i en annan representation: **relationsscheman, nycklar och constraints** — inte SQL-kod och inte fyllda tabeller (Fö5 slide 3, 39). Entiteten e1 med employeeNo E-104, name Mary och jobTitle Analyst blir tupeln ⟨E-104, Mary, Analyst⟩; entiteten och tupeln beskriver samma anställd (slide 41). Men logisk design specificerar schema och constraints för **alla tillåtna populationer**, inte för en viss tupel.
+Logisk design uttrycker samma domän som ER-diagrammet, i en annan representation: **relationsscheman, nycklar och constraints** — inte SQL-kod och inte fyllda tabeller. Entiteten e1 med employeeNo E-104, name Mary och jobTitle Analyst blir tupeln ⟨E-104, Mary, Analyst⟩; entiteten och tupeln beskriver samma anställd. Men logisk design specificerar schema och constraints för **alla tillåtna populationer**, inte för en viss tupel.
 
 På tentan är kapitlet indirekt: uppgift 2 går från ER-diagram rakt till DDL, och reglerna här är tankemodellen bakom varje \`CREATE TABLE\`. Uppgift 3 använder resultatet — relationer med understrukna primärnycklar.
 
 ## Notationen
 
-Fö5 skriver varje relation med sina nycklar: \`CK1 = {…}\`, \`PK = CK1\`, \`FK1 : (…) REF T(…)\` (kapitel 3). Övningshäftets facit stryker under: primärnyckel med hel linje, främmande nycklar med prickad linje, ett attribut som är båda får båda strecken. Så ser facit ut, och så skriver du i uppgift 3. Eftersom kompendiet är i text står primärnyckeln först i attributlistan här, sammansatta primärnycklar anges i en kommentar (\`-- PK:\`), och främmande nycklar skrivs ut med REF.
+Föreläsningen skriver varje relation med sina nycklar: \`CK1 = {…}\`, \`PK = CK1\`, \`FK1 : (…) REF T(…)\` (kapitel 3). Övningshäftets facit stryker under: primärnyckel med hel linje, främmande nycklar med prickad linje, ett attribut som är båda får båda strecken. Så ser facit ut, och så skriver du i uppgift 3. Eftersom kompendiet är i text står primärnyckeln först i attributlistan här, sammansatta primärnycklar anges i en kommentar (\`-- PK:\`), och främmande nycklar skrivs ut med REF.
 
 ## Sex regler i ordning
 
-Decket ger sex transformationsregler (slide 42) och säger hur de ska användas: **etablera först entitetsrelationerna och deras nycklar, tillämpa sedan reglerna på det som återstår.** Ordningen är en checklista — varje konstruktion och varje villkor ska bli avprickat — och alla modeller behöver inte alla sex.
+Föreläsningen ger sex transformationsregler och säger hur de ska användas: **etablera först entitetsrelationerna och deras nycklar, tillämpa sedan reglerna på det som återstår.** Ordningen är en checklista — varje konstruktion och varje villkor ska bli avprickat — och alla modeller behöver inte alla sex.
 
 1. Vanliga entiteter
 2. Svaga entiteter
@@ -618,27 +618,27 @@ Decket ger sex transformationsregler (slide 42) och säger hur de ska användas:
 
 ## Regel 1 — Vanlig entitet
 
-> För varje vanlig entitetstyp: skapa en relation med varje enkelt attribut. För ett sammansatt attribut tas de enkla delarna med, inte det sammansatta attributet självt. Lista varje identifierare som en kandidatnyckel och välj en av dem som primärnyckel. Är den valda identifieraren sammansatt bildar alla dess delar tillsammans primärnyckeln. (Slide 46)
+> För varje vanlig entitetstyp: skapa en relation med varje enkelt attribut. För ett sammansatt attribut tas de enkla delarna med, inte det sammansatta attributet självt. Lista varje identifierare som en kandidatnyckel och välj en av dem som primärnyckel. Är den valda identifieraren sammansatt bildar alla dess delar tillsammans primärnyckeln.
 
-Stegvis (slide 47): skapa en relation → ta med de enkla attributen → ta med delarna av sammansatta attribut → gör varje identifierare till kandidatnyckel → välj en som primärnyckel.
+Stegvis: skapa en relation → ta med de enkla attributen → ta med delarna av sammansatta attribut → gör varje identifierare till kandidatnyckel → välj en som primärnyckel.
 
     PROJECT(ProjectNo, Title)             -- CK1 = {ProjectNo}, PK = CK1
 
-Tre fall som decket visar var för sig. Sammansatt attribut: projectPeriod med startDate och endDate ger \`PROJECT(ProjectNo, Title, StartDate, EndDate)\` — delarna, inget extra ProjectPeriod-attribut (slide 49). Flera identifierare: har projektet både projectNo och projectCode blir båda kandidatnycklar, \`CK1 = {ProjectNo}\`, \`CK2 = {ProjectCode}\`, och att välja ProjectNo som primär tar **inte** bort unikhetskravet på ProjectCode (slide 50). Sammansatt identifierare: består projectNo av registrationYear och sequenceNo — sekvensnumren börjar om varje år — blir \`CK1 = {RegistrationYear, SequenceNo}\`, båda delarna, och det finns inget separat ProjectNo-attribut (slide 51–52).
+Tre fall som föreläsningen visar var för sig. Sammansatt attribut: projectPeriod med startDate och endDate ger \`PROJECT(ProjectNo, Title, StartDate, EndDate)\` — delarna, inget extra ProjectPeriod-attribut. Flera identifierare: har projektet både projectNo och projectCode blir båda kandidatnycklar, \`CK1 = {ProjectNo}\`, \`CK2 = {ProjectCode}\`, och att välja ProjectNo som primär tar **inte** bort unikhetskravet på ProjectCode. Sammansatt identifierare: består projectNo av registrationYear och sequenceNo — sekvensnumren börjar om varje år — blir \`CK1 = {RegistrationYear, SequenceNo}\`, båda delarna, och det finns inget separat ProjectNo-attribut.
 
 ## Regel 2 — Svag entitet
 
-> För varje svag entitetstyp W med ägare E: skapa en relation R med alla enkla attribut (och enkla delar av sammansatta) hos W. Ta dessutom med ägarrelationens primärnyckel som främmande nyckel. Ta med eventuella enkla attribut hos den identifierande relationstypen i R. Primärnyckeln är kombinationen av ägarens (ägarnas) primärnyckel och W:s partiella nyckel, om den har någon. Har en svag entitetstyp en ägare som själv är svag, mappas ägaren först. (Slide 56)
+> För varje svag entitetstyp W med ägare E: skapa en relation R med alla enkla attribut (och enkla delar av sammansatta) hos W. Ta dessutom med ägarrelationens primärnyckel som främmande nyckel. Ta med eventuella enkla attribut hos den identifierande relationstypen i R. Primärnyckeln är kombinationen av ägarens (ägarnas) primärnyckel och W:s partiella nyckel, om den har någon. Har en svag entitetstyp en ägare som själv är svag, mappas ägaren först.
 
-Stegvis (slide 57): mappa ägaren först → skapa relationen → enkla attribut och delar → ägarens primärnyckel som främmande nyckel → den identifierande relationens attribut → primärnyckel av ägarens nyckel plus den partiella nyckeln.
+Stegvis: mappa ägaren först → skapa relationen → enkla attribut och delar → ägarens primärnyckel som främmande nyckel → den identifierande relationens attribut → primärnyckel av ägarens nyckel plus den partiella nyckeln.
 
     PROJECT(ProjectNo)
     PROJECT_TASK(ProjectNo, TaskNo, TaskName)     -- PK: {ProjectNo, TaskNo}
       FK1 : (ProjectNo) REF PROJECT(ProjectNo)
 
-Ägarnyckeln har **två roller** (slide 60): som referens kopplar ProjectNo varje uppgift till sitt projekt, som del av primärnyckeln skiljer den (P-10, 1) från (P-20, 1). Den identifierande relationen Contains får **ingen egen relation** — referensen representerar den (slide 59). Har Contains ett eget attribut, som addedAt, hamnar det i PROJECT_TASK (slide 62). Är ägarens nyckel sammansatt tas **hela** nyckeln med som **en** främmande nyckel: \`FK1 : (RegistrationYear, SequenceNo) REF PROJECT(RegistrationYear, SequenceNo)\`, och primärnyckeln blir ägarparet plus TaskNo (slide 63).
+Ägarnyckeln har **två roller**: som referens kopplar ProjectNo varje uppgift till sitt projekt, som del av primärnyckeln skiljer den (P-10, 1) från (P-20, 1). Den identifierande relationen Contains får **ingen egen relation** — referensen representerar den. Har Contains ett eget attribut, som addedAt, hamnar det i PROJECT_TASK. Är ägarens nyckel sammansatt tas **hela** nyckeln med som **en** främmande nyckel: \`FK1 : (RegistrationYear, SequenceNo) REF PROJECT(RegistrationYear, SequenceNo)\`, och primärnyckeln blir ägarparet plus TaskNo.
 
-**Kedjade svaga entiteter** mappas ägare först, och varje led refererar sin **närmaste ägares kompletta nyckel** (slide 64–65). Har varje uppgift steg som är unika inom uppgiften:
+**Kedjade svaga entiteter** mappas ägare först, och varje led refererar sin **närmaste ägares kompletta nyckel**. Har varje uppgift steg som är unika inom uppgiften:
 
     TASK_STEP(ProjectNo, TaskNo, StepNo)          -- PK: {ProjectNo, TaskNo, StepNo}
       FK1 : (ProjectNo, TaskNo) REF PROJECT_TASK(ProjectNo, TaskNo)
@@ -647,38 +647,38 @@ TaskStep refererar PROJECT_TASK:s hela nyckel, inte TaskNo ensamt — steg 2 i u
 
 ## Regel 3 — Binär 1:1
 
-> För varje binär 1:1-relationstyp R med deltagande relationer S och T: ta normalt med den ena relationens primärnyckel som främmande nyckel i den andra. Föredra relationen för entitetstypen med **totalt deltagande** som värd för den främmande nyckeln. Gör den kopierade främmande nyckeln till **kandidatnyckel**, så att varje refererad tupel förekommer högst en gång. Ta med R:s enkla attribut i värdrelationen. Deltar båda totalt kan S, T och R i stället slås samman till en relation. Ett tredje, sällan föredraget alternativ är en separat relation med båda primärnycklarna som främmande nycklar och R:s attribut; där är varje deltagarnyckel en kandidatnyckel. (Slide 69)
+> För varje binär 1:1-relationstyp R med deltagande relationer S och T: ta normalt med den ena relationens primärnyckel som främmande nyckel i den andra. Föredra relationen för entitetstypen med **totalt deltagande** som värd för den främmande nyckeln. Gör den kopierade främmande nyckeln till **kandidatnyckel**, så att varje refererad tupel förekommer högst en gång. Ta med R:s enkla attribut i värdrelationen. Deltar båda totalt kan S, T och R i stället slås samman till en relation. Ett tredje, sällan föredraget alternativ är en separat relation med båda primärnycklarna som främmande nycklar och R:s attribut; där är varje deltagarnyckel en kandidatnyckel.
 
-Stegvis (slide 70): mappa entitetstyperna → välj värdrelation, helst den totala sidan → ta med den andras primärnyckel som främmande nyckel → gör den till kandidatnyckel för att bevara 1:1-maximum → kräv referens där deltagandet är totalt → ta med relationstypens attribut.
+Stegvis: mappa entitetstyperna → välj värdrelation, helst den totala sidan → ta med den andras primärnyckel som främmande nyckel → gör den till kandidatnyckel för att bevara 1:1-maximum → kräv referens där deltagandet är totalt → ta med relationstypens attribut.
 
-Varje projekt har exakt en ansvarig; en anställd ansvarar för högst ett projekt och behöver inte ansvara för något (slide 71):
+Varje projekt har exakt en ansvarig; en anställd ansvarar för högst ett projekt och behöver inte ansvara för något:
 
     EMPLOYEE(EmployeeNo)
     PROJECT(ProjectNo, ResponsibleEmployeeNo)
       CK1 = {ProjectNo}, CK2 = {ResponsibleEmployeeNo}, PK = CK1
       FK1 : (ResponsibleEmployeeNo) REF EMPLOYEE(EmployeeNo)
 
-PROJECT är värden eftersom varje projekt **måste** ha en referens medan somliga anställda saknar projekt (slide 72). CK2 är det som bevarar 1:1: två projekt som båda refererar E-104 har giltiga främmande nycklar men bryter mot CK2:s unikhet — **en främmande nyckel ensam bevarar inte 1:1** (slide 74). Omvänt gör unikhet ensam inte referensen giltig: E-999 finns inte (slide 75). Relationsattributet responsibilitySince hamnar i PROJECT (slide 76).
+PROJECT är värden eftersom varje projekt **måste** ha en referens medan somliga anställda saknar projekt. CK2 är det som bevarar 1:1: två projekt som båda refererar E-104 har giltiga främmande nycklar men bryter mot CK2:s unikhet — **en främmande nyckel ensam bevarar inte 1:1**. Omvänt gör unikhet ensam inte referensen giltig: E-999 finns inte. Relationsattributet responsibilitySince hamnar i PROJECT.
 
-**Båda totala** (slide 77–80): varje projekt har exakt en budget och varje budget tillhör exakt ett projekt. Främmandenyckelmetoden fungerar fortfarande — valfri sida kan vara värd, och det totala deltagandet måste då upprätthållas på **båda** sidor: ett nytt projekt kräver en ny budget, och en befintlig budget kan inte återanvändas. Alternativet är **sammanslagning**: \`PROJECT(ProjectNo, Title, BudgetNo, Amount)\` med \`CK1 = {ProjectNo}\`, \`CK2 = {BudgetNo}\`, en tupel per projekt–budget-par, ingen separat PROJECT_BUDGET eller HAS_BUDGET (slide 78). Sammanslagning är valfri; båda identifierarna förblir egna kandidatnycklar.
+**Båda totala**: varje projekt har exakt en budget och varje budget tillhör exakt ett projekt. Främmandenyckelmetoden fungerar fortfarande — valfri sida kan vara värd, och det totala deltagandet måste då upprätthållas på **båda** sidor: ett nytt projekt kräver en ny budget, och en befintlig budget kan inte återanvändas. Alternativet är **sammanslagning**: \`PROJECT(ProjectNo, Title, BudgetNo, Amount)\` med \`CK1 = {ProjectNo}\`, \`CK2 = {BudgetNo}\`, en tupel per projekt–budget-par, ingen separat PROJECT_BUDGET eller HAS_BUDGET. Sammanslagning är valfri; båda identifierarna förblir egna kandidatnycklar.
 
 ## Regel 4 — Binär 1:N
 
-> För varje binär 1:N-relationstyp R: identifiera relationen S för entitetstypen på N-sidan. Ta med, som främmande nyckel i S, primärnyckeln hos relationen T för 1-sidan. Ta med R:s enkla attribut i S. Det fungerar eftersom varje entitet på N-sidan är relaterad till högst en entitet på 1-sidan; ingen separat relation skapas för R. (Slide 84)
+> För varje binär 1:N-relationstyp R: identifiera relationen S för entitetstypen på N-sidan. Ta med, som främmande nyckel i S, primärnyckeln hos relationen T för 1-sidan. Ta med R:s enkla attribut i S. Det fungerar eftersom varje entitet på N-sidan är relaterad till högst en entitet på 1-sidan; ingen separat relation skapas för R.
 
-Stegvis (slide 85): mappa entitetstyperna → hitta N-sidans relation → ta med 1-sidans primärnyckel som främmande nyckel → tillåt att värdet upprepas i flera tupler → ta med relationstypens attribut i N-sidans relation.
+Stegvis: mappa entitetstyperna → hitta N-sidans relation → ta med 1-sidans primärnyckel som främmande nyckel → tillåt att värdet upprepas i flera tupler → ta med relationstypens attribut i N-sidans relation.
 
     EMPLOYEE(EmployeeNo, Name)
     PROJECT(ProjectNo, Title, LeaderEmployeeNo, LeadershipSince)
       FK1 : (LeaderEmployeeNo) REF EMPLOYEE(EmployeeNo)
 
-Minnesregeln: **främmande nyckeln hamnar på många-sidan.** Att P-10 och P-20 båda refererar E-104 är giltig 1:N; LeaderEmployeeNo är ingen kandidatnyckel, och det är hela skillnaden mot regel 3 (slide 88, 93). Referenserna måste fortfarande träffa — E-999 är ett fel (slide 89) — men ett nytt projekt kan återanvända en befintlig ledare utan att någon ny anställd behövs (slide 90). Relationsattributet leadershipSince beskriver paret anställd–projekt, inte den anställda, och hamnar i PROJECT (slide 91–92). Regeln tillämpas likadant på en redan mappad svag relation, utan att dess ägarhärledda nyckel ändras (slide 93).
+Minnesregeln: **främmande nyckeln hamnar på många-sidan.** Att P-10 och P-20 båda refererar E-104 är giltig 1:N; LeaderEmployeeNo är ingen kandidatnyckel, och det är hela skillnaden mot regel 3. Referenserna måste fortfarande träffa — E-999 är ett fel — men ett nytt projekt kan återanvända en befintlig ledare utan att någon ny anställd behövs. Relationsattributet leadershipSince beskriver paret anställd–projekt, inte den anställda, och hamnar i PROJECT. Regeln tillämpas likadant på en redan mappad svag relation, utan att dess ägarhärledda nyckel ändras.
 
 ## Regel 5 — Binär M:N
 
-> För varje binär M:N-relationstyp R: skapa en ny relation S som representerar R. Ta med, som främmande nycklar i S, primärnycklarna hos de deltagande entitetstypernas relationer; deras kombination bildar S:s primärnyckel. Ta med R:s enkla attribut i S. En M:N-relation kan inte representeras av en enda främmande nyckel i någon av deltagarrelationerna. (Slide 96)
+> För varje binär M:N-relationstyp R: skapa en ny relation S som representerar R. Ta med, som främmande nycklar i S, primärnycklarna hos de deltagande entitetstypernas relationer; deras kombination bildar S:s primärnyckel. Ta med R:s enkla attribut i S. En M:N-relation kan inte representeras av en enda främmande nyckel i någon av deltagarrelationerna.
 
-Stegvis (slide 97): mappa entitetstyperna → skapa en ny relation → varje deltagares primärnyckel som främmande nyckel → kombinationen som kandidatnyckel, vald som primärnyckel → relationstypens attribut → **deltagandekraven hanteras separat**.
+Stegvis: mappa entitetstyperna → skapa en ny relation → varje deltagares primärnyckel som främmande nyckel → kombinationen som kandidatnyckel, vald som primärnyckel → relationstypens attribut → **deltagandekraven hanteras separat**.
 
     EMPLOYEE(EmployeeNo, Name)
     PROJECT(ProjectNo, Title)
@@ -687,29 +687,29 @@ Stegvis (slide 97): mappa entitetstyperna → skapa en ny relation → varje del
       FK1 : (EmployeeNo) REF EMPLOYEE(EmployeeNo)
       FK2 : (ProjectNo) REF PROJECT(ProjectNo)
 
-En tupel är en tilldelning: E-311 arbetar på två projekt, P-10 har två anställda, och varken EmployeeNo eller ProjectNo ensamt identifierar en tilldelning — paret gör det, och varje par förekommer en gång (slide 100). Relationsattributen **ingår inte i primärnyckeln**: (E-311, P-10) två gånger med olika allokering är en nyckelöverträdelse, inte en andra tilldelning (slide 107). Deltagandet får man inte gratis: alla nycklar och referenser kan hålla medan P-30 saknar tupel i WORKS_ON, trots att Project deltar totalt (slide 103).
+En tupel är en tilldelning: E-311 arbetar på två projekt, P-10 har två anställda, och varken EmployeeNo eller ProjectNo ensamt identifierar en tilldelning — paret gör det, och varje par förekommer en gång. Relationsattributen **ingår inte i primärnyckeln**: (E-311, P-10) två gånger med olika allokering är en nyckelöverträdelse, inte en andra tilldelning. Deltagandet får man inte gratis: alla nycklar och referenser kan hålla medan P-30 saknar tupel i WORKS_ON, trots att Project deltar totalt.
 
-Har en deltagare **sammansatt nyckel** kopieras hela nyckeln som **en** sammansatt främmande nyckel: \`WORKS_ON(EmployeeNo, RegistrationYear, SequenceNo)\` med \`FK2 : (RegistrationYear, SequenceNo) REF PROJECT(RegistrationYear, SequenceNo)\` — en referens, inte två oberoende, för (2025, 1) och (2026, 1) är olika projekt och SequenceNo ensamt är ingen projektnyckel (slide 108–110).
+Har en deltagare **sammansatt nyckel** kopieras hela nyckeln som **en** sammansatt främmande nyckel: \`WORKS_ON(EmployeeNo, RegistrationYear, SequenceNo)\` med \`FK2 : (RegistrationYear, SequenceNo) REF PROJECT(RegistrationYear, SequenceNo)\` — en referens, inte två oberoende, för (2025, 1) och (2026, 1) är olika projekt och SequenceNo ensamt är ingen projektnyckel.
 
 Det är alltså M:N-regeln som föder alla kopplingstabeller. I sjukhusdatabasen är \`Examines\`, \`Suffers\` och \`HasSuffered\` exakt sådana.
 
 ## Regel 6 — Flervärdesattribut
 
-> För varje flervärdesattribut A hos en entitetstyp eller relationstyp: skapa en relation R. Ta med A (eller varje enkel del om A är sammansatt) som attribut i R, och som främmande nyckel primärnyckeln hos ägarens relation. R:s primärnyckel kombinerar ägarens primärnyckel med A. (Slide 114)
+> För varje flervärdesattribut A hos en entitetstyp eller relationstyp: skapa en relation R. Ta med A (eller varje enkel del om A är sammansatt) som attribut i R, och som främmande nyckel primärnyckeln hos ägarens relation. R:s primärnyckel kombinerar ägarens primärnyckel med A.
 
-Stegvis (slide 115): hitta ägarens relation → skapa en ny relation → ägarens **hela** primärnyckel som främmande nyckel → det enkla flervärdesattributet → kombinationen som primärnyckel.
+Stegvis: hitta ägarens relation → skapa en ny relation → ägarens **hela** primärnyckel som främmande nyckel → det enkla flervärdesattributet → kombinationen som primärnyckel.
 
     PROJECT(ProjectNo, Title)
     PROJECT_TECHNOLOGY(ProjectNo, Technology)     -- PK: {ProjectNo, Technology}
       FK1 : (ProjectNo) REF PROJECT(ProjectNo)
 
-Hela samlingen i en cell — \`{Java, SQL}\` — är en domänöverträdelse, för domänen är *ett* teknologinamn (slide 117). Technology finns inte också som kolumn i PROJECT. En tupel per projekt–teknologi-par: P-10 har två, SQL används av två projekt, och P-20 står kvar i PROJECT utan någon tupel alls i värderelationen — en ägare utan värden har ingen tupel där (slide 119, 122). Ännu en teknologi är en ny tupel, aldrig en ny kolumn (slide 121).
+Hela samlingen i en cell — \`{Java, SQL}\` — är en domänöverträdelse, för domänen är *ett* teknologinamn. Technology finns inte också som kolumn i PROJECT. En tupel per projekt–teknologi-par: P-10 har två, SQL används av två projekt, och P-20 står kvar i PROJECT utan någon tupel alls i värderelationen — en ägare utan värden har ingen tupel där. Ännu en teknologi är en ny tupel, aldrig en ny kolumn.
 
 Konsekvensen är värd att notera: eftersom värdet bara är ett värde **kan två ägare dela det** — två projekt använder SQL, två anställda kan ha samma adress. Ville du hindra det skulle attributet modellerats som en egen entitet i stället.
 
 ## Unära relationer
 
-Ingen egen regel i decket — **tillämpa den binära regeln av samma form**, med skillnaden att båda sidorna är samma entitet. Övningshäftets facit gör så. Unär 1:N ger en främmande nyckel i samma relation, med rollnamn som attributnamn: \`EMPLOYEE(EmployeeNo, Name, ManagerNo)\` där ManagerNo refererar EmployeeNo i samma relation och den högsta chefen har NULL. Unär M:N ger en ny relation med två attribut som båda refererar samma entitetsrelation.
+Ingen egen regel bland de sex — **tillämpa den binära regeln av samma form**, med skillnaden att båda sidorna är samma entitet. Övningshäftets facit gör så. Unär 1:N ger en främmande nyckel i samma relation, med rollnamn som attributnamn: \`EMPLOYEE(EmployeeNo, Name, ManagerNo)\` där ManagerNo refererar EmployeeNo i samma relation och den högsta chefen har NULL. Unär M:N ger en ny relation med två attribut som båda refererar samma entitetsrelation.
 
 ## Arbetsgång vid en tentauppgift
 
