@@ -75,7 +75,29 @@ BY/HAVING eller mängdskillnad + skalär subquery, en fråga, indenterad.
 Inte förekommit: application development (listas dock i nya Fö1 slide 16),
 logisk modell som eget svar, relationsalgebra, Crow's Foot som produktion.
 Läs kap 1 har avsnittet "Så ser tentan ut". Stor uppdatering pågår enligt
-prompten CC-prompt-stor-uppdatering-tentan.md (gitignorerad): punkt 1 klar.
+prompten CC-prompt-stor-uppdatering-tentan.md (gitignorerad): punkt 1–2 klara.
+
+**Nya Fö5 (HT26, 124 slides, "Logical Database Design") — vad som är inne
+(2026-09-07):** kapitel 2 (slide 3–21: schema/aktuellt värde, domän =
+tillåtna värden, grad/kardinalitet, ordning, dubbletter, bag/mängd/DISTINCT),
+kapitel 3 (slide 22–37: kandidatnyckel = unikhet + minimalitet, unikhet som
+verksamhetsregel, PK = vald CK, FK som matchande identifierare, "FKs do not
+enforce minimum participation" slide 3/103, notationen CK1={…}/PK=CK1/FK1:(…)
+REF T(…) jämte häftets understrykning), kapitel 7 (slide 38–122: sex regler
+med stegvisa nedbrytningar, FK i 1:1 som kandidatnyckel, totalt deltagande
+väljer FK-värd, sammanslagning, kedjade svaga entiteter, sammansatt FK som
+en referens, attribut på identifierande relation i den svaga relationen;
+ternära relationer borta ur kapitel 7, unära kvar som "samma regel" per
+häftets facit). Surrogatnycklar: Fö5 nämner dem inte, nya Fö1 lägger dem i
+logisk design, häftet/kap 9 i fysisk; kapitlet säger "kursen har placerat
+dem olika, på tentan kommer de i uppgift 2" — noteringen står kvar tills
+Björn svarat. Två spänningar mot kap 8–9 att känna till, inte ändrade:
+Fö5 slide 3 sammanfattar normaliseringssteget som "every non-trivial
+determinant is a key; no decomposition needed" (en BCNF-liknande
+formulering; kursen använder 2NF/3NF-definitionerna, BCNF finns inte);
+Fö5:s DDL-exempel (slide 3) har naturliga nycklar som PRIMARY KEY och
+namngivna constraints, medan tentan kräver surrogatnycklar och inte kräver
+namn — kapitel 9 följer tentan.
 
 **`reviewed: false` syns inte i UI (2026-09-06):** flaggan finns kvar i
 datan som intern markering av vilka frågor som inte granskats mot decken
