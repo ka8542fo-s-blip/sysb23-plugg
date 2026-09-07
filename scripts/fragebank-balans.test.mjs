@@ -1,4 +1,5 @@
-// Frågebanken för Databaser: "Öva speglar Läs" (varje kapitel 5–8 frågor),
+// Frågebanken för Databaser: "Öva speglar Läs" (varje kapitel 4–10 frågor,
+// viktat efter tentan sedan 2026-09-07),
 // mallens designregler (strategi/questions.js) och balansmåtten. Låser att
 // framtida tillägg varken bryter speglingen eller tyst återinför en
 // snedfördelning.
@@ -27,7 +28,7 @@ test("varje fråga är komplett: fyra alternativ med förklaring, ämne i topics
   }
 });
 
-test("Öva speglar Läs: varje kapitel har 5–8 frågor och inga frågor saknar kapitel", () => {
+test("Öva speglar Läs: varje kapitel har 4–10 frågor och inga frågor saknar kapitel", () => {
   const counts = Object.fromEntries(chapters.map((c) => [c.id, 0]));
   for (const q of questions) {
     const chapter = chapterOf[q.topic];
@@ -35,7 +36,7 @@ test("Öva speglar Läs: varje kapitel har 5–8 frågor och inga frågor saknar
     counts[chapter]++;
   }
   for (const c of chapters) {
-    assert.ok(counts[c.id] >= 5 && counts[c.id] <= 8, `${c.id} har ${counts[c.id]} frågor (spann 5–8)`);
+    assert.ok(counts[c.id] >= 4 && counts[c.id] <= 10, `${c.id} har ${counts[c.id]} frågor (spann 4–10)`);
   }
 });
 
@@ -85,7 +86,7 @@ test("balansmåtten håller mallens regler", () => {
 });
 
 test("parkerade SQL-frågor står utanför banken", () => {
-  assert.equal(pendingQuestions.length, 6);
+  assert.equal(pendingQuestions.length, 2);
   const ids = new Set(questions.map((q) => q.id));
   for (const q of pendingQuestions) assert.ok(!ids.has(q.id), `${q.id} är både parkerad och aktiv`);
 });

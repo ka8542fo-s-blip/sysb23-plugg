@@ -622,4 +622,45 @@ export const questions = [
       { text: "BID INTEGER IDENTITY(1,1) som PRIMARY KEY, plus UNIQUE (B1, B2) som ett enda constraint", explain: "Facit: PK_B_BID PRIMARY KEY (BID) och UQ_B_B1_B2 UNIQUE (B1, B2) — den sammansatta naturliga nyckeln bevaras med ett UNIQUE över båda, och B1 och B2 är dessutom NOT NULL." }
     ],
     correct: 3, source: "Kompendiet kap. 9 · övningshäftet uppgift 18", reviewed: true },
+
+  // Kapitel 10 — ur de parkerade SQL-frågorna (Fö1-leveransen), omskrivna till mallens format.
+  { id: "db1-11", topic: "sql", difficulty: 1,
+    question: "Vad gör nyckelordet AS i en select list?",
+    options: [
+      { text: "Det byter namn på kolumnerna i den lagrade tabellen permanent", explain: "AS rör bara resultatet — kolumnnamnen i tabellen ändras med ALTER TABLE, inte med en SELECT." },
+      { text: "Det namnger de härledda resultatkolumnerna i just den här frågan", explain: "AS namnger resultatkolumner, och ett uttryck utan AS får inget namn alls: '(No column name)'. Det ändrar inget i den lagrade tabellen." },
+      { text: "Det skapar en vy som andra frågor sedan kan referera till", explain: "En vy skapas med CREATE VIEW. AS i en select list lever bara i den frågan." },
+      { text: "Det konverterar kolumnens datatyp till den typ som anges efter aliaset", explain: "Konvertering görs med CAST. AS ger ett namn, ingen typ." },
+    ],
+    correct: 1, source: "Kompendiet kap. 10 · föreläsning 1–2", reviewed: false },
+
+  { id: "db1-13", topic: "sql", difficulty: 2,
+    question: "Frågan SELECT PatientName, UnitAddress FROM dbo.Patient ger felet \"Invalid column name 'UnitAddress'\". Varför?",
+    options: [
+      { text: "UnitAddress är felstavat i förhållande till kolumnnamnet i dbo.Unit", explain: "Namnet stämmer. Felet är att tabellen som har kolumnen inte är med i frågan." },
+      { text: "Endast dbo.Patient är angiven efter FROM, så dbo.Unit ligger utanför frågans scope", explain: "PatientName finns i Patient och UnitAddress i Unit. En fråga kan bara se kolumner i de tabeller som står efter FROM — Unit måste joinas in." },
+      { text: "UnitAddress kräver ett tabellprefix eftersom kolumnnamnet finns i två tabeller", explain: "Prefix behövs när ett namn är tvetydigt mellan tabeller i FROM. Här finns kolumnen inte alls i frågans tabeller." },
+      { text: "Kolumnen är skyddad och kräver att schemat dbo anges explicit i frågan", explain: "Schemat är redan angivet. Ingen kolumn är 'skyddad' på det sättet." },
+    ],
+    correct: 1, source: "Kompendiet kap. 10 · föreläsning 1–2", reviewed: false },
+
+  { id: "db1-15", topic: "sql", difficulty: 1,
+    question: "Vad räknar COUNT(*)?",
+    options: [
+      { text: "Antalet unika värden i tabellens primärnyckelkolumn, dubbletter borträknade", explain: "COUNT(*) vet inget om nycklar och räknar inte unika värden — det gör COUNT(DISTINCT kolumn)." },
+      { text: "Antalet rader i indata, oavsett vilka attribut som finns eller är NULL", explain: "COUNT(*) räknar rader, i hela resultatet eller per grupp med GROUP BY. COUNT(kolumn) räknar i stället raderna där kolumnen inte är NULL." },
+      { text: "Antalet kolumner som räknas upp i frågans select list, inklusive uttryck", explain: "Asterisken betyder inte 'alla kolumner' här — COUNT räknar rader, inte kolumner." },
+      { text: "Antalet rader där samtliga attribut har ett värde skilt från NULL", explain: "NULL-värden spelar ingen roll för COUNT(*); de spelar roll för COUNT(kolumn)." },
+    ],
+    correct: 1, source: "Kompendiet kap. 10 · föreläsning 2–3", reviewed: false },
+
+  { id: "db1-16", topic: "sql", difficulty: 2,
+    question: "Varför är det fel att slå upp E2:s lön och sedan skriva WHERE EmpSalary = 55000 i en andra fråga?",
+    options: [
+      { text: "Därför att literalen måste anges som N'55000' för att jämförelsen ska bli giltig i T-SQL", explain: "N-prefixet gäller unicode-strängar. En numerisk jämförelse med 55000 är giltig — problemet är ett annat." },
+      { text: "Därför att jämförelser mot decimaltal alltid kräver en explicit CAST i T-SQL-dialekten", explain: "Ingen CAST behövs för att jämföra ett belopp med ett tal." },
+      { text: "Därför att 55000 är kopierat ur dagens data och blir tyst inaktuellt när lönen ändras", explain: "Frågan svarar på 'vem tjänar 55000?' i stället för 'vem tjänar lika mycket som E2?'. Delfrågan 'vad tjänar E2?' ska stå som en skalär underfråga där värdet behövs — en fråga per delfråga." },
+      { text: "Därför att två frågor alltid är långsammare än en enda fråga med en underfråga", explain: "Prestanda är inte skälet; en underfråga kan vara både snabbare och långsammare. Skälet är att svaret ska följa datan." },
+    ],
+    correct: 2, source: "Kompendiet kap. 10 · föreläsning 2–3", reviewed: false },
 ];

@@ -75,7 +75,20 @@ BY/HAVING eller mängdskillnad + skalär subquery, en fråga, indenterad.
 Inte förekommit: application development (listas dock i nya Fö1 slide 16),
 logisk modell som eget svar, relationsalgebra, Crow's Foot som produktion.
 Läs kap 1 har avsnittet "Så ser tentan ut". Stor uppdatering pågår enligt
-prompten CC-prompt-stor-uppdatering-tentan.md (gitignorerad): punkt 1–5 klara.
+prompten CC-prompt-stor-uppdatering-tentan.md (gitignorerad): punkt 1–6 klara.
+Punkt 6 (2026-09-07): nytt kapitel 10 `kap9` "SQL: att resonera fram en
+fråga", byggt baklänges från uppgift 4 — schema med kopplingstabell, join
+över den, GROUP BY-regeln, HAVING mot WHERE, "X men inte Y" (NOT IN / NOT
+EXISTS / EXCEPT och NULL-fällan), skalär underfråga för jämförelsevärde,
+två genomgångar på eget schema Lantagare/Bok/HarLanat, checklista, och
+T-SQL-mot-SQLite-noter (AVG över heltal, TOP, +). Allt annat ur Fö2–3 hör
+till verkstaden. Ämne `sql` i topics.js, CHAPTER_TOPICS/EXAM_AREAS kap9,
+fem ordlistetermer. Fyra parkerade SQL-frågor (db1-11, 13, 15, 16) in i
+banken i mallens format med reviewed: false; db1-12 och db1-14 står kvar
+parkerade (Fö1-mekanik utanför kapitlet). Balanstestets spann är 4–10.
+Björns regler som kapitlet bär: en fråga per delfråga, underfråga bara
+där JOIN inte räcker, alltid AS, IS NULL inte = NULL, <> i self-join,
+ORDER BY inte med kolumnindex, EXISTS svårast.
 Punkt 5 (2026-09-07): kapitel 9 har avsnittet "Tentans instruktioner för
 uppgift 2" — de fem instruktionerna som rättningskriterier (INTEGER,
 utskrivna reserverade ord, constraintnamn valfria, IDENTITY(1,1) med seed

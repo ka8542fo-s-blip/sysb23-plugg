@@ -70,7 +70,7 @@ De två HT25-tentorna (omtentan 24 oktober 2025 och uppsamlingen 25 maj 2026) ha
 
 **Uppgift 3, 20 p — normalformer.** 3a–3e: fem sant/falskt-påståenden à 2 p om en given relation R med beroenden och tre nedbrytningar — är R i 2NF, är ett schema beroendebevarande, har det lossless join, har R fler än en kandidatnyckel, är alla relationer i schemat i 3NF, är ett visst attribut primärattribut. Fel svar ger −1, blankt 0. 3f–3g à 5 p: ange högsta normalform och motivera genom att hänvisa till definitioner och specifika attribut — bara definitioner ur kurslitteraturen, föreläsningarna eller bilagan; motivering krävs inte för 3NF. Är relationen inte i 3NF ska den normaliseras till 3NF med lossless join och dependency preservation, primärnycklar understrukna, främmande nycklar behöver inte markeras. **Övernormalisering ger poängavdrag.** Kapitel 8.
 
-**Uppgift 4, 30 p — en SQL-fråga.** Tre tabeller — Student, Course och kopplingstabellen HasStudied med betyg — och en uppgift i löpande text som ska bli **en enda fråga** med ett resultat, indenterad. Båda tentorna kräver join över kopplingstabellen plus aggregat med GROUP BY och HAVING, en mängdskillnad ("läses av S1 men inte av S2") eller ett jämförelsevärde hämtat med subquery ("äldre än S4"). En fråga är 30 procent av tentan. Verkstaden under SQL.
+**Uppgift 4, 30 p — en SQL-fråga.** Tre tabeller — Student, Course och kopplingstabellen HasStudied med betyg — och en uppgift i löpande text som ska bli **en enda fråga** med ett resultat, indenterad. Båda tentorna kräver join över kopplingstabellen plus aggregat med GROUP BY och HAVING, en mängdskillnad ("läses av S1 men inte av S2") eller ett jämförelsevärde hämtat med subquery ("äldre än S4"). En fråga är 30 procent av tentan. Kapitel 10 och verkstaden under SQL.
 
 **Poängreglernas konsekvens — två gränser.** Uppgift 1: härled varje påstående ur notationen först. För det du inte kan härleda gäller brytpunkten 3/8: markera påståendet om du är mer än ungefär 40 procent säker på att det är sant (väntevärdet 0,4 · 5 − 0,6 · 3 är precis noll), annars lämna det omarkerat — ett omarkerat sant påstående kostar inget. Uppgift 3a–3e: svara alltid, lämna aldrig blankt. Med två alternativ och +2/−1 är även en ren gissning värd +0,5 poäng i snitt, och med beroendena framför dig behöver du sällan gissa. Uppgift 3f–3g: dela inte upp mer än definitionerna kräver — 3NF är målet, inte så många relationer som möjligt.
 
@@ -1250,6 +1250,211 @@ Läs koden mot diagrammet en gång till. Fyra entitetstyper, fyra tabeller med I
 
 Det som brukar kosta: glömd \`NOT NULL\` på en naturlig nyckel, \`NOT NULL\` som saknas eller står fel mot deltagandelinjerna, en kopplingstabell som fått en egen IDENTITY, en svag entitet utan \`UNIQUE\` över paret, och en \`REFERENCES\` som pekar på den naturliga nyckeln i stället för surrogatnyckeln.
 `
+  },
+
+  {
+    id: "kap9",
+    number: 10,
+    title: "SQL: att resonera fram en fråga",
+    readingMinutes: 18,
+    lead: "Tentans största uppgift är en enda fråga. Vägen från den svenska meningen till frågan: läsa schemat, joina över kopplingstabellen, aggregera per grupp, filtrera rad eller grupp, uttrycka 'men inte' och hämta jämförelsevärden med underfrågor.",
+    sources: ["Föreläsning 2–3", "Extentorna HT25, uppgift 4", "SQL-verkstaden"],
+    body: `
+Uppgift 4 är en enda SQL-fråga och 30 poäng — mer än något annat på tentan. Den ger tre tabeller, två entitetstabeller och en kopplingstabell med ett mätvärde, och en mening på svenska som ska bli **en fråga med ett resultat**. Det här kapitlet är inte en SQL-referens; verkstaden under SQL är det. Kapitlet handlar om vägen från meningen till frågan, och tar bara med det ur föreläsningarna som behövs för att gå den.
+
+De två tentorna hittills krävde samma fyra byggstenar: en **join över kopplingstabellen** för att få ihop namn och mätvärden, ett **aggregat med GROUP BY** för snitt, högsta eller antal per grupp, ett villkor på gruppen med **HAVING** eller en **mängdskillnad** ("läses av X men inte av Y"), och ett **jämförelsevärde hämtat med en underfråga** ("äldre än en viss student"). Kan du de fyra och kan du sätta ihop dem, kan du uppgiften.
+
+## Läsa schemat: vad en rad betyder
+
+Tentans tabeller har ingen surrogatnyckel. Kopplingstabellen bär de naturliga nycklarna direkt, så joinen går på dem. Kapitlets eget schema har samma form:
+
+    Lantagare(LantagarNo, Namn, Alder, Ort)
+    Bok(Isbn, Titel, Sidor)
+    HarLanat(LantagarNo, Isbn, Betyg)
+
+Läs varje tabell som en mening, som i kapitel 2. En rad i HarLanat säger: låntagaren med nummer LantagarNo har lånat boken med Isbn och satt betyget Betyg. Kopplingstabellen är M:N-relationen ur kapitel 7, och dess primärnyckel är paret — **en rad per låntagare och bok**. Det är det du aggregerar över: snittbetyg per bok är ett snitt över HarLanat-raderna med samma Isbn, antal lånade böcker per låntagare är antalet HarLanat-rader med samma LantagarNo.
+
+Frågan att ställa innan du skriver något: **vilken tabell har det uppgiften frågar efter?** Namnet på boken finns i Bok, betyget i HarLanat, låntagarens ålder i Lantagare. Det som står i olika tabeller måste joinas ihop, och det som står i kopplingstabellen är det som räknas.
+
+## Join över kopplingstabellen
+
+En INNER JOIN är en kartesisk produkt följd av en selektion: alla kombinationer av rader, sedan bara de par där joinvillkoret är sant. Villkoret är nästan alltid primärnyckel mot främmande nyckel. Tre tabeller joinas i två steg, och kopplingstabellen står i mitten:
+
+    SELECT
+        b.Isbn,
+        b.Titel,
+        hl.Betyg
+    FROM
+        Bok AS b
+        INNER JOIN HarLanat AS hl ON hl.Isbn = b.Isbn
+        INNER JOIN Lantagare AS l ON l.LantagarNo = hl.LantagarNo;
+
+Resultatet har **en rad per HarLanat-rad**, med bokens och låntagarens kolumner tillagda. Det är viktigt att se: joinen skapar inte fler rader än kopplingstabellen har, och den tar bort böcker som ingen lånat. Behöver du bara två av tabellerna, joina bara dem — uppgiften "kurskod, namn och snitt" behöver Course och HasStudied, inte Student, om inte villkoret handlar om studenterna.
+
+Aliasen \`b\`, \`hl\`, \`l\` är inte kosmetika. Med två tabeller som båda har LantagarNo måste varje kolumn få ett prefix, annars vägrar SQL Server med *ambiguous column name*. Skriv alias med \`AS\` och använd dem konsekvent.
+
+## Aggregat med GROUP BY: vad som får stå i SELECT
+
+Ett aggregat — COUNT, SUM, AVG, MIN, MAX — räknar ihop en mängd rader till ett värde. Utan GROUP BY är hela resultatet en grupp och frågan ger en rad. Med GROUP BY blir varje distinkt värde i grupperingskolumnerna en grupp, och aggregatet beräknas per grupp:
+
+    SELECT
+        b.Isbn,
+        b.Titel,
+        AVG(hl.Betyg) AS Snittbetyg
+    FROM
+        Bok AS b
+        INNER JOIN HarLanat AS hl ON hl.Isbn = b.Isbn
+    GROUP BY
+        b.Isbn,
+        b.Titel;
+
+Regeln som SQL Server upprätthåller och som avgör om frågan alls kör: **varje kolumn i SELECT måste antingen stå i GROUP BY eller inuti en aggregatfunktion.** Titel står i SELECT, alltså står den i GROUP BY, även om Isbn ensamt räcker för att skilja grupperna åt. Felmeddelandet är värt att känna igen: *Column 'Titel' is invalid in the select list because it is not contained in either an aggregate function or the GROUP BY clause.* Det är det första rättaren letar efter.
+
+Två detaljer som föreläsningen lyfter. COUNT(*) räknar rader i gruppen; COUNT(kolumn) räknar rader där kolumnen inte är NULL. Och AVG över en INTEGER-kolumn ger ett heltal i SQL Server: snittet av 7 och 8 blir 7, inte 7,5. Uppgiften ber om snittresultatet, inte om decimaler, så AVG(Betyg) är rätt svar — men vet att avrundningen sker.
+
+## HAVING mot WHERE
+
+Båda filtrerar, men vid olika tidpunkter. SQL:s logiska utförandeordning är FROM, WHERE, GROUP BY, aggregaten, HAVING, SELECT, ORDER BY. **WHERE filtrerar rader innan grupperingen** och får inte innehålla aggregat. **HAVING filtrerar grupper efter grupperingen** och är stället för villkor på aggregat. Minnesregeln från föreläsningen: H kommer efter G i alfabetet.
+
+    SELECT
+        l.LantagarNo,
+        l.Namn,
+        COUNT(*) AS AntalBocker
+    FROM
+        Lantagare AS l
+        INNER JOIN HarLanat AS hl ON hl.LantagarNo = l.LantagarNo
+    GROUP BY
+        l.LantagarNo,
+        l.Namn
+    HAVING
+        COUNT(*) >= 2;
+
+"Har lånat minst två böcker" är ett villkor på gruppen — det går inte att veta för en enskild rad — alltså HAVING. "Betyg över 6" är ett villkor på raden, alltså WHERE, och det påverkar vad som sedan räknas: ett \`WHERE Betyg > 6\` före \`COUNT(*)\` räknar bara de högt betygsatta lånen. Läs uppgiftstexten och avgör för varje villkor: gäller det en rad eller en grupp?
+
+## "X men inte Y": mängdskillnad
+
+"Böcker som lånats av L1 men inte av L2" är två mängder och en skillnad. Tre skrivsätt finns i kursen.
+
+**NOT IN** med en underfråga som ger listan att utesluta:
+
+    WHERE
+        hl.LantagarNo = 'L1'
+        AND hl.Isbn NOT IN (
+            SELECT Isbn
+            FROM HarLanat
+            WHERE LantagarNo = 'L2'
+        )
+
+**NOT EXISTS** med en korrelerad underfråga — "det finns ingen rad där L2 lånat just den här boken":
+
+    WHERE
+        hl.LantagarNo = 'L1'
+        AND NOT EXISTS (
+            SELECT 1
+            FROM HarLanat AS hl2
+            WHERE hl2.LantagarNo = 'L2'
+              AND hl2.Isbn = hl.Isbn
+        )
+
+**EXCEPT** mellan två hela frågor med samma kolumner:
+
+    SELECT Isbn FROM HarLanat WHERE LantagarNo = 'L1'
+    EXCEPT
+    SELECT Isbn FROM HarLanat WHERE LantagarNo = 'L2'
+
+Skillnaden som avgör valet gäller NULL. NOT IN mot en lista som innehåller ett enda NULL ger **tomt resultat**, för \`x NOT IN (…, NULL)\` kan aldrig bli sant. Föreläsningens regel att jämföra med IS NULL, inte = NULL, är samma sak från andra hållet: NULL är varken lika med eller olikt något. NOT EXISTS har inte problemet, och EXCEPT behandlar NULL som ett värde. På tentans schema är Isbn en nyckel och aldrig NULL, så NOT IN fungerar — men NOT EXISTS är det säkra valet och det som föreläsningen kallar svårast, så öva det tills det sitter.
+
+EXCEPT ger bara nycklarna. Behöver du titel och snitt för de böckerna måste resultatet joinas eller läggas som underfråga i IN — då är NOT IN eller NOT EXISTS inne i en fråga med join oftast enklare.
+
+## Ett jämförelsevärde ur en underfråga
+
+"Låntagare som är yngre än L3" jämför varje rads ålder med **ett** värde som står i en annan rad. Instinkten är att slå upp L3:s ålder, se att den är 40, och skriva \`WHERE Alder < 40\`. Det är fel på tentan och fel i verkligheten: frågan svarar då på "vem är yngre än 40?", inte på uppgiften, och blir tyst inaktuell när L3 fyller år. Föreläsningens princip är **en fråga per delfråga**: delfrågan "hur gammal är L3?" skrivs som en underfråga på den plats där värdet behövs.
+
+    WHERE
+        l.Alder < (
+            SELECT Alder
+            FROM Lantagare
+            WHERE LantagarNo = 'L3'
+        )
+
+En sådan **skalär underfråga** måste ge exakt ett värde; ger den fler får du felet *Subquery returned more than 1 value*. Det är därför den går att jämföra med \`<\`. Föreläsningen avråder från underfrågor där en JOIN kan ersätta dem, men det här är fallet där JOIN inte kan: värdet hör inte till raden utan till en annan rad, och det är ett skäl som håller på tentan.
+
+## Sätta ihop allt: två genomgångar
+
+Arbetsgången är densamma varje gång. Stryk under i uppgiftstexten: **vilka kolumner** ska ut, **per vad** (gruppen), **vilka villkor** och om de gäller rad eller grupp, och **vilka värden** som måste hämtas ur andra rader. Sedan skriver du frågan utifrån och in: SELECT-listan, FROM med joinarna, WHERE, GROUP BY, HAVING.
+
+### Genomgång 1: mängdskillnad och snitt
+
+*ISBN, titel och snittbetyg för böcker som lånats av låntagare L1 men inte av låntagare L2.*
+
+Kolumner ut: Isbn och Titel ur Bok, snittbetyg ur HarLanat. Per vad: per bok, så GROUP BY Isbn och Titel. Villkor: boken har en HarLanat-rad för L1, och ingen för L2 — det första är ett radvillkor, det andra en skillnad. Inget värde behöver hämtas ur en annan rad.
+
+En sak kräver eftertanke: **vilka betyg ska snittet räknas över?** Alla låntagares betyg på boken, eller bara L1:s? Uppgiften säger "snittbetyg för böcker", vilket läses som bokens snitt över alla lån. Då får villkoret om L1 inte stå i WHERE, för det skulle kasta bort de andra låntagarnas rader före snittet. Villkoret läggs i stället som en underfråga på bokens nyckel.
+
+    SELECT
+        b.Isbn,
+        b.Titel,
+        AVG(hl.Betyg) AS Snittbetyg
+    FROM
+        Bok AS b
+        INNER JOIN HarLanat AS hl ON hl.Isbn = b.Isbn
+    WHERE
+        b.Isbn IN (
+            SELECT Isbn
+            FROM HarLanat
+            WHERE LantagarNo = 'L1'
+        )
+        AND b.Isbn NOT IN (
+            SELECT Isbn
+            FROM HarLanat
+            WHERE LantagarNo = 'L2'
+        )
+    GROUP BY
+        b.Isbn,
+        b.Titel;
+
+Läs igenom mot texten: tre kolumner, en rad per bok, L1-lånade minus L2-lånade, snitt över alla rader som är kvar efter WHERE — och eftersom WHERE bara filtrerar på boken är alla bokens lån kvar. Hade uppgiften menat L1:s eget snitt hade \`hl.LantagarNo = 'L1'\` stått i WHERE i stället för IN-underfrågan, och skillnaden hade varit en NOT EXISTS på samma bok. Den tolkningsfrågan är värd en kommentar i svaret, en rad med \`--\`, så att rättaren ser att du sett den.
+
+### Genomgång 2: jämförelsevärde, grupp och HAVING
+
+*Låntagarnummer, namn och högsta betyg för låntagare som är yngre än låntagare L3 och har lånat minst två böcker.*
+
+Kolumner ut: LantagarNo och Namn ur Lantagare, högsta betyg ur HarLanat. Per vad: per låntagare. Villkor: yngre än L3 — ett radvillkor med ett värde ur en annan rad, alltså WHERE med skalär underfråga; minst två böcker — ett gruppvillkor, alltså HAVING.
+
+    SELECT
+        l.LantagarNo,
+        l.Namn,
+        MAX(hl.Betyg) AS HogstaBetyg
+    FROM
+        Lantagare AS l
+        INNER JOIN HarLanat AS hl ON hl.LantagarNo = l.LantagarNo
+    WHERE
+        l.Alder < (
+            SELECT Alder
+            FROM Lantagare
+            WHERE LantagarNo = 'L3'
+        )
+    GROUP BY
+        l.LantagarNo,
+        l.Namn
+    HAVING
+        COUNT(*) >= 2;
+
+Läs igenom: tre kolumner, en rad per låntagare, åldersvillkoret filtrerar rader före grupperingen (och det gör inget, för alla en låntagares rader har samma ålder), antalet räknas per grupp efter grupperingen. Namn står i GROUP BY därför att det står i SELECT. Ingen ORDER BY, för uppgiften ber inte om ordning.
+
+## Innan du lämnar in
+
+- **En fråga, ett resultat.** Inga hjälpfrågor, ingen uppslagen literal. Det värde du hämtade i huvudet ska hämtas med en underfråga.
+- **Rätt kolumner, rätt antal.** Jämför SELECT-listan med uppgiftens uppräkning, i samma ordning.
+- **GROUP BY-regeln.** Varje kolumn i SELECT står i GROUP BY eller i ett aggregat.
+- **Rad eller grupp.** Radvillkor i WHERE, gruppvillkor i HAVING.
+- **Alias med AS** på uttryck och tabeller. \`<>\` för olikhet. \`IS NULL\`, aldrig \`= NULL\`. Ingen \`ORDER BY 3\`.
+- **Indenterat**, en klausul per rad, nyckelord med versaler, semikolon sist.
+
+## Verkstaden mot tentan
+
+Verkstaden under SQL kör en riktig databas i webbläsaren, men motorn är SQLite och det du skriver översätts från kursens T-SQL. Tre skillnader som märks just i tentans slags frågor: AVG över heltal ger decimaler i SQLite men heltal i SQL Server; \`TOP n\` blir \`LIMIT n\`; och textsammanslagning med \`+\` blir \`||\`. Allt annat i kapitlet — join, GROUP BY, HAVING, NOT IN, NOT EXISTS, EXCEPT och skalära underfrågor — beter sig likadant. Nivå 4 till 7 i verkstaden tränar byggstenarna en i taget; tentaformens sammansatta frågor får en egen nivå.
+`
   }
 
   ]
@@ -1267,6 +1472,7 @@ export const CHAPTER_TOPICS = {
   kap6: { topics: ["transformation", "nycklar"], primaryTopics: ["transformation"] },
   kap7: { topics: ["normalisering"], primaryTopics: ["normalisering"] },
   kap8: { topics: ["fysisk", "nycklar"], primaryTopics: ["fysisk"] },
+  kap9: { topics: ["sql"], primaryTopics: ["sql"] },
 };
 
 // Tentans område per kapitel. Sedan föreläsarens besked 2026-08-31 (tentan
@@ -1284,6 +1490,7 @@ export const EXAM_AREAS = {
   kap6: "Transformation",
   kap7: "Normalisering",
   kap8: "Transformation",
+  kap9: "SQL",
 };
 
 export const examNote = {
@@ -1312,10 +1519,13 @@ export const glossary = [
   { term: "Dependency preservation", definition: "Att varje funktionellt beroende i originalrelationen har sina båda attribut i samma delrelation, så att det kan kontrolleras utan join. Prövas i övningshäftets sant/falskt-frågor.", chapter: "kap7" },
   { term: "DML (Data Manipulation Language)", definition: "Den del av SQL som hanterar data: SELECT, INSERT, UPDATE, DELETE.", chapter: "kap8" },
   { term: "Domän (domain)", definition: "Mängden tillåtna värden enligt schemat — inte de värden som redan används. Snävare än datatyp och bär affärsregeln.", chapter: "kap2" },
+  { term: "En fråga per delfråga", definition: "Föreläsningens metod: bryt ned uppgiften i delfrågor och skriv var och en som en underfråga där dess värde behövs, i stället för att slå upp värdet och skriva in det. Underfrågor bara där en JOIN inte räcker.", chapter: "kap9" },
   { term: "Flerstegspåstående", definition: "Påstående i tentans uppgift 1 som går över flera relationstyper, som att en spelare kan spela i ett lag vars förening spelaren inte är medlem i. Sant om ingen restriktion i diagrammet binder ihop vägarna — det som inte förbjuds är tillåtet; regler notationen saknar symbol för står i uppgiftstexten.", chapter: "svaga" },
   { term: "Främmande nyckel (foreign key)", definition: "Ett eller flera attribut vars värden måste matcha en kandidatnyckel, normalt primärnyckeln, i en annan eller samma relation. Värdet får upprepas, den refererade tupeln måste finnas, och den tvingar inte i sig fram deltagande.", chapter: "kap3" },
   { term: "Funktionellt beroende", definition: "X bestämmer funktionellt Y om och endast om varje X-värde i relationen är associerat med precis ett Y-värde. Skrivs X → Y.", chapter: "kap7" },
   { term: "Grad (degree)", definition: "Antalet attribut i en relation.", chapter: "kap2" },
+  { term: "GROUP BY-regeln", definition: "Varje kolumn i SELECT måste stå i GROUP BY eller inuti en aggregatfunktion; annars vägrar SQL Server: 'Column … is invalid in the select list because it is not contained in either an aggregate function or the GROUP BY clause'.", chapter: "kap9" },
+  { term: "HAVING", definition: "Villkor på grupper, utvärderat efter GROUP BY och aggregaten; får innehålla aggregat. WHERE filtrerar rader före grupperingen och får inte innehålla aggregat. Logisk ordning: FROM, WHERE, GROUP BY, aggregat, HAVING, SELECT, ORDER BY.", chapter: "kap9" },
   { term: "Icke-primärattribut (non-prime)", definition: "Ett attribut som inte är medlem i någon kandidatnyckel.", chapter: "kap3" },
   { term: "IDENTITY(1,1)", definition: "SQL Servers sätt att skriva en automatiskt inkrementerande surrogatnyckel: första talet är startvärdet (seed), andra steget (increment). Tentans uppgift 2 kräver den på tabeller för vanliga och svaga entiteter — inte på kopplingstabeller.", chapter: "kap8" },
   { term: "Kandidatnyckel (candidate key)", definition: "En attributmängd som uppfyller både unikhet (inga två skilda tupler har samma värden i något giltigt relationsvärde) och minimalitet (inget attribut kan tas bort utan att unikheten förloras). Kortformen: kan användas för att unikt identifiera vilken tupel som helst. En relation kan ha flera.", chapter: "kap3" },
@@ -1327,6 +1537,7 @@ export const glossary = [
   { term: "Lossless join", definition: "Egenskap hos en nedbrytning: en naturlig join av delrelationerna ger tillbaka originalrelationen. Föreläsningen ger bara den negativa regeln — inga gemensamma attribut, ingen lossless join. Kursbokens kontroll, två relationer i taget: de gemensamma attributen ska vara kandidatnyckel i minst en av dem.", chapter: "kap7" },
   { term: "Minimalitet", definition: "Villkoret att inget attribut kan tas bort ur en kandidatnyckel utan att den garanterade unikheten går förlorad. {EmployeeNo, Name} är unik men inte minimal.", chapter: "kap3" },
   { term: "Motivering (högsta normalform)", definition: "Tentans krav i 3f–3g: en rad för normalformen och en rad för skälet, som namnger definitionens begrepp och relationens attribut — 'äkta delmängden B av kandidatnyckeln {A,B} bestämmer funktionellt icke-primärattributet D'. Krävs inte för 3NF.", chapter: "kap7" },
+  { term: "Mängdskillnad i SQL", definition: "'X men inte Y' skrivs med NOT IN, NOT EXISTS eller EXCEPT. NOT IN mot en lista med ett NULL ger tomt resultat; NOT EXISTS är det säkra valet; EXCEPT ger bara de gemensamma kolumnerna.", chapter: "kap9" },
   { term: "Naturlig nyckel", definition: "Nyckel med affärsbetydelse, t.ex. anställningsnummer eller ISBN. Motsats till surrogatnyckel.", chapter: "kap3" },
   { term: "NoSQL", definition: "Dokumentorienterade databaser, ett alternativ till relationsdatabaser för persistent lagring.", chapter: "kap1" },
   { term: "Nyckelnotation (CK, PK, FK)", definition: "Föreläsningens sätt att skriva nycklar under en relation: CK1 = {…} för varje kandidatnyckel, PK = CK1 för den valda, FK1 : (attribut) REF Relation(attribut) för varje referens. Häftets facit stryker i stället under: hel linje för PK, prickad för FK.", chapter: "kap3" },
@@ -1342,6 +1553,7 @@ export const glossary = [
   { term: "Sammansatt nyckel (composite key)", definition: "Flera attribut som tillsammans identifierar en tupel unikt utan att göra det var för sig.", chapter: "kap3" },
   { term: "Sammanslagning (1:1)", definition: "Alternativ till främmande nyckel när båda entitetstyperna deltar totalt i en 1:1-relation: en relation för paret, där båda identifierarna förblir egna kandidatnycklar. Valfritt; främmandenyckelmetoden fungerar alltid.", chapter: "kap6" },
   { term: "Server", definition: "I praktiken en dator som aldrig stängs av, och som betjänar klienter med data ur en databas.", chapter: "kap1" },
+  { term: "Skalär underfråga", definition: "Underfråga som ger exakt ett värde och kan jämföras med =, < eller >. Sättet att hämta ett jämförelsevärde ur en annan rad ('yngre än L3') i stället för att kopiera en literal. Fler än ett värde ger felet 'Subquery returned more than 1 value'.", chapter: "kap9" },
   { term: "SQL (Structured Query Language)", definition: "Språket för att skapa, läsa, uppdatera och radera data samt administrera relationsdatabaser.", chapter: "kap1" },
   { term: "Surrogatnyckel", definition: "Artificiellt, databasgenererat nyckelvärde utan affärsbetydelse; motiven är nyckelstabilitet och prestanda. Kursen placerar den olika (Fö1 logisk, häftet fysisk, Fö5 nämner den inte); på tentan krävs den i DDL-uppgiften.", chapter: "kap3" },
   { term: "Transitivt beroende", definition: "Ett funktionellt beroende där X → Z indirekt, i kraft av X → Y och Y → Z, och där det inte gäller att Y → X. Bryter mot 3NF.", chapter: "kap7" },

@@ -270,5 +270,29 @@ export const topics = [
       "Kopplingstabeller får ingen egen surrogatnyckel; primärnyckeln är de två främmande nycklarna.",
       "På tentan: en REFERENCES som pekar på den naturliga nyckeln i stället för surrogatnyckeln, en kopplingstabell med egen IDENTITY, eller NOT NULL som inte följer deltagandelinjerna — det är de vanliga avdragen."
     ]
+  },
+  {
+    id: "sql",
+    name: "SQL: att resonera fram en fråga",
+    chapter: "kap9",
+    examWeight: "hög",
+    summary: "Tentans uppgift 4 är en enda fråga: join över kopplingstabellen, aggregat per grupp med GROUP BY, villkor på rad i WHERE och på grupp i HAVING, 'men inte' som NOT IN, NOT EXISTS eller EXCEPT, och jämförelsevärden hämtade med skalära underfrågor.",
+    keyPoints: [
+      "Läs schemat som meningar: en rad i kopplingstabellen är ett par (låntagare, bok) med sitt mätvärde, och det är över de raderna man aggregerar. Fråga först vilken tabell som har det uppgiften ber om.",
+      "Join över kopplingstabellen: INNER JOIN är kartesisk produkt plus selektion på primärnyckel mot främmande nyckel; tre tabeller joinas i två steg med kopplingstabellen i mitten, och resultatet har en rad per kopplingsrad. Alias med AS på tabellerna, prefix på varje kolumn.",
+      "GROUP BY-regeln: varje kolumn i SELECT står i GROUP BY eller i ett aggregat — Titel i SELECT betyder Titel i GROUP BY. COUNT(*) räknar rader, COUNT(kolumn) icke-NULL-värden, AVG över INTEGER ger heltal i SQL Server.",
+      "WHERE filtrerar rader före grupperingen och får inte ha aggregat; HAVING filtrerar grupper efter och är stället för COUNT(*) >= 2. Logisk ordning FROM, WHERE, GROUP BY, aggregat, HAVING, SELECT, ORDER BY — H efter G.",
+      "'X men inte Y': NOT IN med underfråga, NOT EXISTS korrelerat på samma nyckel, eller EXCEPT mellan två hela frågor. NOT IN mot en lista med ett NULL ger tomt resultat; NOT EXISTS är säkert; EXCEPT ger bara nycklarna.",
+      "Jämförelsevärde ur en annan rad ('yngre än L3'): skalär underfråga på platsen där värdet behövs, aldrig en uppslagen literal. En fråga per delfråga; underfrågor bara där JOIN inte räcker — och det här är ett sådant fall.",
+      "Arbetsgång: stryk under kolumner ut, per vad, villkor (rad eller grupp) och värden ur andra rader; skriv SELECT, FROM med joinar, WHERE, GROUP BY, HAVING. Läs sedan igenom mot uppgiftstexten: en fråga, rätt kolumner i rätt ordning, GROUP BY-regeln, AS, <>, IS NULL, ingen ORDER BY med index, indenterat.",
+      "Verkstaden mot tentan: SQLite under huven — AVG över heltal ger decimaler där SQL Server ger heltal, TOP blir LIMIT, + för text blir ||. Join, GROUP BY, HAVING, NOT IN, NOT EXISTS, EXCEPT och skalära underfrågor beter sig lika."
+    ],
+    pitfalls: [
+      "Ett villkor som gäller gruppen (minst två böcker) i WHERE i stället för HAVING — WHERE ser bara en rad i taget.",
+      "Kolumn i SELECT som varken står i GROUP BY eller i ett aggregat. SQL Server kör inte frågan.",
+      "Uppslagen literal (WHERE Alder < 40) i stället för en skalär underfråga — svarar på fel fråga och blir tyst inaktuell.",
+      "Radvillkoret för X i WHERE när snittet ska gälla alla lån: villkoret kastar bort de andra raderna före aggregatet. Lägg det som underfråga på nyckeln i stället.",
+      "NOT IN mot en underfråga som kan innehålla NULL ger tomt resultat. NOT EXISTS gör det inte."
+    ]
   }
 ];
