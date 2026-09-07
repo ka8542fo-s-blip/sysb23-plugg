@@ -55,6 +55,28 @@ data" i Statistik. Tentafokus (Strategi) betyder kärnämnen först inom varje
 grupp. Båda delkurserna kör `practiceBy: "chapter"` sedan 2026-09-05.
 Test: `scripts/practice-queue.test.mjs`.
 
+**Tentaformatet Databaser (2026-09-07, det viktigaste vi vet):** två
+HT25-tentor (omtentan 24 okt 2025, uppsamlingen 25 maj 2026) med exakt samma
+fyra uppgifter; PDF:erna ligger i `~/Desktop/Skola/SKOLA T3/Previous_e_ams_export`
+(nya decken i `___Lectures_export`), aldrig i repot. Fem timmar, 100 p,
+Inspera, hjälpmedel: utskrivna slides + boken. A 85/B 75/C 65/D 55/E 50.
+1) Läsa Chen-diagram, 25 p: 10–11 påståenden, +5/−3 per markering, 4–6 sanna;
+fem påståendetyper (måste, kan ha flera/exakt en, två X kan ha samma Y,
+identifieras av kombinationen, flerstegspåståenden). 2) DDL från ER, 25 p:
+alla kolumner INTEGER, reserverade ord utskrivna, inga constraintnamn krävs,
+auto-inkrementerande surrogatnycklar på vanliga OCH svaga entiteter,
+indenterat. 3) Normalformer, 20 p: 3a–e sant/falskt à 2 p (−1 fel, 0 blankt)
+om R + tre scheman (2NF, beroendebevarande, lossless join, >1 kandidatnyckel,
+alla i 3NF, primärattribut); 3f–g à 5 p högsta normalform + motivering med
+kursens definitioner/bilagan, normalisera till 3NF med lossless join och
+dependency preservation, övernormalisering ger avdrag, PK understruken.
+4) En SQL-fråga, 30 p: Student/Course/HasStudied, join + aggregat + GROUP
+BY/HAVING eller mängdskillnad + skalär subquery, en fråga, indenterad.
+Inte förekommit: application development (listas dock i nya Fö1 slide 16),
+logisk modell som eget svar, relationsalgebra, Crow's Foot som produktion.
+Läs kap 1 har avsnittet "Så ser tentan ut". Stor uppdatering pågår enligt
+prompten CC-prompt-stor-uppdatering-tentan.md (gitignorerad): punkt 1 klar.
+
 **`reviewed: false` syns inte i UI (2026-09-06):** flaggan finns kvar i
 datan som intern markering av vilka frågor som inte granskats mot decken
 och facit (Databaser kapitel 1–3: dbq-01…12), men chipen "Ogranskad" på

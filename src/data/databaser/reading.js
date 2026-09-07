@@ -15,9 +15,9 @@ const reading = {
     id: "kap1",
     number: 1,
     title: "Databaser, servrar och designprocessen",
-    readingMinutes: 8,
-    lead: "Vad en databas faktiskt är, var den bor, och de tre stegen från verksamhetskrav till körbar SQL.",
-    sources: ["Föreläsning 1"],
+    readingMinutes: 11,
+    lead: "Vad en databas faktiskt är, var den bor, de tre stegen från verksamhetskrav till körbar SQL — och hur tentan ser ut.",
+    sources: ["Föreläsning 1", "Extentorna HT25 (omtentan 24 okt 2025, uppsamlingen 25 maj 2026)"],
     body: `
 En **databas** är en strukturerad samling data som lagras och nås elektroniskt, utformad för att effektivt lagra, hämta och hantera information.
 
@@ -52,13 +52,29 @@ Detta är kompendiets ryggrad, och tentans struktur.
 - En avdelning har ett unikt namn och en budget.
 - En avdelning kan ha flera anställda.
 
-**1. Konceptuell databasdesign** — ER-modellering. Kraven blir ett **ER-diagram**, en abstraktion av verkligheten. Kapitel 4 och 5.
+**1. Konceptuell databasdesign** — ER-modellering. Kraven blir ett **ER-diagram**, en abstraktion av verkligheten. Kapitel 4–6.
 
-**2. Logisk databasdesign** — transformation av den konceptuella modellen till **relationer**, skrivna i textform: \`Employee(EmpNo, Name, Salary, DepartmentName)\`. Följt av **normalisering** om det behövs. Kapitel 6 och 7.
+**2. Logisk databasdesign** — transformation av den konceptuella modellen till **relationer**, skrivna i textform: \`Employee(EmpNo, Name, Salary, DepartmentName)\`. Följt av **normalisering** om det behövs. Kapitel 7 och 8.
 
-**3. Fysisk databasdesign** — implementation av den logiska modellen som **DDL-satser**, alltså körbar \`CREATE TABLE\`-kod. Kapitel 8.
+**3. Fysisk databasdesign** — implementation av den logiska modellen som **DDL-satser**, alltså körbar \`CREATE TABLE\`-kod. Kapitel 9.
 
 Lägg märke till att SQL kommer sist. Det är först när modellen är genomtänkt som koden skrivs — och det är därför tentan prövar modellering minst lika hårt som SQL.
+
+## Så ser tentan ut
+
+De två HT25-tentorna (omtentan 24 oktober 2025 och uppsamlingen 25 maj 2026) har exakt samma fyra uppgifter, så formen är känd. Tentan skrivs i Inspera på fem timmar och ger 100 poäng. **Tillåtna hjälpmedel: utskrivna slides från innevarande kurstillfälle och kursboken i fysiskt format.** Amanuensernas repetitionsmaterial är inte tillåtet. Betygsgränser: A 85, B 75, C 65, D 55, E 50. Uppgift 3 hänvisar till *tentamens medföljande bilaga* med definitioner. Det betyder att tentan mäter tillämpning, inte utantill — decken ligger på bordet, frågan är om du kan använda dem.
+
+**Uppgift 1, 25 p — läsa ett ER-diagram.** Ett Chen-diagram och tio till elva påståenden; markera alla som är sanna. +5 per rätt markerat, −3 per fel markerat, 0 om inget markeras. Fyra till sex påståenden är sanna. Påståendena är av fem slag: *måste* (totalt deltagande), *kan ha flera* och *exakt en* (kardinalitet), *två X kan ha samma Y* (Y är ingen identifierare), *identifieras av kombinationen* (sammansatt identifierare eller svag entitet) och flerstegspåståenden över flera relationer. Kapitel 4–6.
+
+**Uppgift 2, 25 p — DDL direkt från ER.** "Transformera den konceptuella datamodellen till en fysisk datamodell": \`CREATE TABLE\`-kod med alla constraints. Alla kolumner får antas vara INTEGER, reserverade ord skrivs ut i sin helhet, constraints behöver inte namnges, tabeller för både vanliga och svaga entiteter ska ha automatiskt inkrementerande surrogatnycklar, och koden ska vara indenterad. Samma form som häftets uppgift 18–22. Kapitel 7 och 9.
+
+**Uppgift 3, 20 p — normalformer.** 3a–3e: fem sant/falskt-påståenden à 2 p om en given relation R med beroenden och tre nedbrytningar — är R i 2NF, är ett schema beroendebevarande, har det lossless join, har R fler än en kandidatnyckel, är alla relationer i schemat i 3NF, är ett visst attribut primärattribut. Fel svar ger −1, blankt 0. 3f–3g à 5 p: ange högsta normalform och motivera genom att hänvisa till definitioner och specifika attribut — bara definitioner ur kurslitteraturen, föreläsningarna eller bilagan; motivering krävs inte för 3NF. Är relationen inte i 3NF ska den normaliseras till 3NF med lossless join och dependency preservation, primärnycklar understrukna, främmande nycklar behöver inte markeras. **Övernormalisering ger poängavdrag.** Kapitel 8.
+
+**Uppgift 4, 30 p — en SQL-fråga.** Tre tabeller — Student, Course och kopplingstabellen HasStudied med betyg — och en uppgift i löpande text som ska bli **en enda fråga** med ett resultat, indenterad. Båda tentorna kräver join över kopplingstabellen plus aggregat med GROUP BY och HAVING, en mängdskillnad ("läses av S1 men inte av S2") eller ett jämförelsevärde hämtat med subquery ("äldre än S4"). En fråga är 30 procent av tentan. Verkstaden under SQL.
+
+**Poängreglernas konsekvens.** Markera i uppgift 1 bara påståenden du kan härleda ur notationen — ett omarkerat sant påstående kostar inget, ett felmarkerat kostar 3. Gissa inte i 3a–3e: varje påstående går att härleda med beroendena framför dig, och ett fel kostar en poäng som ett blankt svar inte gör. Dela inte upp mer än definitionerna kräver: 3NF är målet, inte så många relationer som möjligt.
+
+**Det som inte har förekommit:** den logiska modellen som eget svar, relationsalgebra och Crow's Foot som produktionsnotation — Chen är det man ritar och läser. Nya Fö1 listar *application development* som ett av tentans fem områden (slide 16), men det har inte funnits på någon av de två tentorna.
 `
   },
 

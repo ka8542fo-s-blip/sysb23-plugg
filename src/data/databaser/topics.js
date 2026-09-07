@@ -10,7 +10,8 @@ export const topics = [
       "Utgångspunkten: verksamhetskraven. Frågan som styr urvalet är vad verksamheten behöver lagra data om för att fungera — processer, kvalitetssäkring, regelefterlevnad, intern rapportering. Databasadministratören bestämmer inte ensam; verksamhetssidan konsulteras alltid.",
       "Lagring: volatil lagring (RAM, t.ex. en Java-ArrayList) försvinner när programmet stängs; persistent lagring är filer, kalkylblad, RDBMS eller dokumentorienterade databaser (NoSQL).",
       "RDBMS: Relational Database Management System — lagrar data i tabeller och frågas med SQL.",
-      "Kursens miljö: SQL Server på en virtuell maskin i Microsoft Azure, ansluten från VS Code via mssql-tillägget, kod i GitHub. En server är i praktiken en dator som aldrig stängs av."
+      "Kursens miljö: SQL Server på en virtuell maskin i Microsoft Azure, ansluten från VS Code via mssql-tillägget, kod i GitHub. En server är i praktiken en dator som aldrig stängs av.",
+      "Tentan: fyra uppgifter på fem timmar, 100 p, utskrivna slides och boken tillåtna — läsa ER-diagram (25 p, +5/−3 per markering), DDL direkt från ER (25 p, surrogatnycklar även på svaga entiteter), normalformer (20 p, sant/falskt à 2 p med −1 vid fel, två uppgifter om högsta normalform där övernormalisering ger avdrag) och en enda SQL-fråga (30 p)."
     ],
     pitfalls: [
       "LADOK och TimeEdit är applikationer, inte databaser.",
