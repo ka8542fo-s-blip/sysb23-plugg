@@ -479,9 +479,9 @@ Det klassiska exemplet är leverantör, produkt och kund. Frestelsen är att mod
     id: "svaga",
     number: 6,
     title: "Svaga entiteter, associativa entiteter och Crow's Foot",
-    readingMinutes: 14,
-    lead: "Svaga entiteter kräver identitetsberoende, reifiering gör en relation till en sak, och Crow's Foot uttrycker samma regler med andra symboler — men inte alla.",
-    sources: ["Föreläsning 4"],
+    readingMinutes: 19,
+    lead: "Svaga entiteter kräver identitetsberoende, reifiering gör en relation till en sak, Crow's Foot uttrycker samma regler med andra symboler — och sist: att läsa påståenden ur ett diagram, tentans första uppgift.",
+    sources: ["Föreläsning 4", "Extentorna HT25, uppgift 1"],
     body: `
 Kapitlet samlar tre saker som alla handlar om identitet: entiteter som inte kan identifieras utan sin ägare, relationer som blir till entiteter, och en andra notation som uttrycker samma regler med andra symboler — och som inte kan uttrycka allt.
 
@@ -586,6 +586,86 @@ Föreläsningens facit på vad notationen kostar i uttrycksförmåga:
 - **Indirekt eller separat dokumenterat:** entity/relationship instances och sets, value sets; multivalued attributes (som relaterade entity types); composite, derived och optional attributes; value domains; weak identity; attributes på relationship types.
 
 Kursens konvention, sammanfattad: en konceptuell Information Engineering-variant av Crow's Foot där ändsymbolerna visar optional/required och one/many, identifierare och attribut står inuti entitetsboxarna, och en entitet får representera ett par och äga dess attribut. Läroböcker och verktyg varierar i nyckelmarkörer, linjestilar och namn — läs alltid notationens legend.
+
+## Att läsa påståenden ur ett diagram
+
+Tentans första uppgift är ett Chen-diagram och tio till elva påståenden på svenska: markera alla som är sanna. Det är hela kapitel 4–6 i en enda färdighet — att gå från en mening till notationen och tillbaka — och det är där de flesta poängen försvinner, för fel markering kostar tre.
+
+Påståendena är av fem slag, och varje slag pekar på en bestämd plats i diagrammet:
+
+| Påståendet säger | Titta på | Sant när |
+|---|---|---|
+| *X måste ha ett Y* | deltagandelinjen vid X | linjen vid X är dubbel |
+| *X kan ha flera Y* | ratio-etiketten bredvid Y | etiketten bredvid Y är N (eller M) |
+| *X måste ha exakt ett Y* | båda: etiketten bredvid Y och linjen vid X | etiketten är 1 och linjen vid X är dubbel |
+| *två X kan ha samma Y* | attributet Y | Y är inte understruket (och ingår inte i en understruken kombination) |
+| *X identifieras av kombinationen av A och B* | understrykningarna | A och B är delar av en understruken sammansatt identifierare, eller X är svag med B som streckad partiell identifierare och A som ägarens identifierare |
+
+Läsreglerna bakom tabellen är kapitel 5:s: **ratio läses tvärs över** — etiketten bredvid Y säger hur många Y en fixerad X får ha — och den anger bara ett maximum, så 1 betyder högst en, inte exakt en. **Deltagandet läses vid sin egen ände** — dubbel linje vid X betyder att varje X deltar minst en gång. De två är oberoende: "exakt en" kräver båda. Och understrykningen är en regel för varje giltig population, inte en observation om exempeldata.
+
+Så här arbetar du med varje påstående: hitta entitetstyperna det nämner, hitta relationstypen mellan dem, avgör vilket av de fem slagen påståendet är, och titta på **exakt den** plats i diagrammet som slaget pekar på. Allt annat i diagrammet är brus för just det påståendet.
+
+### Flerstegspåståenden: det som inte förbjuds är tillåtet
+
+Det svåraste slaget går över flera relationer: "en spelare kan spela i ett lag som tillhör en förening där spelaren inte är medlem". Instinkten säger nej — det låter fel. Men frågan är inte om det är rimligt utan om **diagrammet förbjuder det**. Ett Chen-diagram uttrycker bara det notationen har symboler för: ratio, deltagande, identifierare. Det finns ingen symbol som säger "spelarens lag måste tillhöra spelarens förening". Om inget i diagrammet binder ihop de två vägarna — MedlemI och SpelarI — är kombinationen tillåten, och påståendet är sant.
+
+Samma sak gäller unära relationer. Föreläsningen visar att ratio och deltagandelinjer inte hindrar att någon handleder sig själv eller att två personer handleder varandra: notationen saknar symbol för sådana regler, så de blir textuella verksamhetsregler utanför diagrammet. Står inget i uppgiften om en sådan regel är också "en låntagare kan vara sin egen fadder" sant enligt diagrammet.
+
+Regeln att bära med sig: **ett påstående om vad som "kan" ske är sant om ingen restriktion i diagrammet utesluter det.** Ett påstående om vad som "måste" ske är sant bara om en restriktion i diagrammet kräver det.
+
+### Genomgång 1: föreningen
+
+[[diagram:pastaenden-forening]]
+
+Åtta påståenden. Avgör varje för dig själv innan du läser facit.
+
+1. Ett lag måste tillhöra en förening.
+2. En förening måste ha minst ett lag.
+3. Två föreningar kan ha samma namn.
+4. Ett lag identifieras av kombinationen av föreningens nummer och lagets nummer.
+5. En spelare måste vara medlem i exakt en förening.
+6. Ett lag kan ha hemmaarena på flera arenor.
+7. En spelare kan spela i ett lag som tillhör en förening där spelaren inte är medlem.
+8. Ett lag måste ha minst en spelare.
+
+**Facit: sanna är 1, 3, 4, 5, 7 och 8.**
+
+- **1 sant.** Linjen vid Lag i Har är dubbel: varje lag deltar. Ratiot 1 bredvid Förening ger dessutom högst en förening, så det är exakt en — men påståendet frågar bara om "måste".
+- **2 falskt.** Linjen vid Förening i Har är enkel: en förening får finnas utan lag. N bredvid Lag säger hur många lag en förening *får* ha, inte hur många den *måste* ha.
+- **3 sant.** namn under Förening är inte understruket. Det enda som är understruket är föreningsNo. Att två föreningar i verkligheten sällan heter lika spelar ingen roll; diagrammet förbjuder det inte.
+- **4 sant.** Lag är svag (dubbel rektangel), Har är identifierande (dubbel romb) och lagNo är streckat understruket. Den kompletta identiteten är ägarens identifierare plus den partiella: {föreningsNo, lagNo}.
+- **5 sant.** Linjen vid Spelare i MedlemI är dubbel (minst en) och ratiot 1 bredvid Förening, läst tvärs över, säger högst en förening per spelare. Båda villkoren: exakt en.
+- **6 falskt.** Ratiot bredvid Arena i Hemma är 1: varje lag får ha högst en arena. Att linjen är enkel betyder bara att ett lag får sakna arena — det gör inte "flera" möjligt.
+- **7 sant.** Flerstegspåstående. MedlemI binder spelaren till en förening; SpelarI binder spelaren till lag; Har binder lag till förening. Ingen symbol säger att lagets förening ska vara spelarens förening. Kombinationen är tillåten.
+- **8 sant.** Linjen vid Lag i SpelarI är dubbel: varje lag deltar minst en gång, alltså har minst en spelare. Att linjen vid Spelare är enkel är en annan sak — en spelare får stå utan lag.
+
+Den vanliga felläsningen i 6 är att ta N bredvid Lag som svar på frågan om Lag. N bredvid Lag säger något om arenor: en arena får ha många lag. För att veta hur många arenor ett lag får ha läser du etiketten på **andra** sidan.
+
+### Genomgång 2: biblioteket
+
+[[diagram:pastaenden-bibliotek]]
+
+1. Två böcker kan ha samma titel.
+2. Ett exemplar identifieras av kombinationen av bokens ISBN och exemplarnumret.
+3. En bok måste ha exakt en författare.
+4. En författare måste ha skrivit minst en bok.
+5. Ett exemplar kan vara utlånat till flera låntagare samtidigt.
+6. En låntagare måste ha en fadder.
+7. En låntagare kan vara sin egen fadder.
+8. En låntagare kan låna två exemplar av samma bok.
+
+**Facit: sanna är 1, 2, 7 och 8.**
+
+- **1 sant.** titel är inte understruket; bara isbn är. Två böcker med samma titel och olika ISBN är två giltiga entiteter.
+- **2 sant.** Exemplar är svag under Bok via den identifierande relationen FinnsSom, med exNo som partiell identifierare. Identiteten är {isbn, exNo}.
+- **3 falskt.** "Exakt en" kräver 1 tvärs över. Ratiot bredvid Författare i SkrivenAv är M: en bok får ha många författare. Dubbellinjen vid Bok ger "minst en", inte "exakt en".
+- **4 falskt.** Linjen vid Författare i SkrivenAv är enkel: en författare får finnas utan bok i modellen. Läs linjen vid den egna änden, inte den andra.
+- **5 falskt.** Ratiot bredvid Låntagare i Lånar är 1: ett exemplar får ha högst en låntagare. "Samtidigt" är den enda tolkning diagrammet har — det visar tillståndet, inte historiken.
+- **6 falskt.** Fadderrelationens linjer är enkla i båda rollerna: en låntagare får stå utan fadder. Ratiot 1 vid fadderrollen säger högst en fadder, inte minst en.
+- **7 sant.** Ingen symbol i Chen-notationen hindrar att samma entitet fyller båda rollerna i en unär relation. Finns regeln "ingen får vara sin egen fadder" står den i uppgiftstexten, inte i diagrammet — och då gäller texten.
+- **8 sant.** Ratiot bredvid Exemplar i Lånar är N: en låntagare får ha många exemplar, och inget säger att de ska vara exemplar av olika böcker. Flerstegsläsningen igen: FinnsSom och Lånar är obundna av varandra.
+
+Poängräkningen gör metoden viktig. Sex sanna i genomgång 1 ger 30 poäng om du markerar exakt dem — men uppgiften ger högst 25, så det räcker med att träffa rätt. Markerar du 2 av misstag är det −3, och markerar du 6 av misstag ytterligare −3. Härled varje påstående ur sin plats i diagrammet, och lämna det du inte kan härleda omarkerat om du inte lutar tydligt åt att det är sant.
 `
   },
 
@@ -1052,6 +1132,7 @@ export const glossary = [
   { term: "Dependency preservation", definition: "Att varje funktionellt beroende i originalrelationen har sina båda attribut i samma delrelation, så att det kan kontrolleras utan join. Prövas i övningshäftets sant/falskt-frågor.", chapter: "kap7" },
   { term: "DML (Data Manipulation Language)", definition: "Den del av SQL som hanterar data: SELECT, INSERT, UPDATE, DELETE.", chapter: "kap8" },
   { term: "Domän (domain)", definition: "Mängden tillåtna värden enligt schemat — inte de värden som redan används. Snävare än datatyp och bär affärsregeln.", chapter: "kap2" },
+  { term: "Flerstegspåstående", definition: "Påstående i tentans uppgift 1 som går över flera relationstyper, som att en spelare kan spela i ett lag vars förening spelaren inte är medlem i. Sant om ingen restriktion i diagrammet binder ihop vägarna — det som inte förbjuds är tillåtet; regler notationen saknar symbol för står i uppgiftstexten.", chapter: "svaga" },
   { term: "Främmande nyckel (foreign key)", definition: "Ett eller flera attribut vars värden måste matcha en kandidatnyckel, normalt primärnyckeln, i en annan eller samma relation. Värdet får upprepas, den refererade tupeln måste finnas, och den tvingar inte i sig fram deltagande.", chapter: "kap3" },
   { term: "Funktionellt beroende", definition: "X bestämmer funktionellt Y om och endast om varje X-värde i relationen är associerat med precis ett Y-värde. Skrivs X → Y.", chapter: "kap7" },
   { term: "Grad (degree)", definition: "Antalet attribut i en relation.", chapter: "kap2" },

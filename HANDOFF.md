@@ -75,7 +75,15 @@ BY/HAVING eller mängdskillnad + skalär subquery, en fråga, indenterad.
 Inte förekommit: application development (listas dock i nya Fö1 slide 16),
 logisk modell som eget svar, relationsalgebra, Crow's Foot som produktion.
 Läs kap 1 har avsnittet "Så ser tentan ut". Stor uppdatering pågår enligt
-prompten CC-prompt-stor-uppdatering-tentan.md (gitignorerad): punkt 1–2 klara.
+prompten CC-prompt-stor-uppdatering-tentan.md (gitignorerad): punkt 1–3 klara.
+Punkt 3 (2026-09-07): kapitel 6 slutar med "Att läsa påståenden ur ett
+diagram" — tabellen påståendeform → notation, flerstegsregeln ("det som
+inte förbjuds är tillåtet", ur Fö4:s poäng att basic Chen saknar symbol
+för självlänkar/cykler och att kardinalitet och deltagande är oberoende),
+och två genomgångar på egna domäner (förening/lag/spelare/arena,
+bok/exemplar/låntagare/författare) med åtta påståenden och facit med skäl.
+Figurerna heter `pastaenden-forening` och `pastaenden-bibliotek`
+(erFigures.jsx) och är tänkta som underlag även för Öva-frågorna i punkt 7.
 
 **Regel (2026-09-07, användarkrav): inga slidehänvisningar i det läsaren ser** —
 inte i kapiteltext, kärnpunkter, fallgropar eller ordlista. De hör hemma i

@@ -13,6 +13,8 @@ export const DIAGRAM_IDS = [
   "population-entiteter",
   "population-relationer",
   "attribut",
+  "pastaenden-forening",
+  "pastaenden-bibliotek",
 ];
 
 export const DIAGRAM_RE = /^\[\[diagram:([a-z0-9-]+)\]\]$/;

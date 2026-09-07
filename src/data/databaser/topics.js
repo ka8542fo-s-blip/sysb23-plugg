@@ -150,12 +150,15 @@ export const topics = [
       "Två beroenden: identitetsberoende (den kompletta identiteten inkluderar ägaren) och existensberoende (kan inte finnas utan ägaren). 1 vid ägaren begränsar till ett projekt, dubbellinjen på den svaga sidan gör deltagandet obligatoriskt. En svag entitet kan ha vanliga relationer också (ProjectTask — AssignedTo — Employee); dubbelheten gäller bara den identifierande.",
       "Två tentafällor: total participation gör inte en entitet svag — Project i Leads har exakt en ledare men förblir stark, för projectNo identifierar det; och multipliciteterna avslöjar inte ägaren — Contains och AssignedTo har samma 1:N, det är dubbel romb och dubbel rektangel som pekar ut den identifierande relationen.",
       "Reifiering: behåll relationen när modellen bara beskriver paret — relationsattribut tvingar inte fram något. Reifiera när paret ska refereras till som begrepp, delta i andra relationer eller ha egen identitet eller livscykel: WorksOn blir entitetstypen Assignment med Holds (1:N) till Employee och Concerns (N:1) till Project, attributen följer med, vanliga Chen-konstruktioner utan särskild symbol.",
-      "Priset: assignmentNo som identifierare skapar ett verkligt ansvar — organisationen måste tilldela, lagra och bevara ett unikt värde för varje uppdrag. Reifiering är inte gratis."
+      "Priset: assignmentNo som identifierare skapar ett verkligt ansvar — organisationen måste tilldela, lagra och bevara ett unikt värde för varje uppdrag. Reifiering är inte gratis.",
+      "Läsa påståenden (tentans uppgift 1): 'måste' ↔ dubbel linje vid den egna änden; 'kan ha flera' ↔ N bredvid den andra entiteten, läst tvärs över; 'exakt en' ↔ 1 tvärs över PLUS dubbel linje; 'två X kan ha samma Y' ↔ Y är inte understruket; 'identifieras av kombinationen' ↔ sammansatt identifierare eller svag entitet med partiell nyckel. Titta bara på den plats i diagrammet som påståendets slag pekar på.",
+      "Flerstegspåståenden: ett 'kan' är sant om ingen restriktion i diagrammet utesluter det, ett 'måste' bara om en restriktion kräver det. Ingen symbol binder ihop två vägar (spelarens förening och lagets förening), och ingen symbol hindrar självlänkar i unära relationer — sådana regler står i uppgiftstexten eller inte alls."
     ],
     pitfalls: [
       "Dubbellinje räcker inte för svaghet — det krävs att identiteten beror på ägaren.",
       "Leta inte efter ägaren i multipliciteterna; den syns bara i dubbel romb och dubbel rektangel.",
-      "Reifiera inte bara för att relationen har attribut — det är ett val i Chen, inte ett tvång."
+      "Reifiera inte bara för att relationen har attribut — det är ett val i Chen, inte ett tvång.",
+      "Vid ett påstående om hur många Y ett X får ha: läs etiketten bredvid Y, inte bredvid X. N bredvid Lag i Hemma säger hur många lag en arena får ha — inget om hur många arenor ett lag får ha."
     ]
   },
   {

@@ -367,3 +367,120 @@ export function AttributeShapesFigure() {
     </Figure>
   );
 }
+
+// 12–13. Övningsdiagram för att läsa påståenden (tentans uppgift 1). Egna
+// domäner — inte tentornas. Varje figur bär alla fem påståendetyperna:
+// måste (dubbel linje), kan ha flera / exakt en (ratio), två X kan ha samma
+// Y (ej understruket), identifieras av kombinationen (svag entitet), och
+// flerstegspåståenden över flera relationer.
+export function StatementsClubFigure() {
+  return (
+    <Figure
+      viewBox="0 0 640 400"
+      label="Chen-diagram med fyra entitetstyper: Förening (föreningsNo understruket, namn), Lag (svag, lagNo streckat understruket, division), Spelare (spelarNo understruket, namn) och Arena (arenaNo understruket, ort). Har: identifierande relation Förening 1 – N Lag, dubbel linje vid Lag. MedlemI: Förening 1 – N Spelare, dubbel linje vid Spelare. SpelarI: Spelare M – N Lag, enkel linje vid Spelare, dubbel vid Lag. Hemma: Lag N – 1 Arena, enkla linjer."
+      caption="Genomgång 1. Fyra entitetstyper, fyra relationstyper. Läs ratio tvärs över och linjerna vid sin egen ände — och lägg märke till att ingenting binder ihop MedlemI med SpelarI."
+      maxWidth={640}
+    >
+      <AttributeOval cx={82} cy={22} label="föreningsNo" identifier="solid" />
+      <AttributeOval cx={195} cy={22} rx={48} label="namn" />
+      <AttributeLink x1={82} y1={37} x2={82} y2={60} />
+      <AttributeLink x1={170} y1={37} x2={130} y2={60} />
+      <EntityBox x={20} y={60} label="Förening" />
+      <Connector x1={144} y1={82} x2={244} y2={82} />
+      <Ratio x={166} y={72} text="1" />
+      <RelationshipDiamond cx={310} cy={82} w={132} h={64} label="Har" identifying />
+      <Connector x1={376} y1={82} x2={496} y2={82} total />
+      <Ratio x={474} y={72} text="N" />
+      <EntityBox x={496} y={60} label="Lag" weak />
+      <AttributeOval cx={558} cy={22} label="lagNo" identifier="dashed" />
+      <AttributeOval cx={445} cy={22} rx={48} label="division" />
+      <AttributeLink x1={558} y1={37} x2={558} y2={60} />
+      <AttributeLink x1={470} y1={37} x2={510} y2={60} />
+
+      <Connector x1={82} y1={104} x2={82} y2={160} />
+      <Ratio x={104} y={130} text="1" />
+      <RelationshipDiamond cx={82} cy={190} w={124} h={60} label="MedlemI" />
+      <Connector x1={82} y1={220} x2={82} y2={296} total />
+      <Ratio x={104} y={262} text="N" />
+      <EntityBox x={20} y={296} label="Spelare" />
+      <AttributeOval cx={82} cy={378} label="spelarNo" identifier="solid" />
+      <AttributeOval cx={195} cy={378} rx={48} label="namn" />
+      <AttributeLink x1={82} y1={340} x2={82} y2={363} />
+      <AttributeLink x1={130} y1={340} x2={170} y2={363} />
+
+      <Connector x1={558} y1={104} x2={558} y2={160} />
+      <Ratio x={580} y={130} text="N" />
+      <RelationshipDiamond cx={558} cy={190} w={124} h={60} label="Hemma" />
+      <Connector x1={558} y1={220} x2={558} y2={296} />
+      <Ratio x={580} y={262} text="1" />
+      <EntityBox x={496} y={296} label="Arena" />
+      <AttributeOval cx={558} cy={378} label="arenaNo" identifier="solid" />
+      <AttributeOval cx={445} cy={378} rx={48} label="ort" />
+      <AttributeLink x1={558} y1={340} x2={558} y2={363} />
+      <AttributeLink x1={510} y1={340} x2={470} y2={363} />
+
+      <Connector x1={144} y1={310} x2={244} y2={190} />
+      <Ratio x={172} y={286} text="M" />
+      <RelationshipDiamond cx={310} cy={190} w={132} h={64} label="SpelarI" />
+      <Connector x1={376} y1={190} x2={496} y2={104} total />
+      <Ratio x={452} y={122} text="N" />
+    </Figure>
+  );
+}
+
+export function StatementsLibraryFigure() {
+  return (
+    <Figure
+      viewBox="0 0 640 420"
+      label="Chen-diagram med fyra entitetstyper: Bok (isbn understruket, titel), Exemplar (svag, exNo streckat understruket, skick), Låntagare (låntagarNo understruket, namn) och Författare (författarNo understruket, namn). FinnsSom: identifierande relation Bok 1 – N Exemplar, dubbel linje vid Exemplar. SkrivenAv: Författare M – N Bok, dubbel linje vid Bok, enkel vid Författare. Lånar: Låntagare 1 – N Exemplar, enkla linjer. Fadder: unär relation på Låntagare med rollerna fadder (1) och adept (N), enkla linjer."
+      caption="Genomgång 2. Samma läsregler, nu med en unär relation. Ingenting i notationen hindrar en låntagare från att vara sin egen fadder — det som inte förbjuds är tillåtet."
+      maxWidth={640}
+    >
+      <AttributeOval cx={82} cy={22} label="isbn" identifier="solid" />
+      <AttributeOval cx={195} cy={22} rx={48} label="titel" />
+      <AttributeLink x1={82} y1={37} x2={82} y2={60} />
+      <AttributeLink x1={170} y1={37} x2={130} y2={60} />
+      <EntityBox x={20} y={60} label="Bok" />
+      <Connector x1={144} y1={82} x2={244} y2={82} />
+      <Ratio x={166} y={72} text="1" />
+      <RelationshipDiamond cx={310} cy={82} w={132} h={64} label="FinnsSom" identifying />
+      <Connector x1={376} y1={82} x2={496} y2={82} total />
+      <Ratio x={474} y={72} text="N" />
+      <EntityBox x={496} y={60} label="Exemplar" weak />
+      <AttributeOval cx={558} cy={22} label="exNo" identifier="dashed" />
+      <AttributeOval cx={445} cy={22} rx={48} label="skick" />
+      <AttributeLink x1={558} y1={37} x2={558} y2={60} />
+      <AttributeLink x1={470} y1={37} x2={510} y2={60} />
+
+      <Connector x1={82} y1={104} x2={82} y2={160} total />
+      <Ratio x={104} y={130} text="N" />
+      <RelationshipDiamond cx={82} cy={190} w={124} h={60} label="SkrivenAv" />
+      <Connector x1={82} y1={220} x2={82} y2={296} />
+      <Ratio x={104} y={262} text="M" />
+      <EntityBox x={20} y={296} label="Författare" />
+      <AttributeOval cx={82} cy={378} label="författarNo" identifier="solid" />
+      <AttributeOval cx={195} cy={378} rx={48} label="namn" />
+      <AttributeLink x1={82} y1={340} x2={82} y2={363} />
+      <AttributeLink x1={130} y1={340} x2={170} y2={363} />
+
+      <Connector x1={558} y1={104} x2={558} y2={160} />
+      <Ratio x={580} y={130} text="N" />
+      <RelationshipDiamond cx={558} cy={190} w={124} h={60} label="Lånar" />
+      <Connector x1={558} y1={220} x2={558} y2={296} />
+      <Ratio x={580} y={262} text="1" />
+      <EntityBox x={496} y={296} label="Låntagare" />
+      <AttributeOval cx={558} cy={378} label="låntagarNo" identifier="solid" />
+      <AttributeOval cx={445} cy={378} rx={48} label="namn" />
+      <AttributeLink x1={558} y1={340} x2={558} y2={363} />
+      <AttributeLink x1={510} y1={340} x2={470} y2={363} />
+
+      <RelationshipDiamond cx={310} cy={300} w={124} h={60} label="Fadder" />
+      <Connector x1={310} y1={270} x2={496} y2={302} />
+      <Role x={400} y={270} text="fadder" />
+      <Ratio x={470} y={280} text="1" />
+      <Connector x1={372} y1={300} x2={496} y2={330} />
+      <Role x={420} y={332} text="adept" />
+      <Ratio x={470} y={345} text="N" />
+    </Figure>
+  );
+}
