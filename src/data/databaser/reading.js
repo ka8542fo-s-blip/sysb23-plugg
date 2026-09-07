@@ -954,7 +954,7 @@ Uppgift 3a–3e ger en relation R med sina beroenden och två eller tre scheman 
 
 **"Schema 3 är en nedbrytning där samtliga funktionella beroenden är bevarade."** Ett beroende är bevarat om dess attribut finns i samma relation. Gå igenom beroendena ett i taget — {A,B} → C är bevarat bara om A, B och C står i en och samma relation — och ett förlorat beroende gör påståendet falskt.
 
-**"Schema 3 har egenskapen lossless join."** Den naturliga joinen av delrelationerna ska ge tillbaka R. Kontrollen i praktiken, ur kursboken: se på nedbrytningen två relationer i taget. De två måste ha gemensamma attribut, och de gemensamma attributen ska vara kandidatnyckel i minst en av dem. Saknas gemensamt attribut någonstans i kedjan är svaret falskt.
+**"Schema 3 har egenskapen lossless join."** Den naturliga joinen av delrelationerna ska ge tillbaka R. Föreläsningen ger bara den negativa regeln — saknar delrelationerna gemensamma attribut finns ingen lossless join. Den positiva kontrollen kommer från kursboken, inte från föreläsningen: se på nedbrytningen två relationer i taget. De två måste ha gemensamma attribut, och de gemensamma attributen ska vara kandidatnyckel i minst en av dem. Saknas gemensamt attribut någonstans i kedjan är svaret falskt.
 
 Två fällor att se upp med. Kandidatnycklar och primärattribut byter betydelse när relationen byter — fråga alltid "i vilken relation?". Och normalformen hos delrelationerna säger inget om nedbrytningens egenskaper: ett schema kan bestå av relationer i 3NF och ändå ha förlorat både ett beroende och lossless join.
 
@@ -1037,9 +1037,9 @@ Nedbrytning: R1(A, B, C) med A som primärnyckel (B förblir kandidatnyckel), R2
     id: "kap8",
     number: 9,
     title: "Fysisk design: DDL, constraints och kodstandard",
-    readingMinutes: 12,
-    lead: "Från logisk modell till körbar CREATE TABLE — datatyper, de fem constrainttyperna, surrogatnycklar och kursens namngivningsregler.",
-    sources: ["Föreläsning 7", "Kodstandard v2.0"],
+    readingMinutes: 16,
+    lead: "Från logisk modell till körbar CREATE TABLE — datatyper, constrainttyperna, surrogatnycklar, kursens namngivningsregler — och tentans instruktioner för uppgift 2, med föreningen som genomgång.",
+    sources: ["Föreläsning 7", "Kodstandard v2.0", "Övningshäftet uppgift 18–22", "Extentorna HT25, uppgift 2"],
     body: `
 Sista steget: den logiska modellen blir körbar SQL. Här kommer också de val som medvetet sköts upp under logisk design.
 
@@ -1082,9 +1082,9 @@ Constraints är hur affärsregler flyttas från applikationskoden in i databasen
 
 Namnge dem alltid. Kursens kodstandard föreskriver prefixen \`PK_\`, \`FK_\`, \`UQ_\`, \`CK_\` och \`DF_\` följt av tabell och kolumn. Skälet är praktiskt: ett namngivet constraint ger ett felmeddelande du kan förstå, och ett du kan referera till i en \`ALTER TABLE\`.
 
-## Surrogatnycklar — nu, inte tidigare
+## Surrogatnycklar
 
-Kapitel 3 slog fast att surrogatnycklar hör till fysisk design. Här är de.
+Kapitel 3 beskrev hur kursen placerar surrogatnycklarna olika. Här, i DDL-steget, är de i alla fall — och föreläsningens linje är tydlig: från och med nu använder alla tabeller surrogatnyckel som primärnyckel, medan de naturliga nycklarna står kvar som UNIQUE.
 
 En **surrogatnyckel** är ett artificiellt, databasgenererat värde utan affärsbetydelse. I SQL Server skapas den med \`IDENTITY(1,1)\`.
 
@@ -1160,6 +1160,95 @@ Standarden (v2.0) gäller i laborationer, SQL-uppgiften och databasprojektet, oc
 - **Inga hemligheter i repot** — anslutningsuppgifter och lösenord hör i miljövariabler eller en konfigurationsfil utanför versionshanteringen.
 
 Den sista punkten är inte kosmetika. Den prövas i databasprojektet, och att checka in ett lösenord i GitHub är ett verkligt fel med verkliga konsekvenser.
+
+## Tentans instruktioner för uppgift 2
+
+Uppgift 2 ger ett ER-diagram och ber om DDL-kod för hela modellen med alla constraints, 25 poäng. Instruktionerna är korta och varje mening är ett rättningskriterium.
+
+**Alla kolumner får antas vara INTEGER.** Datatypsvalet prövas inte — strukturen prövas. Skriv \`INTEGER\` på varje kolumn och lägg tiden på nycklar, referenser och NOT NULL.
+
+**Reserverade ord skrivs ut i sin helhet.** \`PRIMARY KEY\`, \`FOREIGN KEY\`, \`REFERENCES\`, \`CONSTRAINT\`, \`NOT NULL\`, \`UNIQUE\` — inga förkortningar, inga "PK" eller "FK" i koden. Namnen på constraints får däremot innehålla vad du vill.
+
+**Constraints behöver inte namnges.** Kodstandarden vill ha \`PK_Tabell_Kolumn\`, och i laborationer och projekt är det ett krav. På tentan är det tillåtet att skriva \`PRIMARY KEY (LagID)\` utan \`CONSTRAINT\`-rad. Väljer du att namnge går det lika bra — men ett halvfärdigt namn är sämre än inget, så välj en form och håll den.
+
+**Tabeller för vanliga och svaga entiteter ska ha automatiskt inkrementerande surrogatnycklar.** I kursens dialekt, SQL Server, stavas det
+
+    LagID  INTEGER IDENTITY(1,1)
+
+där det första talet är startvärdet (seed) och det andra steget (increment): 1, 2, 3 och så vidare, genererat av databasen. Surrogatkolumnen heter tabellnamnet plus \`ID\`. Kopplingstabeller och tabeller för flervärdesattribut får **ingen** egen surrogatnyckel — deras primärnyckel är de främmande nycklarna, som nu pekar på de refererade tabellernas surrogatnycklar. Föreläsningen ställer frågan själv: varför är EmployeeID i Work inte IDENTITY? Därför att den är en referens, inte en identitet.
+
+**Koden ska vara tydligt formaterad och indenterad.** En tabell per \`CREATE TABLE\`, en kolumn per rad, constraints sist, nyckelord med versaler.
+
+### Det som ger poängen
+
+Instruktionerna säger vad som ska finnas; facit till häftets uppgift 18–22 säger vad som avgör poängen. Tre saker återkommer.
+
+- **Naturliga nycklar som UNIQUE och NOT NULL.** Surrogatnyckeln tar primärnyckelrollen, men entitetsintegriteten för verksamhetens egen identifierare måste skrivas ut med båda.
+- **NOT NULL på främmande nycklar vid totalt deltagande.** En dubbel linje i diagrammet blir \`NOT NULL\` på kolumnen; en enkel linje lämnar den nullbar. Här läser rättaren diagrammet mot koden, rad för rad.
+- **Svag entitet: surrogatnyckel plus UNIQUE över partiell nyckel och ägarens främmande nyckel.** Lagnumret är unikt bara inom föreningen, och det ska koden säga.
+
+### Från diagram till kod: föreningen
+
+Ta diagrammet från genomgång 1 i kapitel 6: Förening, Lag (svag under Förening via Har), Spelare (medlem i exakt en förening), Arena, SpelarI (M:N, minst en spelare per lag) och Hemma (ett lag har högst en hemmaarena, frivilligt). I tentans form, utan constraintnamn och med allt som INTEGER:
+
+    CREATE TABLE Forening (
+        ForeningID     INTEGER IDENTITY(1,1),
+        ForeningsNo    INTEGER NOT NULL,
+        Namn           INTEGER,
+        PRIMARY KEY (ForeningID),
+        UNIQUE (ForeningsNo)
+    );
+
+    CREATE TABLE Arena (
+        ArenaID        INTEGER IDENTITY(1,1),
+        ArenaNo        INTEGER NOT NULL,
+        Ort            INTEGER,
+        PRIMARY KEY (ArenaID),
+        UNIQUE (ArenaNo)
+    );
+
+    CREATE TABLE Lag (
+        LagID          INTEGER IDENTITY(1,1),
+        LagNo          INTEGER NOT NULL,
+        Division       INTEGER,
+        ForeningID     INTEGER NOT NULL,       -- ägaren: identifierande relation, totalt deltagande
+        ArenaID        INTEGER,                -- Hemma: partiellt deltagande, får vara NULL
+        PRIMARY KEY (LagID),
+        UNIQUE (LagNo, ForeningID),            -- partiell nyckel + ägare
+        FOREIGN KEY (ForeningID) REFERENCES Forening(ForeningID),
+        FOREIGN KEY (ArenaID) REFERENCES Arena(ArenaID)
+    );
+
+    CREATE TABLE Spelare (
+        SpelareID      INTEGER IDENTITY(1,1),
+        SpelarNo       INTEGER NOT NULL,
+        Namn           INTEGER,
+        ForeningID     INTEGER NOT NULL,       -- MedlemI: exakt en förening
+        PRIMARY KEY (SpelareID),
+        UNIQUE (SpelarNo),
+        FOREIGN KEY (ForeningID) REFERENCES Forening(ForeningID)
+    );
+
+    CREATE TABLE SpelarI (
+        SpelareID      INTEGER,
+        LagID          INTEGER,
+        PRIMARY KEY (SpelareID, LagID),
+        FOREIGN KEY (SpelareID) REFERENCES Spelare(SpelareID),
+        FOREIGN KEY (LagID) REFERENCES Lag(LagID)
+    );
+
+Läs koden mot diagrammet en gång till. Fyra entitetstyper, fyra tabeller med IDENTITY. Har och MedlemI och Hemma är 1:N och blev främmande nycklar på många-sidan — två av dem NOT NULL, för dubbellinjerna vid Lag och Spelare, en nullbar, för den enkla linjen vid Lag i Hemma. SpelarI är M:N och blev en kopplingstabell utan egen surrogatnyckel. Det dubbellinjen vid Lag i SpelarI säger — varje lag har minst en spelare — kan ingen constraint uttrycka; det är gränsen från kapitel 3, och det kostar inga poäng att inte kunna skriva den. Namn-kolumnerna är INTEGER därför att uppgiften säger så, inte för att det är rimligt.
+
+### Arbetsgång och de vanliga poängförlusterna
+
+1. En tabell per vanlig och svag entitet, med \`IDENTITY(1,1)\` och \`PRIMARY KEY\` på surrogatnyckeln.
+2. Identifierarna ur diagrammet som \`NOT NULL\` och \`UNIQUE\`; för en svag entitet \`UNIQUE\` över partiell nyckel plus ägarens främmande nyckel.
+3. Varje 1:N och 1:1: främmande nyckel på rätt sida, \`NOT NULL\` om linjen är dubbel.
+4. Varje M:N: kopplingstabell med sammansatt primärnyckel av de två främmande nycklarna, relationsattribut som vanliga kolumner.
+5. Flervärdesattribut: egen tabell med ägarens främmande nyckel plus värdet som primärnyckel.
+6. Ordningen: refererade tabeller före refererande, så att koden kör.
+
+Det som brukar kosta: glömd \`NOT NULL\` på en naturlig nyckel, \`NOT NULL\` som saknas eller står fel mot deltagandelinjerna, en kopplingstabell som fått en egen IDENTITY, en svag entitet utan \`UNIQUE\` över paret, och en \`REFERENCES\` som pekar på den naturliga nyckeln i stället för surrogatnyckeln.
 `
   }
 
@@ -1228,14 +1317,14 @@ export const glossary = [
   { term: "Funktionellt beroende", definition: "X bestämmer funktionellt Y om och endast om varje X-värde i relationen är associerat med precis ett Y-värde. Skrivs X → Y.", chapter: "kap7" },
   { term: "Grad (degree)", definition: "Antalet attribut i en relation.", chapter: "kap2" },
   { term: "Icke-primärattribut (non-prime)", definition: "Ett attribut som inte är medlem i någon kandidatnyckel.", chapter: "kap3" },
-  { term: "IDENTITY(1,1)", definition: "SQL Servers sätt att generera surrogatnyckelvärden automatiskt.", chapter: "kap8" },
+  { term: "IDENTITY(1,1)", definition: "SQL Servers sätt att skriva en automatiskt inkrementerande surrogatnyckel: första talet är startvärdet (seed), andra steget (increment). Tentans uppgift 2 kräver den på tabeller för vanliga och svaga entiteter — inte på kopplingstabeller.", chapter: "kap8" },
   { term: "Kandidatnyckel (candidate key)", definition: "En attributmängd som uppfyller både unikhet (inga två skilda tupler har samma värden i något giltigt relationsvärde) och minimalitet (inget attribut kan tas bort utan att unikheten förloras). Kortformen: kan användas för att unikt identifiera vilken tupel som helst. En relation kan ha flera.", chapter: "kap3" },
   { term: "Kardinalitet (cardinality)", definition: "Antalet tupler i det aktuella relationsvärdet; ett tomt värde har kardinalitet noll. I ER-modellen betyder ordet i stället kardinalitetsvillkor på deltagande.", chapter: "kap2" },
   { term: "Kedjade svaga entiteter", definition: "En svag entitetstyp vars ägare själv är svag. Mappas ägare först; varje led refererar sin närmaste ägares kompletta nyckel, och primärnyckeln växer led för led: {ProjectNo}, {ProjectNo, TaskNo}, {ProjectNo, TaskNo, StepNo}.", chapter: "kap6" },
   { term: "Kodstandard", definition: "Kursens namngivningsregler: PascalCase och singular för tabeller, PascalCase för kolumner, constraintprefixen PK_, FK_, UQ_, CK_, DF_, camelCase för Java-variabler.", chapter: "kap8" },
   { term: "Konceptuell databasdesign", definition: "Första steget i designprocessen: verksamhetskraven blir ett ER-diagram.", chapter: "kap1" },
   { term: "Logisk databasdesign", definition: "Andra steget: den konceptuella modellen transformeras till relationer i textform och normaliseras om nödvändigt.", chapter: "kap1" },
-  { term: "Lossless join", definition: "Egenskap hos en nedbrytning: en naturlig join av delrelationerna ger tillbaka originalrelationen. Kontroll två relationer i taget: de måste dela attribut, och de gemensamma attributen ska vara kandidatnyckel i minst en av dem. Saknas gemensamt attribut är egenskapen bruten.", chapter: "kap7" },
+  { term: "Lossless join", definition: "Egenskap hos en nedbrytning: en naturlig join av delrelationerna ger tillbaka originalrelationen. Föreläsningen ger bara den negativa regeln — inga gemensamma attribut, ingen lossless join. Kursbokens kontroll, två relationer i taget: de gemensamma attributen ska vara kandidatnyckel i minst en av dem.", chapter: "kap7" },
   { term: "Minimalitet", definition: "Villkoret att inget attribut kan tas bort ur en kandidatnyckel utan att den garanterade unikheten går förlorad. {EmployeeNo, Name} är unik men inte minimal.", chapter: "kap3" },
   { term: "Motivering (högsta normalform)", definition: "Tentans krav i 3f–3g: en rad för normalformen och en rad för skälet, som namnger definitionens begrepp och relationens attribut — 'äkta delmängden B av kandidatnyckeln {A,B} bestämmer funktionellt icke-primärattributet D'. Krävs inte för 3NF.", chapter: "kap7" },
   { term: "Naturlig nyckel", definition: "Nyckel med affärsbetydelse, t.ex. anställningsnummer eller ISBN. Motsats till surrogatnyckel.", chapter: "kap3" },

@@ -230,7 +230,7 @@ export const topics = [
       "Dekomposition: bryt ned relationen i mindre relationer som uppfyller den önskade normalformen. Transformationsreglerna producerar redan relationer i 3NF — de är normaliseringsteorins resultat i praktisk form.",
       "Lossless join: en naturlig join av delrelationerna ska ge tillbaka originalrelationen. Saknar delrelationerna gemensamt attribut går det inte — då behövs kopplingsrelationen. Icke-förhandlingsbart krav.",
       "Dependency preservation: ett funktionellt beroende är bevarat om dess båda attribut finns i samma relation. Kontrollera beroende för beroende; ett förlorat beroende kan inte upprätthållas med en enkel constraint.",
-      "Sant/falskt om ett schema (3a–e): svara alltid. 2NF i en relation — sammansatt nyckel? annars kan den inte brytas. Alla i 3NF — pröva varje relation med dess egna beroenden; en relation utan beroenden är i 3NF. Fler än en kandidatnyckel — leta cykler (A → B, B → A). Primärattribut — avgörs av DEN relationens kandidatnycklar, inte R:s. Beroendebevarande — varje beroendes attribut i samma relation. Lossless join — två i taget: gemensamma attribut som är kandidatnyckel i minst en av dem.",
+      "Sant/falskt om ett schema (3a–e): svara alltid. 2NF i en relation — sammansatt nyckel? annars kan den inte brytas. Alla i 3NF — pröva varje relation med dess egna beroenden; en relation utan beroenden är i 3NF. Fler än en kandidatnyckel — leta cykler (A → B, B → A). Primärattribut — avgörs av DEN relationens kandidatnycklar, inte R:s. Beroendebevarande — varje beroendes attribut i samma relation. Lossless join — kursbokens kontroll, två i taget: gemensamma attribut som är kandidatnyckel i minst en av dem (föreläsningen ger bara: inga gemensamma attribut → inte lossless).",
       "Motiveringens form (3f–g): kandidatnycklar, primär- och icke-primärattribut först; sedan 'Normalform: 1NF / Skäl: äkta delmängden B av kandidatnyckeln {A,B} bestämmer funktionellt icke-primärattributet D' eller 'icke-primärattributet D är transitivt beroende av kandidatnyckeln A (A → C, C → D, inte C → A)'. Motivering krävs inte för 3NF.",
       "Övernormalisering ger poängavdrag: dela inte upp mer än definitionerna kräver — bryt inte ned en relation som redan är i 3NF, dela inte {A,B} → {C,D} i två. Nedbrytningen ska sträva efter både lossless join och dependency preservation: ett beroende per relation med vänsterledet som primärnyckel, understruken."
     ],
@@ -258,14 +258,17 @@ export const topics = [
       "Svag entitet i DDL: egen surrogatnyckel som primärnyckel, ägarens surrogatnyckel som främmande nyckel med NOT NULL, och UNIQUE över partiell nyckel plus ägarens främmande nyckel.",
       "Unär relation i DDL: främmande nyckel mot tabellens egen surrogatnyckel, namngiven efter rollen (AIDR1), NULL tillåtet vid partiellt deltagande. Unär M:N ger en kopplingstabell med två kolumner mot samma tabell.",
       "Datatyper i SQL Server: INT/BIGINT för heltal, DECIMAL(p,s) för exakta decimaltal och belopp (approximativa numeriska typer bara när exakt precision är mindre viktig), VARCHAR(n)/NVARCHAR(n) för text där N klarar unicode, CHAR(n) för fast längd, DATE/DATETIME/DATETIME2 för tid, BIT för booleskt.",
-      "Kodstandard v2.0: tabellnamn i PascalCase och singular (Employee, inte employees), kolumnnamn i PascalCase ofta med tabellprefix, camelCase för Java-variabler och metoder, PascalCase för Java-klasser, SCREAMING_SNAKE_CASE för miljövariabler. Inga hemligheter i repot — anslutningsuppgifter och lösenord i miljövariabler eller konfiguration utanför versionshanteringen; det prövas i databasprojektet."
+      "Kodstandard v2.0: tabellnamn i PascalCase och singular (Employee, inte employees), kolumnnamn i PascalCase ofta med tabellprefix, camelCase för Java-variabler och metoder, PascalCase för Java-klasser, SCREAMING_SNAKE_CASE för miljövariabler. Inga hemligheter i repot — anslutningsuppgifter och lösenord i miljövariabler eller konfiguration utanför versionshanteringen; det prövas i databasprojektet.",
+      "Tentans uppgift 2: alla kolumner INTEGER (strukturen prövas, inte datatyperna); reserverade ord utskrivna — PRIMARY KEY, FOREIGN KEY, REFERENCES, CONSTRAINT, NOT NULL, UNIQUE; constraintnamn krävs inte, PRIMARY KEY (LagID) utan CONSTRAINT-rad är tillåtet; automatiskt inkrementerande surrogatnyckel stavas INTEGER IDENTITY(1,1) (seed, increment) på tabeller för vanliga OCH svaga entiteter, aldrig på kopplingstabeller; koden indenterad med en kolumn per rad och constraints sist.",
+      "Poängen sitter i det facit läser mot diagrammet: naturliga nycklar UNIQUE och NOT NULL, NOT NULL på främmande nyckel där linjen är dubbel och nullbar där den är enkel, svag entitet med surrogatnyckel plus UNIQUE över partiell nyckel och ägarens främmande nyckel, REFERENCES mot surrogatnyckeln — och refererade tabeller före refererande."
     ],
     pitfalls: [
       "UNIQUE tillåter NULL, PRIMARY KEY gör det inte.",
       "Belopp lagras med en exakt numerisk typ som DECIMAL — approximativa typer ger avrundningsfel.",
       "Tabellnamn ska vara singular enligt kursens standard.",
       "Naturlig nyckel med bara UNIQUE släpper igenom NULL — NOT NULL måste också anges.",
-      "Kopplingstabeller får ingen egen surrogatnyckel; primärnyckeln är de två främmande nycklarna."
+      "Kopplingstabeller får ingen egen surrogatnyckel; primärnyckeln är de två främmande nycklarna.",
+      "På tentan: en REFERENCES som pekar på den naturliga nyckeln i stället för surrogatnyckeln, en kopplingstabell med egen IDENTITY, eller NOT NULL som inte följer deltagandelinjerna — det är de vanliga avdragen."
     ]
   }
 ];

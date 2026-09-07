@@ -75,7 +75,18 @@ BY/HAVING eller mängdskillnad + skalär subquery, en fråga, indenterad.
 Inte förekommit: application development (listas dock i nya Fö1 slide 16),
 logisk modell som eget svar, relationsalgebra, Crow's Foot som produktion.
 Läs kap 1 har avsnittet "Så ser tentan ut". Stor uppdatering pågår enligt
-prompten CC-prompt-stor-uppdatering-tentan.md (gitignorerad): punkt 1–4 klara.
+prompten CC-prompt-stor-uppdatering-tentan.md (gitignorerad): punkt 1–5 klara.
+Punkt 5 (2026-09-07): kapitel 9 har avsnittet "Tentans instruktioner för
+uppgift 2" — de fem instruktionerna som rättningskriterier (INTEGER,
+utskrivna reserverade ord, constraintnamn valfria, IDENTITY(1,1) med seed
+och increment på vanliga och svaga entiteter men inte kopplingstabeller,
+indentering), "det som ger poängen" ur häftets facit, en fullständig DDL
+i tentans form för föreningsdiagrammet från kapitel 6 (utan constraintnamn,
+allt INTEGER), arbetsgång och vanliga avdrag. Fö7 (HT26) läst som
+föreläsning: budskapet är "alla tabeller får surrogatnyckel, naturliga
+nycklar blir UNIQUE + NOT NULL, NOT NULL på FK = obligatoriskt deltagande,
+kopplingstabellen har ingen egen IDENTITY"; kapitlets surrogatavsnitt
+rubricerades om från "nu, inte tidigare" till att stämma med kapitel 3.
 Punkt 4 (2026-09-07): kapitel 8 har två nya avsnitt, "Tentans form: sant
 eller falskt om ett schema" (de sex påståendetyperna med operativa regler)
 och "Tentans form: högsta normalform med motivering" (motiveringens form ur
