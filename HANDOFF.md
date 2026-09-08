@@ -87,7 +87,12 @@ uppsamlingens form (61). Facit verifierat i SQLite. Nytt fält `note` på
 övningar renderas under uppgiften — används där T-SQL skiljer sig (AVG
 över INT). Gamla nivå 9 är nu nivå 10 "… — över tentans nivå" (id n9
 oförändrat). schemaGlossary har tabell- och kolumnnoter för de nya
-tabellerna. Kvar: valfri punkt 9 (markera-alla-sanna-typ).
+tabellerna. **Nästa steg (beslut 2026-09-08, sparat till oktober 2026):** punkt 9 ur
+tentaprompten — en frågetyp "markera alla sanna" med tentans poängregel
+(+5 per rätt markerat, −3 per fel markerat, 0 blankt) och åtta till tio
+påståenden mot ett av sajtens diagram. Kräver en ny frågetyp i Öva,
+frågekortet och klar-logiken (ett pass = ett diagram). Uppdateringen
+efter tentaprompten stannade efter punkt 8.
 Punkt 7 (2026-09-07): Öva omviktad mot tentan. Fördelning 4/4/5/7/7/7/5/
 10/7/9 (kap 1–10), 65 frågor, spann 4–10 i balanstestet. 28 igenkännings-
 frågor strukna (bl.a. TimeEdit, ArrayList, grad/kardinalitet, Crow's Foot
