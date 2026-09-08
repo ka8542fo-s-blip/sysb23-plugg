@@ -65,6 +65,23 @@ test("rätt svar med annat relationsnamn ger rätt plus anmärkning", () => {
   assert.ok(r.remarks.some((n) => /TEACHES/.test(n) && /Teach/i.test(n)), r.remarks.join(" | "));
 });
 
+test("alla relationer omdöpta, även kopplingsrelationen, ger rätt", () => {
+  const r = check(`Larare(EmployeeNo, Name, Salary)
+PK = {EmployeeNo}
+
+Kurs(CourseCode, Name, Credits, AnsvarigLarare)
+PK = {CourseCode}
+FK1: (AnsvarigLarare) REF Larare(EmployeeNo)
+
+Undervisar(EmployeeNo, CourseCode)
+PK = {EmployeeNo, CourseCode}
+FK1: (EmployeeNo) REF Larare(EmployeeNo)
+FK2: (CourseCode) REF Kurs(CourseCode)`);
+  assert.equal(r.status, "correct", JSON.stringify(r.relations.map((x) => [x.name, x.status, x.problems])));
+  assert.equal(r.extra.length, 0);
+  assert.equal(r.remarks.length, 4); // tre relationsnamn + ett FK-attributnamn
+});
+
 test("rätt svar med annat FK-attributnamn ger rätt plus anmärkning", () => {
   const r = check(CORRECT_5.replace("COURSE(CourseCode, Name, Credits, EmployeeNo)", "COURSE(CourseCode, Name, Credits, ResponsibleTeacher)").replace("FK1: (EmployeeNo) REF TEACHER(EmployeeNo)\n\nTEACH", "FK1: (ResponsibleTeacher) REF TEACHER(EmployeeNo)\n\nTEACH"));
   assert.equal(r.status, "correct", JSON.stringify(r.relations.map((x) => x.problems)));

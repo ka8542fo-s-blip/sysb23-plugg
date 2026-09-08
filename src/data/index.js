@@ -54,7 +54,7 @@ export const courses = [
     status: "aktiv",
     // Öva visar tomläge tills en frågebank finns. Prov är medvetet borta:
     // tentan är konstruktionsbaserad, och ett tomläge är sämre än ingen flik.
-    views: ["las", "sql", "ova", "statistik"],
+    views: ["las", "sql", "modell", "ova", "statistik"],
     // Öva speglar Läs: kvizzarna grupperas per kapitel, inte per ämne.
     practiceBy: "chapter",
     topics: databaserTopics,

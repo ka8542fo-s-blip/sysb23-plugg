@@ -87,12 +87,44 @@ uppsamlingens form (61). Facit verifierat i SQLite. Nytt fält `note` på
 övningar renderas under uppgiften — används där T-SQL skiljer sig (AVG
 över INT). Gamla nivå 9 är nu nivå 10 "… — över tentans nivå" (id n9
 oförändrat). schemaGlossary har tabell- och kolumnnoter för de nya
-tabellerna. **Nästa steg (beslut 2026-09-08, sparat till oktober 2026):** punkt 9 ur
+tabellerna. **Modellverkstaden "Modellera" (2026-09-08, CC-prompt-modellverkstad.md,
+gitignorerad):** vy `modell` i Databaser-manifestet mellan SQL och Öva.
+`lib/modelCheck.js` tolkar Fö5-notationen (relationsrad, PK = {…} eller
+PK = CK1, FKn: (…) REF MÅL(…), CK-rader ignoreras, "3NF" som eget svar) och
+rättar mot facit som mängder: relationer matchas på namn eller överlapp
+(icke-FK-attribut + FK-mål, Jaccard ≥ 0,5), icke-FK-attribut som mängd, FK
+på vad de refererar via attributidentiteter (omdöpta FK-attribut och
+kedjade svaga entiteter rättas rätt), PK som identitetsmängd, facit som
+lista av alternativ (bästa visas). Avvikande namn = anmärkning. Test:
+`scripts/model-check.test.mjs` (20 fall) och `model-figures.test.mjs`.
+Uppgifter i `data/databaser/modelExercises.js`: häftets 4–9 (facit läst
+mot understrykningarna på s. 11–12 — Björns bilder finns inte i repot) plus
+egen uppgift 10 med kedjade svaga entiteter; regeltagg + "varför" per
+relation. Diagram i `components/model/modelFigures.jsx` (Chen-primitiver
+plus `vpPrimitives.jsx` för Crow's Foot i Visual Paradigm-stil till
+uppgift 4–5). `SchemaView.jsx` ritar svaret live i häftets form (hel
+understrykning PK, prickad FK, båda) och facit i samma vy bredvid efter
+rättning. Framsteg: `sysb23:modell:<id>` = "solved", klar när rättad rätt,
+nollställs bara via knapp. Steg 2 (häftets 11–13, normalisering till 3NF,
+"R är redan i 3NF" som val) är INTE byggt — rättaren tolkar redan "3NF"
+och facit 11–13 är lästa mot understrykningarna (11:2 har inget tryckfel:
+R2(C, B, D) med C eller B som PK, båda giltiga eftersom B ↔ C).
+
+**Nästa steg (beslut 2026-09-08, sparat till oktober 2026):** punkt 9 ur
 tentaprompten — en frågetyp "markera alla sanna" med tentans poängregel
 (+5 per rätt markerat, −3 per fel markerat, 0 blankt) och åtta till tio
 påståenden mot ett av sajtens diagram. Kräver en ny frågetyp i Öva,
 frågekortet och klar-logiken (ett pass = ett diagram). Uppdateringen
-efter tentaprompten stannade efter punkt 8.
+efter tentaprompten stannade efter punkt 8. Dessutom, ur ordinarie tentan
+25-09-16 (läst 2026-09-08, samma fyra uppgifter och viktning): (a)
+"kandidatnyckel" som ord i 3e-regeln i kapitel 8 ("attribut A är en
+kandidatnyckel i relation R i schema 3"), (b) ett 3g-exempel där rätt svar
+är att inte göra något — cykel A↔B↔C↔D med E, F beroende av D är i 3NF,
+ingen motivering krävs, (c) en tentaspårsuppgift med jämförelse mot ett
+aggregat ur en underfråga ("högre än snittbetyget på kurs C1") plus antal
+per grupp, och (d) en tredje genomgång i kapitel 6 med en kedja av svaga
+entiteter i tre led ("identifieras endast av kombinationen av …").
+Ordinarie tentan har tolv påståenden i uppgift 1.
 Punkt 7 (2026-09-07): Öva omviktad mot tentan. Fördelning 4/4/5/7/7/7/5/
 10/7/9 (kap 1–10), 65 frågor, spann 4–10 i balanstestet. 28 igenkännings-
 frågor strukna (bl.a. TimeEdit, ArrayList, grad/kardinalitet, Crow's Foot

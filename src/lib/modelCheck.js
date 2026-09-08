@@ -123,7 +123,7 @@ function identity(schema, relation, attr, label, seen = new Set()) {
 // Signatur för matchning utan namn: icke-FK-attributen plus vilka relationer
 // FK:erna refererar — så att en ren kopplingsrelation (bara FK-attribut)
 // ändå kan matchas när den heter något annat.
-const signature = (rel) => [...nonFkAttrs(rel).map(norm), ...rel.fks.map((fk) => "fk:" + norm(fk.target))];
+const signature = (rel, label = norm) => [...nonFkAttrs(rel).map(norm), ...rel.fks.map((fk) => "fk:" + label(fk.target))];
 
 const jaccard = (a, b) => {
   const A = new Set(a.map(norm)); const B = new Set(b.map(norm));
@@ -137,23 +137,36 @@ const jaccard = (a, b) => {
 function matchRelations(answer, facit) {
   const pairs = new Map(); // facitIndex -> answerIndex
   const usedAnswer = new Set();
+  const aToF = new Map();
+  const bind = (fi, ai) => {
+    pairs.set(fi, ai); usedAnswer.add(ai);
+    aToF.set(norm(answer.relations[ai].name), norm(facit.relations[fi].name));
+  };
   facit.relations.forEach((f, fi) => {
     const ai = answer.relations.findIndex((a, i) => !usedAnswer.has(i) && norm(a.name) === norm(f.name));
-    if (ai >= 0) { pairs.set(fi, ai); usedAnswer.add(ai); }
+    if (ai >= 0) bind(fi, ai);
   });
-  const candidates = [];
-  facit.relations.forEach((f, fi) => {
-    if (pairs.has(fi)) return;
-    answer.relations.forEach((a, ai) => {
-      if (usedAnswer.has(ai)) return;
-      const score = jaccard(signature(f), signature(a));
-      if (score >= 0.5) candidates.push({ fi, ai, score });
+  // Överlappspass, upprepat: när en relation matchats kan dess nya namn
+  // användas för att känna igen FK-målen i nästa (ren kopplingsrelation
+  // mot omdöpta relationer).
+  const labelA = (name) => aToF.get(norm(name)) ?? norm(name);
+  let progress = true;
+  while (progress) {
+    progress = false;
+    const candidates = [];
+    facit.relations.forEach((f, fi) => {
+      if (pairs.has(fi)) return;
+      answer.relations.forEach((a, ai) => {
+        if (usedAnswer.has(ai)) return;
+        const score = jaccard(signature(f), signature(a, labelA));
+        if (score >= 0.5) candidates.push({ fi, ai, score });
+      });
     });
-  });
-  candidates.sort((x, y) => y.score - x.score);
-  for (const c of candidates) {
-    if (pairs.has(c.fi) || usedAnswer.has(c.ai)) continue;
-    pairs.set(c.fi, c.ai); usedAnswer.add(c.ai);
+    candidates.sort((x, y) => y.score - x.score);
+    for (const c of candidates) {
+      if (pairs.has(c.fi) || usedAnswer.has(c.ai)) continue;
+      bind(c.fi, c.ai); progress = true;
+    }
   }
   return { pairs, usedAnswer };
 }

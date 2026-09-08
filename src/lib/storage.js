@@ -35,6 +35,27 @@ export function saveSqlResult(exerciseId, status) {
 
 // Nollställer en enskild övning — statusen ska gå att tjäna tillbaka när
 // man lärt sig, inte fastna på "löst med hjälp" för alltid.
+// Modellverkstaden: sysb23:modell:<uppgiftsId> = "solved"
+export const modelKey = (exerciseId) => `modell:${exerciseId}`;
+export function loadModelProgress(exerciseIds) {
+  const state = {};
+  for (const id of exerciseIds) {
+    const value = load(modelKey(id), null);
+    if (value === "solved") state[id] = value;
+  }
+  return state;
+}
+export function saveModelResult(exerciseId, status) {
+  if (status) save(modelKey(exerciseId), status);
+}
+export function clearModelResult(exerciseId) {
+  try {
+    localStorage.removeItem(PREFIX + modelKey(exerciseId));
+  } catch {
+    /* privat läge */
+  }
+}
+
 export function clearSqlResult(exerciseId) {
   try {
     localStorage.removeItem(PREFIX + sqlKey(exerciseId));

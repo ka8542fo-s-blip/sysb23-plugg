@@ -7,6 +7,7 @@ export const VIEW_LABELS = {
   prov: "Prov",
   essa: "Essä",
   sql: "SQL",
+  modell: "Modellera",
   statistik: "Statistik",
   schema: "Schema",
 };

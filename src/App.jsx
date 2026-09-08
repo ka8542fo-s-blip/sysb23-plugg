@@ -8,6 +8,8 @@ import Essays from "./views/Essays.jsx";
 import Stats from "./views/Stats.jsx";
 import Schedule from "./views/Schedule.jsx";
 import SqlWorkshop from "./views/SqlWorkshop.jsx";
+import Modeling from "./views/Modeling.jsx";
+import { modelExercises } from "./data/databaser/modelExercises.js";
 import { courses, getCourse } from "./data/index.js";
 import {
   KEYS,
@@ -22,6 +24,9 @@ import {
   loadSqlProgress,
   saveSqlResult,
   clearSqlResult,
+  loadModelProgress,
+  saveModelResult,
+  clearModelResult,
 } from "./lib/storage.js";
 
 export default function App() {
@@ -69,6 +74,23 @@ export default function App() {
   const [sqlProgress, setSqlProgress] = useState(() =>
     loadSqlProgress((getCourse(courseId).sqlExercises || []).map((item) => item.id)),
   );
+  // Modellverkstaden: en nyckel per uppgift i localStorage.
+  const [modelProgress, setModelProgress] = useState(() =>
+    loadModelProgress(modelExercises.map((item) => item.id)),
+  );
+  function solveModelExercise(id, status) {
+    saveModelResult(id, status);
+    setModelProgress((prev) => ({ ...prev, [id]: status }));
+  }
+  function resetModelExercise(id) {
+    clearModelResult(id);
+    setModelProgress((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+  }
+
 
   useEffect(() => {
     setExamSession(null);
@@ -234,6 +256,9 @@ export default function App() {
             onSolve={solveSqlExercise}
             onReset={resetSqlExercise}
           />
+        )}
+        {view === "modell" && (
+          <Modeling modelProgress={modelProgress} onSolve={solveModelExercise} onReset={resetModelExercise} />
         )}
         {view === "schema" && (
           <Schedule
