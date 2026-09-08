@@ -105,10 +105,40 @@ plus `vpPrimitives.jsx` för Crow's Foot i Visual Paradigm-stil till
 uppgift 4–5). `SchemaView.jsx` ritar svaret live i häftets form (hel
 understrykning PK, prickad FK, båda) och facit i samma vy bredvid efter
 rättning. Framsteg: `sysb23:modell:<id>` = "solved", klar när rättad rätt,
-nollställs bara via knapp. Steg 2 (häftets 11–13, normalisering till 3NF,
-"R är redan i 3NF" som val) är INTE byggt — rättaren tolkar redan "3NF"
-och facit 11–13 är lästa mot understrykningarna (11:2 har inget tryckfel:
-R2(C, B, D) med C eller B som PK, båda giltiga eftersom B ↔ C).
+nollställs bara via knapp.
+**Steg 2, normalisering (2026-09-08):** flik "Normalisering till 3NF" i
+Modellera (flikar ovanför: ER-diagram till schema · normalisering, med
+klar-räkning). `data/databaser/normalizeExercises.js`: häftets 11–13 som
+38 poster (12 + 14 + 12), relation + beroenden som förformaterat block,
+facit kompakt (`pk` = häftets understrykning, s. 24–26; `pkAlso` = härledda
+PK-alternativ där relationen har fler kandidatnycklar än facit strukit
+under — häftet ger själv båda i 11:7, 11:11, 11:2, 11:9; `variants` = hela
+alternativa nedbrytningar). Normalformen för uppgift 11 saknas i facit och
+är härledd. `lib/normalize.js`: FD-motor (hölje, kandidatnycklar, högsta
+normalform med kapitel 8:s motivering "äkta delmängden X av kandidatnyckeln
+… bestämmer icke-primärattributet …" / "… transitivt beroende …",
+projicerade beroenden, lossless två i taget, beroendebevarande) plus
+`checkNormalization(item, {nf, text})`. Svaret: uttryckligt val 1NF/2NF/
+"R är redan i 3NF" (3NF döljer textrutan) och uppdelningen i Fö5-notation
+utan FK; rättas med samma rättare med `ignoreNames` (R1, R2 … är
+godtyckliga, inga namnanmärkningar). Regeltaggar härleds ur beroendena:
+Partiellt beroende, Transitivt beroende, Kandidatnyckeln (med noten att
+attribut som själva är kandidatnycklar inte ska brytas ut), Nyckelrelation.
+Extra relation vars attribut ryms i en facitrelation = "Övernormalisering:
+…". Motorn godkänner INTE andra nedbrytningar än facits (bonusen lämnad:
+övernormaliseringar är ofta lossless + beroendebevarande + 3NF, så en
+automatisk "annan giltig nedbrytning" skulle strida mot tentans avdrag).
+Test `scripts/normalize.test.mjs` (16 fall): motorn ger facits normalform
+för alla 38, varje facitvariant är 3NF + lossless + beroendebevarande,
+facit rättar sig självt i alla PK-alternativ, annat PK-val rätt,
+övernormalisering ger diff, m.m. Hela sviten 91.
+**Två avvikelser i häftets facit (rapporterade 2026-09-08, inte ändrade):**
+11:8 saknar understrykningar (PK härledd {A, B}, C, D). 12:9 har
+R4(B, D) — B → D gäller inte och R1 ⋈ R4 över B ger falska tupler; R4(A, D)
+är nyckelrelationen. Häftets variant står som facit, den härledda som
+alternativ, båda godtas tills Björn bekräftat (`KEY_ISSUES` i testet).
+11:2 har inget tryckfel: R2(C, B, D) med C eller B som PK, båda giltiga
+eftersom B ↔ C.
 
 **Nästa steg (beslut 2026-09-08, sparat till oktober 2026):** punkt 9 ur
 tentaprompten — en frågetyp "markera alla sanna" med tentans poängregel

@@ -3,6 +3,8 @@ import { modelExercises } from "../data/databaser/modelExercises.js";
 import { parseSchema, checkModel, norm } from "../lib/modelCheck.js";
 import SchemaView from "../components/model/SchemaView.jsx";
 import { ModelFigure } from "../components/model/modelFigures.jsx";
+import Normalizing from "./Normalizing.jsx";
+import { normalizeExercises } from "../data/databaser/normalizeExercises.js";
 
 const TEMPLATE = `NAMN(Attribut1, Attribut2)
 PK = {Attribut1}
@@ -20,12 +22,15 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
   const [drafts, setDrafts] = useState({});
   const [result, setResult] = useState(null);
   const [confirmReset, setConfirmReset] = useState(false);
+  // Två steg: ER-diagram → schema (häftets 4–10) och normalisering (11–13).
+  const [mode, setMode] = useState("er");
 
   const exercise = exercises.find((e) => e.id === currentId) || exercises[0];
   const code = drafts[exercise.id] ?? "";
   const parsed = useMemo(() => parseSchema(code), [code]);
   const facitParsed = useMemo(() => parseSchema(exercise.facit[result?.variant ?? 0]), [exercise, result]);
   const solvedCount = exercises.filter((e) => modelProgress[e.id]).length;
+  const normSolved = normalizeExercises.filter((e) => modelProgress[e.id]).length;
 
   useEffect(() => { setResult(null); setConfirmReset(false); }, [currentId]);
 
@@ -51,16 +56,39 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
     <div className="space-y-6">
       <section>
         <h1 className="font-display text-2xl">Modellera</h1>
-        <p className="mt-1 max-w-reading text-[15px] text-ink/70">
-          Ett ER-diagram visas, du skriver relationsschemat i föreläsningens notation och får det
-          rättat som mängder: attributens ordning, skiftläge och namnet på en relation eller ett
-          FK-attribut spelar ingen roll, bara vad som identifierar och vad som refererar vad.
-          Bredvid textrutan ritas ditt schema i häftets form, med understrykningarna som på tentan.
-        </p>
-        <p className="tabular mt-2 text-[15px] text-ink/65">{solvedCount} av {exercises.length} uppgifter klara</p>
+        {mode === "er" ? (
+          <p className="mt-1 max-w-reading text-[15px] text-ink/70">
+            Ett ER-diagram visas, du skriver relationsschemat i föreläsningens notation och får det
+            rättat som mängder: attributens ordning, skiftläge och namnet på en relation eller ett
+            FK-attribut spelar ingen roll, bara vad som identifierar och vad som refererar vad.
+            Bredvid textrutan ritas ditt schema i häftets form, med understrykningarna som på tentan.
+          </p>
+        ) : (
+          <p className="mt-1 max-w-reading text-[15px] text-ink/70">
+            En relation R med sina funktionella beroenden, som i tentans uppgift 3f och 3g. Ange
+            högsta normalform och, om R inte redan är i 3NF, uppdelningen med primärnyckel för varje
+            relation. Rättas som mängder mot facit; att dela upp mer än 3NF kräver är övernormalisering.
+          </p>
+        )}
+        <div className="mt-3 flex flex-wrap gap-2" role="tablist" aria-label="Steg">
+          {[["er", `ER-diagram till schema · ${solvedCount} av ${exercises.length}`], ["norm", `Normalisering till 3NF · ${normSolved} av ${normalizeExercises.length}`]].map(([key, label]) => (
+            <button
+              key={key}
+              type="button"
+              role="tab"
+              aria-selected={mode === key}
+              onClick={() => setMode(key)}
+              className={`tabular rounded-lg border px-3 py-1.5 text-sm transition-colors duration-150 ${mode === key ? "border-pine bg-pine text-white" : "border-line hover:border-pine hover:bg-pine/[0.06]"}`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </section>
 
-      <div className="lg:flex lg:gap-8">
+      {mode === "norm" && <Normalizing modelProgress={modelProgress} onSolve={onSolve} onReset={onReset} />}
+
+      {mode === "er" && <div className="lg:flex lg:gap-8">
         <div className="lg:order-2 lg:min-w-0 lg:flex-1">
           <section className="card p-5">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -187,7 +215,7 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
             </ul>
           </nav>
         </div>
-      </div>
+      </div>}
     </div>
   );
 }

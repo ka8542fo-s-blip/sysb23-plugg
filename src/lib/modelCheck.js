@@ -134,7 +134,7 @@ const jaccard = (a, b) => {
 
 // Matcha svarets relationer mot facits: exakt namn först, sedan bästa
 // överlapp på icke-FK-attribut (Jaccard ≥ 0,5), annars omatchad.
-function matchRelations(answer, facit) {
+function matchRelations(answer, facit, { ignoreNames = false } = {}) {
   const pairs = new Map(); // facitIndex -> answerIndex
   const usedAnswer = new Set();
   const aToF = new Map();
@@ -142,7 +142,8 @@ function matchRelations(answer, facit) {
     pairs.set(fi, ai); usedAnswer.add(ai);
     aToF.set(norm(answer.relations[ai].name), norm(facit.relations[fi].name));
   };
-  facit.relations.forEach((f, fi) => {
+  // I normaliseringen är namnen R1, R2 … godtyckliga: matcha bara på innehåll.
+  if (!ignoreNames) facit.relations.forEach((f, fi) => {
     const ai = answer.relations.findIndex((a, i) => !usedAnswer.has(i) && norm(a.name) === norm(f.name));
     if (ai >= 0) bind(fi, ai);
   });
@@ -173,10 +174,10 @@ function matchRelations(answer, facit) {
 
 const setDiff = (a, b) => a.filter((x) => !b.includes(x));
 
-function compareOne(answer, facit, aRel, fRel, labelA, labelF, rules) {
+function compareOne(answer, facit, aRel, fRel, labelA, labelF, rules, { ignoreNames = false } = {}) {
   const notes = [];
   const problems = [];
-  if (norm(aRel.name) !== norm(fRel.name)) notes.push(`Relationen heter ${aRel.name} i ditt svar och ${fRel.name} i facit — samma sak.`);
+  if (!ignoreNames && norm(aRel.name) !== norm(fRel.name)) notes.push(`Relationen heter ${aRel.name} i ditt svar och ${fRel.name} i facit — samma sak.`);
 
   // Icke-FK-attribut som mängd, namn måste stämma.
   const fPlain = nonFkAttrs(fRel).map(norm);
@@ -232,8 +233,8 @@ function compareOne(answer, facit, aRel, fRel, labelA, labelF, rules) {
 }
 
 // Rätta ett tolkat svar mot ett tolkat facit. rules: { [normNamn]: { rule, why } }.
-export function compareSchemas(answer, facit, rules = {}) {
-  const { pairs, usedAnswer } = matchRelations(answer, facit);
+export function compareSchemas(answer, facit, rules = {}, options = {}) {
+  const { pairs, usedAnswer } = matchRelations(answer, facit, options);
   // Etikett: svarets relationsnamn → facits namn där de är matchade.
   const aToF = new Map();
   for (const [fi, ai] of pairs) aToF.set(norm(answer.relations[ai].name), norm(facit.relations[fi].name));
@@ -244,7 +245,7 @@ export function compareSchemas(answer, facit, rules = {}) {
     if (!pairs.has(fi)) {
       return { name: fRel.name, answerName: null, status: "missing", problems: [`Relationen ${fRel.name} saknas i ditt svar.`], notes: [], rule: rules?.[norm(fRel.name)] ?? null, expected: fRel };
     }
-    return compareOne(answer, facit, answer.relations[pairs.get(fi)], fRel, labelA, labelF, rules);
+    return compareOne(answer, facit, answer.relations[pairs.get(fi)], fRel, labelA, labelF, rules, options);
   });
   const extra = answer.relations.filter((_, i) => !usedAnswer.has(i)).map((r) => r.name);
   const okCount = relations.filter((r) => r.status === "ok").length;
@@ -258,14 +259,14 @@ export function compareSchemas(answer, facit, rules = {}) {
 
 // Facit får vara en lista av alternativ (1:1 har två giltiga värdval).
 // Rätta mot varje och visa det bästa.
-export function checkModel(answerText, facitVariants, rules = {}) {
-  const answer = parseSchema(answerText);
+export function checkModel(answerText, facitVariants, rules = {}, options = {}) {
+  const answer = typeof answerText === "string" ? parseSchema(answerText) : answerText;
   if (answer.errors.length) return { status: "parse-error", errors: answer.errors, answer };
   const variants = Array.isArray(facitVariants) ? facitVariants : [facitVariants];
   let best = null;
   variants.forEach((text, i) => {
     const facit = typeof text === "string" ? parseSchema(text) : text;
-    const result = compareSchemas(answer, facit, rules);
+    const result = compareSchemas(answer, facit, rules, options);
     if (!best || result.status === "correct" && best.status !== "correct" || (best.status !== "correct" && result.score > best.score)) {
       best = { ...result, variant: i };
     }
