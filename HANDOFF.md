@@ -80,10 +80,23 @@ kapitel: allt UI läser `chapter.number`.
   golvad vid 0), per påstående skäl; klar när markeringen är exakt rätt.
   *ER-diagram till schema*: `modelExercises.js`, häftets 4–9 plus egen
   uppgift 10 (kedjade svaga entiteter), rättaren `lib/modelCheck.js`
-  (Fö5-notation, mängdjämförelse, FK på vad de refererar, namn =
+  (mängdjämförelse, FK på vad de refererar, namn =
   anmärkning, facit som alternativ), live-vy i häftets form
   (`SchemaView.jsx`), figurer i `components/model/` (Chen + Crow's Foot i
-  Visual Paradigm-stil). *Normalisering till 3NF*: `normalizeExercises.js`,
+  Visual Paradigm-stil; entitetsruta pine, nyckel brass, relationslinjer
+  och N-märke i delkursens koboltblå — användarkrav 2026-09-09 på tydligare
+  färger). **Inmatningsformen (2026-09-09, användarkrav):** föreläsningens
+  blockform som Björn skriver den — `Teacher(`, attributen ett per rad,
+  `CK₁ = {…}`, `PK = CK₁`, `FK (…) REF T(…)`, avslutande `)` på egen rad;
+  släpande komman och tabbar tillåtna, små siffror ₀–₉ = vanliga, `PK1 =
+  CK1` och `FK` utan kolon tillåtna, `{a, b)` tolereras. `unfoldBlocks` i
+  modelCheck.js vecklar ut blocken med originalradnummer i felen;
+  enradsformen fungerar fortfarande. Kodrutan `SchemaEditor.jsx`: mörk
+  yta (ink/paper-tokens), radnummer, Tab/Shift+Tab indrag, Enter behåller
+  indraget och drar in efter "(", knappar ₁–₄ och Alt + siffra sätter in
+  små siffror. Facit visas efter Rätta även vid tolkningsfel. OBS:
+  browserpanelens `key`-verktyg når inte Reacts onKeyDown — testa
+  tangenterna med dispatchade KeyboardEvent i javascript_tool. *Normalisering till 3NF*: `normalizeExercises.js`,
   häftets 11–13 som 38 poster, val 1NF/2NF/"R är redan i 3NF",
   FD-motorn `lib/normalize.js` (hölje, kandidatnycklar, högsta normalform
   med kapitel 8:s motivering, projicerade beroenden, lossless två i taget,
