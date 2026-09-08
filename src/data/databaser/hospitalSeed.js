@@ -143,4 +143,55 @@ INSERT INTO Car (LicenseNo, Brand, Price, EmployeeID) VALUES
     ('C5', 'audi', 70000, (SELECT EmployeeID FROM Employee WHERE EmpNo='E4')),
     ('C6', 'audi', 30000, NULL),
     ('C7', 'saab', 30000, (SELECT EmployeeID FROM Employee WHERE EmpNo='E5'));
+
+CREATE TABLE Reader (
+    ReaderID    INTEGER IDENTITY(1,1),
+    ReaderNo    CHAR(5) NOT NULL,
+    ReaderName  VARCHAR(50) NOT NULL,
+    ReaderAge   INT,
+    ReaderCity  VARCHAR(50),
+    CONSTRAINT UQ_Reader_ReaderNo UNIQUE(ReaderNo),
+    CONSTRAINT PK_Reader_ReaderID PRIMARY KEY (ReaderID)
+);
+
+CREATE TABLE Book (
+    BookID      INTEGER IDENTITY(1,1),
+    BookNo      CHAR(5) NOT NULL,
+    BookTitle   VARCHAR(100) NOT NULL,
+    BookPages   INT,
+    CONSTRAINT UQ_Book_BookNo UNIQUE(BookNo),
+    CONSTRAINT PK_Book_BookID PRIMARY KEY (BookID)
+);
+
+CREATE TABLE HasRead (
+    ReaderID    INTEGER,
+    BookID      INTEGER,
+    Rating      INT,
+    CONSTRAINT PK_HasRead_ReaderID_BookID PRIMARY KEY (ReaderID, BookID),
+    CONSTRAINT FK_HasRead_Reader_ReaderID FOREIGN KEY(ReaderID) REFERENCES Reader(ReaderID),
+    CONSTRAINT FK_HasRead_Book_BookID FOREIGN KEY(BookID) REFERENCES Book(BookID)
+);
+
+INSERT INTO Reader (ReaderNo, ReaderName, ReaderAge, ReaderCity) VALUES
+    ('R1', 'Alice', 24, 'Lund'),
+    ('R2', 'Bruno', 31, 'Malmö'),
+    ('R3', 'Cleo', 19, 'Lund'),
+    ('R4', 'Dev', 35, 'Eslöv'),
+    ('R5', 'Eva', 28, 'Malmö');
+
+INSERT INTO Book (BookNo, BookTitle, BookPages) VALUES
+    ('B1', 'Databaser', 320),
+    ('B2', 'Java', 410),
+    ('B3', 'Statistik', 250),
+    ('B4', 'Nätverk', 180);
+
+INSERT INTO HasRead (ReaderID, BookID, Rating) VALUES
+    ((SELECT ReaderID FROM Reader WHERE ReaderNo='R1'), (SELECT BookID FROM Book WHERE BookNo='B1'), 7),
+    ((SELECT ReaderID FROM Reader WHERE ReaderNo='R1'), (SELECT BookID FROM Book WHERE BookNo='B2'), 8),
+    ((SELECT ReaderID FROM Reader WHERE ReaderNo='R1'), (SELECT BookID FROM Book WHERE BookNo='B3'), 6),
+    ((SELECT ReaderID FROM Reader WHERE ReaderNo='R2'), (SELECT BookID FROM Book WHERE BookNo='B1'), 9),
+    ((SELECT ReaderID FROM Reader WHERE ReaderNo='R2'), (SELECT BookID FROM Book WHERE BookNo='B3'), 5),
+    ((SELECT ReaderID FROM Reader WHERE ReaderNo='R3'), (SELECT BookID FROM Book WHERE BookNo='B2'), 8),
+    ((SELECT ReaderID FROM Reader WHERE ReaderNo='R3'), (SELECT BookID FROM Book WHERE BookNo='B4'), 6),
+    ((SELECT ReaderID FROM Reader WHERE ReaderNo='R4'), (SELECT BookID FROM Book WHERE BookNo='B1'), 6);
 `;

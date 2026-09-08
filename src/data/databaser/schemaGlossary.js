@@ -11,6 +11,9 @@ export const tableNotes = {
   Suffers: "Sjukdomar patienten lider av just nu, med det datum det började.",
   HasSuffered: "Sjukdomar patienten har lidit av tidigare. Samma struktur som Suffers men utan datum — det är det som skiljer dem åt.",
   Car: "Bilarna i registret, sju stycken. Kan sakna ägare: EmployeeID är NULL för de två bilar som ingen anställd har.",
+  Reader: "Tentaspårets läsare, fem stycken, med ålder och ort. Samma struktur som tentans Student — men tentans tabeller saknar surrogatnyckel.",
+  Book: "Tentaspårets böcker, fyra stycken. Motsvarar tentans Course.",
+  HasRead: "Vilken läsare som läst vilken bok, med betyg 1–10. Kopplingstabellen med mätvärdet — tentans HasStudied. Läsare R5 har inte läst något.",
 };
 
 export const columnNotes = {
@@ -64,4 +67,16 @@ export const keyNotes = {
     term: "FK — främmande nyckel",
     text: "Kolumnen pekar på en rad i en annan tabell. Det är på dessa kolumner du joinar, och databasen hindrar värden som inte finns i den andra tabellen.",
   },
+  "Reader.ReaderID": "Läsarens id, satt av databasen.",
+  "Reader.ReaderNo": "Läsarnummer, R1–R5. Unikt och läsbart — det som uppgifterna refererar till.",
+  "Reader.ReaderName": "Läsarens namn.",
+  "Reader.ReaderAge": "Ålder i år, som heltal.",
+  "Reader.ReaderCity": "Ort där läsaren bor.",
+  "Book.BookID": "Bokens id, satt av databasen.",
+  "Book.BookNo": "Boknummer, B1–B4. Unikt och läsbart.",
+  "Book.BookTitle": "Bokens titel.",
+  "Book.BookPages": "Antal sidor.",
+  "HasRead.ReaderID": "Läsaren i kopplingen. Pekar på Reader.ReaderID och ingår i primärnyckeln.",
+  "HasRead.BookID": "Boken i kopplingen. Pekar på Book.BookID och ingår i primärnyckeln.",
+  "HasRead.Rating": "Läsarens betyg på boken, heltal. Det är detta man tar snitt, högsta och lägsta av.",
 };

@@ -75,7 +75,19 @@ BY/HAVING eller mängdskillnad + skalär subquery, en fråga, indenterad.
 Inte förekommit: application development (listas dock i nya Fö1 slide 16),
 logisk modell som eget svar, relationsalgebra, Crow's Foot som produktion.
 Läs kap 1 har avsnittet "Så ser tentan ut". Stor uppdatering pågår enligt
-prompten CC-prompt-stor-uppdatering-tentan.md (gitignorerad): punkt 1–7 klara.
+prompten CC-prompt-stor-uppdatering-tentan.md (gitignorerad): punkt 1–8 klara.
+Punkt 8 (2026-09-07): verkstaden har nivå 9 "Tentaform: en fråga, ett
+resultat" (`level: "tenta"`, sql-54…61) på ett eget schema av tentans
+struktur — Reader, Book, HasRead(Rating) — tillagt sist i hospitalSeed.js
+(Reader R5 har inga lån; B4 läses bara av R3). Uppgifterna: skalär
+underfråga (54), MIN per grupp + HAVING (55), COUNT + HAVING (56), "R1 men
+inte R2" (57), snitt över alla läsare för R1:s böcker med IN-underfråga
+(58), yngre än R2 + minst två (59), omtentans form med NOT EXISTS (60),
+uppsamlingens form (61). Facit verifierat i SQLite. Nytt fält `note` på
+övningar renderas under uppgiften — används där T-SQL skiljer sig (AVG
+över INT). Gamla nivå 9 är nu nivå 10 "… — över tentans nivå" (id n9
+oförändrat). schemaGlossary har tabell- och kolumnnoter för de nya
+tabellerna. Kvar: valfri punkt 9 (markera-alla-sanna-typ).
 Punkt 7 (2026-09-07): Öva omviktad mot tentan. Fördelning 4/4/5/7/7/7/5/
 10/7/9 (kap 1–10), 65 frågor, spann 4–10 i balanstestet. 28 igenkännings-
 frågor strukna (bl.a. TimeEdit, ArrayList, grad/kardinalitet, Crow's Foot
@@ -89,8 +101,7 @@ fler än en kandidatnyckel, alla i 3NF, primärattribut i delrelation) på
 egen R(A–G) med {A,B}→C, B→D, D→E, C→{F,G}, en dbq-23-typ (A↔B, D→E → 2NF),
 en övernormalisering. Varje svar härlett i explain. LENGTH_FLAGGED: db4-16,
 20, 21, 23 borta med frågorna. Verkstadens dialektnot nämner AVG över
-INTEGER, TOP och +. Kvar från prompten: punkt 8 (verkstadens tentaspår) och
-valfri punkt 9 (markera-alla-sanna-typ).
+INTEGER, TOP och +. Punkt 8 se nedan.
 Punkt 6 (2026-09-07): nytt kapitel 10 `kap9` "SQL: att resonera fram en
 fråga", byggt baklänges från uppgift 4 — schema med kopplingstabell, join
 över den, GROUP BY-regeln, HAVING mot WHERE, "X men inte Y" (NOT IN / NOT

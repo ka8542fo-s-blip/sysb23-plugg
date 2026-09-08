@@ -276,6 +276,9 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
                 )}
               </div>
               <h3 className="mt-1 font-display text-xl">{exercise.task}</h3>
+              {exercise.note && (
+                <p className="mt-2 text-sm leading-relaxed text-ink/65">{exercise.note}</p>
+              )}
 
               {exercise.hint && (
                 <div className="mt-3">

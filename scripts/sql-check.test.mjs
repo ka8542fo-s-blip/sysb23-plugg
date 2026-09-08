@@ -88,7 +88,7 @@ test("fel resultat rapporteras före formfel", async () => {
   assert.equal(bada.reason, "rows");
 });
 
-test("alla 53 kurslösningar uppfyller sina egna formkrav", async () => {
+test("alla kurslösningar uppfyller sina egna formkrav", async () => {
   for (const exercise of sqlExercises) {
     const outcome = await run(exercise, exercise.solution);
     assert.equal(outcome.status, "correct", `${exercise.id}: ${outcome.reason} ${outcome.message}`);

@@ -229,9 +229,23 @@ Vyn lagrar ingen data — den kör sin fråga varje gång. Tre regler: en vy exp
 `
   },
   {
-    id: "n9",
+    id: "tenta",
     number: 9,
-    name: "Korrelerade frågor och EXISTS hard mode",
+    name: "Tentaform: en fråga, ett resultat",
+    lesson: `
+Tentans uppgift 4 är en enda SQL-fråga, 30 poäng: tre tabeller — två entitetstabeller och en kopplingstabell med ett mätvärde — och en mening på svenska som ska bli en fråga med ett resultat, indenterad. Den här nivån har ett eget schema av samma struktur: **Reader**, **Book** och **HasRead** med betyget Rating. Uppgifterna är av tentans slag: aggregat per grupp med villkor, "de som har X men inte Y", jämförelse mot ett värde hämtat med underfråga, högsta eller lägsta per grupp, antal per grupp med HAVING — och de två sista är sammansatta precis som tentafrågorna.
+
+Kapitel 10 i Läs är arbetsgången: stryk under **vilka kolumner** som ska ut, **per vad** (gruppen), **vilka villkor** och om de gäller rad eller grupp, och **vilka värden** som måste hämtas ur andra rader. Sedan SELECT, FROM med joinarna, WHERE, GROUP BY, HAVING. Läs igenom mot uppgiftstexten innan du kör.
+
+Två skillnader mot tentan. Verkstadens tabeller har surrogatnycklar, så joinen går på ReaderID och BookID och uppgifterna pekar ut läsare och böcker med ReaderNo och BookNo; tentans tabeller saknar surrogatnycklar, så där joinar du direkt på StudentNo och Code. Och motorn här är SQLite: **AVG över INT ger decimaler här men ett heltal i SQL Server** — 7,33 här är 7 på tentan. Uppgifterna som berörs säger det i sin not.
+
+Nivå 10 ligger över tentans nivå. Den här nivån är tentans.
+`
+  },
+  {
+    id: "n9",
+    number: 10,
+    name: "Korrelerade frågor och EXISTS hard mode — över tentans nivå",
     lesson: `
   Det här är nivån föreläsaren kallar "hard mode", och den ägnar tolv slides åt en enda fråga: **Vem har läst alla kurser?**
 
@@ -505,7 +519,7 @@ export const sqlExercises = [
     hint: "UNION ALL behåller dubbletter — resultatet ska ha 12 rader. UNION skulle ge 6.",
     reviewed: true },
 
-  // ---- Nivå 9 ----
+  // ---- Nivå 10 (över tentans nivå) ----
   { id: "sql-52", level: "n9", task: "Visa namn och lön för de anställda som tjänar mer än medellönen PÅ SIN EGEN ENHET.",
     solution: "SELECT e.EmpName, e.EmpSalary FROM Employee e WHERE e.EmpSalary > (SELECT AVG(e2.EmpSalary) FROM Employee e2 WHERE e2.UnitID = e.UnitID);",
     hint: "Snittet är olika per enhet, så underfrågan måste referera till den yttre radens UnitID.",
@@ -514,5 +528,40 @@ export const sqlExercises = [
   { id: "sql-53", level: "n9", task: "Vilka anställda undersöker ALLA patienter på enheten Trauma? Visa namnen.",
     solution: "SELECT e.EmpName FROM Employee e WHERE NOT EXISTS (SELECT 1 FROM Patient p INNER JOIN Unit u ON p.UnitID = u.UnitID WHERE u.UnitName = 'Trauma' AND NOT EXISTS (SELECT 1 FROM Examines x WHERE x.EmployeeID = e.EmployeeID AND x.PatientID = p.PatientID));",
     hint: "Dubbel NOT EXISTS: anställda där det inte finns någon Trauma-patient som de inte undersöker. Alternativet är COUNT(DISTINCT p.PatientID) i HAVING jämfört med antalet Trauma-patienter — båda ger samma svar.",
-    reviewed: true }
+    reviewed: true },
+
+  // Nivå 9, Tentaform (2026-09-07): åtta uppgifter av tentans slag på Reader/Book/HasRead.
+  { id: "sql-54", level: "tenta", task: "Visa läsarnummer, namn och ålder för läsare som är äldre än läsare R5.",
+    solution: "SELECT r.ReaderNo, r.ReaderName, r.ReaderAge FROM Reader AS r WHERE r.ReaderAge > (SELECT ReaderAge FROM Reader WHERE ReaderNo = 'R5');",
+    hint: "R5:s ålder hör till en annan rad än den som prövas. Hämta den med en skalär underfråga — skriv inte in talet.", reviewed: false },
+
+  { id: "sql-55", level: "tenta", task: "Visa boknummer, titel och lägsta betyg för böcker som lästs av fler än en läsare.",
+    solution: "SELECT b.BookNo, b.BookTitle, MIN(h.Rating) AS LowestRating FROM Book AS b INNER JOIN HasRead AS h ON h.BookID = b.BookID GROUP BY b.BookNo, b.BookTitle HAVING COUNT(*) > 1;",
+    hint: "Lägsta per bok är MIN i en grupp per bok. 'Fler än en läsare' är ett villkor på gruppen — HAVING.", reviewed: false },
+
+  { id: "sql-56", level: "tenta", task: "Visa läsarnummer, namn och antal lästa böcker för läsare som har läst minst två böcker.",
+    solution: "SELECT r.ReaderNo, r.ReaderName, COUNT(*) AS BooksRead FROM Reader AS r INNER JOIN HasRead AS h ON h.ReaderID = r.ReaderID GROUP BY r.ReaderNo, r.ReaderName HAVING COUNT(*) >= 2;",
+    hint: "Namn i SELECT betyder namn i GROUP BY. Antalet finns först efter grupperingen.", reviewed: false },
+
+  { id: "sql-57", level: "tenta", task: "Visa boknummer och titel för böcker som lästs av läsare R1 men inte av läsare R2.",
+    solution: "SELECT b.BookNo, b.BookTitle FROM Book AS b WHERE b.BookID IN (SELECT ReaderBooks.BookID FROM HasRead AS ReaderBooks INNER JOIN Reader AS r ON r.ReaderID = ReaderBooks.ReaderID WHERE r.ReaderNo = 'R1') AND b.BookID NOT IN (SELECT ReaderBooks.BookID FROM HasRead AS ReaderBooks INNER JOIN Reader AS r ON r.ReaderID = ReaderBooks.ReaderID WHERE r.ReaderNo = 'R2');",
+    hint: "Två mängder: R1:s böcker och R2:s böcker. IN för den första, NOT IN eller NOT EXISTS för den andra.", reviewed: false },
+
+  { id: "sql-58", level: "tenta", task: "Visa boknummer, titel och snittbetyg (över alla läsare) för de böcker som läsare R1 har läst.",
+    solution: "SELECT b.BookNo, b.BookTitle, AVG(h.Rating) AS AvgRating FROM Book AS b INNER JOIN HasRead AS h ON h.BookID = b.BookID WHERE b.BookID IN (SELECT ReaderBooks.BookID FROM HasRead AS ReaderBooks INNER JOIN Reader AS r ON r.ReaderID = ReaderBooks.ReaderID WHERE r.ReaderNo = 'R1') GROUP BY b.BookNo, b.BookTitle;",
+    hint: "Villkoret 'som R1 har läst' får inte stå i WHERE på HasRead-raden — då försvinner de andra läsarnas betyg före snittet. Lägg det som en underfråga på bokens nyckel.",
+    note: "T-SQL mot SQLite: AVG över INT ger 7,33 här men 7 i SQL Server. På tentan är heltalet rätt svar.", reviewed: false },
+
+  { id: "sql-59", level: "tenta", task: "Visa läsarnummer, namn och antal lästa böcker för läsare som är yngre än läsare R2 och har läst minst två böcker.",
+    solution: "SELECT r.ReaderNo, r.ReaderName, COUNT(*) AS BooksRead FROM Reader AS r INNER JOIN HasRead AS h ON h.ReaderID = r.ReaderID WHERE r.ReaderAge < (SELECT ReaderAge FROM Reader WHERE ReaderNo = 'R2') GROUP BY r.ReaderNo, r.ReaderName HAVING COUNT(*) >= 2;",
+    hint: "Åldern är ett radvillkor med ett värde ur en annan rad: WHERE med skalär underfråga. Antalet är ett gruppvillkor: HAVING.", reviewed: false },
+
+  { id: "sql-60", level: "tenta", task: "Visa boknummer, titel och snittbetyg för böcker som lästs av läsare R3 men inte av läsare R1. Lös med NOT EXISTS.",
+    solution: "SELECT b.BookNo, b.BookTitle, AVG(h.Rating) AS AvgRating FROM Book AS b INNER JOIN HasRead AS h ON h.BookID = b.BookID WHERE EXISTS (SELECT 1 FROM HasRead AS h3 INNER JOIN Reader AS r3 ON r3.ReaderID = h3.ReaderID WHERE h3.BookID = b.BookID AND r3.ReaderNo = 'R3') AND NOT EXISTS (SELECT 1 FROM HasRead AS h1 INNER JOIN Reader AS r1 ON r1.ReaderID = h1.ReaderID WHERE h1.BookID = b.BookID AND r1.ReaderNo = 'R1') GROUP BY b.BookNo, b.BookTitle;",
+    hint: "Omtentans form. NOT EXISTS är korrelerat på bokens nyckel: 'det finns ingen HasRead-rad där R1 läst just den här boken'. Snittet räknas över raderna som är kvar — här bara R3:s, för ingen annan har läst boken.",
+    note: "T-SQL mot SQLite: AVG över INT ger decimaler här men ett heltal i SQL Server.", reviewed: false },
+
+  { id: "sql-61", level: "tenta", task: "Visa läsarnummer, namn och högsta betyg för läsare som är äldre än läsare R3 och har läst två eller fler böcker.",
+    solution: "SELECT r.ReaderNo, r.ReaderName, MAX(h.Rating) AS HighestRating FROM Reader AS r INNER JOIN HasRead AS h ON h.ReaderID = r.ReaderID WHERE r.ReaderAge > (SELECT ReaderAge FROM Reader WHERE ReaderNo = 'R3') GROUP BY r.ReaderNo, r.ReaderName HAVING COUNT(*) >= 2;",
+    hint: "Uppsamlingens form: skalär underfråga i WHERE, MAX per grupp, antal i HAVING. Tre kolumner ut, en rad per läsare.", reviewed: false },
 ];
