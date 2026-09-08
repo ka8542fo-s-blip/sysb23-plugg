@@ -13,7 +13,7 @@
 //
 // Avvikelser från häftet, rapporterade: 11:8 saknar understrykningar i
 // facit (PK härledd: {A, B}, C, D). 12:9 har R4(B, D) i facit, men B → D
-// gäller inte och R1 ⋈ R4 över B ger falska tupler — R4(A, D) är den
+// gäller inte och joinen av R1 och R4 över B ger tupler som inte fanns i R — R4(A, D) är den
 // nyckelrelation som ger lossless join. Häftets variant står kvar som
 // facit, den härledda som alternativ, tills Björn svarat.
 const R = (name, attrs, pk, pkAlso) => ({ name, attrs, pk: [pk], ...(pkAlso ? { pkAlso } : {}) });

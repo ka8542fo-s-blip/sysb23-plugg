@@ -123,7 +123,7 @@ Kombinationen LEFT JOIN + COUNT har en fälla: \`COUNT(*)\` räknar NULL-raden o
 
 **Flera joins** kedjas för att gå via en mellantabell. Examines kopplar Employee till Patient, Suffers kopplar Patient till Illness.
 
-**Self join** är en tabell joinad mot sig själv med två olika alias. Föreläsaren ägnar tre slides åt hur det går fel:
+**Self join** är en tabell joinad mot sig själv med två olika alias. Föreläsningen visar tre sätt det går fel:
 
 - \`WHERE StudentAddress = StudentAddress\` — jämför en kolumn med sig själv. Alltid sant, ger hela tabellen.
 - \`FROM Student s1, Student s2 WHERE s1.Address = s2.Address\` — matchar varje student med sig själv, så alla kommer med.
@@ -233,7 +233,7 @@ Vyn lagrar ingen data — den kör sin fråga varje gång. Tre regler: en vy exp
     number: 9,
     name: "Tentaform: en fråga, ett resultat",
     lesson: `
-Tentans uppgift 4 är en enda SQL-fråga, 30 poäng: tre tabeller — två entitetstabeller och en kopplingstabell med ett mätvärde — och en mening på svenska som ska bli en fråga med ett resultat, indenterad. Den här nivån har ett eget schema av samma struktur: **Reader**, **Book** och **HasRead** med betyget Rating. Uppgifterna är av tentans slag: aggregat per grupp med villkor, "de som har X men inte Y", jämförelse mot ett värde hämtat med underfråga, högsta eller lägsta per grupp, antal per grupp med HAVING — och de två sista är sammansatta precis som tentafrågorna.
+Tentans uppgift 4 är en enda SQL-fråga, 30 poäng: tre tabeller — två entitetstabeller och en kopplingstabell med ett mätvärde — och en mening på svenska som ska bli en fråga med ett resultat, indenterad. Den här nivån har ett eget schema av samma struktur: **Reader**, **Book** och **HasRead** med betyget Rating. Uppgifterna är av tentans slag: aggregat per grupp med villkor, "de som har X men inte Y", jämförelse mot ett värde hämtat med underfråga, högsta eller lägsta per grupp, antal per grupp med HAVING — och de tre sista är sammansatta precis som tentafrågorna, den allra sista med ett aggregat som jämförelsevärde.
 
 Kapitel 10 i Läs är arbetsgången: stryk under **vilka kolumner** som ska ut, **per vad** (gruppen), **vilka villkor** och om de gäller rad eller grupp, och **vilka värden** som måste hämtas ur andra rader. Sedan SELECT, FROM med joinarna, WHERE, GROUP BY, HAVING. Läs igenom mot uppgiftstexten innan du kör.
 
@@ -247,7 +247,7 @@ Nivå 10 ligger över tentans nivå. Den här nivån är tentans.
     number: 10,
     name: "Korrelerade frågor och EXISTS hard mode — över tentans nivå",
     lesson: `
-  Det här är nivån föreläsaren kallar "hard mode", och den ägnar tolv slides åt en enda fråga: **Vem har läst alla kurser?**
+  Det här är nivån föreläsaren kallar "hard mode", och den kretsar kring en enda fråga: **Vem har läst alla kurser?**
 
   Frågan är svår för att SQL inte har någon "alla"-operator. Två lösningar finns.
 
@@ -564,4 +564,9 @@ export const sqlExercises = [
   { id: "sql-61", level: "tenta", task: "Visa läsarnummer, namn och högsta betyg för läsare som är äldre än läsare R3 och har läst två eller fler böcker.",
     solution: "SELECT r.ReaderNo, r.ReaderName, MAX(h.Rating) AS HighestRating FROM Reader AS r INNER JOIN HasRead AS h ON h.ReaderID = r.ReaderID WHERE r.ReaderAge > (SELECT ReaderAge FROM Reader WHERE ReaderNo = 'R3') GROUP BY r.ReaderNo, r.ReaderName HAVING COUNT(*) >= 2;",
     hint: "Uppsamlingens form: skalär underfråga i WHERE, MAX per grupp, antal i HAVING. Tre kolumner ut, en rad per läsare.", reviewed: false },
+
+  { id: "sql-62", level: "tenta", task: "Visa boknummer, titel och antal läsare för böcker som lästs av minst två läsare och vars snittbetyg är högre än snittbetyget på bok B3.",
+    solution: "SELECT b.BookNo, b.BookTitle, COUNT(*) AS Readers FROM Book AS b INNER JOIN HasRead AS h ON h.BookID = b.BookID GROUP BY b.BookNo, b.BookTitle HAVING COUNT(*) >= 2 AND AVG(h.Rating) > (SELECT AVG(h3.Rating) FROM HasRead AS h3 INNER JOIN Book AS b3 ON b3.BookID = h3.BookID WHERE b3.BookNo = 'B3');",
+    hint: "Ordinarie tentans form: jämförelsevärdet är självt ett aggregat — snittet på en viss bok — och hämtas med en underfråga. Snittet per bok är ett gruppvärde, så jämförelsen står i HAVING, bredvid antalet.",
+    note: "T-SQL mot SQLite: AVG över INT ger decimaler här men ett heltal i SQL Server. Resultatet är detsamma här, men skriv frågan så att den håller i båda.", reviewed: false },
 ];

@@ -74,7 +74,7 @@ De två HT25-tentorna (omtentan 24 oktober 2025 och uppsamlingen 25 maj 2026) ha
 
 **Poängreglernas konsekvens — två gränser.** Uppgift 1: härled varje påstående ur notationen först. För det du inte kan härleda gäller brytpunkten 3/8: markera påståendet om du är mer än ungefär 40 procent säker på att det är sant (väntevärdet 0,4 · 5 − 0,6 · 3 är precis noll), annars lämna det omarkerat — ett omarkerat sant påstående kostar inget. Uppgift 3a–3e: svara alltid, lämna aldrig blankt. Med två alternativ och +2/−1 är även en ren gissning värd +0,5 poäng i snitt, och med beroendena framför dig behöver du sällan gissa. Uppgift 3f–3g: dela inte upp mer än definitionerna kräver — 3NF är målet, inte så många relationer som möjligt.
 
-**Det som inte har förekommit:** den logiska modellen som eget svar, relationsalgebra och Crow's Foot som produktionsnotation — Chen är det man ritar och läser. Nya Fö1 listar *application development* som ett av tentans fem områden, men det har inte funnits på någon av de två tentorna.
+**Det som inte har förekommit:** den logiska modellen som eget svar, relationsalgebra och Crow's Foot som produktionsnotation — Chen är det man ritar och läser. Kursintroduktionen listar *application development* som ett av tentans fem områden, men det har inte funnits på någon av tentorna.
 `
   },
 
@@ -235,7 +235,7 @@ Den notationen står i hjälpmedlen och är den tydligaste när en relation har 
 
 En **naturlig nyckel** är ett attribut som har betydelse i verksamheten: personnummer, anställningsnummer, ISBN. En **surrogatnyckel** är ett artificiellt värde som databasen genererar, typiskt ett löpnummer utan innebörd. Skälen att införa en är nyckelstabilitet (värdet ändras aldrig) och prestanda (effektivare joins och index); priset är att raden inte går att identifiera meningsfullt utan uppslag.
 
-Kursen har placerat surrogatnycklarna olika. Nya Fö5 nämner dem inte alls: den logiska modellen använder ER-modellens identifierare som kandidatnycklar rakt av, för att bevara modellens semantik. Nya Fö1 lägger dem i logisk design. Övningshäftet och kapitel 9 lägger dem i fysisk design. **På tentan avgörs frågan av uppgift 2:** "tabeller som motsvarar vanliga och svaga entiteter ska använda automatiskt inkrementerande surrogatnycklar." De hör alltså till DDL-steget, och i uppgift 3 stryker du under de naturliga nycklarna.
+Kursen har placerat surrogatnycklarna olika. Föreläsningen om logisk design nämner dem inte alls: den logiska modellen använder ER-modellens identifierare som kandidatnycklar rakt av, för att bevara modellens semantik. Kursintroduktionen lägger dem i logisk design. Övningshäftet och kapitel 9 lägger dem i fysisk design. **På tentan avgörs frågan av uppgift 2:** "tabeller som motsvarar vanliga och svaga entiteter ska använda automatiskt inkrementerande surrogatnycklar." De hör alltså till DDL-steget, och i uppgift 3 stryker du under de naturliga nycklarna.
 
 Mönstret att kunna är kursens \`hospital-ddl.sql\`: \`EmployeeID\` (surrogat, primärnyckel) och \`EmpNo\` (naturlig, \`UNIQUE\`). Surrogatnyckeln har lagts till, den naturliga nyckeln har bevarats — tas den bort förloras affärsregeln om unikhet. Ser du det mönstret i en tentauppgift vet du vilket designsteg du befinner dig i.
 `
@@ -665,6 +665,42 @@ Den vanliga felläsningen i 6 är att ta N bredvid Lag som svar på frågan om L
 - **7 sant.** Ingen symbol i Chen-notationen hindrar att samma entitet fyller båda rollerna i en unär relation. Finns regeln "ingen får vara sin egen fadder" står den i uppgiftstexten, inte i diagrammet — och då gäller texten.
 - **8 sant.** Ratiot bredvid Exemplar i Lånar är N: en låntagare får ha många exemplar, och inget säger att de ska vara exemplar av olika böcker. Flerstegsläsningen igen: FinnsSom och Lånar är obundna av varandra.
 
+### Genomgång 3: kedjade svaga entiteter
+
+Ordinarie tentan har ett påståendeslag till, och det är det längsta: "X identifieras endast av kombinationen av 1. …, 2. samt …, 3. samt …". Det prövar en kedja av svaga entiteter. Regeln är kapitlets: en svag entitets kompletta identitet är ägarens **kompletta** identitet plus den partiella identifieraren. Är ägaren själv svag, ingår ägarens ägare också. Kedjan följs uppåt tills en stark entitet nås, och alla led kommer med.
+
+[[diagram:pastaenden-rederi]]
+
+Elva påståenden. Avgör varje för dig själv innan du läser facit.
+
+1. Ett fartyg identifieras av sitt namn.
+2. Ett fartyg identifieras endast av kombinationen av dess namn och numret på rederiet som äger det.
+3. En resa identifieras av kombinationen av avgångsdatum och namnet på fartyget som gör resan.
+4. En resa identifieras endast av kombinationen av 1. dess avgångsdatum, 2. samt namnet på fartyget som gör resan, 3. samt numret på rederiet som äger fartyget.
+5. Ett rederi måste äga minst ett fartyg.
+6. Ett fartyg måste ägas av exakt ett rederi.
+7. Ett fartyg måste ha gjort minst en resa.
+8. En resa måste anlöpa exakt en hamn.
+9. En resa kan anlöpa flera hamnar.
+10. Två hamnar kan ha samma namn.
+11. En hamn måste anlöpas av minst en resa.
+
+**Facit: sanna är 2, 4, 6, 8 och 10.**
+
+- **1 falskt.** Fartyg är svag (dubbel rektangel) och fartygsnamn är streckat understruket: namnet är unikt bara inom sitt rederi. Två rederier kan ha var sitt fartyg med samma namn.
+- **2 sant.** Ett led: ägaren Rederi är stark med rederiNo som identifierare, så Fartygs kompletta identitet är {rederiNo, fartygsnamn}. "Endast" stämmer — inget av de två kan tas bort.
+- **3 falskt.** Fartygets namn är inte en komplett identitet, så kombinationen pekar inte ut ett fartyg och därmed inte en resa. Påståendet saknar rederiets nummer.
+- **4 sant.** Två led: Resa är svag under Fartyg via Gör, och Fartyg är svag under Rederi via Äger. Kompletta identiteten är Fartygs kompletta identitet plus avgångsdatum: {rederiNo, fartygsnamn, avgångsdatum}. Det är precis de tre delarna, och inga fler.
+- **5 falskt.** Linjen vid Rederi i Äger är enkel. Att relationen är identifierande gör deltagandet obligatoriskt för den svaga sidan, inte för ägaren.
+- **6 sant.** Dubbel linje vid Fartyg: minst ett rederi. Ratiot 1 bredvid Rederi, läst tvärs över: högst ett. Exakt ett — och det följer också av att Fartyg är svag under Rederi.
+- **7 falskt.** Linjen vid Fartyg i Gör är enkel. Ett fartyg får finnas utan resor; det är resorna som inte får finnas utan fartyg.
+- **8 sant.** Dubbel linje vid Resa i Anlöper och ratiot 1 bredvid Hamn: minst en och högst en.
+- **9 falskt.** Ratiot bredvid Hamn är 1. N bredvid Resa säger att en hamn får anlöpas av många resor — det är den andra frågan.
+- **10 sant.** Hamns identifierare är den sammansatta hamnId med delarna namn och land. Det är kombinationen som är unik; namn ensamt är det inte, så två hamnar i olika länder får heta lika.
+- **11 falskt.** Linjen vid Hamn i Anlöper är enkel. En hamn får finnas i modellen utan att någon resa anlöper den.
+
+Felläsningen i 3 är tentans egen fälla: påståendet räknar upp *nästan* hela kedjan. Räkna leden i diagrammet, inte i påståendet — varje dubbel rektangel på vägen upp till den starka entiteten bidrar med sin partiella identifierare, och den starka bidrar med sin.
+
 Poängräkningen gör metoden viktig. Sex sanna i genomgång 1 ger 30 poäng om du markerar exakt dem — men uppgiften ger högst 25, så det räcker med att träffa rätt. Markerar du 2 av misstag är det −3, och markerar du 6 av misstag ytterligare −3. Härled varje påstående ur sin plats i diagrammet, och lämna det du inte kan härleda omarkerat om du inte lutar tydligt åt att det är sant.
 `
   },
@@ -950,7 +986,7 @@ Uppgift 3a–3e ger en relation R med sina beroenden och två eller tre scheman 
 
 **"R i schema 2 har fler än en kandidatnyckel."** Två attribut som bestämmer varandra, A → B och B → A, ger två kandidatnycklar om vardera når alla övriga attribut. Leta efter cykler i beroendena. Ett attribut som inte står till höger om någon pil måste ingå i varje kandidatnyckel.
 
-**"Attribut C är ett primärattribut i relation R i schema 3."** Primärattribut är medlem i någon kandidatnyckel *i den relationen*. Det avgörs av relationens egna kandidatnycklar, inte av R:s. C kan vara icke-primärt i R och primärt i delrelationen — i en relation (C, D) med C → D är C nyckeln.
+**"Attribut C är ett primärattribut i relation R i schema 3"** eller **"attribut A är en kandidatnyckel i relation R i schema 3."** Båda avgörs av relationens egna kandidatnycklar, inte av R:s. Primärattribut är medlem i någon kandidatnyckel *i den relationen*. Kandidatnyckel är ett attribut, eller en minimal kombination, som bestämmer alla relationens övriga attribut — ett enda attribut A är kandidatnyckel bara om A ensamt räcker. C kan vara icke-primärt i R och primärt i delrelationen: i en relation (C, D) med C → D är C både kandidatnyckel och primärattribut, och D är varken eller. Skillnaden prövas när relationen har en sammansatt nyckel: i (A, B, C) med {A, B} → C är A primärattribut men ingen kandidatnyckel.
 
 **"Schema 3 är en nedbrytning där samtliga funktionella beroenden är bevarade."** Ett beroende är bevarat om dess attribut finns i samma relation. Gå igenom beroendena ett i taget — {A,B} → C är bevarat bara om A, B och C står i en och samma relation — och ett förlorat beroende gör påståendet falskt.
 
@@ -1030,6 +1066,27 @@ A och B bestämmer varandra, och var och en når C och D. Kandidatnycklar: A och
           (A → C, C → D, och det gäller inte att C → A).
 
 Nedbrytning: R1(A, B, C) med A som primärnyckel (B förblir kandidatnyckel), R2(C, D) med C som primärnyckel. Alla beroenden bevarade, C är nyckel i R2, lossless join. Att dela R1 vidare i (A, B) och (A, C) vore övernormalisering — R1 är redan i 3NF.
+
+### När rätt svar är att inte göra något
+
+Ordinarie tentans 3g gav en relation som redan är i 3NF. Rätt svar är då att säga det och stanna; motivering krävs inte, och varje uppdelning är övernormalisering med avdrag.
+
+    R(A, B, C, D, E, F)
+    A → B
+    B → C
+    C → D
+    D → A
+    D → {E, F}
+
+**Kandidatnycklar.** Beroendena bildar en cykel: A → B → C → D → A. Var och en av A, B, C och D når alla de andra tre, och D når E och F, så var och en av dem når allt. Fyra kandidatnycklar: A, B, C och D, alla enkla.
+
+**Primärattribut:** A, B, C, D. **Icke-primärattribut:** E, F.
+
+**2NF:** alla kandidatnycklar är enkla, så 2NF kan inte brytas. **3NF:** det enda beroendet med icke-primära attribut till höger är D → {E, F}, och D är själv kandidatnyckel. E och F är alltså direkt beroende av en kandidatnyckel, inte transitivt. Cykelns beroenden har bara primärattribut till höger.
+
+    Normalform: 3NF
+
+Ingen nedbrytning. Frestelsen är att bryta ut (D, E, F) "för att D bestämmer dem" — men det är ju vad en kandidatnyckel gör. Resultatet vore två relationer där en räckte, en join till för varje fråga, och poängavdrag. Att känna igen en relation som redan är i 3NF är en egen färdighet på tentan, och den kräver att du räknar fram alla kandidatnycklar innan du letar transitiva beroenden.
 `
   },
 
@@ -1520,6 +1577,7 @@ export const glossary = [
   { term: "DML (Data Manipulation Language)", definition: "Den del av SQL som hanterar data: SELECT, INSERT, UPDATE, DELETE.", chapter: "kap8" },
   { term: "Domän (domain)", definition: "Mängden tillåtna värden enligt schemat — inte de värden som redan används. Snävare än datatyp och bär affärsregeln.", chapter: "kap2" },
   { term: "En fråga per delfråga", definition: "Föreläsningens metod: bryt ned uppgiften i delfrågor och skriv var och en som en underfråga där dess värde behövs, i stället för att slå upp värdet och skriva in det. Underfrågor bara där en JOIN inte räcker.", chapter: "kap9" },
+  { term: "Kedjade svaga entiteter", definition: "En svag entitet vars ägare själv är svag. Den kompletta identiteten är ägarens kompletta identitet plus den egna partiella identifieraren, så kedjan följs uppåt till en stark entitet: Resa identifieras av {rederiNo, fartygsnamn, avgångsdatum}. Tentans påstående \"identifieras endast av kombinationen av 1. …, 2. samt …, 3. samt …\" räknar upp leden.", chapter: "svaga" },
   { term: "Flerstegspåstående", definition: "Påstående i tentans uppgift 1 som går över flera relationstyper, som att en spelare kan spela i ett lag vars förening spelaren inte är medlem i. Sant om ingen restriktion i diagrammet binder ihop vägarna — det som inte förbjuds är tillåtet; regler notationen saknar symbol för står i uppgiftstexten.", chapter: "svaga" },
   { term: "Främmande nyckel (foreign key)", definition: "Ett eller flera attribut vars värden måste matcha en kandidatnyckel, normalt primärnyckeln, i en annan eller samma relation. Värdet får upprepas, den refererade tupeln måste finnas, och den tvingar inte i sig fram deltagande.", chapter: "kap3" },
   { term: "Funktionellt beroende", definition: "X bestämmer funktionellt Y om och endast om varje X-värde i relationen är associerat med precis ett Y-värde. Skrivs X → Y.", chapter: "kap7" },
@@ -1555,7 +1613,7 @@ export const glossary = [
   { term: "Server", definition: "I praktiken en dator som aldrig stängs av, och som betjänar klienter med data ur en databas.", chapter: "kap1" },
   { term: "Skalär underfråga", definition: "Underfråga som ger exakt ett värde och kan jämföras med =, < eller >. Sättet att hämta ett jämförelsevärde ur en annan rad ('yngre än L3') i stället för att kopiera en literal. Fler än ett värde ger felet 'Subquery returned more than 1 value'.", chapter: "kap9" },
   { term: "SQL (Structured Query Language)", definition: "Språket för att skapa, läsa, uppdatera och radera data samt administrera relationsdatabaser.", chapter: "kap1" },
-  { term: "Surrogatnyckel", definition: "Artificiellt, databasgenererat nyckelvärde utan affärsbetydelse; motiven är nyckelstabilitet och prestanda. Kursen placerar den olika (Fö1 logisk, häftet fysisk, Fö5 nämner den inte); på tentan krävs den i DDL-uppgiften.", chapter: "kap3" },
+  { term: "Surrogatnyckel", definition: "Artificiellt, databasgenererat nyckelvärde utan affärsbetydelse; motiven är nyckelstabilitet och prestanda. Kursen placerar den olika (kursintroduktionen i logisk design, häftet i fysisk, föreläsningen om logisk design nämner den inte); på tentan krävs den i DDL-uppgiften.", chapter: "kap3" },
   { term: "Transitivt beroende", definition: "Ett funktionellt beroende där X → Z indirekt, i kraft av X → Y och Y → Z, och där det inte gäller att Y → X. Bryter mot 3NF.", chapter: "kap7" },
   { term: "Tupel (tuple)", definition: "Formellt en mängd attributvärden där inga två skilda element har samma attributnamn. Informellt en rad eller post.", chapter: "kap2" },
   { term: "UNIQUE-constraint", definition: "Kräver unika värden men tillåter NULL. Här hamnar naturliga nycklar när en surrogatnyckel tagit primärnyckelrollen.", chapter: "kap8" },

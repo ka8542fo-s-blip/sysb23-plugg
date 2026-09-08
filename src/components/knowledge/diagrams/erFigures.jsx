@@ -484,3 +484,55 @@ export function StatementsLibraryFigure() {
     </Figure>
   );
 }
+
+// Genomgång 3: kedjade svaga entiteter i tre led. Resa identifieras bara
+// tillsammans med Fartyg, som bara identifieras tillsammans med Rederi.
+export function StatementsShippingFigure() {
+  return (
+    <Figure
+      viewBox="0 0 760 400"
+      label="Chen-diagram med fyra entitetstyper i kedja: Rederi (rederiNo understruket, namn), Fartyg (svag, fartygsnamn streckat understruket, byggår), Resa (svag, avgångsdatum streckat understruket, last) och Hamn med den sammansatta identifieraren hamnId av namn och land. Äger: identifierande relation Rederi 1 – N Fartyg, dubbel linje vid Fartyg, enkel vid Rederi. Gör: identifierande relation Fartyg 1 – N Resa, dubbel linje vid Resa, enkel vid Fartyg. Anlöper: Resa N – 1 Hamn, dubbel linje vid Resa, enkel vid Hamn."
+      caption="Genomgång 3. Två identifierande relationer i rad: Resas kompletta identitet är Fartygs kompletta identitet plus avgångsdatum, och Fartygs är Rederis plus fartygsnamn."
+      maxWidth={760}
+    >
+      <AttributeOval cx={60} cy={40} label="rederiNo" identifier="solid" />
+      <AttributeOval cx={165} cy={40} rx={36} label="namn" />
+      <AttributeLink x1={60} y1={55} x2={60} y2={120} />
+      <AttributeLink x1={155} y1={55} x2={105} y2={120} />
+      <EntityBox x={10} y={120} w={110} label="Rederi" />
+      <Connector x1={120} y1={142} x2={152} y2={142} />
+      <Ratio x={136} y={132} text="1" />
+      <RelationshipDiamond cx={200} cy={142} w={96} h={56} label="Äger" identifying />
+      <Connector x1={248} y1={142} x2={280} y2={142} total />
+      <Ratio x={264} y={132} text="N" />
+      <EntityBox x={280} y={120} w={110} label="Fartyg" weak />
+      <AttributeOval cx={335} cy={40} rx={58} label="fartygsnamn" identifier="dashed" />
+      <AttributeOval cx={445} cy={40} rx={40} label="byggår" />
+      <AttributeLink x1={335} y1={55} x2={335} y2={120} />
+      <AttributeLink x1={435} y1={55} x2={375} y2={120} />
+      <Connector x1={390} y1={142} x2={422} y2={142} />
+      <Ratio x={406} y={132} text="1" />
+      <RelationshipDiamond cx={470} cy={142} w={96} h={56} label="Gör" identifying />
+      <Connector x1={518} y1={142} x2={550} y2={142} total />
+      <Ratio x={534} y={132} text="N" />
+      <EntityBox x={550} y={120} w={110} label="Resa" weak />
+      <AttributeOval cx={590} cy={40} rx={62} label="avgångsdatum" identifier="dashed" />
+      <AttributeOval cx={700} cy={40} rx={34} label="last" />
+      <AttributeLink x1={590} y1={55} x2={590} y2={120} />
+      <AttributeLink x1={690} y1={55} x2={640} y2={120} />
+
+      <Connector x1={605} y1={164} x2={605} y2={222} total />
+      <Ratio x={627} y={190} text="N" />
+      <RelationshipDiamond cx={605} cy={250} w={110} h={56} label="Anlöper" />
+      <Connector x1={605} y1={278} x2={605} y2={320} />
+      <Ratio x={627} y={302} text="1" />
+      <EntityBox x={550} y={320} w={110} label="Hamn" />
+      <AttributeOval cx={440} cy={342} rx={44} label="hamnId" identifier="solid" />
+      <AttributeLink x1={484} y1={342} x2={550} y2={342} />
+      <AttributeOval cx={330} cy={318} rx={36} label="namn" />
+      <AttributeOval cx={330} cy={366} rx={36} label="land" />
+      <AttributeLink x1={396} y1={342} x2={366} y2={318} />
+      <AttributeLink x1={396} y1={342} x2={366} y2={366} />
+    </Figure>
+  );
+}

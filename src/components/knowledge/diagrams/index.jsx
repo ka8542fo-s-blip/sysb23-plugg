@@ -3,7 +3,7 @@ import {
   WorksOnFigure, ParticipationFigure, ReadingDirectionsFigure, WeakEntityFigure,
   ReificationFigure, CrowEndpointsFigure, ChenVsCrowFigure, FourLayersFigure,
   EntityPopulationFigure, RelationshipPopulationFigure, AttributeShapesFigure,
-  StatementsClubFigure, StatementsLibraryFigure,
+  StatementsClubFigure, StatementsLibraryFigure, StatementsShippingFigure,
 } from "./erFigures.jsx";
 
 const FIGURES = {
@@ -20,6 +20,7 @@ const FIGURES = {
   attribut: AttributeShapesFigure,
   "pastaenden-forening": StatementsClubFigure,
   "pastaenden-bibliotek": StatementsLibraryFigure,
+  "pastaenden-rederi": StatementsShippingFigure,
 };
 
 if (import.meta.env?.DEV) {

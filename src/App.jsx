@@ -11,6 +11,7 @@ import SqlWorkshop from "./views/SqlWorkshop.jsx";
 import Modeling from "./views/Modeling.jsx";
 import { modelExercises } from "./data/databaser/modelExercises.js";
 import { normalizeExercises } from "./data/databaser/normalizeExercises.js";
+import { statementExercises } from "./data/databaser/statementExercises.js";
 import { courses, getCourse } from "./data/index.js";
 import {
   KEYS,
@@ -77,7 +78,7 @@ export default function App() {
   );
   // Modellverkstaden: en nyckel per uppgift i localStorage.
   const [modelProgress, setModelProgress] = useState(() =>
-    loadModelProgress([...modelExercises, ...normalizeExercises].map((item) => item.id)),
+    loadModelProgress([...modelExercises, ...normalizeExercises, ...statementExercises].map((item) => item.id)),
   );
   function solveModelExercise(id, status) {
     saveModelResult(id, status);

@@ -4,6 +4,8 @@ import { parseSchema, checkModel, norm } from "../lib/modelCheck.js";
 import SchemaView from "../components/model/SchemaView.jsx";
 import { ModelFigure } from "../components/model/modelFigures.jsx";
 import Normalizing from "./Normalizing.jsx";
+import Statements from "./Statements.jsx";
+import { statementExercises } from "../data/databaser/statementExercises.js";
 import { normalizeExercises } from "../data/databaser/normalizeExercises.js";
 
 const TEMPLATE = `NAMN(Attribut1, Attribut2)
@@ -22,7 +24,8 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
   const [drafts, setDrafts] = useState({});
   const [result, setResult] = useState(null);
   const [confirmReset, setConfirmReset] = useState(false);
-  // Två steg: ER-diagram → schema (häftets 4–10) och normalisering (11–13).
+  // Tre steg som tentans uppgifter: läsa diagram (1), ER-diagram → schema
+  // (häftets 4–10, tankemodellen bakom uppgift 2) och normalisering (11–13, 3f–g).
   const [mode, setMode] = useState("er");
 
   const exercise = exercises.find((e) => e.id === currentId) || exercises[0];
@@ -31,6 +34,7 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
   const facitParsed = useMemo(() => parseSchema(exercise.facit[result?.variant ?? 0]), [exercise, result]);
   const solvedCount = exercises.filter((e) => modelProgress[e.id]).length;
   const normSolved = normalizeExercises.filter((e) => modelProgress[e.id]).length;
+  const stmtSolved = statementExercises.filter((e) => modelProgress[e.id]).length;
 
   useEffect(() => { setResult(null); setConfirmReset(false); }, [currentId]);
 
@@ -56,22 +60,29 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
     <div className="space-y-6">
       <section>
         <h1 className="font-display text-2xl">Modellera</h1>
-        {mode === "er" ? (
+        {mode === "er" && (
           <p className="mt-1 max-w-reading text-[15px] text-ink/70">
             Ett ER-diagram visas, du skriver relationsschemat i föreläsningens notation och får det
             rättat som mängder: attributens ordning, skiftläge och namnet på en relation eller ett
             FK-attribut spelar ingen roll, bara vad som identifierar och vad som refererar vad.
             Bredvid textrutan ritas ditt schema i häftets form, med understrykningarna som på tentan.
           </p>
-        ) : (
+        )}
+        {mode === "norm" && (
           <p className="mt-1 max-w-reading text-[15px] text-ink/70">
             En relation R med sina funktionella beroenden, som i tentans uppgift 3f och 3g. Ange
             högsta normalform och, om R inte redan är i 3NF, uppdelningen med primärnyckel för varje
             relation. Rättas som mängder mot facit; att dela upp mer än 3NF kräver är övernormalisering.
           </p>
         )}
+        {mode === "stmt" && (
+          <p className="mt-1 max-w-reading text-[15px] text-ink/70">
+            Tentans första uppgift: ett Chen-diagram och tio påståenden, markera alla som är sanna.
+            Poängen räknas som på tentan, och varje påstående rättas med skälet ur diagrammet.
+          </p>
+        )}
         <div className="mt-3 flex flex-wrap gap-2" role="tablist" aria-label="Steg">
-          {[["er", `ER-diagram till schema · ${solvedCount} av ${exercises.length}`], ["norm", `Normalisering till 3NF · ${normSolved} av ${normalizeExercises.length}`]].map(([key, label]) => (
+          {[["stmt", `Läsa diagram · ${stmtSolved} av ${statementExercises.length}`], ["er", `ER-diagram till schema · ${solvedCount} av ${exercises.length}`], ["norm", `Normalisering till 3NF · ${normSolved} av ${normalizeExercises.length}`]].map(([key, label]) => (
             <button
               key={key}
               type="button"
@@ -86,6 +97,7 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
         </div>
       </section>
 
+      {mode === "stmt" && <Statements modelProgress={modelProgress} onSolve={onSolve} onReset={onReset} />}
       {mode === "norm" && <Normalizing modelProgress={modelProgress} onSolve={onSolve} onReset={onReset} />}
 
       {mode === "er" && <div className="lg:flex lg:gap-8">

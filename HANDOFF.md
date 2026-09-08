@@ -1,591 +1,330 @@
-# Övergångsprompt — SYSB23 Plugg
+# Överlämning — SYSB23 Plugg
 
-Du tar över en pågående session. Läs detta, verifiera ingenting av det i onödan —
-allt nedan är byggt, testat i webbläsare och driftsatt. Fortsätt där det slutar.
+Du tar över en avslutad arbetsperiod (senaste svepet 2026-09-08). Allt nedan
+är byggt, testat i webbläsare och driftsatt; verifiera inget i onödan. Läs
+avsnitten "Regler", "Ogranskat", "Frågor till Björn" och "Medvetet inte
+byggt" innan du rör innehåll.
 
 ## Vad projektet är
 
-Pluggsida för kursen SYSB23 (Lunds universitet, Ekonomihögskolan). Vite + React 18
-+ Tailwind, ren SPA utan backend. All progress i `localStorage` under prefixet
-`sysb23:`. All UI-text på svenska.
+Pluggsida för kursen SYSB23 (Lunds universitet, Ekonomihögskolan). Vite +
+React 18 + Tailwind, ren SPA utan backend. All progress i `localStorage`
+under prefixet `sysb23:`. All UI-text på svenska.
 
 - **Repo:** https://github.com/ka8542fo-s-blip/sysb23-plugg (publikt; `gh` är inloggad som ka8542fo-s-blip)
 - **Live:** https://ka8542fo-s-blip.github.io/sysb23-plugg/ — varje push till `main`
-  bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in körningen
-  med `gh run watch` och verifiera live efter varje push.
-- **Dev-server:** `preview_start {name: "sysb23-plugg"}` (finns i `.claude/launch.json`), port 5173.
+  bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
+  körningen med `gh run watch` och verifiera live efter varje push.
+- **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
+- **Test:** `npm test` = 95 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-09-08.
+- **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
+  `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
+  Fö4, Fö5, Fö6, Fö7 och övningshäftet `sysb23-database-exercises.pdf`),
+  extentorna i `~/Desktop/Skola/SKOLA T3/Previous_e_ams_export` (omtentan
+  24 okt 2025, uppsamlingen 25 maj 2026; ordinarie 16 sep 2025 finns som
+  riktig export i `~/Downloads/`, filen i exportmappen är en trasig
+  Inspera-laddningssida på 35 KB). Läs PDF:er med pdf-parse i scratchpad;
+  understrykningar i häftets facit syns bara om sidorna renderas som bilder
+  (`render.swift` i scratchpad gjorde det). Promptfilerna
+  `CC-prompt-stor-uppdatering-tentan.md`, `CC-prompt-modellverkstad.md` och
+  `cc-prompt-fo4-ht2026-uppdatering.md` är gitignorerade eftersom de återger
+  Björns material; övriga prompt-md-filer ligger publikt (användaren informerad).
 
 ## Arkitekturen — manifestet styr allt
 
-`src/data/index.js` är sanningen. Varje delkurs har `views` (vilka flikar den får;
-Hem och Schema är globala), sitt innehåll och `readingIntro`/`examNote`. Navigation,
-Hem-genvägar, statistik och "Plugga till denna tenta" läser manifestet — inga
-delkursvillkor utspridda i koden.
+`src/data/index.js` är sanningen. Varje delkurs har `views` (vilka flikar den
+får; Hem och Schema är globala), sitt innehåll och `readingIntro`/`examNote`.
+Navigation, Hem-genvägar, statistik och "Plugga till denna tenta" läser
+manifestet — inga delkursvillkor utspridda i koden. **id ≠ nummer** för
+kapitel: allt UI läser `chapter.number`.
 
-**Delkursernas läge just nu:**
+## Vad sajten innehåller
 
 | Delkurs | Status | Har |
 |---|---|---|
-| strategi | komplett | 11 kapitel (kap `digital` = nr 9, infogat 2026-09-03 ur Weavers föreläsning 1; kap9/kap10 är nr 10/11 — **id ≠ nummer**, allt UI läser `chapter.number`), 14 ämnen, 117 termer, 66 frågor (designregler i filens kommentar; mätskript `scripts/check-fragebank.mjs`), 4 essäer |
-| databaser | delvis | 9 kapitel (Fö4 = `kap4`, `kap5`, `svaga` = nr 4–6, omskrivna 2026-09-05 efter HT2026 års Fö4-deck; `kap6`–`kap8` är nr 7–9 — **id ≠ nummer**), 11 ämnen, 90 termer, 11 inline-SVG-figurer i kapitel 4–6, SQL-verkstad (53 övningar i 9 nivåer, utökad 2026-09-02 efter SQL-föreläsningen), **57 övningsfrågor som speglar Läs** (`practiceBy: "chapter"`: nio kapitel = nio kvizzar, 6–7 frågor var, omgjort 2026-09-05 enligt `CC-prompt-ova-speglar-las.md`), 6 SQL-frågor parkerade i `questions-pending.js` i väntan på ett kapitel om frågespråket, **Prov-fliken är medvetet borttagen ur manifestet** (tentan är konstruktionsbaserad, Öva prövar förståelse av läsmaterialet — inget poängsystem) |
+| strategi | komplett | 11 kapitel (kap `digital` = nr 9 ur Weavers föreläsning 1; kap9/kap10 är nr 10/11), 14 ämnen, 117 termer, 66 frågor (designregler i filens kommentar, mätskript `scripts/check-fragebank.mjs`), 4 essäer, `practiceBy: "chapter"` |
+| databaser | komplett mot tentan | se nedan |
 | process, arkitektur, sakerhet | kommande | platshållare i manifestet |
 
-**Dataregeln (helig):** `topics.js` äger alla korta punkter (`keyPoints`, `pitfalls`).
-**Kärnpunkternas form (2026-09-05, användarkrav):** en punkt = ett begrepp,
-skriven som "Begrepp: förklaring". `LeadIn.jsx` fetar inledningen före det
-första kolonet (högst 48 tecken, ingen mening) i "Kärnan i korthet" och på
-begreppskorten, så listan går att skumma. Punkter som fortsätter varandra
-slås ihop — aldrig en fortsättning som egen punkt. Databaser är omgjord så;
-Strategis punkter renderas med samma regel men är inte omskrivna.
+**Databaser** (`views: las, sql, modell, ova, statistik`; Prov medvetet borta):
 
-**Öva utan pass (2026-09-05, användarkrav):** allt tillstånd ligger per fråga
-i `sysb23:answers` — `{ seen, correct, wrong, last, lastAt, recent }` — och
-skrivs vid varje svar (`recordAnswer`) resp. visning (`recordSeen`). Klar =
-de två senaste svaren rätt (`lib/practiceQueue.js: isDone`). "Fortsätt öva"
-serverar nästa ofärdiga fråga: fel som senaste svar först, sedan OBESVARADE
-(inte "osedda" — visningar är ren statistik, annars försvinner en visad men
-obesvarad fråga ur kön), sedan de med ett rätt; inom grupp äldst besvarad
-först, obesvarade i kapitelordning eller blandat. Karens: en fråga
-återkommer inte förrän COOLDOWN = 8 andra serverats (`settings.practiceRecent`
-per delkurs), regeln viker när kön är kortare. Ingen pass-längd, inget slut,
-ingen viktad slump, inget svårighetsfilter, inga poäng, inga streaks, ingen
-spaced repetition med dagsintervall. Nollställning bara via knappen
-"Nollställ övningsläget för <delkurs>" (per delkurs) eller "Nollställ min
-data" i Statistik. Tentafokus (Strategi) betyder kärnämnen först inom varje
-grupp. Båda delkurserna kör `practiceBy: "chapter"` sedan 2026-09-05.
-Test: `scripts/practice-queue.test.mjs`.
+- **Läs:** 10 kapitel i `data/databaser/reading.js` — id/nummer: kap1=1
+  (grunder, med "Så ser tentan ut"), kap2=2, kap3=3, kap4=4, kap5=5,
+  svaga=6 (svaga entiteter, Crow's Foot, "Att läsa påståenden ur ett
+  diagram" med tre genomgångar), kap6=7 (transformation, sex regler),
+  kap7=8 (normalformer med tentans två former), kap8=9 (fysisk design med
+  tentans instruktioner för uppgift 2), kap9=10 (SQL: att resonera fram en
+  fråga, byggt baklänges från uppgift 4). 12 ämnen i `topics.js`, 109
+  ordlistetermer, 14 SVG-figurer (`components/knowledge/diagrams/`,
+  `[[diagram:namn]]` som ensamt stycke; namnen i `ids.js` är ett API mot
+  reading.js, låst av `scripts/diagram-ids.test.mjs`).
+- **Öva:** 65 frågor i `questions.js`, fördelade 4/4/5/7/7/7/5/10/7/9 på
+  kapitel 1–10 (omviktat mot tentan 2026-09-07), former: vanliga, med
+  `diagram` (ett av sajtens diagram som underlag) och med `context`
+  (förformaterat block). Två frågor parkerade i `questions-pending.js`
+  (db1-12, db1-14 — Fö1-mekanik utanför kapitlen). Balanstestet
+  `scripts/fragebank-balans.test.mjs`: 4–10 per kapitel, spridning ≤ 1,25
+  utom `LENGTH_FLAGGED` (db4-12, 14, 26 med skäl), positioner, kvot
+  0,9–1,1, unikt längst ≤ 25 %, giltiga diagram-id, under hälften "Ja" per
+  diagram. Öva utan pass: se "Vyer och särdrag".
+- **SQL-verkstad:** 62 övningar i 10 nivåer (`sqlExercises.js`); nivå 9
+  `tenta` "Tentaform: en fråga, ett resultat" (sql-54…62) på schemat
+  Reader/Book/HasRead(Rating) i `hospitalSeed.js`; nivå 10 (id n9) ligger
+  över tentans nivå. Slumpövningar och fritt läge. T-SQL först, översatt
+  till SQLite (`lib/tsql.js`).
+- **Modellera:** tre flikar som tentans modelleringsuppgifter.
+  *Läsa diagram* (uppgift 1): `statementExercises.js`, tre uppgifter, en
+  per diagram i kapitel 6 (föreningen, biblioteket, rederiet), tio
+  påståenden var med under hälften sanna, tentans poängregel i
+  `lib/statementScore.js` (+5/−3/0, alla och endast de sanna = 25, summan
+  golvad vid 0), per påstående skäl; klar när markeringen är exakt rätt.
+  *ER-diagram till schema*: `modelExercises.js`, häftets 4–9 plus egen
+  uppgift 10 (kedjade svaga entiteter), rättaren `lib/modelCheck.js`
+  (Fö5-notation, mängdjämförelse, FK på vad de refererar, namn =
+  anmärkning, facit som alternativ), live-vy i häftets form
+  (`SchemaView.jsx`), figurer i `components/model/` (Chen + Crow's Foot i
+  Visual Paradigm-stil). *Normalisering till 3NF*: `normalizeExercises.js`,
+  häftets 11–13 som 38 poster, val 1NF/2NF/"R är redan i 3NF",
+  FD-motorn `lib/normalize.js` (hölje, kandidatnycklar, högsta normalform
+  med kapitel 8:s motivering, projicerade beroenden, lossless två i taget,
+  beroendebevarande) härleder regeltaggar och "varför"; extra relation
+  vars attribut ryms i en facitrelation = övernormalisering. Framsteg för
+  alla tre: `sysb23:modell:<id>` = "solved", nollställs bara via knapp.
+  Tester: `model-check`, `model-figures`, `normalize`, `statements`.
+- **Statistik**, **Schema (Pluggkalender)** och **Hem** som för Strategi.
 
-**Tentaformatet Databaser (2026-09-07, det viktigaste vi vet):** två
-HT25-tentor (omtentan 24 okt 2025, uppsamlingen 25 maj 2026) med exakt samma
-fyra uppgifter; PDF:erna ligger i `~/Desktop/Skola/SKOLA T3/Previous_e_ams_export`
-(nya decken i `___Lectures_export`), aldrig i repot. Fem timmar, 100 p,
-Inspera, hjälpmedel: utskrivna slides + boken. A 85/B 75/C 65/D 55/E 50.
-1) Läsa Chen-diagram, 25 p: 10–11 påståenden, +5/−3 per markering, 4–6 sanna;
-fem påståendetyper (måste, kan ha flera/exakt en, två X kan ha samma Y,
-identifieras av kombinationen, flerstegspåståenden). 2) DDL från ER, 25 p:
-alla kolumner INTEGER, reserverade ord utskrivna, inga constraintnamn krävs,
-auto-inkrementerande surrogatnycklar på vanliga OCH svaga entiteter,
-indenterat. 3) Normalformer, 20 p: 3a–e sant/falskt à 2 p (−1 fel, 0 blankt)
-om R + tre scheman (2NF, beroendebevarande, lossless join, >1 kandidatnyckel,
-alla i 3NF, primärattribut); 3f–g à 5 p högsta normalform + motivering med
-kursens definitioner/bilagan, normalisera till 3NF med lossless join och
-dependency preservation, övernormalisering ger avdrag, PK understruken.
-4) En SQL-fråga, 30 p: Student/Course/HasStudied, join + aggregat + GROUP
-BY/HAVING eller mängdskillnad + skalär subquery, en fråga, indenterad.
-Inte förekommit: application development (listas dock i nya Fö1 slide 16),
+## Regler (följ dem)
+
+**Innehållsregeln:** ändra aldrig fakta, definitioner eller schemadata på
+eget initiativ — kursmaterialet är sanningen, och innehållet är extraherat
+ordagrant där det är definitioner (normalformerna, Chens
+entity-definition, identifier, partial identifier, value set,
+femfrågetabellen, Crow's Foot-listan). Inför inga termer utanför kursen:
+**ingen BCNF, inga "spurious tuples", ingen FLOAT** (decket säger exakta
+mot approximativa numeriska typer). Lossless join definieras som att
+naturlig join ger tillbaka originalet; kursbokens tvåitaget-kontroll är
+enda regeln utanför decken och texten säger att den kommer från boken.
+Sakfel rapporteras, rättas inte utan beslut. Grep-gate som ska ge noll i
+`reading.js`/`topics.js`:
+`mandatory participation|non-mandatory|\bUML\b|\bEER\b|specialis|generalis|disjoint|overlapping|\bStudent|\bCourse|\bUniversity|\bOffer|\bTeacher|HasStudied|\bGrade\b|\bmentor|lärare|BCNF|spurious|FLOAT`
+(SQL-verkstadens Student/Course/HasStudied är SQL-föreläsningens egna och
+ska vara kvar där).
+
+**Inga slidehänvisningar i det läsaren ser** (användarkrav 2026-09-07):
+inte i kapiteltext, kärnpunkter, fallgropar, ordlista, lektioner eller
+uppgiftstexter. De hör hemma i `sources`/`source`, i HANDOFF och i
+redovisningar. Svept 2026-09-08: enda kvarvarande "slides" i läsartext är
+tentans hjälpmedelsregel (utskrivna slides tillåtna), som är ett faktum om
+tentan. Läs decken som en föreläsning, inte som en specifikation — frågan
+är vad Björn ville få fram; extentorna visar vad som betyder något.
+
+**Dataregeln:** `topics.js` äger alla korta punkter (`keyPoints`,
+`pitfalls`), `reading.js` äger löptexten och ordlistan; kapitelavsluten
+renderas ur `primaryTopics` via `lib/topicLookup.js`. Ändra alltid båda
+tillsammans. Kärnpunkternas form: en punkt = ett begrepp, "Begrepp:
+förklaring", `LeadIn.jsx` fetar inledningen före första kolonet (högst 48
+tecken).
+
+**Fö4-konventioner (kap4–6):** total/partial participation (aldrig
+mandatory), identifying relationship, partial identifier, cardinality
+ratio; ratio-etiketter anger endast maxima och läses tvärs över,
+deltagandelinjer vid egen ände, "exakt en" = 1 plus dubbel linje. Exempel
+Employee/Project/ProjectTask/Assignment. UML och EER är ute ur kursen.
+
+**Frågeregler:** inga ändringar av stam eller alternativ utan mandat; nya
+frågor `reviewed: false`; längsta alternativ bör vara en distraktor;
+undvik kategoriska distraktorer; `LENGTH_FLAGGED` kräver skäl.
+
+**Design ("Läsesalen"):** fylld pine-yta = valt tillstånd + vyns enda
+huvudåtgärd; allt klickbart har hover; inga nya färger (delkursfärgerna är
+en validerad helhet); Fraunces rubriker, Inter brödtext; desktop ≥1024 px
+har 17 px-rot med px-omskrivningar sist i `index.css`; mobil intakt.
+
+**Commit:** svenska meddelanden med imperativ rubrik och varför-stycke,
+trailer `Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>`, push,
+`gh run watch`, verifiera live. DOM-verifiering i browserpanelen
+(skärmdumpar kan vara tomma), rensa testdata i localStorage, ta bort
+`__STUB_IDAG`-stubbar efter tidstest.
+
+## Tentaformatet (det viktigaste vi vet)
+
+Tre HT25-tentor lästa (ordinarie 16 sep 2025, omtentan 24 okt 2025,
+uppsamlingen 25 maj 2026): exakt samma fyra uppgifter och viktning. Fem
+timmar, 100 p, Inspera, hjälpmedel utskrivna slides + boken. A 85/B 75/
+C 65/D 55/E 50. 1) Läsa Chen-diagram, 25 p: 10–12 påståenden, +5/−3 per
+markering, 0 blankt, 25 vid alla och endast de sanna (4–6 sanna); fem
+påståendetyper plus flerstegspåståenden och ordinarie tentans "identifieras
+endast av kombinationen av 1. …, 2. samt …, 3. samt …" över en kedja av
+svaga entiteter. 2) DDL från ER, 25 p: alla kolumner INTEGER, reserverade
+ord utskrivna, inga constraintnamn krävs, IDENTITY(1,1) på vanliga och
+svaga entiteter men inte kopplingstabeller, indenterat. 3) Normalformer,
+20 p: 3a–e sant/falskt à 2 p (−1 fel, 0 blankt) om R + scheman (2NF,
+beroendebevarande, lossless, >1 kandidatnyckel, alla i 3NF,
+primärattribut/kandidatnyckel i delrelation); 3f–g à 5 p högsta normalform
+med motivering ur definitionerna, normalisera till 3NF, övernormalisering
+ger avdrag, och ett 3g där rätt svar är att inte göra något. 4) En
+SQL-fråga, 30 p: Student/Course/HasStudied, join + aggregat + GROUP BY/
+HAVING, "X men inte Y", skalär underfråga, och ordinarie tentans jämförelse
+mot ett aggregat ur en underfråga ("högre än snittbetyget på kurs C1").
+Inte förekommit: application development (listas i kursintroduktionen),
 logisk modell som eget svar, relationsalgebra, Crow's Foot som produktion.
-Läs kap 1 har avsnittet "Så ser tentan ut". Stor uppdatering pågår enligt
-prompten CC-prompt-stor-uppdatering-tentan.md (gitignorerad): punkt 1–8 klara.
-Punkt 8 (2026-09-07): verkstaden har nivå 9 "Tentaform: en fråga, ett
-resultat" (`level: "tenta"`, sql-54…61) på ett eget schema av tentans
-struktur — Reader, Book, HasRead(Rating) — tillagt sist i hospitalSeed.js
-(Reader R5 har inga lån; B4 läses bara av R3). Uppgifterna: skalär
-underfråga (54), MIN per grupp + HAVING (55), COUNT + HAVING (56), "R1 men
-inte R2" (57), snitt över alla läsare för R1:s böcker med IN-underfråga
-(58), yngre än R2 + minst två (59), omtentans form med NOT EXISTS (60),
-uppsamlingens form (61). Facit verifierat i SQLite. Nytt fält `note` på
-övningar renderas under uppgiften — används där T-SQL skiljer sig (AVG
-över INT). Gamla nivå 9 är nu nivå 10 "… — över tentans nivå" (id n9
-oförändrat). schemaGlossary har tabell- och kolumnnoter för de nya
-tabellerna. **Modellverkstaden "Modellera" (2026-09-08, CC-prompt-modellverkstad.md,
-gitignorerad):** vy `modell` i Databaser-manifestet mellan SQL och Öva.
-`lib/modelCheck.js` tolkar Fö5-notationen (relationsrad, PK = {…} eller
-PK = CK1, FKn: (…) REF MÅL(…), CK-rader ignoreras, "3NF" som eget svar) och
-rättar mot facit som mängder: relationer matchas på namn eller överlapp
-(icke-FK-attribut + FK-mål, Jaccard ≥ 0,5), icke-FK-attribut som mängd, FK
-på vad de refererar via attributidentiteter (omdöpta FK-attribut och
-kedjade svaga entiteter rättas rätt), PK som identitetsmängd, facit som
-lista av alternativ (bästa visas). Avvikande namn = anmärkning. Test:
-`scripts/model-check.test.mjs` (20 fall) och `model-figures.test.mjs`.
-Uppgifter i `data/databaser/modelExercises.js`: häftets 4–9 (facit läst
-mot understrykningarna på s. 11–12 — Björns bilder finns inte i repot) plus
-egen uppgift 10 med kedjade svaga entiteter; regeltagg + "varför" per
-relation. Diagram i `components/model/modelFigures.jsx` (Chen-primitiver
-plus `vpPrimitives.jsx` för Crow's Foot i Visual Paradigm-stil till
-uppgift 4–5). `SchemaView.jsx` ritar svaret live i häftets form (hel
-understrykning PK, prickad FK, båda) och facit i samma vy bredvid efter
-rättning. Framsteg: `sysb23:modell:<id>` = "solved", klar när rättad rätt,
-nollställs bara via knapp.
-**Steg 2, normalisering (2026-09-08):** flik "Normalisering till 3NF" i
-Modellera (flikar ovanför: ER-diagram till schema · normalisering, med
-klar-räkning). `data/databaser/normalizeExercises.js`: häftets 11–13 som
-38 poster (12 + 14 + 12), relation + beroenden som förformaterat block,
-facit kompakt (`pk` = häftets understrykning, s. 24–26; `pkAlso` = härledda
-PK-alternativ där relationen har fler kandidatnycklar än facit strukit
-under — häftet ger själv båda i 11:7, 11:11, 11:2, 11:9; `variants` = hela
-alternativa nedbrytningar). Normalformen för uppgift 11 saknas i facit och
-är härledd. `lib/normalize.js`: FD-motor (hölje, kandidatnycklar, högsta
-normalform med kapitel 8:s motivering "äkta delmängden X av kandidatnyckeln
-… bestämmer icke-primärattributet …" / "… transitivt beroende …",
-projicerade beroenden, lossless två i taget, beroendebevarande) plus
-`checkNormalization(item, {nf, text})`. Svaret: uttryckligt val 1NF/2NF/
-"R är redan i 3NF" (3NF döljer textrutan) och uppdelningen i Fö5-notation
-utan FK; rättas med samma rättare med `ignoreNames` (R1, R2 … är
-godtyckliga, inga namnanmärkningar). Regeltaggar härleds ur beroendena:
-Partiellt beroende, Transitivt beroende, Kandidatnyckeln (med noten att
-attribut som själva är kandidatnycklar inte ska brytas ut), Nyckelrelation.
-Extra relation vars attribut ryms i en facitrelation = "Övernormalisering:
-…". Motorn godkänner INTE andra nedbrytningar än facits (bonusen lämnad:
-övernormaliseringar är ofta lossless + beroendebevarande + 3NF, så en
-automatisk "annan giltig nedbrytning" skulle strida mot tentans avdrag).
-Test `scripts/normalize.test.mjs` (16 fall): motorn ger facits normalform
-för alla 38, varje facitvariant är 3NF + lossless + beroendebevarande,
-facit rättar sig självt i alla PK-alternativ, annat PK-val rätt,
-övernormalisering ger diff, m.m. Hela sviten 91.
-**Två avvikelser i häftets facit (rapporterade 2026-09-08, inte ändrade):**
-11:8 saknar understrykningar (PK härledd {A, B}, C, D). 12:9 har
-R4(B, D) — B → D gäller inte och R1 ⋈ R4 över B ger falska tupler; R4(A, D)
-är nyckelrelationen. Häftets variant står som facit, den härledda som
-alternativ, båda godtas tills Björn bekräftat (`KEY_ISSUES` i testet).
-11:2 har inget tryckfel: R2(C, B, D) med C eller B som PK, båda giltiga
-eftersom B ↔ C.
+Kap 1 har "Så ser tentan ut" med gränserna: 3a–e svara alltid; uppgift 1
+markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
 
-**Nästa steg (beslut 2026-09-08, sparat till oktober 2026):** punkt 9 ur
-tentaprompten — en frågetyp "markera alla sanna" med tentans poängregel
-(+5 per rätt markerat, −3 per fel markerat, 0 blankt) och åtta till tio
-påståenden mot ett av sajtens diagram. Kräver en ny frågetyp i Öva,
-frågekortet och klar-logiken (ett pass = ett diagram). Uppdateringen
-efter tentaprompten stannade efter punkt 8. Dessutom, ur ordinarie tentan
-25-09-16 (läst 2026-09-08, samma fyra uppgifter och viktning): (a)
-"kandidatnyckel" som ord i 3e-regeln i kapitel 8 ("attribut A är en
-kandidatnyckel i relation R i schema 3"), (b) ett 3g-exempel där rätt svar
-är att inte göra något — cykel A↔B↔C↔D med E, F beroende av D är i 3NF,
-ingen motivering krävs, (c) en tentaspårsuppgift med jämförelse mot ett
-aggregat ur en underfråga ("högre än snittbetyget på kurs C1") plus antal
-per grupp, och (d) en tredje genomgång i kapitel 6 med en kedja av svaga
-entiteter i tre led ("identifieras endast av kombinationen av …").
-Ordinarie tentan har tolv påståenden i uppgift 1.
-Punkt 7 (2026-09-07): Öva omviktad mot tentan. Fördelning 4/4/5/7/7/7/5/
-10/7/9 (kap 1–10), 65 frågor, spann 4–10 i balanstestet. 28 igenkännings-
-frågor strukna (bl.a. TimeEdit, ArrayList, grad/kardinalitet, Crow's Foot
-ner till en: db4-33), 30 nya, alla reviewed: false. Nya former: frågor med
-`diagram` (ett av sajtens SVG-diagram som underlag, "Enligt diagrammet: …",
-distraktorer = de fyra felläsningarna; testet kräver under hälften "Ja"
-per diagram), frågor med `context` (förformaterat block: R med beroenden
-och scheman i tentans 3a–e-form, DDL, SQL). QuestionCard renderar båda.
-Kapitel 8: sex sant/falskt i tentans form (2NF, beroendebevarande, lossless,
-fler än en kandidatnyckel, alla i 3NF, primärattribut i delrelation) på
-egen R(A–G) med {A,B}→C, B→D, D→E, C→{F,G}, en dbq-23-typ (A↔B, D→E → 2NF),
-en övernormalisering. Varje svar härlett i explain. LENGTH_FLAGGED: db4-16,
-20, 21, 23 borta med frågorna. Verkstadens dialektnot nämner AVG över
-INTEGER, TOP och +. Punkt 8 se nedan.
-Punkt 6 (2026-09-07): nytt kapitel 10 `kap9` "SQL: att resonera fram en
-fråga", byggt baklänges från uppgift 4 — schema med kopplingstabell, join
-över den, GROUP BY-regeln, HAVING mot WHERE, "X men inte Y" (NOT IN / NOT
-EXISTS / EXCEPT och NULL-fällan), skalär underfråga för jämförelsevärde,
-två genomgångar på eget schema Lantagare/Bok/HarLanat, checklista, och
-T-SQL-mot-SQLite-noter (AVG över heltal, TOP, +). Allt annat ur Fö2–3 hör
-till verkstaden. Ämne `sql` i topics.js, CHAPTER_TOPICS/EXAM_AREAS kap9,
-fem ordlistetermer. Fyra parkerade SQL-frågor (db1-11, 13, 15, 16) in i
-banken i mallens format med reviewed: false; db1-12 och db1-14 står kvar
-parkerade (Fö1-mekanik utanför kapitlet). Balanstestets spann är 4–10.
-Björns regler som kapitlet bär: en fråga per delfråga, underfråga bara
-där JOIN inte räcker, alltid AS, IS NULL inte = NULL, <> i self-join,
-ORDER BY inte med kolumnindex, EXISTS svårast.
-Punkt 5 (2026-09-07): kapitel 9 har avsnittet "Tentans instruktioner för
-uppgift 2" — de fem instruktionerna som rättningskriterier (INTEGER,
-utskrivna reserverade ord, constraintnamn valfria, IDENTITY(1,1) med seed
-och increment på vanliga och svaga entiteter men inte kopplingstabeller,
-indentering), "det som ger poängen" ur häftets facit, en fullständig DDL
-i tentans form för föreningsdiagrammet från kapitel 6 (utan constraintnamn,
-allt INTEGER), arbetsgång och vanliga avdrag. Fö7 (HT26) läst som
-föreläsning: budskapet är "alla tabeller får surrogatnyckel, naturliga
-nycklar blir UNIQUE + NOT NULL, NOT NULL på FK = obligatoriskt deltagande,
-kopplingstabellen har ingen egen IDENTITY"; kapitlets surrogatavsnitt
-rubricerades om från "nu, inte tidigare" till att stämma med kapitel 3.
-Punkt 4 (2026-09-07): kapitel 8 har två nya avsnitt, "Tentans form: sant
-eller falskt om ett schema" (de sex påståendetyperna med operativa regler)
-och "Tentans form: högsta normalform med motivering" (motiveringens form ur
-Fö6:s "Normal form / Reason"-rader, övernormalisering, ett fullständigt
-3f-exempel R(A–F) med {A,B}→C, B→D, D→E, C→F → 1NF → fyra relationer, och
-ett tvåkandidatnyckel-exempel A↔B, B→C, C→D → 2NF). Enda regel utanför
-decken: lossless-kontrollen "två i taget, gemensamma attribut som är
-kandidatnyckel i minst en av dem" kommer ur kursboken (Elmasri & Navathe),
-inte ur Fö6, som bara ger "inga gemensamma attribut → inte lossless".
-Punkt 3 (2026-09-07): kapitel 6 slutar med "Att läsa påståenden ur ett
-diagram" — tabellen påståendeform → notation, flerstegsregeln ("det som
-inte förbjuds är tillåtet", ur Fö4:s poäng att basic Chen saknar symbol
-för självlänkar/cykler och att kardinalitet och deltagande är oberoende),
-och två genomgångar på egna domäner (förening/lag/spelare/arena,
-bok/exemplar/låntagare/författare) med åtta påståenden och facit med skäl.
-Figurerna heter `pastaenden-forening` och `pastaenden-bibliotek`
-(erFigures.jsx) och är tänkta som underlag även för Öva-frågorna i punkt 7.
-Krav till punkt 7 (användare): andelen sanna påståenden per diagram ska
-ligga under hälften, som på tentan (4–6 sanna av 10–11).
+## Ogranskat (mot kursmaterialet)
 
-**Regel (2026-09-07, användarkrav): inga slidehänvisningar i det läsaren ser** —
-inte i kapiteltext, kärnpunkter, fallgropar eller ordlista. De hör hemma i
-`sources`, i HANDOFF och i redovisningar. Princip för decken: läs dem som
-en föreläsning, inte som en specifikation — frågan är vad Björn ville få
-fram, inte vad som står på varje slide; extentorna visar vad som betyder
-något.
+- **Öva:** 43 av 65 frågor bär `reviewed: false` — dbq-01…12 (kapitel
+  1–3, skrivna mot kapiteltexten 2026-09-05) och dbq-33…62 (de 30 nya från
+  omviktningen 2026-09-07, inklusive diagram- och context-frågorna och de
+  fyra SQL-frågorna db1-11/13/15/16). Flaggan syns inte i UI.
+- **SQL-verkstaden:** sql-54…62 (tentaspåret), facit verifierade i motorn
+  men uppgiftstexterna ogranskade. sql-62 är den nya med aggregat som
+  jämförelsevärde (resultat B1 med 3 läsare, B2 med 2).
+- **Modellera / Läsa diagram:** alla tre påståendeuppgifterna
+  (`reviewed: false` i datat) — påståenden och skäl skrivna mot sajtens
+  egna diagram, inte mot en tenta.
+- **Kapitel 6, genomgång 3** (rederiet) och figuren `pastaenden-rederi`,
+  kapitel 8:s tillägg 2026-09-08 (kandidatnyckel i 3e-regeln, "När rätt
+  svar är att inte göra något" — exemplet är verifierat i FD-motorn: fyra
+  enkla kandidatnycklar, 3NF) och kapitel 10 är skrivna mot decken men
+  inte granskade av användaren.
+- **Granskade:** kapitel 7–9 mot Fö5/Fö6/Fö7 + häftet (2026-09-05),
+  kapitel 2, 3, 7 omskrivna mot nya Fö5 (2026-09-07). Kapitel 1–6 väntar
+  på användarens granskning.
 
-**Nya Fö5 (HT26, 124 slides, "Logical Database Design") — vad som är inne
-(2026-09-07):** kapitel 2 (slide 3–21: schema/aktuellt värde, domän =
-tillåtna värden, grad/kardinalitet, ordning, dubbletter, bag/mängd/DISTINCT),
-kapitel 3 (slide 22–37: kandidatnyckel = unikhet + minimalitet, unikhet som
-verksamhetsregel, PK = vald CK, FK som matchande identifierare, "FKs do not
-enforce minimum participation" slide 3/103, notationen CK1={…}/PK=CK1/FK1:(…)
-REF T(…) jämte häftets understrykning), kapitel 7 (slide 38–122: sex regler
-med stegvisa nedbrytningar, FK i 1:1 som kandidatnyckel, totalt deltagande
-väljer FK-värd, sammanslagning, kedjade svaga entiteter, sammansatt FK som
-en referens, attribut på identifierande relation i den svaga relationen;
-ternära relationer borta ur kapitel 7, unära kvar som "samma regel" per
-häftets facit). Surrogatnycklar: Fö5 nämner dem inte, nya Fö1 lägger dem i
-logisk design, häftet/kap 9 i fysisk; kapitlet säger "kursen har placerat
-dem olika, på tentan kommer de i uppgift 2" — noteringen står kvar tills
-Björn svarat. Två spänningar mot kap 8–9 att känna till, inte ändrade:
-Fö5 slide 3 sammanfattar normaliseringssteget som "every non-trivial
-determinant is a key; no decomposition needed" (en BCNF-liknande
-formulering; kursen använder 2NF/3NF-definitionerna, BCNF finns inte);
-Fö5:s DDL-exempel (slide 3) har naturliga nycklar som PRIMARY KEY och
-namngivna constraints, medan tentan kräver surrogatnycklar och inte kräver
-namn — kapitel 9 följer tentan.
+## Frågor till Björn (öppna)
 
-**`reviewed: false` syns inte i UI (2026-09-06):** flaggan finns kvar i
-datan som intern markering av vilka frågor som inte granskats mot decken
-och facit (Databaser kapitel 1–3: dbq-01…12), men chipen "Ogranskad" på
-frågekortet är borttagen — den kändes oprofessionell för den som pluggar.
-`reading.js` äger löptexten och har ALDRIG egna recap-arrayer — kapitelavsluten
-("Kärnan i korthet"/"Se upp för") renderas ur kapitlets `primaryTopics` via
-`lib/topicLookup.js`. `topics` = allt kapitlet berör (styr "Öva på detta kapitel"),
-`primaryTopics` = det kapitlet introducerar (styr avslutet). Ingen komponent läser
-punkter direkt ur datafilerna.
+1. **Häftets facit 12:9** (normalisering): facit ger R4(B, D), men
+   A → B, B → C, D → C ger kandidatnyckeln {A, D}; B → D gäller inte, och
+   joinen av R1(A, B) och R4(B, D) över B ger tupler som inte fanns i R.
+   R4(A, D) är nyckelrelationen. Sajten godtar båda tills svaret kommit
+   (`variants` i `normalizeExercises.js`, `KEY_ISSUES` i testet). Samma
+   fråga i förbigående: 11:8 saknar understrykningar i facit (PK härledd
+   {A, B}, C, D). 11:2 är inget tryckfel (B ↔ C ger två giltiga PK-val).
+2. **Surrogatnycklarnas plats:** kursintroduktionen lägger dem i logisk
+   design, föreläsningen om logisk design nämner dem inte, häftet och
+   kapitel 9 lägger dem i fysisk design, fråga db1-07 följer
+   kursintroduktionen. Kapitel 3 och 7 säger "kursen har placerat dem
+   olika, på tentan kommer de i uppgift 2". Rätta inte förrän Björn svarat.
 
-**Innehållsregeln:** ändra aldrig fakta, definitioner eller schemadata på eget
-initiativ — innehållet kommer ur prompt-md-filer i reporoten och är extraherat
-**ordagrant** (verifiera byte-identiskt efter extraktion, det är arbetssättet).
-Normalformernas definitioner och engelska facktermer i Databaser är ordagranna med
-flit. Flagga inkonsekvenser i stället (redan flaggad: hp-talen i `schedule.js`
-summerar till 20, inte 30 — medvetet orört).
+Känt men inte en fråga: Fö5:s sammanfattning av normaliseringssteget
+("every non-trivial determinant is a key") är BCNF-liknande; kursen
+använder 2NF/3NF-definitionerna och sajten följer dem. Fö5:s DDL-exempel
+har naturliga nycklar som PRIMARY KEY och namngivna constraints; tentan
+kräver surrogatnycklar och inte namn — kapitel 9 följer tentan.
+
+## Medvetet inte byggt, och varför
+
+- **Prov-fliken för Databaser:** tentan är konstruktionsbaserad, inte
+  flerval. Öva prövar förståelse av läsmaterialet utan poäng. Tas tillbaka
+  bara om tentaformatet visar sig vara flerval.
+- **Automatisk "annan giltig nedbrytning" i normaliseringen:** FD-motorn
+  kan pröva lossless och beroendebevarande, men övernormaliseringar klarar
+  nästan alltid båda proven och ger ändå avdrag på tentan. Facit är
+  därför enda måttet; härledda PK-alternativ (`pkAlso`) är tillagda där
+  relationen har fler kandidatnycklar än facit strukit under, efter
+  häftets eget mönster i 11:7 och 11:11.
+- **Spaced repetition, poäng, streaks och pass i Öva:** användarbeslut —
+  tillståndet är per fråga, klar = två rätt i rad, ingen viktad slump,
+  inget svårighetsfilter, ingen dagsintervall.
+- **"Markera alla sanna" som frågetyp i Öva:** byggd i Modellera i
+  stället (Läsa diagram), eftersom uppgiften rättas som helhet med poäng
+  och kräver ett helt diagram — det är en verkstadsform, inte en
+  kvizzfråga. Öva har kvar diagramfrågor i flervalsform.
+- **Kapitel om application development:** har inte förekommit på någon
+  tenta.
+- **Björns bilder i repot:** alla diagram är ritade om med sajtens
+  primitiver; kursmaterialet publiceras aldrig.
+- **Synk av progress mellan enheter:** ingen backend, medvetet.
+- **Generalisering/specialisering i kapitel 7:** ute ur kursen sedan nya
+  Fö4; nya Fö5 har inte heller med det.
 
 ## Vyer och särdrag
 
-- **Hem** — WeekAtAGlance (nedräkning + kompakt veckorad, klicka fram en dag;
-  vid laddning och vid midnatt är den öppna dagen alltid idag — aldrig
-  "mest intressanta dagen", användarkrav 2026-09-05),
-  statusrutor, genvägar byggda ur `views`. Veckoraden visar **innevarande
-  vecka måndag–söndag** (`startOfWeek` i `lib/dates.js`), inte sju dagar
-  framåt: passerade dagar tonas ned, rubriken bär veckonumret.
-- **Läs (KnowledgeHub)** — tre segment: Kompendium/Begrepp/Ordlista + gemensam
-  sökning. Ordlistan sorteras per kapitel som standard, A–Ö som val. Databaser har
-  `examArea`-etiketter per kapitel + tentabanner (fältet saknas = ingen etikett
-  alls; null = "Utanför tentan"). Sedan föreläsarens besked 2026-08-31 görs
-  tentan om och väntas täcka det mesta — alla kapitel har områdesetikett
-  (kap1 = "Grund"), och filtret "Visa bara tentarelevanta kapitel" döljer sig
-  självt eftersom det bara visas när något kapitel är utanför (hasBackground). Läsprogress
-  mäts i **kapitel och procent, aldrig minuter** (per kapitel står "ca X min").
-  Kompendiets intro innehåller platshållaren `{lästid}` som `ChapterList` byter
-  mot summan av `readingMinutes`, avrundad till närmaste tio minuter
-  (`lib/readingTime.js`, t.ex. "1 timme och 50 minuter") — skriv aldrig in
-  lästiden som fast text igen.
-  Tangentbord i kapitel: J/K/N/P/Esc. **Uppläsning** (`lib/useReadAloud.js`):
-  webbläsarens talsyntes läser kapitlet styckvis (svensk röst väljs via
-  `lang: sv-SE`) och markerar aktuellt stycke (`.tts-aktuell`) — medvetet
-  UTAN autoscroll, läsaren styr själv var på sidan stycket är;
-  `data-tts-skip` undantar menyer/metarader; hastighet sparas i
-  `upplasningstakt`, valt röstnamn i `upplasningsrost` (naturliga röster
-  à la Edge "Natural/Online" föredras automatiskt, InfoTip förklarar hur
-  man får bättre gratisröster); kapitelbyte/avmontering stoppar alltid
-  rösten. Vid uppläsning ersätts headerkontrollerna av en flytande pill
-  (fixed bottom) med paus/stopp/hastighet; mellanslag pausar (utom när
-  fokus står på knapp/fält). Styckena blir klickbara under uppläsning
-  (`.tts-block`, pekare + hover) — klick hoppar dit direkt, även ur paus.
-  OBS: vid hopp nollas den pågående utterancens onend/onerror FÖRE
-  cancel() — de avfyras asynkront och tolkar annars hoppet som stopp.
-- **Tentaprioritet** (Strategi, `lib/examPriority.js`) — varje ämne har
-  `examPriority`: `karna` (prövat som flervalsfråga HT24/quiz F1), `essa`
-  (prövat som essä) eller `bakgrund` (aldrig prövat); ett ämne kan ha både
-  karna och essa. Kapitel ärver unionen av sina `primaryTopics` — bakgrund
-  bara när inget ämne prövats. Etiketter (konturchips: Kärna pine, Essä brass,
-  Bakgrund dämpad) visas på begreppskort och kapitelrader. `examEvidence`
-  ({ mcq, quiz, essay }) ger raden "Prövat HT24: N flervalsfrågor" och är
-  **bara ifylld där repot dokumenterar underlaget** (HT24-märkta frågor, quiz
-  F1-frågor, de fyra HT24-essäerna) — hitta aldrig på siffror; saknas
-  underlag uteblir raden. Prioriteten informerar, den styr inte: Snabbspår i
-  kompendiets TOC tonar ned bakgrundskapitel ("Läs om tid finns") men döljer
-  inget och räknar om lästiden, och Tentafokus i Öva viktar kärnämnen ×2 utan
-  att ta bort frågor. Delkurser utan `examPriority` (Databaser) ser ut som
-  förut. Tester: `scripts/exam-priority.test.mjs`.
-- **Öva** — nästa ofärdiga fråga tills den är klar (två rätt i rad), sidopanel med kapitelval på desktop; se "Öva utan pass" nedan.
-  **Gruppering (`lib/practiceAxis.js`):** Öva filtrerar per ämne (Strategi)
-  eller per kapitel (Databaser, manifestets `practiceBy: "chapter"` — "Öva
-  speglar Läs": ett kapitel i Läs = en kvizz i Öva, samma ordning och namn).
-  Frågorna bär alltid `topic`; i kapitelläget härleds kapitlet ur ämnets
-  `chapter`, så topics.js och Begrepp (elva kort) är orörda. Allt som
-  grupperar — filtret, räknarna, "Öva på detta"-knapparna, Statistik/Hem —
-  går via `practiceGroups`/`groupKeyFor`/`groupsForTopics`, aldrig via
-  `question.topic` direkt. **Ordning** (`practiceOrder` i settings): "Blandat"
-  = obesvarade frågor blandat, "Kapitel för kapitel"/"Ämne för ämne" =
-  obesvarade i Läs-ordningen och bankens ordning inom
-  gruppen, utan viktning. Testat i `scripts/practice-axis.test.mjs`. Inställningarna `practiceTopics`/`practiceDifficulty`
-  är globala — val som hör till en annan delkurs ignoreras. Banker utan
-  `explain` per alternativ eller utan `difficulty` stöds fortfarande
-  (`ExplanationPanel`/`QuestionCard` anpassar sig), men **Databaser-banken
-  följer nu mallens format rakt av** (`data/databaser/questions.js`):
-  57 frågor, 6 per kapitel utom kap4/kap5/svaga som har 7 (godkända sjunde
-  frågor db4-13, db4-25, db4-34), alla besvarbara enbart ur kapiteltexten,
-  `reviewed: false` på de 30 som skrevs mot kapiteltexten 2026-09-05 (dbq-)
-  tills användaren granskat dem. Regeln vid tillägg: 5–8 frågor per kapitel,
-  principer inte exempel, inget som saknar kapitel i Läs (SQL-frågespråket
-  och application development saknar kapitel — parkerade SQL-frågor ligger i
-  `questions-pending.js`). `LENGTH_FLAGGED` listar behållna frågor där en
-  distraktor är längst med spridning > 1,25 (får stå); balanstestet
-  `scripts/fragebank-balans.test.mjs` låser spegling (5–8 per kapitel),
-  spridning ≤ 1,25 utom flaggade, positioner, kvot 0,9–1,1 och unikt längst
-  ≤ 25 %. Sakfel i frågor rapporteras, rättas inte utan beslut.
-  Prov-beroende ytor (Hem "Så räknas tentan", Statistik "Provhistorik") visas
-  bara när delkursen har `prov` i `views`.
-- **Prov** — +6/−1/0, balanserad dragning (max 2/ämne), deadline-baserad timer,
-  provet lever i App-state (överlever flikbyte, medvetet INTE omladdning),
-  dubbelinlämningsspärr, Betygsmätare (SVG, gränser 50/55/65/75/85).
-- **SQL** (Databaser) — sql.js/WASM. Lazy-laddad, **färsk databas per körning**.
-  **T-SQL först (2026-09-02, användarbeslut):** kursen kör SQL Server/Azure SQL,
-  så användaren ser och skriver bara T-SQL. `lib/tsql.js` översätter till
-  SQLite precis före körning (TOP/SET ROWCOUNT → LIMIT, ISNULL/SUBSTRING/LEN/
-  GETDATE, `+` → `||` när en operand är text enligt schemat eller en
-  strängliteral, IDENTITY(1,1)+PK-constraint → AUTOINCREMENT, [hakparenteser],
-  TRUNCATE, GO) och `checkTsqlRules` stoppar GROUP BY-brott med SQL Servers
-  eget felmeddelande, eftersom SQLite annars är slapp. Seeden i
-  `hospitalSeed.js` är skriven i T-SQL och översätts av `sqliteSeed()`
-  (textkolumner får COLLATE NOCASE = SQL Servers standardcollation, så
-  `= 'lund'` matchar). Facit, ledtrådar och lektioner nämner aldrig SQLite;
-  dialektrutorna och `dialectNotes.js` är borta, en fotnot i Fritt läge
-  förklarar motorn. Nya testmotorer MÅSTE bygga databasen med
-  `sqliteSeed(hospitalSeed)`. Tester: `scripts/tsql.test.mjs`.
-  Rättning i `lib/sqlCheck.js`: radordning ignoreras utom `ordered: true`,
-  dubbletter räknas, DML rättas via `check`-frågan. **Formkrav** (2026-09-02)
-  ger "Nästan." (brasston, räknas inte som löst) när resultatet stämmer men
-  formen inte: avslutande semikolon krävs alltid; `names: true` kräver att
-  kolumnnamnen matchar facit (uppgifter som säger "som Namn"); `requires:
-  ["EXISTS"]` kräver att konstruktionen förekommer (uppgifter som säger
-  "skriv den med …"). Flaggorna sätts per övning i datat och i generatorns
-  familjer — testade i `scripts/sql-check.test.mjs`. WASM kopieras av
-  `scripts/copy-sql-wasm.mjs` (pre-dev/-build; filen heter `sql-wasm-browser.wasm`
-  i webbläsarbygget — binärerna är gitignorerade). Kör-knappen är `btn-emphasis`
-  längst till höger. Schemapanelen har InfoTip på varje tabell/kolumn (beskrivningarna
-  i `schemaGlossary.js` är lästa ur seeden — hitta inte på egenskaper).
-  Tre lägen: Övningar · **Slumpövningar** · Fritt läge. Slumpläget
-  (`components/sql/PracticeMode.jsx`) bygger uppgifter ur schemat med
-  `lib/sqlGenerator.js` (20 mallfamiljer, deterministiskt frö) och
-  `lib/sqlPractice.js`, som läser verkliga värden ur databasen och **kör
-  varje kandidats lösning innan den visas** — tomma, degenererade (filtret
-  släpper igenom allt), för stora och kursidentiska frågor kastas och
-  slumpas om. Rör aldrig kursövningarnas progress; egen räknare i `sqlSlump`.
-  Testat i `scripts/sql-generator.test.mjs` (200 genererade övningar rättas
-  som rätt) — kör `npm test` efter ändringar i generatorn.
-  Domslutet efter en körning visas i `ResultBanner` ovanför tabellerna och
-  går att kryssa bort; `ResultPanel` bär bara detaljerna. Varje övning kan
-  nollställas (`clearSqlResult`), och Tab i redigeraren gör indrag (Esc
-  lämnar fältet).
-  53 övningar i 9 nivåer (nivå 9 = korrelerade frågor/EXISTS hard mode);
-  ("Björn säger"-fälten ur v2-prompten togs bort 2026-09-02 på användarens
-  begäran — det viktiga ska stå i lektionerna och ledtrådarna).
-  sql.js bundlar SQLite 3.49.1, så RIGHT/FULL OUTER JOIN (sql-43/44) körs på
-  riktigt. Heltalsdivision verifierad (25000/12 = 2083) och dubbletträkningen
-  gör att UNION nekas där UNION ALL krävs (sql-51).
-- **Schema (Pluggkalender)** — data i `src/data/schedule.js` (avläst ur TimeEdit,
-  senast 2026-08-30; bevakningen larmar om ändringar). Fem perioder varav två
-  med `warning: true` (9–17 nov och 18 nov–3 dec — Säkerhet flyttade sin start
-  till 10 nov, mitt i redovisningsveckan). Tunga sträckan tonas i gult i
-  terminsöversiktens tidslinje, varningsperioder får brass-tonade kort, och
-  pågår en varningsperiod visas en banner överst i Schema-vyn. Passlistan har vyväxling Lista/Kalender
-  (SegmentedControl, sparas i `schemaVy`); månadskalendern (`MonthCalendar.jsx`)
-  delar filtren med listan, börjar veckor på måndag, visar flerdagarspass på
-  varje täckt dag och är låst till terminens månader. Google Kalender-stil:
-  hela veckor med angränsande månaders dagar nedtonade men klickbara,
-  hårlinjerutnät (gap-px på `--line`), chips med tid+titel i cellerna på
-  desktop (fyllt rött = tenta, delkurständ vänsterkant annars), prickar på
-  mobil, veckonummer i vänsterkanten ≥ sm, "idag"-knapp när man bläddrat
-  bort. Dagklick öppnar en dialogruta med dagens pass (tid, titel, sal,
-  tenta-/obligatorisk-chips) — stängs med Esc, kryss eller klick utanför,
-  fokus återvänder till dagcellen, sidan bakom skrollåses. Öppen dag =
-  fylld pine-cirkel på dagnumret, idag = mässing. Datumlogik i `lib/dates.js`: Europe/Stockholm,
-  UTC-midnattsdiffar (sommartidssäkert), ISO-veckor. `lib/useToday.js` gör datumet
-  reaktivt (minutkoll + fokus) så öppna flikar slår över vid midnatt.
-  "Plugga till denna tenta" väljer ALDRIG läge åt användaren — den byter delkurs
-  och går till första vyn i `views` (Läs-TOC för båda), med tillbakalänk som bara
-  lever i vy-state. **Tentaanmälan:** deadline härleds ALLTID i kod
-  (`registrationDeadline` i `lib/dates.js` = tentadatum − 7 dagar, aldrig lagrad;
-  "omkring" i texterna är avsiktligt — exakt gräns finns bara i Ladok, länka inte).
-  Kryssruta "Anmäld" per examination (`examreg:<examId>`); nedräkningskortet
-  framhäver anmälan tills deadlinen passerats/kryssats, sedan tentan. Passerad
-  deadline på okryssad kommande tenta = neutral text, aldrig rött larm. Hem-raden
-  visar närmaste okryssade deadline i stället för tentan när den är närmast
-  (kan tillhöra en senare tenta — novembertentorna ligger tätare än sju dagar).
-- **Tentaöversikt** (`ExamTimeline.jsx`, i Schema efter nedräkningskortet) —
-  vertikal tidslinje med tentorna i följd: glappet i dagar utskrivet mellan
-  varje par, linjelängden skalad efter glappet (20–88 px), ≤ 7 dagar ger
-  brass-linje + "Tätt"-chip. Ordinarie som standard, omtentor via chip-toggle
-  (glappen räknas om). Passerade tentor tonas ned med ✓ avklarad.
-- **Statistik** — InfoTips (frågetecken) förklarar varje term; texterna i
-  `data/statTerms.js` är skrivna mot koden och måste följa med om beräkningar ändras.
-
-## Databaser Fö4 (HT2026) — konventioner som ska hålla
-
-Kapitel 4–6 (`kap4`, `kap5`, `svaga`) är skrivna efter Björns nya
-116-slidesdeck. Källorna `cc-prompt-fo4-ht2026-uppdatering.md` och
-`fo4-conceptual-database-design-ht2026.md` kom i `files.zip`, som ligger
-ospårad i reporoten och INTE är incheckad (prompten vill inte publicera
-Björns material). Regler för allt Fö4-innehåll (kap4–6, ämnena metamodell/
-er/relationstyper/svaga/crowsfoot och deras ordlistetermer):
-
-- **Termer:** total/partial participation (aldrig mandatory/non-mandatory),
-  identifying relationship (svag relationstyp bara som alias), partial
-  identifier, cardinality ratio. Ratio-etiketter anger ENDAST maxima (1 =
-  högst en) och läses tvärs över; deltagandelinjer läses vid egen ände —
-  "exakt en" = 1 plus dubbel linje. Fö4-kapitlen skriver 1:N; 1:M lever
-  kvar i transformationskapitlet (annan föreläsning) och texten säger att
-  det betyder samma sak.
-- **Exempel:** Employee/Project/ProjectTask/Assignment med WorksOn, Leads,
-  ResponsibleFor, Supervises (supervisor/report), Contains, AssignedTo.
-  Student/Course finns inte i Fö4-innehållet — MEN SQL-verkstadens
-  Student/Course/HasStudied är SQL-föreläsningens egna exempel och ska vara
-  kvar. Kap1:s kravtext "exakt en avdelning" är en verksamhetsregel, inte
-  en ratio-läsning; lämna.
-- **Ute ur kursen:** UML-jämförelsen och EER/specialisering — lägg inte
-  tillbaka. Min–max-tupler är en Chen-variant, inte UML.
-- **Ordagrant** ur decket: Chens entity-definition, identifier-definitionen,
-  partial identifier, value set, femfrågetabellen (slide 37) och slide
-  111-listan över vad Crow's Foot kodar direkt/indirekt. Övrig prosa är
-  fritt skriven kring exakt terminologi (användarbeslut 2026-09-05 — sy
-  inte ihop sammanfattningens formuleringar med bindetext).
-- Ternär relation är kvar, förankrad i metamodellens 2..* deltaganden och
-  degree. "Flervärdesattribut eller egen entitet" är kvar från förra året
-  (inte motsagt av decket).
-- Grep-gate som ska ge noll i `reading.js` och `topics.js`:
-  `mandatory participation|non-mandatory|\bUML\b|\bEER\b|specialis|generalis|disjoint|overlapping|\bStudent|\bCourse|\bUniversity|\bOffer|\bTeacher|HasStudied|\bGrade\b|\bmentor|lärare`
-  ("mandatory attribute" är däremot en riktig term från slide 31).
-
-**Diagram** (`src/components/knowledge/diagrams/`): `erPrimitives.jsx`
-(EntityBox, RelationshipDiamond, AttributeOval, Connector, Ratio, Role,
-Note, Arrow, CrowEntity/CrowMarks/CrowLine, PopulationSet, Figure) och
-`erFigures.jsx` (11 namngivna figurer). Kapiteltexten bäddar in en figur
-med raden `[[diagram:namn]]` som ensamt stycke — `ChapterView`s
-p-renderare byter ut den, `knowledgeSearch` rensar den ur utdrag och
-uppläsningen hoppar över figuren (`data-tts-skip`). **Namnen i `ids.js`
-är ett API mot reading.js** — byt aldrig ett namn utan att byta
-platshållaren; `scripts/diagram-ids.test.mjs` låser att varje
-platshållare har en figur, att varje figur används och att platshållaren
-står ensam på raden. Färger via tokens (`--pine`/`--brass`/`--ink`), inte
-currentColor — appen har ett ljust tema. Populationsvyer märks "inte
-Chen-notation" i bildtexten. Visuell kontroll när browserpanelen är tom:
-bundla `erFigures.jsx` med esbuild (`NODE_PATH=node_modules`,
-`--platform=node --format=cjs --jsx=automatic`), rendera med
-`react-dom/server`, byt tokens mot hex och skärmdumpa SVG:erna med headless
-Chrome (`--headless=new --screenshot`) — gjort 2026-09-05.
-
-## Design ("Läsesalen") och användarens uttalade preferenser
-
-Tokens i `src/index.css` (+ 7 delkursfärger `--c-*`). Fraunces för rubriker, Inter
-för brödtext — sekundär text i rubriker sätts i Inter, inte Fraunces.
-Delkursfärgerna är en validerad helhet (jämn kulörspridning + växlande ljushet,
-kontrollerad parvis även för rödgrönt färgseende; rött reserverat för tentor) —
-ändra aldrig en färg isolerat, se kommentaren vid tokens i `index.css`.
-
-- **Fylld pine-yta = valt tillstånd + vyns ENDA huvudåtgärd.** Genvägar/åtgärder
-  bland likadana knappar får aldrig fyllas (därav `btn-emphasis`).
-- **Allt klickbart ska ha hover** — global regel även för inputs. Detta är ett
-  uttryckligt användarkrav; bryt det inte.
-- **Desktop först i praktiken:** container `max-w-7xl`; vid ≥1024 px är html-roten
-  17 px och de fasta px-storlekarna skrivs om i blocket **sist** i `index.css`
-  (ordningen är poängen — det slår utilities). Mobilen (16 px-rot) ska förbli intakt;
-  spot-checka 375 px för sidoscroll.
-- InfoTip (frågetecken) svarar på hover + fokus + tryck, positioneras deterministiskt
-  ur knappens läge, kläms innanför skärmen.
-- Vald delkurs sparas (`sysb23:delkurs`) och återställs vid omladdning.
+- **Hem** — WeekAtAGlance (nedräkning + kompakt veckorad, innevarande
+  vecka måndag–söndag, öppen dag alltid idag vid laddning och midnatt),
+  statusrutor, genvägar ur `views`.
+- **Läs (KnowledgeHub)** — Kompendium/Begrepp/Ordlista + sökning. Ordlistan
+  per kapitel som standard. Databaser har `examArea`-etikett per kapitel;
+  filtret "Visa bara tentarelevanta kapitel" döljer sig när alla kapitel
+  är relevanta. Läsprogress i kapitel och procent; `{lästid}` i intron
+  räknas ur `readingMinutes` (`lib/readingTime.js`). Tangentbord J/K/N/P/
+  Esc. Uppläsning (`lib/useReadAloud.js`): styckvis talsyntes, markerar
+  stycke utan autoscroll, `data-tts-skip` undantar menyer och figurer,
+  flytande pill med paus/stopp/hastighet, klickbara stycken; vid hopp
+  nollas onend/onerror före cancel().
+- **Tentaprioritet** (Strategi, `lib/examPriority.js`) — `examPriority`
+  karna/essa/bakgrund per ämne, `examEvidence` bara där repot dokumenterar
+  underlaget. Informerar, styr inte.
+- **Öva** — "Öva utan pass": tillstånd per fråga i `sysb23:answers`
+  (`{ seen, correct, wrong, last, lastAt, recent }`), klar = två senaste
+  rätt (`lib/practiceQueue.js: isDone`), "Fortsätt öva" serverar fel som
+  senaste svar först, sedan obesvarade, sedan de med ett rätt; karens
+  COOLDOWN = 8 serverade frågor (`settings.practiceRecent`), viker när kön
+  är kortare. Översikt först ("klara per kapitel/totalt"), nollställning
+  per delkurs. Gruppering via `lib/practiceAxis.js` (`practiceBy:
+  "chapter"` = Öva speglar Läs). QuestionCard renderar `diagram` och
+  `context`; chipen "Ogranskad" är borttagen.
+- **Prov** (Strategi) — +6/−1/0, balanserad dragning, deadline-timer,
+  lever i App-state (försvinner vid omladdning, avsiktligt).
+- **SQL** — sql.js/WASM, färsk databas per körning. T-SQL först:
+  `lib/tsql.js` översätter (TOP → LIMIT, ISNULL/SUBSTRING/LEN/GETDATE,
+  `+` → `||` vid text, IDENTITY → AUTOINCREMENT, hakparenteser, GO),
+  `checkTsqlRules` stoppar GROUP BY-brott. Seeden i T-SQL, `sqliteSeed()`
+  (COLLATE NOCASE). Rättning `lib/sqlCheck.js`: radordning ignoreras utom
+  `ordered`, dubbletter räknas, formkrav ger "Nästan." (semikolon, `names`,
+  `requires`). `note`-fältet renderas under uppgiften (T-SQL-skillnader: AVG
+  över INT, TOP, +). Slumpövningar (`lib/sqlGenerator.js`, 20 familjer,
+  varje kandidat körs innan den visas). Schemapanel med InfoTips ur
+  `schemaGlossary.js`. WASM kopieras av `scripts/copy-sql-wasm.mjs`.
+- **Modellera** — se ovan. Layout som verkstaden: uppgiftslista (Läsa
+  diagram och ER: rader; normalisering: sifferknappar per häftesuppgift),
+  underlag, inmatning, Rätta, resultatpanel, facit efter rättning.
+- **Schema (Pluggkalender)** — data i `src/data/schedule.js` (TimeEdit
+  2026-08-30), passlista ovanför tentaöversikten (2026-09-07), Lista/
+  Kalender (`schemaVy`), månadskalender i Google-stil med dagdialog,
+  varningsperioder i brass, tentaanmälan (`examreg:<examId>`, deadline
+  alltid härledd = tentadatum − 7 dagar), `lib/dates.js` Europe/Stockholm,
+  `lib/useToday.js` reaktivt datum. "Plugga till denna tenta" byter delkurs
+  och går till första vyn i `views`.
+- **Tentaöversikt** (`ExamTimeline.jsx`) — vertikal tidslinje med glapp,
+  ≤ 7 dagar = "Tätt", ordinarie/omtentor via chip.
+- **Statistik** — InfoTips ur `data/statTerms.js`, måste följa beräkningarna.
 
 ## Schemabevakning (GitHub Actions)
 
-`.github/workflows/schema-check.yml` kör måndagar 06:00 UTC + manuellt
-(workflow_dispatch). Hämtar repovariabeln `TIMEEDIT_URL` (ri-URL:en med .json),
-normaliserar via `scripts/timeedit-parse.mjs` (enhetstester + verklig fixtur i
-`scripts/fixtures/`, kör `npm test`), jämför delpass från idag med
-`schedule.sessions` — sammanslagna poster (grupp-tider "A / B", `dateEnd`)
-vecklas ut till TimeEdits granularitet — och öppnar ett issue märkt
-`schemabevakning` vid skillnader. Jobbet ändrar ALDRIG schemadata automatiskt;
-enda skrivningen är stämpeln `lastChecked` i `schedule.js` (visas i Schema-vyns
-fotnot), och efter den pushen triggas deploy-workflowet uttryckligen (pushar
-med GITHUB_TOKEN startar det inte själva). Parsern felar högt och tydligt vid
-formatändringar — gissa aldrig i den, och uppdatera fixturen + förväntansfilen
-ihop om TimeEdit ändrar format.
+`.github/workflows/schema-check.yml` måndagar 06:00 UTC + manuellt: hämtar
+`TIMEEDIT_URL`, normaliserar via `scripts/timeedit-parse.mjs` (fixtur i
+`scripts/fixtures/`), jämför med `schedule.sessions`, öppnar issue
+`schemabevakning` vid skillnad. Ändrar aldrig schemadata; enda skrivningen
+är `lastChecked`, och deploy triggas uttryckligen efter den pushen.
 
 ## Lagringsnycklar
 
-`answers`, `exams`, `essays`, `settings`, `lasSegment`, `delkurs`, `schemaVy`
-(= `"lista"` | `"kalender"`), `upplasningstakt`, `upplasningsrost`, `sqlSlump` (antal lösta slumpövningar),
-`read:<kurs>:<kapitel>`, `sql:<övningsId>`
-(= `"solved"` | `"solved-with-help"`), `examreg:<examId>` (= `true`, nyckeln
-tas bort vid avbockning).
-"Nollställ min data" i Statistik rensar allt. Progress är per webbläsare och domän
-— ingen synk, medvetet val.
-
-## Arbetssätt (följ detta)
-
-1. Bygg (`npm run build`) och **verifiera i webbläsaren** före varje leverans —
-   DOM-mätningar via javascript_tool är pålitligare än skärmdumpar (panelen laggar
-   ibland och ger tomma/gamla bilder; lita på DOM).
-2. Tidstillstånd testas genom att tillfälligt stubba `today()` med
-   `window.__STUB_IDAG` i `lib/dates.js` — **ta alltid bort stubben efteråt**
-   (grep "STUB" ska ge noll).
-3. Testdata i localStorage rensas efter test.
-4. Committa med svenska meddelanden (imperativ rubrik + varför-stycke) och
-   `Co-Authored-By: Claude <noreply@anthropic.com>`-trailer enligt systemreglerna,
-   pusha, `gh run watch`, verifiera live.
-5. SQL-ändringar: kör alla 32 lösningar mot motorn igen (mönster finns i historiken —
-   node-skript med sql.js + `checkExercise`).
+`answers`, `exams`, `essays`, `settings` (bl.a. `practiceRecent`,
+`practiceOrder`, `practiceTopics`), `lasSegment`, `delkurs`, `schemaVy`,
+`upplasningstakt`, `upplasningsrost`, `sqlSlump`, `read:<kurs>:<kapitel>`,
+`sql:<övningsId>` (= "solved" | "solved-with-help"), `modell:<uppgiftsId>`
+(= "solved"; mod-, norm- och stmt-id), `examreg:<examId>`. "Nollställ min
+data" i Statistik rensar allt. Progress är per webbläsare och domän.
 
 ## Kända egenheter (inte buggar)
 
-- Provet försvinner vid omladdning — avsiktligt (en tenta pausas inte).
-- Kapitlet `kap6` (nr 7, Transformation) i Databaser har inga egna ordlistetermer
-  (1:1/1:N/M:N-termerna hör till kap5 i datat) — gruppen utelämnas korrekt i
-  kapitelsorterad ordlista.
-- Kompendiets kapitel 3 (ur gamla Fö5/Fö7) placerar surrogatnycklar i fysisk
-  design; nya Fö1 (slide 73–74) säger logisk och fysisk, och fråga db1-07
-  följer Fö1. Skillnaden är känd och medvetet orörd i kapitel 3 — nya Fö5 kan
-  komma och säga annat. Rätta inte på eget initiativ.
-- **Kursmaterialet ligger lokalt, inte i repot:** decks och övningshäfte med facit
-  i `~/Desktop/Skola/SKOLA T3/Databaser Kursfiler/` (02_Lectures/*.pdf,
-  04_Labs-and-Exercises/sysb23-database-exercises.pdf). Läs dem med pdf-parse
-  installerad i scratchpad (Read-verktyget saknar poppler). Publicera aldrig
-  materialet i repot.
-- **Kapitel 9 (fysisk design) är granskat mot Fö7-decket, coding-standards.pdf och
-  häftets uppgift 18–22 med DDL-facit 2026-09-05.** FLOAT finns inte i
-  kursmaterialet — decket säger exakta mot approximativa numeriska typer; använd
-  de orden. Hålen mot DDL-uppgiften är fyllda 2026-09-05 med avsnittet "Från
-  logisk modell till DDL: vad facit kräver" (NOT NULL för entitetsintegritet
-  och totalt deltagande, vilka tabeller som får surrogatnyckel, svag entitets
-  DDL, unära FK-kolumner; CASCADE, versaler och Table+ID på en rad var).
-  Granskningen av Databaser är pausad efter kapitel 7–9; kapitel 1–6 återstår.
-- **Kapitel 7 (transformation) är granskat mot Fö5-decket (05-logical-database-design.pdf)
-  och häftets uppgift 4–9 med facit 2026-09-05.** Kursens notation i facit:
-  primärnyckel = hel understrykning, främmande nyckel = prickad — inte kursiv.
-  Fö5-decket är fortfarande den gamla trions (Svensson/Hultman/Uçan) och har
-  generalisering/specialisering + UML-transformation (slide 58–63) som kapitlet
-  medvetet saknar sedan nya Fö4 tog bort EER; avvakta nya Fö5 innan något
-  läggs till.
-- **Kapitel 8 (normalformer) är granskat mot Fö6-decket och facit 2026-09-05.**
-  Kursen har bara 1NF–3NF — inför inte BCNF. "Spurious tuples" är inte kursens
-  term; lossless join definieras som att naturlig join av delrelationerna ger
-  tillbaka originalet (slide 61). Dependency preservation: ett beroende är
-  bevarat om båda attributen finns i samma relation (slide 63) — decket gör
-  inget generellt påstående om 3NF. 2NF-genvägen "är kandidatnyckeln
-  sammansatt? nej → 2NF kan inte brytas" (slide 41/45) är hur uppgifterna
-  löses; kapitlet säger "alla kandidatnycklar enkla". Frågeformatet
-  "högsta normalform (1NF–3NF)" är tentans (häftets uppgift 10–13).
-- Prompt-md-filerna ligger publikt i repot (användaren informerad).
-- `DELETE FROM Patient` stoppas av FK i fritt läge — korrekt beteende.
-- Skärmdumpar i browserpanelen kan vara eftersläpande/tomma; DOM-verifiering gäller.
+- Provet försvinner vid omladdning — avsiktligt.
+- Kapitlet `kap6` (nr 7) har inga egna ordlistetermer; gruppen utelämnas
+  korrekt i kapitelsorterad ordlista.
+- hp-talen i `schedule.js` summerar till 20, inte 30 — flaggat, orört.
+- `DELETE FROM Patient` stoppas av FK i fritt läge — korrekt.
+- Konsolen i dev visar en gammal React-varning om dubbla nycklar i
+  röstväljaren (`ChapterView`, två röster som heter "Alva (svenska
+  (Sverige))") — kosmetiskt, beror på webbläsarens röstlista.
+- Skärmdumpar i browserpanelen kan vara eftersläpande/tomma; DOM gäller.
 
-## Närmast väntat
+## Nästa steg
 
-Beslut om ett Läs-kapitel om SQL-frågespråket (och ev. application
-development): får Databaser ett sådant kapitel skrivs de parkerade
-SQL-frågorna om till mallens format och kapitlet får sina sex frågor —
-resonemangsfrågor (vad returnerar frågan, IN mot EXISTS vid NULL, <> i
-self-join, vy utan ORDER BY), inte skrivövningar (verkstaden har dem).
-Nya kapitel i Läs får alltid sex frågor mot kapiteltexten. Prov ska inte
-tillbaka för Databaser om inte tentaformatet visar sig vara flerval.
-Därefter sannolikt fler delkurser enligt samma mall (data + manifestrad,
-ingen ny kod).
+- Användarens granskning av det ogranskade (listan ovan), i första hand
+  Öva-frågorna dbq-33…62 och påståendeuppgifterna.
+- Björns svar på de två frågorna; därefter stryk R4(B, D)-varianten i
+  12:9 respektive rätta surrogatnyckelnoteringen i kapitel 3 och 7.
+- Fler delkurser (process, arkitektur, säkerhet) enligt samma mall: data +
+  manifestrad, ingen ny kod.
