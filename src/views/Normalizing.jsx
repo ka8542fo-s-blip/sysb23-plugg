@@ -3,12 +3,19 @@ import { normalizeExercises, NORMALIZE_GROUPS, contextOf } from "../data/databas
 import { parseSchema, norm } from "../lib/modelCheck.js";
 import { checkNormalization, NF_LABELS } from "../lib/normalize.js";
 import SchemaView from "../components/model/SchemaView.jsx";
+import SchemaEditor from "../components/model/SchemaEditor.jsx";
 
-const TEMPLATE = `R1(A, B)
-PK = {A}
+const TEMPLATE = `R₁(
+  A,
+  B,
+  PK = {A}
+)
 
-R2(B, C)
-PK = {B}`;
+R₂(
+  B,
+  C,
+  PK = {B}
+)`;
 
 // Normaliseringssteget: en relation R med beroenden, som tentans 3f och 3g.
 // Svaret är högsta normalform som uttryckligt val — "R är redan i 3NF" är
@@ -93,21 +100,17 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
 
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             <div>
-              <label htmlFor="normalize-input" className="mb-1 block text-sm font-medium text-ink/80">
-                Uppdelningen, i föreläsningens notation
-              </label>
               {decomposes ? (
                 <>
-                  <textarea
+                  <SchemaEditor
                     id="normalize-input"
+                    label="Uppdelningen, i föreläsningens notation"
                     value={draft.text}
-                    onChange={(e) => setDraft({ text: e.target.value })}
+                    onChange={(text) => setDraft({ text })}
                     placeholder={TEMPLATE}
-                    spellCheck={false}
                     rows={12}
-                    className="w-full rounded-lg border border-line bg-white p-3 font-mono text-[14px] leading-relaxed text-ink focus:border-pine focus:outline-none focus:ring-1 focus:ring-pine"
                   />
-                  <p className="mt-1 text-xs text-ink/65">Relationsrad och en rad PK = {"{…}"} per relation, tom rad emellan. Namnen R1, R2 … spelar ingen roll.</p>
+                  <p className="mt-1 text-xs text-ink/65">Relationsnamn och (, attributen, en rad PK = {"{…}"}, avslutat med ). Namnen R₁, R₂ … spelar ingen roll.</p>
                 </>
               ) : (
                 <p className="rounded-lg border border-dashed border-line p-3 text-sm text-ink/65">
@@ -127,7 +130,7 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
                   </ul>
                 )}
               </div>
-              {result && result.status !== "parse-error" && (
+              {result && (
                 <div className="mt-3">
                   <p className="mb-1 text-sm font-medium text-ink/80">Facit{result.variant > 0 ? ` (alternativ ${result.variant + 1})` : ""}</p>
                   <div className="rounded-lg border border-line bg-paper p-3">

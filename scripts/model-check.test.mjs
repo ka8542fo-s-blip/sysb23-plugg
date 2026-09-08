@@ -206,7 +206,7 @@ test("tolkningsfel har radnummer och begripligt meddelande", () => {
   assert.match(p.errors[0].message, /^Rad 2: Nope i PK finns inte/);
   const q = parseSchema(`PK = {A}`);
   assert.match(q.errors[0].message, /^Rad 1: väntade en relationsrad/);
-  const s = parseSchema(`R(A, B)\nPK = {A}\nFK1 (B) REF S(B)`);
+  const s = parseSchema(`R(A, B)\nPK = {A}\nFK1: B REF S(B)`);
   assert.match(s.errors[0].message, /^Rad 3: FK-raden ska se ut som/);
   const t = parseSchema(`R(A, B)`);
   assert.match(t.errors[0].message, /saknar PK-rad/);
@@ -218,4 +218,52 @@ test("svaret 3NF tolkas som 'redan i 3NF' utan relationer", () => {
   const p = parseSchema("R är redan i 3NF");
   assert.equal(p.already3NF, true);
   assert.equal(p.errors.length, 0);
+});
+
+const BLOCK_5 = `Teacher(
+\tEmployeeNo,
+\tName,
+\tSalary,
+\tCK₁ = {EmployeeNo},
+\tPK = CK₁,
+)
+
+Course(
+CourseCode,
+Name,
+Credits,
+ResponsibleNo,
+CK1 ={CourseCode},
+PK1 = CK1,
+FK (ResponsibleNo) REF Teacher(EmployeeNo)
+)
+
+Teach (
+	EmployeeNo,
+	CourseCode,
+	CK1 = {EmployeeNo, CourseCode),
+	PK1 = CK1,
+	FK(EmployeeNo) REF Teacher(EmployeeNo),
+	FK(CourseCode) REF Course(CourseCode)
+)`;
+
+test("föreläsningens blockform: attribut per rad, små siffror, PK1 = CK1, FK utan kolon, släpande komman", () => {
+  const p = parseSchema(BLOCK_5);
+  assert.deepEqual(p.errors, []);
+  assert.deepEqual(p.relations.map((r) => r.name), ["Teacher", "Course", "Teach"]);
+  assert.deepEqual(p.relations[1].attrs, ["CourseCode", "Name", "Credits", "ResponsibleNo"]);
+  assert.deepEqual(p.relations[2].pk, ["EmployeeNo", "CourseCode"]);
+  assert.equal(p.relations[1].fks[0].target, "Teacher");
+  const r = check(BLOCK_5);
+  assert.equal(r.status, "correct", JSON.stringify(r.relations.map((x) => x.problems)));
+});
+
+test("blockform: radnumren i felen pekar på originalraderna", () => {
+  const p = parseSchema(`Teacher(\n  EmployeeNo,\n  Name,\n  CK1 = {CourseCode},\n  PK = CK1\n)`);
+  assert.match(p.errors[0].message, /^Rad 4: CourseCode i CK1 finns inte/);
+  const q = parseSchema(`Teacher(\n  EmployeeNo,\n  Name`);
+  assert.match(q.errors[0].message, /^Rad 1: parentesen efter Teacher stängs aldrig/);
+  const s = parseSchema(`Teacher(\n  EmployeeNo,\n  Name)\nPK = {EmployeeNo}`);
+  assert.deepEqual(s.errors, []);
+  assert.deepEqual(s.relations[0].attrs, ["EmployeeNo", "Name"]);
 });

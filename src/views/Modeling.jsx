@@ -2,15 +2,27 @@ import { useEffect, useMemo, useState } from "react";
 import { modelExercises } from "../data/databaser/modelExercises.js";
 import { parseSchema, checkModel, norm } from "../lib/modelCheck.js";
 import SchemaView from "../components/model/SchemaView.jsx";
+import SchemaEditor from "../components/model/SchemaEditor.jsx";
 import { ModelFigure } from "../components/model/modelFigures.jsx";
 import Normalizing from "./Normalizing.jsx";
 import Statements from "./Statements.jsx";
 import { statementExercises } from "../data/databaser/statementExercises.js";
 import { normalizeExercises } from "../data/databaser/normalizeExercises.js";
 
-const TEMPLATE = `NAMN(Attribut1, Attribut2)
-PK = {Attribut1}
-FK1: (Attribut2) REF ANNAN(Attribut)`;
+const TEMPLATE = `Teacher(
+  EmployeeNo,
+  Name,
+  CK₁ = {EmployeeNo},
+  PK = CK₁
+)
+
+Course(
+  CourseCode,
+  ResponsibleNo,
+  CK₁ = {CourseCode},
+  PK = CK₁,
+  FK (ResponsibleNo) REF Teacher(EmployeeNo)
+)`;
 
 // Modellverkstaden: ett ER-diagram, du skriver relationsschemat i Fö5:s
 // notation, appen rättar som mängder och visar facit i samma
@@ -125,20 +137,16 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
 
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               <div>
-                <label htmlFor="model-input" className="mb-1 block text-sm font-medium text-ink/80">
-                  Ditt schema, i föreläsningens notation
-                </label>
-                <textarea
+                <SchemaEditor
                   id="model-input"
+                  label="Ditt schema, i föreläsningens notation"
                   value={code}
-                  onChange={(e) => setDrafts((prev) => ({ ...prev, [exercise.id]: e.target.value }))}
+                  onChange={(text) => setDrafts((prev) => ({ ...prev, [exercise.id]: text }))}
                   placeholder={TEMPLATE}
-                  spellCheck={false}
-                  rows={14}
-                  className="w-full rounded-lg border border-line bg-white p-3 font-mono text-[14px] leading-relaxed text-ink focus:border-pine focus:outline-none focus:ring-1 focus:ring-pine"
+                  rows={16}
                 />
                 <p className="mt-1 text-xs text-ink/65">
-                  Relationsrad, en rad PK = {"{…}"}, noll eller flera FK1: (…) REF MÅL(…). Tom rad mellan relationer. CK-rader får finnas.
+                  Som i föreläsningen: relationsnamn och (, attributen ett per rad, CK₁ = {"{…}"}, PK = CK₁ och FK (…) REF MÅL(…) på egna rader, avslutat med ). Enradsformen NAMN(a, b) med PK = {"{…}"} på egen rad fungerar också.
                 </p>
               </div>
               <div>
@@ -151,7 +159,7 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
                     </ul>
                   )}
                 </div>
-                {result && result.status !== "parse-error" && (
+                {result && (
                   <div className="mt-3">
                     <p className="mb-1 text-sm font-medium text-ink/80">Facit{result.variant > 0 ? ` (alternativ ${result.variant + 1})` : ""}</p>
                     <div className="rounded-lg border border-line bg-paper p-3">

@@ -17,13 +17,69 @@
 
 export const norm = (s) => String(s ?? "").toLowerCase().replace(/[\s_]+/g, "");
 
-const RELATION_RE = /^([A-Za-zÅÄÖåäö][\wÅÄÖåäö ]*?)\s*\(([^()]*)\)\s*$/;
-const PK_RE = /^PK\s*=\s*(.+)$/i;
-const CK_RE = /^CK\s*(\d*)\s*=\s*\{([^}]*)\}\s*$/i;
-const FK_RE = /^FK\s*(\d*)\s*:\s*\(([^()]*)\)\s*REF\s+([A-Za-zÅÄÖåäö][\wÅÄÖåäö ]*?)\s*\(([^()]*)\)\s*$/i;
+const NAME = "[A-Za-zÅÄÖåäö][\\wÅÄÖåäö ]*?";
+const RELATION_RE = new RegExp(`^(${NAME})\\s*\\(([^()]*)\\)\\s*$`);
+const OPEN_RE = new RegExp(`^(${NAME})\\s*\\(\\s*$`);
+const PK_RE = /^PK\s*\d*\s*=\s*(.+)$/i;
+const CK_RE = /^CK\s*(\d*)\s*=\s*[{(]([^}){]*)[})]\s*$/i;
+const FK_RE = new RegExp(`^FK\\s*\\d*\\s*:?\\s*\\(([^()]*)\\)\\s*REF\\s+(${NAME})\\s*\\(([^()]*)\\)\\s*$`, "i");
 const NF3_RE = /^(R\s+(är|is)\s+(redan\s+|already\s+)?(i|in)\s+)?3NF\.?$/i;
+const KEY_LINE_RE = /^(PK|CK|FK)(?![A-Za-zÅÄÖåäö])/i;
 
 const splitList = (s) => s.split(",").map((x) => x.trim()).filter(Boolean);
+
+// Små siffror (CK₁, PK₁, FK₂) är samma sak som vanliga.
+const SUBSCRIPTS = { "₀": "0", "₁": "1", "₂": "2", "₃": "3", "₄": "4", "₅": "5", "₆": "6", "₇": "7", "₈": "8", "₉": "9" };
+export const unsubscript = (s) => String(s ?? "").replace(/[₀-₉]/g, (c) => SUBSCRIPTS[c]);
+export const subscript = (s) => String(s ?? "").replace(/[0-9]/g, (c) => "₀₁₂₃₄₅₆₇₈₉"[Number(c)]);
+
+const clean = (raw) => unsubscript(raw).replace(/--.*$/, "").replace(/\t/g, " ").trim().replace(/,\s*$/, "");
+
+// Föreläsningens blockform —
+//   Teacher(
+//     EmployeeNo,
+//     Name,
+//     CK1 = {EmployeeNo},
+//     PK = CK1,
+//     FK (X) REF T(X)
+//   )
+// — vecklas ut till en relationsrad följd av nyckelraderna, med varje rads
+// ursprungliga radnummer bevarat för felmeddelandena. Enradsformen
+// NAMN(a, b) med PK/FK på egna rader går igenom oförändrad.
+function unfoldBlocks(text) {
+  const lines = String(text ?? "").split("\n");
+  const out = [];
+  let i = 0;
+  while (i < lines.length) {
+    const line = clean(lines[i]);
+    const open = OPEN_RE.exec(line);
+    if (!open || KEY_LINE_RE.test(line)) {
+      if (line) out.push({ text: line, line: i + 1 });
+      i++;
+      continue;
+    }
+    const attrs = [];
+    const keys = [];
+    let j = i + 1;
+    let closed = false;
+    while (j < lines.length) {
+      let l = clean(lines[j]);
+      if (l === ")" ) { closed = true; j++; break; }
+      if (l && !KEY_LINE_RE.test(l) && /\)$/.test(l) && !/\(/.test(l)) { l = clean(l.slice(0, -1)); closed = true; }
+      if (l) {
+        if (KEY_LINE_RE.test(l)) keys.push({ text: l, line: j + 1 });
+        else attrs.push(...splitList(l));
+      }
+      j++;
+      if (closed) break;
+    }
+    if (!closed) return { lines: out, error: { line: i + 1, message: `Rad ${i + 1}: parentesen efter ${open[1].trim()} stängs aldrig — avsluta blocket med en rad som bara innehåller ).` } };
+    out.push({ text: `${open[1].trim()}(${attrs.join(", ")})`, line: i + 1 });
+    out.push(...keys);
+    i = j;
+  }
+  return { lines: out, error: null };
+}
 
 // Tolka text till { relations, errors, already3NF }. Fel bär radnummer och
 // ett begripligt meddelande.
@@ -32,16 +88,14 @@ export function parseSchema(text) {
   const errors = [];
   let current = null;
   let already3NF = false;
-  const lines = String(text ?? "").split("\n");
+  const unfolded = unfoldBlocks(text);
+  if (unfolded.error) errors.push(unfolded.error);
 
-  lines.forEach((raw, index) => {
-    const line = raw.replace(/--.*$/, "").trim();
-    const no = index + 1;
-    if (!line) return;
+  unfolded.lines.forEach(({ text: line, line: no }) => {
     if (NF3_RE.test(line)) { already3NF = true; return; }
 
     let m;
-    if ((m = RELATION_RE.exec(line)) && !/^(PK|CK|FK)\b/i.test(line)) {
+    if ((m = RELATION_RE.exec(line)) && !KEY_LINE_RE.test(line)) {
       const attrs = splitList(m[2]);
       if (attrs.length === 0) { errors.push({ line: no, message: `Rad ${no}: relationen ${m[1].trim()} har inga attribut inom parentesen.` }); return; }
       const dup = attrs.find((a, i) => attrs.findIndex((b) => norm(b) === norm(a)) !== i);
@@ -51,11 +105,14 @@ export function parseSchema(text) {
       return;
     }
     if (!current) {
-      errors.push({ line: no, message: `Rad ${no}: väntade en relationsrad som NAMN(attr1, attr2) före PK- och FK-rader.` });
+      errors.push({ line: no, message: `Rad ${no}: väntade en relationsrad som NAMN(attr1, attr2) eller NAMN( före PK- och FK-rader.` });
       return;
     }
     if ((m = CK_RE.exec(line))) {
-      current.cks[m[1] || "1"] = splitList(m[2]);
+      const ck = splitList(m[2]);
+      const unknown = ck.find((a) => !current.attrs.some((b) => norm(b) === norm(a)));
+      if (unknown) { errors.push({ line: no, message: `Rad ${no}: ${unknown} i CK${m[1] || "1"} finns inte bland attributen i ${current.name}.` }); return; }
+      current.cks[m[1] || "1"] = ck;
       return;
     }
     if ((m = PK_RE.exec(line))) {
@@ -64,29 +121,30 @@ export function parseSchema(text) {
       let pk;
       if (ck) {
         pk = current.cks[ck[1] || "1"];
-        if (!pk) { errors.push({ line: no, message: `Rad ${no}: PK = ${rhs} men ingen ${rhs.toUpperCase()}-rad finns ovanför.` }); return; }
+        if (!pk) { errors.push({ line: no, message: `Rad ${no}: PK = ${rhs} men ingen ${rhs.toUpperCase()}-rad finns ovanför i ${current.name}.` }); return; }
       } else {
-        const braces = /^\{([^}]*)\}$/.exec(rhs);
+        const braces = /^[{(]([^})]*)[})]$/.exec(rhs);
         pk = splitList(braces ? braces[1] : rhs);
       }
       const unknown = pk.find((a) => !current.attrs.some((b) => norm(b) === norm(a)));
       if (unknown) { errors.push({ line: no, message: `Rad ${no}: ${unknown} i PK finns inte bland attributen i ${current.name}.` }); return; }
-      if (pk.length === 0) { errors.push({ line: no, message: `Rad ${no}: PK är tom — skriv PK = {attribut}.` }); return; }
+      if (pk.length === 0) { errors.push({ line: no, message: `Rad ${no}: PK är tom — skriv PK = {attribut} eller PK = CK1.` }); return; }
       current.pk = pk;
       return;
     }
     if ((m = FK_RE.exec(line))) {
-      const cols = splitList(m[2]);
-      const targetCols = splitList(m[4]);
+      const cols = splitList(m[1]);
+      const targetCols = splitList(m[3]);
       const unknown = cols.find((a) => !current.attrs.some((b) => norm(b) === norm(a)));
       if (unknown) { errors.push({ line: no, message: `Rad ${no}: ${unknown} i FK finns inte bland attributen i ${current.name}.` }); return; }
       if (cols.length !== targetCols.length) { errors.push({ line: no, message: `Rad ${no}: FK har ${cols.length} attribut före REF men ${targetCols.length} efter — de ska vara lika många.` }); return; }
-      current.fks.push({ cols, target: m[3].trim(), targetCols });
+      current.fks.push({ cols, target: m[2].trim(), targetCols });
       return;
     }
-    if (/^FK/i.test(line)) { errors.push({ line: no, message: `Rad ${no}: FK-raden ska se ut som FK1: (attribut) REF RELATION(attribut).` }); return; }
-    if (/^PK/i.test(line)) { errors.push({ line: no, message: `Rad ${no}: PK-raden ska se ut som PK = {attribut, attribut}.` }); return; }
-    errors.push({ line: no, message: `Rad ${no}: kunde inte tolka "${line}". En relation skrivs NAMN(attr1, attr2), sedan PK = {…} och FK1: (…) REF MÅL(…).` });
+    if (/^FK/i.test(line)) { errors.push({ line: no, message: `Rad ${no}: FK-raden ska se ut som FK (attribut) REF RELATION(attribut).` }); return; }
+    if (/^PK/i.test(line)) { errors.push({ line: no, message: `Rad ${no}: PK-raden ska se ut som PK = CK1 eller PK = {attribut, attribut}.` }); return; }
+    if (/^CK/i.test(line)) { errors.push({ line: no, message: `Rad ${no}: CK-raden ska se ut som CK1 = {attribut, attribut}.` }); return; }
+    errors.push({ line: no, message: `Rad ${no}: kunde inte tolka "${line}". En relation skrivs NAMN( och sedan attributen, CK1 = {…}, PK = CK1 och FK (…) REF MÅL(…) på egna rader, avslutat med ).` });
   });
 
   for (const r of relations) {

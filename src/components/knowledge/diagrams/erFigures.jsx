@@ -420,7 +420,7 @@ export function StatementsClubFigure() {
       <AttributeLink x1={510} y1={340} x2={470} y2={363} />
 
       <Connector x1={144} y1={310} x2={244} y2={190} />
-      <Ratio x={172} y={286} text="M" />
+      <Ratio x={188} y={298} text="M" />
       <RelationshipDiamond cx={310} cy={190} w={132} h={64} label="SpelarI" />
       <Connector x1={376} y1={190} x2={496} y2={104} total />
       <Ratio x={452} y={122} text="N" />

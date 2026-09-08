@@ -239,7 +239,7 @@ export function checkNormalization(item, answer) {
   const variants = facitVariants(item);
   const rules = facitRules(item, analysis);
   const result = checkModel(answer.text, variants, rules, { ignoreNames: true });
-  if (result.status === "parse-error") return { ...result, nf, analysis };
+  if (result.status === "parse-error") return { ...result, nf, analysis, variant: 0, facit: parseSchema(variants[0]) };
   const facit = parseSchema(variants[result.variant]);
 
   // Extra relationer: övernormalisering om attributen redan ryms i en
