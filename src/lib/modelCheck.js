@@ -256,7 +256,14 @@ function compareOne(answer, facit, aRel, fRel, labelA, labelF, rules, { ignoreNa
   const aFks = aRel.fks.map((fk) => fkKey(answer, aRel, fk, labelA));
   const missingFks = setDiff(fFks, aFks);
   const extraFks = setDiff(aFks, fFks);
-  const pretty = (k) => k.replace(/\([^)]*\)/, (m) => "(" + m.slice(1, -1).split(",").map((x) => x.split(".").pop()).join(", ") + ")");
+  // Visa målrelation och attribut med riktiga namn, inte normaliserade.
+  const realName = (n) => [...facit.relations, ...answer.relations].find((r) => norm(r.name) === n)?.name ?? n;
+  const pretty = (k) => {
+    const target = k.slice(0, k.indexOf("("));
+    const rel = [...facit.relations, ...answer.relations].find((r) => norm(r.name) === target);
+    const cols = k.slice(k.indexOf("(") + 1, -1).split(",").map((x) => x.split(".").pop()).map((c) => rel?.attrs.find((a) => norm(a) === c) ?? c);
+    return `${realName(target)}(${cols.join(", ")})`;
+  };
   if (missingFks.length) problems.push(`Saknar främmande nyckel mot ${missingFks.map(pretty).join(" och ")}.`);
   if (extraFks.length) problems.push(`Främmande nyckel som inte hör hit: mot ${extraFks.map(pretty).join(" och ")}.`);
   // Anmärkning: FK-attribut med annat namn än facit.
@@ -330,4 +337,17 @@ export function checkModel(answerText, facitVariants, rules = {}, options = {}) 
     }
   });
   return { ...best, answer };
+}
+
+// Facit i föreläsningens blockform, som man skriver det på tentan.
+export function toBlockNotation(schema) {
+  return schema.relations.map((rel) => {
+    const rows = rel.attrs.map((a) => `  ${a},`);
+    rows.push(`  CK${subscript("1")} = {${rel.pk.join(", ")}},`);
+    rows.push(`  PK = CK${subscript("1")}${rel.fks.length ? "," : ""}`);
+    rel.fks.forEach((fk, i) => {
+      rows.push(`  FK${subscript(String(i + 1))} (${fk.cols.join(", ")}) REF ${fk.target}(${fk.targetCols.join(", ")})${i < rel.fks.length - 1 ? "," : ""}`);
+    });
+    return `${rel.name}(\n${rows.join("\n")}\n)`;
+  }).join("\n\n");
 }

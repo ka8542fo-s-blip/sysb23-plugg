@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { normalizeExercises, NORMALIZE_GROUPS, contextOf } from "../data/databaser/normalizeExercises.js";
-import { parseSchema, norm } from "../lib/modelCheck.js";
+import { parseSchema, norm, toBlockNotation } from "../lib/modelCheck.js";
 import { checkNormalization, NF_LABELS } from "../lib/normalize.js";
 import SchemaView from "../components/model/SchemaView.jsx";
 import SchemaEditor from "../components/model/SchemaEditor.jsx";
@@ -182,6 +182,10 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
                       </li>
                     ))}
                   </ul>
+                  <div className="mt-4">
+                    <p className="mb-1 text-sm font-medium text-ink/80">Facit i sin helhet, så som du skulle ha skrivit det{result.variant > 0 ? ` (alternativ ${result.variant + 1})` : ""}</p>
+                    <pre className="overflow-x-auto rounded-lg border border-line bg-paper px-4 py-3 font-mono text-[13.5px] leading-relaxed text-ink">{result.facit ? `${NF_LABELS[result.nf.expected]}\n\n${toBlockNotation(result.facit)}` : NF_LABELS[result.nf.expected]}</pre>
+                  </div>
                 </>
               )}
             </div>

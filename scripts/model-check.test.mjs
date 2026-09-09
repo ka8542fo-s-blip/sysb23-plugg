@@ -267,3 +267,28 @@ test("blockform: radnumren i felen pekar på originalraderna", () => {
   assert.deepEqual(s.errors, []);
   assert.deepEqual(s.relations[0].attrs, ["EmployeeNo", "Name"]);
 });
+
+test("facit skrivs ut i blockform med små siffror, riktiga namn i FK-felen", async () => {
+  const { toBlockNotation } = await import("../src/lib/modelCheck.js");
+  const text = toBlockNotation(parseSchema(byId["mod-04"].facit[0]));
+  assert.equal(text, `PERSON(
+  Name,
+  Address,
+  Salary,
+  CK₁ = {Name},
+  PK = CK₁
+)
+
+CAR(
+  LicenseNumber,
+  Brand,
+  Speed,
+  OwnerName,
+  CK₁ = {LicenseNumber},
+  PK = CK₁,
+  FK₁ (OwnerName) REF PERSON(Name)
+)`);
+  assert.equal(checkModel(text, byId["mod-04"].facit, byId["mod-04"].rules).status, "correct");
+  const r = checkModel(`PERSON(Name, Address, Salary)\nPK = {Name}\n\nCAR(LicenseNumber, Brand, Speed, OwnerName)\nPK = {LicenseNumber}`, byId["mod-04"].facit, byId["mod-04"].rules);
+  assert.ok(rel(r, "CAR").problems.includes("Saknar främmande nyckel mot PERSON(Name)."), JSON.stringify(rel(r, "CAR").problems));
+});

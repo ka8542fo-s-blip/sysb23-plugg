@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { modelExercises } from "../data/databaser/modelExercises.js";
-import { parseSchema, checkModel, norm } from "../lib/modelCheck.js";
+import { parseSchema, checkModel, norm, toBlockNotation } from "../lib/modelCheck.js";
 import SchemaView from "../components/model/SchemaView.jsx";
 import SchemaEditor from "../components/model/SchemaEditor.jsx";
 import { ModelFigure } from "../components/model/modelFigures.jsx";
@@ -201,6 +201,10 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
                         <li key={"extra-" + name}><span className="font-medium text-wrong">{name}: extra</span> — finns inte i facit.</li>
                       ))}
                     </ul>
+                    <div className="mt-4">
+                      <p className="mb-1 text-sm font-medium text-ink/80">Facit i sin helhet, så som du skulle ha skrivit det{result.variant > 0 ? ` (alternativ ${result.variant + 1})` : ""}</p>
+                      <pre className="overflow-x-auto rounded-lg border border-line bg-paper px-4 py-3 font-mono text-[13.5px] leading-relaxed text-ink">{toBlockNotation(facitParsed)}</pre>
+                    </div>
                     {result.remarks.length > 0 && (
                       <ul className="mt-2 space-y-1 text-sm text-ink/65">{result.remarks.map((n) => <li key={n}>Anmärkning: {n}</li>)}</ul>
                     )}
