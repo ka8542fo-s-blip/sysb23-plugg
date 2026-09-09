@@ -426,7 +426,7 @@ Fyra förklaringar anges oftast:
 
 **Kostnads- och nyttokriteriet** innebär att en metods nytta för måluppfyllelsen ska vägas mot metodens kostnad. Metoder är inte kostnadsfria: konsultarvoden, kalkylsystem, beräkningar och analyser, utbildning, insamling och rapportering av information. Nyttan varierar också: kvalitet på beslutsunderlag, styreffekt, effektivitet i kostnadskontroll, tidsbesparing. Man ska välja det alternativ som ger störst **nettonytta**. Praktiker tillämpar kriteriet; teorin bortser ofta från det.
 
-Slutsatsen är viktig och kan användas i essäsvar: litteraturens metoder utgör **inte** en samling metoder som ska användas, utan en samling tillgängliga metoder att välja bland. Det är inte möjligt att kategoriskt hävda att ABC-kalkylen är bättre än bidragskalkylen, att icke-finansiella mått är bättre än finansiella, eller att den processorienterade organisationsformen är bättre än den hierarkiska.
+Slutsatsen är viktig och kan användas i essäsvar: litteraturens metoder utgör **inte** en samling metoder som ska användas, utan en samling tillgängliga metoder att välja bland. Det är inte möjligt att kategoriskt hävda att ABC-kalkylen (aktivitetsbaserad kalkylering, activity based costing) är bättre än bidragskalkylen, att icke-finansiella mått är bättre än finansiella, eller att den processorienterade organisationsformen är bättre än den hierarkiska.
 `,
   },
 
@@ -474,7 +474,7 @@ Ordningen — omvärld, resurser, kunskap — är det som prövas på tentan.
 4. Kundernas förhandlingsstyrka
 5. Leverantörernas förhandlingsstyrka
 
-Observera vad som **inte** är en kraft: lagar och regleringar. Det är en återkommande distraktor, och regleringar hör snarare till bredare omvärldsanalyser som PESTEL. Modellens typiska användningsfall är att bedöma attraktiviteten i en bransch, exempelvis inför ett inträde på en ny marknad.
+Observera vad som **inte** är en kraft: lagar och regleringar. Det är en återkommande distraktor, och regleringar hör snarare till bredare omvärldsanalyser som PESTEL (politiska, ekonomiska, sociala, teknologiska, miljömässiga och legala faktorer). Modellens typiska användningsfall är att bedöma attraktiviteten i en bransch, exempelvis inför ett inträde på en ny marknad.
 
 Porters **generiska strategier** är kostnadsledarskap, differentiering och fokus (koncentration på ett smalt segment, med kostnads- eller differentieringsinriktning). Logiken i hela skolan är att konkurrensfördel skapas genom **position** i branschen.
 
@@ -482,7 +482,7 @@ Företag som saknar en vald generisk strategi riskerar att bli **"stuck in the m
 
 ## Det resursbaserade synsättet
 
-RBV (Jay Barney m.fl., 1990-talet) flyttar blicken inåt — ett **inifrån-ut-perspektiv**. Branscher består av heterogena företag, och resurser är inte fullständigt mobila: de kan vara svåra att överföra, imitera och ersätta. En resurs ger uthållig konkurrensfördel om den uppfyller **VRIO**:
+RBV (*resource-based view*, det resursbaserade synsättet; Jay Barney m.fl., 1990-talet) flyttar blicken inåt — ett **inifrån-ut-perspektiv**. Branscher består av heterogena företag, och resurser är inte fullständigt mobila: de kan vara svåra att överföra, imitera och ersätta. En resurs ger uthållig konkurrensfördel om den uppfyller **VRIO**:
 
 - **Valuable** — värdefull, t.ex. sänker kostnader eller höjer kvalitet.
 - **Rare** — sällsynt, få eller inga konkurrenter har den.
@@ -620,7 +620,7 @@ Hållbarhet är det tema som starkast präglar nyare tentafrågor, och det häng
 
 ## Hållbarhetens väg till strategisk fråga
 
-Föreläsningen ger en tidslinje: ökad miljömedvetenhet på 1960–80-talet, Brundtlandrapporten 1987, CSR och Triple Bottom Line på 1990-talet, hållbarhet som **strategisk** fråga från 2000-talet (konkurrensfördel kan nås genom att bli hållbar), och från 2010 omfattande hållbarhetsreglering i EU, bland annat CSRD. Hållbarhet har blivit ett nödvändigt parallellt strategiskt mål — och en målkonflikt mellan företagets vinst och dess samhällsansvar att hantera.
+Föreläsningen ger en tidslinje: ökad miljömedvetenhet på 1960–80-talet, Brundtlandrapporten 1987, CSR och Triple Bottom Line på 1990-talet, hållbarhet som **strategisk** fråga från 2000-talet (konkurrensfördel kan nås genom att bli hållbar), och från 2010 omfattande hållbarhetsreglering i EU, bland annat CSRD (Corporate Sustainability Reporting Directive, EU:s direktiv om hållbarhetsrapportering). Hållbarhet har blivit ett nödvändigt parallellt strategiskt mål — och en målkonflikt mellan företagets vinst och dess samhällsansvar att hantera.
 
 ## Hållbar utveckling — definitionen
 
@@ -709,7 +709,7 @@ Det här kapitlet är föreläsningens egen berättelse, och den förklarar varf
 
 ## De första datorerna: en process i taget
 
-De första datorerna var avancerade räknemaskiner med mycket specifika syften — ENIAC 1946, Apollo Guidance Computer 1966. De tidiga enterprise-systemen byggdes av stora företag, banker och statliga myndigheter som utvecklade sina egna applikationer: lönehantering, redovisning, lagerhantering, batchbaserad dataanalys, processkontroll. **En sak i taget**, varje system för sig.
+De första datorerna var avancerade räknemaskiner med mycket specifika syften — ENIAC (Electronic Numerical Integrator and Computer) 1946, Apollo Guidance Computer 1966. De tidiga enterprise-systemen byggdes av stora företag, banker och statliga myndigheter som utvecklade sina egna applikationer: lönehantering, redovisning, lagerhantering, batchbaserad dataanalys, processkontroll. **En sak i taget**, varje system för sig.
 
 **Moores lag** skapade efterhand förutsättningar för datorisering av fler företag och processer: IBM System/360 mainframe på 60- och 70-talet, DEC minidatorer på 70-talet, PC:n från 80-talet.
 
@@ -725,7 +725,7 @@ Trots enorma IT-investeringar syntes ingen produktivitetsökning i statistiken. 
 
 > "You can see the computer age everywhere but in the productivity statistics."
 
-NIST beskrev 1989 samma sak som **integrationens paradox** (Appleton): systemen fanns, men de hängde inte ihop.
+NIST (National Institute of Standards and Technology, USA:s standardiseringsinstitut) beskrev 1989 samma sak som **integrationens paradox** (Appleton): systemen fanns, men de hängde inte ihop.
 
 Förklaringen som föreläsningen ger — och som Weaver prövar på tentan — är att **det tar tid för företag att anpassa sina processer och organisationer till nya teknologier**. Tekniken i sig ger ingen vinst; vinsten kommer när arbetssätten ändras. Notera vad som *inte* är svaret: att tekniken bara påverkar små företag, att teknisk utveckling alltid ger omedelbar effekt, eller att innovation automatiskt ökar lönsamheten.
 
@@ -744,13 +744,13 @@ Svaret på paradoxen blev att koppla IT till affärsstrategin genom tre idéer: 
 - Data warehousing
 - Outsourcing
 
-Lägg märke till att flera av dessa är exakt de metoder AJK kapitel 3 nämner som svar på omvärldsförändringarna — kursens två halvor beskriver samma decennium från var sitt håll.
+Lägg märke till att flera av dessa är exakt de metoder kursboken (AJK) nämner i kapitel 3 som svar på omvärldsförändringarna — kursens två halvor beskriver samma decennium från var sitt håll.
 
 ## Clinger Cohen Act 1996
 
 En reform av IT-arbetet inom amerikansk offentlig sektor (Information Technology Management Reform Act) som enligt föreläsningen skapade förutsättningarna för den moderna IT-industrin:
 
-- **CIO-rollen** legitimerades som en strategisk ledningsfunktion.
+- **CIO-rollen** (Chief Information Officer, IT-chef) legitimerades som en strategisk ledningsfunktion.
 - **Enterprise Architecture (EA)** etablerades som managementdisciplin.
 - **IT governance:** IT började styras som en strategisk investering.
 - **COTS** (commercial off-the-shelf) fick stort genomslag — färdiga system som ERP och CRM i stället för egenutveckling.
@@ -771,7 +771,7 @@ Föreläsningen tar berättelsen fram till idag med tre ramverk.
 **The AI factory** (Iansiti & Lakhani 2020) beskriver AI-driven verksamhet som en industriell process med fyra delar:
 
 1. **Data pipeline** — samlar in, rensar och lagrar data.
-2. **Algorithm development** — konstruktion och (offline-)träning av ML-modeller.
+2. **Algorithm development** — konstruktion och (offline-)träning av ML-modeller (maskininlärning, machine learning).
 3. **Experimentation platform** — A/B-testning av olika modeller för att se vad som fungerar.
 4. **IT infrastructure** — systemets generella arkitektur.
 
@@ -782,17 +782,17 @@ Deras exempel: ingen mänsklig auktionsförrättare deltar i Googles miljontals 
 **Datastrategi** (DalleMule & Davenport 2017) är en balans mellan två inriktningar:
 
 - **Data defense** — minimera datarisk: regelefterlevnad, upptäcka och begränsa bedrägerier, förhindra intrång och datastöld, intern dataintegritet genom single source of truth.
-- **Data offense** — maximera avkastningen på data: datainsamlingsstrategier, dataintegration och analys, data mining, BI och AI/ML, realtidsupptäckt av bedrägerier, multiple versions of the truth.
+- **Data offense** — maximera avkastningen på data: datainsamlingsstrategier, dataintegration och analys, data mining, BI (business intelligence, beslutsstöd) och AI/ML, realtidsupptäckt av bedrägerier, multiple versions of the truth.
 
 Var balansen ska ligga beror på **riskkontexten**. I ena änden av spektrumet finns high-stakes-sektorer — rättsväsende, polis, sjukvård, socialtjänst, utbildning — där defense dominerar. I mitten banker, finansinstitut och försäkring. I andra änden detaljhandel, onlinetjänster, media och hotell, där offense väger tyngre.
 
-Skillnaden mellan USA och EU är stor: USA är "vilda västern" med lite reglering, medan EU har regleringsfokus. **GDPR** har redan gjort de flesta sektorer high-stakes vad gäller personuppgifter, och **AI Act** inför en riskbaserad ansats. Externa krav — dataskydd, personuppgifter, datasäkerhet — skapar juridiska utmaningar, gör efterlevnad alltmer komplex och kostsam, och gör **data resilience** (backuper med mera) verksamhetskritisk för AI-drivna organisationer.
+Skillnaden mellan USA och EU är stor: USA är "vilda västern" med lite reglering, medan EU har regleringsfokus. **GDPR** (EU:s dataskyddsförordning) har redan gjort de flesta sektorer high-stakes vad gäller personuppgifter, och **AI Act** inför en riskbaserad ansats. Externa krav — dataskydd, personuppgifter, datasäkerhet — skapar juridiska utmaningar, gör efterlevnad alltmer komplex och kostsam, och gör **data resilience** (backuper med mera) verksamhetskritisk för AI-drivna organisationer.
 
 ## Löste vi alla IT-problem?
 
 Nej. Trots alla metoder förekommer ständiga, ofta spektakulära IT-misslyckanden. Ökande komplexitet — inklusive IT och mjukvara — leder till ökad risk för misslyckande.
 
-På **makronivå** skapar varje ny IT-epok nya utmaningar som kräver nya integrationer och en ny helhetssyn. Komplexiteten är **kumulativ**: spagettiarkitektur, sedan ERP/CRM och legacysystem, sedan SOA/API/webbtjänster, sedan SaaS/mobilt/moln, sedan big data/ML/AI, sedan cybersäkerhet och integritet, och nu agentisk AI. Varje lager ligger kvar under nästa.
+På **makronivå** skapar varje ny IT-epok nya utmaningar som kräver nya integrationer och en ny helhetssyn. Komplexiteten är **kumulativ**: spagettiarkitektur, sedan ERP/CRM och legacysystem, sedan tjänsteorienterad arkitektur (SOA), programmeringsgränssnitt (API) och webbtjänster, sedan SaaS/mobilt/moln, sedan big data/ML/AI, sedan cybersäkerhet och integritet, och nu agentisk AI. Varje lager ligger kvar under nästa.
 
 På **mikronivå** tenderar produktivitetsparadoxen att **upprepa sig inom varje nytt område som digitaliseras**. Det vi idag kallar digital transformation eller AI-transformation är samma mönster som PC-revolutionen: tekniken finns före förmågan att använda den.
 
@@ -801,7 +801,7 @@ På **mikronivå** tenderar produktivitetsparadoxen att **upprepa sig inom varje
 Fyra drivkrafter gör att databaser, enterprise architecture, processer och säkerhet aldrig blir "klara":
 
 - **Ökad konkurrens på globala marknader** — internet, snabbare produktcykler, distribution och logistik.
-- **Nya regleringar** — SOX, GDPR, CSRD, AI Act.
+- **Nya regleringar** — SOX (Sarbanes-Oxley Act, USA:s lag om finansiell rapportering), GDPR, CSRD (EU:s direktiv om hållbarhetsrapportering), AI Act.
 - **Frivillig efterlevnad** — standarder, certifieringar, miljömärkning; kan vara krav i upphandlingar.
 - **Accelererande teknikutveckling** — IoT, cloud, SaaS, AI.
 
@@ -869,7 +869,7 @@ Generativ AI är den senaste teknologin med potential att radikalt förändra hu
 
 ### Värdeskapande är inte värdefångst
 
-Det finns ingen tvekan om att AI skapar mycket värde. Artikeln redovisar exempel från en konferens 2024: Ally Financials CIO om sänkta kostnader för att sammanfatta kundinteraktioner, Ciscos CIO om allt effektivare kodgenerering, Dows CIO om minskade kostnader för materialhantering och patenterbarhetsbedömning. Klarna rapporterade i februari 2024 att två tredjedelar av kundtjänstchattarna hanterades av en AI-assistent under programmets första månad, med betydande kostnadsminskningar, ökad hastighet och ingen nedgång i kundnöjdhet.
+Det finns ingen tvekan om att AI skapar mycket värde. Artikeln redovisar exempel från en konferens 2024: Ally Financials CIO (Chief Information Officer, IT-chef) om sänkta kostnader för att sammanfatta kundinteraktioner, Ciscos CIO om allt effektivare kodgenerering, Dows CIO om minskade kostnader för materialhantering och patenterbarhetsbedömning. Klarna rapporterade i februari 2024 att två tredjedelar av kundtjänstchattarna hanterades av en AI-assistent under programmets första månad, med betydande kostnadsminskningar, ökad hastighet och ingen nedgång i kundnöjdhet.
 
 Problemet: **AI kan leverera liknande besparingar till varje företag som inför den.** Värde skapas men fångas inte — åtminstone inte länge.
 
@@ -934,7 +934,7 @@ För att strategin ska bli verklighet krävs styrmedel: formella metoder, organi
 
 Men mätningen är själv ett problem. Rena finansiella mått är bakåtblickande, så styrningen kompletteras med icke-finansiella mått i fyra perspektiv (kap 7). Görs det slarvigt — utan kausalmodell, utan validering, med fel målnivåer — blir det manipulation och felinvesteringar istället för styrning.
 
-Och nu kommer två omvärldsförändringar som ställer nya krav på samma mätapparat: **hållbarheten** (kap 8), som gör att företaget ska redovisa resultat i tre dimensioner istället för en, och **digitaliseringen** (kap 9), som både ger nya mått och ställer frågan om var konkurrensfördelen egentligen sitter. Svaret på den frågan visar sig vara detsamma som RBV gav på 1990-talet: i det som är svårt att kopiera.
+Och nu kommer två omvärldsförändringar som ställer nya krav på samma mätapparat: **hållbarheten** (kap 8), som gör att företaget ska redovisa resultat i tre dimensioner istället för en, och **digitaliseringen** (kap 9), som både ger nya mått och ställer frågan om var konkurrensfördelen egentligen sitter. Svaret på den frågan visar sig vara detsamma som det resursbaserade synsättet (RBV) gav på 1990-talet: i det som är svårt att kopiera.
 
 ## Temat "nya mått" — kursens favoritessä
 
@@ -942,13 +942,13 @@ Eftersom det knyter ihop nästan allt är detta värt att kunna som ett färdigt
 
 **Drivkrafterna.** Ökad hållbarhetsmedvetenhet (från konsumenter, investerare, reglering) och digitalisering (mer data, snabbare återkoppling, nya affärsmodeller).
 
-**De nya måtten.** Hållbarhetsmått enligt ESG och TBL: koldioxidutsläpp, energieffektivitet, andel förnybart, jämställdhet och lönegap, personalomsättning, arbetsmiljö, leverantörsgranskning. Digitala mått: kundnöjdhet (NKI/NPS), kundbortfall, digital användning och konvertering, ledtider och processdata i realtid.
+**De nya måtten.** Hållbarhetsmått enligt ESG och TBL: koldioxidutsläpp, energieffektivitet, andel förnybart, jämställdhet och lönegap, personalomsättning, arbetsmiljö, leverantörsgranskning. Digitala mått: kundnöjdhet (nöjd kund-index NKI, Net Promoter Score NPS), kundbortfall, digital användning och konvertering, ledtider och processdata i realtid.
 
 **Ramverken som håller ihop dem.** Balanced Scorecard, där icke-finansiella mått i kund-, process- och lärandeperspektivet fungerar som drivare av det finansiella utfallet. Triple Bottom Line, där tre resultatdimensioner redovisas parallellt.
 
 **Hur arbetet påverkas.** "What gets measured gets done" — mått styr beteende, belöningar och investeringsbeslut. Icke-finansiella mått är **ledande indikatorer**: de ger signaler innan bokslutet. Ansvarsfördelning och belöningssystem måste följa med, annars styr måtten ingenting.
 
-**Riskerna.** Ittner & Larckers fyra misstag, med den empiriska poängen att validerade kausalmodeller gav högre ROA och ROE. Plus manipulationsexemplen — mått utan regelverk inbjuder till kreativitet.
+**Riskerna.** Ittner & Larckers fyra misstag, med den empiriska poängen att validerade kausalmodeller gav högre ROA och ROE (avkastning på totalt respektive eget kapital). Plus manipulationsexemplen — mått utan regelverk inbjuder till kreativitet.
 
 **Slutsatsen.** De nya måtten **ersätter inte** de finansiella målen, de kompletterar och driver dem. Finansiella mått visar utfallet, de nya visar drivkrafterna. Konsten ligger i att välja få, strategikopplade, validerade mått — och att sätta rimliga målnivåer.
 

@@ -27,7 +27,7 @@ En server är i grunden "en dator som aldrig stängs av". I den här kursen kör
 
 ## Varför inte bara filer?
 
-Data i en Java-\`ArrayList\` ligger i RAM och försvinner när programmet stängs — det är **volatil** lagring. **Persistent** lagring kan göras med filer, kalkylblad, relationsdatabaser (RDBMS) eller dokumentorienterade databaser (NoSQL). Alla tjänar samma syfte: att lagra, skydda och hämta data.
+Data i en Java-\`ArrayList\` ligger i arbetsminnet (RAM) och försvinner när programmet stängs — det är **volatil** lagring. **Persistent** lagring kan göras med filer, kalkylblad, relationsdatabaser (RDBMS) eller dokumentorienterade databaser (NoSQL). Alla tjänar samma syfte: att lagra, skydda och hämta data.
 
 Ett **relationsdatabashanteringssystem** (RDBMS) lagrar data i tabeller och frågas med **SQL** (Structured Query Language), ett språk för att skapa, läsa, uppdatera och radera data samt administrera databasen.
 
@@ -52,11 +52,11 @@ Detta är kompendiets ryggrad, och tentans struktur.
 - En avdelning har ett unikt namn och en budget.
 - En avdelning kan ha flera anställda.
 
-**1. Konceptuell databasdesign** — ER-modellering. Kraven blir ett **ER-diagram**, en abstraktion av verkligheten. Kapitel 4–6.
+**1. Konceptuell databasdesign** — ER-modellering (entity–relationship). Kraven blir ett **ER-diagram**, en abstraktion av verkligheten. Kapitel 4–6.
 
 **2. Logisk databasdesign** — transformation av den konceptuella modellen till **relationer**, skrivna i textform: \`Employee(EmpNo, Name, Salary, DepartmentName)\`. Följt av **normalisering** om det behövs. Kapitel 7 och 8.
 
-**3. Fysisk databasdesign** — implementation av den logiska modellen som **DDL-satser**, alltså körbar \`CREATE TABLE\`-kod. Kapitel 9.
+**3. Fysisk databasdesign** — implementation av den logiska modellen som **DDL-satser** (Data Definition Language), alltså körbar \`CREATE TABLE\`-kod. Kapitel 9.
 
 Lägg märke till att SQL kommer sist. Det är först när modellen är genomtänkt som koden skrivs — och det är därför tentan prövar modellering minst lika hårt som SQL.
 
@@ -110,7 +110,7 @@ Definitionerna:
 > **Grad (degree):** antalet attribut i relationsschemat.
 > **Kardinalitet (cardinality):** antalet tupler i det aktuella relationsvärdet.
 
-En relation är inte samma sak som en ER-relationship. EMPLOYEE och WORKS_ON är båda relationer — mängder av tupler — men EMPLOYEE lagrar entitetsfakta och WORKS_ON lagrar relationsfakta. Relationship är ett begrepp i den konceptuella modellen; relation är ett begrepp i den logiska.
+En relation är inte samma sak som en ER-relationship (entity–relationship). EMPLOYEE och WORKS_ON är båda relationer — mängder av tupler — men EMPLOYEE lagrar entitetsfakta och WORKS_ON lagrar relationsfakta. Relationship är ett begrepp i den konceptuella modellen; relation är ett begrepp i den logiska.
 
 ## Schema och aktuellt värde
 
@@ -136,7 +136,7 @@ En relation är en mängd, och en mängd innehåller varje medlem bara en gång.
 
 ## SQL ger en bag, relationen är en mängd
 
-Här skiljer sig praktiken från teorin, och föreläsningen gör en poäng av det. Kör \`SELECT Name FROM employee\` mot fyra anställda där två heter Mary, och resultatet har fyra rader varav två identiska. SQL behåller båda: resultatet är en **bag**, som räknar upprepningar. Relationen NAMES med bara attributet Name har tre tupler, för de två Mary-raderna är samma kompletta tupel. \`DISTINCT\` tar bort dubblettraderna ur ett SQL-resultat. Varken en mängd eller en bag anger någon ordning — vill du ha en garanterad radordning behöver frågan \`ORDER BY\`.
+Här skiljer sig praktiken från teorin, och föreläsningen gör en poäng av det. SQL (Structured Query Language) är frågespråket mot databasen. Kör \`SELECT Name FROM employee\` mot fyra anställda där två heter Mary, och resultatet har fyra rader varav två identiska. SQL behåller båda: resultatet är en **bag**, som räknar upprepningar. Relationen NAMES med bara attributet Name har tre tupler, för de två Mary-raderna är samma kompletta tupel. \`DISTINCT\` tar bort dubblettraderna ur ett SQL-resultat. Varken en mängd eller en bag anger någon ordning — vill du ha en garanterad radordning behöver frågan \`ORDER BY\`.
 
 ## Relationens sju egenskaper
 
@@ -211,7 +211,7 @@ Tre saker som föreläsningen lägger tid på:
 
 - **Ett främmandenyckelvärde får förekomma flera gånger**. Mary kan leda både Atlas och Nova, så E-104 upprepas i PROJECT medan det identifierar exakt en tupel i EMPLOYEE. En främmande nyckel kräver en matchande refererad nyckel; den kräver **inte** i sig unikhet i den refererande relationen. (Vill man ha unikhet, som i 1:1, måste den läggas till separat — kapitel 7.)
 - **Den refererade tupeln måste finnas**. E-999 har rätt form, E-nnn, men ingen anställd har det numret, så tupeln bryter mot främmandenyckelvillkoret. Ett tillåtet domänvärde är inte automatiskt en giltig referens.
-- **Främmande nycklar tvingar inte fram deltagande**. Att varje WORKS_ON-tupel pekar på ett existerande projekt hindrar inte att projekt P-30 saknar tupel i WORKS_ON, trots att Project deltar totalt i WorksOn. Minimideltagandet ligger utanför det främmande nycklar kan garantera — "FKs do not enforce minimum participation". I DDL kan \`NOT NULL\` på en främmande nyckel göra många-sidans deltagande obligatoriskt (kapitel 9), men ett-sidans eller M:N-sidans totala deltagande blir en verksamhetsregel utanför constraints.
+- **Främmande nycklar tvingar inte fram deltagande**. Att varje WORKS_ON-tupel pekar på ett existerande projekt hindrar inte att projekt P-30 saknar tupel i WORKS_ON, trots att Project deltar totalt i WorksOn. Minimideltagandet ligger utanför det främmande nycklar kan garantera — "FKs do not enforce minimum participation". I DDL (Data Definition Language, tabelldefinitionerna) kan \`NOT NULL\` på en främmande nyckel göra många-sidans deltagande obligatoriskt (kapitel 9), men ett-sidans eller M:N-sidans totala deltagande blir en verksamhetsregel utanför constraints.
 
 Främmande nycklar upprätthåller **referensintegritet**: databasen vägrar rader som pekar på något som inte finns, och vägrar radera det som fortfarande refereras. En främmande nyckel får vara **NULL** om deltagandet är frivilligt — en bil utan ägare har \`EmployeeID = NULL\`. Är deltagandet obligatoriskt sätts kolumnen till \`NOT NULL\`.
 
@@ -235,7 +235,7 @@ Den notationen står i hjälpmedlen och är den tydligaste när en relation har 
 
 En **naturlig nyckel** är ett attribut som har betydelse i verksamheten: personnummer, anställningsnummer, ISBN. En **surrogatnyckel** är ett artificiellt värde som databasen genererar, typiskt ett löpnummer utan innebörd. Skälen att införa en är nyckelstabilitet (värdet ändras aldrig) och prestanda (effektivare joins och index); priset är att raden inte går att identifiera meningsfullt utan uppslag.
 
-Kursen har placerat surrogatnycklarna olika. Föreläsningen om logisk design nämner dem inte alls: den logiska modellen använder ER-modellens identifierare som kandidatnycklar rakt av, för att bevara modellens semantik. Kursintroduktionen lägger dem i logisk design. Övningshäftet och kapitel 9 lägger dem i fysisk design. **På tentan avgörs frågan av uppgift 2:** "tabeller som motsvarar vanliga och svaga entiteter ska använda automatiskt inkrementerande surrogatnycklar." De hör alltså till DDL-steget, och i uppgift 3 stryker du under de naturliga nycklarna.
+Kursen har placerat surrogatnycklarna olika. Föreläsningen om logisk design nämner dem inte alls: den logiska modellen använder ER-modellens (entity–relationship) identifierare som kandidatnycklar rakt av, för att bevara modellens semantik. Kursintroduktionen lägger dem i logisk design. Övningshäftet och kapitel 9 lägger dem i fysisk design. **På tentan avgörs frågan av uppgift 2:** "tabeller som motsvarar vanliga och svaga entiteter ska använda automatiskt inkrementerande surrogatnycklar." De hör alltså till DDL-steget, och i uppgift 3 stryker du under de naturliga nycklarna.
 
 Mönstret att kunna är kursens \`hospital-ddl.sql\`: \`EmployeeID\` (surrogat, primärnyckel) och \`EmpNo\` (naturlig, \`UNIQUE\`). Surrogatnyckeln har lagts till, den naturliga nyckeln har bevarats — tas den bort förloras affärsregeln om unikhet. Ser du det mönstret i en tentauppgift vet du vilket designsteg du befinner dig i.
 `
@@ -249,15 +249,15 @@ Mönstret att kunna är kursens \`hospital-ddl.sql\`: \`EmployeeID\` (surrogat, 
     lead: "Metamodell, modell och diagram är tre olika saker; entitetstyp, entitetsmängd och entitet är tre nivåer. Attribut, värdemängder och identifierare i Chen-notation.",
     sources: ["Föreläsning 4"],
     body: `
-**ER-modellering (Entity-Relationship modeling)** är konstruktionen av ER-diagram för att fånga verksamhetens krav på persistent datalagring, som underlag för design av relationsdatabaser som möter dessa krav. Metoden går tillbaka på Peter Chen: en konferensversion på den första VLDB-konferensen i september 1975 och den utökade tidskriftsartikeln *The Entity–Relationship Model — Toward a Unified View of Data* i ACM TODS i mars 1976.
+**ER-modellering (Entity-Relationship modeling)** är konstruktionen av ER-diagram för att fånga verksamhetens krav på persistent datalagring, som underlag för design av relationsdatabaser som möter dessa krav. Metoden går tillbaka på Peter Chen: en konferensversion på den första VLDB-konferensen (Very Large Data Bases) i september 1975 och den utökade tidskriftsartikeln *The Entity–Relationship Model — Toward a Unified View of Data* i ACM Transactions on Database Systems (TODS) i mars 1976.
 
 Chens förslag hade två delar, och skillnaden mellan dem är det här kapitlets röda tråd. Den ena är **ER-datamodellen** — begreppen entities, relationships, attributes, roles och constraints, som gör verksamhetens semantik explicit. Den andra är en **diagramteknik** — rektanglar, romber, rollnamn och M:N-etiketter, som gör de valda begreppen synliga under designarbetet. En modell och ett ritsätt är alltså två skilda saker.
 
-Föreläsningen täcker ett enda steg i databasdesignen: att bygga en **konceptuell datamodell** som ett ER-diagram, innan något bestäms om tabeller, nycklar eller SQL. Kapitel 1 visade kedjan från verksamhetskrav till DDL; här stannar vi i det första steget. Notera redan nu en gräns som återkommer: modellen kan uttrycka regler som schemat inte kan tvinga fram. Att varje projekt måste delta i \`WorksOn\` går att säga i modellen, men främmande nycklar kan inte upprätthålla ett sådant minimikrav.
+Föreläsningen täcker ett enda steg i databasdesignen: att bygga en **konceptuell datamodell** som ett ER-diagram, innan något bestäms om tabeller, nycklar eller SQL (Structured Query Language). Kapitel 1 visade kedjan från verksamhetskrav till DDL (Data Definition Language); här stannar vi i det första steget. Notera redan nu en gräns som återkommer: modellen kan uttrycka regler som schemat inte kan tvinga fram. Att varje projekt måste delta i \`WorksOn\` går att säga i modellen, men främmande nycklar kan inte upprätthålla ett sådant minimikrav.
 
 ## Metamodell, modell och representation
 
-Efter 1979 växte ER till en hel familj av metoder, verktyg och läroböcker. Kärnan — entitetstyper, relationstyper, attribut och kardinalitetsvillkor — förblev igenkännbar, men detaljer, notation och metod varierade. **Det finns ingen enda universellt antagen ERD-specifikation.** Därför ser diagram olika ut i olika böcker och verktyg, och därför behöver du tre begrepp för att inte blanda ihop vad som är vad.
+Efter 1979 växte ER till en hel familj av metoder, verktyg och läroböcker. Kärnan — entitetstyper, relationstyper, attribut och kardinalitetsvillkor — förblev igenkännbar, men detaljer, notation och metod varierade. **Det finns ingen enda universellt antagen specifikation för ER-diagram (ERD).** Därför ser diagram olika ut i olika böcker och verktyg, och därför behöver du tre begrepp för att inte blanda ihop vad som är vad.
 
 Föreläsningen använder en liten tunnelbana som exempel. **Metamodellen** är vokabulären: här bara tre påståenden — \`Line\`, \`Stop\` och \`Line has stops\`. Metamodellen säger vad en modell *får* uttrycka. **Modellen** består av fakta om en viss tunnelbana: att \`Central Line\` finns, att \`Stop A\` och \`Stop B\` finns, och att linjen har de stoppen. \`Central Line\` tillhör alltså modellen, inte metamodellen. En **representation** är ett sätt att visa modellen: samma fem fakta kan skrivas som vanlig text, som XML eller ritas som en karta. Olika syntax, samma modell — och **ingen av representationerna *är* modellen.**
 
@@ -538,11 +538,11 @@ Reifiering är inte gratis. Understrykningen av \`assignmentNo\` deklarerar det 
 
 ## Crow's Foot-notation
 
-Crow's Foot är kursens andra notation. Historien förklarar varför den ser ut som den gör: **Gordon C. Everest** använde 1976 *inverted arrows* mellan entitetsboxar för att visa parent–dependent-strukturer, och forken gjorde "many" synligt utan att se ut som en pil som antydde en navigeringsriktning. Via **Information Engineering** (Finkelstein, CACI, sent 70-tal–1981) och **James Martins** böcker och CASE-verktyg på 80- och 90-talen spreds flera varianter. Namnen Crow's Foot, Information Engineering-notation och Martin-notation syftar på **besläktade varianter**, inte på en fast syntax skapad av en person.
+Crow's Foot är kursens andra notation. Historien förklarar varför den ser ut som den gör: **Gordon C. Everest** använde 1976 *inverted arrows* mellan entitetsboxar för att visa parent–dependent-strukturer, och forken gjorde "many" synligt utan att se ut som en pil som antydde en navigeringsriktning. Via **Information Engineering** (Finkelstein, CACI, sent 70-tal–1981) och **James Martins** böcker och CASE-verktyg (datorstödd systemutveckling, computer-aided software engineering) på 80- och 90-talen spreds flera varianter. Namnen Crow's Foot, Information Engineering-notation och Martin-notation syftar på **besläktade varianter**, inte på en fast syntax skapad av en person.
 
 Det får en praktisk konsekvens. Alla dialekter delar entitetsboxar, relationslinjer och fork för many, men resten beror på metod och verktyg:
 
-- **Common IE** använder cirkel, streck och fork för optional/required och one/many. **Kursen använder denna konceptuella common IE-variant.**
+- **Common IE** (Information Engineering) använder cirkel, streck och fork för optional/required och one/many. **Kursen använder denna konceptuella common IE-variant.**
 - **Barker/Oracle** kodar *may* och *must* med brutna och heldragna halvlinjer; forken betyder fortfarande many, men cirkel–streck-vokabulären saknas.
 - **Modelleringsverktyg** kan ge linjestilen en tredje betydelse: heldragen = identifying, streckad = non-identifying relationship. Då kodar den inte deltagande alls.
 
@@ -552,7 +552,7 @@ Det får en praktisk konsekvens. Alla dialekter delar entitetsboxar, relationsli
 
 [[diagram:chen-crow]]
 
-Entitetstyper, relationstyper och constraints är **ER-begrepp**. Rektanglar, romber, namngivna linjer och ändsymboler är **val som notationen gör**. Samma \`Employee–WorksOn–Project\`-modell kan ritas i båda.
+Entitetstyper, relationstyper och constraints är **ER-begrepp** (entity–relationship). Rektanglar, romber, namngivna linjer och ändsymboler är **val som notationen gör**. Samma \`Employee–WorksOn–Project\`-modell kan ritas i båda.
 
 I Crow's Foot skiljer **entitetsboxen** identifierare från övriga attribut: en rubrik namnger entitetstypen, \`ID\` bredvid \`project_no\` och \`employee_no\` markerar identifierande attribut, och vanliga attribut står under avskiljaren. Namnkonventionen byter \`projectNo\` mot \`project_no\`. Där Chen stryker under \`employeeNo\` och lägger \`name\` och \`hireDate\` i separata ovaler, samlar Crow's Foot allt i en uppdelad box — samma anställd, samma identifierare, samma attribut, bara notation och placering skiljer.
 
@@ -713,13 +713,13 @@ Poängräkningen gör metoden viktig. Sex sanna i genomgång 1 ger 30 poäng om 
     lead: "Deckets sex regler i ordning med sina stegvisa nedbrytningar: vanliga och svaga entiteter, 1:1, 1:N, M:N och flervärdesattribut — kedjade svaga entiteter, sammansatta främmande nycklar och varför 1:1 kräver en kandidatnyckel.",
     sources: ["Föreläsning 5 (HT26, slide 38–122)", "Övningshäftets facit"],
     body: `
-Logisk design uttrycker samma domän som ER-diagrammet, i en annan representation: **relationsscheman, nycklar och constraints** — inte SQL-kod och inte fyllda tabeller. Entiteten e1 med employeeNo E-104, name Mary och jobTitle Analyst blir tupeln ⟨E-104, Mary, Analyst⟩; entiteten och tupeln beskriver samma anställd. Men logisk design specificerar schema och constraints för **alla tillåtna populationer**, inte för en viss tupel.
+Logisk design uttrycker samma domän som ER-diagrammet (entity–relationship), i en annan representation: **relationsscheman, nycklar och constraints** — inte SQL-kod (Structured Query Language) och inte fyllda tabeller. Entiteten e1 med employeeNo E-104, name Mary och jobTitle Analyst blir tupeln ⟨E-104, Mary, Analyst⟩; entiteten och tupeln beskriver samma anställd. Men logisk design specificerar schema och constraints för **alla tillåtna populationer**, inte för en viss tupel.
 
-På tentan är kapitlet indirekt: uppgift 2 går från ER-diagram rakt till DDL, och reglerna här är tankemodellen bakom varje \`CREATE TABLE\`. Uppgift 3 använder resultatet — relationer med understrukna primärnycklar.
+På tentan är kapitlet indirekt: uppgift 2 går från ER-diagram rakt till DDL (Data Definition Language), och reglerna här är tankemodellen bakom varje \`CREATE TABLE\`. Uppgift 3 använder resultatet — relationer med understrukna primärnycklar.
 
 ## Notationen
 
-Föreläsningen skriver varje relation med sina nycklar: \`CK1 = {…}\`, \`PK = CK1\`, \`FK1 : (…) REF T(…)\` (kapitel 3). Övningshäftets facit stryker under: primärnyckel med hel linje, främmande nycklar med prickad linje, ett attribut som är båda får båda strecken. Så ser facit ut, och så skriver du i uppgift 3. Eftersom kompendiet är i text står primärnyckeln först i attributlistan här, sammansatta primärnycklar anges i en kommentar (\`-- PK:\`), och främmande nycklar skrivs ut med REF.
+Föreläsningen skriver varje relation med sina nycklar: \`CK1 = {…}\`, \`PK = CK1\`, \`FK1 : (…) REF T(…)\` — kandidatnyckel, primärnyckel och främmande nyckel (kapitel 3). Övningshäftets facit stryker under: primärnyckel med hel linje, främmande nycklar med prickad linje, ett attribut som är båda får båda strecken. Så ser facit ut, och så skriver du i uppgift 3. Eftersom kompendiet är i text står primärnyckeln först i attributlistan här, sammansatta primärnycklar anges i en kommentar (\`-- PK:\`), och främmande nycklar skrivs ut med REF.
 
 ## Sex regler i ordning
 
@@ -1098,7 +1098,7 @@ Ingen nedbrytning. Frestelsen är att bryta ut (D, E, F) "för att D bestämmer 
     lead: "Från logisk modell till körbar CREATE TABLE — datatyper, constrainttyperna, surrogatnycklar, kursens namngivningsregler — och tentans instruktioner för uppgift 2, med föreningen som genomgång.",
     sources: ["Föreläsning 7", "Kodstandard v2.0", "Övningshäftet uppgift 18–22", "Extentorna HT25, uppgift 2"],
     body: `
-Sista steget: den logiska modellen blir körbar SQL. Här kommer också de val som medvetet sköts upp under logisk design.
+Sista steget: den logiska modellen blir körbar SQL (Structured Query Language). Här kommer också de val som medvetet sköts upp under logisk design.
 
 ## DDL
 
@@ -1151,7 +1151,7 @@ Priset är att raden inte längre går att identifiera meningsfullt utan uppslag
 
 ## Från logisk modell till DDL: vad facit kräver
 
-Tentans DDL-uppgift ger ett ER-diagram och ber om körbar kod med alla constraints, där alla kolumner får antas vara \`INTEGER\`. Övningshäftets uppgift 18 till 22 har den formen, och facit följer fyra regler som avgör poängen.
+Tentans DDL-uppgift ger ett ER-diagram (entity–relationship) och ber om körbar kod med alla constraints, där alla kolumner får antas vara \`INTEGER\`. Övningshäftets uppgift 18 till 22 har den formen, och facit följer fyra regler som avgör poängen.
 
 **1. NOT NULL är också en constraint.** Den skrivs på kolumnen, utan eget namn, och gör två jobb. Den naturliga nyckeln ska vara både \`NOT NULL\` och \`UNIQUE\` — annars kan en rad utan anställningsnummer, eller två rader med samma, ta sig in, och det är just den **entitetsintegritet (entity integrity)** som surrogatnyckeln inte längre skyddar. En primärnyckel på en naturlig nyckel gav det gratis; med surrogatnyckel måste båda anges. Det andra jobbet gäller deltagandet: en främmande nyckel som är \`NOT NULL\` tvingar fram **totalt deltagande (total participation)** — varje anställd måste ha en avdelning — medan en främmande nyckel som får vara NULL uttrycker partiellt deltagande. Facit kommenterar varje sådan kolumn: *Foreign key column for R3 relationship. Total participation.*
 
@@ -1212,7 +1212,7 @@ Standarden (v2.0) gäller i laborationer, SQL-uppgiften och databasprojektet, oc
 - **Tabellnamn i PascalCase och singular:** \`Employee\`, inte \`employees\`.
 - **Kolumnnamn i PascalCase**, ofta med tabellprefix på beskrivande kolumner: \`EmpName\`, \`EmpSalary\`.
 - **Constraintnamn** enligt prefixmönstret ovan.
-- **Java:** camelCase för variabler och metoder, PascalCase för klasser, K&R-klammerstil.
+- **Java:** camelCase för variabler och metoder, PascalCase för klasser, K&R-klammerstil (Kernighan & Ritchie).
 - **Miljövariabler** i SCREAMING_SNAKE_CASE.
 - **Inga hemligheter i repot** — anslutningsuppgifter och lösenord hör i miljövariabler eller en konfigurationsfil utanför versionshanteringen.
 
@@ -1317,7 +1317,7 @@ Det som brukar kosta: glömd \`NOT NULL\` på en naturlig nyckel, \`NOT NULL\` s
     lead: "Tentans största uppgift är en enda fråga. Vägen från den svenska meningen till frågan: läsa schemat, joina över kopplingstabellen, aggregera per grupp, filtrera rad eller grupp, uttrycka 'men inte' och hämta jämförelsevärden med underfrågor.",
     sources: ["Föreläsning 2–3", "Extentorna HT25, uppgift 4", "SQL-verkstaden"],
     body: `
-Uppgift 4 är en enda SQL-fråga och 30 poäng — mer än något annat på tentan. Den ger tre tabeller, två entitetstabeller och en kopplingstabell med ett mätvärde, och en mening på svenska som ska bli **en fråga med ett resultat**. Det här kapitlet är inte en SQL-referens; verkstaden under SQL är det. Kapitlet handlar om vägen från meningen till frågan, och tar bara med det ur föreläsningarna som behövs för att gå den.
+Uppgift 4 är en enda SQL-fråga (Structured Query Language) och 30 poäng — mer än något annat på tentan. Den ger tre tabeller, två entitetstabeller och en kopplingstabell med ett mätvärde, och en mening på svenska som ska bli **en fråga med ett resultat**. Det här kapitlet är inte en SQL-referens; verkstaden under SQL är det. Kapitlet handlar om vägen från meningen till frågan, och tar bara med det ur föreläsningarna som behövs för att gå den.
 
 De två tentorna hittills krävde samma fyra byggstenar: en **join över kopplingstabellen** för att få ihop namn och mätvärden, ett **aggregat med GROUP BY** för snitt, högsta eller antal per grupp, ett villkor på gruppen med **HAVING** eller en **mängdskillnad** ("läses av X men inte av Y"), och ett **jämförelsevärde hämtat med en underfråga** ("äldre än en viss student"). Kan du de fyra och kan du sätta ihop dem, kan du uppgiften.
 
