@@ -16,6 +16,7 @@ export const essays = [
     question: "Inom vissa strategiperspektiv betonas vikten av att företag är 'lärande organisationer'. Nämn ett sådant strategiperspektiv och förklara vad som avses med begreppet lärande organisation och varför det är viktigt.",
     context: "Förekom som essäfråga på ordinarie tentan HT24 (20 p).",
     checklist: [
+      "Godtagbara perspektiv enligt föreläsning 2: dynamic capabilities (Teece — sensing, seizing, transforming; lärande centralt), RBV:s kunskapstrend (knowledge management, Nonaka), eller Mintzbergs emergent strategy (strategi växer fram ur lärande). Nämn ett, förklara varför lärande är centralt i just det.",
       "Namnger ett perspektiv: det kunskaps-/lärandebaserade strategiperspektivet (den nuvarande eran i Herrmanns utvecklingslinje; kan även kopplas till RBV:s förlängning mot dynamiska förmågor).",
       "Definierar lärande: bestående beteendeförändringar utifrån erfarenhet; organisatoriskt lärande uppstår när individers lärande sprids i organisationen och omsätts i praktiken.",
       "Beskriver förutsättningarna: kultur där experiment, initiativ och ifrågasättande är accepterat.",

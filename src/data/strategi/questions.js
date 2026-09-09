@@ -646,5 +646,75 @@ export const questions = [
       { text: "Att allt fler användare gör systemen svårare att administrera och säkra.", explain: "Användarantal är inte föreläsningens poäng." },
       { text: "Att äldre system måste ersättas helt innan nya kan införas i verksamheten.", explain: "Tvärtom: legacysystemen blir kvar och skapar komplexiteten." }
     ],
-    correct: 1, source: "Weaver, fö 1", reviewed: true }
+    correct: 1, source: "Weaver, fö 1", reviewed: true },
+
+  { id: "str-q67", topic: "rbv", difficulty: 1,
+    question: "Vad står bokstäverna i VRIO för?",
+    options: [
+      { text: "Valuable, Rare, Inimitable, Organized", explain: "Rätt. RBV:s fyra krav på en resurs för uthållig fördel." },
+      { text: "Vision, Resources, Innovation, Outcomes", explain: "Låter strategiskt men är inte akronymens innehåll." },
+      { text: "Value, Revenue, Investment, Operations", explain: "Ekonomiska termer som inte hör till RBV." },
+      { text: "Valuable, Relevant, Integrated, Optimized", explain: "Bara första ledet stämmer." }
+    ],
+    correct: 0, source: "Weaver, fö 2", reviewed: true },
+
+  { id: "str-q68", topic: "porter", difficulty: 1,
+    question: "Vad menar Porter med att ett företag är 'stuck in the middle'?",
+    options: [
+      { text: "Att det geografiskt ligger mellan två stora huvudmarknader", explain: "Uttrycket handlar om strategi, inte geografi." },
+      { text: "Att det saknar en vald generisk strategi och konkurrensfördel", explain: "Rätt. Varken billigast, mest differentierat eller fokuserat." },
+      { text: "Att det befinner sig i mitten av branschens värdekedja", explain: "Position i värdekedjan är en annan fråga." },
+      { text: "Att det har en marknadsandel som ligger mitt i branschens spann", explain: "Marknadsandel är inte det Porter avser." }
+    ],
+    correct: 1, source: "Weaver, fö 2", reviewed: true },
+
+  { id: "str-q69", topic: "strategiutveckling", difficulty: 2,
+    question: "Vad avses med 'realized strategy' hos Mintzberg och Waters?",
+    options: [
+      { text: "Den ursprungliga planen som högsta ledningen formulerade uppifrån.", explain: "Det är intended strategy." },
+      { text: "De delar av planen som förkastades eller ignorerades längs vägen.", explain: "Det är non-realized strategy." },
+      { text: "Blandningen av genomförd plan och strategi som växte fram på vägen.", explain: "Rätt. Realized = deliberate + emergent." },
+      { text: "Strategier som aldrig planerades utan uppstod ur lärande nedifrån.", explain: "Det är emergent strategy, en av delarna." }
+    ],
+    correct: 2, source: "Weaver, fö 2 / Mintzberg & Waters (1985)", reviewed: true },
+
+  { id: "str-q70", topic: "strategiutveckling", difficulty: 2,
+    question: "Vilka tre förmågor ingår i dynamic capabilities enligt Teece?",
+    options: [
+      { text: "Planning, positioning och performing", explain: "Inte Teeces begrepp." },
+      { text: "Sourcing, scaling och sustaining", explain: "Inte Teeces begrepp." },
+      { text: "Valuable, rare och inimitable", explain: "Det är VRIO, som dynamic capabilities bygger vidare på." },
+      { text: "Sensing, seizing och transforming", explain: "Rätt. Upptäcka, fånga, omkonfigurera." }
+    ],
+    correct: 3, source: "Weaver, fö 2 / Teece", reviewed: true },
+
+  { id: "str-q71", topic: "tbl", difficulty: 2,
+    question: "Hur skiljer sig TBL från ESG enligt föreläsningen?",
+    options: [
+      { text: "TBL mäter enbart miljöpåverkan, ESG mäter socialt ansvar och bolagsstyrning.", explain: "Båda rymmer miljö och socialt; skillnaden ligger i perspektivet." },
+      { text: "TBL gäller börsnoterade storföretag, ESG gäller små och medelstora företag.", explain: "Företagsstorlek är inte skillnaden." },
+      { text: "TBL är helt frivilligt medan ESG är lagstadgat inom EU sedan 2010-talet.", explain: "Regleringen är en tredje sak, skild från båda ramverken." },
+      { text: "TBL är ett internt redovisningsperspektiv, ESG ett externt investerarperspektiv.", explain: "Rätt. TBL är hur företaget redovisar, ESG hur investerare bedömer." }
+    ],
+    correct: 3, source: "Weaver, fö 2", reviewed: true },
+
+  { id: "str-q72", topic: "rbv", difficulty: 3,
+    question: "Vilket är enligt RBV ett skäl till att en resurs är svår att imitera?",
+    options: [
+      { text: "Kausal tvetydighet: sambandet mellan resursen och lönsamheten är svårt att förstå.", explain: "Rätt. Vet konkurrenten inte vad som ger effekten kan den inte kopiera det." },
+      { text: "Hög anskaffningskostnad: resursen är dyr att köpa på öppna marknaden.", explain: "Är den köpbar är den inte svårimiterad — bara dyr." },
+      { text: "Patentskydd: resursen är juridiskt skyddad mot kopiering under en begränsad tid.", explain: "Patent nämns inte som ett av de tre skälen." },
+      { text: "Storleksfördelar: bara stora företag har råd att bygga upp resursen.", explain: "Skala är inte ett av RBV:s tre skäl." }
+    ],
+    correct: 0, source: "Weaver, fö 2 / Barney", reviewed: true },
+
+  { id: "str-q73", topic: "strategiutveckling", difficulty: 3,
+    question: "Vilket perspektiv förknippas med Nonaka och Mintzberg i föreläsningens sammanfattning?",
+    options: [
+      { text: "Strategi som skicklig planering och långsiktig resursallokering.", explain: "Det är Chandler och Ansoff." },
+      { text: "Anpassning genom lärande, innovation och kunskapsskapande.", explain: "Rätt. Det lärande perspektivet, grunden för den lärande organisationen." },
+      { text: "Uthållig fördel genom VRIO-resurser som är svåra att imitera.", explain: "Det är Barney." },
+      { text: "Värde genom plattformar och ekosystem med nätverkseffekter.", explain: "Det är Parker, Van Alstyne och Gawer." }
+    ],
+    correct: 1, source: "Weaver, fö 2", reviewed: true }
 ];

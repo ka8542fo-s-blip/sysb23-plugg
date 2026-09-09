@@ -39,7 +39,8 @@ export const topics = [
       "Stora företag har strategier på flera nivåer: koncern-, affärsområdes-, divisions-, affärsenhets- och funktionsstrategi. Ekonomistyrning sker främst på divisions-/affärsenhetsnivå, eftersom verksamheten först där kan preciseras.",
       "Verksamhetsplanering = nedbrytning av huvudmål till delmål, där varje mål behöver tidshorisont (kort/medellång/lång sikt), ansvarig enhet och handlingsplaner med riktlinjer.",
       "Delmål uttrycks både finansiellt (räntabilitet, försäljning, kostnader) och icke-finansiellt (kvalitet, kundtillfredsställelse, marknadsandel).",
-      "Klassisk tentafråga: visionen beskriver företagets framtida riktning, affärsidén vad företaget gör och hur det genererar intäkter."
+      "Klassisk tentafråga: visionen beskriver företagets framtida riktning, affärsidén vad företaget gör och hur det genererar intäkter.",
+      "Affärsidén = value creation (hur värde skapas för kunder) + value capture (hur pengar tjänas). Tillsammans affärsmodellen."
     ],
     pitfalls: [
       "Vision är INTE en konkret plan och INTE främst extern kommunikation — den är det önskade framtida tillståndet.",
@@ -149,7 +150,11 @@ export const topics = [
       "Era 1 — omvärlden: fokus på analys av omgivningen; mognar när Porters branschanalys och generiska strategier blir dominant design.",
       "Era 2 — resurserna: RBV skapar ny jäsningsperiod — uthålliga konkurrensfördelar kommer från värdefulla, sällsynta och svårimiterade resurser och kärnkompetenser inuti företaget.",
       "Era 3 — nu: kunskap, lärande och innovation; hur företag lär och kontinuerligt förnyar sig som källa till uthållig konkurrensfördel.",
-      "Mintzberg: strategi kan inte alltid planeras i förväg eftersom marknad och omvärld ofta är osäkra och förändras snabbt. Realiserad strategi = avsiktlig (planerad) + framväxande (emergent) strategi, där lärandet är mekanismen bakom det framväxande."
+      "Mintzberg: strategi kan inte alltid planeras i förväg eftersom marknad och omvärld ofta är osäkra och förändras snabbt. Realiserad strategi = avsiktlig (planerad) + framväxande (emergent) strategi, där lärandet är mekanismen bakom det framväxande.",
+      "Mintzberg & Waters (1985) fem termer: intended, deliberate, non-realized, emergent, realized. Realized = deliberate + emergent. Netflix: streaming var emergent, DVD-postorder var intended.",
+      "Strategi sågs 1960–80-tal som formaliserad planering (Chandler, Ansoff); Mintzbergs kritik 1994 med Honda-fallet.",
+      "Dynamic capabilities (Teece m.fl. 1997): sensing, seizing, transforming — förmågan att kontinuerligt förnya resurser; bygger på RBV; lärande centralt.",
+      "Sex vägar till uthållig fördel: planering (Chandler/Ansoff), positionering (Porter), VRIO (Barney), lärande (Nonaka/Mintzberg), plattformar (Parker/Van Alstyne/Gawer), dynamic capabilities (Teece)."
     ],
     pitfalls: [
       "Mintzberg säger inte att planerade strategier 'alltid misslyckas' eller att strategi är irrelevant — det är klassiska felalternativ.",
@@ -169,7 +174,8 @@ export const topics = [
       "'Lagar och regleringar' är INTE en av de fem krafterna — en återkommande distraktor på tentan. Regleringar hör till bredare omvärldsanalyser som PESTEL.",
       "Modellen hör till positioneringsskolan: konkurrensfördel skapas genom position i branschen.",
       "Generiska strategier: kostnadsledarskap, differentiering och fokus (smalt segment med kostnads- eller differentieringsinriktning).",
-      "Typiskt användningsfall: bedöma attraktiviteten i en bransch inför inträde."
+      "Typiskt användningsfall: bedöma attraktiviteten i en bransch inför inträde.",
+      "'Stuck in the middle': företag utan vald generisk strategi saknar konkurrensfördel. Porter antar att alla kan skaffa samma resurser — branschens attraktivitet avgör. Utifrån-in-perspektiv."
     ],
     pitfalls: [
       "Five forces analyserar branschen — inte intern arbetsmiljö, leveranskedjeoptimering eller marknadsföringskampanjer.",
@@ -192,7 +198,9 @@ export const topics = [
       "Egen 'bättre' generell modell är orealistisk mot specialiserade leverantörer (som dessutom ofta bygger på öppen källkod); specialanpassade modeller imiteras, samköps eller beställs av konkurrenter — fördelen blir tillfällig.",
       "Proprietär data skyddar sällan: konkurrenter har ofta funktionellt likvärdig data (liknande mönster ger liknande resultat), större dataset ger avtagande nytta, AI kan härleda vilken data du måste ha och imitera din strategi utifrån synliga resultat, och data är svår att skydda (läckor, misstag).",
       "Silverkanten: har du redan värdefulla, sällsynta, svårimiterade resurser (Barneys exempel: Amazons leverantörsrelationer, sammankopplade system, logistik och returhantering inom en kultur som belönar effektivitet) kan AI förstärka värdet av dem — förutsatt att du är snabbfotad nog att agera, vilket i sig är en sällsynt förmåga.",
-      "Alternativ väg: bygga hela affärsmodellen kring AI så att varje process integrerar AI-insikter — kan ge svårkopierad agilitet, men tekniken är omogen och ingen har lyckats ännu."
+      "Alternativ väg: bygga hela affärsmodellen kring AI så att varje process integrerar AI-insikter — kan ge svårkopierad agilitet, men tekniken är omogen och ingen har lyckats ännu.",
+      "VRIO: Valuable, Rare, Inimitable, Organized. Tre skäl till svårimiterbarhet: historiska grunder/path dependency, kausal tvetydighet, social komplexitet (t.ex. företagskultur). Inifrån-ut-perspektiv; trender: kärnkompetens, outsourcing, alignment, knowledge management.",
+      "Föreläsningen om Barney och AI: fast follower kan ha fördel framför first mover."
     ],
     pitfalls: [
       "Barneys slutsats är inte 'undvik AI' — tvärtom bör AI in i beslutsprocesserna; poängen är att AI i sig inte ger uthållig fördel.",
@@ -262,12 +270,14 @@ export const topics = [
       "Drivkrafter: 'pull' från ledare som ser hållbarhet som nästa utvecklingssteg i organisationsutveckling, 'push' från marknadskrafter och reglering.",
       "Hållbarhet kräver förändring i tänkande och praktik på varje nivå och bygger på delade praktiska erfarenheter över organisatoriska, sektoriella och nationella gränser. Praktiker utanför toppledningen kan vara bättre positionerade — 'distribuerad intelligens'.",
       "ESG-exempel per bokstav: E = öka energieffektivitet, minska koldioxidutsläpp; S = lika löner mellan könen, arbetsvillkor, vidareutbildning; G = utvärdera styrelsens prestation och sammansättning, ersättning, transparens.",
-      "ESG:s syfte: skydda miljön, förbättra socialt ansvarstagande och stärka bolagsstyrningen — grund för bl.a. hållbara investeringar."
+      "ESG:s syfte: skydda miljön, förbättra socialt ansvarstagande och stärka bolagsstyrningen — grund för bl.a. hållbara investeringar.",
+      "CSR = bred etisk ambition (t.ex. FN:s globala mål). TBL = internt redovisningsperspektiv. ESG = externt investeringsperspektiv. EU har infört omfattande hållbarhetsreglering från 2010, bland annat CSRD."
     ],
     pitfalls: [
       "Sortera ESG-exempel på rätt bokstav — löner/utbildning är S, inte G; styrelsefrågor är G.",
       "TBL handlar om balans mellan tre områden, inte om produktionskvalitet eller kostnadsminimering.",
-      "'Purpose' ingår inte i TBL."
+      "'Purpose' ingår inte i TBL.",
+      "TBL och ESG är inte samma sak: TBL är internt (redovisning), ESG är externt (investerare)."
     ]
   },
   {

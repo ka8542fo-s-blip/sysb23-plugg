@@ -95,7 +95,7 @@ Det leder till nästa kapitel, för om styrningen ska implementera strategin må
     title: "Vision, affärsidé, strategi och verksamhetsplaner",
     readingMinutes: 8,
     lead: "Kedjan från önskad framtid till konkret styrning — och exakt vad som skiljer en vision från en affärsidé.",
-    sources: ["AJK kap 1"],
+    sources: ["AJK kap 1", "Weaver, föreläsning 2"],
     body: `
 Ekonomistyrningen har utgångspunkter. Den svävar inte fritt, utan är sista ledet i en kedja som börjar i företagets framtidsbild:
 
@@ -120,6 +120,8 @@ En vision har minst tre funktioner:
 Utvecklade affärsidéer klargör vilka varor och tjänster som erbjuds, vilka kunder man vänder sig till, vilka marknader man arbetar på eller avser att arbeta på, och hur verksamheten ska utvecklas. Etiska riktlinjer och uttalanden om hur företaget vill uppfattas kan ingå. Sammanfattningsvis: **affärsidén anger vad företaget ägnar sig åt eller tjänar pengar på** — nu eller i framtiden. H&M:s "mode och kvalitet till bästa pris", följt av en lista över hur det låga priset möjliggörs (få mellanhänder, stora volymer, djup kunskap om design och textil, kostnadsmedvetenhet i alla led, effektiv distribution), är ett typexempel.
 
 Affärsidéns uppgifter är främst att ange riktning och klargöra attityder — i mindre grad att precisera mål. Den ska åstadkomma förståelse för organisationens syfte, skapa underlag för motivation, utgöra underlag för fördelning av resurser, etablera önskad ton och affärsklimat, fungera som orienteringspunkt för dem som kan identifiera sig med syftet, och möjliggöra översättning av syfte till konkreta mål och vidare till strategier.
+
+Föreläsningen beskriver affärsidén med två engelska begrepp: hur företaget **skapar värde** för marknad och kunder (*value creation*) och hur det **fångar värde**, alltså tjänar pengar (*value capture*). Tillsammans utgör de företagets affärsmodell.
 
 ## Strategi
 
@@ -434,7 +436,7 @@ Slutsatsen är viktig och kan användas i essäsvar: litteraturens metoder utgö
     title: "Strategiämnets utveckling: från omvärld till kunskap",
     readingMinutes: 11,
     lead: "Herrmanns evolutionslinje, Porters positioneringsskola, det resursbaserade synsättet och Mintzbergs framväxande strategi.",
-    sources: ["Herrmann (2005)", "Porter", "Mintzberg"],
+    sources: ["Herrmann (2005)", "Porter", "Mintzberg", "Weaver, föreläsning 2"],
     body: `
 Strategifältet har inte utvecklats linjärt utan i vågor. Herrmann (2005) beskriver det med ett lån från teorin om teknisk utveckling, och det är en bild som gör hela ämnet begripligt.
 
@@ -476,22 +478,51 @@ Observera vad som **inte** är en kraft: lagar och regleringar. Det är en åter
 
 Porters **generiska strategier** är kostnadsledarskap, differentiering och fokus (koncentration på ett smalt segment, med kostnads- eller differentieringsinriktning). Logiken i hela skolan är att konkurrensfördel skapas genom **position** i branschen.
 
+Företag som saknar en vald generisk strategi riskerar att bli **"stuck in the middle"** — utan konkurrensfördel åt något håll. Porters grundantagande är att alla företag kan skaffa samma resurser på marknaden; det som skiljer är att **branscher är olika attraktiva**. Det är ett **utifrån-in-perspektiv**.
+
 ## Det resursbaserade synsättet
 
-RBV flyttar blicken inåt. Uthålliga konkurrensfördelar kommer från resurser och förmågor som är **värdefulla, sällsynta och svåra att imitera**, och som företaget är organiserat för att utnyttja. Är en resurs lätt att köpa eller kopiera kan alla skaffa den, och då uppstår ingen varaktig fördel — hur värdefull den än är.
+RBV (Jay Barney m.fl., 1990-talet) flyttar blicken inåt — ett **inifrån-ut-perspektiv**. Branscher består av heterogena företag, och resurser är inte fullständigt mobila: de kan vara svåra att överföra, imitera och ersätta. En resurs ger uthållig konkurrensfördel om den uppfyller **VRIO**:
 
-Skillnaden mot Porter är instruktiv: positioneringsskolan frågar "vilken bransch och vilken position?", RBV frågar "vad har vi som andra inte kan skaffa?". Kapitel 9 visar hur Barney använder exakt den frågan på generativ AI.
+- **Valuable** — värdefull, t.ex. sänker kostnader eller höjer kvalitet.
+- **Rare** — sällsynt, få eller inga konkurrenter har den.
+- **Inimitable** — kostsam att imitera eller ersätta.
+- **Organized** — företaget är organiserat för att dra nytta av den.
 
-Från RBV går utvecklingen vidare mot kunskap, lärande och dynamiska förmågor — förmågan att kontinuerligt förnya sina resurser blir själv den svåraste resursen att imitera. Det knyter samman kapitel 5:s avsnitt om lärande organisationer med strategifältets nuvarande era: en lärande organisation är inte en trivsamhetsfråga, den är en strategisk position.
+Tre saker gör en resurs svår att imitera: **historiska grunder** (timing, path dependency), **kausal tvetydighet** (svårt att förstå sambandet mellan resursen och lönsamheten) och **social komplexitet** (svårt att ens definiera resursen — företagskultur är typexemplet).
+
+Skillnaden mot Porter: positioneringsskolan frågar "vilken bransch och vilken position?", RBV frågar "vad har vi som andra inte kan skaffa?". RBV:s managementtrender: kärnkompetens, outsourcing, flexibilitet, strategic alignment och knowledge management — den lärande organisationen. Kapitel 10 visar hur Barney använder VRIO-logiken på generativ AI; föreläsningen tillägger att en *fast follower* ibland har fördel framför en first mover.
+
+## Dynamiska förmågor
+
+**Dynamic capabilities** (Teece, Pisano & Shuen 1997) bygger på RBV men flyttar fokus från att *ha* värdefulla resurser till förmågan att **kontinuerligt förnya** dem. Tre förmågor: **sensing** — identifiera nya möjligheter, hot och teknikskiften; **seizing** — mobilisera resurser och investera för att fånga möjligheterna; **transforming** — kontinuerligt omkonfigurera resurser, affärsmodeller och strukturer. Lärande och innovation är centrala, och målet är uthållig fördel genom ständig anpassning snarare än genom befintliga produkter eller marknadspositioner. Det är här den lärande organisationen från kapitel 5 blir en strategisk position snarare än en trivsamhetsfråga.
+
+## Sex sätt att nå uthållig konkurrensfördel
+
+Föreläsningens sammanfattning av hela strategifältet, och kapitlets viktigaste lista:
+
+1. Strategi som skicklig planering och långsiktig resursallokering (Chandler 1962, Ansoff 1965).
+2. Konkurrensfördel genom branschanalys och positionering (Porter 1980, 1985).
+3. Uthållig fördel genom VRIO-resurser (Barney 1991).
+4. Anpassning genom lärande, innovation och kunskapsskapande (Nonaka 1994, Mintzberg 1987).
+5. Värde skapat genom plattformar och ekosystem med nätverkseffekter (Parker, Van Alstyne, Gawer).
+6. Integrera, bygga och omkonfigurera resurser i snabbt föränderliga miljöer (Teece m.fl. 1997).
 
 ## Mintzberg: strategi som kan växa fram
 
-En strategi kan inte alltid planeras fullt ut i förväg, eftersom marknaden och omvärlden ofta är osäkra och förändras snabbt. Den **realiserade** strategin är därför en kombination av två delar:
+Under 1960–80-talet sågs strategi som en **formaliserad planeringsprocess** (Chandler, Ansoff). Mintzberg gick till angrepp mot detta i *The fall and rise of strategic planning* (1994); hans klassiska belägg är Honda i USA, där den framgång som i efterhand beskrevs som en genomtänkt plan i själva verket byggde på improvisation och lärande på plats.
 
-- **Avsiktlig (deliberate) strategi** — det som planerades och genomfördes.
-- **Framväxande (emergent) strategi** — mönster som växer fram ur handlingar och beslut längs vägen, ofta som svar på det man lär sig.
+Mintzberg & Waters (1985) delar upp begreppet i fem delar:
 
-Två feltolkningar att undvika, eftersom de dyker upp som svarsalternativ: Mintzberg hävdar **inte** att planerade strategier alltid misslyckas, och **inte** att strategiarbete är meningslöst och bör ersättas av improvisation. Poängen är att planering behöver kompletteras med lärande och anpassning — och att lärandet är själva mekanismen bakom den framväxande strategin.
+- **Intended strategy** — den ursprungliga visionen och planen, uppifrån.
+- **Deliberate strategy** — den del av planen som faktiskt genomförs.
+- **Non-realized strategy** — planer som förkastas eller ignoreras längs vägen.
+- **Emergent strategy** — strategier som aldrig planerades utan växer fram nedifrån, ur handlingar och lärande.
+- **Realized strategy** — det som till slut blev företagets strategi: en mix av deliberate och emergent.
+
+Netflix är föreläsningens exempel: den avsiktliga strategin var postorder av DVD via webben, medan streaming och egenproducerat innehåll var framväxande.
+
+Två feltolkningar att undvika, eftersom de dyker upp som svarsalternativ: Mintzberg hävdar **inte** att planerade strategier alltid misslyckas, och **inte** att strategiarbete är meningslöst. Poängen är att planering behöver kompletteras med lärande och anpassning — och att lärandet är mekanismen bakom det framväxande.
 `,
   },
 
@@ -583,9 +614,13 @@ Här ligger kapitlets tyngsta belägg, användbart i essäsvar: **företag som i
     title: "Hållbarhet: Triple Bottom Line och ESG",
     readingMinutes: 8,
     lead: "Tre resultaträkningar istället för en — Brundtland, Elkington, Venn-diagrammet och hur ESG-exempel sorteras rätt.",
-    sources: ["Rogers & Hudson (2011)", "ESG-tema"],
+    sources: ["Rogers & Hudson (2011)", "ESG-tema", "Weaver, föreläsning 2"],
     body: `
 Hållbarhet är det tema som starkast präglar nyare tentafrågor, och det hänger direkt på föregående kapitel: hållbarhetsarbete blir styrning först när det mäts.
+
+## Hållbarhetens väg till strategisk fråga
+
+Föreläsningen ger en tidslinje: ökad miljömedvetenhet på 1960–80-talet, Brundtlandrapporten 1987, CSR och Triple Bottom Line på 1990-talet, hållbarhet som **strategisk** fråga från 2000-talet (konkurrensfördel kan nås genom att bli hållbar), och från 2010 omfattande hållbarhetsreglering i EU, bland annat CSRD. Hållbarhet har blivit ett nödvändigt parallellt strategiskt mål — och en målkonflikt mellan företagets vinst och dess samhällsansvar att hantera.
 
 ## Hållbar utveckling — definitionen
 
@@ -651,6 +686,14 @@ ESG är det närliggande ramverket för att bedöma och rapportera företags hå
 Syftet med ramverket är att skydda miljön, förbättra det sociala ansvarstagandet och stärka bolagsstyrningen — och det används bland annat som grund för hållbara investeringar.
 
 Sorteringsövningen är den vanliga tentaformen: löner och kompetensutveckling är **S** (inte G), styrelsefrågor är **G**, utsläpp och energi är **E**. Var uppmärksam när ett svarsalternativ placerar en personalfråga under Governance — det är fel bokstav.
+
+## Tre termer att hålla isär: CSR, TBL och ESG
+
+- **CSR (Corporate Social Responsibility)** — en bred term för ett företags ambition att agera etiskt i enlighet med uppsatta hållbarhetsmål, t.ex. FN:s globala mål.
+- **TBL (Triple Bottom Line)** — ett **internt** perspektiv, ett redovisningsperspektiv: en "bottom line" som utöver vinst inkluderar miljö och socialt ansvar.
+- **ESG (Environmental, Social, Governance)** — ett **externt** perspektiv, ett investeringsperspektiv: att utvärdera företag enligt mätbara hållbarhetskriterier.
+
+Sorteringen internt/externt är den som prövas: TBL är hur företaget redovisar för sig självt, ESG är hur investerare bedömer företaget utifrån.
 `,
   },
 
@@ -957,14 +1000,16 @@ export const glossary = [
   { term: "Bokföringsmässiga grunder", definition: "Extern redovisnings sätt att bestämma intäkter och kostnader genom periodisering och matchning mot periodens försäljning.", chapter: "kap4" },
   { term: "Brundtlandrapporten", definition: "FN-rapporten Our Common Future (1987) som definierade hållbar utveckling som utveckling som möter dagens behov utan att äventyra kommande generationers.", chapter: "kap8" },
   { term: "Contingencyteori", definition: "Teorin att organisationer vars struktur och delsystem matchar omgivningen presterar bättre än de med sämre passform.", chapter: "kap6" },
+  { term: "CSR (Corporate Social Responsibility)", definition: "Bred term för ett företags ambition att agera etiskt enligt uppsatta hållbarhetsmål. Skiljs från TBL (internt) och ESG (externt).", chapter: "kap8" },
   { term: "Differentiering", definition: "Generisk strategi där konkurrensfördel skapas genom ett unikt erbjudande som kunder värderar högre.", chapter: "kap6" },
   { term: "Distribuerad intelligens", definition: "Idén att hållbarhetsledarskap kan komma från praktiker utanför toppledningen som ser sig som del av ett större samhälleligt sammanhang.", chapter: "kap8" },
   { term: "Divisionsorganisation", definition: "Organisationsform indelad efter produkter, tjänster eller geografiska marknader; underlättar nya produktområden och marknader.", chapter: "kap5" },
   { term: "Dominant design", definition: "Den branschstandard som väljs och avslutar en jäsningsperiod. Valet avgörs av sociala, politiska och organisatoriska dynamiker, inte av teknisk logik.", chapter: "kap6" },
   { term: "Dubbelkretslärande", definition: "Lärande där man både löser det oönskade och ifrågasätter själva orsaken till det: kurerar både symptom och sjukdom.", chapter: "kap5" },
+  { term: "Dynamic capabilities", definition: "Teece m.fl.: förmågan att kontinuerligt förnya resurser genom sensing, seizing och transforming. Bygger på RBV; lärande centralt.", chapter: "kap6" },
   { term: "Effektivitet", definition: "Grad av måluppfyllelse; värdet av utflödet i förhållande till värdet av inflödet, ställt mot ett mål.", chapter: "kap4" },
   { term: "Ekonomistyrning", definition: "Avsiktlig påverkan på en verksamhet och dess befattningshavare mot vissa ekonomiska mål (Nationalencyklopedin).", chapter: "kap1" },
-  { term: "Emergent strategi", definition: "Framväxande strategi: mönster som växer fram ur handlingar och lärande längs vägen. Del av den realiserade strategin enligt Mintzberg.", chapter: "kap6" },
+  { term: "Emergent strategi", definition: "Framväxande strategi: mönster som växer fram ur handlingar och lärande längs vägen. En av Mintzberg & Waters fem termer (intended, deliberate, non-realized, emergent, realized) och del av den realiserade strategin.", chapter: "kap6" },
   { term: "Enkelkretslärande", definition: "Lärande där ett problem löses utan att man går till botten med orsaken.", chapter: "kap5" },
   { term: "ESG", definition: "Ramverk för att bedöma företag utifrån Environmental (miljö), Social (socialt ansvar) och Governance (bolagsstyrning).", chapter: "kap8" },
   { term: "Fokusstrategi", definition: "Generisk strategi där företaget koncentrerar sig på ett smalt segment, med kostnads- eller differentieringsinriktning.", chapter: "kap6" },
@@ -983,6 +1028,7 @@ export const glossary = [
   { term: "Inbetalning och utbetalning", definition: "Begreppspar knutet till de tillfällen då likvida medel överförs, alltså betalningstransaktionerna.", chapter: "kap4" },
   { term: "Inkomst och utgift", definition: "Begreppspar knutet till affärstransaktioner med externa parter; enligt praxis fakturans datering respektive fakturans ankomst.", chapter: "kap4" },
   { term: "Inre effektivitet", definition: "Att göra saker rätt: hög produktivitet, kostnadseffektivitet och väl utvecklade rutiner ur ett internt perspektiv.", chapter: "kap4" },
+  { term: "Intended strategy", definition: "Den ursprungliga visionen och planen, uppifrån. Delas i deliberate (genomförd) och non-realized (förkastad).", chapter: "kap6" },
   { term: "Intressentmodellen", definition: "Målmodell där företaget strävar efter jämvikt med sina intressenter genom balans mellan deras bidrag och företagets belöningar; målet blir en kompromiss.", chapter: "kap3" },
   { term: "Intäkt och kostnad", definition: "Periodiserade begrepp: värdet av utförda prestationer respektive av den resursförbrukning som krävts.", chapter: "kap4" },
   { term: "IT-infrastruktur och processer", definition: "Domänen i Strategic Alignment Model som avser den interna tekniksidan: arkitektur, system, IT-processer och IT-kompetens.", chapter: "kap9" },
@@ -1006,6 +1052,7 @@ export const glossary = [
   { term: "Porters fem krafter", definition: "Befintlig konkurrens, hot från nya aktörer, substitut, kundernas förhandlingsstyrka och leverantörernas förhandlingsstyrka. Lagar och regleringar ingår inte.", chapter: "kap6" },
   { term: "Produktivitet", definition: "Kvantitet utflöde i förhållande till kvantitet inflöde; samma förhållande som effektivitet men i fysiska termer.", chapter: "kap4" },
   { term: "Påverkbarhetsprincipen", definition: "Principen att den som ansvarar för något ska kunna påverka det.", chapter: "kap5" },
+  { term: "Realized strategy", definition: "Den strategi som faktiskt blev: en mix av deliberate och emergent (Mintzberg & Waters 1985).", chapter: "kap6" },
   { term: "Rent resultatansvar", definition: "Resultatansvar där intäkterna kommer från externa kunder och enheten har full beslutsrätt över intäkter och kostnader.", chapter: "kap5" },
   { term: "Resultat", definition: "Intäkter minus kostnader för en period; ett absolut tal.", chapter: "kap4" },
   { term: "Resultatansvar", definition: "Ansvar för intäkter minus kostnader, utan befogenhet över kapitalposter. Kan vara rent eller artificiellt.", chapter: "kap5" },
@@ -1018,16 +1065,19 @@ export const glossary = [
   { term: "Strategisk ekonomistyrning", definition: "Inriktning som breddar ekonomistyrningen med externt fokus på konkurrenter och kunder, värdekedjeanalys och anpassning till strategisk inriktning.", chapter: "kap1" },
   { term: "Strategisk passform", definition: "Dimensionen i Strategic Alignment Model som avser kopplingen mellan extern strategi och intern infrastruktur.", chapter: "kap9" },
   { term: "Strategic Alignment Model", definition: "Henderson & Venkatramans modell där affärsstrategi, IT-strategi, organisationsinfrastruktur och IT-infrastruktur ska vara i samklang.", chapter: "kap9" },
+  { term: "Stuck in the middle", definition: "Porters beteckning på företag utan vald generisk strategi, och därmed utan konkurrensfördel.", chapter: "kap6" },
   { term: "Styrmedel", definition: "Medel för att utföra ekonomistyrningens uppgifter; delas i formella styrmedel, organisationsstruktur och mindre formaliserad styrning.", chapter: "kap1" },
   { term: "Svart låda", definition: "Bilden av företaget i neoklassisk teori: en resursomvandlingsenhet där individer och omvandlingens innehåll bortses från.", chapter: "kap3" },
   { term: "Teknisk diskontinuitet", definition: "Genombrott som avviker dramatiskt från inkrementella innovationer och inleder en jäsningsperiod.", chapter: "kap6" },
   { term: "Total effektivitet", definition: "Summan av inre och yttre effektivitet; båda krävs på lång sikt för att företaget ska överleva.", chapter: "kap4" },
   { term: "Transparenstestet", definition: "Kravet att en utomstående ska kunna utläsa affärsenhetens konkurrensstrategi ur styrkortets 15–20 mått.", chapter: "kap7" },
   { term: "Triple Bottom Line", definition: "Elkingtons ramverk med tre resultatdimensioner: People (socialt), Planet (miljö) och Profit/Prosperity (ekonomi).", chapter: "kap8" },
+  { term: "Value creation / value capture", definition: "Hur företaget skapar värde för kunder respektive hur det fångar värde, alltså tjänar pengar. Tillsammans affärsmodellen.", chapter: "kap2" },
   { term: "Verksamhetsplanering", definition: "Nedbrytning av huvudmål till delmål med handlingsplaner, riktlinjer, tidshorisont och ansvarig.", chapter: "kap2" },
   { term: "Vertikalt perspektiv", definition: "Synen på företaget som en hierarki där ägarkrav bryts ned till ansvar på lägre nivåer.", chapter: "kap5" },
   { term: "Vinstmaximeringsmodellen", definition: "Neoklassisk målmodell där vinst är företagets enda mål och handlandet antas rationellt.", chapter: "kap3" },
   { term: "Vision", definition: "Ett önskvärt framtida tillstånd: hur företaget vill uppfattas och i vilken riktning det ska utvecklas.", chapter: "kap2" },
+  { term: "VRIO", definition: "Valuable, Rare, Inimitable, Organized — RBV:s fyra krav på en resurs för uthållig konkurrensfördel.", chapter: "kap6" },
   { term: "Värdekedja", definition: "Företaget sett som en serie processer och aktiviteter som skapar kundvärde; värdeskapande aktiviteter främjas, icke-värdeskapande minimeras.", chapter: "kap5" },
   { term: "Värde för pengarna", definition: "Uttryck för att resurser i offentlig verksamhet ska utnyttjas så att de skapar så stor nytta som möjligt.", chapter: "kap3" },
   { term: "Williamsons modell", definition: "Företagsledarmodell där ledningen maximerar sin egen nytta i form av lön, makt, status och prestige.", chapter: "kap3" },

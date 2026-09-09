@@ -42,7 +42,7 @@ kapitel: allt UI läser `chapter.number`.
 
 | Delkurs | Status | Har |
 |---|---|---|
-| strategi | komplett | 11 kapitel (kap `digital` = nr 9 ur Weavers föreläsning 1; kap9/kap10 är nr 10/11), 14 ämnen, 117 termer, 66 frågor (designregler i filens kommentar, mätskript `scripts/check-fragebank.mjs`), 4 essäer, `practiceBy: "chapter"` |
+| strategi | komplett | 11 kapitel (kap `digital` = nr 9 ur Weavers föreläsning 1; kap9/kap10 är nr 10/11), 14 ämnen, 124 termer, 71 frågor (designregler i filens kommentar, mätskript `scripts/check-fragebank.mjs`), 4 essäer, `practiceBy: "chapter"`. Tillägg 2026-09-09 ur Weavers föreläsning 2: kapitel 2 value creation/value capture, kapitel 6 stuck in the middle + omskrivet RBV-avsnitt med VRIO och de tre imitationshindren + nya avsnitt "Dynamiska förmågor" (Teece: sensing/seizing/transforming) och "Sex sätt att nå uthållig konkurrensfördel" + omskrivet Mintzberg-avsnitt med Waters fem termer och Honda/Netflix, kapitel 8 hållbarhetens tidslinje (CSRD) och "Tre termer att hålla isär: CSR, TBL och ESG" (internt/externt är det som prövas). Sju frågor str-q67…73, sju ordlistetermer, essächecklistan för lärande organisation har de tre godtagbara perspektiven |
 | databaser | komplett mot tentan | se nedan |
 | process, arkitektur, sakerhet | kommande | platshållare i manifestet |
 
@@ -332,6 +332,19 @@ data" i Statistik rensar allt. Progress är per webbläsare och domän.
   röstväljaren (`ChapterView`, två röster som heter "Alva (svenska
   (Sverige))") — kosmetiskt, beror på webbläsarens röstlista.
 - Skärmdumpar i browserpanelen kan vara eftersläpande/tomma; DOM gäller.
+
+## Noterat om Strategis frågebank (2026-09-09)
+
+Banken har 71 frågor, inte 73 som tilläggsprompten räknade med: str-q55 och
+str-q56 ströks tidigare på användarens begäran som dubbletter i kapitel 3
+("Vad är egentligen företagets mål?"). Numreringen går till 73 med två
+luckor. De sju nya frågorna är inklistrade ordagrant. Positionsbalansen
+föll först (21/24/15/11 mot bandet 12–23 för n = 71), eftersom ingen av de
+nya frågorna hade rätt svar på plats D och fyra hade det på plats B; rätt
+svar i str-q70 och str-q71 flyttades därför till plats D genom att byta
+plats med alternativet på den platsen — samma texter, ny ordning. Mätning
+efteråt: unikt längst 19/71 (27 %), längdkvot 1,01, positioner 21/22/15/13,
+största spridning 1,24 (str-q70). Alla inom gränserna.
 
 ## Nästa steg
 
