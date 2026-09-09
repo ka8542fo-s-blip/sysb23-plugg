@@ -93,8 +93,8 @@ kapitel: allt UI läser `chapter.number`.
   modelCheck.js vecklar ut blocken med originalradnummer i felen;
   enradsformen fungerar fortfarande. Kodrutan `SchemaEditor.jsx`: mörk
   yta (ink/paper-tokens), radnummer, Tab/Shift+Tab indrag, Enter behåller
-  indraget och drar in efter "(", knappar ₁–₄ och Alt + siffra sätter in
-  små siffror. Facit visas efter Rätta även vid tolkningsfel. OBS:
+  indraget och drar in efter "(", knappar ₁–₄ och Option/Alt + siffra (även Ctrl + siffra) sätter in
+  små siffror; etiketten säger ⌥ Option på Mac. Facit visas efter Rätta även vid tolkningsfel. OBS:
   browserpanelens `key`-verktyg når inte Reacts onKeyDown — testa
   tangenterna med dispatchade KeyboardEvent i javascript_tool. *Normalisering till 3NF*: `normalizeExercises.js`,
   häftets 11–13 som 38 poster, val 1NF/2NF/"R är redan i 3NF",

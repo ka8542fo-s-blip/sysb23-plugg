@@ -2,6 +2,10 @@ import { useRef } from "react";
 
 const INDENT = "  ";
 const SUBS = ["₁", "₂", "₃", "₄"];
+// På Mac heter Alt-tangenten Option (⌥); händelsen är densamma. Ctrl + siffra
+// fungerar också, för den som hellre trycker det.
+const IS_MAC = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent || "");
+const MOD_LABEL = IS_MAC ? "⌥ Option" : "Alt";
 
 // Kodruta för relationsscheman: mörk yta, radnummer, Tab gör indrag
 // (Shift+Tab tar bort), Enter behåller indraget och drar in efter en rad
@@ -48,7 +52,7 @@ export default function SchemaEditor({ id, value, onChange, placeholder, rows = 
       replaceSelection("\n" + current + extra);
       return;
     }
-    if (event.altKey && /^[0-9]$/.test(event.key)) {
+    if ((event.altKey || event.ctrlKey) && !event.metaKey && /^[0-9]$/.test(event.key)) {
       event.preventDefault();
       replaceSelection("₀₁₂₃₄₅₆₇₈₉"[Number(event.key)]);
       return;
@@ -69,7 +73,7 @@ export default function SchemaEditor({ id, value, onChange, placeholder, rows = 
               key={c}
               type="button"
               onClick={() => replaceSelection(c)}
-              title={`Sätt in ${c} (Alt + ${"₁₂₃₄".indexOf(c) + 1})`}
+              title={`Sätt in ${c} (${MOD_LABEL} + ${"₁₂₃₄".indexOf(c) + 1})`}
               className="h-7 min-w-7 rounded border border-paper/25 px-1.5 font-mono text-sm text-paper transition-colors duration-150 hover:border-paper hover:bg-paper/15"
             >
               {c}
@@ -98,7 +102,7 @@ export default function SchemaEditor({ id, value, onChange, placeholder, rows = 
           className="min-h-0 w-full resize-y bg-transparent px-3 py-3 font-mono text-[14px] leading-6 text-paper placeholder:text-paper/35 focus:outline-none"
         />
       </div>
-      <p className="mt-1 text-xs text-ink/65">Tab gör indrag, Enter behåller det, Alt + siffra ger liten siffra, Esc lämnar rutan.</p>
+      <p className="mt-1 text-xs text-ink/65">Tab gör indrag, Enter behåller det, {MOD_LABEL} + siffra (eller Ctrl + siffra) ger liten siffra, Esc lämnar rutan.</p>
     </div>
   );
 }
