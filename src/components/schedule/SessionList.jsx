@@ -43,69 +43,81 @@ export default function SessionList({ schedule, defaultForwardOnly, now: nowProp
 
   return (
     <section>
-      <h2 className="font-display text-xl">Alla pass</h2>
-      <p className="mt-1 text-[15px] text-ink/70">
-        {schedule.sessions.length} bokade pass vid senaste avläsningen. Schemat
-        kontrolleras automatiskt mot TimeEdit varje måndag.
-      </p>
-
-      <div className="mt-3 max-w-xs">
-        <SegmentedControl
-          label="Visning av passen"
-          value={view}
-          onChange={changeView}
-          segments={[
-            { id: "lista", label: "Lista" },
-            { id: "kalender", label: "Kalender" },
-          ]}
-        />
+      {/* Rubrik och räknare på samma rad; verktygsraden under samlar
+          visning, delkursfilter och de två växlarna i en enda list, så att
+          filtren läses som ett verktyg och inte som tre lösa rader. */}
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <h2 className="font-display text-xl">Alla pass</h2>
+        <p className="tabular text-sm text-ink/65" aria-live="polite">
+          {filtered.length === schedule.sessions.length
+            ? `${schedule.sessions.length} pass`
+            : `${filtered.length} av ${schedule.sessions.length} pass`}
+        </p>
       </div>
 
-      <div className="mt-3 flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => setTopics([])}
-          aria-pressed={topics.length === 0}
-          className={`chip ${topics.length === 0 ? "chip-on" : ""}`}
-        >
-          Alla delkurser
-        </button>
-        {schedule.subcourses.map((subcourse) => {
-          const on = topics.includes(subcourse.id);
-          return (
+      <div className="mt-3 flex flex-col gap-2 rounded-card border border-line bg-white p-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="w-full sm:w-auto">
+            <SegmentedControl
+              label="Visning av passen"
+              value={view}
+              onChange={changeView}
+              compact
+              segments={[
+                { id: "lista", label: "Lista" },
+                { id: "kalender", label: "Kalender" },
+              ]}
+            />
+          </div>
+          <div role="group" aria-label="Urval" className="flex items-center gap-1.5">
             <button
-              key={subcourse.id}
               type="button"
-              onClick={() => toggleTopic(subcourse.id)}
-              aria-pressed={on}
-              className={`chip ${on ? "chip-on" : ""}`}
+              onClick={() => setOnlyExams(!onlyExams)}
+              aria-pressed={onlyExams}
+              className={`chip chip-sm ${onlyExams ? "chip-on" : ""}`}
             >
-              <CourseDot subcourse={subcourse} />
+              Bara tentor
             </button>
-          );
-        })}
-      </div>
-
-      <div className="mt-2 flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => setOnlyExams(!onlyExams)}
-          aria-pressed={onlyExams}
-          className={`chip ${onlyExams ? "chip-on" : ""}`}
+            <button
+              type="button"
+              onClick={() => setForwardOnly(!forwardOnly)}
+              aria-pressed={forwardOnly}
+              className={`chip chip-sm ${forwardOnly ? "chip-on" : ""}`}
+            >
+              Bara framåt
+            </button>
+          </div>
+        </div>
+        {/* Delkurserna på egen rad: rullar på mobil, radbryter på desktop —
+            inget filter göms. */}
+        <div
+          role="group"
+          aria-label="Delkurs"
+          className="no-scrollbar flex items-center gap-1.5 overflow-x-auto sm:flex-wrap sm:overflow-visible"
         >
-          Bara tentor
-        </button>
-        <button
-          type="button"
-          onClick={() => setForwardOnly(!forwardOnly)}
-          aria-pressed={forwardOnly}
-          className={`chip ${forwardOnly ? "chip-on" : ""}`}
-        >
-          Bara framåt
-        </button>
-        <span className="tabular self-center text-sm text-ink/65">
-          {filtered.length} pass
-        </span>
+          <button
+            type="button"
+            onClick={() => setTopics([])}
+            aria-pressed={topics.length === 0}
+            className={`chip chip-sm shrink-0 ${topics.length === 0 ? "chip-on" : ""}`}
+          >
+            Alla
+          </button>
+          {schedule.subcourses.map((subcourse) => {
+            const on = topics.includes(subcourse.id);
+            return (
+              <button
+                key={subcourse.id}
+                type="button"
+                onClick={() => toggleTopic(subcourse.id)}
+                aria-pressed={on}
+                className={`chip chip-sm shrink-0 ${on ? "chip-on" : ""}`}
+              >
+                <CourseDot subcourse={subcourse} />
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {view === "kalender" ? (

@@ -182,6 +182,11 @@
     @apply border-pine bg-pine text-white hover:bg-pine-dark;
   }
 
+  /* Lägre chip för verktygsrader, där många chips står på en rad. */
+  .chip-sm {
+    @apply px-2.5 py-0.5 text-[13px];
+  }
+
   .no-scrollbar {
     scrollbar-width: none;
   }
