@@ -36,8 +36,12 @@ function TeacherCourse() {
 
 // 6. Employee med Supervise (unär) och flervärdesattributet Email.
 function EmployeeSupervise() {
+  // Som häftets bild: de två linjerna utgår från rutans underkant och
+  // konvergerar mot romben strax under, så att det syns att det är EN
+  // relation från entiteten till sig själv. M och 1 vid sin egen linje,
+  // rollnamnen under dem på utsidan.
   return (
-    <Figure viewBox="0 0 520 300" label="Chen-diagram: Employee med EmployeeNo understruket, flervärdesattributet Email (dubbel oval), Name och Salary. Unär relation Supervise med rollerna supervised_by (M) och supervises (1)." caption="Uppgift 6. Employee identifieras av EmployeeNo och kan ha flera e-postadresser. Supervise är unär: en anställd handleder många och handleds av högst en.">
+    <Figure viewBox="0 0 520 256" label="Chen-diagram: Employee med EmployeeNo understruket, flervärdesattributet Email (dubbel oval), Name och Salary. Unär relation Supervise strax under Employee, med två linjer från rutans underkant: supervised_by (M) till vänster och supervises (1) till höger." caption="Uppgift 6. Employee identifieras av EmployeeNo och kan ha flera e-postadresser. Supervise är unär: en anställd handleder många och handleds av högst en.">
       <AttributeOval cx={260} cy={28} label="EmployeeNo" identifier="solid" />
       <AttributeOval cx={110} cy={60} label="Email" multivalued />
       <AttributeOval cx={400} cy={70} rx={44} label="Name" />
@@ -47,13 +51,13 @@ function EmployeeSupervise() {
       <AttributeLink x1={370} y1={82} x2={300} y2={112} />
       <AttributeLink x1={392} y1={130} x2={322} y2={128} />
       <EntityBox x={198} y={110} w={124} h={44} label="Employee" />
-      <Connector x1={222} y1={154} x2={222} y2={232} />
-      <Ratio x={200} y={190} text="M" />
-      <Role x={196} y={215} text="supervised_by" anchor="end" />
-      <Connector x1={298} y1={154} x2={298} y2={232} />
-      <Ratio x={320} y={190} text="1" />
-      <Role x={324} y={215} text="supervises" anchor="start" />
-      <RelationshipDiamond cx={260} cy={262} w={132} h={60} label="Supervise" />
+      <Connector x1={208} y1={154} x2={230} y2={205} />
+      <Ratio x={194} y={172} text="M" />
+      <Role x={204} y={190} text="supervised_by" anchor="end" />
+      <Connector x1={312} y1={154} x2={290} y2={205} />
+      <Ratio x={326} y={172} text="1" />
+      <Role x={316} y={190} text="supervises" anchor="start" />
+      <RelationshipDiamond cx={260} cy={218} w={120} h={52} label="Supervise" />
     </Figure>
   );
 }

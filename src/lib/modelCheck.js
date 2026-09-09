@@ -6,7 +6,9 @@
 //   FK1: (OwnerName) REF PERSON(Name)
 //
 // Skiftläge, blanksteg och understreck i namn spelar ingen roll. CKn-rader
-// får finnas och ignoreras vid rättning (PK = CK1 slås upp). Ett svar kan
+// får finnas och ignoreras vid rättning (PK = CK1 slås upp). Formen är
+// tillåtande: = eller : som separator, ( ) eller { } runt attributlistor,
+// med eller utan nummer, små siffror som vanliga — strikt bara på innehållet. Ett svar kan
 // också vara "R är redan i 3NF" (normaliseringssteget), skrivet som en rad
 // med bara 3NF.
 //
@@ -20,9 +22,9 @@ export const norm = (s) => String(s ?? "").toLowerCase().replace(/[\s_]+/g, "");
 const NAME = "[A-Za-zÅÄÖåäö][\\wÅÄÖåäö ]*?";
 const RELATION_RE = new RegExp(`^(${NAME})\\s*\\(([^()]*)\\)\\s*$`);
 const OPEN_RE = new RegExp(`^(${NAME})\\s*\\(\\s*$`);
-const PK_RE = /^PK\s*\d*\s*=\s*(.+)$/i;
-const CK_RE = /^CK\s*(\d*)\s*=\s*[{(]([^}){]*)[})]\s*$/i;
-const FK_RE = new RegExp(`^FK\\s*\\d*\\s*:?\\s*\\(([^()]*)\\)\\s*REF\\s+(${NAME})\\s*\\(([^()]*)\\)\\s*$`, "i");
+const PK_RE = /^PK\s*\d*\s*[=:]\s*(.+)$/i;
+const CK_RE = /^CK\s*(\d*)\s*[=:]\s*[{(]([^(){}]*)[})]\s*$/i;
+const FK_RE = new RegExp(`^FK\\s*\\d*\\s*[:=]?\\s*[({]([^(){}]*)[)}]\\s*REF\\s+(${NAME})\\s*[({]([^(){}]*)[)}]\\s*$`, "i");
 const NF3_RE = /^(R\s+(är|is)\s+(redan\s+|already\s+)?(i|in)\s+)?3NF\.?$/i;
 const KEY_LINE_RE = /^(PK|CK|FK)(?![A-Za-zÅÄÖåäö])/i;
 
@@ -141,7 +143,7 @@ export function parseSchema(text) {
       current.fks.push({ cols, target: m[2].trim(), targetCols });
       return;
     }
-    if (/^FK/i.test(line)) { errors.push({ line: no, message: `Rad ${no}: FK-raden ska se ut som FK (attribut) REF RELATION(attribut).` }); return; }
+    if (/^FK/i.test(line)) { errors.push({ line: no, message: `Rad ${no}: FK-raden ska se ut som FK1 = {attribut} REF RELATION(attribut) — parentes eller klammer, = eller : går lika bra.` }); return; }
     if (/^PK/i.test(line)) { errors.push({ line: no, message: `Rad ${no}: PK-raden ska se ut som PK = CK1 eller PK = {attribut, attribut}.` }); return; }
     if (/^CK/i.test(line)) { errors.push({ line: no, message: `Rad ${no}: CK-raden ska se ut som CK1 = {attribut, attribut}.` }); return; }
     errors.push({ line: no, message: `Rad ${no}: kunde inte tolka "${line}". En relation skrivs NAMN( och sedan attributen, CK1 = {…}, PK = CK1 och FK (…) REF MÅL(…) på egna rader, avslutat med ).` });

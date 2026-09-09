@@ -292,3 +292,101 @@ CAR(
   const r = checkModel(`PERSON(Name, Address, Salary)\nPK = {Name}\n\nCAR(LicenseNumber, Brand, Speed, OwnerName)\nPK = {LicenseNumber}`, byId["mod-04"].facit, byId["mod-04"].rules);
   assert.ok(rel(r, "CAR").problems.includes("Saknar främmande nyckel mot PERSON(Name)."), JSON.stringify(rel(r, "CAR").problems));
 });
+
+// Formen är tillåtande, innehållet strikt: alla skrivsätt Björn godtar
+// ska gå igenom, och bara sakfel ska stoppa.
+const COURSE_BLOCK = (fk) => `Course(
+  CourseCode,
+  Name,
+  Credits,
+  EmployeeNo,
+  CK₁ = {CourseCode},
+  PK = CK₁,
+  ${fk}
+  )`;
+const TEACH_TEACHER = `TEACHER(EmployeeNo, Name, Salary)
+PK = {EmployeeNo}
+
+TEACH(EmployeeNo, CourseCode)
+PK = {EmployeeNo, CourseCode}
+FK1: (EmployeeNo) REF TEACHER(EmployeeNo)
+FK2: (CourseCode) REF COURSE(CourseCode)`;
+
+test("användarens svar med FK₁ = {…} inne i parentesen ger rätt", () => {
+  const r = check(TEACH_TEACHER + "\n\n" + COURSE_BLOCK("FK₁ = {EmployeeNo} REF Teacher(EmployeeNo)"));
+  assert.equal(r.status, "correct", JSON.stringify(r.errors ?? r.relations.map((x) => x.problems)));
+});
+
+test("FK-radens formvarianter godtas alla", () => {
+  const variants = [
+    "FK1 : (EmployeeNo) REF Teacher(EmployeeNo)",
+    "FK1 = (EmployeeNo) REF Teacher(EmployeeNo)",
+    "FK1 : {EmployeeNo} REF Teacher(EmployeeNo)",
+    "FK1 = {EmployeeNo} REF Teacher(EmployeeNo)",
+    "FK (EmployeeNo) REF Teacher(EmployeeNo)",
+    "FK1 = {EmployeeNo} REF Teacher{EmployeeNo}",
+    "FK₁ = {EmployeeNo} REF Teacher(EmployeeNo)",
+    "FK₁ : {EmployeeNo} REF Teacher(EmployeeNo)",
+    "FK₁={EmployeeNo}REF Teacher(EmployeeNo)",
+  ];
+  for (const v of variants) {
+    const r = check(TEACH_TEACHER + "\n\n" + COURSE_BLOCK(v));
+    assert.equal(r.status, "correct", `${v}: ${JSON.stringify(r.errors ?? r.relations.map((x) => x.problems))}`);
+  }
+});
+
+test("CK- och PK-radens formvarianter: = eller :, ( ) eller { }, flera attribut", () => {
+  const forms = [
+    ["CK1 = {EmployeeNo, CourseCode}", "PK = CK1"],
+    ["CK1 : (EmployeeNo, CourseCode)", "PK : CK1"],
+    ["CK₁ : {EmployeeNo, CourseCode}", "PK₁ = CK₁"],
+    [null, "PK : (EmployeeNo, CourseCode)"],
+    [null, "PK = {EmployeeNo, CourseCode}"],
+  ];
+  for (const [ck, pk] of forms) {
+    const text = `TEACHER(EmployeeNo, Name, Salary)\nPK = {EmployeeNo}\n\nCOURSE(CourseCode, Name, Credits, EmployeeNo)\nPK = {CourseCode}\nFK1 = (EmployeeNo) REF TEACHER(EmployeeNo)\n\nTEACH(\n  EmployeeNo,\n  CourseCode,\n${ck ? "  " + ck + ",\n" : ""}  ${pk},\n  FK1 = (EmployeeNo) REF TEACHER(EmployeeNo),\n  FK2 = (CourseCode) REF COURSE(CourseCode),\n)`;
+    const r = check(text);
+    assert.equal(r.status, "correct", `${ck} / ${pk}: ${JSON.stringify(r.errors ?? r.relations.map((x) => x.problems))}`);
+  }
+});
+
+test("nyckelrader efter slutparentesen, skiftläge i namn, släpande komma", () => {
+  const text = `teacher(
+  employeeNO,
+  name,
+  salary,
+)
+CK1 = {employeeno}
+PK = CK1
+
+COURSE(
+  CourseCode,
+  Name,
+  Credits,
+  EmployeeNO,
+  CK1 = {CourseCode},
+  PK = CK1,
+  FK1 = {EmployeeNO} REF teacher(EmployeeNo),
+)
+
+Teach(
+  EmployeeNo,
+  CourseCode,
+  PK = {EmployeeNo, CourseCode},
+  FK1 = (EmployeeNo) REF TEACHER(EmployeeNo),
+  FK2 = (CourseCode) REF Course(CourseCode),
+)`;
+  const r = check(text);
+  assert.equal(r.status, "correct", JSON.stringify(r.errors ?? r.relations.map((x) => x.problems)));
+});
+
+test("formtolerans stoppar ändå sakfel: okänt FK-attribut, fel REF-mål, fel nyckel", () => {
+  const bad1 = check(TEACH_TEACHER + "\n\n" + COURSE_BLOCK("FK₁ = {ResponsibleNo} REF Teacher(EmployeeNo)"));
+  assert.equal(bad1.status, "parse-error");
+  assert.match(bad1.errors[0].message, /ResponsibleNo i FK finns inte bland attributen i Course/);
+  const bad2 = check(TEACH_TEACHER + "\n\n" + COURSE_BLOCK("FK₁ = {EmployeeNo} REF Course(CourseCode)"));
+  assert.notEqual(bad2.status, "correct");
+  assert.equal(rel(bad2, "COURSE").status, "diff");
+  const bad3 = check(TEACH_TEACHER.replace("PK = {EmployeeNo, CourseCode}", "PK = {EmployeeNo}") + "\n\n" + COURSE_BLOCK("FK₁ = {EmployeeNo} REF Teacher(EmployeeNo)"));
+  assert.equal(rel(bad3, "TEACH").status, "diff");
+});
