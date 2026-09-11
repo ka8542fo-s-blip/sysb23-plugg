@@ -743,7 +743,7 @@ export const questions = [
     options: [
       { text: "Ja, unik data låter företaget dra långsiktiga fördelar av AI", explain: "Barney visar att proprietär data sällan skyddar — mönstren finns hos alla." },
       { text: "Ja, en first-mover-fördel med AI kan hålla i sig över mycket lång tid", explain: "Pionjärens val absorberas i data som konkurrenternas AI lär av." },
-      { text: "Nej, AI är för omogen, så man förlorar inget på att vänta", explain: "Barney säger tvärtom att AI bör in i beslutsprocesserna nu." },
+      { text: "Nej, AI är för omogen, så man förlorar inget på att vänta några år", explain: "Barney säger tvärtom att AI bör in i beslutsprocesserna nu." },
       { text: "Nej, AI är som annan IT inte unik men kan förstärka befintliga resurser", explain: "Rätt. Fördelen sitter i det företaget redan har som är svårkopierat." }
     ],
     correct: 3, source: "Weaver, quiz F2", reviewed: true },

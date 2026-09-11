@@ -350,7 +350,8 @@ export const topics = [
       "Ramverk för balansen: BSC (fyra perspektiv där icke-finansiella mått driver finansiella) och TBL (tre resultatdimensioner).",
       "Hur måtten förändrar arbetet: 'what gets measured gets done' — mått styr beteende, belöningar och investeringar. Icke-finansiella mått fungerar som ledande indikatorer, finansiella som släpande. Ansvarsfördelning och belöningssystem måste följa med.",
       "Risker (Ittner & Larcker): mät bara det som är kopplat till strategin, validera orsakssambanden, sätt rimliga målnivåer, mät korrekt — annars manipulation och felinvesteringar.",
-      "Traditionella finansiella mål försvinner inte: konsten är kombinationen — finansiella mått visar utfallet, de nya måtten visar drivkrafterna. Välj få, strategikopplade, validerade mått."
+      "Traditionella finansiella mål försvinner inte: konsten är kombinationen — finansiella mått visar utfallet, de nya måtten visar drivkrafterna. Välj få, strategikopplade, validerade mått.",
+      "Weavers exempel (fö 3): CSRD gör hållbarhetsmått till lagkrav; XaaS kräver churn, CLV, CAC, MRR/ARR, NPS; sociala medier-mått är oreglerade och lätta att manipulera."
     ],
     pitfalls: [
       "Skriv inte att nya mått ersätter finansiella — de kompletterar och driver dem.",

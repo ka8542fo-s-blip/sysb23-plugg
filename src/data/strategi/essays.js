@@ -46,6 +46,9 @@ export const essays = [
     checklist: [
       "Hållbarhetsmått: ESG/TBL — koldioxidutsläpp, energieffektivitet, jämställdhet, personalomsättning; hållbarhetsredovisning.",
       "Digitaliseringsmått: kundnöjdhet (NKI/NPS), kundbortfall, digital användningsdata, processmått i realtid — tidigare signaler än bokslutet.",
+      "Hållbarhet (Weaver, fö 3): CSRD (EU 2022) gör hållbarhetsrapportering till lagkrav med standardiserade mått; tidigare frivilliga rapporter var ofta greenwashing.",
+      "Digitalisering (Weaver, fö 3): prenumerationsaffärer kräver nya mått — churn, customer lifetime value, customer acquisition cost, MRR/ARR, NPS.",
+      "Kontrast (Weaver, fö 3): sociala medier-mått (MAU/DAU) är inte standardiserade och inte lagreglerade — lätta att blåsa upp; knyt till Ittner & Larckers poäng om manipulation.",
       "Ramverk för att kombinera: Balanced Scorecard (icke-finansiella mått som drivare av finansiella i fyra perspektiv) och Triple Bottom Line (tre resultatdimensioner).",
       "Hur arbetet påverkas: 'what gets measured gets done' — mått styr beteende, belöningar och investeringar; ledande vs släpande indikatorer.",
       "Risker och hantverk (Ittner & Larcker): koppla mått till strategin via kausalmodell, validera sambanden, sätt rimliga målnivåer, mät korrekt; annars manipulation och felinvesteringar.",
