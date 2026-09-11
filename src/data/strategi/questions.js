@@ -742,7 +742,7 @@ export const questions = [
     question: "Kan stora och tidiga AI-investeringar ge långsiktig konkurrensfördel enligt Barney?",
     options: [
       { text: "Ja, unik data låter företaget dra långsiktiga fördelar av AI", explain: "Barney visar att proprietär data sällan skyddar — mönstren finns hos alla." },
-      { text: "Ja, en first-mover-fördel med AI kan hålla över lång tid", explain: "Pionjärens val absorberas i data som konkurrenternas AI lär av." },
+      { text: "Ja, en first-mover-fördel med AI kan hålla i sig över mycket lång tid", explain: "Pionjärens val absorberas i data som konkurrenternas AI lär av." },
       { text: "Nej, AI är för omogen, så man förlorar inget på att vänta", explain: "Barney säger tvärtom att AI bör in i beslutsprocesserna nu." },
       { text: "Nej, AI är som annan IT inte unik men kan förstärka befintliga resurser", explain: "Rätt. Fördelen sitter i det företaget redan har som är svårkopierat." }
     ],
@@ -781,10 +781,10 @@ export const questions = [
   { id: "str-q80", topic: "mal", difficulty: 1,
     question: "Vilken teori ser företagets mål som att maximera nuvärdet av framtida nettokassaflöden?",
     options: [
-      { text: "Företagsledarmodellerna", explain: "De handlar om ledningens egen nytta — Baumol och Williamson." },
+      { text: "Företagsledarmodellerna (Baumol)", explain: "De handlar om ledningens egen nytta — Baumol och Williamson." },
       { text: "Kassaflödesbaserade modeller", explain: "Rätt. Aktieägarperspektiv med kalkylränta." },
-      { text: "Satisfieringsmodellen", explain: "Tillfredsställande vinst, inte maximerat nuvärde." },
-      { text: "Intressentmodellen", explain: "Balans mellan intressenters krav." }
+      { text: "Satisfieringsmodellen (Simon)", explain: "Tillfredsställande vinst, inte maximerat nuvärde." },
+      { text: "Intressentmodellen (Rhenman)", explain: "Balans mellan intressenters krav." }
     ],
     correct: 1, source: "Weaver, quiz F2", reviewed: true }
 ];
