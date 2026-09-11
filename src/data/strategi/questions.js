@@ -203,7 +203,7 @@ export const questions = [
     options: [
       { text: "Den samlar specialistkompetensen och minskar behovet av samordning mellan enheter.", explain: "Detta är snarare funktionsorganisationens fördel och divisionsformens svaghet." },
       { text: "Den gör det möjligt att styra hela verksamheten mot ett enda gemensamt räntabilitetskrav.", explain: "Divisioner får tvärtom egna resultat- eller lönsamhetskrav per enhet." },
-      { text: "Den underlättar lansering av nya produktområden och inträde på nya geografiska marknader.", explain: "Formen gör diversifiering hanterbar genom självständiga enheter med eget ansvar." },
+      { text: "Den underlättar när företaget har flera separata delar som verkar i helt olika branscher.", explain: "Rätt. Indelning efter breda produkt-/tjänstekategorier eller geografi gör diversifiering hanterbar — varje del får eget ansvar." },
       { text: "Den minskar behovet av formella styrmedel eftersom enheterna styr sig själva.", explain: "Behovet av ansvarsfördelning och prestationsmätning ökar snarare med formen." }
     ],
     correct: 2, source: "AJK kap 3 / föreläsning", reviewed: true },
@@ -716,5 +716,75 @@ export const questions = [
       { text: "Uthållig fördel genom VRIO-resurser som är svåra att imitera.", explain: "Det är Barney." },
       { text: "Värde genom plattformar och ekosystem med nätverkseffekter.", explain: "Det är Parker, Van Alstyne och Gawer." }
     ],
-    correct: 1, source: "Weaver, fö 2", reviewed: true }
+    correct: 1, source: "Weaver, fö 2", reviewed: true },
+
+  { id: "str-q74", topic: "rbv", difficulty: 1,
+    question: "Hur hjälper det resursbaserade synsättet företag att utveckla strategi?",
+    options: [
+      { text: "Genom att identifiera marknadssegment med störst potential för expansion", explain: "Marknadsval är positioneringsskolans fråga, inte RBV:s." },
+      { text: "Genom att analysera hur interna resurser kan ge hållbar konkurrensfördel", explain: "Rätt. RBV ser inåt: vad har vi som andra inte kan skaffa?" },
+      { text: "Genom att fokusera på externa hot och möjligheter i företagets omvärld", explain: "Det är utifrån-in — Porter och SWOT:s O och T." },
+      { text: "Genom att studera konkurrenternas prissättning och deras kampanjer", explain: "Konkurrentbevakning är inte RBV:s bidrag." }
+    ],
+    correct: 1, source: "Weaver, quiz F2", reviewed: true },
+
+  { id: "str-q75", topic: "rbv", difficulty: 1,
+    question: "Vilka resurser är enligt RBV särskilt viktiga för hållbar konkurrensfördel?",
+    options: [
+      { text: "Interna resurser och kompetenser som ger långsiktiga fördelar", explain: "Rätt. Värdefulla, sällsynta, svårimiterade — och som företaget utnyttjar." },
+      { text: "Resurser som minimerar kostnaderna i hela leveranskedjan", explain: "Kostnadsfokus är en generisk strategi hos Porter." },
+      { text: "Marknadsföringsresurser som bygger kundlojalitet över tid", explain: "Kan vara en resurs, men är inte RBV:s definition." },
+      { text: "Externa marknadsfaktorer som påverkar företagets konkurrenskraft", explain: "Externa faktorer är motsatsen till RBV:s inifrån-ut-perspektiv." }
+    ],
+    correct: 0, source: "Weaver, quiz F2", reviewed: true },
+
+  { id: "str-q76", topic: "rbv", difficulty: 1,
+    question: "Kan stora och tidiga AI-investeringar ge långsiktig konkurrensfördel enligt Barney?",
+    options: [
+      { text: "Ja, unik data låter företaget dra långsiktiga fördelar av AI", explain: "Barney visar att proprietär data sällan skyddar — mönstren finns hos alla." },
+      { text: "Ja, en first-mover-fördel med AI kan hålla över lång tid", explain: "Pionjärens val absorberas i data som konkurrenternas AI lär av." },
+      { text: "Nej, AI är för omogen, så man förlorar inget på att vänta", explain: "Barney säger tvärtom att AI bör in i beslutsprocesserna nu." },
+      { text: "Nej, AI är som annan IT inte unik men kan förstärka befintliga resurser", explain: "Rätt. Fördelen sitter i det företaget redan har som är svårkopierat." }
+    ],
+    correct: 3, source: "Weaver, quiz F2", reviewed: true },
+
+  { id: "str-q77", topic: "vision", difficulty: 1,
+    question: "Vad beskriver bäst en strategi i ett företag?",
+    options: [
+      { text: "Användningen av resurser för att lösa kortsiktiga problem", explain: "Kortsiktig problemlösning är operativt, inte strategiskt." },
+      { text: "De dagliga operationella uppgifterna i verksamheten", explain: "Det är drift, inte strategi." },
+      { text: "Den övergripande långsiktiga planen för att uppnå målen", explain: "Rätt. Strategin är planen för hur affärsidén ska förverkligas." },
+      { text: "De specifika stegen som tas för att genomföra en plan", explain: "Det är taktik — besluten på marken." }
+    ],
+    correct: 2, source: "Weaver, quiz F2", reviewed: true },
+
+  { id: "str-q78", topic: "vision", difficulty: 1,
+    question: "Vad är det primära syftet med att formulera en affärsidé?",
+    options: [
+      { text: "Att förklara hur företaget vill uppfattas av kunderna i framtiden", explain: "Det är visionens uppgift." },
+      { text: "Att beskriva vad företaget gör och hur det ska tjäna pengar", explain: "Rätt. Vad man ägnar sig åt, för vem, och hur intäkterna uppstår." },
+      { text: "Att formulera de etiska riktlinjer som ska gälla i företaget", explain: "Kan ingå, men är inte affärsidéns primära syfte." },
+      { text: "Att sätta upp de långsiktiga strategierna för företagsledningen", explain: "Strategin kommer efter affärsidén i kedjan." }
+    ],
+    correct: 1, source: "Weaver, quiz F2", reviewed: true },
+
+  { id: "str-q79", topic: "vision", difficulty: 1,
+    question: "Vad är syftet med verksamhetsplanering i ett företag?",
+    options: [
+      { text: "En metod för att öka företagets vinstmarginal över tid", explain: "Vinstmarginal kan bli ett delmål, men är inte planeringens syfte." },
+      { text: "Ett sätt att fördela resurser rättvist mellan avdelningarna", explain: "Resursfördelning följer av planerna, den är inte syftet." },
+      { text: "En process för att utveckla och stärka företagskulturen", explain: "Kultur är ett mindre formaliserat styrmedel, inte planering." },
+      { text: "Att konkretisera strategin genom att bryta ned huvudmål till delmål", explain: "Rätt. Delmål med tidshorisont, ansvarig och handlingsplan." }
+    ],
+    correct: 3, source: "Weaver, quiz F2", reviewed: true },
+
+  { id: "str-q80", topic: "mal", difficulty: 1,
+    question: "Vilken teori ser företagets mål som att maximera nuvärdet av framtida nettokassaflöden?",
+    options: [
+      { text: "Företagsledarmodellerna", explain: "De handlar om ledningens egen nytta — Baumol och Williamson." },
+      { text: "Kassaflödesbaserade modeller", explain: "Rätt. Aktieägarperspektiv med kalkylränta." },
+      { text: "Satisfieringsmodellen", explain: "Tillfredsställande vinst, inte maximerat nuvärde." },
+      { text: "Intressentmodellen", explain: "Balans mellan intressenters krav." }
+    ],
+    correct: 1, source: "Weaver, quiz F2", reviewed: true }
 ];

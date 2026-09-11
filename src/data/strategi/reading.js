@@ -362,7 +362,7 @@ Eftersom nästan inga helt hierarkilösa företag existerar bör båda dimension
 ## Organisationsformer
 
 - **Funktionsorganisation** — strukturerad efter funktioner: marknadsföring, produktion, ekonomi, inköp. Samlar specialistkompetens.
-- **Divisionsorganisation** — indelad efter produkter, tjänster eller geografiska marknader. Vanlig i stora företag eftersom den underlättar lansering av nya produktområden och inträde på nya geografiska marknader. Divisioner kan drivas som egna resultat- eller lönsamhetsenheter.
+- **Divisionsorganisation** — indelad efter produkter, tjänster eller geografiska marknader. Vanlig i stora företag eftersom den underlättar lansering av nya produktområden och inträde på nya geografiska marknader. Weaver beskriver den som indelning efter bredare produkt- eller tjänstekategorier, ofta inriktade på helt olika branscher. Divisioner kan drivas som egna resultat- eller lönsamhetsenheter.
 - **Matrisorganisation** — kombinerar vertikalt funktionsansvar med horisontellt process- eller kundansvar.
 
 ## Ansvarsfördelning
