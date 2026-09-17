@@ -27,8 +27,8 @@ export const essays = [
     outline: "1) Perspektiv: kunskaps-/lärandefokuset som strategifältets nuvarande era (Herrmann). 2) Definition individ → organisation, förutsättningar i kulturen, enkel-/dubbelkrets. 3) Varför: förändringstakt, innovation, svårimiterad förmåga. 4) Brygga till emergent strategi + slutsats." },
 
   { id: "str-e3",
-    question: "Jay Barney hävdar att företags investeringar i och användning av AI inte i sig leder till långsiktiga konkurrensfördelar. Vilka är hans huvudsakliga argument, och hur menar han att företag kan använda AI för att faktiskt skapa hållbara konkurrensfördelar?",
-    context: "Förekom som essäfråga på omtentan HT24 (20 p).",
+    question: "Diskutera varför IT eller AI oftast inte leder till långsiktiga konkurrensfördelar. Vad krävs för att dessa teknologier ändå ska kunna skapa varaktiga konkurrensfördelar.",
+    context: "HT24 och HT25 — återkommer. Omtentan HT24 (20 p) och ordinarie HT25 (15 p, max 300 ord), lätt omformulerad.",
     checklist: [
       "Historisk parallell: ångmaskin, elmotor, PC — transformativa teknologier som alla tvingades införa och som därför sällan gav uthållig fördel (raderade ofta etablerade försprång).",
       "Värdeskapande ≠ värdefångst: AI sänker kostnader och driver innovation för alla användare, så vinsterna konkurreras bort.",
@@ -54,5 +54,32 @@ export const essays = [
       "Risker och hantverk (Ittner & Larcker): koppla mått till strategin via kausalmodell, validera sambanden, sätt rimliga målnivåer, mät korrekt; annars manipulation och felinvesteringar.",
       "Balansen: nya mått ersätter inte finansiella mål utan kompletterar dem — finansiella mått visar utfallet, de nya visar drivkrafterna. Konkret företagsexempel ger högre betyg."
     ],
-    outline: "1) Drivkrafterna och de nya måttypernas två familjer (hållbarhet, digitalt). 2) Ramverken BSC + TBL som integrationslösning. 3) Effekter på arbetssätt + riskerna enligt Ittner & Larcker. 4) Exempel + slutsats om komplement, inte ersättning." }
+    outline: "1) Drivkrafterna och de nya måttypernas två familjer (hållbarhet, digitalt). 2) Ramverken BSC + TBL som integrationslösning. 3) Effekter på arbetssätt + riskerna enligt Ittner & Larcker. 4) Exempel + slutsats om komplement, inte ersättning." },
+
+  { id: "str-e5",
+    question: "Nämn de fyra grundperspektiven i det balanserade styrkortet som introducerades av Kaplan och Norton. Beskriv kort vad varje perspektiv fokuserar på, och ge även exempel på andra perspektiv som kan vara relevanta i dagens verksamheter.",
+    context: "Förekom som essäfråga på ordinarie tentan HT25 (15 p, max 300 ord).",
+    checklist: [
+      "De fyra: finansiellt (hur ser vi ut för aktieägarna), kund (hur ser kunderna på oss), interna processer (vad måste vi bli bra på), innovation och lärande (kan vi fortsätta förbättra och skapa värde).",
+      "Varför de behövs: finansiella mått är historiska och för generella — de visar vad som hände, inte vad som händer. Styrkortet balanserar trailing och leading mått och kopplar dem till strategin.",
+      "Andra relevanta perspektiv idag: medarbetarperspektiv (arbetstillfredsställelse, medbestämmande, mångfald), CSR- och hållbarhetsperspektiv, perspektiv anpassade för offentlig verksamhet (medborgare, miljö, socialt) eller för projekt.",
+      "Poängen att styrkortet inte är en mall: perspektiven väljs efter verksamhetens uppdrag och strategi.",
+      "Med 300 ord: fyra perspektiv med en mening var, två-tre alternativa perspektiv, och en mening om varför de inte är en mall."
+    ],
+    outline: "1) De fyra perspektiven, en mening var med frågan de svarar på. 2) Varför: finansiella mått är historiska; balansen trailing/leading kopplad till strategin. 3) Två-tre alternativa perspektiv med exempel. 4) En mening: styrkortet är ingen mall." },
+
+  { id: "str-e6",
+    question: "Tänk dig att du startar ett företag inom en valfri bransch. Vilka faktorer skulle påverka hur du resonerar kring vad som är en rimlig vinst eller avkastningsgrad för företaget på längre sikt? Utgå gärna från relevanta teorier och begrepp som diskuterats under kursen.",
+    context: "Förekom som essäfråga på ordinarie tentan HT25 (15 p, max 300 ord).",
+    checklist: [
+      "Vinst räcker inte som mått — sätt resultatet i relation till kapitalet. ROE (resultat / eget kapital) eller ROCE (avkastning på sysselsatt kapital).",
+      "Vad som är 'rimligt' beror på tre saker: branschen (lönsamheten varierar kraftigt mellan branscher), risknivån (högre risk kräver högre avkastning) och jämförelsealternativen (vad kapitalet kunde gett någon annanstans).",
+      "Kalkylräntans tre komponenter fångar detta: inflation, alternativa investeringsmöjligheter och risk.",
+      "Satisfiering (Simon): i praktiken söker man en tillfredsställande vinst mot en anspråksnivå, inte maximal. Anspråksnivån beror på omvärld, tradition och ägarpreferenser.",
+      "Intressentmodellen: ägarnas avkastningskrav är ett krav bland flera — anställda, kunder och långivare ska också tillgodoses.",
+      "Kassaflödesmodellen: teoretiskt maximera nuvärdet av framtida nettokassaflöden, men svårt att tillämpa vid snabb förändring.",
+      "Nämn din valda bransch konkret och vad den innebär för rimlig avkastning.",
+      "Med 300 ord: relationsmåttet först, de tre faktorerna, satisfiering, och en mening om intressenterna."
+    ],
+    outline: "1) Bransch vald, och vinst som relationsmått (ROE/ROCE). 2) De tre faktorerna bransch, risk och jämförelsealternativ — kalkylräntans komponenter. 3) Satisfiering mot en anspråksnivå. 4) En mening om intressenterna, eventuellt kassaflödesmodellen som teoretisk kontrast." }
 ];

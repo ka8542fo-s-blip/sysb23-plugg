@@ -173,8 +173,9 @@ export default function Home({
       <section className="card border-brass/40 p-5">
         <h2 className="font-display text-lg">Så räknas tentan</h2>
         <p className="mt-2 text-[15px] leading-relaxed text-ink/80">
-          10 flervalsfrågor à 6 p, där ett felaktigt svar ger −1 p och en obesvarad
-          fråga 0 p, plus 2 essäfrågor à 20 p utan minuspoäng. Max 100 p.
+          HT25-formatet: 11 flervalsfrågor à 5 p, där ett felaktigt svar ger −1 p och
+          en obesvarad fråga 0 p, plus 3 essäfrågor à 15 p utan minuspoäng och med
+          max 300 ord var. Max 100 p.
           Betygsgränserna går vid 50, 55, 65, 75 och 85 procent. Att hoppa över en
           fråga du inte kan är alltså värt en poäng — träna på det i Prov-läget.
         </p>

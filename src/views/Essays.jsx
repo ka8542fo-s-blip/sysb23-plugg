@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+const WORD_LIMIT = 300;
+
 export default function Essays({ course, essayState, setEssayState }) {
   const [activeId, setActiveId] = useState(course.essays[0]?.id);
   const essay = course.essays.find((item) => item.id === activeId) || course.essays[0];
@@ -26,6 +28,10 @@ export default function Essays({ course, essayState, setEssayState }) {
   }
 
   const checkedCount = (state.checked || []).filter(Boolean).length;
+  // Insperas essäfält tar max 300 ord — räknaren visar det och slår om till
+  // rött över gränsen.
+  const wordCount = (state.draft || "").trim().split(/\s+/).filter(Boolean).length;
+  const overLimit = wordCount > WORD_LIMIT;
 
   return (
     <div className="space-y-6">
@@ -35,6 +41,10 @@ export default function Essays({ course, essayState, setEssayState }) {
           Skriv först ditt eget svar — utkastet sparas automatiskt. Fäll sedan ut
           checklistan och kryssa i vad du faktiskt fick med. Ingen rättning sker
           här; poängen är den aktiva återkallningen.
+        </p>
+        <p className="mt-2 max-w-reading text-[15px] text-ink/80">
+          Tentans essäsvar får vara max 300 ord. Välj tre till fyra bärande punkter
+          och skriv tätt — hoppa inledning och sammanfattning.
         </p>
       </section>
 
@@ -74,9 +84,10 @@ export default function Essays({ course, essayState, setEssayState }) {
           placeholder="Skriv utan att titta på checklistan först."
           className="mt-2 w-full rounded-lg border border-line bg-white p-4 text-[15px] leading-relaxed"
         />
-        <p className="tabular mt-1 text-sm text-ink/65">
-          {(state.draft || "").trim().split(/\s+/).filter(Boolean).length} ord ·
-          sparas automatiskt
+        <p className={`tabular mt-1 text-sm ${overLimit ? "font-medium text-wrong" : "text-ink/65"}`} aria-live="polite">
+          Ord: {wordCount}/{WORD_LIMIT}
+          {overLimit ? " — över tentans gräns" : ""}
+          <span className="text-ink/65"> · sparas automatiskt</span>
         </p>
 
         <button

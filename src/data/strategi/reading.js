@@ -138,6 +138,10 @@ I **strategin** klargörs hur företaget ska arbeta. Strategin kan därför säg
 
 Mindre företag har vanligen en homogen verksamhet där strategin gäller helheten. Större företag har flera strategier, eftersom flera verksamhetsinriktningar arbetar under skilda villkor. I mycket stora företag finns strategier på flera nivåer: **koncernstrategi, affärsområdesstrategi, divisionsstrategi, affärsenhetsstrategi och funktionsstrategi**. När man diskuterar strategi håller man sig vanligen på divisions- eller affärsenhetsnivå — det är först där verksamheten kan preciseras, och det är också där ekonomistyrningen i de flesta fall förekommer.
 
+### Strategi och taktik
+
+Skillnaden ligger i beslutsnivå och tidshorisont. **Strategi** är det långsiktiga, övergripande — att bli marknadsledande inom fem år, att identifiera nya marknader, att lägga en treårsplan. **Taktik** är besluten som fattas här och nu för att nå målet i det enskilda läget — att erbjuda rabatt under en kampanjvecka för att öka försäljningen. Begreppen har militära rötter: strategi är att vinna kriget, taktik att vinna slaget.
+
 ## Verksamhetsplanering
 
 När strategin är formulerad behöver huvudmålen brytas ned i **delmål**. Huvudmålen är en precisering och operationalisering av vision och affärsidé; strategin är sättet de ska uppnås. Delmålen väljs så att deras uppfyllelse leder till att de övergripande strategiska målen uppfylls, och de riktas mot olika organisatoriska delar. Vissa uttrycks finansiellt (räntabilitet, försäljning, kostnader), andra icke-finansiellt (kvalitet, kundtillfredsställelse, marknadsandel).
@@ -318,6 +322,8 @@ Resultatbegreppet har dock begränsningar. Ett företag med stor vinst behöver 
 **Lönsamhet = resultat / kapital.** Ett kvotmått, ett relationstal. Storheten i nämnaren är vanligen något uttryck för det kapital som finns och används i företaget. Därför är lönsamhet ett bättre mått på hur verksamheten bedrivs: det säger något om hur väl verksamheten drivs **i förhållande till det kapital som används** för att skapa resultatet.
 
 **Räntabilitet** (avkastning) är det vanligaste lönsamhetsmåttet, och beräknas oftast utifrån den externa redovisningen. Vanliga kapitalbegrepp: totalt kapital, eget kapital och sysselsatt kapital. Räntabilitet på sysselsatt kapital ställer resultatet i förhållande till det kapital som kräver avkastning, vilket har fördelen att finansieringen styrs mot räntefria krediter.
+
+Två vanliga lönsamhetsmått: **ROE** (return on equity) = resultat / eget kapital, ägarnas avkastning. **ROCE** (return on capital employed) = avkastning på sysselsatt kapital, alltså hur effektivt allt kapital, eget och lånat, används. Samma vinst kan ge helt olika lönsamhet: 10 Mkr på 50 Mkr eget kapital är 20 %, på 500 Mkr är det 2 %. Vad som är "bra" avkastning beror på **bransch, risknivå och jämförelsealternativ** — lönsamheten varierar kraftigt mellan branscher, från några procent i fastigheter och utbildning till över trettio i hår- och skönhetsvård.
 `,
   },
 
@@ -361,7 +367,7 @@ Eftersom nästan inga helt hierarkilösa företag existerar bör båda dimension
 
 ## Organisationsformer
 
-- **Funktionsorganisation** — strukturerad efter funktioner: marknadsföring, produktion, ekonomi, inköp. Samlar specialistkompetens.
+- **Funktionsorganisation** — strukturerad efter funktioner: marknadsföring, produktion, ekonomi, inköp. Samlar specialistkompetens. Fördelen är att ledningen har direkt kontroll över enheterna och relativt lätt kan styra företaget enligt uppsatta mål. Nackdelen är att samordningen mellan funktioner kräver arbete, och att kundperspektivet har svårt att nå de funktioner som inte möter marknaden.
 - **Divisionsorganisation** — indelad efter produkter, tjänster eller geografiska marknader. Vanlig i stora företag eftersom den underlättar lansering av nya produktområden och inträde på nya geografiska marknader. Weaver beskriver den som indelning efter bredare produkt- eller tjänstekategorier, ofta inriktade på helt olika branscher. Divisioner kan drivas som egna resultat- eller lönsamhetsenheter.
 - **Matrisorganisation** — kombinerar vertikalt funktionsansvar med horisontellt process- eller kundansvar.
 
@@ -954,16 +960,16 @@ Eftersom det knyter ihop nästan allt är detta värt att kunna som ett färdigt
 
 ## Tentataktik: flervalsdelen
 
-Tio frågor à 6 poäng, **−1 poäng för fel svar**, 0 för obesvarad. Det förändrar hur du ska svara.
+Elva frågor à 5 poäng, **−1 poäng för fel svar**, 0 för obesvarad. Det förändrar hur du ska svara.
 
-- Kan du eliminera minst två alternativ är gissningen matematiskt värd att ta: du har då minst 50 procents chans på +6 mot −1.
+- Kan du eliminera minst två alternativ är gissningen matematiskt värd att ta: du har då minst 50 procents chans på +5 mot −1.
 - Kan du inte eliminera något och saknar all känsla för frågan är det rationellt att lämna den obesvarad — men det är sällan läget om du läst kompendiet.
 - Läs frågan efter negationer. "Vilken är **inte** en av Porters fem krafter" har fällt fler än okunskap gjort.
 - Distraktorerna i den här kursen följer mönster: rätt begrepp men fel kategori (personalfråga under Governance), rätt modell men fel upphovsman (Baumol/Williamson/Simon), rätt idé men överdriven till en absolut ("alltid", "aldrig", "enbart"). Absoluta formuleringar är nästan alltid fel i det här ämnet.
 
 ## Tentataktik: essädelen
 
-Två frågor à 20 poäng — 40 procent av tentan, och där betyget avgörs. En struktur som fungerar för samtliga fyra kända essätyper:
+Tre frågor à 15 poäng, max 300 ord var — 45 procent av tentan, och där betyget avgörs. Med ordgränsen får inledning och sammanfattning stryka på foten: välj tre till fyra bärande punkter och skriv tätt. En struktur som fungerar för de kända essätyperna:
 
 1. **Definiera begreppen** som frågan använder, kort och korrekt. Nämn upphovsman och årtal när du har det (Henderson & Venkatraman 1993, Kaplan & Norton 1993, Elkington, Barney 2024).
 2. **Redogör för modellen eller argumentet** strukturerat — punktvis eller i tydliga stycken. Räkna upp de fyra domänerna, de fyra perspektiven, de tre P:na, de fyra misstagen.

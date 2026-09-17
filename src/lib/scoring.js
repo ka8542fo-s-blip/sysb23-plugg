@@ -1,7 +1,9 @@
-// Poängen följer den riktiga tentan: +6 rätt, −1 fel, 0 för överhoppad.
-export const POINTS = { correct: 6, wrong: -1, skipped: 0 };
-export const QUESTIONS_PER_EXAM = 10;
-export const MAX_EXAM_POINTS = QUESTIONS_PER_EXAM * POINTS.correct; // 60
+// Poängen följer HT25-tentan (2025-10-14): 11 flervalsfrågor à 5 p, −1 för
+// fel, 0 för överhoppad. Essäerna (3 à 15 p) ligger utanför provläget.
+export const POINTS = { correct: 5, wrong: -1, skipped: 0 };
+export const QUESTIONS_PER_EXAM = 11;
+export const MAX_EXAM_POINTS = QUESTIONS_PER_EXAM * POINTS.correct; // 55
+export const ESSAY_POINTS = 45;
 
 // Betygsstegen: A 85–100, B 75–84, C 65–74, D 55–64, E 50–54, U < 50.
 export const GRADE_SCALE = [

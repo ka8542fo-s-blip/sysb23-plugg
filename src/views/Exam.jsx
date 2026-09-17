@@ -6,6 +6,8 @@ import { balancedExamPick } from "../lib/weightedPick.js";
 import {
   QUESTIONS_PER_EXAM,
   MAX_EXAM_POINTS,
+  ESSAY_POINTS,
+  POINTS,
   scoreExam,
   formatTime,
 } from "../lib/scoring.js";
@@ -181,9 +183,13 @@ export default function Exam({
       <section className="card max-w-3xl p-5 sm:p-6">
         <h1 className="font-display text-2xl">Prov</h1>
         <p className="mt-2 max-w-reading text-[15px] leading-relaxed text-ink/80">
-          Tio frågor, balanserat dragna över ämnena (högst två per ämne). Poängen
-          följer tentan: <span className="font-medium">+6</span> för rätt svar,{" "}
-          <span className="font-medium">−1</span> för fel och{" "}
+          HT25-formatet: 11 flervalsfrågor à 5 poäng (−1 för fel) och 3 essäfrågor
+          à 15 poäng. Essäerna är 45 % av poängen.
+        </p>
+        <p className="mt-2 max-w-reading text-[15px] leading-relaxed text-ink/80">
+          Provet är flervalsdelen: elva frågor balanserat dragna över ämnena (högst
+          två per ämne), <span className="font-medium">+{POINTS.correct}</span> för
+          rätt svar, <span className="font-medium">−1</span> för fel och{" "}
           <span className="font-medium">0</span> för överhoppad. Ingen feedback
           förrän provet är inlämnat.
         </p>
@@ -388,12 +394,17 @@ export default function Exam({
           <span className="font-medium">{record.grade}</span>
         </p>
         <p className="tabular mt-1 text-[15px] text-ink/65">
-          {record.correct} rätt (+{record.correct * 6}), {record.wrong} fel (−
+          {record.correct} rätt (+{record.correct * POINTS.correct}), {record.wrong} fel (−
           {record.wrong}), {record.skipped} överhoppade.
         </p>
 
         <div className="mt-6 max-w-3xl">
           <GradeGauge percent={record.percent} grade={record.grade} />
+          <p className="mt-2 text-sm leading-relaxed text-ink/65">
+            Betyget här räknas på provets {MAX_EXAM_POINTS} möjliga flervalspoäng.
+            På tentan tillkommer essäerna, {ESSAY_POINTS} av 100 poäng, utanför
+            provläget.
+          </p>
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3">

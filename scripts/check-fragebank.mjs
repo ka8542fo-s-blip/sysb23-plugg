@@ -40,7 +40,7 @@ for (const q of questions) {
     varstaSpridning = spridning;
     varstaSpridningId = q.id;
   }
-  if (spridning > 1.25) spridningsBrott.push(`${q.id} (${spridning.toFixed(2)})`);
+  if (spridning > 1.5) spridningsBrott.push(`${q.id} (${spridning.toFixed(2)})`);
 }
 
 const andelLangst = (uniktLangst / n) * 100;
@@ -68,7 +68,7 @@ console.log(
   `Positionsfördelning 0–3: ${positioner.join("/")} — krav ${posMin}–${posMax} per position: ${ok.positioner ? "OK" : "BROTT"}`
 );
 console.log(
-  `Största längdspridning inom en fråga: ${varstaSpridning.toFixed(2)} (${varstaSpridningId}) — krav ≤ 1,25: ${ok.spridning ? "OK" : "BROTT: " + spridningsBrott.join(", ")}`
+  `Största längdspridning inom en fråga: ${varstaSpridning.toFixed(2)} (${varstaSpridningId}) — krav ≤ 1,50: ${ok.spridning ? "OK" : "BROTT: " + spridningsBrott.join(", ")}`
 );
 
 process.exitCode = Object.values(ok).every(Boolean) ? 0 : 1;

@@ -40,7 +40,8 @@ export const topics = [
       "Verksamhetsplanering = nedbrytning av huvudmål till delmål, där varje mål behöver tidshorisont (kort/medellång/lång sikt), ansvarig enhet och handlingsplaner med riktlinjer.",
       "Delmål uttrycks både finansiellt (räntabilitet, försäljning, kostnader) och icke-finansiellt (kvalitet, kundtillfredsställelse, marknadsandel).",
       "Klassisk tentafråga: visionen beskriver företagets framtida riktning, affärsidén vad företaget gör och hur det genererar intäkter.",
-      "Affärsidén = value creation (hur värde skapas för kunder) + value capture (hur pengar tjänas). Tillsammans affärsmodellen."
+      "Affärsidén = value creation (hur värde skapas för kunder) + value capture (hur pengar tjänas). Tillsammans affärsmodellen.",
+      "Strategi vs taktik: strategi är långsiktig och övergripande (bli marknadsledande, treårsplan), taktik är beslut här och nu (rabatt under kampanjvecka). Prövat HT25."
     ],
     pitfalls: [
       "Vision är INTE en konkret plan och INTE främst extern kommunikation — den är det önskade framtida tillståndet.",
@@ -99,7 +100,8 @@ export const topics = [
       "Resultat = intäkter − kostnader (absolut tal). Lönsamhet = resultat / kapital (relationstal, t.ex. räntabilitet) — bättre mått eftersom det relaterar utfallet till insatt kapital.",
       "Räntabilitet beräknas mot totalt, eget eller sysselsatt kapital. Räntabilitet på sysselsatt kapital ställer resultatet mot det kapital som kräver avkastning och styr finansieringen mot räntefria krediter.",
       "Begreppspar: inbetalning/utbetalning (när likvida medel överförs), inkomst/utgift (fakturadatum vid avyttring respektive fakturans ankomst vid anskaffning), intäkt/kostnad (periodiserade — värdet av utförda prestationer resp. förbrukade resurser).",
-      "Bokföringsmässiga grunder (extern redovisning): matchning mot periodens försäljning — ett företag som bara producerat mot lager har varken intäkter eller kostnader för perioden. Kalkylmässiga grunder (ekonomistyrning): knutna till vad som presterats, oavsett försäljning. Skillnaderna beror på urval, värdering och periodisering."
+      "Bokföringsmässiga grunder (extern redovisning): matchning mot periodens försäljning — ett företag som bara producerat mot lager har varken intäkter eller kostnader för perioden. Kalkylmässiga grunder (ekonomistyrning): knutna till vad som presterats, oavsett försäljning. Skillnaderna beror på urval, värdering och periodisering.",
+      "ROE = resultat / eget kapital (ägarnas avkastning). ROCE = avkastning på sysselsatt kapital (allt kapital). Vad som är bra avkastning beror på bransch, risknivå och jämförelsealternativ."
     ],
     pitfalls: [
       "Inre/yttre förväxlas ständigt — memorera 'göra saker rätt' (inre) vs 'göra rätt saker' (yttre).",
@@ -127,7 +129,8 @@ export const topics = [
       "Lärande = bestående beteendeförändringar utifrån erfarenhet. Individer lär först; organisatoriskt lärande uppstår när kunskapen sprids och omsätts i praktiken. Kräver en kultur där experiment, initiativ och ifrågasättande accepteras.",
       "Enkelkretslärande löser problemet utan att gå till botten med orsaken; dubbelkretslärande löser problemet och ifrågasätter orsaken — kurerar både symptom och sjukdom.",
       "Medarbetarskap (empowerment) = demokratisering av arbetslivet: befogenheter och inflytande över arbetsplatsens utformning, arbetets utförande, investeringar och chefstillsättning. Största hindret är chefers motstånd mot att förlora kontroll.",
-      "Gapet mellan teori och praktik: teorins metoder används ofta inte, enkla varianter föredras. Förklaringen med starkast stöd är kostnads- och nyttokriteriet — en metods nytta ska vägas mot dess kostnad och den med störst nettonytta väljas."
+      "Gapet mellan teori och praktik: teorins metoder används ofta inte, enkla varianter föredras. Förklaringen med starkast stöd är kostnads- och nyttokriteriet — en metods nytta ska vägas mot dess kostnad och den med störst nettonytta väljas.",
+      "Funktionsorganisationens fördel: ledningen har direkt kontroll över enheterna och kan lätt styra mot uppsatta mål. Prövat HT25."
     ],
     pitfalls: [
       "Divisionsorganisationens poäng är diversifiering (produkt/geografi) — inte att 'alla arbetar i samma riktning'.",
@@ -223,7 +226,8 @@ export const topics = [
       "BSC är ingen universalmall: olika marknadssituationer, produktstrategier och konkurrensmiljöer kräver olika styrkort, som skräddarsys efter uppdrag, strategi, teknik och kultur.",
       "Transparenstest: av de 15–20 måtten ska en utomstående kunna utläsa affärsenhetens konkurrensstrategi.",
       "Rockwater-exemplet: vision → strategi → mål → mått i alla fyra perspektiv. Finansiellt (räntabilitet på sysselsatt kapital, kassaflöde, prognossäkerhet, projektlönsamhet, orderstock), kund (Tier I/Tier II, prisindex, oberoende årlig ranking, månatliga betyg, marknadsandel hos nyckelkunder), processer (mått per fas i projektets livscykel: timmar med potentiella kunder, anbudsträffsäkerhet, projektprestation, säkerhet, omarbetning, avslutstid).",
-      "Rockwaters interna mått markerade ett skifte: från prestation per funktionsavdelning till mått som integrerar nyckelprocesser."
+      "Rockwaters interna mått markerade ett skifte: från prestation per funktionsavdelning till mått som integrerar nyckelprocesser.",
+      "Perspektiven kan bytas ut eller utökas: medarbetarperspektiv, CSR/hållbarhet, offentlig verksamhet, projekt. Styrkortet är ingen mall. Prövat som essä HT25."
     ],
     pitfalls: [
       "BSC ersätter INTE finansiella mått med kvalitativa bedömningar — det integrerar båda.",

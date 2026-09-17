@@ -278,7 +278,7 @@ kräver surrogatnycklar och inte namn — kapitel 9 följer tentan.
   per delkurs. Gruppering via `lib/practiceAxis.js` (`practiceBy:
   "chapter"` = Öva speglar Läs). QuestionCard renderar `diagram` och
   `context`; chipen "Ogranskad" är borttagen.
-- **Prov** (Strategi) — +6/−1/0, balanserad dragning, deadline-timer,
+- **Prov** (Strategi) — HT25-format sedan 2026-09-17: 11 frågor à 5 p, −1/0, betyget räknas på 55 flervalspoäng (essäerna 3 à 15 p, max 300 ord, ligger utanför), balanserad dragning, deadline-timer,
   lever i App-state (försvinner vid omladdning, avsiktligt).
 - **SQL** — sql.js/WASM, färsk databas per körning. T-SQL först:
   `lib/tsql.js` översätter (TOP → LIMIT, ISNULL/SUBSTRING/LEN/GETDATE,
@@ -332,6 +332,21 @@ data" i Statistik rensar allt. Progress är per webbläsare och domän.
   röstväljaren (`ChapterView`, två röster som heter "Alva (svenska
   (Sverige))") — kosmetiskt, beror på webbläsarens röstlista.
 - Skärmdumpar i browserpanelen kan vara eftersläpande/tomma; DOM gäller.
+
+## HT25-tentan för Strategi (2025-10-14, inlagd 2026-09-17)
+
+11 flervalsfrågor à 5 p (−1 fel, 0 blankt) + 3 essäer à 15 p, max 300 ord
+var; betygsskalan oförändrad. Prov, Hem och kapitel 11:s tentataktik säger
+HT25-formatet. Essä-vyn har ordräknare "Ord: X/300" (röd över 300) och
+raden om 300-ordsgränsen. Sex essäer: str-e5 (BSC:s fyra perspektiv plus
+andra perspektiv) och str-e6 (rimlig vinst/avkastning: ROE/ROCE, bransch,
+risk, jämförelsealternativ, satisfiering, intressenter) nya; str-e3 har
+HT25:s lydelse och är märkt "HT24 och HT25 — återkommer". Tre delar som
+tidigare ströks som "ej testade" är tillbaka: strategi/taktik (kap 2),
+funktionsorganisationens för- och nackdel (kap 5), ROE/ROCE och vad som är
+bra avkastning (kap 4), med kärnpunkter i vision, organisation,
+effektivitet och bsc samt frågorna str-q81–83 (79–80 var tagna av quiz F2).
+Spridningsgränsen i `check-fragebank.mjs` höjd från 1,25 till 1,50.
 
 ## Noterat om Strategis frågebank (2026-09-09)
 

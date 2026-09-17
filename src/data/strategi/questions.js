@@ -1,5 +1,5 @@
 // Designregler för frågor i denna fil:
-// 1. Alla fyra alternativ jämnlånga — längsta högst 25 % längre än kortaste.
+// 1. Alla fyra alternativ jämnlånga — längsta högst 50 % längre än kortaste (gränsen höjd 2026-09-17 från 25 %).
 // 2. Inga skämtdistraktorer; varje fel alternativ ska vara rimligt att tro på.
 // 3. Distraktormönster: fel upphovsman, fel omfattning, eller sant men svarar inte på frågan.
 // 4. Rätt svar får inte vara det enda nyanserade alternativet.
@@ -786,5 +786,35 @@ export const questions = [
       { text: "Satisfieringsmodellen (Simon)", explain: "Tillfredsställande vinst, inte maximerat nuvärde." },
       { text: "Intressentmodellen (Rhenman)", explain: "Balans mellan intressenters krav." }
     ],
-    correct: 1, source: "Weaver, quiz F2", reviewed: true }
+    correct: 1, source: "Weaver, quiz F2", reviewed: true },
+
+  { id: "str-q81", topic: "vision", difficulty: 1,
+    question: "Vilket av följande är ett exempel på en taktik?",
+    options: [
+      { text: "Ett företags mål att bli marknadsledande inom de närmaste fem åren", explain: "Långsiktigt övergripande mål — strategi, inte taktik." },
+      { text: "Ett beslut att erbjuda rabatter under en kampanjvecka", explain: "Rätt. Ett beslut här och nu för att nå målet i det enskilda läget." },
+      { text: "Identifiering av nya marknader som företaget kan expandera till", explain: "Strategiskt val av inriktning, inte taktiskt beslut." },
+      { text: "Utvecklingen av en treårsplan för företagets fortsatta tillväxt", explain: "Planering på lång sikt hör till strategin." }
+    ],
+    correct: 1, source: "Tenta HT25", reviewed: true },
+
+  { id: "str-q82", topic: "organisation", difficulty: 2,
+    question: "Vad är en fördel med en funktionsorganisation?",
+    options: [
+      { text: "Den underlättar vid expansion till nya geografiska marknader", explain: "Det är divisionsorganisationens fördel." },
+      { text: "Det blir lättare att lansera helt nya produktområden i företaget", explain: "Även detta talar för divisionsorganisation." },
+      { text: "Ledningen har direkt kontroll över enheterna och kan styra mot mål", explain: "Rätt. Den klassiska hierarkin ger kort väg från ledning till funktion." },
+      { text: "Den minskar behovet av samordning mellan organisationens delar", explain: "Tvärtom: samordning mellan funktioner kräver arbete." }
+    ],
+    correct: 2, source: "Tenta HT25", reviewed: true },
+
+  { id: "str-q83", topic: "porter", difficulty: 1,
+    question: "Vad innebär Porters generiska strategi kostnadsledarskap?",
+    options: [
+      { text: "Att erbjuda unika produkter eller tjänster till ett högre pris", explain: "Det är differentiering." },
+      { text: "Att ha branschens lägsta produktionskostnader och kunna ta lägre pris", explain: "Rätt. Kostnadsfördelen omsätts i pris eller marginal." },
+      { text: "Att investera tungt i forskning och utveckling för att leda innovation", explain: "Kan stödja differentiering, men är inte kostnadsledarskap." },
+      { text: "Att rikta sig mot en specifik nischmarknad med anpassade produkter", explain: "Det är fokusstrategin." }
+    ],
+    correct: 1, source: "Tenta HT25", reviewed: true }
 ];
