@@ -1,6 +1,9 @@
 import { useState } from "react";
 
 const WORD_LIMIT = 300;
+// Samma slutrad i alla essäer — den hör till checklistans form, inte till
+// någon enskild fråga, så den bor i vyn.
+const CLOSING = "Max 300 ord. Fyra stycken, ett per rubrik. Punkt 4 är den som höjer betyget.";
 
 export default function Essays({ course, essayState, setEssayState }) {
   const [activeId, setActiveId] = useState(course.essays[0]?.id);
@@ -27,7 +30,10 @@ export default function Essays({ course, essayState, setEssayState }) {
     update({ checked });
   }
 
-  const checkedCount = (state.checked || []).filter(Boolean).length;
+  // Checklistan är fyra grupper; kryssrutorna indexeras löpande över dem.
+  const groups = essay.checklist;
+  const pointCount = groups.reduce((sum, group) => sum + group.points.length, 0);
+  const checkedCount = (state.checked || []).slice(0, pointCount).filter(Boolean).length;
   // Insperas essäfält tar max 300 ord — räknaren visar det och slår om till
   // rött över gränsen.
   const wordCount = (state.draft || "").trim().split(/\s+/).filter(Boolean).length;
@@ -41,6 +47,10 @@ export default function Essays({ course, essayState, setEssayState }) {
           Skriv först ditt eget svar — utkastet sparas automatiskt. Fäll sedan ut
           checklistan och kryssa i vad du faktiskt fick med. Ingen rättning sker
           här; poängen är den aktiva återkallningen.
+        </p>
+        <p className="mt-2 max-w-reading text-[15px] text-ink/80">
+          Varje essä: säg vad det är, varför det spelar roll, ge ett exempel, och
+          koppla till en annan del av kursen.
         </p>
         <p className="mt-2 max-w-reading text-[15px] text-ink/80">
           Tentans essäsvar får vara max 300 ord. Välj tre till fyra bärande punkter
@@ -106,24 +116,42 @@ export default function Essays({ course, essayState, setEssayState }) {
             <div className="flex items-baseline justify-between gap-3">
               <h3 className="font-display text-lg">Vad ett toppsvar innehåller</h3>
               <span className="tabular text-sm text-ink/65">
-                {checkedCount}/{essay.checklist.length}
+                {checkedCount}/{pointCount}
               </span>
             </div>
-            <ul className="mt-3 space-y-2">
-              {essay.checklist.map((point, i) => (
-                <li key={i}>
-                  <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-line p-3 text-[15px] leading-relaxed hover:border-pine">
-                    <input
-                      type="checkbox"
-                      checked={Boolean((state.checked || [])[i])}
-                      onChange={() => toggleCheck(i)}
-                      className="mt-1 h-4 w-4 shrink-0 accent-pine"
-                    />
-                    <span>{point}</span>
-                  </label>
-                </li>
-              ))}
-            </ul>
+            {groups.map((group, gi) => {
+              const offset = groups
+                .slice(0, gi)
+                .reduce((sum, item) => sum + item.points.length, 0);
+              return (
+                <div key={group.heading} className={gi === 0 ? "mt-4" : "mt-5"}>
+                  <h4 className="text-[11px] font-medium uppercase tracking-[0.14em] text-brass">
+                    {gi + 1}. {group.heading}
+                  </h4>
+                  <ul className="mt-2 space-y-2">
+                    {group.points.map((point, pi) => {
+                      const i = offset + pi;
+                      return (
+                        <li key={i}>
+                          <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-line p-3 text-[15px] leading-relaxed hover:border-pine">
+                            <input
+                              type="checkbox"
+                              checked={Boolean((state.checked || [])[i])}
+                              onChange={() => toggleCheck(i)}
+                              className="mt-1 h-4 w-4 shrink-0 accent-pine"
+                            />
+                            <span>{point}</span>
+                          </label>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              );
+            })}
+            <p className="mt-5 border-t border-line pt-4 text-[15px] leading-relaxed text-brass">
+              {CLOSING}
+            </p>
 
             <h3 className="mt-6 font-display text-lg">Disposition</h3>
             <p className="mt-2 text-[15px] leading-relaxed text-ink/80">

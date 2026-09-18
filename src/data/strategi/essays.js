@@ -1,14 +1,31 @@
+// Checklistorna följer samma fyra steg i alla essäer, eftersom läraren
+// premierar "relevanta argument och resonemang som kan göra kopplingar till
+// kursmaterialet": vad det är, varför det spelar roll, konkret, koppling.
+// Steg 4 namnger alltid det område man kopplar till. Slutraden om 300 ord
+// och de fyra styckena renderas av vyn, lika för alla essäer.
 export const essays = [
   { id: "str-e1",
     question: "Varför är 'strategic alignment' mellan IT och resten av företagets verksamhet viktig? Vad innebär strategic alignment i korta drag, och hur kan man enligt synsättet uppnå långsiktiga konkurrensfördelar med hjälp av IT?",
     context: "Förekom som essäfråga på ordinarie tentan HT24 (20 p).",
     checklist: [
-      "Definierar strategic alignment: samklang mellan affärsstrategi, IT-strategi, organisationsinfrastruktur/processer och IT-infrastruktur/processer (Henderson & Venkatramans modell).",
-      "Nämner modellens två dimensioner: strategisk passform (strategi ↔ infrastruktur) och funktionell integration (verksamhet ↔ IT).",
-      "Förklarar varför det är viktigt: IT-investeringar utan koppling till strategi och organisation ger inte effekt — koppla gärna till produktivitetsparadoxen.",
-      "Betonar att alignment är en kontinuerlig process eftersom strategi, teknik och omvärld förändras.",
-      "Förklarar vägen till långsiktig fördel: inte tekniken i sig (köp- och kopierbar) utan kombinationen av IT med processer, kompetens och organisation — komplementära, svårimiterade resurser (RBV-koppling).",
-      "Ger ett konkret exempel (t.ex. e-handlare där IT-strategi, logistikprocesser och affärsstrategi samspelar)."
+      { heading: "Vad det är", points: [
+        "Strategic alignment är samklang mellan verksamhet och IT — IT är inte en fristående funktion vid sidan om.",
+        "Fyra domäner i Henderson & Venkatramans modell: affärsstrategi, IT-strategi, organisationsinfrastruktur/processer och IT-infrastruktur/processer.",
+      ] },
+      { heading: "Varför det spelar roll", points: [
+        "Två dimensioner: strategisk passform (strategi ↔ infrastruktur) och funktionell integration (verksamhet ↔ IT).",
+        "Alignment är en kontinuerlig process och går åt båda håll, eftersom strategi, teknik och omvärld förändras.",
+        "IT-investeringar utan koppling till strategi och organisation ger ingen effekt.",
+        "Långsiktig fördel kommer inte av tekniken i sig, som är köp- och kopierbar, utan av kombinationen IT, processer, kompetens och organisation.",
+      ] },
+      { heading: "Konkret", points: [
+        "Ett företag som köper ett system utan att ändra arbetssätt: investeringen syns i budgeten men inte i resultatet.",
+        "E-handlaren där IT-strategi, logistikprocesser och affärsstrategi samspelar.",
+      ] },
+      { heading: "Koppling", points: [
+        "Produktivitetsparadoxen: det är precis det som händer utan alignment — IT-investeringarna syns inte i produktiviteten.",
+        "Det resursbaserade synsättet: komplementära, svårimiterade organisatoriska resurser är det som gör fördelen varaktig, inte tekniken.",
+      ] },
     ],
     outline: "1) Definiera alignment + modellens fyra domäner och två dimensioner. 2) Varför: IT skapar värde först i samspel med strategi/organisation; produktivitetsparadoxen som belägg. 3) Hur långsiktig fördel: kontinuerlig alignmentförmåga + komplementära organisatoriska resurser snarare än tekniken själv. 4) Exempel + kort slutsats." },
 
@@ -16,13 +33,25 @@ export const essays = [
     question: "Inom vissa strategiperspektiv betonas vikten av att företag är 'lärande organisationer'. Nämn ett sådant strategiperspektiv och förklara vad som avses med begreppet lärande organisation och varför det är viktigt.",
     context: "Förekom som essäfråga på ordinarie tentan HT24 (20 p).",
     checklist: [
-      "Godtagbara perspektiv enligt föreläsning 2: dynamic capabilities (Teece — sensing, seizing, transforming; lärande centralt), RBV:s kunskapstrend (knowledge management, Nonaka), eller Mintzbergs emergent strategy (strategi växer fram ur lärande). Nämn ett, förklara varför lärande är centralt i just det.",
-      "Namnger ett perspektiv: det kunskaps-/lärandebaserade strategiperspektivet (den nuvarande eran i Herrmanns utvecklingslinje; kan även kopplas till RBV:s förlängning mot dynamiska förmågor).",
-      "Definierar lärande: bestående beteendeförändringar utifrån erfarenhet; organisatoriskt lärande uppstår när individers lärande sprids i organisationen och omsätts i praktiken.",
-      "Beskriver förutsättningarna: kultur där experiment, initiativ och ifrågasättande är accepterat.",
-      "Nämner enkelkrets- kontra dubbelkretslärande (lösa problemet vs även ifrågasätta orsaken).",
-      "Förklarar varför det är viktigt: snabbt föränderlig omvärld kräver kontinuerlig förnyelse; kunskap och lärandeförmåga är svåra att imitera och därmed en källa till uthållig konkurrensfördel.",
-      "Knyter gärna an till Mintzbergs emergenta strategi — lärande är mekanismen bakom framväxande strategi."
+      { heading: "Vad det är", points: [
+        "Välj ett perspektiv och håll dig till det: dynamic capabilities (Teece — sensing, seizing, transforming), RBV:s kunskapstrend (knowledge management, Nonaka) eller Mintzbergs emergent strategy.",
+        "Det kunskaps- och lärandebaserade perspektivet är strategifältets nuvarande era i Herrmanns utvecklingslinje.",
+        "Lärande är bestående beteendeförändringar utifrån erfarenhet. Organisatoriskt lärande uppstår när individens lärande sprids i organisationen och omsätts i praktiken.",
+      ] },
+      { heading: "Varför det spelar roll", points: [
+        "Omvärlden ändras snabbare än planerna hinner skrivas, så kontinuerlig förnyelse krävs.",
+        "Kunskap och lärandeförmåga är svåra att imitera, och därmed en källa till uthållig konkurrensfördel.",
+        "Lärandet är mekanismen bakom den framväxande strategin hos Mintzberg.",
+      ] },
+      { heading: "Konkret", points: [
+        "Ett företag som ändrar riktning efter vad kunderna faktiskt vill, inte efter vad planen sa.",
+        "Poängen med exemplet: riktningen ändrades för att någon lärde sig något, inte för att planen förutsåg det.",
+      ] },
+      { heading: "Koppling", points: [
+        "Ekonomistyrningens mjuka styrmedel: en kultur där experiment, initiativ och ifrågasättande är accepterat är förutsättningen.",
+        "Medarbetarskapet hör hit — lärandet blir organisatoriskt först när det sprids och används av andra.",
+        "Enkelkrets- mot dubbelkretslärande: lösa problemet, eller också ifrågasätta orsaken till det.",
+      ] },
     ],
     outline: "1) Perspektiv: kunskaps-/lärandefokuset som strategifältets nuvarande era (Herrmann). 2) Definition individ → organisation, förutsättningar i kulturen, enkel-/dubbelkrets. 3) Varför: förändringstakt, innovation, svårimiterad förmåga. 4) Brygga till emergent strategi + slutsats." },
 
@@ -30,13 +59,24 @@ export const essays = [
     question: "Diskutera varför IT eller AI oftast inte leder till långsiktiga konkurrensfördelar. Vad krävs för att dessa teknologier ändå ska kunna skapa varaktiga konkurrensfördelar.",
     context: "HT24 och HT25 — återkommer. Omtentan HT24 (20 p) och ordinarie HT25 (15 p, max 300 ord), lätt omformulerad.",
     checklist: [
-      "Historisk parallell: ångmaskin, elmotor, PC — transformativa teknologier som alla tvingades införa och som därför sällan gav uthållig fördel (raderade ofta etablerade försprång).",
-      "Värdeskapande ≠ värdefångst: AI sänker kostnader och driver innovation för alla användare, så vinsterna konkurreras bort.",
-      "First mover-fördelar kortlivade: AI lär av uppdaterad data — pionjärens val absorberas i den data som konkurrenternas AI analyserar.",
-      "Egen modell/proprietär data skyddar sällan: funktionellt likvärdig data hos konkurrenter, avtagande nytta av större dataset, strategin kan härledas/imiteras, data svår att skydda.",
-      "Silverkanten (RBV-logiken): applicera AI på befintliga värdefulla, sällsynta, svårimiterade resurser — då förstärks fördelen (Amazon-exemplet).",
-      "Nämner alternativet att bygga hela affärsmodellen kring AI (agilitet), med reservationen att det är omoget och oprövat.",
-      "Slutsats med rätt nyans: använd AI aktivt — men förvänta dig fördel av dina unika resurser, inte av tekniken."
+      { heading: "Vad det är", points: [
+        "Tesen: tekniken i sig går att köpa och kopiera, så alla får tillgång till samma sak.",
+        "Transformativa teknologier tvingar alla att införa dem — och just därför ger de sällan någon uthållig fördel. De raderade ofta etablerade försprång.",
+      ] },
+      { heading: "Varför det spelar roll", points: [
+        "Värdeskapande är inte värdefångst: AI sänker kostnader och driver innovation för alla användare, så vinsterna konkurreras bort.",
+        "First mover-fördelen är kortlivad: AI lär av uppdaterad data, och pionjärens val absorberas i den data konkurrenternas AI analyserar.",
+        "Egen modell eller proprietär data skyddar sällan: konkurrenterna har funktionellt likvärdig data, större dataset ger avtagande nytta, strategin kan härledas och imiteras, och data är svår att skydda.",
+      ] },
+      { heading: "Konkret", points: [
+        "Ångmaskinen, elmotorn, persondatorn — och nu AI. Samma mönster varje gång.",
+        "Amazon som motexempel: AI läggs på resurser som redan är värdefulla, sällsynta och svårimiterade, och då förstärks fördelen.",
+      ] },
+      { heading: "Koppling", points: [
+        "Det resursbaserade synsättet och VRIO: fördelen sitter i resurser som redan är svårkopierade — AI förstärker dem, skapar dem inte.",
+        "Alternativet är att bygga hela affärsmodellen kring AI för svårkopierad agilitet, med reservationen att det är omoget och oprövat.",
+        "Slutsatsen med rätt nyans: använd AI aktivt, men förvänta dig fördelen från dina unika resurser, inte från tekniken.",
+      ] },
     ],
     outline: "1) Tes + historisk parallell. 2) Tre argument: värdefångstproblemet, kortlivad first mover, data/modell skyddar inte. 3) Lösningen: RBV — förstärk unika resurser med AI; ev. AI-centrerad affärsmodell. 4) Nyanserad slutsats." },
 
@@ -44,15 +84,24 @@ export const essays = [
     question: "Förändringar i omvärlden, som ökad medvetenhet om hållbarhet och digitalisering, driver företag att utveckla nya typer av mått för att utvärdera sin måluppfyllelse. Diskutera vilka typer av mått dessa förändringar ger upphov till och hur de påverkar företagens sätt att arbeta. Ge exempel på hur företag kan hantera både traditionella ekonomiska mål och nya omvärldsutmaningar.",
     context: "Förekom som essäfråga på omtentan HT24 (20 p).",
     checklist: [
-      "Hållbarhetsmått: ESG/TBL — koldioxidutsläpp, energieffektivitet, jämställdhet, personalomsättning; hållbarhetsredovisning.",
-      "Digitaliseringsmått: kundnöjdhet (NKI/NPS), kundbortfall, digital användningsdata, processmått i realtid — tidigare signaler än bokslutet.",
-      "Hållbarhet (Weaver, fö 3): CSRD (EU 2022) gör hållbarhetsrapportering till lagkrav med standardiserade mått; tidigare frivilliga rapporter var ofta greenwashing.",
-      "Digitalisering (Weaver, fö 3): prenumerationsaffärer kräver nya mått — churn, customer lifetime value, customer acquisition cost, MRR/ARR, NPS.",
-      "Kontrast (Weaver, fö 3): sociala medier-mått (MAU/DAU) är inte standardiserade och inte lagreglerade — lätta att blåsa upp; knyt till Ittner & Larckers poäng om manipulation.",
-      "Ramverk för att kombinera: Balanced Scorecard (icke-finansiella mått som drivare av finansiella i fyra perspektiv) och Triple Bottom Line (tre resultatdimensioner).",
-      "Hur arbetet påverkas: 'what gets measured gets done' — mått styr beteende, belöningar och investeringar; ledande vs släpande indikatorer.",
-      "Risker och hantverk (Ittner & Larcker): koppla mått till strategin via kausalmodell, validera sambanden, sätt rimliga målnivåer, mät korrekt; annars manipulation och felinvesteringar.",
-      "Balansen: nya mått ersätter inte finansiella mål utan kompletterar dem — finansiella mått visar utfallet, de nya visar drivkrafterna. Konkret företagsexempel ger högre betyg."
+      { heading: "Vad det är", points: [
+        "Två drivkrafter ger två familjer av nya mått: hållbarhetskrav och digitalisering.",
+        "Hållbarhetsmåtten mäter ESG- och TBL-dimensionerna; digitaliseringsmåtten mäter kundbeteende och processer, ofta i realtid.",
+      ] },
+      { heading: "Varför det spelar roll", points: [
+        "Finansiella mått är historiska och visar utfallet. De nya måtten är ledande indikatorer och ger signaler tidigare än bokslutet.",
+        "'What gets measured gets done': måtten styr beteende, belöningar och investeringar.",
+        "De nya måtten ersätter inte de finansiella målen utan kompletterar och driver dem.",
+      ] },
+      { heading: "Konkret", points: [
+        "Hållbarhet: koldioxidutsläpp, energieffektivitet, jämställdhet, personalomsättning, hållbarhetsredovisning. CSRD (EU 2022) gör rapporteringen till lagkrav med standardiserade mått; tidigare frivilliga rapporter var ofta greenwashing.",
+        "Digitalisering: kundnöjdhet (NKI/NPS), kundbortfall, digital användningsdata. Prenumerationsaffärer kräver churn, customer lifetime value, customer acquisition cost och MRR/ARR.",
+        "Kontrasten: MAU/DAU i sociala medier är varken standardiserade eller lagreglerade, och därmed lätta att blåsa upp.",
+      ] },
+      { heading: "Koppling", points: [
+        "Ittner & Larcker: utan validerad kausalmodell blir måtten manipulation och felinvesteringar. Koppla mått till strategin, validera sambanden, sätt rimliga målnivåer och mät korrekt.",
+        "Balanced Scorecard och Triple Bottom Line är ramverken som håller ihop det: icke-finansiella mått som drivare i fyra perspektiv, respektive tre resultatdimensioner.",
+      ] },
     ],
     outline: "1) Drivkrafterna och de nya måttypernas två familjer (hållbarhet, digitalt). 2) Ramverken BSC + TBL som integrationslösning. 3) Effekter på arbetssätt + riskerna enligt Ittner & Larcker. 4) Exempel + slutsats om komplement, inte ersättning." },
 
@@ -60,11 +109,25 @@ export const essays = [
     question: "Nämn de fyra grundperspektiven i det balanserade styrkortet som introducerades av Kaplan och Norton. Beskriv kort vad varje perspektiv fokuserar på, och ge även exempel på andra perspektiv som kan vara relevanta i dagens verksamheter.",
     context: "Förekom som essäfråga på ordinarie tentan HT25 (15 p, max 300 ord).",
     checklist: [
-      "De fyra: finansiellt (hur ser vi ut för aktieägarna), kund (hur ser kunderna på oss), interna processer (vad måste vi bli bra på), innovation och lärande (kan vi fortsätta förbättra och skapa värde).",
-      "Varför de behövs: finansiella mått är historiska och för generella — de visar vad som hände, inte vad som händer. Styrkortet balanserar trailing och leading mått och kopplar dem till strategin.",
-      "Andra relevanta perspektiv idag: medarbetarperspektiv (arbetstillfredsställelse, medbestämmande, mångfald), CSR- och hållbarhetsperspektiv, perspektiv anpassade för offentlig verksamhet (medborgare, miljö, socialt) eller för projekt.",
-      "Poängen att styrkortet inte är en mall: perspektiven väljs efter verksamhetens uppdrag och strategi.",
-      "Med 300 ord: fyra perspektiv med en mening var, två-tre alternativa perspektiv, och en mening om varför de inte är en mall."
+      { heading: "Vad det är", points: [
+        "Finansiellt: hur ser vi ut för aktieägarna?",
+        "Kund: hur ser kunderna på oss?",
+        "Interna processer: vad måste vi bli bra på?",
+        "Innovation och lärande: kan vi fortsätta förbättra och skapa värde?",
+      ] },
+      { heading: "Varför det spelar roll", points: [
+        "Finansiella mått är historiska och för generella — de visar vad som hände, inte vad som händer.",
+        "Styrkortet balanserar trailing och leading mått och kopplar dem till strategin.",
+      ] },
+      { heading: "Konkret", points: [
+        "Medarbetarperspektiv: arbetstillfredsställelse, medbestämmande, mångfald.",
+        "CSR- och hållbarhetsperspektiv.",
+        "Offentlig verksamhet: medborgare, miljö och socialt. Projekt kan kräva egna perspektiv.",
+      ] },
+      { heading: "Koppling", points: [
+        "Strategin: perspektiven väljs efter verksamhetens uppdrag och strategi — styrkortet är ingen mall.",
+        "Transparenstestet: en utomstående ska kunna utläsa affärsenhetens konkurrensstrategi ur måtten.",
+      ] },
     ],
     outline: "1) De fyra perspektiven, en mening var med frågan de svarar på. 2) Varför: finansiella mått är historiska; balansen trailing/leading kopplad till strategin. 3) Två-tre alternativa perspektiv med exempel. 4) En mening: styrkortet är ingen mall." },
 
@@ -72,14 +135,25 @@ export const essays = [
     question: "Tänk dig att du startar ett företag inom en valfri bransch. Vilka faktorer skulle påverka hur du resonerar kring vad som är en rimlig vinst eller avkastningsgrad för företaget på längre sikt? Utgå gärna från relevanta teorier och begrepp som diskuterats under kursen.",
     context: "Förekom som essäfråga på ordinarie tentan HT25 (15 p, max 300 ord).",
     checklist: [
-      "Vinst räcker inte som mått — sätt resultatet i relation till kapitalet. ROE (resultat / eget kapital) eller ROCE (avkastning på sysselsatt kapital).",
-      "Vad som är 'rimligt' beror på tre saker: branschen (lönsamheten varierar kraftigt mellan branscher), risknivån (högre risk kräver högre avkastning) och jämförelsealternativen (vad kapitalet kunde gett någon annanstans).",
-      "Kalkylräntans tre komponenter fångar detta: inflation, alternativa investeringsmöjligheter och risk.",
-      "Satisfiering (Simon): i praktiken söker man en tillfredsställande vinst mot en anspråksnivå, inte maximal. Anspråksnivån beror på omvärld, tradition och ägarpreferenser.",
-      "Intressentmodellen: ägarnas avkastningskrav är ett krav bland flera — anställda, kunder och långivare ska också tillgodoses.",
-      "Kassaflödesmodellen: teoretiskt maximera nuvärdet av framtida nettokassaflöden, men svårt att tillämpa vid snabb förändring.",
-      "Nämn din valda bransch konkret och vad den innebär för rimlig avkastning.",
-      "Med 300 ord: relationsmåttet först, de tre faktorerna, satisfiering, och en mening om intressenterna."
+      { heading: "Vad det är", points: [
+        "Vinst i kronor säger ingenting i sig — sätt resultatet i relation till kapitalet.",
+        "ROE = resultat / eget kapital, ägarnas avkastning. ROCE = avkastning på sysselsatt kapital, alltså allt kapital.",
+      ] },
+      { heading: "Varför det spelar roll", points: [
+        "Branschen: lönsamheten varierar kraftigt mellan branscher.",
+        "Risknivån: högre risk kräver högre avkastning.",
+        "Jämförelsealternativen: vad kapitalet kunde ha gett någon annanstans.",
+        "Kalkylräntans tre komponenter fångar precis detta — inflation, alternativa investeringsmöjligheter och risk.",
+      ] },
+      { heading: "Konkret", points: [
+        "Nämn din valda bransch och vad den innebär för rimlig avkastning: en siffra, inte bara 'hög' eller 'låg'.",
+        "Håll relationsmåttet i exemplet — resultatet satt mot det kapital företaget binder.",
+      ] },
+      { heading: "Koppling", points: [
+        "Målmodellerna, satisfiering (Simon): i praktiken söker man en tillfredsställande vinst mot en anspråksnivå, inte maximal. Anspråksnivån beror på omvärld, tradition och ägarpreferenser.",
+        "Intressentmodellen: ägarnas avkastningskrav är ett krav bland flera — anställda, kunder och långivare ska också tillgodoses.",
+        "Kassaflödesmodellen som teoretisk kontrast: maximera nuvärdet av framtida nettokassaflöden, men svårt att tillämpa vid snabb förändring.",
+      ] },
     ],
-    outline: "1) Bransch vald, och vinst som relationsmått (ROE/ROCE). 2) De tre faktorerna bransch, risk och jämförelsealternativ — kalkylräntans komponenter. 3) Satisfiering mot en anspråksnivå. 4) En mening om intressenterna, eventuellt kassaflödesmodellen som teoretisk kontrast." }
+    outline: "1) Bransch vald, och vinst som relationsmått (ROE/ROCE). 2) De tre faktorerna bransch, risk och jämförelsealternativ — kalkylräntans komponenter. 3) Satisfiering mot en anspråksnivå. 4) En mening om intressenterna, eventuellt kassaflödesmodellen som teoretisk kontrast." },
 ];

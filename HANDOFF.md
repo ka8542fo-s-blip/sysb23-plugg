@@ -333,6 +333,27 @@ data" i Statistik rensar allt. Progress är per webbläsare och domän.
   (Sverige))") — kosmetiskt, beror på webbläsarens röstlista.
 - Skärmdumpar i browserpanelen kan vara eftersläpande/tomma; DOM gäller.
 
+## Essächecklistornas form (2026-09-18, lärarbesked)
+
+Läraren premierar "relevanta argument och resonemang som kan göra kopplingar
+till kursmaterialet". Alla sex checklistor i `strategi/essays.js` följer
+därför samma fyra steg: **Vad det är / Varför det spelar roll / Konkret /
+Koppling**, som grupper `{ heading, points: [...] }` med två till fyra
+punkter var. Steg 4 namnger alltid ett annat kursområde — paradoxen och RBV
+(e1), mjuka styrmedel och dubbelkretslärande (e2), RBV/VRIO (e3), Ittner &
+Larcker plus BSC/TBL (e4), strategin och transparenstestet (e5),
+målmodellerna satisfiering/intressent/kassaflöde (e6). Slutraden "Max 300
+ord. Fyra stycken, ett per rubrik. Punkt 4 är den som höjer betyget."
+renderas av `views/Essays.jsx` (konstanten `CLOSING`) i --brass, lika för
+alla essäer, liksom rubrikerna. Kryssrutorna indexeras löpande över
+grupperna, och `checked` kapas till antalet punkter så att gammal sparad
+data inte kan ge fler kryss än punkter. Testet
+`scripts/essa-struktur.test.mjs` låser rubrikerna, punktantalet och att steg
+4 namnger ett område. Faktainnehållet är oförändrat utom två saker:
+transparenstestet (kapitel 7) tillagt i e5:s steg 4 på användarens begäran,
+och de två "Med 300 ord: …"-punkterna i e5/e6 borttagna eftersom slutraden
+och `outline` säger samma sak.
+
 ## HT25-tentan för Strategi (2025-10-14, inlagd 2026-09-17)
 
 11 flervalsfrågor à 5 p (−1 fel, 0 blankt) + 3 essäer à 15 p, max 300 ord
