@@ -74,6 +74,7 @@ export const essays = [
       ] },
       { heading: "Koppling", points: [
         "Det resursbaserade synsättet och VRIO: fördelen sitter i resurser som redan är svårkopierade — AI förstärker dem, skapar dem inte.",
+        "Strategic alignment: tekniken måste dessutom hänga ihop med strategi och organisation, annars uppstår produktivitetsparadoxen. Det krävs alltså två saker, inte ett.",
         "Alternativet är att bygga hela affärsmodellen kring AI för svårkopierad agilitet, med reservationen att det är omoget och oprövat.",
         "Slutsatsen med rätt nyans: använd AI aktivt, men förvänta dig fördelen från dina unika resurser, inte från tekniken.",
       ] },
