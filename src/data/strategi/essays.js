@@ -86,22 +86,23 @@ export const essays = [
     context: "Förekom som essäfråga på omtentan HT24 (20 p).",
     checklist: [
       { heading: "Vad det är", points: [
-        "Två drivkrafter ger två familjer av nya mått: hållbarhetskrav och digitalisering.",
-        "Hållbarhetsmåtten mäter ESG- och TBL-dimensionerna; digitaliseringsmåtten mäter kundbeteende och processer, ofta i realtid.",
+        "Två drivkrafter ger två sorters nya mått: hållbarhetskrav och digitalisering.",
+        "Hållbarhetsmått: utsläpp, energi, jämställdhet, arbetsmiljö.",
+        "Digitala mått: kundnöjdhet, kundbortfall, ledtider — ofta i realtid.",
       ] },
       { heading: "Varför det spelar roll", points: [
-        "Finansiella mått är historiska och visar utfallet. De nya måtten är ledande indikatorer och ger signaler tidigare än bokslutet.",
-        "'What gets measured gets done': måtten styr beteende, belöningar och investeringar.",
-        "De nya måtten ersätter inte de finansiella målen utan kompletterar och driver dem.",
+        "Finansiella mått är historiska; de nya är ledande och signalerar tidigare.",
+        "Det som mäts blir gjort — måtten styr beteende och belöningar.",
+        "De nya måtten ersätter inte de finansiella utan förklarar dem.",
       ] },
       { heading: "Konkret", points: [
-        "Hållbarhet: koldioxidutsläpp, energieffektivitet, jämställdhet, personalomsättning, hållbarhetsredovisning. CSRD (EU 2022) gör rapporteringen till lagkrav med standardiserade mått; tidigare frivilliga rapporter var ofta greenwashing.",
-        "Digitalisering: kundnöjdhet (NKI/NPS), kundbortfall, digital användningsdata. Prenumerationsaffärer kräver churn, customer lifetime value, customer acquisition cost och MRR/ARR.",
-        "Kontrasten: MAU/DAU i sociala medier är varken standardiserade eller lagreglerade, och därmed lätta att blåsa upp.",
+        "EU kräver sedan 2022 att större företag rapporterar hållbarhet enligt bestämda mått (CSRD). Tidigare var det frivilligt och ofta greenwashing.",
+        "Ramverken: Triple Bottom Line (People, Planet, Profit — företagets egen redovisning) och ESG (investerarnas bedömning utifrån).",
+        "Prenumerationstjänster mäter kundbortfall (churn), vad en kund är värd över tid och vad den kostar att skaffa.",
       ] },
       { heading: "Koppling", points: [
-        "Ittner & Larcker: utan validerad kausalmodell blir måtten manipulation och felinvesteringar. Koppla mått till strategin, validera sambanden, sätt rimliga målnivåer och mät korrekt.",
-        "Balanced Scorecard och Triple Bottom Line är ramverken som håller ihop det: icke-finansiella mått som drivare i fyra perspektiv, respektive tre resultatdimensioner.",
+        "Ittner & Larcker: mät inte utan att veta att måttet hänger ihop med resultatet — annars blir det manipulation.",
+        "Balanserat styrkort är ramverket som håller ihop det: icke-finansiella mått i tre perspektiv driver det finansiella utfallet.",
       ] },
     ],
     outline: "1) Drivkrafterna och de nya måttypernas två familjer (hållbarhet, digitalt). 2) Ramverken BSC + TBL som integrationslösning. 3) Effekter på arbetssätt + riskerna enligt Ittner & Larcker. 4) Exempel + slutsats om komplement, inte ersättning." },

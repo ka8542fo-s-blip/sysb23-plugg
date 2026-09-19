@@ -44,6 +44,7 @@ test("kopplingssteget namnger ett område ur kursen", () => {
     "produktivitetsparadoxen", "resursbaserade", "vrio", "mjuka styrmedel",
     "dubbelkretslärande", "ittner", "balanced scorecard", "triple bottom line",
     "transparenstestet", "satisfiering", "intressentmodellen", "kassaflödesmodellen",
+    "balanserat styrkort", "strategic alignment",
     "strategin", "medarbetarskapet",
   ];
   for (const essay of essays) {
