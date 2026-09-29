@@ -24,9 +24,11 @@ jobs:
           node-version: 24
 
       # Formatändringar hos TimeEdit ska upptäckas som testfel/parsefel,
-      # aldrig som tyst skräpdata — därför tester före kontrollen.
+      # aldrig som tyst skräpdata — därför tester före kontrollen. Bara
+      # parserns test: jobbet installerar inga paket, och övriga tester
+      # (sql.js m.fl.) körs av deploy-bygget.
       - name: Enhetstester för parsern
-        run: node --test scripts/*.test.mjs
+        run: node --test scripts/timeedit-parse.test.mjs
 
       - name: Hämta TimeEdit och jämför med schedule.js
         id: kontroll
