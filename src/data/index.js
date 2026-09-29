@@ -17,6 +17,7 @@ import {
 import { intro as strategiIntro } from "./strategi/reading.js";
 import { topics as processTopics } from "./process/topics.js";
 import { questions as processQuestions } from "./process/questions.js";
+import { essays as processEssays } from "./process/essays.js";
 import {
   chapters as processChapters,
   glossary as processGlossary,
@@ -81,10 +82,11 @@ export const courses = [
     status: "aktiv",
     // Byggs i faser (2026-09-29): Läs först, sedan Öva, Essä, Kör processen
     // och Prov. Flikarna läggs till när deras innehåll finns.
-    views: ["las", "ova", "statistik"],
+    views: ["las", "ova", "essa", "statistik"],
     practiceBy: "chapter",
     topics: processTopics,
     questions: processQuestions,
+    essays: processEssays,
     chapters: processChapters,
     glossary: processGlossary,
     readingIntro: processIntro,

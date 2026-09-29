@@ -2,12 +2,16 @@
 // läraren premierar, och den ska inte glida isär när innehåll läggs till.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { essays } from "../src/data/strategi/essays.js";
+import { essays as strategiEssays } from "../src/data/strategi/essays.js";
+import { essays as processEssays } from "../src/data/process/essays.js";
+
+const essays = [...strategiEssays, ...processEssays];
 
 const HEADINGS = ["Vad det är", "Varför det spelar roll", "Konkret", "Koppling"];
 
 test("varje essä har de fyra rubrikerna i rätt ordning", () => {
-  assert.ok(essays.length >= 6);
+  assert.ok(strategiEssays.length >= 6);
+  assert.equal(processEssays.length, 6);
   for (const essay of essays) {
     assert.deepEqual(
       essay.checklist.map((group) => group.heading),
@@ -46,6 +50,9 @@ test("kopplingssteget namnger ett område ur kursen", () => {
     "transparenstestet", "satisfiering", "intressentmodellen", "kassaflödesmodellen",
     "balanserat styrkort", "strategic alignment",
     "strategin", "medarbetarskapet",
+    // BPM
+    "bpr", "hammer", "produktivitetsparadoxen", "7fe", "huset", "sustainability",
+    "scenarierna", "strategy-led",
   ];
   for (const essay of essays) {
     const text = essay.checklist[3].points.join(" ").toLowerCase();
