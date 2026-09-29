@@ -425,10 +425,10 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   frågor (omtentans 12 delad förstaplats), räknat ur de ordagranna
   frågorna. Skrivs om
   efter F4 (5 okt) och F5 (12 okt).
-- **Öva:** 70 frågor i `questions.js`, 5–9 per kapitel. `bpm-t01…t22` =
+- **Öva:** 71 frågor i `questions.js`, 5–9 per kapitel. `bpm-t01…t22` =
   HT25-tentornas flervalsfrågor nära ordagrant (i `LENGTH_FLAGGED` med
   skälet "tentafråga ordagrant", räknas inte i balansmåtten — på tentan
-  var rätt svar längst i ungefär tre fall av fyra). `bpm-q01…q48` egna (q48 = gateway-namngivning),
+  var rätt svar längst i ungefär tre fall av fyra). `bpm-q01…q49` egna (q48 = gateway-namngivning, q49 = OR-join-fallet på genomgången s. 37–38; q46 = terminate end-fallet s. 35–36),
   HT24-begrepp omskrivna till fyrval (inga frågor med falska fasnamn),
   `bpm-q25` flaggad (rollnamn). Alla `reviewed: false`. Balanstestet
   `fragebank-balans.test.mjs` är tabelldrivet per delkurs: Databaser
@@ -463,6 +463,39 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   Kapitel 11:s genomgångar är text, inte renderade diagram (diagrammen
   finns i Kör processen). Häftets 1.2 har ingen körfråga (linjär med AND
   och en månadstimer, prövar inget nytt).
+
+- **Granskning 2026-09-29** (tre granskare + egen kontroll mot bilderna,
+  Kaspers beslut): rättade sakfel i kap 1, 3, 4, 6, 8, 10, 11 och e1/e3/e4,
+  Jeston-påståenden utan källa i kap 7–8 uppmjukade till "enligt tentans
+  svarsalternativ", HT24-tolkningar märkta "HT24 saknar facit".
+  **Nära dubbletter** har `group` i questions.js (red-wine: t12/t14,
+  realize-sustain: q30/q31, essentials: q17/q18/q33); `lib/examPlan.js`
+  drar högst en per grupp (test i `exam-plan.test.mjs`). **Default flow**
+  (`default: true` på ett flöde) stöds i simulatorn och ritas med
+  snedstreck; `egen-or` följer nu Silvers exempel, vilket ändrade facit:
+  kp-egen-or-2 ABDE → ABE, kp-egen-or-3 ABCDE → ABCE (or-1 oförändrad ADE).
+
+### Kontrollera mot F4 (5 okt)
+
+Påståenden som i dag bara vilar på tentornas svarsalternativ (HT24 saknar
+facit) och ska stämmas av mot föreläsning 4:
+- Var identifierade rotorsaker tas fram (antaget: Understand) — kap 7,
+  topics `understand`, förklaringen i bpm-t18.
+- Om Understand ger quick wins (texten borttagen tills vidare).
+- Vad People innehåller (antaget: roller och utbildning; utbildningsplaner
+  är enligt 2(h) inte Innovates output) — kap 8, bpm-t18.
+- Vad Develop och Implement gör (HT24 fråga 43:s alternativ "bygga alla
+  komponenter" = troligen Develop) — kap 8, bpm-q30.
+- Att Innovate inte prioriterar inkrementellt (HT24 fråga 26) och att
+  Sustainability fortsätter med styrning (HT24 fråga 47) — kap 8, topics
+  `fullfoljd`, bpm-q31.
+- Appreciative inquiry (HT24 fråga 33): "utgår från det som fungerar"; att
+  det "möter mindre motstånd" är borttaget — kap 8, bpm-q32.
+- 60 % kommunikation och människor: bara ur tentans essäfråga 1(a).
+- Processoptimeringslösningarna (kap 4): bara uppräkningen i omtentans
+  fråga 12 och RPA-exemplet i 2(c).
+- BPM-mognad: bara vision/mål/processarkitektur och tempo; ingen
+  mognadsmodell.
 
 ### Facit och osäkerheter (BPM)
 

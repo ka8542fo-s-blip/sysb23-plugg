@@ -33,7 +33,7 @@ export const CHAPTER_ORDER = Object.keys(CHAPTER_TOPICS);
 export const intro = "Den här delkursen handlar om hur en organisation styr och förbättrar sina processer — och om hur man ritar och läser dem i BPMN. Tentan har två delar som kräver olika sorters läsning: BPM-delen (Jestons 7FE-ramverk, historiken och artiklarna) prövas med scenariofrågor och essäer, BPMN-delen med att köra diagram. Kompendiet följer den ordningen. Räkna med ungefär {lästid} för hela texten. Termerna står på engelska, eftersom tentan och litteraturen använder dem.";
 
 export const examNote = {
-  text: "Salstenta 13 november i Inspera, inga hjälpmedel: två essäer à 15 p, tio BPM-flervalsfrågor à 5 p och fyra BPMN-frågor à 3–7 p. Fel svar ger −1, blankt 0.",
+  text: "Salstenta 13 november i Inspera, inga hjälpmedel. Weaver har angett 2–3 essäer och 10–15 flervalsfrågor; den sannolika formen är HT25:s: två essäer à 15 p, tio BPM-flervalsfrågor à 5 p och fyra BPMN-frågor à 3–7 p. Fel svar ger −1, blankt 0.",
   source: "HT25-tentorna",
 };
 
@@ -48,7 +48,7 @@ const rawChapters = [
     body: `
 ## Så ser tentan ut
 
-Tentan är en salstenta i Inspera på 3 hp, **13 november**, utan hjälpmedel. Omtentan är 7 januari. Båda HT25-tentorna hade exakt samma form:
+Tentan är en salstenta i Inspera på 3 hp, **13 november**, utan hjälpmedel. Omtentan är 7 januari. Weaver har sagt att tentan har "ett fåtal (2–3) kortare essäfrågor, inte om BPMN" och "ett antal flervalsfrågor (10–15)" som inkluderar BPMN. Den sannolika formen är därför HT25:s, som båda HT25-tentorna hade exakt:
 
 | Del | Innehåll | Poäng |
 |---|---|---|
@@ -58,7 +58,7 @@ Tentan är en salstenta i Inspera på 3 hp, **13 november**, utan hjälpmedel. O
 
 Betygsgränserna är A 85, B 75, C 65, D 55 och E 50 procent. Rätt svar ger frågans poäng, **fel svar ger −1** och obesvarad fråga 0.
 
-Essäfrågorna handlar aldrig om BPMN. De börjar nästan alltid med "Jeston (2022) menar att …" och ber dig förklara och diskutera en av hans principer. BPM-flervalsfrågorna är oftast scenarier: en organisation beskrivs, och du ska avgöra vad Jeston rekommenderar eller vilket av hans begrepp som beskrivs. BPMN-frågorna går till största delen ut på att **köra ett diagram**: vilka aktiviteter körs, och när är processen klar? Weaver har sagt att alla tentafrågor finns i övningsquizzarna BPM och BPMN på Canvas.
+Essäfrågorna handlar aldrig om BPMN. De börjar alltid med Jeston (2022) — "Jeston (2022) framhåller …", "menar att …" eller "Enligt Jeston …" — och ber dig förklara och diskutera en av hans principer. BPM-flervalsfrågorna är en blandning av begreppsfrågor och scenarier, där en organisation beskrivs och du ska avgöra vad Jeston rekommenderar eller vilket begrepp det gäller. På HT25 var 7 av 20 scenarier. BPMN-frågorna går till största delen ut på att **köra ett diagram**: vilka aktiviteter körs, och när är processen klar? Enligt Weaver finns alla frågor i HT25-exempeltentan i övningsquizzarna BPM och BPMN på Canvas.
 
 ### När lönar det sig att gissa?
 
@@ -67,6 +67,7 @@ Med −1 för fel beror det på hur många alternativ det finns. Väntevärdet a
 | Fråga | Väntevärde vid ren gissning |
 |---|---|
 | BPM-fråga, 5 p och fyra alternativ | +0,5 |
+| BPMN-fråga, 6 p och fem alternativ | +0,4 |
 | BPMN-fråga, 7 p och sex alternativ | +0,33 |
 | BPMN-fråga, 5 p och sex alternativ | 0 |
 | BPMN-fråga, 3 p och fyra alternativ | 0 |
@@ -78,7 +79,7 @@ På HT25-tentorna var rätt svar det ensamt längsta alternativet i 14 av 20 BPM
 
 ## Vad BPM är
 
-Jeston (2022) definierar Business Process Management som **implementation, execution och governance av processer**. Definitionen är lika viktig för vad den utesluter som för vad den säger. BPM är inte en mjukvarusvit eller annan teknik. Det är inte heller bara modellering av processer. Leverantörerna marknadsför BPM som programvara, men för Jeston är BPM en managementdisciplin: att förbättra och styra verksamhetens processer så att organisationen når sina mål. Människorna och förändringsledningen är en lika stor del av BPM som processerna själva.
+Jeston (2022) definierar Business Process Management som **implementation, execution och governance av processer**. Definitionen är lika viktig för vad den utesluter som för vad den säger. BPM är inte en mjukvarusvit eller annan teknik. Det är inte heller bara modellering av processer. Leverantörerna marknadsför BPM som programvara, men för Jeston är BPM en managementdisciplin: att förbättra och styra verksamhetens processer så att organisationen når sina mål. BPM är ett helhetstänkande som också omfattar människorna och förändringsledningen, inte bara processerna.
 
 Det akademiska perspektivet beskriver samma sak som en **BPM lifecycle**:
 
@@ -137,7 +138,7 @@ Weaver skiljer mellan två sorters text i kursen. Jeston är **normativ manageme
     title: "Hur BPM växte fram",
     readingMinutes: 10,
     lead: "Från Taylor och kvalitetsrörelsen via BPR och workflowforskningen till BPMS, RPA och agentisk AI — och varför BPR gick för långt.",
-    sources: ["F1 (Weaver 22 sep 2026)", "Hammer (1990) s. 104–112", "Reijers (2021) s. 4", "Rosemann et al. (2024) s. 420–421", "Tenta HT25 ord 2(b), omtenta 8"],
+    sources: ["F1 (Weaver 22 sep 2026)", "Hammer (1990) s. 104–112", "Reijers (2021) s. 4", "Rosemann et al. (2024) s. 420–421", "Tenta HT25 ord 2(b), omtenta 8", "HT24 fråga 10 (CPI), 13 (Lean)"],
     body: `
 BPM är inte en uppfinning utan ett resultat av flera strömningar som möttes kring år 2000. Tentan prövar framför allt två saker härifrån: **varför BPR misslyckades** och **varför RPA inte skalade**. Resten är bakgrund som gör de två begripliga.
 
@@ -175,11 +176,11 @@ Kort sagt: BPR var **för radikalt, för dyrt och mötte för mycket motstånd**
 
 Parallellt utvecklades i Europa en **formell modellering av arbetsflöden**. Carl Adam Petris **Petri-nät** (1962) beskrev processflöden och samtidighet matematiskt och gav oss den visuella processmodellen. BPM som akademiskt fält växte fram 1998–2003 ur mötet mellan amerikanskt affärsprocesstänkande och europeisk workflowforskning. Den första BPM-konferensen hölls i Eindhoven 2003.
 
-Två krav utifrån tvingade fram processdokumentation. **ISO 9000:2000** ökade kraven på att processer är beskrivna. Efter Enronskandalen kom **Sarbanes-Oxley (SOX)** 2002, som krävde spårbar intern kontroll av alla processer kring den finansiella rapporteringen. BPM gav metoderna, verktygen och notationen. Kravet på standardisering drev fram BPMN.
+Två krav utifrån spred processdokumentationen. **ISO 9000:2000** ökade kraven på att processer är beskrivna. Efter Enronskandalen kom **Sarbanes-Oxley (SOX)** 2002, som krävde spårbar intern kontroll av alla processer kring den finansiella rapporteringen. BPM gav metoderna, verktygen och notationen, och SOX ledde till en bred användning av BPM och en push mot standardisering, till exempel BPMN.
 
 ## BPMS, SOA och vågen efter
 
-På 90-talet fanns processlogiken i workflowsystem och ERP. Under 2000-talet kom **BPMS**, körbara processmotorer med övervakning, och **SOA**, där affärsfunktioner exponeras som återanvändbara, löst kopplade tjänster. Tillsammans kan en process orkestrera aktiviteter över många system och funktioner. Smith och Fingar (2003) beskrev BPM som agilt i stället för monolitiskt, som förändring och ständig förbättring i stället för revolution, och som ett förenat angreppssätt för teknik, ledning och människor med uthållig konkurrensfördel som mål.
+På 90-talet fanns processlogiken i workflowsystem och ERP. Under 2000-talet kom **BPMS**, körbara processmotorer med övervakning, och **SOA**, där affärsfunktioner exponeras som återanvändbara, löst kopplade tjänster. Tillsammans kan en process orkestrera aktiviteter över många system och funktioner. Weaver sammanfattar BPM-rörelsen kring Smith och Fingar (2003) och Harmon (2003) så: BPM är agilt i stället för monolitiskt, som förändring och ständig förbättring i stället för revolution, och ett förenat angreppssätt för teknik, ledning och människor med uthållig konkurrensfördel som mål.
 
 På 2010- och 2020-talen används ordet BPM mindre i marknadsföringen. Man talar om process orchestration, Digital Process Automation, process mining och **iBPMS**: API-först-motorer som orkestrerar människor, botar och mikrotjänster.
 
@@ -202,18 +203,18 @@ Jestons egen bild av utvecklingen, som han kallar en "hype cycle", är egentlige
     title: "När och hur BPM startar",
     readingMinutes: 10,
     lead: "Drivers och triggers, framgångsfaktorerna, top-down mot bottom-up, tre sätt att initiera BPM och Jestons fyra scenarier.",
-    sources: ["F2 (Weaver 25 sep 2026)", "F3 (Launch steg 2)", "Tenta HT25 ord 2(g), omtenta 7, 9, 10", "HT24 fråga 17, 18, 45"],
+    sources: ["F2 (Weaver 25 sep 2026, figur 12.3)", "F3 (Launch steg 2)", "Tenta HT25 ord 2(g), omtenta 7, 9, 10", "HT24 fråga 17 (drivers långsiktiga), 18, 45"],
     body: `
-Det här kapitlet ger mest tentapoäng per sida. HT25-tentorna hade en scenariofråga om vart och ett av dess huvudbegrepp: vad Jeston rekommenderar när ledningen inte är engagerad, vilket scenario en HR-avdelning befinner sig i och vilket angreppssätt en myndighet ska välja.
+Flera av HT25-tentornas scenariofrågor kom härifrån: vad Jeston rekommenderar när ledningen inte är engagerad, vilket scenario en HR-avdelning befinner sig i, vilket angreppssätt en myndighet ska välja och vad som kännetecknar en quick win.
 
 ## Drivers och triggers
 
 Jeston skiljer mellan två sorters anledningar att börja med BPM:
 
-- En **driver** är ett affärsskäl eller en motivation som får organisationen att agera för att nå ett mål. Den är långsiktig, till exempel att vilja öka lönsamheten, förbättra kundnöjdheten eller genomföra strategin.
-- En **trigger** är en händelse som får organisationen att agera nu, för att lösa ett akut problem eller svara på en förändring utifrån. Exempel är nya regler, en kris eller en uppköpt konkurrent.
+- En **driver** är ett affärsskäl eller en motivation som får organisationen att agera för att nå ett mål, till exempel att vilja öka lönsamheten, förbättra kundnöjdheten eller genomföra strategin.
+- En **trigger** är en händelse som får organisationen att agera nu, för att lösa ett akut problem eller svara på en förändring som påtvingas utifrån.
 
-Skillnaden är tidshorisonten och konkretionen, inte om orsaken är intern eller extern. Enligt Jeston ska BPM startas först när drivers och triggers är **fastställda och överenskomna** av alla intressenter, **dokumenterade, kommunicerade och förstådda**, och synliga i hela organisationen.
+En äldre tentafråga (HT24) beskrev skillnaden som att drivers är långsiktiga motiv och triggers konkreta händelser som kräver omedelbar handling. Enligt Jeston ska BPM startas först när drivers och triggers är **fastställda och överenskomna** av alla intressenter, **dokumenterade, kommunicerade och förstådda**, och synliga i hela organisationen.
 
 ## Framgångsfaktorerna
 
@@ -263,16 +264,17 @@ Jeston delar också in projekten efter komplexitet, från bottom-up till top-dow
 
 ## De fyra scenarierna
 
-Jeston placerar BPM-insatser efter två dimensioner: **hur stor påverkan** de har på organisationen och **hur involverad ledningen** är.
+Jeston placerar BPM-insatser efter två dimensioner: **hur stor påverkan** de har på organisationen och **hur involverad chefen** (business manager) är, alltså hur informerad och hur engagerad.
 
-| Scenario | Påverkan | Ledningens engagemang |
+| Scenario | Påverkan | Chefens involvering |
 |---|---|---|
-| **Under the radar** | Mindre processförbättringar | Begränsat eller inget |
-| **Pilot project** | Förbättrar eller gör om processer | Delvis informerad och engagerad |
-| **In the driver's seat** | Gör om processer från början till slut, eller affärsmodellen | Fullt informerad och engagerad |
-| **Business as usual** | BPM fullt infört i organisationen | Fullt engagerad |
+| **Under the radar** | Mindre processförbättringar | Delvis informerad, begränsat eller inget engagemang |
+| **Pilot project** | Förbättrar eller gör om processer | Fullt informerad, delvis engagerad |
+| **In the driver's seat** | Gör om processer från början till slut, eller affärsmodellen | Fullt informerad, fullt engagerad |
 
-Under the radar är de små informella insatserna. Tentans exempel är en HR-avdelning där två analytiker själva börjat kartlägga, cheferna vet om det men har inte prioriterat det, och arbetet sker sporadiskt utan budget eller formell styrning. En pilot ska bevisa BPM:s värde. In the driver's seat betyder att BPM är erkänt som strategiskt verktyg med växande styrning. **Business as usual** betyder att BPM är helt inbäddat i organisationens sätt att arbeta. Det betyder inte att BPM-arbetet vilar. Scenariot avgör hur noggrant och brett ramverket används.
+Figuren har också två zoner. **Exceeding mandate** är när påverkan är större än chefens involvering räcker till. **Under ambitious** är när chefen är mer involverad än insatsen utnyttjar. Det fjärde scenariot, **Business as usual**, finns inte i figuren utan bara i Weavers punktlista: BPM är "fully embedded" i organisationens sätt att arbeta.
+
+Under the radar är de små informella insatserna med begränsat stöd från ledningen. Tentans exempel är en HR-avdelning där två analytiker själva börjat kartlägga, cheferna vet om det men har inte prioriterat det, och arbetet sker sporadiskt utan budget eller formell styrning. En pilot ska bevisa BPM:s värde. In the driver's seat betyder att BPM är erkänt som strategiskt verktyg med växande styrning. **Business as usual** betyder att BPM är helt inbäddat i organisationens sätt att arbeta. Det betyder inte att BPM-arbetet vilar. Scenariot avgör hur noggrant och brett ramverket används.
 
 ## Quick wins
 
@@ -289,7 +291,7 @@ BPM kan omfatta allt från att driva projekt och detaljgranska processer till mo
     title: "Improve before automate, och BPM:s perspektiv",
     readingMinutes: 8,
     lead: "Varför processer ska förbättras innan de automatiseras, spreadsheet-testet, BPMS-komponenterna, kund- och medarbetarperspektivet och processoptimeringslösningarna.",
-    sources: ["F2 (Weaver 25 sep 2026)", "Tenta HT25 ord 1(b), 2(c), 2(f); omtenta 12", "Processoptimeringslösningarna: preliminärt, bara ur omtentans fråga 12 — uppdateras efter F4"],
+    sources: ["F2 (Weaver 25 sep 2026)", "Tenta HT25 ord 1(b), 2(c), 2(f); omtenta 12", "Processoptimeringslösningarna: preliminärt, bara uppräkningen i omtentans fråga 12 och RPA-exemplet i ord 2(c) — uppdateras efter F4"],
     body: `
 ## Improve before automate
 
@@ -303,9 +305,9 @@ Mekanismen är enkel. **Automatisering förstärker det som redan finns.** En ef
 
 Bakom det ligger Jestons syn på teknik: **technology is an enabler, not a solution.** Tekniken kan inte kompensera för en dålig processdesign. Därför ska man minska komplexiteten och förbättra processen **innan** tekniken införs. Grunderna kommer först: förstå, kartlägg och förbättra processflödet och affärsreglerna, och inför sedan systemet.
 
-Principen har en historisk udd. Hammers kritik 1990 var just att företagen automatiserade gamla arbetssätt. Produktivitetsparadoxen från kapitel 2 är samma fenomen i stor skala.
+Principen har en historisk udd. Hammers kritik 1990 var just att företagen automatiserade gamla arbetssätt, och han förklarade produktivitetsparadoxen från kapitel 2 på samma sätt.
 
-Ett konkret exempel: ett företag inför en workflowlösning för attester, men attestkedjan har fem nivåer där tre bara skickar vidare. Automatiseras den som den är går varje ärende nu digitalt genom fem nivåer. Förbättras den först räcker kanske två, och automationen gör den kortare kedjan snabb.
+Ett eget exempel: ett företag inför en workflowlösning för attester, men attestkedjan har fem nivåer där tre bara skickar vidare. Automatiseras den som den är går varje ärende nu digitalt genom fem nivåer. Förbättras den först räcker kanske två, och automationen gör den kortare kedjan snabb.
 
 ### Spreadsheet-testet
 
@@ -334,7 +336,7 @@ Jestons slutsats är **balans**. Utan kunder finns ingen verksamhet, och utan me
 
 ## Processoptimeringslösningar
 
-Jeston räknar **process redesign, outsourcing, shared services, RPA och cloud computing** som typiska processoptimeringslösningar att välja mellan. Här gäller samma ordning som ovan: först förstå och förbättra processen, sedan välja lösning. Valet beror på processens natur. RPA passar när stegen alltid är likadana och inte kräver omdöme. Redesign behövs när själva flödet är problemet.
+Jeston räknar **process redesign, outsourcing, shared services, RPA och cloud computing** som typiska processoptimeringslösningar att välja mellan. Tentans exempel på valet: ett team som varje dag kopierar fakturarader från e-post till ett ERP-system, där stegen alltid är likadana och inte kräver omdöme, är ett fall för RPA.
 
 Håll isär listorna. Leadership, project management och people change management är 7FE:s essentials (kapitel 5), inte optimeringslösningar. Customer- och employee-centric är perspektiv, inte lösningar.
 `,
@@ -388,7 +390,7 @@ Varför behövs ett ramverk alls? Jeston menar att traditionella metoder inte r�
 
 ## Allt börjar med strategin
 
-Strategin är drivkraften. Den bestämmer affärsmodellen, alltså hur värde skapas och fångas, och den operativa modellen (business operating model). Att genomföra den kräver förmågor och resurser inom tre områden: **människor** (organisation och kultur), **teknik** och **process**. Jestons **framgångspall** (BPM success stool) har samma logik. Strategi, process, människor och beteende måste bära lika mycket, annars välter pallen. Olika intressenter uppfattar dessutom BPM olika. För en chef är det mätning och styrning, för en annan modellering eller simulering. Ramverket behövs för att hålla ihop helheten.
+Strategin är drivkraften. Den bestämmer affärsmodellen, alltså hur värde skapas och fångas, och den operativa modellen (business operating model). Att genomföra den kräver förmågor och resurser inom tre områden: **människor** (organisation och kultur), **teknik** och **process**. Jestons **framgångspall** (BPM success stool) har samma logik: BPM lyckas när strategi, processer, människor och beteende är linjerade. Olika intressenter uppfattar dessutom BPM olika (Jestons figur 11.3 visar begrepp som mätning, simulering, processförändring och ledarskap). Ramverket behövs för att hålla ihop helheten.
 
 ## Styrkor och svagheter
 
@@ -409,7 +411,7 @@ Detta var en essäfråga på omtentan HT25, tillsammans med BPM-mognad (se kapit
 - Vissa organisationer har redan en stabil grund, med vision, mål och processarkitektur. Andra börjar med splittrade insatser.
 - Därför anpassas ramverket. Scenariot från kapitel 3 avgör hur noggrant och brett det används.
 
-**Att hoppa över faser** är möjligt men avrått utan motivering. En organisation som redan har sina foundations behöver inte bygga dem igen, men den ska kunna visa att de finns. Tempot följer samma logik: går man fortare än mognaden tillåter ökar risken att misslyckas.
+**Att hoppa över faser** är möjligt men avrått utan motivering. Tempot följer samma logik: går man fortare än mognaden tillåter ökar risken att misslyckas.
 `,
   },
   {
@@ -439,7 +441,7 @@ Det här begreppet var en essäfråga på omtentan HT25. Många organisationer m
 
 Fokuserar man bara på operational efficiency blir resultatet **"different sameness"**: små förbättringar utan verklig förändring.
 
-I Jestons hus motsvarar ledningsprocesserna och taket management effectiveness, och de operativa processerna operational efficiency. BPM är ramverket som binder ihop dem. För att fylla tomrummet krävs:
+Weaver visar det i Jestons hus med tre zoner. Den blå zonen, rummet för **management processes**, är management effectiveness: miljön för genomförandet. Den röda zonen, rummet för **operational processes**, är operational efficiency: själva genomförandet. Det är där "different sameness" uppstår. Den gröna zonen är bandet **Business Transformation Program Management** ("Set for Success"), BPM som det strukturerade ramverk som binder ihop dem. För att fylla tomrummet krävs:
 
 - en tydlig koppling från strategin till strategiska teman och nyckelprocesser (nivå 1–2)
 - samordnade program och projekt mot flaskhalsarna, med stark överlämning och ägarskap
@@ -612,7 +614,7 @@ Workshopparna med sponsorer och chefer från berörda enheter ska ge överenskom
 
 **Processmålen** anger hur mycket prestationen ska förbättras. Nuläget jämförs med önskat läge. Antalet mått hålls **lågt, helst högst fem per process**, och varje mål kopplas till en ansvarig chef. Alla processmål ska vara **SMART**: specifika, mätbara, uppnåeliga, realistiska och tidsbundna.
 
-För att välja processer rekommenderar Jeston **process selection matrix (PSM)**. Den visar alla processer i en affärsenhet: huvudprocesserna från början till slut (till exempel order- och supportprocessen) mot scenarier som produkter, geografi och distributionskanal. Det gör det lättare att se komplexitet, kopplingar och var samma process täcker flera produkter.
+För att identifiera processerna rekommenderar Jeston **process selection matrix (PSM)**. Den visar alla processer i en affärsenhet: huvudprocesserna från början till slut (till exempel order- och supportprocessen) mot scenarier som produkter, geografi och distributionskanal. Det gör det lättare att se komplexitet, kopplingar och var samma process täcker flera produkter. För att prioritera arbetet används analysverktyg som **Process Worth Matrix**.
 
 ### Överlämning, business case och team
 
@@ -648,7 +650,7 @@ Tentan prövade just skillnaden mot andra syften, som alla låter rimliga men ä
 - att definiera detaljerade KPI:er för framtida styrning
 - att producera dokumentation för revision
 
-Nulägesmodellen är ett analysverktyg, inte en slutprodukt. I Understand identifieras också **rotorsakerna** till problemen, och de fler quick wins som modelleringen brukar avslöja. Rotorsakerna är Understands resultat. Lösningarna kommer i Innovate, i nästa kapitel.
+Nulägesmodellen är ett analysverktyg, inte en slutprodukt. Enligt tentans svarsalternativ hör identifierade rotorsaker inte till Innovate; att de tas fram i analysen av nuläget är en slutsats som kontrolleras mot föreläsning 4. Lösningarna kommer i Innovate, i nästa kapitel.
 `,
   },
   {
@@ -657,42 +659,42 @@ Nulägesmodellen är ett analysverktyg, inte en slutprodukt. I Understand identi
     title: "Från Innovate till Sustainability, och människorna",
     readingMinutes: 8,
     lead: "Faserna från to-be till nyttorealisering, varför Sustainability inte betyder hållbarhet, varför människorna är 60 procent av arbetet, och BPM-mognad.",
-    sources: ["F2 (7FE:s faser och grupper, one size fits all, mognad)", "F3 (Foundations steg 2, Launch steg 1)", "Preliminärt: Innovate–Sustainability, 60 %, appreciative inquiry och essentials ur tenta HT25 ord 1(a), 2(h), HT24 fråga 26, 32, 33, 43, 47 — skrivs om efter F4 (5 okt)"],
+    sources: ["F2 (7FE:s faser och grupper, one size fits all, mognad)", "F3 (Foundations steg 2, Launch steg 1)", "Preliminärt: Innovate–Sustainability, 60 %, appreciative inquiry och essentials ur tenta HT25 ord 1(a), 2(h), HT24 fråga 26, 32, 33, 43, 47 (HT24 saknar facit) — skrivs om efter F4 (5 okt)"],
     body: `
 Faserna efter Understand gås igenom på föreläsning 4. Det här kapitlet innehåller det tentorna redan visat och skrivs om efter den.
 
 ## Innovate
 
-**Innovate** är den andra fasen i Findings & solutions. Dess typiska output är **design av framtida processer ("to-be") och validerade lösningsförslag**. Distraktorerna på tentan var utdata från andra faser: rotorsaker hör till Understand och utbildningsplaner till People. Innovate är **inte** bundet till små steg. En äldre tentafråga påstod att fasen prioriterar inkrementella förbättringar framför radikala för att undvika störningar, och det var falskt.
+**Innovate** är den andra fasen i Findings & solutions. Dess typiska output är **design av framtida processer ("to-be") och validerade lösningsförslag**. Enligt tentans svarsalternativ hör varken identifierade rotorsaker, en riskanalys eller utbildningsplaner till Innovates output. Var de hör hemma kontrolleras mot föreläsning 4. En äldre tentafråga (HT24) påstod att fasen prioriterar inkrementella förbättringar framför radikala för att undvika störningar. Den tolkas här som falsk, men HT24 saknar facit.
 
 ## Fulfilment: People, Develop, Implement
 
-Gruppen Fulfilment förverkligar lösningarna. **People** gäller människorna i de nya processerna, till exempel roller och utbildning. **Develop** bygger komponenterna som krävs för att införa de nya processerna. **Implement** inför dem i verksamheten.
+Gruppen Fulfilment består av **People**, **Develop** och **Implement**. Vad faserna innehåller gås igenom på föreläsning 4. Enligt ett svarsalternativ i HT24 är det att "bygga alla komponenter för att införa de nya processerna" en annan fas än Realize, troligen Develop, men HT24 saknar facit.
 
 ## Future: Realize och Sustainability
 
 **Realize** säkerställer att **nyttan som beskrevs i business case faktiskt realiseras**. Här sluter sig cirkeln från Launch, där business case skrevs.
 
-**Sustainability** betyder att styrningen och den ständiga förbättringen fortsätter efter projektet, så att förbättringarna lever kvar. En äldre tentafråga påstod att Sustainability bara handlar om att införa och kommunicera förbättringarna, utan vidare fokus på styrning, och det var falskt. Observera ordet: **Sustainability i 7FE betyder uthållig konkurrensfördel, inte hållbarhet i miljömening.** Weaver påpekar det uttryckligen. Green BPM i kapitel 9 är något annat.
+**Sustainability** betyder att styrningen och den ständiga förbättringen fortsätter efter projektet, så att förbättringarna lever kvar. En äldre tentafråga (HT24) påstod att Sustainability bara handlar om att införa och kommunicera förbättringarna, utan vidare fokus på styrning. Den tolkas här som falsk, men HT24 saknar facit. Observera ordet: **Sustainability i 7FE betyder uthållig konkurrensfördel, inte hållbarhet i miljömening.** Weaver påpekar det uttryckligen. Green BPM i kapitel 9 är något annat.
 
 ## Människorna: ungefär 60 procent av arbetet
 
-Jeston framhåller att **cirka 60 procent av arbetet i ett BPM-initiativ handlar om kommunikation och mänskliga aspekter** snarare än teknik eller modellering. Det var HT25-tentans andra essäfråga. Kursmaterialet ger flera skäl till varför det är så:
+Jeston framhåller att **cirka 60 procent av arbetet i ett BPM-initiativ handlar om kommunikation och mänskliga aspekter** snarare än teknik eller modellering. Det var essäfråga 1(a) på ordinarie tentan HT25. Kursmaterialet ger flera skäl till varför det är så:
 
 - **Förändringen sker i människor, inte i modeller.** En ny process finns bara om de som ska arbeta i den förstår den, kan den och vill den. Därför är people change management en av 7FE:s tre essentials, och därför ska alla berörda kunna och vilja ta till sig lösningen.
 - **Rädslan finns redan.** Launch-fasens kommunikation ska bemöta rädslan för nedskärningar, outsourcing och automatisering. Obesvarad blir den motstånd.
 - **Historien visar vad som händer annars.** BPR misslyckades bland annat för att det inte tog hänsyn till medarbetarnas acceptans och möttes av starkt motstånd.
-- **Medarbetarna bär kvaliteten.** Medelbra processer med engagerade medarbetare slår bra processer med oengagerade (employee-centric BPM).
-- **Kommunikationen återkommer i varje fas.** Den är sista steget i Foundations och första steget i Enablement och Launch.
+- **Medarbetarna bär kvaliteten.** Medelbra processer med engagerade medarbetare slår ofta bra processer med oengagerade (employee-centric BPM).
+- **Kommunikationen återkommer i faserna.** Den är sista steget i Foundations och första steget i Enablement och Launch.
 
-Riskerna om människorna inte prioriteras följer av samma logik:
+Riskerna om människorna inte prioriteras är en egen sammanfattning för essäsvaret, dragen ur samma logik:
 - motstånd och svag användning av de nya processerna och systemen
 - förbättringar som inte håller när projektet är slut
 - ett tekniskt korrekt projekt som inte ger den nytta business case lovade, och alltså inte klarar Realize
 
 ### Appreciative inquiry
 
-**Appreciative inquiry** är en förändringsansats som **utgår från det som fungerar** och **söker rotorsakerna till framgång**. Den fokuserar alltså inte på vad som är fel, behandlar inte hinder som barriärer och letar inte efter orsakerna till misslyckanden. Tanken är att förändring som bygger på organisationens styrkor möter mindre motstånd.
+**Appreciative inquiry** är en förändringsansats som **utgår från det som fungerar** och **söker rotorsakerna till framgång**. Beskrivningen kommer från svarsalternativen i en HT24-fråga, och HT24 saknar facit. Enligt den tolkningen fokuserar ansatsen inte på vad som är fel och letar inte efter orsakerna till misslyckanden.
 
 ### De tre essentials
 
@@ -702,15 +704,14 @@ Riskerna om människorna inte prioriteras följer av samma logik:
 
 ## BPM-mognad
 
-**BPM-mognad** beskriver hur långt en organisation har kommit i att arbeta processorienterat: om den har vision, mål och processarkitektur på plats, om processerna har ägare och mäts, och om BPM är inbäddat eller sker i spridda insatser. Mognaden bedöms redan i Foundations. **Låg mognad gör BPM svårare** att genomföra.
+**BPM-mognad** beskriver hur långt en organisation har kommit i att arbeta processorienterat. Kursmaterialet ger som exempel att vissa organisationer redan har vision, mål och processarkitektur på plats, medan andra börjar med splittrade insatser. Mognaden bedöms redan i Foundations. **Låg mognad gör BPM svårare** att genomföra.
 
-Mognaden förklarar varför **one size fits all inte fungerar** (omtentans essäfråga). Tre argument från kursen hänger ihop:
+Mognaden förklarar varför **one size fits all inte fungerar** (omtentans essäfråga). Två argument från kursen hänger ihop:
 
 1. **Tempot:** går man fortare än organisationens processmognad ökar risken att misslyckas.
 2. **Startpunkten:** vissa organisationer har redan en stabil grund, andra börjar med splittrade insatser. Ramverket anpassas, och faser kan hoppas över bara med motivering.
-3. **Scenariot:** från Under the radar till Business as usual avgör mognad och ledningens engagemang hur noggrant och brett ramverket används.
 
-Ett konkret exempel: en organisation på Under the radar-nivå som försöker starta ett organisationsövergripande transformationsprogram saknar både styrningen, rollerna och kulturen som programmet förutsätter. En pilot som visar värde och bygger mognad är då rätt nästa steg.
+Organisationer skiljer sig också i kultur, ledarskap och processerfarenhet, och även när ledningen stödjer BPM saknar projekten ofta uthållig uppmärksamhet och resurser. Ett eget exempel för essän: en organisation där BPM hittills skett i små informella insatser, och som försöker starta ett organisationsövergripande transformationsprogram, går fortare än mognaden tillåter.
 `,
   },
   {
@@ -719,7 +720,7 @@ Ett konkret exempel: en organisation på Under the radar-nivå som försöker st
     title: "BPM framåt: AI och hållbarhet",
     readingMinutes: 9,
     lead: "Rosemanns tre drifts, Large Process Models, Green BPM enligt Houy, Reijers överblick över disciplinen och BPMN/DMN som stöd för förklarbarhet.",
-    sources: ["Rosemann et al. (2024) s. 415–425", "Houy et al. (2012) s. 75–92", "Reijers (2021) s. 1–4", "Tenta HT25 ord 2(e), 3(a); omtenta 8, 11", "Kampik et al. (2025), SAP Signavio-bloggen om Large Process Models"],
+    sources: ["Rosemann et al. (2024) s. 415–425", "Houy et al. (2012) s. 75–92", "Reijers (2021) s. 1–5", "Tenta HT25 ord 2(e), 3(a); omtenta 8, 11", "Kampik et al. (2025), SAP Signavio-bloggen om Large Process Models"],
     body: `
 ## Rosemann et al. (2024): tre drifts
 
@@ -764,16 +765,18 @@ Tentans rätta svar var att de flesta BPM-verktyg saknar inbyggt stöd för att 
 ## Reijers (2021): disciplinens utveckling
 
 Reijers ger en överblick över drygt hundra artiklar i en tidskrift. Grundtanken är att **BPM i grunden är en managementidé**: organisationer som styr sina processer från början till slut presterar bättre än de som delar upp arbetet funktionellt. Det som utmärker ett **BPMS** jämfört med ERP är att det konfigureras med en **körbar processmodell** som workflowmotorn tolkar. De förväntade fördelarna var:
-- automatiserad samordning
-- flexibel integration
-- transparens
-- regelefterlevnad
+- mindre arbete genom automatiserad samordning
+- flexibel integration av IT-system
+- transparens och spårbarhet
+- att organisationens policyer och regler blir lättare att upprätthålla
 
 Enligt Reijers har potentialen inte förverkligats. Han skiljer också **design** från **modellering**. BPM betyder inte "Business Process Modeling": designbeslut gäller organisation, teknik och ansvar, modellering gäller hur det representeras. Process mining använder händelsedata för att se hur processer faktiskt körs. RPA beskrivs som botar som härmar människans manuella väg genom applikationerna.
 
 ## BPMN, DMN och förklarbarhet
 
-Regler om automatiserat beslutsfattande kräver att det går att förklara varför ett beslut blev som det blev. **BPMN och DMN stödjer det genom att göra beslutsflöden och beslutsregler visuella och förståeliga.** En handläggare kan då visa en medborgare vilken regel i beslutstabellen som gav utfallet och var i processen beslutet togs. De automatiserar inte förklaringen, översätter inte till naturligt språk och gör inte besluten enklare. Artiklarna tar inte upp DMN, men Rosemanns krav på transparens och ansvarsskyldighet pekar åt samma håll. DMN beskrivs i nästa kapitel.
+Det här avsnittet bygger på tentans svar, inte på en artikel eller föreläsning; det kontrolleras efter föreläsning 5. Tentan frågade hur BPMN och DMN stödjer regulatoriska krav på förklarbarhet vid automatiserat beslutsfattande. Svaret var att de **gör beslutsflöden och beslutsregler visuella och förståeliga**, så att det går att förklara för medborgare varför ett beslut blev som det blev. De automatiserar inte förklaringen, översätter inte till naturligt språk och gör inte besluten enklare.
+
+En egen tolkning: en handläggare kan visa vilken regel i beslutstabellen som gav utfallet och var i processen beslutet togs. Artiklarna tar inte upp DMN. Rosemann nämner transparens och ansvarsskyldighet som delar av processetiken, men kopplar dem inte till förklarbarhet. DMN beskrivs i nästa kapitel.
 `,
   },
   {
@@ -796,15 +799,14 @@ Tentan prövade det med fyra förslag. Rätt svar var ersättningshanteringen f�
 
 ## Aktiviteter och task-typer
 
-En **aktivitet** är en arbetsenhet som tar tid. Den namnges **verb–objekt**: "Review loan application", inte "Loan application review". Typen visar hur arbetet utförs:
+En **aktivitet** är en arbetsenhet som tar tid. Den namnges **verb–objekt**: "Review loan application", inte "Loan application review". Typen visar hur arbetet utförs. Källorna skiljer sig åt: genomgången beskriver bara user och service task, några typer syns i tentans och häftets diagram, och resten finns bara som påståenden i HT24, som saknar facit.
 
-- **User task** (en person): utförs av en människa. Även när en person klickar på en knapp och systemet gör resten räknas det som user task.
-- **Service task** (kugghjul): automatiserad, utan mänsklig interaktion.
-- **Send task** (fyllt kuvert): skickar ett meddelande.
-- **Receive task** (ofyllt kuvert): väntar på ett meddelande.
-- **Manual task** (hand): utförs för hand, utanför systemen.
-- **Script task:** kör ett skript i processmotorn.
-- **Business rule task:** anropar en beslutsregel, till exempel en DMN-beslutstabell.
+- **User task** (en person), ur genomgången: utförs av en människa. Även när en person klickar på en knapp och systemet gör resten räknas det som user task.
+- **Service task** (kugghjul), ur genomgången: automatiserad, utan mänsklig interaktion.
+- **Send task** (fyllt kuvert) och **receive task** (ofyllt kuvert), ur tentans elementfråga och häftets facit: skickar respektive väntar på ett meddelande.
+- **Manual task** (hand), ur tentans diagram: utförs för hand.
+- **Script task**, ur HT24: kör ett skript.
+- **Business rule task**, ur HT24: anropar en beslutsregel, till exempel en DMN-beslutstabell.
 
 Valet av typ beror på aktivitetens natur och hur automatiserad den är. En automatisk e-postavisering är ingen user task, och ett chefsbeslut om en inköpsbegäran är ingen service task.
 
@@ -814,20 +816,20 @@ En **gateway** (romb) delar upp eller slår ihop sekvensflöden (heldragna pilar
 
 - **Exclusive gateway (XOR),** tom romb: exakt en av vägarna (gates) följs. Gatewayen **fattar inget beslut**. Beslutet är redan fattat i aktiviteten före, och gatewayen testar ett datavillkor som är sant eller falskt för varje gate.
 - **Parallel gateway (AND),** plustecken: en **AND-split** startar alla utgående vägar samtidigt, och en **AND-join** väntar tills alla inkommande vägar har kommit fram. AND-gateways etiketteras aldrig.
-- **Inclusive gateway (OR),** ring: **en eller flera** vägar aktiveras beroende på villkoren, men inte nödvändigtvis alla. Silvers exempel är en insättning där olika kontroller görs beroende på belopp och valuta, så att en, två eller alla tre vägarna kan aktiveras.
+- **Inclusive gateway (OR),** ring: **en eller flera** vägar aktiveras beroende på villkoren, men inte nödvändigtvis alla. Silvers exempel är en insättning: en väg för belopp över 10 000 USD, en för utländsk valuta och en tredje, "Log standard deposit", som är **default flow**. Default flow märks med ett litet snedstreck i början av flödet och tas bara när inget annat villkor är sant. 5 000 USD och 15 000 USD ger därför en väg var, och 1 000 000 SEK ger två vägar (stort belopp och utländsk valuta). Alla tre aktiveras aldrig samtidigt.
 - **Event-based gateway,** femhörning i dubbelcirkel: väntar på händelser, och vägen avgörs vid körning (kapitel 11).
 
 ## Pooler, lanes och meddelanden
 
 - **Pool:** en behållare för **en process**. Den etiketteras med processens namn, till exempel "Application screening process". Pooler är valfria. De används för att skilja processer som utbyter meddelanden i samma diagram.
-- **Lane:** visar **vem som utför** aktiviteten. Den etiketteras med en roll eller en organisatorisk enhet, som "Loan officer" eller "Credit department". Silver råder att lägga till pooler och lanes sist. Var en gateway står säger inget om var beslutet fattas.
+- **Lane:** visar **vem som utför** aktiviteten. Den etiketteras med en roll eller en organisatorisk enhet, som "Loan officer" eller "Credit department". Genomgången råder att lägga till pooler och lanes sist. Var en gateway står säger inget om var beslutet fattas.
 - **Black-box pool:** en tom pool utan händelser, aktiviteter och gateways. Den representerar en **extern deltagare**, som en kund eller sökande, eller en intern part utan egna definierade uppgifter i processen.
 - **Message flow:** streckad pil med ring i början. Den visar envägskommunikation **mellan pooler**, aldrig inom samma pool. Den kopplas till en aktivitet, en subprocess, en meddelandehändelse eller en black-box pool, och namnges med ett **substantiv** ("Order", "Invoice").
 - **Sequence flow:** visar ordningen mellan aktiviteter, händelser och gateways inom en process.
 - **Association:** kopplar artefakter som textannoteringar och data till flödesobjekt.
 - **Data store:** information i en applikation, databas eller fil som processen och externa parter kan läsa och skriva. Den kopplas med data associations och är ett alternativ till message flow för att föra över information.
 
-Sequence flow, message flow och association är BPMN:s **connecting objects**.
+Sequence flow, message flow och association kallas i en HT24-fråga för BPMN:s **connecting objects**.
 
 ## Namngivning
 
@@ -842,7 +844,7 @@ Kursens namngivningskonventioner ger diagrammen samma form:
 | Gatewayens utgående flöden | Svaren på frågan, Yes och No när det finns exakt två | Yes / No |
 | Sluthändelse | Processens sluttillstånd | Loan application approved |
 
-Med fler än två utgångar blir svaren gatewayens möjliga utfall, till exempel "Draft approval status?" med Under review, Approved och Rejected. Genomgången skriver ibland "Receive loan application" om starten. Konventionen säger "Received", och det är den formen du bör använda. Övningshäftets facit har också oetiketterade XOR-gatewayer vars gates heter efter villkoren, till exempel "Customer present".
+Med fler än två utgångar blir svaren gatewayens möjliga utfall, till exempel "Draft approval status?" med Under review, Approved och Rejected. Här krockar källorna. Genomgången anger uttryckligen namnkonventionen "Receive [message name]", och övningshäftets facit använder "Receive order". Canvas-konventionen säger "Received [meddelandets namn]", och det är den som gäller för kursen. Övningshäftets facit har också oetiketterade XOR-gatewayer vars gates heter efter villkoren, till exempel "Customer present".
 
 ## Subprocesser
 
@@ -851,11 +853,11 @@ En **subprocess** består själv av aktiviteter. Den ritas **kollapsad**, med et
 1. Det måste ha en **otriggad start** (tom cirkel), eftersom det startas av att sekvensflödet når subprocessen i föräldern.
 2. Om subprocessen följs av en gateway i föräldern ska **antalet sluthändelser i barnet vara lika med antalet gates**. I övningshäftets blombud slutar leveranssubprocessen i "Delivery succeeded" och "Delivery failed", och XOR-gatewayen efter den har exakt de två vägarna.
 
-En **call activity** har **tjock ram**. Den anropar en fristående process som är modellerad separat och kan återanvändas av flera processer, till exempel en verifiering av finansiella uppgifter som både kreditkortsansökan och kontouppgraderingen använder. En **loop marker** (cirkelpil) betyder att aktiviteten upprepas tills ett villkor är uppfyllt. Tre lodräta streck är en parallell **multi-instance**-markör: aktiviteten körs för flera instanser samtidigt.
+En **call activity** har **tjock ram**. Den anropar en fristående process som är modellerad separat och kan återanvändas av flera processer, till exempel en verifiering av finansiella uppgifter som både kreditkortsansökan och kontouppgraderingen använder. En **loop marker** betyder enligt ett HT24-påstående att aktiviteten upprepas tills ett villkor är uppfyllt. Tre lodräta streck, som på element A i omtentans elementfråga, är en parallell **multi-instance**-markör. Dess betydelse förklaras inte i kursmaterialet.
 
 ## DMN i korthet
 
-**DMN** (Decision Model and Notation) beskriver **beslut** på samma sätt som BPMN beskriver processer. Beslutsreglerna läggs i **beslutstabeller**, och sambanden mellan beslut och deras indata visas i ett **DRD** (Decision Requirements Diagram). En processmotors business rules engine kan köra tabellerna. I BPMN-diagrammet kopplas beslutet in med en **business rule task**. Ett beslut kräver inte en XOR-gateway direkt efter sig. En gateway behövs bara om flödet faktiskt ska dela sig på utfallet. Gruppuppgiften använder DMN, men salstentan har hittills bara frågat om hur BPMN och DMN stödjer förklarbarhet (kapitel 9).
+**DMN** (Decision Model and Notation) beskriver **beslut** på samma sätt som BPMN beskriver processer. Beslutsreglerna läggs i **beslutstabeller**, och sambanden mellan beslut och deras indata visas i ett **DRD** (Decision Requirements Diagram). En processmotors business rules engine kan köra tabellerna. I BPMN-diagrammet kopplas beslutet in med en **business rule task**. Ett beslut kräver inte en XOR-gateway direkt efter sig. En gateway behövs bara om flödet faktiskt ska dela sig på utfallet. Gruppuppgiften använder DMN. På salstentan har DMN förekommit i HT24 fråga 23 (om ett beslut kräver en XOR efteråt, och hur DMN kopplas in via business rule task) och i HT25 (hur BPMN och DMN stödjer förklarbarhet, kapitel 9).
 `,
   },
   {
@@ -921,11 +923,14 @@ Tentan frågade vilket av sex element som är en non-interrupting event subproce
 
 ## Terminate, deadlock och OR-join
 
-En **terminate end** (fylld tjock cirkel) avslutar hela processnivån direkt, även parallella vägar som fortfarande pågår. Den används för undantag i ett parallellt block.
+En **terminate end** (tjock cirkel med fylld inre skiva) avslutar hela processnivån direkt, även parallella vägar som fortfarande pågår.
 
-En **deadlock** uppstår när en AND-join väntar på en väg som aldrig kommer, till exempel för att en XOR tidigare skickade flödet åt ett annat håll. Lösningen är en **OR-join**. Den används när det finns minst två parallella inkommande vägar och man inte kan garantera att alla aktiveras. OR-joinen väntar bara på de vägar som faktiskt är på väg.
+En **deadlock** uppstår när en AND-join väntar på en väg som aldrig kommer. Genomgången visar två fall med olika lösningar:
 
-Har en aktivitet **flera inkommande flöden utan gateway** fungerar det som en okontrollerad sammanslagning: aktiviteten startar **en gång för varje token som kommer fram**. Efter en XOR eller event-based gateway kommer bara en token, så aktiviteten körs en gång.
+1. **Ett undantag i ett parallellt block:** en XOR på den ena vägen leder till ett eget slut, till exempel "Documentation collation failed". AND-joinen väntar då förgäves på den vägen. Lösningen är ett **terminate end** där undantaget slutar. Det avslutar hela processen, också den andra parallella vägen.
+2. **Vägar som inte säkert aktiveras:** XOR:ns båda grenar leder in i joinen, den ena direkt och den andra via en extra aktivitet ("Collect missing documents"), så joinen har tre inkommande flöden men bara två får en token. Lösningen är en **OR-join**. Den används när det finns minst två parallella inkommande vägar och man inte kan garantera att alla aktiveras. OR-joinen väntar bara på de vägar som faktiskt är på väg, och processen fortsätter efter joinen.
+
+Har en aktivitet **flera inkommande flöden utan gateway** startar den **en gång för varje token som kommer fram**. Det är standard i BPMN men förklaras inte i genomgången; konstruktionen används i övningshäftets 1.1 ("Invoice customer") och i tentans 3(b). Efter en XOR eller event-based gateway kommer bara en token, så aktiviteten körs en gång.
 
 ## Så kör du ett diagram
 
@@ -998,19 +1003,19 @@ export const chapters = rawChapters.map((chapter) => ({
 
 export const glossary = [
   { term: "Activity-based costing (ABC)", definition: "80- och 90-talsmetod som kopplar kostnader till aktiviteter och resursförbrukning. Dyr att underhålla; principerna lever vidare i dagens analysverktyg.", chapter: "kap4" },
-  { term: "Appreciative inquiry", definition: "Förändringsansats som utgår från det som fungerar och söker rotorsakerna till framgång, inte till fel.", chapter: "kap8" },
+  { term: "Appreciative inquiry", definition: "Förändringsansats som utgår från det som fungerar och söker rotorsakerna till framgång, inte till fel (tolkning av HT24:s svarsalternativ; HT24 saknar facit).", chapter: "kap8" },
   { term: "BOAT", definition: "Business Orchestration and Automation Technologies: dagens plattformar för orkestrering och automatisering, där BPM-systemen ingår.", chapter: "kap2" },
   { term: "Bottom-up", definition: "BPM som startas av processägare eller team för lokala förbättringar. Ger quick wins och engagemang, men riskerar att stanna lokalt.", chapter: "kap3" },
   { term: "BPA (Business Process Automation)", definition: "Processautomation: att automatisera processer eller delar av dem.", chapter: "kap1" },
   { term: "BPM (Business Process Management)", definition: "Enligt Jeston implementering, exekvering och styrning (governance) av processer. En managementdisciplin, inte en mjukvara och inte bara modellering.", chapter: "kap1" },
   { term: "BPM lifecycle", definition: "Det akademiska perspektivets cykel: identifiering, modellering, discovery (as-is), analys, redesign (to-be), implementering och monitoring.", chapter: "kap1" },
-  { term: "BPM-mognad", definition: "Hur långt en organisation kommit i att arbeta processorienterat. Avgör hur fort och brett BPM kan införas.", chapter: "kap8" },
+  { term: "BPM-mognad", definition: "Hur långt en organisation kommit i att arbeta processorienterat. Tempot i BPM-arbetet ska matcha mognaden.", chapter: "kap8" },
   { term: "BPMS", definition: "Business Process Management System: programvara för att modellera, köra och följa upp processer, med en körbar processmodell som workflowmotorn tolkar.", chapter: "kap2" },
   { term: "BPR (Business Process Reengineering)", definition: "Hammers (1990) radikala omdesign av processer med hjälp av IT. För radikalt, dyrt och motståndsdrabbat; BPM:s föregångare.", chapter: "kap2" },
   { term: "Business as usual", definition: "Jestons fjärde scenario: BPM är fullt inbäddat i organisationens sätt att arbeta.", chapter: "kap3" },
   { term: "Business issue-led", definition: "BPM-initiativ som svarar på ett konkret verksamhetsproblem; taktiskt, lokalt och bottom-up.", chapter: "kap3" },
   { term: "Continuous process improvement (CPI)", definition: "Stegvis, ständig förbättring av processer, i motsats till BPR:s radikala omdesign.", chapter: "kap2" },
-  { term: "Customer-centric BPM", definition: "BPM som utgår från kundens verkliga upplevelse: ta bort irritationer, färre hand-offs, en kontaktpunkt.", chapter: "kap4" },
+  { term: "Customer-centric BPM", definition: "BPM som utgår från kundens verkliga upplevelse: att ta bort irritationer ger mer än wow-faktorer; färre hand-offs, en kontaktpunkt.", chapter: "kap4" },
   { term: "Different sameness", definition: "Resultatet av att bara förbättra operational efficiency: små förbättringar utan verklig förändring.", chapter: "kap6" },
   { term: "Driver", definition: "Ett långsiktigt affärsskäl eller motiv som får organisationen att agera för att nå ett mål.", chapter: "kap3" },
   { term: "Employee-centric BPM", definition: "BPM som utgår från motiverade medarbetare, empowerment och servant leadership.", chapter: "kap4" },
@@ -1027,7 +1032,7 @@ export const glossary = [
   { term: "Operational efficiency", definition: "Kvaliteten i de operativa processerna. Höjer produktiviteten men ger sällan varaktig fördel ensam.", chapter: "kap6" },
   { term: "Performance management", definition: "Strukturerad mätning, ansvar och ständig förbättring av nyckelprocesserna med KPI:er.", chapter: "kap6" },
   { term: "Petri-nät", definition: "Carl Adam Petris formella modell (1962) för processflöden och samtidighet; föregångare till den visuella processmodellen.", chapter: "kap2" },
-  { term: "Pilot project", definition: "Jestons andra scenario: avgränsade projekt för att bevisa BPM:s värde.", chapter: "kap3" },
+  { term: "Pilot project", definition: "Jestons andra scenario: avgränsade projekt för att bevisa BPM:s värde; chefen är fullt informerad men bara delvis engagerad.", chapter: "kap3" },
   { term: "Process architecture", definition: "Regler, principer och riktlinjer för hur processer designas och förvaltas, linjerade med EA.", chapter: "kap6" },
   { term: "Process asset", definition: "Centralt arkiv av processmodeller, dokumentation och metadata (regler, IT-system, roller, risker). Processmodellen är en del av den.", chapter: "kap6" },
   { term: "Process governance", definition: "Styrningen av processer: roller för beslutsansvar, affärsrisker och prestationsstyrning.", chapter: "kap6" },
@@ -1049,7 +1054,7 @@ export const glossary = [
   { term: "Target Operating Model (TOM)", definition: "Övergripande bild av hur organisationens delar ska fungera i framtiden. Sju komponenter: strategy, process governance, process architecture, performance management, people and culture, organization design, technology.", chapter: "kap6" },
   { term: "Top-down", definition: "BPM som drivs av ledningen med strategisk linjering, mandat och styrning; för strategiska och tvärfunktionella förändringar.", chapter: "kap3" },
   { term: "Trigger", definition: "En händelse som får organisationen att agera nu, för ett akut problem eller en påtvingad förändring.", chapter: "kap3" },
-  { term: "Under the radar", definition: "Jestons första scenario: små informella BPM-insatser utan ledningens engagemang eller budget.", chapter: "kap3" },
+  { term: "Under the radar", definition: "Jestons första scenario: små informella BPM-insatser med begränsat stöd från ledningen.", chapter: "kap3" },
   { term: "AND-gateway (parallel)", definition: "Plustecken i romb. Split startar alla utgående vägar, join väntar in alla inkommande. Etiketteras aldrig.", chapter: "kap10" },
   { term: "Black-box pool", definition: "Tom pool som representerar en extern deltagare, till exempel kunden. Kommunicerar med processen via message flow.", chapter: "kap10" },
   { term: "Boundary event", definition: "Händelse på kanten av en aktivitet, utan inkommande flöden. Interrupting (heldragen) avbryter aktiviteten, non-interrupting (streckad) låter den fortsätta.", chapter: "kap11" },
@@ -1071,9 +1076,10 @@ export const glossary = [
   { term: "Launch", definition: "Fas 3 i 7FE: den formella starten av en BPM-aktivitet med scope, intressenter, processmål, processval, business case och team.", chapter: "kap7" },
   { term: "Message flow", definition: "Streckad pil mellan pooler som visar envägskommunikation; namnges med ett substantiv. Aldrig inom samma pool.", chapter: "kap10" },
   { term: "OR-gateway (inclusive)", definition: "Ring i romb. En eller flera vägar aktiveras efter villkoren; som join väntar den bara på de vägar som faktiskt aktiverats.", chapter: "kap10" },
+  { term: "Default flow", definition: "Utgående flöde från en gateway, märkt med ett snedstreck i början, som tas bara när inget annat villkor är sant (Silvers insättningsexempel: Log standard deposit).", chapter: "kap10" },
   { term: "People change management", definition: "En av 7FE:s essentials: att alla berörda kan och vill ta till sig och bidra till den framtida lösningen.", chapter: "kap8" },
   { term: "Pool", definition: "Behållare för en process, etiketterad med processens namn.", chapter: "kap10" },
-  { term: "Process selection matrix (PSM)", definition: "Launch-fasens verktyg som visar en affärsenhets processer mot scenarier som produkter och kanaler, för att prioritera.", chapter: "kap7" },
+  { term: "Process selection matrix (PSM)", definition: "Launch-fasens verktyg som visar en affärsenhets processer mot scenarier som produkter och kanaler, för att se komplexitet och kopplingar. Prioriteringen görs med verktyg som Process Worth Matrix.", chapter: "kap7" },
   { term: "Processautonomisering", definition: "Rosemann et al.: när processen själv fattar beslut utifrån mål och begränsningar; nästa steg efter automatisering.", chapter: "kap9" },
   { term: "Realize", definition: "Fas 9 i 7FE: säkerställer att nyttan i business case realiseras.", chapter: "kap8" },
   { term: "Sequence flow", definition: "Heldragen pil som visar ordningen mellan aktiviteter, händelser och gateways inom en process.", chapter: "kap10" },
@@ -1081,12 +1087,12 @@ export const glossary = [
   { term: "SMART", definition: "Krav på processmål: specifika, mätbara, uppnåeliga, realistiska och tidsbundna.", chapter: "kap7" },
   { term: "Subprocess", definition: "Aktivitet som själv består av aktiviteter; kollapsad med plustecken och ett barndiagram med otriggad start.", chapter: "kap10" },
   { term: "Sustainability (7FE)", definition: "Fas 10 i 7FE: styrning och ständig förbättring fortsätter så att förbättringarna består. Betyder uthållig konkurrensfördel, inte miljömässig hållbarhet.", chapter: "kap8" },
-  { term: "Terminate end event", definition: "Fylld sluthändelse som avslutar hela processnivån direkt, även parallella vägar.", chapter: "kap11" },
+  { term: "Terminate end event", definition: "Sluthändelse med tjock cirkel och fylld inre skiva som avslutar hela processnivån direkt, även parallella vägar. Löser deadlock när ett undantag i ett parallellt block har ett eget slut.", chapter: "kap11" },
   { term: "Three drifts", definition: "Rosemann et al. (2024): från transaktion till konversation, från automatisering till autonomisering, från förenkling till sofistikering.", chapter: "kap9" },
   { term: "Throwing event", definition: "Händelse där processen skickar en signal direkt och går vidare (fylld ikon).", chapter: "kap11" },
   { term: "Timer event", definition: "Klocka. Som start: återkommande tidpunkt. Som intermediate: vänta en varaktighet eller tills en tidpunkt.", chapter: "kap11" },
   { term: "Token", definition: "Tankemodellen för att köra ett diagram: en markör som vandrar längs sekvensflödena.", chapter: "kap11" },
-  { term: "Understand", definition: "Fas 4 i 7FE: modellering av nuläget för en gemensam, faktabaserad bild av hur processen fungerar i dag, med rotorsaker.", chapter: "kap7" },
+  { term: "Understand", definition: "Fas 4 i 7FE: modellering av nuläget för en gemensam, faktabaserad bild av hur processen fungerar i dag, för att analysera hur den kan förbättras.", chapter: "kap7" },
   { term: "User task", definition: "Aktivitet som utförs av en människa, även om systemet gör resten efter ett klick.", chapter: "kap10" },
   { term: "XOR-gateway (exclusive)", definition: "Tom romb. Exakt en väg följs; gatewayen testar ett datavillkor, beslutet är redan fattat.", chapter: "kap10" },
 ];

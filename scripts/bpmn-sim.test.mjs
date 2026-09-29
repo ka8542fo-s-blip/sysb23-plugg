@@ -150,3 +150,15 @@ test("inga noder överlappar i samma vy (boundary events undantagna)", () => {
     }
   }
 });
+
+test("default flow tas bara när inget villkor är sant (XOR och OR)", () => {
+  const mk = (gw) => ({ nodes: [
+    { id: "s", type: "start", event: "none" }, { id: "g", type: "gateway", gw },
+    t("a"), t("b"), t("d"), { id: "e1", type: "end", event: "none" }, { id: "e2", type: "end", event: "none" }, { id: "e3", type: "end", event: "none" },
+  ], flows: [f("s", "g"), f("g", "a", { cond: "x" }), f("g", "b", { cond: "y" }), f("g", "d", { default: true }),
+    f("a", "e1"), f("b", "e2"), f("d", "e3")] });
+  assert.equal(letters(simulate(mk("xor"), { conditions: { g: "z" } })), "D");
+  assert.equal(letters(simulate(mk("xor"), { conditions: { g: "x" } })), "A");
+  assert.equal(letters(simulate(mk("or"), { conditions: { g: [] } })), "D");
+  assert.equal(letters(simulate(mk("or"), { conditions: { g: ["x", "y"] } })), "AB");
+});

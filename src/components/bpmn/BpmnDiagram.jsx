@@ -299,6 +299,21 @@ function SeqFlow({ from, to, flow, markerId }) {
   return (
     <g>
       <polyline points={pts.map((p) => `${p.x},${p.y}`).join(" ")} fill="none" stroke={INK} strokeWidth={1.3} markerEnd={`url(#${markerId}-seq)`} />
+      {flow.default && (() => {
+        // Default flow: ett kort snedstreck strax efter flödets början.
+        const len = Math.hypot(p1.x - p0.x, p1.y - p0.y) || 1;
+        const ux = (p1.x - p0.x) / len;
+        const uy = (p1.y - p0.y) / len;
+        const qx = p0.x + ux * 11;
+        const qy = p0.y + uy * 11;
+        return (
+          <line
+            x1={qx - uy * 6 - ux * 4} y1={qy + ux * 6 - uy * 4}
+            x2={qx + uy * 6 + ux * 4} y2={qy - ux * 6 + uy * 4}
+            stroke={INK} strokeWidth={1.3}
+          />
+        );
+      })()}
       {text && atCorner && (
         <text x={p1.x + 8} y={p1.y - 6} fontSize={FONT - 1} fill={INK}>{text}</text>
       )}

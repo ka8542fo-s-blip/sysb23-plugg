@@ -6,6 +6,8 @@
 //            topics?: [...], excludeTopics?: [...], kinds?: [...] }
 //   questions: dras balanserat över ämnena (högst två per ämne) och
 //              alternativen blandas; `points` per fråga (standard 5).
+//              Frågor med samma `group` (nära dubbletter) dras aldrig
+//              tillsammans.
 //   bpmnTasks: Kör processen-uppgifter med sina egna poäng och tentans
 //              alternativordning (sista alternativet är ofta "Inget av
 //              övriga"), högst en per diagram.
@@ -44,6 +46,17 @@ export function taskToQuestion(task) {
   };
 }
 
+// Behåller en slumpvis vald fråga per dubblettgrupp.
+function oneGroupMember(questions) {
+  const seen = new Set();
+  return shuffle(questions).filter((q) => {
+    if (!q.group) return true;
+    if (seen.has(q.group)) return false;
+    seen.add(q.group);
+    return true;
+  });
+}
+
 const identityView = (question) => ({
   options: question.options.map((option, originalIndex) => ({ ...option, originalIndex })),
   correct: question.correct,
@@ -54,10 +67,15 @@ export function pickExam(course) {
   const items = [];
   for (const section of config.sections) {
     if (section.from === "questions") {
-      const pool = (course.questions || []).filter(
-        (q) =>
-          (!section.topics || section.topics.includes(q.topic)) &&
-          (!section.excludeTopics || !section.excludeTopics.includes(q.topic)),
+      // Nära dubbletter delar `group`; högst en per grupp i samma prov.
+      const usedGroups = new Set(items.map((item) => item.question.group).filter(Boolean));
+      const pool = oneGroupMember(
+        (course.questions || []).filter(
+          (q) =>
+            (!section.topics || section.topics.includes(q.topic)) &&
+            (!section.excludeTopics || !section.excludeTopics.includes(q.topic)) &&
+            !(q.group && usedGroups.has(q.group)),
+        ),
       );
       for (const question of balancedExamPick(pool, section.count, 2)) {
         items.push({ question, view: shuffleQuestion(question), points: section.points ?? POINTS.correct });

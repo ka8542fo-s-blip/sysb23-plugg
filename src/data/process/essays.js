@@ -28,7 +28,7 @@ export const essays = [
       ] },
       { heading: "Koppling", points: [
         "BPR misslyckades bland annat för att det ignorerade medarbetarnas acceptans och mötte starkt motstånd.",
-        "Kommunikationen återkommer i varje fas: sista steget i Foundations, första i Enablement och Launch.",
+        "Kommunikationen återkommer i faserna: sista steget i Foundations, första i Enablement och Launch.",
       ] },
     ],
     outline: "1) BPM är människor, inte teknik — definitionen. 2) Varför: people change management, rädslan, employee-centric. 3) Exempel där tekniken fungerar men människorna inte följer med. 4) Koppling till BPR:s misslyckande och kommunikationen i faserna; riskerna som slutsats." },
@@ -78,7 +78,7 @@ export const essays = [
         "TOM beskriver hur organisationens delar ska fungera i framtiden, och Enablement bygger styrning, arkitektur och process asset.",
       ] },
       { heading: "Koppling", points: [
-        "Jestons hus: ledningsprocesserna och taket är management effectiveness, de operativa processerna operational efficiency.",
+        "Jestons hus: blå zon (management processes) = management effectiveness, röd zon (operational processes) = operational efficiency, grön zon (Business Transformation Program Management, \"Set for Success\") binder ihop dem.",
         "Sustainability i 7FE håller styrningen igång — konkurrensfördel, inte hållbarhet.",
       ] },
     ],
@@ -90,7 +90,7 @@ export const essays = [
     examPriority: ["essa"],
     checklist: [
       { heading: "Vad det är", points: [
-        "BPM-mognad är hur långt organisationen kommit i att arbeta processorienterat: vision, mål, processarkitektur, ägarskap och mätning.",
+        "BPM-mognad är hur långt organisationen kommit i att arbeta processorienterat; vissa har redan vision, mål och processarkitektur, andra börjar med splittrade insatser.",
         "Organisationer skiljer sig i mognad, kultur, ledarskap och processerfarenhet — därför passar inte ett och samma upplägg.",
       ] },
       { heading: "Varför det spelar roll", points: [
@@ -99,11 +99,11 @@ export const essays = [
         "Faser i 7FE kan hoppas över, men bara med motivering.",
       ] },
       { heading: "Konkret", points: [
-        "En organisation Under the radar som startar ett koncernbrett program saknar styrningen, rollerna och kulturen det kräver.",
-        "Rätt nästa steg är en pilot som visar värde och bygger mognad.",
+        "Eget exempel: en organisation där BPM bara skett i små informella insatser startar ett koncernbrett program — tempot går fortare än mognaden.",
+        "Eget exempel, inte ur källan: en pilot som visar värde passar bättre än att gå fortare än mognaden tillåter.",
       ] },
       { heading: "Koppling", points: [
-        "De fyra scenarierna, från Under the radar till Business as usual, avgör hur noggrant och brett ramverket används.",
+        "De fyra scenarierna: varje scenario påverkar hur noggrant och brett ramverket används.",
         "Top-down eller bottom-up väljs efter aktivitetens typ och ledningens engagemang.",
       ] },
     ],

@@ -189,7 +189,7 @@ export const diagrams = [
   {
     id: "egen-or",
     title: "Inclusive gateway (OR)",
-    source: "Eget diagram efter Silvers insättningsexempel i genomgången (s. 17–20)",
+    source: "Eget diagram efter Silvers insättningsexempel i genomgången (s. 17–20); den tredje vägen är default flow som där",
     views: [{ container: null, width: 820, height: 300 }],
     pools: [],
     nodes: [
@@ -207,7 +207,7 @@ export const diagrams = [
       seq("s", "a"), seq("a", "g"),
       seq("g", "b", { route: "vh", cond: "Över 10 000 USD" }),
       seq("g", "c", { cond: "Utländsk valuta" }),
-      seq("g", "d", { route: "vh", cond: "Alltid" }),
+      seq("g", "d", { route: "vh", default: true }),
       seq("b", "j", { route: "hv" }), seq("c", "j"), seq("d", "j", { route: "hv" }),
       seq("j", "e"), seq("e", "en"),
     ],

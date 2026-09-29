@@ -26,6 +26,8 @@
 //   messages:   [{ name, at }]                vid minut `at`
 //               [{ name, after: nodId, minutes }]  minuter efter att noden avslutats
 //   conditions: { gatewayId: "Yes" | ["a", "b"] | [["a"], ["b"]] }
+//               Ett flöde med `default: true` (default flow) tas bara när
+//               inget villkor på gatewayen är sant.
 //               XOR: en etikett, eller en lista som tas i tur och ordning vid
 //               upprepade besök (loopar). OR: en lista av etiketter.
 //
@@ -275,16 +277,24 @@ export function simulate(diagram, scenario = {}) {
     }
     if (node.gw === "xor") {
       const value = chooseCondition(node);
-      const flow = outs.find((f) => f.cond === value);
+      // Default flow (snedstreck) tas bara när inget villkor är sant.
+      const flow = outs.find((f) => !f.default && f.cond === value) || outs.find((f) => f.default);
       if (!flow) throw new Error(`${node.id}: inget villkor "${value}" (${outs.map((f) => f.cond).join(", ")})`);
-      log(`XOR${node.label ? ` "${node.label}"` : ""}: ${value}`, node.id);
+      log(`XOR${node.label ? ` "${node.label}"` : ""}: ${flow.default ? "inget villkor sant, default flow" : value}`, node.id);
       return moveTo(scope, flow.to, flow);
     }
     if (node.gw === "or") {
       const values = [].concat(chooseCondition(node) || []);
-      const flows = outs.filter((f) => values.includes(f.cond));
+      let flows = outs.filter((f) => !f.default && values.includes(f.cond));
+      // Inget villkor sant: default flow, om det finns.
+      if (!flows.length) flows = outs.filter((f) => f.default);
       if (!flows.length) throw new Error(`${node.id}: inget OR-villkor valt`);
-      log(`OR-split: ${flows.map((f) => f.cond).join(" och ")}`, node.id);
+      log(
+        flows[0].default
+          ? "OR-split: inget villkor sant, default flow"
+          : `OR-split: ${flows.map((f) => f.cond).join(" och ")}`,
+        node.id,
+      );
       for (const f of flows) moveTo(scope, f.to, f);
       return;
     }

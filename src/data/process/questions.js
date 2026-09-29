@@ -3,7 +3,8 @@
 // Designreglerna är Strategis (se strategi/questions.js): fyra jämnlånga
 // alternativ, rimliga distraktorer, distraktorer från andra modeller och
 // faser (Weavers eget mönster), rätt position fördelad, explain per
-// alternativ. Frågorna är scenariobaserade som på HT25-tentan.
+// alternativ. Blandning av begreppsfrågor och scenariofrågor, som på
+// HT25-tentan (7 av 20 BPM-frågor var scenarier).
 //
 // HT25-tentornas egna flervalsfrågor ligger nära ordagrant (source "Tenta
 // HT25 …"). De är inte längdbalanserade — på tentan är rätt svar ofta
@@ -45,10 +46,10 @@ export const questions = [
     correct: 0, source: "F1 (Jestons definition, demystifiering)", reviewed: false },
 
   { id: "bpm-q02", topic: "grunder", difficulty: 2,
-    question: "I vilket steg av BPM lifecycle identifieras gapet mellan hur processen fungerar i dag och målbilden?",
+    question: "I vilket steg av BPM lifecycle analyseras var den befintliga processen brister?",
     options: [
       { text: "Process discovery, där nuläget kartläggs.", explain: "Discovery tar fram as-is-modellen, men analysen av gapet kommer efter." },
-      { text: "Process analysis, där bristerna mot målbilden analyseras.", explain: "Analysen jämför nuläget med vad processen borde åstadkomma." },
+      { text: "Process analysis, där bristerna i nuläget analyseras.", explain: "Analysen tar reda på var och varför den befintliga processen brister." },
       { text: "Process redesign, där den nya processen formas.", explain: "Redesign bygger på analysen och tar fram to-be-processen." },
       { text: "Process monitoring, där processen följs upp löpande.", explain: "Monitoring följer upp den införda processen och startar nästa varv." }
     ],
@@ -90,7 +91,7 @@ export const questions = [
     options: [
       { text: "RPA kunde endast köras via molnlösningar vilket begränsade många applikationer.", explain: "RPA är inte bundet till molnet." },
       { text: "RPA kräver omfattande kodning av experter, vilket är en trång resurs i de flesta organisationer.", explain: "RPA-verktygen är low-code och byggda för att icke-tekniker ska kunna konfigurera botar." },
-      { text: "RPA saknade integrationer till moderna API:er.", explain: "Poängen är att RPA går via gränssnittet i stället för via integrationer — inte att API:er saknades." },
+      { text: "RPA saknade integrationer till moderna API:er.", explain: "Nära rätt svar men fel orsak: begränsningen är inte att API:er saknades, utan att RPA arbetar via användargränssnittet i stället för genom robusta integrationer, och därför går sönder när gränssnitten ändras." },
       { text: "RPA arbetar via UI-interaktioner, inte robusta systemintegrationer, vilket begränsar stabilitet och skalbarhet.", explain: "Roboten härmar användarens klick i UI:t och går sönder när gränssnitten ändras." }
     ],
     correct: 3, source: "Tenta HT25 omtenta 8", reviewed: false },
@@ -180,7 +181,7 @@ export const questions = [
     question: "Vad skiljer en driver från en trigger enligt Jeston?",
     options: [
       { text: "En driver är ett långsiktigt affärsmotiv, en trigger en händelse som kräver handling nu.", explain: "Skillnaden är tidshorisonten: motiv mot akut händelse." },
-      { text: "En driver är en extern faktor, en trigger ett internt initiativ från ledningen.", explain: "Båda kan vara interna eller externa; det är inte skiljelinjen." },
+      { text: "En driver är en extern faktor, en trigger ett internt initiativ från ledningen.", explain: "Skiljelinjen är tidshorisonten, inte var orsaken kommer ifrån; en trigger kan till exempel vara en påtvingad förändring utifrån." },
       { text: "En driver är ett operativt problem, en trigger ett strategiskt mål för organisationen.", explain: "Omvänt snarare: drivers är långsiktiga, triggers konkreta och akuta." },
       { text: "En driver är ett processmått, en trigger en milstolpe som visar att processen har lyckats.", explain: "Varken drivers eller triggers är mått eller milstolpar." }
     ],
@@ -197,7 +198,7 @@ export const questions = [
     correct: 1, source: "F2 (tre sätt att initiera), HT24 fråga 45", reviewed: false },
 
   { id: "bpm-q11", topic: "start", difficulty: 2,
-    question: "En vd vill starta ett organisationsövergripande BPM-program, men resten av ledningsgruppen är ointresserad. Vad säger Jeston?",
+    question: "En avdelningschef vill starta ett organisationsövergripande BPM-program, men vd och ledningsgruppen är ointresserade. Vad säger Jeston?",
     options: [
       { text: "Starta ändå, eftersom framgångsrika resultat senare övertygar ledningen.", explain: "Jeston: utan ledningens stöd spelar de andra faktorerna ingen roll." },
       { text: "Starta med extern konsult som ersätter ledningens stöd tills vidare.", explain: "Konsulter kan hjälpa men ersätter inte ledningens sponsorskap." },
@@ -212,7 +213,7 @@ export const questions = [
     options: [
       { text: "Agentic AI process orchestration", explain: "Agenter behövs när beslut ska fattas; här krävs inget omdöme." },
       { text: "RPA (Robotic Process Automation)", explain: "Regelstyrda, likadana steg i befintliga applikationer." },
-      { text: "Redesign av processen med hjälp av BPM", explain: "Redesign behövs när själva flödet är problemet; här är det repetitivt manuellt arbete." },
+      { text: "Redesign av processen med hjälp av BPM", explain: "Stegen är redan likadana och regelstyrda; det som ska lösas är det repetitiva manuella arbetet." },
       { text: "Outsourcing i kombination med en molnbaserad lösning", explain: "Flyttar arbetet men automatiserar det inte." }
     ],
     correct: 1, source: "Tenta HT25 ord 2(c)", reviewed: false },
@@ -230,7 +231,7 @@ export const questions = [
   { id: "bpm-t10", topic: "perspektiv", difficulty: 2,
     question: "Vilka alternativ räknar Jeston som typiska processoptimeringslösningar som man kan välja mellan?",
     options: [
-      { text: "Process redesign, outsourcing, shared services, RPA och cloud computing.", explain: "Jestons lista över lösningar att välja mellan när processen väl är förstådd." },
+      { text: "Process redesign, outsourcing, shared services, RPA och cloud computing.", explain: "Jestons lista över typiska processoptimeringslösningar att välja mellan." },
       { text: "Leadership, project management och och people change management.", explain: "Det är 7FE:s tre essentials." },
       { text: "Integration-centric BPM, human-centric BPM och customer-centric BPM.", explain: "Det är perspektiv på BPM, inte lösningar." },
       { text: "Activity-based costing (ABC), process modelling och workflow management.", explain: "Det är tekniker och BPMS-komponenter." }
@@ -297,17 +298,17 @@ export const questions = [
     ],
     correct: 3, source: "F2 (7FE = 10P3E)", reviewed: false },
 
-  { id: "bpm-q17", topic: "ramverk", difficulty: 2,
+  { id: "bpm-q17", group: "essentials", topic: "ramverk", difficulty: 2,
     question: "Vilka är de tre essentials i 7FE?",
     options: [
       { text: "Leadership, BPM project management och people change management.", explain: "Förmågor som krävs genom alla faser." },
       { text: "Foundations, Findings & solutions och Fulfilment.", explain: "Det är tre av de fyra F-grupperna av faser." },
       { text: "Strategy, process governance, process architecture och technology.", explain: "Det är komponenter i target operating model." },
-      { text: "Process redesign, outsourcing, shared services och RPA.", explain: "Det är processoptimeringslösningar." }
+      { text: "Customer-centric, employee-centric och balanserad BPM.", explain: "Det är BPM:s perspektiv, inte essentials." }
     ],
     correct: 0, source: "F2, HT24 fråga 38", reviewed: false },
 
-  { id: "bpm-q18", topic: "ramverk", difficulty: 2,
+  { id: "bpm-q18", group: "essentials", topic: "ramverk", difficulty: 2,
     question: "Vilken beskrivning passar essential-förmågan Leadership i 7FE?",
     options: [
       { text: "Att resurser, budget, tidplan, intressenter och leveranser hanteras i hela aktiviteten.", explain: "Det är BPM project management." },
@@ -318,7 +319,7 @@ export const questions = [
     correct: 1, source: "HT24 fråga 32", reviewed: false },
 
   { id: "bpm-q19", topic: "ramverk", difficulty: 2,
-    question: "En organisation har redan vision, mål och en processarkitektur på plats och vill hoppa direkt till Launch. Vad säger Jeston?",
+    question: "En organisation vill hoppa över Foundations och gå direkt till Launch, utan att visa att grunderna redan finns. Vad säger Jeston?",
     options: [
       { text: "Det är inte tillåtet: alla tio faser måste alltid genomföras i ordning.", explain: "Jeston säger att faser kan hoppas över, men inte utan motivering." },
       { text: "Det är alltid rätt, eftersom Foundations bara behövs i små projekt.", explain: "Foundations är kanske den mest kritiska fasen och gäller alla." },
@@ -348,7 +349,7 @@ export const questions = [
     correct: 0, source: "F2 (tio faser)", reviewed: false },
 
   // ── Kapitel 6: Foundations och Enablement ─────────────────────────────
-  { id: "bpm-t12", topic: "foundations", difficulty: 1,
+  { id: "bpm-t12", group: "red-wine", topic: "foundations", difficulty: 1,
     question: "I en \"Red Wine Test\"-workshop beskriver chefer att “kunderna nu får sina ärenden lösta i ett steg”, “medarbetarna är engagerade”, och “vi har mycket bättre tvärfunktionellt samarbete”. Vilket syfte uppfylls här?",
     options: [
       { text: "Att definiera scope för framtida BPM-arbete", explain: "Scope definieras i Launch-workshopparna." },
@@ -361,14 +362,14 @@ export const questions = [
   { id: "bpm-t13", topic: "enablement", difficulty: 2,
     question: "Vad skiljer en \"process asset\" från enbart en processmodell, enligt Jeston?",
     options: [
-      { text: "Processmodellen är separat och beskriver en specifik sekvens av aktiviteter, medan en process asset innehåller regler, ägarskap, risker, IT-stöd och dokumentationskrav", explain: "Modellen är inte separat: process asseten är ett arkiv som rymmer modellerna." },
+      { text: "Processmodellen är separat och beskriver en specifik sekvens av aktiviteter, medan en process asset innehåller regler, ägarskap, risker, IT-stöd och dokumentationskrav", explain: "Innehållsbeskrivningen stämmer, men ordet \"separat\" gör det fel: modellen är inte fristående utan ingår i process asseten." },
       { text: "Processmodellen är ett exempel på explicit kunskap, medan en process asset kan inkludera både explicit och tyst (tacit) kunskap", explain: "Skillnaden gäller innehållet i arkivet, inte kunskapstyp." },
       { text: "Processmodellen används för små förändringar, process assets för större förändringsarbete", explain: "Storleken på förändringen avgör inte." },
       { text: "Processmodellen är en del av en process asset, som dessutom inkluderar roller, policies, regler, risker och övriga styrande element", explain: "Process asseten är arkivet; modellen är en del av den tillsammans med det styrande." }
     ],
     correct: 3, source: "Tenta HT25 ord 2(j)", reviewed: false },
 
-  { id: "bpm-t14", topic: "foundations", difficulty: 1,
+  { id: "bpm-t14", group: "red-wine", topic: "foundations", difficulty: 1,
     question: "Vilket av följande beskriver bäst hur ett Red Wine Test genomförs, enligt Jeston?",
     options: [
       { text: "I en workshop analyserar man företagets strategidokument och gör kopplingar till centrala processer.", explain: "Det är Foundations steg 1, att skaffa strategin." },
@@ -493,24 +494,24 @@ export const questions = [
   { id: "bpm-t18", topic: "fullfoljd", difficulty: 2,
     question: "Vilket av följande är typiska outputs från Innovate-fasen i Jeston's 7FE-ramverk?",
     options: [
-      { text: "Identifierade rotorsaker", explain: "Rotorsaker identifieras i Understand." },
+      { text: "Identifierade rotorsaker", explain: "Enligt tentans svarsalternativ inte Innovates output; kursmaterialet för nulägesanalysen (Understand) gås igenom på F4." },
       { text: "Projektets riskanalys och riskregister", explain: "Hör till projektledningen, inte till Innovate." },
       { text: "Design av framtida processer (“to-be”) och validerade lösningsförslag", explain: "To-be och validerade lösningar är Innovates resultat." },
-      { text: "Utbildningsplaner för berörd personal", explain: "Hör till People-fasen." }
+      { text: "Utbildningsplaner för berörd personal", explain: "Enligt tentans svarsalternativ inte Innovates output; var de hör hemma gås igenom på F4." }
     ],
     correct: 2, source: "Tenta HT25 ord 2(h)", reviewed: false },
 
-  { id: "bpm-q30", topic: "fullfoljd", difficulty: 2,
+  { id: "bpm-q30", group: "realize-sustain", topic: "fullfoljd", difficulty: 2,
     question: "Vad är syftet med Realize-fasen i 7FE?",
     options: [
-      { text: "Att bygga alla de komponenter som krävs för att kunna införa de nya processerna.", explain: "Det är Develop." },
+      { text: "Att bygga alla de komponenter som krävs för att kunna införa de nya processerna.", explain: "HT24:s alternativ för något annat än Realize; enligt tentans ordval troligen Develop (HT24 saknar facit, preliminärt till F4)." },
       { text: "Att säkerställa att nyttan som beskrevs i business case faktiskt realiseras.", explain: "Realize följer upp business case från Launch." },
       { text: "Att föreställa sig det framtida tillståndet i en visionsövning.", explain: "Det är Red Wine Test i Foundations." },
       { text: "Att hålla igång styrning och ständig förbättring efter projektet.", explain: "Det är Sustainability." }
     ],
     correct: 1, source: "HT24 fråga 43", reviewed: false },
 
-  { id: "bpm-q31", topic: "fullfoljd", difficulty: 2,
+  { id: "bpm-q31", group: "realize-sustain", topic: "fullfoljd", difficulty: 2,
     question: "Vad betyder Sustainability i 7FE?",
     options: [
       { text: "Att processerna optimeras för lägre energiförbrukning och utsläpp.", explain: "Det är Green BPM; Weaver påpekar att Sustainability inte betyder hållbarhet." },
@@ -530,7 +531,7 @@ export const questions = [
     ],
     correct: 3, source: "HT24 fråga 33 (preliminärt)", reviewed: false },
 
-  { id: "bpm-q33", topic: "manniskor", difficulty: 2,
+  { id: "bpm-q33", group: "essentials", topic: "manniskor", difficulty: 2,
     question: "Ett BPM-projekt levererar tekniskt korrekta processer, men medarbetarna fortsätter arbeta på det gamla sättet. Vilken essential har troligen försummats?",
     options: [
       { text: "People change management, som ska göra att alla kan och vill ta till sig lösningen.", explain: "Acceptansen är people change managements uppgift, en av de tre essentials." },
@@ -541,12 +542,12 @@ export const questions = [
     correct: 0, source: "F2 (essentials), tenta HT25 ord 1(a)", reviewed: false },
 
   { id: "bpm-q34", topic: "manniskor", difficulty: 2,
-    question: "En organisation på Under the radar-nivå planerar ett organisationsövergripande transformationsprogram. Vad säger Jestons råd om mognad?",
+    question: "En organisation i ett Under the radar-scenario planerar ett organisationsövergripande transformationsprogram. Vad säger Jestons råd om mognad?",
     options: [
       { text: "Att ett stort program är bästa sättet att snabbt höja mognaden.", explain: "Jeston menar tvärtom att för högt tempo ökar risken." },
       { text: "Att gå fortare än mognaden tillåter ökar risken att misslyckas.", explain: "Matcha tempot med processmognaden." },
       { text: "Att mognaden saknar betydelse om ledningen stödjer programmet.", explain: "Även med stöd måste tempot passa mognaden." },
-      { text: "Att mognaden bara påverkar valet av BPM-programvara.", explain: "Mognaden påverkar tempo, bredd och angreppssätt." }
+      { text: "Att mognaden bara påverkar valet av BPM-programvara.", explain: "Jestons råd gäller tempot: det ska passa mognaden." }
     ],
     correct: 1, source: "F2 (Jeston s. 25), F3 (mognad)", reviewed: false },
 
@@ -665,7 +666,7 @@ export const questions = [
   { id: "bpm-q42", topic: "bpmn", difficulty: 2,
     question: "Vilket element anropar en fristående, återanvändbar process som är modellerad separat?",
     options: [
-      { text: "En kollapsad subprocess med plustecken.", explain: "En vanlig subprocess hör till sin förälder." },
+      { text: "En kollapsad subprocess med plustecken.", explain: "Också den länkar till ett eget diagram, men en vanlig subprocess hör till sin förälder och återanvänds inte — det gör call activity." },
       { text: "En call activity med tjock ram runt aktiviteten.", explain: "Tjock ram betyder call activity: en fristående process som kan återanvändas." },
       { text: "En event subprocess med streckad ram och triggad start.", explain: "Den triggas av en händelse inne i processen." },
       { text: "En task med loop marker, som upprepas.", explain: "Loop marker betyder att aktiviteten upprepas." }
@@ -704,14 +705,24 @@ export const questions = [
     correct: 0, source: "Genomgången s. 49, 57–59", reviewed: false },
 
   { id: "bpm-q46", topic: "handelser", difficulty: 2,
-    question: "Två parallella vägar möts, men en XOR på den ena vägen kan leda flödet till ett annat slut. Vilken join undviker deadlock?",
+    question: "Två parallella vägar möts i en AND-join, men en XOR på den ena vägen kan leda flödet till ett eget slut (ett undantag). Hur undviks deadlock?",
     options: [
-      { text: "En OR-join, som bara väntar på de vägar som faktiskt aktiverats.", explain: "OR-joinen väntar bara in de vägar som faktiskt är på väg." },
-      { text: "En AND-join, eftersom vägarna startade parallellt.", explain: "AND-joinen väntar på en väg som kanske aldrig kommer: deadlock." },
-      { text: "En XOR-join, som släpper igenom varje token som kommer.", explain: "Då körs det som följer två gånger när båda vägarna kommer." },
-      { text: "En event-based gateway, som väljer den väg som kommer först.", explain: "Event-based gateway används för att vänta på händelser, inte för join." }
+      { text: "Med ett terminate end där XOR-vägen slutar, som avslutar hela processen.", explain: "Terminate end markerar ett undantag i ett parallellt block och avslutar alla vägar, så joinen väntar inte förgäves." },
+      { text: "Med en AND-join, eftersom vägarna startade parallellt.", explain: "AND-joinen väntar på en väg som aldrig kommer: det är själva deadlocken." },
+      { text: "Med en OR-join, som bara väntar på de vägar som faktiskt aktiverats.", explain: "OR-join hör till fallet där XOR:ns grenar leder in i joinen. Här är det ett undantag, och processen ska inte fortsätta efter joinen." },
+      { text: "Med en event-based gateway, som väljer den väg som kommer först.", explain: "Event-based gateway väntar på händelser; den löser inte en join som väntar förgäves." }
     ],
-    correct: 0, source: "Genomgången s. 35–39", reviewed: false },
+    correct: 0, source: "Genomgången s. 35–36", reviewed: false },
+
+  { id: "bpm-q49", topic: "handelser", difficulty: 3,
+    question: "En AND-split startar två vägar. På den ena leder en XOR antingen direkt till joinen eller via en extra aktivitet till samma join, så joinen har tre inkommande flöden. Vilken join undviker deadlock?",
+    options: [
+      { text: "En AND-join, som väntar tills alla tre inkommande flöden har kommit fram.", explain: "XOR:n skickar bara en token på en av sina två vägar, så det tredje flödet kommer aldrig: deadlock." },
+      { text: "En OR-join, som bara väntar på de vägar som faktiskt har aktiverats.", explain: "Genomgången s. 38: flödena är parallella och alla kan inte garanteras aktiveras, så OR-join är lösningen." },
+      { text: "Ett terminate end efter XOR:n, som avslutar hela processen direkt.", explain: "Terminate hör till undantagsfallet; här ska processen fortsätta efter joinen." },
+      { text: "En event-based gateway, som tar den väg vars token kommer först.", explain: "Event-based gateway väntar på händelser, inte på tokens från flera vägar." }
+    ],
+    correct: 1, source: "Genomgången s. 37–39", reviewed: false },
 
   { id: "bpm-q47", topic: "handelser", difficulty: 2,
     question: "Hur fungerar en event-based gateway?",

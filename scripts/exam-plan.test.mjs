@@ -55,3 +55,17 @@ test("BPM: 10 BPM-frågor à 5 p, en BPMN-fråga à 3 p, tre körfrågor med egn
     for (const it of runs) assert.ok(it.view.correct >= 0 && it.view.correct < it.view.options.length);
   }
 });
+
+test("BPM: frågor i samma dubblettgrupp dras aldrig i samma prov", () => {
+  const groups = new Set(process.questions.map((q) => q.group).filter(Boolean));
+  assert.ok(groups.size >= 3, "grupperna finns");
+  for (let run = 0; run < 200; run++) {
+    const seen = new Set();
+    for (const it of pickExam(process)) {
+      const g = it.question.group;
+      if (!g) continue;
+      assert.ok(!seen.has(g), `gruppen ${g} två gånger`);
+      seen.add(g);
+    }
+  }
+});
