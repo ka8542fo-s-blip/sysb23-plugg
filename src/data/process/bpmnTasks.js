@@ -155,6 +155,137 @@ export const tasks = [
     answer: "ABDE",
     note: "Utan fel slutar subprocessen normalt i Verification Completed, och huvudflödet fortsätter till E. Error boundary aktiveras aldrig.",
   },
+
+  // ── Egna diagram ─────────────────────────────────────────────────────
+  {
+    id: "kp-egen-boundary-1", diagram: "egen-boundary", kind: "aktiviteter", points: 6,
+    source: "Egen uppgift (genomgången s. 49–53)",
+    premises: ["En låneansökan tas emot", "Activity A tar 3 dagar", "Ingen återkallelse kommer"],
+    scenario: { messages: [{ name: "Loan application", at: 0 }], durations: { a: 3 * 1440 } },
+    options: ["Activity A, B", "Activity A, B, D", "Activity A, C", "Activity A, C, D", "Activity A, B, C, D"],
+    answer: "ABD",
+    note: "Timern på kanten är streckad, alltså non-interrupting: efter 2 dagar startar D vid sidan av, och A fortsätter tills den är klar och går vidare till B.",
+  },
+  {
+    id: "kp-egen-boundary-2", diagram: "egen-boundary", kind: "aktiviteter", points: 6,
+    source: "Egen uppgift (genomgången s. 49–53)",
+    premises: ["En låneansökan tas emot", "Activity A tar 3 dagar", "En återkallelse (Cancellation) kommer 1 dag efter att ansökan tagits emot"],
+    scenario: { messages: [{ name: "Loan application", at: 0 }, { name: "Cancellation", at: 1440 }], durations: { a: 3 * 1440 } },
+    options: ["Activity A, B", "Activity A, B, D", "Activity A, C", "Activity A, C, D", "Activity A, B, C, D"],
+    answer: "AC",
+    note: "Återkallelsen fångas av ett heldraget boundary event: A avbryts direkt och undantagsflödet till C tar över. Timern på 2 dagar hinner aldrig gå, eftersom A redan är avbruten.",
+  },
+  {
+    id: "kp-egen-boundary-3", diagram: "egen-boundary", kind: "aktiviteter", points: 6,
+    source: "Egen uppgift (genomgången s. 49–53)",
+    premises: ["En låneansökan tas emot", "Activity A tar 3 dagar", "En återkallelse (Cancellation) kommer 2,5 dagar efter att ansökan tagits emot"],
+    scenario: { messages: [{ name: "Loan application", at: 0 }, { name: "Cancellation", at: 3600 }], durations: { a: 3 * 1440 } },
+    options: ["Activity A, B", "Activity A, B, D", "Activity A, C", "Activity A, C, D", "Activity A, B, C, D"],
+    answer: "ACD",
+    note: "Efter 2 dagar startar D (non-interrupting). Efter 2,5 dagar avbryter återkallelsen A, och C körs. B nås aldrig.",
+  },
+  {
+    id: "kp-egen-or-1", diagram: "egen-or", kind: "aktiviteter", points: 6,
+    source: "Egen uppgift efter Silvers exempel (genomgången s. 17–20)",
+    premises: ["Insättningen är 5 000 USD", "Villkoren på gatewayen: över 10 000 USD, utländsk valuta (inte USD), alltid"],
+    scenario: { conditions: { g: ["Alltid"] } },
+    options: ["Activity A, E", "Activity A, D, E", "Activity A, B, D, E", "Activity A, C, D, E", "Activity A, B, C, D, E"],
+    answer: "ADE",
+    note: "Bara villkoret \"Alltid\" är sant. OR-joinen väntar bara på den väg som faktiskt aktiverades, så E körs direkt efter D.",
+  },
+  {
+    id: "kp-egen-or-2", diagram: "egen-or", kind: "aktiviteter", points: 6,
+    source: "Egen uppgift efter Silvers exempel (genomgången s. 17–20)",
+    premises: ["Insättningen är 15 000 USD"],
+    scenario: { conditions: { g: ["Över 10 000 USD", "Alltid"] } },
+    options: ["Activity A, E", "Activity A, D, E", "Activity A, B, D, E", "Activity A, C, D, E", "Activity A, B, C, D, E"],
+    answer: "ABDE",
+  },
+  {
+    id: "kp-egen-or-3", diagram: "egen-or", kind: "aktiviteter", points: 6,
+    source: "Egen uppgift efter Silvers exempel (genomgången s. 17–20)",
+    premises: ["Insättningen är 1 000 000 SEK (mer än 10 000 USD)"],
+    scenario: { conditions: { g: ["Över 10 000 USD", "Utländsk valuta", "Alltid"] } },
+    options: ["Activity A, E", "Activity A, D, E", "Activity A, B, D, E", "Activity A, C, D, E", "Activity A, B, C, D, E"],
+    answer: "ABCDE",
+  },
+  {
+    id: "kp-egen-terminate-1", diagram: "egen-terminate", kind: "aktiviteter", points: 7,
+    source: "Egen uppgift (genomgången s. 35–36)",
+    premises: ["Processen startar", "Activity B tar 10 minuter", "Villkoret OK? är Nej"],
+    scenario: { durations: { a: 30, b: 10 }, conditions: { gx: "Nej" } },
+    options: ["Activity A, B", "Activity A, B, C", "Activity A, B, D, E", "Activity A, B, C, D, E", "Inget av övriga alternativ"],
+    answer: "AB",
+    note: "Terminate avslutar hela processen direkt, även den parallella vägen som väntar på timern. C hinner aldrig starta, och joinen nås aldrig — utan terminate hade AND-joinen väntat för evigt (deadlock).",
+  },
+  {
+    id: "kp-egen-terminate-2", diagram: "egen-terminate", kind: "tid", points: 5,
+    source: "Egen uppgift (genomgången s. 35–36)",
+    premises: ["Processen startar 2026-03-02 kl. 09.00", "A tar 30 min, B 10 min, C 30 min, D 20 min, E 15 min", "Villkoret OK? är Ja"],
+    scenario: { start: "2026-03-02 09:00", durations: { a: 30, b: 10, c: 30, d: 20, e: 15 }, conditions: { gx: "Ja" } },
+    options: ["2026-03-02 kl. 10:15", "2026-03-02 kl. 10:45", "2026-03-02 kl. 11:15", "2026-03-02 kl. 11:45", "2026-03-02 kl. 12:15", "Inget av övriga alternativ"],
+    answer: "2026-03-02 kl. 11:15",
+    note: "Den övre vägen är klar 10:00, men AND-joinen väntar in den undre: timern räknar en timme från 09:30, C är klar 11:00, och E slutar 11:15.",
+  },
+  {
+    id: "kp-egen-loop", diagram: "egen-loop", kind: "tid", points: 5,
+    source: "Egen uppgift efter övningshäftets 1.1",
+    premises: ["Processen startar 2026-03-02 kl. 09.00", "A tar 30 min, B 10 min, C 20 min, D 15 min", "Godkänd? blir Nej, Nej och sedan Ja"],
+    scenario: { start: "2026-03-02 09:00", durations: { a: 30, b: 10, c: 20, d: 15 }, conditions: { gx: ["Nej", "Nej", "Ja"] } },
+    options: ["2026-03-02 kl. 09:55", "2026-03-02 kl. 10:25", "2026-03-02 kl. 10:40", "2026-03-02 kl. 10:55", "2026-03-02 kl. 11:25", "Inget av övriga alternativ"],
+    answer: "2026-03-02 kl. 10:55",
+    note: "B körs tre gånger och C två: 09:30 A klar, 09:40 B, 10:00 C, 10:10 B, 10:30 C, 10:40 B (godkänd), 10:55 D.",
+  },
+  {
+    id: "kp-egen-es-1", diagram: "egen-es-timer", kind: "aktiviteter", points: 5,
+    source: "Egen uppgift (genomgången s. 66)",
+    premises: ["Processen startar", "Activity A tar 3 dagar"],
+    scenario: { durations: { a: 3 * 1440 } },
+    options: ["Activity A", "Activity A, B", "Activity A, C", "Activity A, B, C", "Inget av övriga alternativ"],
+    answer: "ABC",
+    note: "Efter 2 dagar pågår processen fortfarande, så event subprocessen startar och C körs. Startcirkeln är streckad, så A fortsätter och processen går vidare till B.",
+  },
+  {
+    id: "kp-egen-es-2", diagram: "egen-es-timer", kind: "aktiviteter", points: 5,
+    source: "Egen uppgift (genomgången s. 66)",
+    premises: ["Processen startar", "Activity A tar 1 dag", "Activity B tar 2 timmar"],
+    scenario: { durations: { a: 1440, b: 120 } },
+    options: ["Activity A", "Activity A, B", "Activity A, C", "Activity A, B, C", "Inget av övriga alternativ"],
+    answer: "AB",
+    note: "Processen är klar efter 1 dag och 2 timmar. En event subprocess kan bara starta medan processen den ligger i körs, så timern på 2 dagar hinner aldrig utlösa den.",
+  },
+
+  // ── Övningshäftet ────────────────────────────────────────────────────
+  {
+    id: "kp-hafte-1-1", diagram: "hafte-1-1-leverans", kind: "slut", points: 5,
+    source: "Övningshäftet 1.1 (egen körfråga)",
+    premises: ["Buketten lämnas över", "Notification of failure to deliver kommer 3 timmar efter överlämningen", "Confirmation of delivery kommer 5 timmar efter överlämningen"],
+    scenario: { messages: [{ name: "Notification of failure to deliver", after: "h", minutes: 180 }, { name: "Confirmation of delivery", after: "h", minutes: 300 }] },
+    question: "I vilket sluttillstånd slutar subprocessen, och vad betyder det i föräldradiagrammet?",
+    options: [
+      "Delivery succeeded — XOR:en efter subprocessen går vidare till fakturering",
+      "Delivery failed — XOR:en efter subprocessen går till Arrange alternate delivery time",
+      "Båda — subprocessen slutar i båda sluttillstånden",
+      "Inget — subprocessen väntar på båda meddelandena",
+    ],
+    answer: "Delivery failed",
+    note: "Event-based gateway: meddelandet som kommer först vinner. Björns regel: subprocessens två sluttillstånd motsvarar de två gates som XOR-gatewayen efter den har i föräldern.",
+  },
+  {
+    id: "kp-hafte-1-3", diagram: "hafte-1-3-kritisk", kind: "aktiviteter", points: 7, named: true,
+    source: "Övningshäftet 1.3 (egen körfråga)",
+    premises: ["Uppskattningen blir 48 timmar eller mer", "Feedbacken ledde inte till förbättringar"],
+    scenario: { conditions: { gx: "48 hours or more", gx2: "No enhancements" } },
+    options: [
+      "Estimate time for resolution, Inform customer of estimate",
+      "Estimate time for resolution, Set review reminder, Engage second line support, Notify customer of escalation",
+      "Estimate time for resolution, Set review reminder, Engage second line support, Notify customer of escalation, Notify customer of feedback result",
+      "Estimate time for resolution, Engage second line support, Notify customer of escalation",
+      "Inget av övriga alternativ",
+    ],
+    answer: "Engage second line support, Estimate time for resolution, Notify customer of escalation, Set review reminder",
+    note: "AND-splitten kör båda vägarna, och joinen väntar in dem. Den sista XOR:en går direkt till OR-sammanslagningen, så Notify customer of feedback result körs inte.",
+  },
 ];
 
 // Hjälp för vyn och testet: "Activity A, B, D" → "ABD"; övriga → null.
@@ -166,6 +297,8 @@ export function lettersOf(option) {
 // Simulatorns resultat som svarssträng i uppgiftens form.
 export function answerFromResult(task, result) {
   if (task.kind === "tid") return result.endClock;
+  if (task.kind === "slut") return result.endStates.join(", ");
+  if (task.named) return [...result.started].sort().join(", ");
   return result.started
     .map((label) => /^Activity ([A-Z])$/.exec(label)?.[1])
     .filter(Boolean)
@@ -176,8 +309,11 @@ export function answerFromResult(task, result) {
 // Vilket alternativ som är rätt, härlett ur facit.
 export function correctIndex(task) {
   if (task.kind === "element") return task.options.indexOf(task.answer);
-  const i = task.options.findIndex((opt) =>
-    task.kind === "tid" ? opt === task.answer : lettersOf(opt) === task.answer,
-  );
+  const i = task.options.findIndex((opt) => {
+    if (task.kind === "tid") return opt === task.answer;
+    if (task.kind === "slut") return opt.split(" — ")[0] === task.answer;
+    if (task.named) return opt.split(", ").sort().join(", ") === task.answer;
+    return lettersOf(opt) === task.answer;
+  });
   return i >= 0 ? i : task.options.findIndex((opt) => opt.startsWith("Inget"));
 }

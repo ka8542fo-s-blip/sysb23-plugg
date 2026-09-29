@@ -13,6 +13,10 @@ const KIND_QUESTION = {
   tid: "Vid vilken tidpunkt har processen avslutats?",
 };
 
+// Källan visas utan sidhänvisning (HANDOFF: inga slidehänvisningar i det
+// läsaren ser); hela källan står kvar i datat.
+const shortSource = (task) => task.source.replace(/\s*\(.*\)$/, "");
+
 const titleOf = (task) => (task.kind === "element" ? "Känna igen ett element" : diagramById[task.diagram].title);
 
 export default function ProcessRun({ modelProgress, onSolve, onReset }) {
@@ -52,7 +56,7 @@ export default function ProcessRun({ modelProgress, onSolve, onReset }) {
         <section className="card p-5">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <p className="text-sm text-ink/65">
-              {task.source} · {task.points} poäng, fel ger −1
+              {shortSource(task)} · {task.points} poäng, fel ger −1
               {modelProgress[task.id] && <span className="ml-2 text-correct">✓ Klar</span>}
             </p>
             {modelProgress[task.id] && !confirmReset && (
@@ -165,7 +169,7 @@ export default function ProcessRun({ modelProgress, onSolve, onReset }) {
                     className={`flex w-full items-baseline gap-2 rounded-lg border px-3 py-2 text-left text-sm transition-colors duration-150 ${active ? "border-pine bg-pine/[0.08] text-pine" : "border-transparent hover:border-pine hover:bg-pine/[0.06]"}`}
                   >
                     <span className="tabular w-6 shrink-0 text-ink/65">{i + 1}</span>
-                    <span className="min-w-0 flex-1 truncate">{titleOf(t)} · {t.source.replace(/^Tenta /, "").replace(/^Variant av tenta /, "variant ")}</span>
+                    <span className="min-w-0 flex-1 truncate">{titleOf(t)} · {shortSource(t).replace(/^Tenta /, "").replace(/^Variant av tenta /, "variant ")}</span>
                     {modelProgress[t.id] && <span className="shrink-0 text-correct" title="Klar">✓<span className="sr-only"> Klar</span></span>}
                   </button>
                 </li>

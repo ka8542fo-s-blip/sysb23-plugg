@@ -84,6 +84,7 @@ export function simulate(diagram, scenario = {}) {
   const trace = [];
   const log = (text, nodeId, kind = "info") => trace.push({ time: now, clock: formatClock(startMs, now), text, node: nodeId, kind });
   const started = [];
+  const endStates = [];
   const completed = [];
   const visited = new Set();
   let endTime = null;
@@ -377,7 +378,10 @@ export function simulate(diagram, scenario = {}) {
 
   function runEnd(scope, node) {
     if (node.event === "message") log(`Sluthändelse${node.label ? `: ${node.label}` : ""} — skickar "${node.message}"`, node.id, "end");
-    else if (node.event !== "error" && node.event !== "terminate") log(node.label ? `Sluthändelse: ${node.label}` : "Sluthändelse nås", node.id, "end");
+    // Sluttillstånd räknas bara på översta nivån (subprocessens egna
+    // sluttillstånd syns i föräldern som vilken väg som tas).
+    if (!scope.container) endStates.push(node.label || node.id);
+    if (node.event !== "message" && node.event !== "error" && node.event !== "terminate") log(node.label ? `Sluthändelse: ${node.label}` : "Sluthändelse nås", node.id, "end");
     if (node.event === "terminate") {
       log(`Terminate: ${label(node.id)} avslutar hela nivån`, node.id, "end");
       killScope(scope, "terminate");
@@ -562,6 +566,7 @@ export function simulate(diagram, scenario = {}) {
     started: labelsOf(started),
     completed: labelsOf(completed),
     visited: [...visited],
+    endStates,
     trace,
   };
 }

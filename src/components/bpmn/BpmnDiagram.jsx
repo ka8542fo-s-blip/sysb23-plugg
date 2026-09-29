@@ -195,7 +195,7 @@ export function ActivityShape({ cx, cy, label, taskType, variant = "task", start
         fill={highlight?.fill || "white"} stroke={stroke}
         strokeWidth={thick ? 3.5 : 1.5} strokeDasharray={dashed ? "2 3" : undefined}
       />
-      {Icon && <Icon x={x + 12} y={y + 12} />}
+      {Icon && <Icon x={x + 11} y={y + 11} />}
       {startEvent && (
         <g transform={`translate(${x + 13},${y + 13}) scale(0.58) translate(${-x - 13},${-y - 13})`}>
           <EventShape cx={x + 13} cy={y + 13} kind="start" event={startEvent.event} interrupting={startEvent.interrupting} />
@@ -206,7 +206,10 @@ export function ActivityShape({ cx, cy, label, taskType, variant = "task", start
       )}
       {showLabel && (startEvent
         ? <Label x={cx} y={cy - 1} text={label} size={FONT - 2} max={18} />
-        : <Label x={cx} y={cy + (label && wrap(label).length > 1 ? -2 : 4)} text={label} />)}
+        : (() => {
+            const n = label ? wrap(label).length : 1;
+            return <Label x={cx + (n > 1 ? 4 : 0)} y={cy + 4 - (n - 1) * 6.5 + (n > 1 ? 4 : 0)} text={label} size={n > 2 ? FONT - 2 : FONT - 1} />;
+          })())}
       {collapsed && (
         <g>
           <rect x={cx - 6} y={y + TASK_H - 15} width={12} height={12} fill="white" stroke={INK} strokeWidth={1.1} />
@@ -290,10 +293,16 @@ function SeqFlow({ from, to, flow, markerId }) {
   const p0 = pts[0];
   const p1 = pts[1];
   const horizontalFirst = Math.abs(p1.y - p0.y) < 1;
+  // Villkor på en väg som först går lodrätt: skriv det ovanför den vågräta
+  // biten efter hörnet, där det inte krockar med gatewayens grannar.
+  const atCorner = flow.cond && !horizontalFirst && pts.length === 3;
   return (
     <g>
       <polyline points={pts.map((p) => `${p.x},${p.y}`).join(" ")} fill="none" stroke={INK} strokeWidth={1.3} markerEnd={`url(#${markerId}-seq)`} />
-      {text && (
+      {text && atCorner && (
+        <text x={p1.x + 8} y={p1.y - 6} fontSize={FONT - 1} fill={INK}>{text}</text>
+      )}
+      {text && !atCorner && (
         <text
           x={horizontalFirst ? p0.x + 8 : p0.x - 6}
           y={horizontalFirst ? p0.y - 6 : (p0.y + p1.y) / 2}
@@ -388,7 +397,7 @@ function NodeShape({ node: n, diagram, highlight }) {
     return (
       <g>
         <GatewayShape cx={n.cx} cy={n.cy} gw={n.gw} highlight={highlight} />
-        {n.label && <Label x={n.cx} y={n.cy + GW + 14} text={n.label} max={22} />}
+        {n.label && <Label x={n.cx} y={n.labelAbove ? n.cy - GW - 8 : n.cy + GW + 14} text={n.label} max={22} />}
       </g>
     );
   }
