@@ -7,7 +7,7 @@ import { simulate } from "../src/lib/bpmnSim.js";
 import { diagrams, diagramById } from "../src/data/process/bpmnDiagrams.js";
 import { tasks, answerFromResult, correctIndex } from "../src/data/process/bpmnTasks.js";
 
-for (const task of tasks) {
+for (const task of tasks.filter((t) => t.kind !== "element")) {
   test(`${task.id}: simulatorn ger facit (${task.answer})`, () => {
     const result = simulate(diagramById[task.diagram], task.scenario);
     assert.ok(result.finished, `${task.id}: processen avslutades inte`);
@@ -15,6 +15,13 @@ for (const task of tasks) {
     assert.ok(correctIndex(task) >= 0, `${task.id}: facit finns inte bland alternativen`);
   });
 }
+
+test("elementfrågan: facit finns bland alternativen och motsvarar ett element", () => {
+  for (const task of tasks.filter((t) => t.kind === "element")) {
+    assert.ok(correctIndex(task) >= 0, task.id);
+    assert.ok(task.elements.some((e) => e.letter === task.answer), task.id);
+  }
+});
 
 test("3(c) med interrupting event subprocess ger A, E, F — tentans distraktor", () => {
   const d = structuredClone(diagramById["ht25-3c"]);
@@ -122,6 +129,24 @@ test("varje diagram har giltiga flöden och unika id:n", () => {
     for (const n of d.nodes) {
       if (n.in) assert.ok(ids.has(n.in), `${d.id}: ${n.id} ligger i okänd ${n.in}`);
       if (n.attachedTo) assert.ok(ids.has(n.attachedTo), `${d.id}: ${n.id} sitter på okänd ${n.attachedTo}`);
+    }
+  }
+});
+
+test("inga noder överlappar i samma vy (boundary events undantagna)", () => {
+  const half = (n) => (["task", "subprocess", "eventSubprocess"].includes(n.type) ? [50, 32] : n.type === "gateway" ? [25, 25] : [18, 18]);
+  for (const d of diagrams) {
+    const nodes = d.nodes.filter((n) => n.type !== "boundary");
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const a = nodes[i];
+        const b = nodes[j];
+        if ((a.in || null) !== (b.in || null)) continue;
+        const [aw, ah] = half(a);
+        const [bw, bh] = half(b);
+        const overlap = Math.abs(a.cx - b.cx) < aw + bw && Math.abs(a.cy - b.cy) < ah + bh;
+        assert.ok(!overlap, `${d.id}: ${a.id} och ${b.id} överlappar`);
+      }
     }
   }
 });

@@ -163,4 +163,17 @@ export const diagrams = [
   },
 ];
 
+// Variant av 3(c) där event subprocessens start är heldragen (interrupting).
+// Samma layout; bara det som prövas skiljer.
+{
+  const base = diagrams.find((d) => d.id === "ht25-3c");
+  diagrams.push({
+    ...base,
+    id: "ht25-3c-int",
+    title: "Event subprocess (interrupting)",
+    source: "Variant av tenta HT25 ord 3(c): startcirkeln är heldragen",
+    nodes: base.nodes.map((n) => (n.id === "esS" ? { ...n, interrupting: true } : n)),
+  });
+}
+
 export const diagramById = Object.fromEntries(diagrams.map((d) => [d.id, d]));

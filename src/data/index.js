@@ -82,7 +82,7 @@ export const courses = [
     status: "aktiv",
     // Byggs i faser (2026-09-29): Läs först, sedan Öva, Essä, Kör processen
     // och Prov. Flikarna läggs till när deras innehåll finns.
-    views: ["las", "ova", "essa", "statistik"],
+    views: ["las", "ova", "bpmn", "essa", "statistik"],
     practiceBy: "chapter",
     topics: processTopics,
     questions: processQuestions,

@@ -235,7 +235,8 @@ export function simulate(diagram, scenario = {}) {
     const starts = kids.filter((n) => n.type === "start");
     for (const s of starts) {
       visited.add(s.id);
-      log(`${label(s.id)}`, s.id, "event");
+      const what = scope.container ? `Barndiagrammet "${label(scope.container)}" startar` : "Processen startar";
+      log(s.label ? `${what}: ${s.label}` : what, s.id, "event");
       emit(scope, s.id);
     }
   }
@@ -375,8 +376,8 @@ export function simulate(diagram, scenario = {}) {
   }
 
   function runEnd(scope, node) {
-    if (node.event === "message") log(`${label(node.id)} — skickar "${node.message}"`, node.id, "end");
-    else if (node.event !== "error" && node.event !== "terminate") log(`${label(node.id)}`, node.id, "end");
+    if (node.event === "message") log(`Sluthändelse${node.label ? `: ${node.label}` : ""} — skickar "${node.message}"`, node.id, "end");
+    else if (node.event !== "error" && node.event !== "terminate") log(node.label ? `Sluthändelse: ${node.label}` : "Sluthändelse nås", node.id, "end");
     if (node.event === "terminate") {
       log(`Terminate: ${label(node.id)} avslutar hela nivån`, node.id, "end");
       killScope(scope, "terminate");
