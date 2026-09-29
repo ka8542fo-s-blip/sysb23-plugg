@@ -392,9 +392,11 @@ Kasper godkände. Källorna ligger i
 `03_Readings` artiklarna, `04_Labs-and-Exercises/bpmn-dmn-module`
 genomgången och häftet, `07_Assessments` HT24/HT25-tentorna). Jeston och
 Silver finns inte; Silvers *Method and Style* (2:a uppl., inte kursboken)
-ligger i `SKOLA T1`. **Saknas lokalt:** Kaspers projektdokument
-(LPM-texten "Kampik et al. 2025", "BPMN Element naming conventions",
-"Why LLMs struggle with BPMN", kursöversikten).
+ligger i `SKOLA T1`. Kaspers projektdokument ligger direkt i
+`~/Desktop/Skola/SKOLA T3/`: `lpm-text-kampik-2025.txt` (SAP
+Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
+`bpmn-naming-conventions.txt`, `why-llms-struggle-with-bpmn.txt`,
+`kursoversikt.txt`.
 
 `views: las, ova, bpmn, prov, essa, statistik`.
 
@@ -411,18 +413,27 @@ ligger i `SKOLA T1`. **Saknas lokalt:** Kaspers projektdokument
   essäfrågor), låst i `exam-priority.test.mjs`. **Preliminärt** (märkt i
   `sources`, inget i UI): kap 4 (processoptimeringslösningarna, bara ur
   omtentans fråga 12), kap 7 (Understand), kap 8 (Innovate–Sustainability,
-  60 %, appreciative inquiry — bara ur tentafrågorna), kap 9 (LPM, bara ur
-  omtentans fråga 11), kap 10 (DMN, bara F1/F2 och tentan). Skrivs om
+  60 %, appreciative inquiry — bara ur tentafrågorna), kap 10 (DMN, bara
+  F1/F2 och tentan). Kap 9:s LPM-avsnitt är skrivet mot LPM-texten
+  (2026-09-29). Kap 10:s namngivning följer Canvas-konventionerna
+  (message flow = substantiv, message start = "Received …", aktivitet =
+  verb–objekt, XOR = fråga med "?" och Yes/No, sluthändelse =
+  sluttillstånd); genomgången skriver "Receive loan application", texten
+  säger det och rekommenderar "Received". Egna diagram följer
+  konventionerna; tentans och häftets diagram är ritade som förlagan.
+  Kap 1 har raden att rätt svar var ensamt längst i 14 av 20 HT25-BPM-
+  frågor (omtentans 12 delad förstaplats), räknat ur de ordagranna
+  frågorna. Skrivs om
   efter F4 (5 okt) och F5 (12 okt).
-- **Öva:** 69 frågor i `questions.js`, 5–9 per kapitel. `bpm-t01…t22` =
+- **Öva:** 70 frågor i `questions.js`, 5–9 per kapitel. `bpm-t01…t22` =
   HT25-tentornas flervalsfrågor nära ordagrant (i `LENGTH_FLAGGED` med
   skälet "tentafråga ordagrant", räknas inte i balansmåtten — på tentan
-  var rätt svar längst i ungefär tre fall av fyra). `bpm-q01…q47` egna,
+  var rätt svar längst i ungefär tre fall av fyra). `bpm-q01…q48` egna (q48 = gateway-namngivning),
   HT24-begrepp omskrivna till fyrval (inga frågor med falska fasnamn),
   `bpm-q25` flaggad (rollnamn). Alla `reviewed: false`. Balanstestet
   `fragebank-balans.test.mjs` är tabelldrivet per delkurs: Databaser
   oförändrad, BPM med Strategis gränser (spridning 1,5, unikt längst
-  < 35 %). Mätt: 28 %, kvot 1,08, positioner 18/17/17/17.
+  < 35 %). Mätt: 30 %, kvot 1,08.
 - **Essä:** 6 i `essays.js`: HT25:s fyra med exakt lydelse + två egna
   (top-down/bottom-up, BPR mot BPM). `essa-struktur.test.mjs` täcker båda
   delkurserna.
@@ -463,12 +474,16 @@ ligger i `SKOLA T1`. **Saknas lokalt:** Kaspers projektdokument
   A, E, F (distraktorn).
 - **Artikelstöd:** 2(e) Green BPM stöds delvis av Houy (s. 76, 78, 90),
   omtenta 8 (RPA via UI) av Rosemann s. 421 och Reijers s. 4 men inte
-  kontrasten "inte robust integration", **3(a) (BPMN/DMN och
-  förklarbarhet) har inget stöd i någon artikel.**
+  kontrasten "inte robust integration".
+- **3(a) (BPMN/DMN och förklarbarhet) saknar källstöd** — inget i
+  artiklarna, F1–F3 eller genomgången. Frågan (`bpm-t21`) och kap 9:s
+  avsnitt ligger kvar; **kontrollera efter föreläsning 5 (12 okt).**
 - **HT24:** omtentan har samma frågor utom 23, 27, 50 men **omkastade
   alternativ** — positionssvar gäller bara ordinarien. Avvikande
   bedömningar mot promptens facit: 4 och 38 ska vara ×; 6 = Foundations
-  (inte Evaluation); 36 = bara poolalternativet; 33 sänkt till T; 37 och
+  (inte Evaluation; F3 säger att Foundations säkerställer linjeringen
+  mellan strategi, processledning och processer — ingen Öva-fråga, × står
+  kvar); 36 = bara poolalternativet; 33 sänkt till T; 37 och
   45 höjda till S.
 - **TOM** har sju komponenter; bildens lista har sex, figuren sju
   (process architecture). **Sustainability** i 7FE betyder konkurrensfördel,
@@ -482,7 +497,7 @@ ligger i `SKOLA T1`. **Saknas lokalt:** Kaspers projektdokument
   12:9 respektive rätta surrogatnyckelnoteringen i kapitel 3 och 7.
 - **BPM efter F4 (5 okt) och F5 (12 okt):** skriv om kapitel 4, 7, 8, 10
   och 11; väv in Canvas-quizzarna BPM och BPMN när de kommer (alla
-  tentafrågor finns där enligt Weaver); lägg in LPM-texten när Kasper
-  hittat den. Kasper granskar Öva-frågorna och kapitlen.
+  tentafrågor finns där enligt Weaver); kontrollera 3(a) efter F5. Kasper
+  granskar själv, Kör processen och kapitel 11 först.
 - Fler delkurser (arkitektur, säkerhet) enligt samma mall: data +
   manifestrad, ingen ny kod.

@@ -74,6 +74,8 @@ Med −1 för fel beror det på hur många alternativ det finns. Väntevärdet a
 
 Regeln blir alltså: **svara alltid på BPM-frågorna.** På BPMN-frågorna lönar det sig när poängen är minst lika stor som antalet alternativ. Kan du stryka ett enda alternativ lönar det sig nästan alltid.
 
+På HT25-tentorna var rätt svar det ensamt längsta alternativet i 14 av 20 BPM-frågor. Det är bara ett sätt att välja när du ändå ska gissa, inte en strategi: i sex av frågorna var det fel.
+
 ## Vad BPM är
 
 Jeston (2022) definierar Business Process Management som **implementation, execution och governance av processer**. Definitionen är lika viktig för vad den utesluter som för vad den säger. BPM är inte en mjukvarusvit eller annan teknik. Det är inte heller bara modellering av processer. Leverantörerna marknadsför BPM som programvara, men för Jeston är BPM en managementdisciplin: att förbättra och styra verksamhetens processer så att organisationen når sina mål. Människorna och förändringsledningen är en lika stor del av BPM som processerna själva.
@@ -717,7 +719,7 @@ Ett konkret exempel: en organisation på Under the radar-nivå som försöker st
     title: "BPM framåt: AI och hållbarhet",
     readingMinutes: 9,
     lead: "Rosemanns tre drifts, Large Process Models, Green BPM enligt Houy, Reijers överblick över disciplinen och BPMN/DMN som stöd för förklarbarhet.",
-    sources: ["Rosemann et al. (2024) s. 415–425", "Houy et al. (2012) s. 75–92", "Reijers (2021) s. 1–4", "Tenta HT25 ord 2(e), 3(a); omtenta 8, 11", "LPM: preliminärt, bara ur omtentans fråga 11 — texten (\"Kampik et al. 2025\") saknas lokalt"],
+    sources: ["Rosemann et al. (2024) s. 415–425", "Houy et al. (2012) s. 75–92", "Reijers (2021) s. 1–4", "Tenta HT25 ord 2(e), 3(a); omtenta 8, 11", "Kampik et al. (2025), SAP Signavio-bloggen om Large Process Models"],
     body: `
 ## Rosemann et al. (2024): tre drifts
 
@@ -731,7 +733,20 @@ Den nya generationen **utvidgar** den gamla, den ersätter den inte. Artikeln ly
 
 ## Large Process Models
 
-En **Large Process Model (LPM)** är enligt texten som tentan kallar Kampik et al. (2025) **en samlad, datadriven kunskapsbas som kan ge automatiserade rekommendationer för processförbättring**. Poängen är inte att ta bort processanalytikerna, att sluta dokumentera eller att styra alla processer med agentisk AI. Poängen är att samla kunskapen om processerna så att förbättringsförslag kan tas fram automatiskt.
+Texten som tentan kallar Kampik et al. (2025) är ett blogginlägg från SAP Signavio. Den beskriver steget från **Large Language Models (LLM)** till **Large Process Models (LPM)**.
+
+Utgångspunkten är **foundation models**: modeller som tränats på breda datamängder och sedan kan specialiseras för ett visst område med lite extra träning. En LLM är en sådan modell, tränad på text. Men en generell LLM bygger på stora mängder ofta dåligt kurerad text. Därför är den oförutsägbar och ibland ologisk, och det begränsar hur den kan användas i verksamheter. Frågar du en generell AI "vilket är det största problemet i mina produktionsprocesser?" får du inget bra svar.
+
+En **LPM** är en LLM som finjusterats och kompletterats med processkunskap. Den kombineras med klassiska algoritmiska verktyg och strukturerad data och får tillgång till organisationens egen, ostrukturerade processkunskap, erfarenhet från tusentals processexperter och prestationsdata från tusentals organisationer. Huvudpoängen, som tentan frågade efter, är alltså **en samlad, datadriven kunskapsbas som kan ge automatiserade rekommendationer för processförbättring**. Den ska korta tiden till insikt (time-to-insight) och tiden till förändring (time-to-adapt), och göra processerna mer genomskinliga (process observability).
+
+Texten räknar med fyra förmågor, från kort till lång sikt:
+
+1. **Automatiserad processanalys med kontext:** förslag på automatisering och strukturella förbättringar.
+2. **Insikter ur ostrukturerad information:** processmodeller och analyser genereras direkt ur dokument och data som redan finns i organisationen.
+3. **Automatiserad ständig förbättring med människan i kontroll:** förändringar föreslås och startas, men en människa godkänner (human-in-the-loop).
+4. **Den självkörande organisationen:** en visionär "enterprise general intelligence" som justerar sig själv efter tidigare resultat.
+
+En LPM tar alltså inte bort processanalytikerna, gör inte dokumentationen onödig och styr inte alla processer med agentisk AI. Den är en kunskapsbas som föreslår, och människan beslutar. Läs texten med samma blick som Jeston (kapitel 1): den är en leverantörs vision om sin egen produkt, inte forskning.
 
 ## Houy et al. (2012): Green BPM
 
@@ -816,12 +831,18 @@ Sequence flow, message flow och association är BPMN:s **connecting objects**.
 
 ## Namngivning
 
-Silvers stil ger diagrammen samma form:
-- starthändelser med meddelande heter "Receive [meddelande]"
-- aktiviteter heter verb–objekt
-- meddelanden heter substantiv
-- sluthändelser heter efter sitt sluttillstånd, till exempel "Order completed"
-- XOR-gatewayens gates heter efter villkoren, till exempel "Customer present"
+Kursens namngivningskonventioner ger diagrammen samma form:
+
+| Element | Namn | Exempel |
+|---|---|---|
+| Message flow | Substantiv | Loan application |
+| Message start event | Received [meddelandets namn] | Received loan application |
+| Aktivitet | Verb–objekt | Review loan application |
+| Exclusive gateway (som delar) | En fråga i formen [verb objekt] följd av frågetecken | Draft approved? |
+| Gatewayens utgående flöden | Svaren på frågan, Yes och No när det finns exakt två | Yes / No |
+| Sluthändelse | Processens sluttillstånd | Loan application approved |
+
+Med fler än två utgångar blir svaren gatewayens möjliga utfall, till exempel "Draft approval status?" med Under review, Approved och Rejected. Genomgången skriver ibland "Receive loan application" om starten. Konventionen säger "Received", och det är den formen du bör använda. Övningshäftets facit har också oetiketterade XOR-gatewayer vars gates heter efter villkoren, till exempel "Customer present".
 
 ## Subprocesser
 
@@ -859,7 +880,7 @@ Ikonen inuti visar vilken sorts signal det gäller, som meddelande (kuvert), tim
 
 ### Tre sätt att starta
 
-1. **Extern begäran:** en **message start** med kuvert, "Receive loan application". Processen startar när ett meddelande kommer.
+1. **Extern begäran:** en **message start** med kuvert, "Received loan application". Processen startar när ett meddelande kommer.
 2. **Intern begäran:** en **none start**, alltså tom cirkel. Så startar ett barndiagram, när föräldern når subprocessen.
 3. **Återkommande:** en **timer start**, till exempel "4th Day of the Month". Processen startar vid den tidpunkten.
 
@@ -1046,7 +1067,7 @@ export const glossary = [
   { term: "Handover och takeover", definition: "Planerna för hur BPM-teamet lämnar över och verksamheten tar över det nya arbetssättet.", chapter: "kap7" },
   { term: "Innovate", definition: "Fas 5 i 7FE: design av framtida processer (to-be) och validerade lösningsförslag.", chapter: "kap8" },
   { term: "Lane", definition: "Del av en pool som visar vem som utför aktiviteterna: en roll eller organisatorisk enhet.", chapter: "kap10" },
-  { term: "Large Process Model (LPM)", definition: "En samlad, datadriven kunskapsbas som kan ge automatiserade rekommendationer för processförbättring.", chapter: "kap9" },
+  { term: "Large Process Model (LPM)", definition: "En LLM som finjusterats och kompletterats med processkunskap och prestationsdata: en samlad, datadriven kunskapsbas som kan ge automatiserade rekommendationer för processförbättring (Kampik et al. 2025, SAP Signavio).", chapter: "kap9" },
   { term: "Launch", definition: "Fas 3 i 7FE: den formella starten av en BPM-aktivitet med scope, intressenter, processmål, processval, business case och team.", chapter: "kap7" },
   { term: "Message flow", definition: "Streckad pil mellan pooler som visar envägskommunikation; namnges med ett substantiv. Aldrig inom samma pool.", chapter: "kap10" },
   { term: "OR-gateway (inclusive)", definition: "Ring i romb. En eller flera vägar aktiveras efter villkoren; som join väntar den bara på de vägar som faktiskt aktiverats.", chapter: "kap10" },

@@ -219,8 +219,8 @@ export const tasks = [
   {
     id: "kp-egen-terminate-1", diagram: "egen-terminate", kind: "aktiviteter", points: 7,
     source: "Egen uppgift (genomgången s. 35–36)",
-    premises: ["Processen startar", "Activity B tar 10 minuter", "Villkoret OK? är Nej"],
-    scenario: { durations: { a: 30, b: 10 }, conditions: { gx: "Nej" } },
+    premises: ["Processen startar", "Activity B tar 10 minuter", "Villkoret Data complete? är No"],
+    scenario: { durations: { a: 30, b: 10 }, conditions: { gx: "No" } },
     options: ["Activity A, B", "Activity A, B, C", "Activity A, B, D, E", "Activity A, B, C, D, E", "Inget av övriga alternativ"],
     answer: "AB",
     note: "Terminate avslutar hela processen direkt, även den parallella vägen som väntar på timern. C hinner aldrig starta, och joinen nås aldrig — utan terminate hade AND-joinen väntat för evigt (deadlock).",
@@ -228,8 +228,8 @@ export const tasks = [
   {
     id: "kp-egen-terminate-2", diagram: "egen-terminate", kind: "tid", points: 5,
     source: "Egen uppgift (genomgången s. 35–36)",
-    premises: ["Processen startar 2026-03-02 kl. 09.00", "A tar 30 min, B 10 min, C 30 min, D 20 min, E 15 min", "Villkoret OK? är Ja"],
-    scenario: { start: "2026-03-02 09:00", durations: { a: 30, b: 10, c: 30, d: 20, e: 15 }, conditions: { gx: "Ja" } },
+    premises: ["Processen startar 2026-03-02 kl. 09.00", "A tar 30 min, B 10 min, C 30 min, D 20 min, E 15 min", "Villkoret Data complete? är Yes"],
+    scenario: { start: "2026-03-02 09:00", durations: { a: 30, b: 10, c: 30, d: 20, e: 15 }, conditions: { gx: "Yes" } },
     options: ["2026-03-02 kl. 10:15", "2026-03-02 kl. 10:45", "2026-03-02 kl. 11:15", "2026-03-02 kl. 11:45", "2026-03-02 kl. 12:15", "Inget av övriga alternativ"],
     answer: "2026-03-02 kl. 11:15",
     note: "Den övre vägen är klar 10:00, men AND-joinen väntar in den undre: timern räknar en timme från 09:30, C är klar 11:00, och E slutar 11:15.",
@@ -237,11 +237,11 @@ export const tasks = [
   {
     id: "kp-egen-loop", diagram: "egen-loop", kind: "tid", points: 5,
     source: "Egen uppgift efter övningshäftets 1.1",
-    premises: ["Processen startar 2026-03-02 kl. 09.00", "A tar 30 min, B 10 min, C 20 min, D 15 min", "Godkänd? blir Nej, Nej och sedan Ja"],
-    scenario: { start: "2026-03-02 09:00", durations: { a: 30, b: 10, c: 20, d: 15 }, conditions: { gx: ["Nej", "Nej", "Ja"] } },
+    premises: ["Processen startar 2026-03-02 kl. 09.00", "A tar 30 min, B 10 min, C 20 min, D 15 min", "Quality approved? blir No, No och sedan Yes"],
+    scenario: { start: "2026-03-02 09:00", durations: { a: 30, b: 10, c: 20, d: 15 }, conditions: { gx: ["No", "No", "Yes"] } },
     options: ["2026-03-02 kl. 09:55", "2026-03-02 kl. 10:25", "2026-03-02 kl. 10:40", "2026-03-02 kl. 10:55", "2026-03-02 kl. 11:25", "Inget av övriga alternativ"],
     answer: "2026-03-02 kl. 10:55",
-    note: "B körs tre gånger och C två: 09:30 A klar, 09:40 B, 10:00 C, 10:10 B, 10:30 C, 10:40 B (godkänd), 10:55 D.",
+    note: "B körs tre gånger och C två: 09:30 A klar, 09:40 B, 10:00 C, 10:10 B, 10:30 C, 10:40 B (Yes), 10:55 D.",
   },
   {
     id: "kp-egen-es-1", diagram: "egen-es-timer", kind: "aktiviteter", points: 5,

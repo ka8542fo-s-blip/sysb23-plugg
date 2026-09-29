@@ -646,7 +646,7 @@ export const questions = [
     question: "En modell har poolerna \"Order process\" och \"Customer\" (black-box). Hur ska kundens beställning ritas?",
     options: [
       { text: "Som ett sequence flow från Customer-poolen till startaktiviteten.", explain: "Sequence flow går aldrig mellan pooler." },
-      { text: "Som ett message flow \"Order\" till en message start \"Receive order\".", explain: "Message flow namnges med substantiv, starten \"Receive [meddelande]\"." },
+      { text: "Som ett message flow \"Order\" till en message start \"Received order\".", explain: "Message flow namnges med ett substantiv och message start med \"Received [meddelande]\"." },
       { text: "Som en lane \"Customer\" i orderprocessens pool med egna aktiviteter.", explain: "Kunden är extern och har inga definierade uppgifter; black-box pool." },
       { text: "Som en association från Customer-poolen till en textannotering.", explain: "Association kopplar artefakter, inte meddelanden." }
     ],
@@ -722,4 +722,14 @@ export const questions = [
       { text: "Den väljer väg utifrån en DMN-beslutstabell.", explain: "Beslutstabeller anropas med business rule task." }
     ],
     correct: 0, source: "Genomgången s. 60, HT24 fråga 20", reviewed: false },
+
+  { id: "bpm-q48", topic: "bpmn", difficulty: 1,
+    question: "En exclusive gateway delar flödet i två vägar efter att ett utkast granskats. Hur namnges den enligt kursens konventioner?",
+    options: [
+      { text: "Gatewayen \"Draft approved?\", med Yes och No på de två flödena.", explain: "En fråga i formen verb objekt med frågetecken, och svaren på flödena." },
+      { text: "Gatewayen \"Approve draft\", med Approved och Rejected på flödena.", explain: "Verb–objekt är aktivitetens form; gatewayen fattar inget beslut utan ställer en fråga." },
+      { text: "Gatewayen lämnas utan namn, och flödena heter Draft och No draft.", explain: "Konventionen ger gatewayen en fråga och flödena svaren på den." },
+      { text: "Gatewayen \"Draft approval\", med True och False på flödena.", explain: "Ett substantiv är message flows form, och svaren ska vara Yes och No." }
+    ],
+    correct: 0, source: "BPMN Element naming conventions (Canvas)", reviewed: false },
 ];

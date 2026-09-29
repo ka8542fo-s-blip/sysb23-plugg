@@ -313,7 +313,8 @@ export const topics = [
       "Houys utmaningar: mätbara hållbarhetsnyckeltal saknas, kostnad går oftast före och verktygen måste anpassas.",
       "Reijers: BPM är i grunden en managementidé — processorienterade organisationer presterar bättre.",
       "BPMS enligt Reijers: konfigureras med en körbar processmodell som workflowmotorn tolkar.",
-      "LPM (Large Process Model): en samlad, datadriven kunskapsbas som ger automatiserade förbättringsförslag.",
+      "LPM (Large Process Model): en LLM specialiserad på processkunskap — en samlad, datadriven kunskapsbas som ger automatiserade förbättringsförslag.",
+      "Fyra förmågor hos en LPM: automatiserad analys, insikter ur ostrukturerad information, ständig förbättring med människan i kontroll och den självkörande organisationen.",
     ],
     pitfalls: [
       "Rosemanns drifts ersätter inte första generationens BPM — de utvidgar den.",
@@ -332,6 +333,7 @@ export const topics = [
       "BPMN passar för: processer med definierad start och slut som körs på instanser, med kända aktiviteter.",
       "BPMN passar inte för: kontinuerliga eller ostrukturerade processer, som ledning och ständig förbättring.",
       "Aktivitet: en arbetsenhet som tar tid. Namnges verb–objekt, till exempel \"Review loan application\".",
+      "Namngivning: message flow = substantiv, message start = \"Received [meddelande]\", gateway = fråga med ? och Yes/No, sluthändelse = sluttillstånd.",
       "User task: utförs av en person, även om systemet gör resten efter ett klick.",
       "Service task: automatiserad, utan mänsklig interaktion.",
       "Send och receive task: skickar respektive tar emot ett meddelande. Fyllt kuvert = send, ofyllt = receive.",
