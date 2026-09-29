@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 95 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-09-08.
+- **Test:** `npm test` = 153 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-09-29.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö6, Fö7 och övningshäftet `sysb23-database-exercises.pdf`),
@@ -44,7 +44,8 @@ kapitel: allt UI läser `chapter.number`.
 |---|---|---|
 | strategi | komplett | 11 kapitel (kap `digital` = nr 9 ur Weavers föreläsning 1; kap9/kap10 är nr 10/11), 14 ämnen, 124 termer, 71 frågor (designregler i filens kommentar, mätskript `scripts/check-fragebank.mjs`), 4 essäer, `practiceBy: "chapter"`. Tillägg 2026-09-09 ur Weavers föreläsning 2: kapitel 2 value creation/value capture, kapitel 6 stuck in the middle + omskrivet RBV-avsnitt med VRIO och de tre imitationshindren + nya avsnitt "Dynamiska förmågor" (Teece: sensing/seizing/transforming) och "Sex sätt att nå uthållig konkurrensfördel" + omskrivet Mintzberg-avsnitt med Waters fem termer och Honda/Netflix, kapitel 8 hållbarhetens tidslinje (CSRD) och "Tre termer att hålla isär: CSR, TBL och ESG" (internt/externt är det som prövas). Sju frågor str-q67…73, sju ordlistetermer, essächecklistan för lärande organisation har de tre godtagbara perspektiven |
 | databaser | komplett mot tentan | se nedan |
-| process, arkitektur, sakerhet | kommande | platshållare i manifestet |
+| process | aktiv (2026-09-29) | se "Processorienterad verksamhetsutveckling (BPM)" nedan |
+| arkitektur, sakerhet | kommande | platshållare i manifestet |
 
 **Databaser** (`views: las, sql, modell, ova, statistik`; Prov medvetet borta):
 
@@ -382,11 +383,106 @@ plats med alternativet på den platsen — samma texter, ny ordning. Mätning
 efteråt: unikt längst 19/71 (27 %), längdkvot 1,01, positioner 21/22/15/13,
 största spridning 1,24 (str-q70). Alla inom gränserna.
 
+## Processorienterad verksamhetsutveckling (BPM), byggd 2026-09-29
+
+Underlag: `cc-prompt-bpm-delkurs.md` och `bpm-diagram-i-text.md`
+(gitignorerade, återger tentor och Weavers material) och planen som
+Kasper godkände. Källorna ligger i
+`~/Desktop/Skola/SKOLA T3/course_files_export/` (`02_Lectures` F1–F3,
+`03_Readings` artiklarna, `04_Labs-and-Exercises/bpmn-dmn-module`
+genomgången och häftet, `07_Assessments` HT24/HT25-tentorna). Jeston och
+Silver finns inte; Silvers *Method and Style* (2:a uppl., inte kursboken)
+ligger i `SKOLA T1`. **Saknas lokalt:** Kaspers projektdokument
+(LPM-texten "Kampik et al. 2025", "BPMN Element naming conventions",
+"Why LLMs struggle with BPMN", kursöversikten).
+
+`views: las, ova, bpmn, prov, essa, statistik`.
+
+- **Tentan (HT25, båda tentorna samma form):** 2 essäer à 15 p (aldrig
+  BPMN), 10 BPM-flerval à 5 p (4 alternativ), 4 BPMN-flerval à 3–7 p
+  (4–6 alternativ), −1 fel, 0 blankt, inga hjälpmedel. **Gissningsregeln
+  räknad om:** väntevärdet är positivt bara när poängen ≥ antalet
+  alternativ — BPM-frågorna +0,5; 3(b) +0,4; 7 p/6 alt +0,33; 5 p/6 alt
+  och 3 p/4 alt 0; **3(d) 4 p/6 alt −0,17**. Kapitel 1 och Kör processen
+  (per fråga) säger det.
+- **Läs:** 11 kapitel i `data/process/reading.js` (kap1–kap11 = nr 1–11),
+  15 ämnen i `topics.js`, 92 ordlistetermer. Alla ämnen `karna`; `essa`
+  på automatisera, ramverk, foundations, manniskor (HT25:s fyra
+  essäfrågor), låst i `exam-priority.test.mjs`. **Preliminärt** (märkt i
+  `sources`, inget i UI): kap 4 (processoptimeringslösningarna, bara ur
+  omtentans fråga 12), kap 7 (Understand), kap 8 (Innovate–Sustainability,
+  60 %, appreciative inquiry — bara ur tentafrågorna), kap 9 (LPM, bara ur
+  omtentans fråga 11), kap 10 (DMN, bara F1/F2 och tentan). Skrivs om
+  efter F4 (5 okt) och F5 (12 okt).
+- **Öva:** 69 frågor i `questions.js`, 5–9 per kapitel. `bpm-t01…t22` =
+  HT25-tentornas flervalsfrågor nära ordagrant (i `LENGTH_FLAGGED` med
+  skälet "tentafråga ordagrant", räknas inte i balansmåtten — på tentan
+  var rätt svar längst i ungefär tre fall av fyra). `bpm-q01…q47` egna,
+  HT24-begrepp omskrivna till fyrval (inga frågor med falska fasnamn),
+  `bpm-q25` flaggad (rollnamn). Alla `reviewed: false`. Balanstestet
+  `fragebank-balans.test.mjs` är tabelldrivet per delkurs: Databaser
+  oförändrad, BPM med Strategis gränser (spridning 1,5, unikt längst
+  < 35 %). Mätt: 28 %, kvot 1,08, positioner 18/17/17/17.
+- **Essä:** 6 i `essays.js`: HT25:s fyra med exakt lydelse + två egna
+  (top-down/bottom-up, BPR mot BPM). `essa-struktur.test.mjs` täcker båda
+  delkurserna.
+- **Kör processen** (vy `bpmn`, `views/ProcessRun.jsx`): 25 uppgifter i
+  `bpmnTasks.js` — HT25:s fem körfrågor, elementfrågan (omtenta 13), sju
+  varianter, 11 uppgifter på fem egna diagram (boundary events, OR,
+  terminate, loop, event subprocess med timer) och häftets 1.1 (Bouquet
+  delivery, sluttillstånd) och 1.3 (Handle critical issue). Diagrammen är
+  data i `bpmnDiagrams.js` (noder med `cx/cy`, flöden, pooler, barnvyer)
+  som både ritas (`components/bpmn/BpmnDiagram.jsx`) och körs
+  (`lib/bpmnSim.js`, tokensimulator: throw direkt, catch väntar,
+  event-based gateway, AND/XOR/OR med OR-join via nåbarhet, boundary,
+  error end → error boundary, event subprocess, terminate, okontrollerad
+  merge; tid i minuter på väggklocka). **`bpmn-sim.test.mjs` kräver att
+  simulatorn ger det handskrivna facit för varje uppgift** — alla stämmer
+  — plus konstruktionstester och ett överlappstest för ritningarna.
+  Framsteg i `sysb23:modell:<kp-id>` = "solved". Sidhänvisningar i
+  `source` visas inte i vyn.
+- **Prov:** `course.exam` i manifestet anger sektioner (`lib/examPlan.js`);
+  utan fält gäller Strategis format (11 × 5, oförändrat, låst i
+  `exam-plan.test.mjs`). BPM: 10 BPM-frågor à 5 p (ej ämnena bpmn/
+  handelser), 1 BPMN-begreppsfråga à 3 p, 3 körfrågor med tentans poäng,
+  högst en per diagram → max 65–74 p. `scoreExam` tar `points` per post;
+  sparade prov har `max`, Statistik läser det.
+- **Gjorda avvikelser från prompten (godkända i planen):** Läs committades
+  som en helhet (1a+1b), eftersom ämnen och ordlista pekar på alla kapitel.
+  Kapitel 11:s genomgångar är text, inte renderade diagram (diagrammen
+  finns i Kör processen). Häftets 1.2 har ingen körfråga (linjär med AND
+  och en månadstimer, prövar inget nytt).
+
+### Facit och osäkerheter (BPM)
+
+- **3(c):** tentans ritning motsäger sig själv — den kollapsade markören
+  har streckad startcirkel (non-interrupting), barnvyn heldragen. Sajten
+  ritar båda streckade. Premissen "Message B skickas 10 min efter A"
+  krockar med "throw sker direkt" (genomgången) och tolkas som en
+  fördröjning i scenariot; den gör att interrupting-fallet ger rena
+  A, E, F (distraktorn).
+- **Artikelstöd:** 2(e) Green BPM stöds delvis av Houy (s. 76, 78, 90),
+  omtenta 8 (RPA via UI) av Rosemann s. 421 och Reijers s. 4 men inte
+  kontrasten "inte robust integration", **3(a) (BPMN/DMN och
+  förklarbarhet) har inget stöd i någon artikel.**
+- **HT24:** omtentan har samma frågor utom 23, 27, 50 men **omkastade
+  alternativ** — positionssvar gäller bara ordinarien. Avvikande
+  bedömningar mot promptens facit: 4 och 38 ska vara ×; 6 = Foundations
+  (inte Evaluation); 36 = bara poolalternativet; 33 sänkt till T; 37 och
+  45 höjda till S.
+- **TOM** har sju komponenter; bildens lista har sex, figuren sju
+  (process architecture). **Sustainability** i 7FE betyder konkurrensfördel,
+  inte hållbarhet (Weaver uttryckligen).
+
 ## Nästa steg
 
 - Användarens granskning av det ogranskade (listan ovan), i första hand
   Öva-frågorna dbq-33…62 och påståendeuppgifterna.
 - Björns svar på de två frågorna; därefter stryk R4(B, D)-varianten i
   12:9 respektive rätta surrogatnyckelnoteringen i kapitel 3 och 7.
-- Fler delkurser (process, arkitektur, säkerhet) enligt samma mall: data +
+- **BPM efter F4 (5 okt) och F5 (12 okt):** skriv om kapitel 4, 7, 8, 10
+  och 11; väv in Canvas-quizzarna BPM och BPMN när de kommer (alla
+  tentafrågor finns där enligt Weaver); lägg in LPM-texten när Kasper
+  hittat den. Kasper granskar Öva-frågorna och kapitlen.
+- Fler delkurser (arkitektur, säkerhet) enligt samma mall: data +
   manifestrad, ingen ny kod.
