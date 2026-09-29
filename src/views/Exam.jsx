@@ -1,16 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import QuestionCard from "../components/QuestionCard.jsx";
 import GradeGauge from "../components/GradeGauge.jsx";
-import { shuffleQuestion } from "../lib/shuffle.js";
-import { balancedExamPick } from "../lib/weightedPick.js";
-import {
-  QUESTIONS_PER_EXAM,
-  MAX_EXAM_POINTS,
-  ESSAY_POINTS,
-  POINTS,
-  scoreExam,
-  formatTime,
-} from "../lib/scoring.js";
+import { scoreExam, formatTime } from "../lib/scoring.js";
+import { examConfig, pickExam, maxPoints } from "../lib/examPlan.js";
 
 // Provet lever i App:s state (`session`) så att man kan gå till Begrepp
 // och tillbaka utan att tappa ett påbörjat prov. Timern räknar mot en
@@ -37,12 +29,13 @@ export default function Exam({
     (topicId) => course.topics.find((topic) => topic.id === topicId)?.name,
     [course],
   );
+  const config = examConfig(course);
 
   const secondsLeft =
     deadline === null ? null : Math.max(0, Math.round((deadline - now) / 1000));
 
   function startExam() {
-    const picked = balancedExamPick(course.questions, QUESTIONS_PER_EXAM, 2);
+    const picked = pickExam(course);
     const runId = Date.now();
     setConfirmSubmit(false);
     setNow(Date.now());
@@ -51,9 +44,10 @@ export default function Exam({
       stage: "running",
       index: 0,
       deadline: settings.timerOn ? runId + settings.timerMinutes * 60000 : null,
-      items: picked.map((question) => ({
+      items: picked.map(({ question, view, points }) => ({
         question,
-        view: shuffleQuestion(question),
+        view,
+        points,
         choice: null,
         skipped: false,
       })),
@@ -72,6 +66,7 @@ export default function Exam({
         topic: item.question.topic,
         choice: item.choice,
         correct: item.view.correct,
+        points: item.points,
       }));
       const score = scoreExam(entries);
       const record = {
@@ -152,7 +147,8 @@ export default function Exam({
     function onKeyDown(event) {
       const tag = event.target?.tagName;
       if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
-      if (["1", "2", "3", "4"].includes(event.key)) {
+      const count = session?.items?.[session.index]?.view.options.length ?? 4;
+      if (/^[1-9]$/.test(event.key) && Number(event.key) <= count) {
         event.preventDefault();
         setChoice(Number(event.key) - 1);
       } else if (event.key === "ArrowRight" || event.key === "Enter") {
@@ -165,7 +161,7 @@ export default function Exam({
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [stage, setChoice, goTo]);
+  }, [stage, setChoice, goTo, session]);
 
   if (stage === "intro") {
     if (course.questions.length === 0) {
@@ -182,16 +178,9 @@ export default function Exam({
     return (
       <section className="card max-w-3xl p-5 sm:p-6">
         <h1 className="font-display text-2xl">Prov</h1>
+        <p className="mt-2 max-w-reading text-[15px] leading-relaxed text-ink/80">{config.intro}</p>
         <p className="mt-2 max-w-reading text-[15px] leading-relaxed text-ink/80">
-          HT25-formatet: 11 flervalsfrågor à 5 poäng (−1 för fel) och 3 essäfrågor
-          à 15 poäng. Essäerna är 45 % av poängen.
-        </p>
-        <p className="mt-2 max-w-reading text-[15px] leading-relaxed text-ink/80">
-          Provet är flervalsdelen: elva frågor balanserat dragna över ämnena (högst
-          två per ämne), <span className="font-medium">+{POINTS.correct}</span> för
-          rätt svar, <span className="font-medium">−1</span> för fel och{" "}
-          <span className="font-medium">0</span> för överhoppad. Ingen feedback
-          förrän provet är inlämnat.
+          {config.howto} Ingen feedback förrän provet är inlämnat.
         </p>
 
         <div className="mt-6 space-y-4">
@@ -309,7 +298,7 @@ export default function Exam({
           revealed={false}
           onChoose={setChoice}
           topicName={topicName(item.question.topic)}
-          counter={`Fråga ${index + 1}`}
+          counter={`Fråga ${index + 1} · ${item.points ?? 5} p`}
         >
           <div className="flex flex-wrap items-center gap-3">
             <button
@@ -383,6 +372,7 @@ export default function Exam({
   }
 
   const { record } = session;
+  const recordMax = record.max ?? maxPoints(items);
 
   return (
     <div className="space-y-6">
@@ -390,19 +380,19 @@ export default function Exam({
         <h1 className="font-display text-2xl">Resultat</h1>
         <p className="tabular mt-2 text-[17px]">
           <span className="font-display text-3xl text-pine">{record.points}</span>{" "}
-          av {MAX_EXAM_POINTS} poäng · {record.percent} % · betyg{" "}
+          av {recordMax} poäng · {record.percent} % · betyg{" "}
           <span className="font-medium">{record.grade}</span>
         </p>
         <p className="tabular mt-1 text-[15px] text-ink/65">
-          {record.correct} rätt (+{record.correct * POINTS.correct}), {record.wrong} fel (−
+          {record.correct} rätt (+{record.gained ?? record.correct * 5}), {record.wrong} fel (−
           {record.wrong}), {record.skipped} överhoppade.
         </p>
 
         <div className="mt-6 max-w-3xl">
           <GradeGauge percent={record.percent} grade={record.grade} />
           <p className="mt-2 text-sm leading-relaxed text-ink/65">
-            Betyget här räknas på provets {MAX_EXAM_POINTS} möjliga flervalspoäng.
-            På tentan tillkommer essäerna, {ESSAY_POINTS} av 100 poäng, utanför
+            Betyget här räknas på provets {recordMax} möjliga flervalspoäng.
+            På tentan tillkommer essäerna, {config.essayPoints} av 100 poäng, utanför
             provläget.
           </p>
         </div>
@@ -433,7 +423,7 @@ export default function Exam({
               revealed
               onChoose={() => {}}
               topicName={topicName(item.question.topic)}
-              counter={`Fråga ${i + 1}${item.choice === null ? " · överhoppad" : ""}`}
+              counter={`Fråga ${i + 1} · ${item.points ?? 5} p${item.choice === null ? " · överhoppad" : ""}`}
             />
           ))}
         </div>

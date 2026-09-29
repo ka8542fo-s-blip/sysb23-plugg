@@ -18,6 +18,7 @@ import { intro as strategiIntro } from "./strategi/reading.js";
 import { topics as processTopics } from "./process/topics.js";
 import { questions as processQuestions } from "./process/questions.js";
 import { essays as processEssays } from "./process/essays.js";
+import { tasks as processBpmnTasks } from "./process/bpmnTasks.js";
 import {
   chapters as processChapters,
   glossary as processGlossary,
@@ -82,11 +83,26 @@ export const courses = [
     status: "aktiv",
     // Byggs i faser (2026-09-29): Läs först, sedan Öva, Essä, Kör processen
     // och Prov. Flikarna läggs till när deras innehåll finns.
-    views: ["las", "ova", "bpmn", "essa", "statistik"],
+    views: ["las", "ova", "bpmn", "prov", "essa", "statistik"],
     practiceBy: "chapter",
     topics: processTopics,
     questions: processQuestions,
     essays: processEssays,
+    bpmnTasks: processBpmnTasks,
+    // Provet i HT25-tentans form: 10 BPM-frågor à 5 p, sedan BPMN-delen
+    // som på tentan — en begreppsfråga à 3 p och tre körfrågor ur Kör
+    // processen med tentans poäng (4–7 p). Essäerna (2 à 15 p) ligger utanför.
+    exam: {
+      sections: [
+        { from: "questions", count: 10, points: 5, excludeTopics: ["bpmn", "handelser"] },
+        { from: "questions", count: 1, points: 3, topics: ["bpmn", "handelser"] },
+        { from: "bpmnTasks", count: 2, kinds: ["aktiviteter", "element", "slut"] },
+        { from: "bpmnTasks", count: 1, kinds: ["tid"] },
+      ],
+      essayPoints: 30,
+      intro: "HT25-formatet: två essäer à 15 p, tio BPM-flervalsfrågor à 5 p och fyra BPMN-frågor à 3–7 p. Fel svar ger −1, blankt 0. Essäerna är 30 % av poängen.",
+      howto: "Provet är flervalsdelen: tio BPM-frågor balanserat dragna över ämnena, en BPMN-begreppsfråga à 3 p och tre körfrågor ur Kör processen med tentans poäng och alternativ.",
+    },
     chapters: processChapters,
     glossary: processGlossary,
     readingIntro: processIntro,

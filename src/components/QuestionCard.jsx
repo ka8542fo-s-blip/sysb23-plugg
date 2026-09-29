@@ -1,6 +1,8 @@
 import OptionButton from "./OptionButton.jsx";
 import ExplanationPanel from "./ExplanationPanel.jsx";
 import { Diagram } from "./knowledge/diagrams/index.jsx";
+import { BpmnDiagram, ElementGallery } from "./bpmn/BpmnDiagram.jsx";
+import { diagramById } from "../data/process/bpmnDiagrams.js";
 
 const DIFFICULTY = { 1: "Grund", 2: "Standard", 3: "Klurig" };
 
@@ -40,6 +42,14 @@ export default function QuestionCard({
       {/* Underlag före stammen: ett av sajtens diagram (tentans uppgift 1) eller
           ett förformaterat block — R med beroenden och scheman, eller SQL. */}
       {question.diagram && <Diagram id={question.diagram} />}
+      {/* Provets BPMN-frågor: diagrammet eller elementgalleriet plus förutsättningarna. */}
+      {question.bpmnDiagram && <BpmnDiagram diagram={diagramById[question.bpmnDiagram]} />}
+      {question.elements && <ElementGallery elements={question.elements} />}
+      {question.premises && (
+        <ul className="mb-4 list-disc pl-5 text-[15px] leading-relaxed text-ink/85">
+          {question.premises.map((p) => <li key={p}>{p}</li>)}
+        </ul>
+      )}
       {question.context && (
         <pre className="mb-4 overflow-x-auto rounded-lg border border-line bg-paper px-4 py-3 font-mono text-[13.5px] leading-relaxed text-ink">
           {question.context}

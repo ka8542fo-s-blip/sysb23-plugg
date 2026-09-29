@@ -18,6 +18,7 @@ export const tasks = [
     scenario: { messages: [{ name: "Message A", at: 0 }, { name: "Message B", after: "a", minutes: 2 * 1440 }] },
     options: ["Activity A, B, C, D", "Activity A, B, D", "Activity A", "Inget av övriga alternativ", "Activity A, C, D"],
     answer: "ABD",
+    note: "Message B kommer efter 2 dagar, före timern på 4 dagar, så meddelandevägen vinner vid event-based gatewayen och C körs aldrig. D har två inkommande flöden, men bara en token kommer fram.",
   },
   {
     id: "kp-3c", diagram: "ht25-3c", kind: "aktiviteter", points: 7,
@@ -35,6 +36,7 @@ export const tasks = [
     },
     options: ["Activity A, B, C, D", "Inget av övriga alternativ", "Activity A, B", "Activity A, B, C, D, E, F", "Activity A, E, F", "Activity A"],
     answer: "ABCDEF",
+    note: "Streckad startcirkel betyder non-interrupting: E och F körs vid sidan av, och huvudprocessen fortsätter med B, C (efter 3 timmar) och D. Distraktorn A, E, F är vad en interrupting event subprocess hade gett.",
   },
   {
     id: "kp-3d", diagram: "ht25-3d", kind: "tid", points: 4,
@@ -43,6 +45,7 @@ export const tasks = [
     scenario: { start: "2025-12-04 00:01", durations: { a: 60, b: 60 } },
     options: ["2025-12-05 kl. 00:01", "2025-12-06 kl. 00:01", "2025-12-06 kl. 01:01", "2025-12-06 kl. 03:01", "2025-12-06 kl. 02:01", "Inget av övriga alternativ"],
     answer: "2025-12-06 kl. 02:01",
+    note: "A är klar 12-04 01:01. Timern räknar 48 timmar därifrån, till 12-06 01:01, och B är klar 02:01.",
   },
   {
     id: "kp-om15", diagram: "ht25-om15", kind: "aktiviteter", points: 7,
@@ -51,6 +54,7 @@ export const tasks = [
     scenario: { conditions: { gm: "Yes" } },
     options: ["Activity A, B, C, D", "Activity A, B, D, E", "Activity A, B", "Inget av övriga alternativ", "Activity A, B, C, F", "Activity A, B, C, D, E, F"],
     answer: "ABCF",
+    note: "Yes leder till C och error end. Felet fångas av error boundary på subprocessen, som avbryts, så normalflödet till E används aldrig. Undantagsflödet kör F.",
   },
   {
     id: "kp-om16", diagram: "ht25-om16", kind: "tid", points: 5,
@@ -59,6 +63,7 @@ export const tasks = [
     scenario: { start: "2026-02-02 00:01", durations: { a: 120, b: 120 } },
     options: ["2026-02-03 kl. 14:01", "2026-02-04 kl. 16:01", "2026-02-03 kl. 16:01", "2026-02-03 kl. 18:01", "2026-02-04 kl. 14:01", "Inget av övriga alternativ"],
     answer: "2026-02-03 kl. 16:01",
+    note: "Den manuella A är klar 02:01. 36 timmar därifrån är 02-03 14:01, och B är klar 16:01.",
   },
 
   // ── Elementfrågan ────────────────────────────────────────────────────
@@ -200,6 +205,7 @@ export const tasks = [
     scenario: { conditions: { g: ["Över 10 000 USD", "Alltid"] } },
     options: ["Activity A, E", "Activity A, D, E", "Activity A, B, D, E", "Activity A, C, D, E", "Activity A, B, C, D, E"],
     answer: "ABDE",
+    note: "Två villkor är sanna, över 10 000 USD och Alltid, så B och D körs. OR-joinen väntar in båda innan E.",
   },
   {
     id: "kp-egen-or-3", diagram: "egen-or", kind: "aktiviteter", points: 6,
@@ -208,6 +214,7 @@ export const tasks = [
     scenario: { conditions: { g: ["Över 10 000 USD", "Utländsk valuta", "Alltid"] } },
     options: ["Activity A, E", "Activity A, D, E", "Activity A, B, D, E", "Activity A, C, D, E", "Activity A, B, C, D, E"],
     answer: "ABCDE",
+    note: "Alla tre villkoren är sanna: beloppet är över 10 000 USD, valutan är inte USD, och Alltid gäller alltid. B, C och D körs, och OR-joinen väntar in alla tre.",
   },
   {
     id: "kp-egen-terminate-1", diagram: "egen-terminate", kind: "aktiviteter", points: 7,

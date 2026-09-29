@@ -220,7 +220,7 @@ export default function Stats({
                   })}
                 </span>
                 <span className="tabular text-[15px] text-ink/70">
-                  {exam.points}/{MAX_EXAM_POINTS} p · {exam.percent} % ·{" "}
+                  {exam.points}/{exam.max ?? MAX_EXAM_POINTS} p · {exam.percent} % ·{" "}
                   <span className="font-display text-lg text-pine">{exam.grade}</span>
                 </span>
               </li>

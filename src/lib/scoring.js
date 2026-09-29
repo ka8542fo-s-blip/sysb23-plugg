@@ -1,7 +1,10 @@
-// Poängen följer HT25-tentan (2025-10-14): 11 flervalsfrågor à 5 p, −1 för
-// fel, 0 för överhoppad. Essäerna (3 à 15 p) ligger utanför provläget.
+// Poängen per delkurs står i manifestet (`course.exam`, se lib/examPlan.js).
+// Standard = Strategis HT25-tenta (2025-10-14): 11 flervalsfrågor à 5 p, −1
+// för fel, 0 för överhoppad; essäerna (3 à 15 p) ligger utanför provläget.
+// En post kan ha egen poäng (`points`), som BPM-tentans BPMN-frågor (3–7 p).
 export const POINTS = { correct: 5, wrong: -1, skipped: 0 };
 export const QUESTIONS_PER_EXAM = 11;
+// Kvar för gamla sparade prov utan `max` (alla Strategi, 11 × 5).
 export const MAX_EXAM_POINTS = QUESTIONS_PER_EXAM * POINTS.correct; // 55
 export const ESSAY_POINTS = 45;
 
@@ -25,31 +28,35 @@ export function gradeFor(percent) {
   return grade;
 }
 
-// answers: [{ questionId, choice: number|null, correct: number }]
+// entries: [{ questionId, choice: number|null, correct: number, points? }]
 export function scoreExam(entries) {
   let points = 0;
+  let gained = 0;
   let correct = 0;
   let wrong = 0;
   let skipped = 0;
+  let max = 0;
 
   for (const entry of entries) {
+    const worth = entry.points ?? POINTS.correct;
+    max += worth;
     if (entry.choice === null || entry.choice === undefined) {
       skipped++;
       points += POINTS.skipped;
     } else if (entry.choice === entry.correct) {
       correct++;
-      points += POINTS.correct;
+      points += worth;
+      gained += worth;
     } else {
       wrong++;
       points += POINTS.wrong;
     }
   }
 
-  const max = entries.length * POINTS.correct;
   // Negativ totalpoäng golvas till 0 procent.
   const percent = max === 0 ? 0 : Math.max(0, Math.round((points / max) * 100));
 
-  return { points, max, percent, grade: gradeFor(percent), correct, wrong, skipped };
+  return { points, max, percent, grade: gradeFor(percent), correct, wrong, skipped, gained };
 }
 
 export function accuracy(stat) {
