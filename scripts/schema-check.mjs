@@ -6,7 +6,8 @@
 // Hämtar TimeEdits JSON, jämför delpass från och med idag med sessions i
 // src/data/schedule.js och skriver en markdownrapport när något skiljer.
 // Rapporterar bara — schedule.js ändras aldrig automatiskt, med ett enda
-// undantag: fältet lastChecked stämplas efter varje lyckad kontroll.
+// undantag: fältet lastChecked stämplas när kontrollen lyckats OCH schemat
+// stämmer med TimeEdit.
 // Vid HTTP-fel, tomt svar eller oväntad struktur avbryts körningen innan
 // någon fil rörs.
 import { readFileSync, writeFileSync, appendFileSync } from "node:fs";
@@ -112,7 +113,13 @@ if (process.env.GITHUB_OUTPUT) {
 }
 
 // Stämpla lastChecked — enda automatiska skrivningen i schedule.js, och
-// bara nu, efter att hämtning och parsning bevisligen lyckats.
+// bara när schemat bevisligen stämmer med TimeEdit. Finns skillnader lämnas
+// stämpeln orörd: sajten visar då en varning när den blir för gammal, i
+// stället för att påstå att ett schema som skiljer sig är kontrollerat.
+if (n > 0) {
+  console.log("lastChecked lämnas orörd tills skillnaderna är införda.");
+  process.exit(0);
+}
 const src = readFileSync(SCHEDULE_PATH, "utf8");
 const matches = src.match(/lastChecked: "\d{4}-\d{2}-\d{2}"/g) ?? [];
 if (matches.length !== 1) {

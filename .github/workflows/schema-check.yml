@@ -2,8 +2,13 @@ name: Schemabevakning mot TimeEdit
 
 on:
   schedule:
-    - cron: "0 6 * * 1" # måndagar 06:00 UTC
+    - cron: "0 5 * * *" # varje dag 05:00 UTC (07:00 svensk sommartid)
   workflow_dispatch:
+    inputs:
+      testa_larm:
+        description: "Simulera ett fel för att testa att larm-issuet skapas"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -23,6 +28,12 @@ jobs:
         with:
           node-version: 24
 
+      - name: Simulerat fel (bara vid manuell test av larmet)
+        if: inputs.testa_larm == true
+        run: |
+          echo "Simulerat fel för att testa larmet."
+          exit 1
+
       # Formatändringar hos TimeEdit ska upptäckas som testfel/parsefel,
       # aldrig som tyst skräpdata — därför tester före kontrollen. Bara
       # parserns test: jobbet installerar inga paket, och övriga tester
@@ -36,17 +47,32 @@ jobs:
           TIMEEDIT_URL: ${{ vars.TIMEEDIT_URL }}
         run: node scripts/schema-check.mjs
 
-      - name: Skapa issue vid skillnader
+      # Ett öppet issue per uppsättning skillnader: finns ett redan och
+      # rapporten är densamma händer inget; har den ändrats kommenteras den
+      # nya rapporten. Issuet tilldelas repo-ägaren så att det syns.
+      - name: Skapa eller uppdatera issue vid skillnader
         if: steps.kontroll.outputs.changes == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
+          REPORT: ${{ steps.kontroll.outputs.report }}
+          OWNER: ${{ github.repository_owner }}
         run: |
           gh label create schemabevakning --color BFD4F2 \
             --description "Automatiskt upptäckta schemaändringar i TimeEdit" --force
-          gh issue create \
-            --title "Schemaändringar i TimeEdit ($(date -u +%F))" \
-            --label schemabevakning \
-            --body-file "${{ steps.kontroll.outputs.report }}"
+          open=$(gh issue list --label schemabevakning --state open --json number -q '.[0].number')
+          if [ -z "$open" ]; then
+            gh issue create \
+              --title "Schemaändringar i TimeEdit ($(date -u +%F))" \
+              --label schemabevakning --assignee "$OWNER" \
+              --body-file "$REPORT"
+          else
+            gh issue view "$open" --json body -q .body > previous.md
+            # Jämför utan kontrolldatumet, som ändras varje dag.
+            if ! diff -q <(grep -v '^(kontroll' previous.md) <(grep -v '^(kontroll' "$REPORT") > /dev/null; then
+              gh issue edit "$open" --body-file "$REPORT"
+              gh issue comment "$open" --body-file "$REPORT"
+            fi
+          fi
 
       # Enda automatiska ändringen i schedule.js är lastChecked-stämpeln.
       - name: Committa lastChecked
@@ -71,3 +97,32 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run deploy.yml --ref main
+
+      # Om något steg ovan fallerar (TimeEdit nere, ny länk, nytt format,
+      # testfel) ska det synas: ett issue tilldelat ägaren, ett i taget.
+      - name: Larma om kontrollen misslyckades
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OWNER: ${{ github.repository_owner }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh label create schemabevakning-fel --color D93F0B \
+            --description "Schemabevakningen mot TimeEdit kunde inte köras" --force
+          open=$(gh issue list --label schemabevakning-fel --state open --json number -q '.[0].number')
+          msg="Schemabevakningen misslyckades $(date -u +%F). Schemat på sajten kontrolleras inte mot TimeEdit förrän felet är löst. Logg: $RUN_URL"
+          if [ -z "$open" ]; then
+            gh issue create --title "Schemabevakningen misslyckades" \
+              --label schemabevakning-fel --assignee "$OWNER" --body "$msg"
+          else
+            gh issue comment "$open" --body "$msg"
+          fi
+
+      - name: Stäng felissue när kontrollen fungerar igen
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for n in $(gh issue list --label schemabevakning-fel --state open --json number -q '.[].number'); do
+            gh issue close "$n" --comment "Kontrollen fungerar igen $(date -u +%F)."
+          done

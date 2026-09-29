@@ -307,11 +307,29 @@ kräver surrogatnycklar och inte namn — kapitel 9 följer tentan.
 
 ## Schemabevakning (GitHub Actions)
 
-`.github/workflows/schema-check.yml` måndagar 06:00 UTC + manuellt: hämtar
-`TIMEEDIT_URL`, normaliserar via `scripts/timeedit-parse.mjs` (fixtur i
-`scripts/fixtures/`), jämför med `schedule.sessions`, öppnar issue
-`schemabevakning` vid skillnad. Ändrar aldrig schemadata; enda skrivningen
-är `lastChecked`, och deploy triggas uttryckligen efter den pushen.
+`.github/workflows/schema-check.yml` **varje dag 05:00 UTC** + manuellt:
+hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
+`scripts/timeedit-parse.mjs` och jämför kommande pass med
+`schedule.sessions`.
+- **Skillnader:** ett öppet issue `schemabevakning`, tilldelat ägaren.
+  Samma rapport igen ger ingen ny notis; ändrad rapport kommenteras.
+- **Kontrollen misslyckas** (TimeEdit nere, ny länk/format, testfel): ett
+  issue `schemabevakning-fel`, tilldelat ägaren, som stängs automatiskt när
+  en körning lyckas. Manuell körning med `testa_larm` simulerar ett fel.
+- **`lastChecked` stämplas bara när schemat stämmer** med TimeEdit (inte
+  vid skillnader). Sajten (`components/schedule/ScheduleTrust.jsx`, i
+  Schema och på Hem) visar en röd varning när stämpeln är äldre än två
+  dagar — alltså om bevakningen slutat fungera eller skillnader ligger
+  oinförda. Daglig stämpel = daglig commit + deploy, vilket också håller
+  repot aktivt (GitHub pausar schemalagda körningar efter 60 dagar utan
+  aktivitet).
+- **Handskrivna delar** (veckoöversikt, tentalista, delkursernas datum)
+  låses av `scripts/schedule-consistency.test.mjs`; deploy kör `npm test`,
+  så ett schema som inte hänger ihop publiceras inte. Veckoöversikten
+  räknar pass som startar i veckan, utan omtentor.
+- Bevakningen körde 2026-09-14–28 aldrig jämförelsen (teststeget körde alla
+  tester utan `npm ci` och föll på sql.js); lagat 2026-09-29, då fem
+  ändringar fördes in.
 
 ## Lagringsnycklar
 

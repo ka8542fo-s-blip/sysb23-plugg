@@ -3,6 +3,7 @@ import ExamCountdown from "../components/schedule/ExamCountdown.jsx";
 import ExamTimeline from "../components/schedule/ExamTimeline.jsx";
 import TermOverview from "../components/schedule/TermOverview.jsx";
 import SessionList from "../components/schedule/SessionList.jsx";
+import ScheduleTrust from "../components/schedule/ScheduleTrust.jsx";
 import { schedule } from "../data/schedule.js";
 import { getCourse } from "../data/index.js";
 import {
@@ -78,6 +79,7 @@ export default function Schedule({ answers, exams: examHistory, navigate, onSele
 
   return (
     <div className="space-y-10">
+      <ScheduleTrust />
       <section>
         <h1 className="font-display text-2xl">Pluggkalender</h1>
         <p className="mt-1 max-w-reading text-[15px] text-ink/70">
@@ -126,9 +128,9 @@ export default function Schedule({ answers, exams: examHistory, navigate, onSele
 
       <section className="border-t border-line pt-5">
         <p className="text-sm leading-relaxed text-ink/65">
-          Verifierat mot TimeEdit {formatFullDate(schedule.verifiedOn)}. Schemat kontrollerades
-          senast {formatFullDate(schedule.lastChecked)}. Kontrollera alltid aktuell vecka i
-          TimeEdit — salar och tider kan ändras.
+          Genomgånget för hand mot TimeEdit {formatFullDate(schedule.verifiedOn)}. En automatisk
+          kontroll jämför varje dag alla kommande pass med TimeEdit och larmar vid skillnader,
+          senast {formatFullDate(schedule.lastChecked)}.
         </p>
         <p className="mt-2 text-sm leading-relaxed text-ink/65">{schedule.note}</p>
       </section>

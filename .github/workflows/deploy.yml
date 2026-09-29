@@ -24,6 +24,9 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # Testerna stoppar publicering av data som inte hänger ihop, bland
+      # annat ett schema där veckoöversikt, tentalista och pass skiljer sig.
+      - run: npm test
       # Projektsidor ligger på /<repo>/ — BASE_PATH sätts av configure-pages.
       - uses: actions/configure-pages@v5
         id: pages

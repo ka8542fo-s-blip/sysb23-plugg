@@ -19,6 +19,7 @@ import {
   weekNumber,
 } from "../../lib/dates.js";
 import { useToday } from "../../lib/useToday.js";
+import ScheduleTrust from "./ScheduleTrust.jsx";
 
 const DAY_COUNT = 7;
 
@@ -286,6 +287,7 @@ export default function WeekAtAGlance({ navigate, onSelectCourse }) {
           )}
         </div>
 
+        <div className="mt-3"><ScheduleTrust compact /></div>
         <button
           type="button"
           className="btn-quiet mt-3 -ml-2"
