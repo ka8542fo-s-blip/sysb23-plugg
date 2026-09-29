@@ -15,6 +15,13 @@ import {
   examNote as databaserExamNote,
 } from "./databaser/reading.js";
 import { intro as strategiIntro } from "./strategi/reading.js";
+import { topics as processTopics } from "./process/topics.js";
+import {
+  chapters as processChapters,
+  glossary as processGlossary,
+  intro as processIntro,
+  examNote as processExamNote,
+} from "./process/reading.js";
 
 // Tomma listor för delkurser som ännu inte har den sortens material.
 const noContent = {
@@ -70,8 +77,16 @@ export const courses = [
     ...noContent,
     id: "process",
     name: "Processorienterad verksamhetsutveckling",
-    status: "kommande",
-    views: [],
+    status: "aktiv",
+    // Byggs i faser (2026-09-29): Läs först, sedan Öva, Essä, Kör processen
+    // och Prov. Flikarna läggs till när deras innehåll finns.
+    views: ["las", "statistik"],
+    practiceBy: "chapter",
+    topics: processTopics,
+    chapters: processChapters,
+    glossary: processGlossary,
+    readingIntro: processIntro,
+    examNote: processExamNote,
   },
   {
     ...noContent,

@@ -6,6 +6,8 @@ import assert from "node:assert/strict";
 import { topics } from "../src/data/strategi/topics.js";
 import { chapters } from "../src/data/strategi/reading.js";
 import { topics as dbTopics } from "../src/data/databaser/topics.js";
+import { topics as processTopics } from "../src/data/process/topics.js";
+import { chapters as processChapters } from "../src/data/process/reading.js";
 import {
   chapterPriority,
   evidenceSentence,
@@ -66,4 +68,20 @@ test("delkurser utan klassning påverkas inte", () => {
   assert.equal(hasPriorities(dbTopics), false);
   for (const topic of dbTopics) assert.deepEqual(priorityOf(topic), []);
   assert.deepEqual(chapterPriority({ primaryTopics: ["kap1"] }, dbTopics), []);
+});
+
+// BPM: klassningen följer HT25- och HT24-tentorna. Allt har prövats som
+// flerval; essä = HT25:s fyra essäfrågor (60 % människor, improve before
+// automate, execution void, mognad/one size fits all).
+test("BPM-delkursens klassning: allt kärna, essä där HT25 frågade", () => {
+  const essa = ["automatisera", "ramverk", "foundations", "manniskor"];
+  for (const topic of processTopics) {
+    const levels = priorityOf(topic);
+    assert.ok(levels.includes("karna"), `${topic.id} ska vara kärna`);
+    assert.equal(levels.includes("essa"), essa.includes(topic.id), topic.id);
+    assert.ok(!levels.includes("bakgrund"), topic.id);
+  }
+  for (const chapter of processChapters) {
+    assert.ok(isFastTrack(chapterPriority(chapter, processTopics)), chapter.id);
+  }
 });
