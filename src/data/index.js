@@ -16,6 +16,7 @@ import {
 } from "./databaser/reading.js";
 import { intro as strategiIntro } from "./strategi/reading.js";
 import { topics as processTopics } from "./process/topics.js";
+import { questions as processQuestions } from "./process/questions.js";
 import {
   chapters as processChapters,
   glossary as processGlossary,
@@ -80,9 +81,10 @@ export const courses = [
     status: "aktiv",
     // Byggs i faser (2026-09-29): Läs först, sedan Öva, Essä, Kör processen
     // och Prov. Flikarna läggs till när deras innehåll finns.
-    views: ["las", "statistik"],
+    views: ["las", "ova", "statistik"],
     practiceBy: "chapter",
     topics: processTopics,
+    questions: processQuestions,
     chapters: processChapters,
     glossary: processGlossary,
     readingIntro: processIntro,
