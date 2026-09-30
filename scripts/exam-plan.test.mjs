@@ -58,7 +58,9 @@ test("BPM: 10 BPM-frågor à 5 p, en BPMN-fråga à 3 p, tre körfrågor med egn
 
 test("BPM: frågor i samma dubblettgrupp dras aldrig i samma prov", () => {
   const groups = new Set(process.questions.map((q) => q.group).filter(Boolean));
-  assert.ok(groups.size >= 3, "grupperna finns");
+  // red-wine och essentials; realize-sustain upphörde när q30 parkerades
+  // (2026-09-30, bara HT24-stöd).
+  assert.ok(groups.size >= 2, "grupperna finns");
   for (let run = 0; run < 200; run++) {
     const seen = new Set();
     for (const it of pickExam(process)) {

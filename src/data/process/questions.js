@@ -9,8 +9,9 @@
 // HT25-tentornas egna flervalsfrågor ligger nära ordagrant (source "Tenta
 // HT25 …"). De är inte längdbalanserade — på tentan är rätt svar ofta
 // längst — och står därför i LENGTH_FLAGGED och räknas inte in i
-// balansmåtten. HT24-frågor är omskrivna till fyrval; frågor med fasnamn
-// som inte finns i 7FE används inte. Alla frågor är ogranskade.
+// balansmåtten. HT24-tentorna (den förra lärarens) är inte källa: Weaver säger
+// att de kan strunta i. Frågor som bara vilade på HT24 står i
+// questions-pending.js. Alla frågor är ogranskade.
 
 const VERBATIM = "Tentafråga ordagrant (HT25); alternativen är tentans egna och inte längdbalanserade.";
 
@@ -53,7 +54,7 @@ export const questions = [
       { text: "Process redesign, där den nya processen formas.", explain: "Redesign bygger på analysen och tar fram to-be-processen." },
       { text: "Process monitoring, där processen följs upp löpande.", explain: "Monitoring följer upp den införda processen och startar nästa varv." }
     ],
-    correct: 1, source: "F1 (lifecycle), HT24 fråga 28", reviewed: false },
+    correct: 1, source: "F1 (BPM lifecycle)", reviewed: false },
 
   { id: "bpm-q03", topic: "grunder", difficulty: 2,
     question: "En ledningsgrupp säger: \"BPM är enkelt, vi gör allt på en gång i hela koncernen.\" Vad säger Jestons verklighetskontroll?",
@@ -73,7 +74,7 @@ export const questions = [
       { text: "Att öka medarbetarnas nöjdhet genom färre arbetsmoment.", explain: "Medarbetarna är viktiga, men nöjdhet är inte BPM:s primära syfte." },
       { text: "Att linjera verksamhetens processer med strategin och målen.", explain: "BPM förbättrar och styr processerna så att organisationen når sina mål." }
     ],
-    correct: 3, source: "HT24 fråga 9, F1", reviewed: false },
+    correct: 3, source: "F1 (definitionerna: linjering med verksamhetens mål)", reviewed: false },
 
   // ── Kapitel 2: historia ───────────────────────────────────────────────
   { id: "bpm-t02", topic: "historia", difficulty: 1,
@@ -104,7 +105,7 @@ export const questions = [
       { text: "Robotic process automation (RPA).", explain: "RPA automatiserar befintliga steg; det är ingen förbättringsfilosofi." },
       { text: "Service-oriented architecture (SOA).", explain: "SOA är en teknisk arkitektur för återanvändbara tjänster." }
     ],
-    correct: 0, source: "HT24 fråga 10, F1", reviewed: false },
+    correct: 0, source: "F1 (kvalitetsrörelsen och 1990-talets trender; BPM som continuous improvement)", reviewed: false },
 
   { id: "bpm-q06", topic: "historia", difficulty: 1,
     question: "En fabrik vill få bort väntan, överlager och onödiga transporter i sin produktion. Vilken tradition passar bäst?",
@@ -114,7 +115,7 @@ export const questions = [
       { text: "Reengineering, med radikal omdesign av hela processen.", explain: "BPR gör om allt från grunden; här gäller det att ta bort slöseri." },
       { text: "Taylorism, med uppdelning av arbetet i minsta möjliga moment.", explain: "Taylor delar upp arbetet men är inte traditionen för att eliminera slöseri." }
     ],
-    correct: 1, source: "F1, HT24 fråga 13", reviewed: false },
+    correct: 1, source: "F1 (kvalitetsrörelsen: TQM, Lean, Six Sigma)", reviewed: false },
 
   { id: "bpm-q07", topic: "historia", difficulty: 2,
     question: "Vad drev enligt Weaver fram ett brett införande av BPM och processdokumentation efter 2002?",
@@ -178,24 +179,24 @@ export const questions = [
     correct: 3, source: "Tenta HT25 omtenta 10", reviewed: false },
 
   { id: "bpm-q09", topic: "start", difficulty: 2,
-    question: "Vad skiljer en driver från en trigger enligt Jeston?",
+    question: "Kundtjänstens kö växer och allt fler kunder säger upp sina abonnemang. Samtidigt aviserar EU en ny rapporteringslag som gäller om två år. Hur klassar Jeston dem?",
     options: [
-      { text: "En driver är ett långsiktigt affärsmotiv, en trigger en händelse som kräver handling nu.", explain: "Skillnaden är tidshorisonten: motiv mot akut händelse." },
-      { text: "En driver är en extern faktor, en trigger ett internt initiativ från ledningen.", explain: "Skiljelinjen är tidshorisonten, inte var orsaken kommer ifrån; en trigger kan till exempel vara en påtvingad förändring utifrån." },
-      { text: "En driver är ett operativt problem, en trigger ett strategiskt mål för organisationen.", explain: "Omvänt snarare: drivers är långsiktiga, triggers konkreta och akuta." },
-      { text: "En driver är ett processmått, en trigger en milstolpe som visar att processen har lyckats.", explain: "Varken drivers eller triggers är mått eller milstolpar." }
+      { text: "Kön och uppsägningarna är drivers; lagen är en trigger, fast den syns i förväg.", explain: "Drivers är vardagliga affärsproblem inifrån, som flaskhalsar och churn. Lagen kommer utifrån och måste besvaras: en trigger, även om den aviseras år i förväg." },
+      { text: "Kön och uppsägningarna är triggers; lagen är en driver, eftersom den är långsiktig.", explain: "Omvänt: lagen är en extern händelse man måste svara på, och kön och churn är interna affärsproblem." },
+      { text: "Alla tre är triggers, eftersom de kräver att organisationen agerar snart.", explain: "Kön och churn är interna, vardagliga affärsproblem som man kan arbeta proaktivt med: drivers." },
+      { text: "Alla tre är drivers, eftersom lagen annonseras flera år i förväg.", explain: "Att en trigger syns i förväg gör den inte till en driver; den kommer fortfarande utifrån." }
     ],
-    correct: 0, source: "F2 (Jeston s. 33), HT24 fråga 17", reviewed: false },
+    correct: 0, source: "F2 (drivers och triggers, Weavers förklaring)", reviewed: false },
 
   { id: "bpm-q10", topic: "start", difficulty: 2,
     question: "Ett försäkringsbolag får många kundklagomål på skadehanteringen och startar ett förbättringsprojekt i skadeavdelningen. Vilken typ av initiering är det?",
     options: [
       { text: "Strategy-led, eftersom kundnöjdhet ingår i bolagets strategi.", explain: "Strategy-led följer av strategin och startar i Foundations och Enablement, top-down." },
       { text: "Business issue-led, eftersom det svarar på ett konkret verksamhetsproblem.", explain: "Taktiskt, lokalt och bottom-up, som svar på klagomålen." },
-      { text: "Process-led, eftersom en processanalytiker har tagit initiativet.", explain: "Process-led startas oberoende av ett verksamhetsproblem, ofta för att visa värdet." },
+      { text: "Process-led, eftersom en processanalytiker har tagit initiativet.", explain: "Process-led förutsätter enligt Weaver en organisation som redan har en processlivscykel igång och löpande ser var flaskhalsarna uppstår." },
       { text: "Pilot-led, eftersom projektet ska bevisa värdet av BPM.", explain: "Pilot är ett scenario, inte ett av de tre sätten att initiera." }
     ],
-    correct: 1, source: "F2 (tre sätt att initiera), HT24 fråga 45", reviewed: false },
+    correct: 1, source: "F2 (tre sätt att initiera)", reviewed: false },
 
   { id: "bpm-q11", topic: "start", difficulty: 2,
     question: "En avdelningschef vill starta ett organisationsövergripande BPM-program, men vd och ledningsgruppen är ointresserade. Vad säger Jeston?",
@@ -288,16 +289,6 @@ export const questions = [
     ],
     correct: 2, source: "Tenta HT25 ord 2(d)", reviewed: false },
 
-  { id: "bpm-q16", topic: "ramverk", difficulty: 1,
-    question: "Vilka tre faser ingår i F-gruppen Fulfilment i 7FE?",
-    options: [
-      { text: "Implement, Realize och Sustainability.", explain: "Realize och Sustainability är gruppen Future." },
-      { text: "Understand, Innovate och People.", explain: "Understand och Innovate är Findings & solutions." },
-      { text: "Launch, Understand och Develop.", explain: "Launch hör till Foundations-gruppen." },
-      { text: "People, Develop och Implement.", explain: "Fulfilment förverkligar lösningarna." }
-    ],
-    correct: 3, source: "F2 (7FE = 10P3E)", reviewed: false },
-
   { id: "bpm-q17", group: "essentials", topic: "ramverk", difficulty: 2,
     question: "Vilka är de tre essentials i 7FE?",
     options: [
@@ -306,17 +297,7 @@ export const questions = [
       { text: "Strategy, process governance, process architecture och technology.", explain: "Det är komponenter i target operating model." },
       { text: "Customer-centric, employee-centric och balanserad BPM.", explain: "Det är BPM:s perspektiv, inte essentials." }
     ],
-    correct: 0, source: "F2, HT24 fråga 38", reviewed: false },
-
-  { id: "bpm-q18", group: "essentials", topic: "ramverk", difficulty: 2,
-    question: "Vilken beskrivning passar essential-förmågan Leadership i 7FE?",
-    options: [
-      { text: "Att resurser, budget, tidplan, intressenter och leveranser hanteras i hela aktiviteten.", explain: "Det är BPM project management." },
-      { text: "Att ledarna ger stöd och vägledning så att aktiviteten och organisationen är linjerade.", explain: "Leadership är ledarnas stöd och vägledning; de andra två essentials hanterar resurser respektive acceptans." },
-      { text: "Att alla berörda kan och vill ta till sig och bidra till den framtida lösningen.", explain: "Det är people change management." },
-      { text: "Att en Chief Process Officer ansvarar för alla processer i hela organisationen.", explain: "CPO är en governance-roll i Enablement, inte en essential." }
-    ],
-    correct: 1, source: "HT24 fråga 32", reviewed: false },
+    correct: 0, source: "F2 (10 faser och 3 essentials)", reviewed: false },
 
   { id: "bpm-q19", topic: "ramverk", difficulty: 2,
     question: "En organisation vill hoppa över Foundations och gå direkt till Launch, utan att visa att grunderna redan finns. Vad säger Jeston?",
@@ -427,13 +408,13 @@ export const questions = [
       { text: "Fasen är den formella startpunkten för en enskild BPM-aktivitet.", explain: "Det är Launch." },
       { text: "Fasen bygger komponenterna i TOM, som styrning, arkitektur, människor och teknik.", explain: "Sju steg från kommunikation till teknik som möjliggörare." }
     ],
-    correct: 3, source: "F3 (Enablement), HT24 fråga 3", reviewed: false },
+    correct: 3, source: "F3 (Enablement)", reviewed: false },
 
   { id: "bpm-q25", topic: "enablement", difficulty: 2,
     question: "Vem ansvarar enligt Jestons governance-struktur för en enskild process och prestationsstyrningen på processnivå?",
     options: [
       { text: "Process steward.", explain: "Ansvarar för enskilda processer och BPM-projekt." },
-      { text: "Chief Process Officer.", explain: "Idealrollen över alla processer, sällan sedd i verkligheten." },
+      { text: "Chief Process Officer.", explain: "Den högst ansvariga för allt processarbete, ofta en tillfällig roll." },
       { text: "Process executive.", explain: "Chef med ansvar för flera processer." },
       { text: "Strategic process council.", explain: "Det främsta styrande organet för alla BPM-aktiviteter." }
     ],
@@ -501,35 +482,15 @@ export const questions = [
     ],
     correct: 2, source: "Tenta HT25 ord 2(h)", reviewed: false },
 
-  { id: "bpm-q30", group: "realize-sustain", topic: "fullfoljd", difficulty: 2,
-    question: "Vad är syftet med Realize-fasen i 7FE?",
-    options: [
-      { text: "Att bygga alla de komponenter som krävs för att kunna införa de nya processerna.", explain: "HT24:s alternativ för något annat än Realize; enligt tentans ordval troligen Develop (HT24 saknar facit, preliminärt till F4)." },
-      { text: "Att säkerställa att nyttan som beskrevs i business case faktiskt realiseras.", explain: "Realize följer upp business case från Launch." },
-      { text: "Att föreställa sig det framtida tillståndet i en visionsövning.", explain: "Det är Red Wine Test i Foundations." },
-      { text: "Att hålla igång styrning och ständig förbättring efter projektet.", explain: "Det är Sustainability." }
-    ],
-    correct: 1, source: "HT24 fråga 43", reviewed: false },
-
-  { id: "bpm-q31", group: "realize-sustain", topic: "fullfoljd", difficulty: 2,
+  { id: "bpm-q31", topic: "fullfoljd", difficulty: 2,
     question: "Vad betyder Sustainability i 7FE?",
     options: [
-      { text: "Att processerna optimeras för lägre energiförbrukning och utsläpp.", explain: "Det är Green BPM; Weaver påpekar att Sustainability inte betyder hållbarhet." },
-      { text: "Att förbättringarna kommuniceras, varefter styrningen av processerna kan avslutas.", explain: "Styrningen och förbättringen fortsätter." },
-      { text: "Att styrning och ständig förbättring fortsätter, som konkurrensfördel.", explain: "Sustainability håller förbättringarna vid liv genom fortsatt styrning." },
-      { text: "Att nyttan i business case följs upp och rapporteras till ledningen.", explain: "Det är Realize." }
+      { text: "Att processerna optimeras för lägre energiförbrukning och utsläpp.", explain: "Det är Green BPM; Sustainability i 7FE betyder inte miljömässig hållbarhet." },
+      { text: "Att projektets business case följs upp mot de strategiska målen.", explain: "Det liknar Realize, den fas som gäller de strategiska målen." },
+      { text: "Att förbättringarna ger en uthållig konkurrensfördel över tid.", explain: "Sustainability står för konkurrensfördelen, fas 10 i gruppen Future." },
+      { text: "Att BPM-teamet avvecklas när de nya processerna är införda.", explain: "7FE ser BPM som en livscykel som fortsätter, inte som ett avslutat projekt." }
     ],
-    correct: 2, source: "F2 (\"not hållbarhet\"), HT24 fråga 47", reviewed: false },
-
-  { id: "bpm-q32", topic: "manniskor", difficulty: 2,
-    question: "Vad kännetecknar appreciative inquiry som förändringsansats?",
-    options: [
-      { text: "Den söker rotorsakerna till fel och åtgärdar dem en i taget.", explain: "Tvärtom: den söker rotorsakerna till framgång." },
-      { text: "Den fokuserar på vad som är fel för att skapa en känsla av kris.", explain: "Det är motsatsen till appreciative inquiry." },
-      { text: "Den behandlar hinder som barriärer som ska rivas uppifrån.", explain: "Så beskrivs inte ansatsen." },
-      { text: "Den utgår från det som fungerar och söker orsakerna till framgång.", explain: "Ansatsen bygger förändringen på organisationens styrkor." }
-    ],
-    correct: 3, source: "HT24 fråga 33 (preliminärt)", reviewed: false },
+    correct: 2, source: "F2 (7FE:s faser: Sustainability = konkurrensfördelen)", reviewed: false },
 
   { id: "bpm-q33", group: "essentials", topic: "manniskor", difficulty: 2,
     question: "Ett BPM-projekt levererar tekniskt korrekta processer, men medarbetarna fortsätter arbeta på det gamla sättet. Vilken essential har troligen försummats?",
@@ -631,7 +592,7 @@ export const questions = [
       { text: "Manual task, eftersom e-post skickas utanför processen.", explain: "Manual task utförs för hand av en människa." },
       { text: "Business rule task, eftersom en regel styr utskicket.", explain: "Business rule task anropar en beslutsregel, t.ex. en DMN-tabell." }
     ],
-    correct: 1, source: "Genomgången s. 8, HT24 fråga 39–42", reviewed: false },
+    correct: 1, source: "Genomgången s. 8", reviewed: false },
 
   { id: "bpm-q39", topic: "bpmn", difficulty: 2,
     question: "Vad gör en exclusive gateway (XOR) i Silvers stil?",
@@ -732,7 +693,7 @@ export const questions = [
       { text: "Den startar alla vägar och väntar in samtliga händelser.", explain: "Det är beteendet hos AND." },
       { text: "Den väljer väg utifrån en DMN-beslutstabell.", explain: "Beslutstabeller anropas med business rule task." }
     ],
-    correct: 0, source: "Genomgången s. 60, HT24 fråga 20", reviewed: false },
+    correct: 0, source: "Genomgången s. 60", reviewed: false },
 
   { id: "bpm-q48", topic: "bpmn", difficulty: 1,
     question: "En exclusive gateway delar flödet i två vägar efter att ett utkast granskats. Hur namnges den enligt kursens konventioner?",

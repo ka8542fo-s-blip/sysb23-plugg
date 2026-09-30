@@ -70,11 +70,13 @@ test("delkurser utan klassning påverkas inte", () => {
   assert.deepEqual(chapterPriority({ primaryTopics: ["kap1"] }, dbTopics), []);
 });
 
-// BPM: klassningen följer HT25- och HT24-tentorna. Allt har prövats som
-// flerval; essä = HT25:s fyra essäfrågor (60 % människor, improve before
-// automate, execution void, mognad/one size fits all).
-test("BPM-delkursens klassning: allt kärna, essä där HT25 frågade", () => {
-  const essa = ["automatisera", "ramverk", "foundations", "manniskor"];
+// BPM: klassningen följer HT25-tentorna och Weavers föreläsningar (HT24 är
+// den förra lärarens och används inte). Allt har prövats som flerval; essä =
+// HT25:s fyra essäfrågor (60 % människor, improve before automate, execution
+// void, mognad/one size fits all) plus process asset, som Weaver kallar
+// kanske den viktigaste komponenten (F3, 2026-09-30).
+test("BPM-delkursens klassning: allt kärna, essä där HT25 frågade eller Weaver betonar", () => {
+  const essa = ["automatisera", "ramverk", "foundations", "enablement", "manniskor"];
   for (const topic of processTopics) {
     const levels = priorityOf(topic);
     assert.ok(levels.includes("karna"), `${topic.id} ska vara kärna`);

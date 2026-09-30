@@ -23,8 +23,9 @@ export const essays = [
         "Risker: motstånd, svag användning, förbättringar som inte håller och en nytta i business case som aldrig realiseras.",
       ] },
       { heading: "Konkret", points: [
-        "Ett nytt ärendeflöde som är tekniskt korrekt men där handläggarna fortsätter med sina egna kalkylark.",
-        "Poängen: projektet klarade Implement men inte Realize, eftersom människorna aldrig följde med.",
+        "Rädslan är aktuell (Weaver, F3): företag som IKEA säger upp personal och hela yrkesgrupper, som mjukvarutestare, ersätts av AI — ett BPM-projekt möts av den rädslan från start.",
+        "Att bara lova att ingen sparkas räcker inte alltid; man kan sockra dealen med utbildning och empowerment, så att medarbetaren får mer intressanta uppgifter än att klicka mellan databaser.",
+        "Eget exempel: ett nytt ärendeflöde som är tekniskt korrekt men där handläggarna fortsätter med sina egna kalkylark — nyttan i business case uteblir.",
       ] },
       { heading: "Koppling", points: [
         "BPR misslyckades bland annat för att det ignorerade medarbetarnas acceptans och mötte starkt motstånd.",
@@ -48,8 +49,10 @@ export const essays = [
         "Ordningen blir därför: förstå, kartlägg och förbättra flöde och affärsregler — sedan system.",
       ] },
       { heading: "Konkret", points: [
-        "En attestkedja med fem nivåer där tre bara skickar vidare: automatiserad blir den bara en snabbare omväg.",
-        "Spreadsheet-testet: kalkylark i kritiska processteg visar att processen måste förbättras först.",
+        "Mekanismen (Weaver, F2): i en dålig process kompenserar erfarna medarbetare som vet hur man tar sig ur fällorna — en automatisering saknar den kunskapen och fastnar hela tiden.",
+        "Spreadsheet-testet: Weaver ser varje år i projektkursen företag, även IKEA, som driver en kritisk process i ett kalkylark — ett tecken på att processen måste förbättras först.",
+        "Eget exempel: en attestkedja med fem nivåer där tre bara skickar vidare blir automatiserad bara en snabbare omväg.",
+        "Nyansera: Weaver invänder att förändring i dag inte går att göra utan system — principen gäller ordningen, inte att tekniken är oviktig.",
       ] },
       { heading: "Koppling", points: [
         "Hammer 1990: företagen automatiserade gamla arbetssätt — \"don't automate, obliterate\".",
@@ -79,7 +82,7 @@ export const essays = [
       ] },
       { heading: "Koppling", points: [
         "Jestons hus: blå zon (management processes) = management effectiveness, röd zon (operational processes) = operational efficiency, grön zon (Business Transformation Program Management, \"Set for Success\") binder ihop dem.",
-        "Sustainability i 7FE håller styrningen igång — konkurrensfördel, inte hållbarhet.",
+        "Sustainability i 7FE: målet är uthållig konkurrensfördel, inte hållbarhet i miljömening.",
       ] },
     ],
     outline: "1) Definitionen och de två delarna. 2) Different sameness och varför båda krävs. 3) Hur Foundations, TOM och Enablement överbryggar. 4) Huset och Sustainability som koppling." },
@@ -100,6 +103,7 @@ export const essays = [
       ] },
       { heading: "Konkret", points: [
         "Eget exempel: en organisation där BPM bara skett i små informella insatser startar ett koncernbrett program — tempot går fortare än mognaden.",
+        "Olika grund gäller också det konkreta (Weaver, F2): vilken IT-arkitektur och vilka system som redan finns eller måste skaffas först.",
         "Eget exempel, inte ur källan: en pilot som visar värde passar bättre än att gå fortare än mognaden tillåter.",
       ] },
       { heading: "Koppling", points: [
@@ -125,6 +129,7 @@ export const essays = [
       ] },
       { heading: "Konkret", points: [
         "En myndighet som måste anpassa hela verksamheten till nya regler: top-down.",
+        "Amazon (Weaver, F2): bara ledningen kan prioritera kundnära processer före leverantörsprocesser utifrån strategin — ett skäl till top-down.",
         "En avdelning utan ledningsstöd och med oklar strategi: börja lokalt med små bottom-up-förbättringar.",
       ] },
       { heading: "Koppling", points: [
@@ -150,7 +155,8 @@ export const essays = [
       ] },
       { heading: "Konkret", points: [
         "Fords leverantörsreskontra: betala när varorna kommer, 75 % färre anställda — framgången som gjorde BPR till trend.",
-        "Poängen: samma radikala logik i organisationer utan ledningsstöd och acceptans gav dyra misslyckanden.",
+        "BPR:s bortglömda syfte var empowerment (Weaver, F1): sekreteraren med dator skulle få mer varierade uppgifter, men i praktiken fick en person göra fyras jobb och resten sparkades.",
+        "Samma diskussion förs i dag om AI: gör om allt från grunden för att dra nytta av tekniken — och motståndet känns igen.",
       ] },
       { heading: "Koppling", points: [
         "People change management i 7FE svarar direkt på BPR:s största brist.",

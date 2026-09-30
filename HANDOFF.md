@@ -426,12 +426,15 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   och 3 p/4 alt 0; **3(d) 4 p/6 alt −0,17**. Kapitel 1 och Kör processen
   (per fråga) säger det.
 - **Läs:** 11 kapitel i `data/process/reading.js` (kap1–kap11 = nr 1–11),
-  15 ämnen i `topics.js`, 92 ordlistetermer. Alla ämnen `karna`; `essa`
+  15 ämnen i `topics.js`, 94 ordlistetermer. Alla ämnen `karna`; `essa`
   på automatisera, ramverk, foundations, manniskor (HT25:s fyra
-  essäfrågor), låst i `exam-priority.test.mjs`. **Preliminärt** (märkt i
+  essäfrågor) och enablement (process asset, Weavers betoning), låst i
+  `exam-priority.test.mjs`. Det Weaver tonar ned (husets delar, stegen i
+  Foundations/Enablement/Launch, PSM) står under rubriker märkta
+  "(bakgrund)" i kapiteltexten; varje fas börjar med syfte och output. **Preliminärt** (märkt i
   `sources`, inget i UI): kap 4 (processoptimeringslösningarna, bara ur
   omtentans fråga 12), kap 7 (Understand), kap 8 (Innovate–Sustainability,
-  60 %, appreciative inquiry — bara ur tentafrågorna), kap 10 (DMN, bara
+  60 % — bara ur HT25-tentafrågorna), kap 10 (DMN, bara
   F1/F2 och tentan). Kap 9:s LPM-avsnitt är skrivet mot LPM-texten
   (2026-09-29). Kap 10:s namngivning följer Canvas-konventionerna
   (message flow = substantiv, message start = "Received …", aktivitet =
@@ -443,11 +446,13 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   frågor (omtentans 12 delad förstaplats), räknat ur de ordagranna
   frågorna. Skrivs om
   efter F4 (5 okt) och F5 (12 okt).
-- **Öva:** 71 frågor i `questions.js`, 5–9 per kapitel. `bpm-t01…t22` =
+- **Öva:** 67 frågor i `questions.js`, 5–9 per kapitel. `bpm-t01…t22` =
   HT25-tentornas flervalsfrågor nära ordagrant (i `LENGTH_FLAGGED` med
   skälet "tentafråga ordagrant", räknas inte i balansmåtten — på tentan
   var rätt svar längst i ungefär tre fall av fyra). `bpm-q01…q49` egna (q48 = gateway-namngivning, q49 = OR-join-fallet på genomgången s. 37–38; q46 = terminate end-fallet s. 35–36),
-  HT24-begrepp omskrivna till fyrval (inga frågor med falska fasnamn),
+  ingen med HT24 som källa (test i `fragebank-balans.test.mjs`); fyra
+  parkerade i `questions-pending.js` (q16 F-gruppernas namn, q18, q30, q32
+  som bara vilade på HT24),
   `bpm-q25` flaggad (rollnamn). Alla `reviewed: false`. Balanstestet
   `fragebank-balans.test.mjs` är tabelldrivet per delkurs: Databaser
   oförändrad, BPM med Strategis gränser (spridning 1,5, unikt längst
@@ -482,12 +487,22 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   finns i Kör processen). Häftets 1.2 har ingen körfråga (linjär med AND
   och en månadstimer, prövar inget nytt).
 
+- **HT24 bort och Weavers transkript in (2026-09-30):** Weaver säger på
+  F1 att den förra lärarens tentor (HT24) kan strunta i; hans egna HT25
+  ligger som övningsquiz på Canvas. HT24 är inte längre källa för Öva eller
+  kap 1–9 (BPMN-kapitlen nämner HT24 för några elementnamn). Kap 1–9 har
+  fått Weavers förklaringar och exempel ur F1–F3-transkripten (drivers och
+  triggers, process-led, framgångspallen, CPO, TOM, execution void,
+  process asset, end-to-end, Google Maps, BPR/AI, RPA/UiPath, rädslan,
+  process mining). Transkripten ligger i
+  `~/Desktop/Skola/SKOLA T3/BPM_transkript/` och committas aldrig.
+
 - **Granskning 2026-09-29** (tre granskare + egen kontroll mot bilderna,
   Kaspers beslut): rättade sakfel i kap 1, 3, 4, 6, 8, 10, 11 och e1/e3/e4,
   Jeston-påståenden utan källa i kap 7–8 uppmjukade till "enligt tentans
-  svarsalternativ", HT24-tolkningar märkta "HT24 saknar facit".
+  svarsalternativ".
   **Nära dubbletter** har `group` i questions.js (red-wine: t12/t14,
-  realize-sustain: q30/q31, essentials: q17/q18/q33); `lib/examPlan.js`
+  essentials: q17/q33); `lib/examPlan.js`
   drar högst en per grupp (test i `exam-plan.test.mjs`). **Default flow**
   (`default: true` på ett flöde) stöds i simulatorn och ritas med
   snedstreck; `egen-or` följer nu Silvers exempel, vilket ändrade facit:
@@ -495,25 +510,24 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
 
 ### Kontrollera mot F4 (5 okt)
 
-Påståenden som i dag bara vilar på tentornas svarsalternativ (HT24 saknar
-facit) och ska stämmas av mot föreläsning 4:
+Påståenden som i dag bara vilar på HT25-tentornas svarsalternativ eller
+saknar föreläsningsstöd, och ska stämmas av mot föreläsning 4 (F1–F3 är
+avstämda mot transkripten 2026-09-30):
 - Var identifierade rotorsaker tas fram (antaget: Understand) — kap 7,
   topics `understand`, förklaringen i bpm-t18.
-- Om Understand ger quick wins (texten borttagen tills vidare).
+- Om Understand också ger quick wins (F3 lägger dem i Launch-fasens
+  intressentintervjuer).
 - Vad People innehåller (antaget: roller och utbildning; utbildningsplaner
   är enligt 2(h) inte Innovates output) — kap 8, bpm-t18.
-- Vad Develop och Implement gör (HT24 fråga 43:s alternativ "bygga alla
-  komponenter" = troligen Develop) — kap 8, bpm-q30.
-- Att Innovate inte prioriterar inkrementellt (HT24 fråga 26) och att
-  Sustainability fortsätter med styrning (HT24 fråga 47) — kap 8, topics
-  `fullfoljd`, bpm-q31.
-- Appreciative inquiry (HT24 fråga 33): "utgår från det som fungerar"; att
-  det "möter mindre motstånd" är borttaget — kap 8, bpm-q32.
+- Vad Develop, Implement, Realize och Sustainability innehåller (i dag
+  bara F2:s översikt: Realize = de strategiska målen, Sustainability =
+  konkurrensfördelen) — kap 8, topics `fullfoljd`, bpm-q31. Pröva om de
+  parkerade q30 (Realize) och q32 (appreciative inquiry) får stöd.
 - 60 % kommunikation och människor: bara ur tentans essäfråga 1(a).
 - Processoptimeringslösningarna (kap 4): bara uppräkningen i omtentans
-  fråga 12 och RPA-exemplet i 2(c).
-- BPM-mognad: bara vision/mål/processarkitektur och tempo; ingen
-  mognadsmodell.
+  fråga 12 och RPA-exemplet i 2(c); inget i F1–F3.
+- BPM-mognad: bara vision/mål/processarkitektur, IT-grund och tempo;
+  ingen mognadsmodell (Weaver: behöver inte gås igenom).
 
 ### Facit och osäkerheter (BPM)
 
@@ -529,8 +543,9 @@ facit) och ska stämmas av mot föreläsning 4:
 - **3(a) (BPMN/DMN och förklarbarhet) saknar källstöd** — inget i
   artiklarna, F1–F3 eller genomgången. Frågan (`bpm-t21`) och kap 9:s
   avsnitt ligger kvar; **kontrollera efter föreläsning 5 (12 okt).**
-- **HT24:** omtentan har samma frågor utom 23, 27, 50 men **omkastade
-  alternativ** — positionssvar gäller bara ordinarien. Avvikande
+- **HT24 (den förra lärarens, används inte sedan 2026-09-30):** omtentan
+  har samma frågor utom 23, 27, 50 men **omkastade alternativ** —
+  positionssvar gäller bara ordinarien. Avvikande
   bedömningar mot promptens facit: 4 och 38 ska vara ×; 6 = Foundations
   (inte Evaluation; F3 säger att Foundations säkerställer linjeringen
   mellan strategi, processledning och processer — ingen Öva-fråga, × står

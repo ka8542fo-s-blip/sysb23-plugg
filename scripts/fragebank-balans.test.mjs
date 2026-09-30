@@ -15,6 +15,7 @@ import { pendingQuestions } from "../src/data/databaser/questions-pending.js";
 import { topics as dbTopics } from "../src/data/databaser/topics.js";
 import { chapters as dbChapters } from "../src/data/databaser/reading.js";
 import * as bpmQ from "../src/data/process/questions.js";
+import { pendingQuestions as bpmPending } from "../src/data/process/questions-pending.js";
 import { topics as bpmTopics } from "../src/data/process/topics.js";
 import { chapters as bpmChapters } from "../src/data/process/reading.js";
 import { DIAGRAM_IDS } from "../src/components/knowledge/diagrams/ids.js";
@@ -162,4 +163,11 @@ test("process: HT25-frågorna står i LENGTH_FLAGGED och har tentan som källa",
     assert.ok(flagged.has(q.id), `${q.id} saknas i LENGTH_FLAGGED`);
     assert.match(q.source, /^Tenta HT25/, `${q.id}: källan ska vara tentan`);
   }
+});
+
+test("process: parkerade frågor står utanför banken, och ingen aktiv fråga har HT24 som källa", () => {
+  // HT24 är den förra lärarens tentor; Weaver säger att de kan strunta i.
+  const ids = new Set(bpmQ.questions.map((q) => q.id));
+  for (const q of bpmPending) assert.ok(!ids.has(q.id), `${q.id} är både parkerad och aktiv`);
+  for (const q of bpmQ.questions) assert.doesNotMatch(q.source, /HT24/, `${q.id}: HT24 som källa`);
 });
