@@ -232,6 +232,26 @@ test("geometri: grupp omsluter sina rutor, nästlad grupp ritas större, pilar s
   assert.equal(hitTest({ x: 600, y: 400 }, d), null);
 });
 
+test("pilar åt båda hållen blir symmetriska: raka, parallella, lika långt från mittlinjen", () => {
+  for (const [bx, by] of [[200, 60], [60, 200], [180, 170]]) {
+    let d = { boxes: [{ id: "A", attr: "A", x: 60, y: 60 }, { id: "B", attr: "B", x: bx, y: by }], groups: [], arrows: [] };
+    d = addArrow(d, { kind: "box", id: "A" }, { kind: "box", id: "B" }).diagram;
+    d = addArrow(d, { kind: "box", id: "B" }, { kind: "box", id: "A" }).diagram;
+    const [ab, ba] = d.arrows.map((a) => arrowGeometry(a, d));
+    assert.equal(ab.kind, "line");
+    assert.equal(ba.kind, "line");
+    // Signerat avstånd från mittlinjen A→B: lika stort, motsatt tecken.
+    const len = Math.hypot(bx - 60, by - 60);
+    const side = (p) => ((bx - 60) * (p.y - 60) - (by - 60) * (p.x - 60)) / len;
+    assert.ok(Math.abs(side(ab.mid) + side(ba.mid)) < 1e-6, `${bx},${by}: inte symmetriskt`);
+    assert.ok(Math.abs(side(ab.mid)) > 5, "pilarna ligger inte isär");
+    // Pilarna börjar och slutar på rutornas kanter.
+    const onEdge = (p, c) => Math.abs(Math.max(Math.abs(p.x - c.x), Math.abs(p.y - c.y)) - BOX / 2) < 1e-6;
+    assert.ok(onEdge(ab.p1, { x: 60, y: 60 }) && onEdge(ab.p2, { x: bx, y: by }));
+    assert.ok(onEdge(ba.p1, { x: bx, y: by }) && onEdge(ba.p2, { x: 60, y: 60 }));
+  }
+});
+
 test("placeAll lägger ut de attribut som saknas utan att flytta de som finns", () => {
   const d = placeAll({ ...emptyDiagram(), boxes: [{ id: "x", attr: "B", x: 60, y: 56 }] }, ["A", "B", "C"]);
   assert.equal(d.boxes.length, 3);

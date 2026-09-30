@@ -90,20 +90,31 @@ export function arrowGeometry(arrow, diagram) {
   const blockers = diagram.boxes.filter((b) => !skip.has(b.id)).map(boxRect);
   const blocked = blockers.some((r) => segmentHitsRect(c1, c2, r));
 
-  let bend = 0;
-  if (blocked) bend = 46;
-  else if (reverse) bend = 14;
-  if (bend) {
-    // Samma sida för ett par åt båda håll ger två bågar som inte korsar varandra.
-    const sign = reverse && arrow.from.id > arrow.to.id ? -1 : 1;
-    const ctrl = { x: (c1.x + c2.x) / 2 + nx * bend * sign, y: (c1.y + c2.y) / 2 + ny * bend * sign };
+  // Normalen (nx, ny) vänder med pilens riktning, så ett par åt båda hållen
+  // hamnar automatiskt på var sin sida om mittlinjen — symmetriskt.
+  if (blocked) {
+    const bend = 46;
+    const ctrl = { x: (c1.x + c2.x) / 2 + nx * bend, y: (c1.y + c2.y) / 2 + ny * bend };
     const p1 = exitPoint(from, ctrl);
     const p2 = exitPoint(to, ctrl);
     return { kind: "curve", p1, p2, ctrl, d: `M ${p1.x} ${p1.y} Q ${ctrl.x} ${ctrl.y} ${p2.x} ${p2.y}`, mid: { x: 0.25 * p1.x + 0.5 * ctrl.x + 0.25 * p2.x, y: 0.25 * p1.y + 0.5 * ctrl.y + 0.25 * p2.y } };
   }
-  const p1 = exitPoint(from, c2);
-  const p2 = exitPoint(to, c1);
+  // Åt båda hållen: två raka, parallella pilar förskjutna lika långt åt var
+  // sitt håll. Annars en rak pil mellan mittpunkterna.
+  const off = reverse ? 7 : 0;
+  const s1 = { x: c1.x + nx * off, y: c1.y + ny * off };
+  const s2 = { x: c2.x + nx * off, y: c2.y + ny * off };
+  const p1 = rayExit(from, s1, { x: dx, y: dy });
+  const p2 = rayExit(to, s2, { x: -dx, y: -dy });
   return { kind: "line", p1, p2, d: `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y}`, mid: { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 } };
+}
+
+// Punkten där strålen från p (inne i rektangeln) i riktning d lämnar den.
+function rayExit(r, p, d) {
+  const sx = d.x > 0 ? (r.x + r.w - p.x) / d.x : d.x < 0 ? (r.x - p.x) / d.x : Infinity;
+  const sy = d.y > 0 ? (r.y + r.h - p.y) / d.y : d.y < 0 ? (r.y - p.y) / d.y : Infinity;
+  const t = Math.max(0, Math.min(sx, sy));
+  return { x: p.x + d.x * t, y: p.y + d.y * t };
 }
 
 function distToSegment(p, a, b) {

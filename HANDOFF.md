@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 198 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-09-30.
+- **Test:** `npm test` = 199 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-09-30.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -118,7 +118,9 @@ kapitel: allt UI läser `chapter.number`.
   nedbrytningen ovanpå den (oförändrad princip: annan nedbrytning än
   facits godtas inte, eftersom övernormaliseringar klarar lossless och DP).
   **Ritytan** `components/fd/FdCanvas.jsx`: eget SVG + pointer events,
-  värld 640×420, ruta 46 (`lib/fdDiagram.js`: modell, geometri, träffprov,
+  värld 640×420, ruta 46 (`lib/fdDiagram.js`: modell, geometri — pilar åt
+  båda hållen ritas som två raka parallella pilar ±7 från mittlinjen, en
+  pil som skulle gå genom en annan ruta böjs —, träffprov,
   `compareDrawing` mot givna beroenden som par (vänsterled, attribut),
   `arrowTypes`, autolayout `layoutFromFds`). Verktyg Flytta/Pil/Penna;
   hylla + "Lägg ut alla"; pil via handtagsprick eller tryck källa → mål;
