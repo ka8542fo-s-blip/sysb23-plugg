@@ -19,7 +19,11 @@ under prefixet `sysb23:`. All UI-text på svenska.
 - **Test:** `npm test` = 198 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-09-30.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
-  Fö4, Fö5, Fö6, Fö7); övningshäftet ligger bredvid, i
+  Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
+  `06-normalization-and-normal-forms-new.pdf` (152 bilder, Beamer, bara
+  Björn; användaren flyttar den dit — låg först i
+  `~/Downloads/___Lectures_export (1)/`). Gamla `06-normal-forms-normalization.pdf`
+  är ersatt och ska inte användas som källa. Övningshäftet ligger bredvid, i
   `~/Desktop/Skola/SKOLA T3/sysb23-database-exercises.pdf` (inte i exportmappen),
   extentorna i `~/Desktop/Skola/SKOLA T3/Previous_e_ams_export` (omtentan
   24 okt 2025, uppsamlingen 25 maj 2026; ordinarie 16 sep 2025 finns som
@@ -107,7 +111,7 @@ kapitel: allt UI läser `chapter.number`.
   `highestNF` → 1|2|3 + `violations` ({fd, index, type partial|transitive,
   attr, ck, via}) valda bland de GIVNA beroendena (härlett partiellt bara
   om inget givet visar 2NF-brottet), `isLossless` (exakt tablåprov) +
-  `losslessSteps` (kursbokens två-i-taget som förklaring),
+  `losslessSteps` (Fö6:s test två delar i taget som förklaring),
   `isDependencyPreserving`/`dependencyReport` (closure av unionen av
   lokala beroenden, inte "samma relation"), `projectFds`, `relationNF`.
   `lib/normalize.js` bygger motiveringstexterna och faciträttningen av
@@ -150,8 +154,10 @@ entity-definition, identifier, partial identifier, value set,
 femfrågetabellen, Crow's Foot-listan). Inför inga termer utanför kursen:
 **ingen BCNF, inga "spurious tuples", ingen FLOAT** (decket säger exakta
 mot approximativa numeriska typer). Lossless join definieras som att
-naturlig join ger tillbaka originalet; kursbokens tvåitaget-kontroll är
-enda regeln utanför decken och texten säger att den kommer från boken.
+naturlig join ger tillbaka originalet för varje population som uppfyller
+beroendena; testet för två delar (gemensamma attribut bestämmer en hel
+del) och dependency preservation (lokala beroenden medför tillsammans alla
+ursprungliga) följer nya Fö6.
 Sakfel rapporteras, rättas inte utan beslut. Grep-gate som ska ge noll i
 `reading.js`/`topics.js`:
 `mandatory participation|non-mandatory|\bUML\b|\bEER\b|specialis|generalis|disjoint|overlapping|\bStudent|\bCourse|\bUniversity|\bOffer|\bTeacher|HasStudied|\bGrade\b|\bmentor|lärare|BCNF|spurious|FLOAT`
@@ -238,12 +244,16 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
   inte granskade av användaren.
 - **Normaliseringens rit- och analysyta (2026-09-30):** de tio egna
   uppgifterna (fällorna och `trap`-texterna), definitionspanelen, kapitel
-  8:s omskrivna dependency preservation-stycke och sant/falskt-stycke,
+  8:s omskrivna dependency preservation-stycke (nya Fö6:s exempel) och
+  sant/falskt-styckena om beroendebevarande och lossless join, ordlistans
+  lossless join,
   kärnpunkten och fallgropsraden om beroendebevarande i `topics.js`, tre
   nya ordlistetermer (hölje, superkey, trivialt beroende) och förklaringarna
   (inte alternativen) i dbq-48, som lärde ut "samma relation" som krav.
   Häftets uppgift 10 är avläst och kontrollerad mot sidan som bild.
-- **Granskade:** kapitel 7–9 mot Fö5/Fö6/Fö7 + häftet (2026-09-05),
+- **Granskade:** kapitel 7–9 mot Fö5/Fö6/Fö7 + häftet (2026-09-05; Fö6 då
+  den gamla decken — kapitel 8 kontrollerat mot nya Fö6 2026-09-30, se
+  nedan),
   kapitel 2, 3, 7 omskrivna mot nya Fö5 (2026-09-07). Kapitel 1–6 väntar
   på användarens granskning.
 
@@ -262,22 +272,10 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
    kursintroduktionen. Kapitel 3 och 7 säger "kursen har placerat dem
    olika, på tentan kommer de i uppgift 2". Rätta inte förrän Björn svarat.
 
-3. **Dependency preservation:** Fö6 säger att ett beroende är bevarat om
-   dess två attribut står i samma relation, och räknar i exemplet med
-   Employee(EmployeeNo, Name, Address, ProjectNo) och Project(ProjectNo,
-   Name, Budget) ett beroende som förlorat (sajten har tolkat det som
-   EmployeeNo → ProjectName). Med definitionen (lokala beroenden medför
-   tillsammans alla ursprungliga) följer EmployeeNo → ProjectName ur
-   EmployeeNo → ProjectNo och ProjectNo → ProjectName, alltså bevarat.
-   Kapitel 8, ordlistan och motorn följer definitionen sedan 2026-09-30
-   (användarbeslut); frågan är hur 3a–e rättas när regeln och definitionen
-   ger olika svar. Sajten skriver ProjectName i Project där decken skriver
-   Name.
-
-Observation, ingen fråga: häftets facit 13:9 har R1(A, B, C) och
-R2(A, B, D) med samma nyckel {A, B}, som sajtens egen regel om
-övernormalisering ({A, B} → {C, D} ska inte delas) skulle underkänna. Facit
-står kvar som det är; motorn godkänner det (3NF, lossless, DP).
+3. **Häftets facit 13:9:** R(A, B, C, D) med {A, B} → C, {A, B} → D,
+   D → C; facit ger R1(A, B, C), R2(A, B, D), R3(D, C). R1 är överflödig:
+   {A, B} → D och D → C ger redan C, och R1 och R2 har samma nyckel — mot
+   regeln om övernormalisering. Facit står kvar tills Björn svarat.
 
 Känt men inte en fråga: Fö5:s sammanfattning av normaliseringssteget
 ("every non-trivial determinant is a key") är BCNF-liknande; kursen
@@ -419,6 +417,17 @@ data" i Statistik rensar allt. Progress är per webbläsare och domän.
   röstväljaren (`ChapterView`, två röster som heter "Alva (svenska
   (Sverige))") — kosmetiskt, beror på webbläsarens röstlista.
 - Skärmdumpar i browserpanelen kan vara eftersläpande/tomma; DOM gäller.
+- Gamla Fö6 och YouTube-videon "Lossless Join and Dependency Preservation"
+  lär ut samma-relation-regeln; nya Fö6 använder implikationsdefinitionen —
+  sajten följer nya Fö6.
+- Kapitel 8 mot nya Fö6 (2026-09-30), skillnader som står kvar: kapitlet
+  har två anomalier (update, deletion), decken tre (också insertion
+  anomaly); attribute closure, superkey och nyckelsökningen i fem steg
+  finns i ordlistan och definitionspanelen men inte i kapitlets löptext;
+  ordlistans "Atomärt värde" säger "odelbart" medan decken säger att ett
+  atomärt värde kan ha komponenter (ett datum) — det som bryter 1NF är en
+  samling. Decken använder "spurious tuples", som innehållsregeln håller
+  borta från sajten. Inget av detta motsäger decken i sak.
 
 ## Essächecklistornas form (2026-09-18, lärarbesked)
 
@@ -627,8 +636,9 @@ avstämda mot transkripten 2026-09-30):
 
 - Användarens granskning av det ogranskade (listan ovan), i första hand
   Öva-frågorna dbq-33…62 och påståendeuppgifterna.
-- Björns svar på de två frågorna; därefter stryk R4(B, D)-varianten i
-  12:9 respektive rätta surrogatnyckelnoteringen i kapitel 3 och 7.
+- Björns svar på de tre frågorna; därefter stryk R4(B, D)-varianten i
+  12:9, rätta surrogatnyckelnoteringen i kapitel 3 och 7 respektive
+  ta ställning till 13:9.
 - **BPM efter F4 (5 okt) och F5 (12 okt):** skriv om kapitel 4, 7, 8, 10
   och 11; väv in Canvas-quizzarna BPM och BPMN när de kommer (alla
   tentafrågor finns där enligt Weaver); kontrollera 3(a) efter F5. Kasper

@@ -10,7 +10,7 @@
 //   kandidatnyckel (X → Y och Y → Z där Y ↛ X).
 // - Lossless join: den naturliga joinen av delarna ger tillbaka R för varje
 //   population som uppfyller beroendena (prövas exakt med tablåmetoden; för
-//   förklaringen används kursbokens kontroll två i taget).
+//   förklaringen används Fö6:s test två delar i taget).
 // - Dependency preservation: de lokala beroendena i delarna medför
 //   tillsammans alla ursprungliga beroenden — inte "båda attributen i samma
 //   relation", som bara är ett tillräckligt villkor.
@@ -202,7 +202,7 @@ export function isLossless(R, F, decomposition) {
   return rows.some((row) => row.every((v) => v === "a"));
 }
 
-// Förklaringen i kursbokens form, två delar i taget: två delar får slås
+// Förklaringen i Fö6:s form, två delar i taget: två delar får slås
 // ihop om de gemensamma attributen bestämmer alla attribut i minst en av
 // dem. Ger stegen och, om kontrollen fastnar, var den fastnade.
 export function losslessSteps(R, F, decomposition) {
