@@ -81,8 +81,8 @@ export function decompositionProperties(item, text) {
       ? loss.steps.map((s) => `${name(s.left.names)} och ${name(s.right.names)} delar ${braceText(s.common)}, och ${closureText(s.common, F, R)} täcker ${s.covers === "right" ? name(s.right.names) : name(s.left.names)}.`)
       : ["Joinen ger tillbaka R (tablåprovet), men inte två delar i taget."]
     : loss.stuck
-      ? [`Två i taget fastnar: ${loss.stuck.map((p) => `${name(p.names)} (${p.attrs.join(", ")})`).join(" och ")} har inga gemensamma attribut som bestämmer någon av dem. Att fastna avgör inte ensamt, men tablåprovet visar att joinen inte ger tillbaka R.`]
-      : ["Joinen ger inte tillbaka R."];
+      ? [`Två i taget fastnar: ${loss.stuck.map((p) => `${name(p.names)} (${p.attrs.join(", ")})`).join(" och ")} har inga gemensamma attribut som bestämmer någon av dem. Att fastna avgör inte ensamt, men tablåprovet visar att joinen kan ge spurious tuples — tuples som inte fanns i R.`]
+      : ["Joinen kan ge spurious tuples — tuples som inte fanns i R."];
   const report = dependencyReport(R, F, decomposition);
   const depText = report.map((r) => {
     const t = r.fd.text || fdText(r.fd);

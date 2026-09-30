@@ -557,7 +557,7 @@ export const questions = [
     question: "Påstående: schema 2 har egenskapen lossless join.",
     options: [
       { text: "Sant — båda relationerna har en kandidatnyckel som bestämmer sina övriga attribut", explain: "Nycklar inom delrelationerna säger inget om nedbrytningen. Egenskapen gäller joinen mellan dem." },
-      { text: "Sant — R1 och R2 är disjunkta, så den naturliga joinen lägger inte till några extra rader", explain: "Utan gemensamt attribut blir joinen en kartesisk produkt av alla kombinationer — inte R." },
+      { text: "Sant — R1 och R2 är disjunkta, så den naturliga joinen lägger inte till några extra rader", explain: "Utan gemensamt attribut parar joinen ihop varje rad med varje rad och lägger till spurious tuples — inte R." },
       { text: "Falskt — lossless join kräver att varje relation i schemat är i 3NF, och R1 är det inte", explain: "Normalformen hos delrelationerna och nedbrytningens egenskaper är två olika saker. Skälet här är det saknade gemensamma attributet." },
       { text: "Falskt — R1 och R2 saknar gemensamt attribut, så ingen naturlig join ger tillbaka R", explain: "Lossless join betyder att den naturliga joinen av delrelationerna ger tillbaka R. R1(A, B, C, F, G) och R2(D, E) har inget attribut gemensamt — precis föreläsningens exempel på när egenskapen saknas." },
     ],

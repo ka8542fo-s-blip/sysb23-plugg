@@ -152,15 +152,17 @@ eget initiativ — kursmaterialet är sanningen, och innehållet är extraherat
 ordagrant där det är definitioner (normalformerna, Chens
 entity-definition, identifier, partial identifier, value set,
 femfrågetabellen, Crow's Foot-listan). Inför inga termer utanför kursen:
-**ingen BCNF, inga "spurious tuples", ingen FLOAT** (decket säger exakta
-mot approximativa numeriska typer). Lossless join definieras som att
+**ingen BCNF, ingen FLOAT** (decket säger exakta
+mot approximativa numeriska typer). "Spurious tuples" är kursvokabulär
+sedan 2026-09-30 — nya Fö6 använder termen (lossy-exemplen, sammanfattningen);
+spärren gällde gamla materialet och är borttagen ur regeln och grep-gaten. Lossless join definieras som att
 naturlig join ger tillbaka originalet för varje population som uppfyller
 beroendena; testet för två delar (gemensamma attribut bestämmer en hel
 del) och dependency preservation (lokala beroenden medför tillsammans alla
 ursprungliga) följer nya Fö6.
 Sakfel rapporteras, rättas inte utan beslut. Grep-gate som ska ge noll i
 `reading.js`/`topics.js`:
-`mandatory participation|non-mandatory|\bUML\b|\bEER\b|specialis|generalis|disjoint|overlapping|\bStudent|\bCourse|\bUniversity|\bOffer|\bTeacher|HasStudied|\bGrade\b|\bmentor|lärare|BCNF|spurious|FLOAT`
+`mandatory participation|non-mandatory|\bUML\b|\bEER\b|specialis|generalis|disjoint|overlapping|\bStudent|\bCourse|\bUniversity|\bOffer|\bTeacher|HasStudied|\bGrade\b|\bmentor|lärare|BCNF|FLOAT`
 (SQL-verkstadens Student/Course/HasStudied är SQL-föreläsningens egna och
 ska vara kvar där).
 
@@ -246,7 +248,9 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
   uppgifterna (fällorna och `trap`-texterna), definitionspanelen, kapitel
   8:s omskrivna dependency preservation-stycke (nya Fö6:s exempel) och
   sant/falskt-styckena om beroendebevarande och lossless join, ordlistans
-  lossless join,
+  lossless join, och kapitel 8:s tillägg efter nya Fö6 (anomalierna,
+  höljesavsnittet med exemplet, spurious tuples, ordlistans nya termer
+  insättningsanomali, spurious tuples, nyckelsökning i fem steg),
   kärnpunkten och fallgropsraden om beroendebevarande i `topics.js`, tre
   nya ordlistetermer (hölje, superkey, trivialt beroende) och förklaringarna
   (inte alternativen) i dbq-48, som lärde ut "samma relation" som krav.
@@ -420,14 +424,16 @@ data" i Statistik rensar allt. Progress är per webbläsare och domän.
 - Gamla Fö6 och YouTube-videon "Lossless Join and Dependency Preservation"
   lär ut samma-relation-regeln; nya Fö6 använder implikationsdefinitionen —
   sajten följer nya Fö6.
-- Kapitel 8 mot nya Fö6 (2026-09-30), skillnader som står kvar: kapitlet
-  har två anomalier (update, deletion), decken tre (också insertion
-  anomaly); attribute closure, superkey och nyckelsökningen i fem steg
-  finns i ordlistan och definitionspanelen men inte i kapitlets löptext;
-  ordlistans "Atomärt värde" säger "odelbart" medan decken säger att ett
-  atomärt värde kan ha komponenter (ett datum) — det som bryter 1NF är en
-  samling. Decken använder "spurious tuples", som innehållsregeln håller
-  borta från sajten. Inget av detta motsäger decken i sak.
+- Kapitel 8 följer nya Fö6 sedan 2026-09-30 (decken är facit för
+  kapitlet): tre anomalier (update, insertion, deletion) med gemensam
+  orsak, avsnittet "Hölje, superkey och alla kandidatnycklar" före
+  normalformerna (closure-algoritmen, superkey, CK = minimal superkey, de
+  fem stegen, genomräknat exempel = egen uppgift 4 med CK {A, B} och
+  {A, C}), spurious tuples i lossless-stycket, ordlistans "Atomärt värde"
+  med deckens innebörd (ett enda värde, får ha komponenter). Kvar som inte
+  är ändrat: definitionen av funktionellt beroende i kapitlet är den gamla
+  ordagranna ("varje X-värde i R är associerat med precis ett Y-värde");
+  decken betonar att det ska gälla i varje tillåten population.
 
 ## Essächecklistornas form (2026-09-18, lärarbesked)
 

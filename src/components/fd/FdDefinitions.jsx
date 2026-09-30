@@ -11,10 +11,10 @@ const DEFINITIONS = [
   ["Nyckelsökning i fem steg", null, "(1) Skriv upp attributen och beroendena. (2) Attribut som aldrig står till höger om en pil måste ingå i varje nyckel. (3) Räkna höljet och lägg till attribut tills det når allt. (4) Kontrollera att nyckeln är minimal. (5) Hitta ALLA kandidatnycklar innan du klassar attributen."],
   ["Prime attribute", "primärattribut", "Med i minst en kandidatnyckel. Non-prime (icke-primärattribut): med i ingen. Alla kandidatnycklar räknas, inte bara den du väljer som primärnyckel."],
   ["Proper subset", "äkta delmängd", "En delmängd som inte är hela mängden: A och B är äkta delmängder av {A, B}, men {A, B} är det inte."],
-  ["1NF", "första normalformen", "Varje attributvärde är ett enda atomärt värde, ingen samling."],
+  ["1NF", "första normalformen", "Varje attributvärde är ett enda atomärt värde, ingen samling. Ett atomärt värde får ha komponenter, som ett datum."],
   ["2NF", "andra normalformen", "1NF, och inget non-prime attribut är functionally dependent på en proper subset av någon candidate key. Kan bara brytas när någon kandidatnyckel är sammansatt."],
   ["3NF", "tredje normalformen", "2NF, och inget non-prime attribut är transitively dependent på någon candidate key. Transitivt: X → Z indirekt via X → Y och Y → Z, där Y ↛ X."],
-  ["Lossless join", "förlustfri join", "Originalet kan återskapas exakt med join av delarna, för varje population som uppfyller beroendena. För två delar: de gemensamma attributen måste bestämma alla attribut i minst en av dem. Ett exempel som råkar fungera bevisar inget; ett motexempel motbevisar."],
+  ["Lossless join", "förlustfri join", "Originalet kan återskapas exakt med join av delarna, för varje population som uppfyller beroendena. För två delar: de gemensamma attributen måste bestämma alla attribut i minst en av dem. En lossy nedbrytning kan ge spurious tuples: joinen lägger till tuples som inte fanns. Ett exempel som råkar fungera bevisar inget; ett motexempel motbevisar."],
   ["Dependency preservation", "beroendebevarande", "Delrelationernas lokala beroenden medför TILLSAMMANS alla ursprungliga. A → B i R1 och B → C i R2 bevarar A → C. Att båda attributen står i samma relation räcker för att visa att ett beroende är bevarat, men inte för att visa att det gått förlorat."],
 ];
 

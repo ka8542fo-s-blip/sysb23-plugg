@@ -865,9 +865,13 @@ Betrakta vad som händer om vi implementerar M:N-exemplet som **en enda** relati
     E5  Ken  Hong Kong  P3  WAC installation      15000
     E6  Dan  London     P4  Network optimization  50000
 
-**Uppdateringsanomali (update anomaly):** ska budgeten för P3 höjas måste **två celler** uppdateras i stället för en. Uppdateras bara den ena blir datan inkonsekvent.
+**Uppdateringsanomali (update anomaly):** ska budgeten för P3 höjas måste **två celler** ändras; ändras bara den ena har P3 två olika budgetar.
 
-**Raderingsanomali (deletion anomaly):** raderas de anställda E4 och E5 försvinner samtidigt **all information om projekt P3**. Att radera information om en entitet ska under normala förhållanden inte leda till att information om en separat entitet förloras.
+**Insättningsanomali (insertion anomaly):** ett nytt projekt P5 kan inte registreras innan någon är tilldelad det, eftersom nyckeln {EmployeeNo, ProjectNo} kräver ett EmployeeNo.
+
+**Raderingsanomali (deletion anomaly):** raderas de anställda E4 och E5 försvinner samtidigt **all information om projekt P3**.
+
+De tre har **samma orsak**: ett faktum — projektets namn och budget — lagras i en relation vars nyckel handlar om något annat, kopplingen mellan anställd och projekt.
 
 Redundansen är alltså inte bara slöseri med lagring — den är en källa till fel. Och för att förhindra anomalierna måste man förstå varför de uppstår, vilket kräver teorin.
 
@@ -906,9 +910,41 @@ Därmed:
 
 Parentesen i den sista definitionen är viktig: gäller även Y → X är beroendet inte transitivt, eftersom Y då själv är en kandidatnyckel.
 
+## Hölje, superkey och alla kandidatnycklar
+
+I exemplet syntes kandidatnyckeln med blotta ögat. Med abstrakta beroenden behövs en metod, och tentan kräver **alla** kandidatnycklar: "har R fler än en kandidatnyckel?" och "är C ett primärattribut?" avgörs båda av hela listan.
+
+> **Hölje (attribute closure):** X⁺ är mängden av alla attribut som X bestämmer under de givna beroendena, inklusive X självt.
+
+Algoritmen: börja med X. Hitta ett beroende vars hela vänsterled finns i mängden och lägg till högerledet. Upprepa tills ett helt varv inte lägger till något.
+
+> **Superkey:** en attributmängd vars hölje innehåller alla attribut i relationen.
+> **Kandidatnyckel (candidate key):** en minimal superkey — tas något attribut bort slutar den vara superkey.
+
+Nyckelsökningen i fem steg:
+
+1. **Skriv upp** relationens attribut och beroenden.
+2. **Attribut som inte står på någon högersida måste ingå i varje nyckel** — inget beroende kan lägga till dem.
+3. **Räkna höljet** av startmängden. Når det inte alla attribut, lägg till fler.
+4. **Kontrollera minimaliteten:** ta bort ett attribut bara om resten fortfarande bestämmer allt.
+5. **Hitta alla kandidatnycklar:** pröva andra startmängder och förklara varför inga andra minimala mängder duger.
+
+Först därefter klassas attributen som primära och icke-primära.
+
+    R(A, B, C, D)
+    {A, B} → {C, D}
+    C → B
+
+**Steg 2:** A står inte på någon högersida, så A ingår i varje nyckel. A⁺ = {A} räcker inte. **Steg 3:** {A, B}⁺ = {A, B, C, D} — superkey. **Steg 4:** A⁺ = {A} och B⁺ = {B}, så ingen del räcker: {A, B} är kandidatnyckel. **Steg 5:** byt B mot C. {A, C}⁺: C → B ger B, sedan {A, B} → {C, D} ger D — {A, B, C, D}, också superkey, och varken A⁺ eller C⁺ = {C, B} räcker ensamma. {A, D}⁺ = {A, D} räcker inte, och varje annan superkey innehåller {A, B} eller {A, C}.
+
+    Kandidatnycklar: {A, B} och {A, C}
+    Primärattribut: A, B, C      Icke-primärattribut: D
+
+Steg 5 är det som avgör. Den som stannar vid {A, B} klassar C som icke-primärt och missar att R har två kandidatnycklar. Eftersom B är primärt bryter C → B inget, och R är i 3NF.
+
 ## Normalformerna
 
-Generellt: relationer i högre normalform har **mindre redundans** och därmed mindre risk för uppdaterings- och raderingsanomalier. Normalformerna **bygger på varandra** — för att uppfylla 3NF måste relationen redan uppfylla 2NF.
+Generellt: relationer i högre normalform har **mindre redundans** och därmed mindre risk för uppdaterings-, insättnings- och raderingsanomalier. Normalformerna **bygger på varandra** — för att uppfylla 3NF måste relationen redan uppfylla 2NF.
 
 > **Första normalformen (1NF):** en relation är i första normalformen om värdena i varje attribut är atomära.
 
@@ -951,7 +987,7 @@ Kandidatnyckel: {A, B}. Primärattribut: A, B. Icke-primärattribut: C, D. Här 
 
 Arbetsgången vid varje sådan uppgift är alltid samma fyra steg:
 
-1. **Bestäm kandidatnyckeln eller kandidatnycklarna** ur de funktionella beroendena.
+1. **Bestäm alla kandidatnycklar** ur de funktionella beroendena, med de fem stegen ovan.
 2. **Lista primärattribut och icke-primärattribut.**
 3. **Testa 2NF:** finns något icke-primärattribut som beror på en äkta delmängd av en kandidatnyckel?
 4. **Testa 3NF:** finns något icke-primärattribut som beror transitivt på en kandidatnyckel?
@@ -972,7 +1008,7 @@ Och där kommer svaret på kapitlets inledande fråga: **transformationsreglerna
 
 Att dela upp en relation är inte gratis. Två egenskaper avgör om uppdelningen är godtagbar.
 
-**Lossless join (förlustfri join, även non-additive join).** En dekomposition har egenskapen om en **naturlig join** av delrelationerna ger tillbaka originalrelationen. En naturlig join matchar automatiskt kolumner med samma namn, utan ON-villkor. Föreläsningens exempel: \`R(A,B,C,D,E,F)\` med \`A → {B,C}\` och \`D → {E,F}\` delas upp i \`R1(A,B,C)\` och \`R2(D,E,F)\`. Båda ser ut att vara i 3NF, men de har inget gemensamt attribut, så den naturliga joinen kan inte återskapa \`R\`. I Employee–Project-exemplet betyder det att ingen längre vet vem som arbetar i vilket projekt. Lösningen är kopplingsrelationen \`Work(EmployeeNo, ProjectNo)\`, precis den M:N-regeln föreskriver: med den på plats kan de tre relationerna joinas tillbaka till originalet. Detta är det icke-förhandlingsbara kravet.
+**Lossless join (förlustfri join, även non-additive join).** En dekomposition har egenskapen om en **naturlig join** av delrelationerna ger tillbaka originalrelationen. En naturlig join matchar automatiskt kolumner med samma namn, utan ON-villkor. Föreläsningens exempel: \`R(A,B,C,D,E,F)\` med \`A → {B,C}\` och \`D → {E,F}\` delas upp i \`R1(A,B,C)\` och \`R2(D,E,F)\`. Båda ser ut att vara i 3NF, men de har inget gemensamt attribut, så den naturliga joinen parar ihop varje tuple i R1 med varje tuple i R2 och kan inte återskapa \`R\`. Tuples som joinen lägger till men som inte fanns i originalet kallas **spurious tuples**; en nedbrytning där de kan uppstå är **lossy**. I Employee–Project-exemplet betyder det att ingen längre vet vem som arbetar i vilket projekt. Lösningen är kopplingsrelationen \`Work(EmployeeNo, ProjectNo)\`, precis den M:N-regeln föreskriver: med den på plats kan de tre relationerna joinas tillbaka till originalet. Detta är det icke-förhandlingsbara kravet.
 
 **Dependency preservation (beroendebevarande).** Utöver lossless join kan en dekomposition ha egenskapen att beroendena bevaras. Definitionen: **de lokala beroendena i delrelationerna medför tillsammans alla ursprungliga beroenden.** Ett beroende behöver alltså inte stå i en enda relation för att vara bevarat — det räcker att det går att härleda ur det som gäller inom delrelationerna. Exempel: \`R(A, B, C)\` med \`A → B\`, \`B → C\` och \`A → C\` delas upp i \`R1(A, B)\` och \`R2(B, C)\`. \`A → C\` står i ingen av dem, men \`A → B\` gäller i R1 och \`B → C\` i R2, och tillsammans ger de \`A → C\`. Beroendet är bevarat. Kontrollen "båda attributen i samma relation" är därför ensidig: **står ett beroendes attribut i samma relation är det bevarat; står de utspridda måste du pröva om det följer av de andra.** Räkna höljet av vänsterledet med bara de beroenden som gäller inom en delrelation, och se om högerledet nås. Föreläsningens två exempel visar båda utfallen. Bevarat: \`EMPLOYEE_DETAILS(EmployeeNo, DepartmentNo, DepartmentName)\` med \`EmployeeNo → DepartmentNo\` och \`DepartmentNo → DepartmentName\` delas upp i \`EMPLOYEE(EmployeeNo, DepartmentNo)\` och \`DEPARTMENT(DepartmentNo, DepartmentName)\`; varje beroende kan kontrolleras inom en relation. Förlorat: \`EMPLOYEE(EmployeeNo, Email, Office)\` med \`EmployeeNo → Email\` (en anställd har en e-postadress men kan sitta på flera kontor) delas upp i \`EMPLOYEE_OFFICE(EmployeeNo, Office)\` och \`EMAIL_OFFICE(Email, Office)\`. Ingen av dem innehåller både EmployeeNo och Email, och inga lokala beroenden finns som tillsammans ger \`EmployeeNo → Email\`. Varje relation kan vara korrekt för sig — E1 på kontor O1, två adresser på O1 — men joinen över Office ger E1 två e-postadresser. Ett förlorat beroende kan databasen inte längre upprätthålla med en enkel constraint inom en tabell. Just den kontrollen, beroende för beroende, är vad övningshäftets sant/falskt-frågor om dekompositioner prövar (uppgift 16 och 17).
 
@@ -1567,7 +1603,7 @@ export const glossary = [
   { term: "1NF (första normalformen)", definition: "En relation är i första normalformen om värdena i varje attribut är atomära.", chapter: "kap7" },
   { term: "2NF (andra normalformen)", definition: "En relation är i 2NF om och endast om den är i 1NF och inget icke-primärattribut är funktionellt beroende av någon äkta delmängd av någon kandidatnyckel i relationen.", chapter: "kap7" },
   { term: "3NF (tredje normalformen)", definition: "En relation är i 3NF om och endast om den är i 2NF och varje icke-primärattribut är icke-transitivt beroende av varje kandidatnyckel i relationen.", chapter: "kap7" },
-  { term: "Atomärt värde", definition: "Ett odelbart värde i en cell. Kravet på atomära värden är både en av relationens egenskaper och innehållet i 1NF.", chapter: "kap2" },
+  { term: "Atomärt värde", definition: "Ett enda värde i en cell, inte en samling. Ett atomärt värde kan ha komponenter, som ett datum; det som bryter 1NF är flera värden i samma cell, som flera datum eller \"P1, P5\". Kravet på atomära värden är både en av relationens egenskaper och innehållet i 1NF.", chapter: "kap2" },
   { term: "Attribut (attribute)", definition: "Formellt: ett namn parat med en domän. Informellt en kolumn eller ett fält.", chapter: "kap2" },
   { term: "Bag", definition: "En samling som räknar upprepningar. Ett SQL-resultat är en bag: SELECT Name kan ge två identiska rader från två anställda. En relation är en mängd och innehåller tupeln en gång; DISTINCT tar bort dubblettraderna.", chapter: "kap2" },
   { term: "CHECK-constraint", definition: "Villkor på tillåtna värden i en kolumn, t.ex. CHECK (EmpSalary >= 0). Domänbegreppets tekniska motsvarighet.", chapter: "kap8" },
@@ -1586,13 +1622,13 @@ export const glossary = [
   { term: "HAVING", definition: "Villkor på grupper, utvärderat efter GROUP BY och aggregaten; får innehålla aggregat. WHERE filtrerar rader före grupperingen och får inte innehålla aggregat. Logisk ordning: FROM, WHERE, GROUP BY, aggregat, HAVING, SELECT, ORDER BY.", chapter: "kap9" },
   { term: "Icke-primärattribut (non-prime)", definition: "Ett attribut som inte är medlem i någon kandidatnyckel.", chapter: "kap3" },
   { term: "IDENTITY(1,1)", definition: "SQL Servers sätt att skriva en automatiskt inkrementerande surrogatnyckel: första talet är startvärdet (seed), andra steget (increment). Tentans uppgift 2 kräver den på tabeller för vanliga och svaga entiteter — inte på kopplingstabeller.", chapter: "kap8" },
-  { term: "Kandidatnyckel (candidate key)", definition: "En attributmängd som uppfyller både unikhet (inga två skilda tupler har samma värden i något giltigt relationsvärde) och minimalitet (inget attribut kan tas bort utan att unikheten förloras). Kortformen: kan användas för att unikt identifiera vilken tupel som helst. En relation kan ha flera.", chapter: "kap3" },
+  { term: "Kandidatnyckel (candidate key)", definition: "En attributmängd som uppfyller både unikhet (inga två skilda tupler har samma värden i något giltigt relationsvärde) och minimalitet (inget attribut kan tas bort utan att unikheten förloras). Kortformen: kan användas för att unikt identifiera vilken tupel som helst. Ur beroendena: en minimal superkey. En relation kan ha flera.", chapter: "kap3" },
   { term: "Kardinalitet (cardinality)", definition: "Antalet tupler i det aktuella relationsvärdet; ett tomt värde har kardinalitet noll. I ER-modellen betyder ordet i stället kardinalitetsvillkor på deltagande.", chapter: "kap2" },
   { term: "Kedjade svaga entiteter", definition: "En svag entitetstyp vars ägare själv är svag. Mappas ägare först; varje led refererar sin närmaste ägares kompletta nyckel, och primärnyckeln växer led för led: {ProjectNo}, {ProjectNo, TaskNo}, {ProjectNo, TaskNo, StepNo}.", chapter: "kap6" },
   { term: "Kodstandard", definition: "Kursens namngivningsregler: PascalCase och singular för tabeller, PascalCase för kolumner, constraintprefixen PK_, FK_, UQ_, CK_, DF_, camelCase för Java-variabler.", chapter: "kap8" },
   { term: "Konceptuell databasdesign", definition: "Första steget i designprocessen: verksamhetskraven blir ett ER-diagram.", chapter: "kap1" },
   { term: "Logisk databasdesign", definition: "Andra steget: den konceptuella modellen transformeras till relationer i textform och normaliseras om nödvändigt.", chapter: "kap1" },
-  { term: "Lossless join", definition: "Egenskap hos en nedbrytning: originalrelationen kan återskapas exakt med naturlig join av delrelationerna, för varje population som uppfyller beroendena. Test för två delar: de gemensamma attributen bestämmer alla attribut i minst en av dem. Ett lyckat exempel bevisar inget; ett motexempel motbevisar.", chapter: "kap7" },
+  { term: "Lossless join", definition: "Egenskap hos en nedbrytning: originalrelationen kan återskapas exakt med naturlig join av delrelationerna, för varje population som uppfyller beroendena. Test för två delar: de gemensamma attributen bestämmer alla attribut i minst en av dem. En nedbrytning som saknar egenskapen är lossy och kan ge spurious tuples. Ett lyckat exempel bevisar inget; ett motexempel motbevisar.", chapter: "kap7" },
   { term: "Minimalitet", definition: "Villkoret att inget attribut kan tas bort ur en kandidatnyckel utan att den garanterade unikheten går förlorad. {EmployeeNo, Name} är unik men inte minimal.", chapter: "kap3" },
   { term: "Motivering (högsta normalform)", definition: "Tentans krav i 3f–3g: en rad för normalformen och en rad för skälet, som namnger definitionens begrepp och relationens attribut — 'äkta delmängden B av kandidatnyckeln {A,B} bestämmer funktionellt icke-primärattributet D'. Krävs inte för 3NF.", chapter: "kap7" },
   { term: "Mängdskillnad i SQL", definition: "'X men inte Y' skrivs med NOT IN, NOT EXISTS eller EXCEPT. NOT IN mot en lista med ett NULL ger tomt resultat; NOT EXISTS är det säkra valet; EXCEPT ger bara de gemensamma kolumnerna.", chapter: "kap9" },
@@ -1617,11 +1653,14 @@ export const glossary = [
   { term: "Transitivt beroende", definition: "Ett funktionellt beroende där X → Z indirekt, i kraft av X → Y och Y → Z, och där det inte gäller att Y → X. Bryter mot 3NF.", chapter: "kap7" },
   { term: "Tupel (tuple)", definition: "Formellt en mängd attributvärden där inga två skilda element har samma attributnamn. Informellt en rad eller post.", chapter: "kap2" },
   { term: "UNIQUE-constraint", definition: "Kräver unika värden men tillåter NULL. Här hamnar naturliga nycklar när en surrogatnyckel tagit primärnyckelrollen.", chapter: "kap8" },
-  { term: "Uppdateringsanomali", definition: "Att samma faktum lagras i flera rader så att en ändring måste göras på flera ställen, med risk för inkonsekvens.", chapter: "kap7" },
+  { term: "Uppdateringsanomali (update anomaly)", definition: "Att samma faktum lagras i flera rader så att en ändring måste göras på flera ställen, med risk för inkonsekvens.", chapter: "kap7" },
   { term: "Fysisk databasdesign", definition: "Tredje steget: den logiska modellen implementeras som DDL-satser, med surrogatnycklar, datatyper och constraints.", chapter: "kap1" },
-  { term: "Raderingsanomali", definition: "Att radering av information om en entitet leder till att information om en separat entitet förloras.", chapter: "kap7" },
-  { term: "Hölje (attribute closure)", definition: "X⁺, allt som X bestämmer. Börja med X; när hela vänsterledet i ett beroende finns i mängden läggs högerledet till; upprepa tills inget nytt tillkommer. {A, B}⁺ = alla attribut betyder att {A, B} är superkey.", chapter: "kap7" },
+  { term: "Insättningsanomali (insertion anomaly)", definition: "Att ett faktum inte kan registreras förrän något annat finns: ett nytt projekt kan inte läggas in innan någon är tilldelad det, när nyckeln kräver EmployeeNo.", chapter: "kap7" },
+  { term: "Spurious tuples", definition: "Tuples som en join av delrelationerna lägger till men som inte fanns i originalrelationen. Uppstår i en lossy nedbrytning, till exempel när delarna saknar gemensamma attribut och joinen parar ihop allt med allt.", chapter: "kap7" },
+  { term: "Raderingsanomali (deletion anomaly)", definition: "Att radering av information om en entitet leder till att information om en separat entitet förloras.", chapter: "kap7" },
+  { term: "Hölje (attribute closure)", definition: "X⁺, alla attribut som X bestämmer under de givna beroendena, inklusive X. Börja med X; när hela vänsterledet i ett beroende finns i mängden läggs högerledet till; upprepa tills ett helt varv inte tillför något. {A, B}⁺ = alla attribut betyder att {A, B} är superkey.", chapter: "kap7" },
   { term: "Superkey (supernyckel)", definition: "En attributmängd vars hölje innehåller alla attribut i relationen. En kandidatnyckel är en minimal superkey: tas något attribut bort slutar den vara superkey.", chapter: "kap7" },
+  { term: "Nyckelsökning i fem steg", definition: "(1) Skriv upp attribut och beroenden. (2) Attribut som inte står på någon högersida måste ingå i varje nyckel. (3) Räkna höljet och lägg till attribut tills det når allt. (4) Kontrollera minimaliteten. (5) Hitta alla kandidatnycklar innan attributen klassas som primära och icke-primära.", chapter: "kap7" },
   { term: "Trivialt beroende (trivial dependency)", definition: "X → Y där Y ⊆ X, som {A, B} → A. Säger ingenting och räknas aldrig som partiellt eller transitivt. A → {B, C} betyder A → B och A → C, men {A, B} → C kan inte delas upp.", chapter: "kap7" },
   { term: "Äkta delmängd (proper subset)", definition: "En delmängd av en mängd som inte är lika med mängden själv. Både A och B är äkta delmängder av {A,B}.", chapter: "kap7" },
   { term: "Metamodell (metamodel)", definition: "Vokabulären som säger vad en modell får uttrycka. För ER: EntityType, Attribute, RelationshipType, Participation/Role och CardinalityConstraint. Ändras inte när modellen växer.", chapter: "kap4" },
