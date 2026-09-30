@@ -39,7 +39,6 @@ function weekdayLong(iso) {
 // öppnar en dag i taget. Detaljerna finns i Pluggkalendern.
 export default function WeekAtAGlance({ navigate, onSelectCourse }) {
   const state = termState(schedule);
-  const next = nextExam(schedule);
   const byId = useMemo(() => subcoursesById(schedule), []);
   const now = useToday();
 
@@ -50,10 +49,13 @@ export default function WeekAtAGlance({ navigate, onSelectCourse }) {
     () => loadExamRegistrations(schedule.exams.map((exam) => exam.id)),
     [now],
   );
+  const next = nextExam(schedule, registrations);
+  // Omtentor räknas inte här: en okryssad omtenta är inte aktuell alls.
   const regNext = useMemo(
     () =>
       decoratedExams(schedule).find(
-        (exam) => !exam.past && !registrations[exam.id] && exam.regDays >= 0,
+        (exam) =>
+          !exam.past && exam.type !== "omtenta" && !registrations[exam.id] && exam.regDays >= 0,
       ) || null,
     [now, registrations],
   );

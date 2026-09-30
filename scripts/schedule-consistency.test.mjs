@@ -65,3 +65,17 @@ test("kontrolldatumen är giltiga", () => {
   assert.match(schedule.lastChecked, DATE);
   assert.ok(schedule.verifiedOn <= schedule.lastChecked);
 });
+
+test("nästa tenta hoppar över omtentor man inte anmält sig till", async () => {
+  const { nextExam } = await import("../src/lib/scheduleInfo.js");
+  // Framtida datum så att testet inte beror på dagens datum.
+  const s = {
+    subcourses: [{ id: "a" }, { id: "b" }],
+    exams: [
+      { id: "om-a", subcourse: "a", type: "omtenta", date: "2099-11-06", start: "08:00", end: "11:00" },
+      { id: "ex-b", subcourse: "b", type: "ordinarie", date: "2099-11-13", start: "08:00", end: "13:00" },
+    ],
+  };
+  assert.equal(nextExam(s).id, "ex-b");
+  assert.equal(nextExam(s, { "om-a": true }).id, "om-a");
+});

@@ -22,8 +22,20 @@ export function decoratedExams(schedule) {
     });
 }
 
-export function nextExam(schedule) {
-  return decoratedExams(schedule).find((exam) => !exam.past) || null;
+// En omtenta är bara aktuell för den som ska skriva den. Utan anmälan
+// hoppas den över, annars blir Strategis omtenta (6 nov) "nästa tenta"
+// fast den ordinarie redan är skriven. Kryssar man i "Anmäld" på
+// omtentan räknas den med igen.
+export function isRelevantExam(exam, registrations = {}) {
+  return exam.type !== "omtenta" || Boolean(registrations[exam.id]);
+}
+
+export function nextExam(schedule, registrations = {}) {
+  return (
+    decoratedExams(schedule).find(
+      (exam) => !exam.past && isRelevantExam(exam, registrations),
+    ) || null
+  );
 }
 
 // tre tillstånd: före terminsstart, under terminen, efter sista examinationen

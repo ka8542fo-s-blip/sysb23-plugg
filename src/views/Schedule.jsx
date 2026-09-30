@@ -25,7 +25,6 @@ export default function Schedule({ answers, exams: examHistory, navigate, onSele
   // följer med om fliken står öppen över midnatt.
   const now = useToday();
   const exams = useMemo(() => decoratedExams(schedule), [now]);
-  const next = useMemo(() => nextExam(schedule), [now]);
   const state = termState(schedule);
   const period = currentPeriod(schedule);
 
@@ -33,6 +32,7 @@ export default function Schedule({ answers, exams: examHistory, navigate, onSele
   const [registrations, setRegistrations] = useState(() =>
     loadExamRegistrations(schedule.exams.map((exam) => exam.id)),
   );
+  const next = useMemo(() => nextExam(schedule, registrations), [now, registrations]);
   function toggleRegistration(examId, isRegistered) {
     saveExamRegistration(examId, isRegistered);
     setRegistrations((prev) => {
