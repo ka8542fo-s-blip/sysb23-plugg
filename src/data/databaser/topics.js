@@ -219,7 +219,8 @@ export const topics = [
     summary: "Redundans ger uppdaterings-, insättnings- och raderingsanomalier. Funktionella beroenden och höljet gör det möjligt att härleda alla kandidatnycklar och avgöra normalform. 1NF kräver atomära värden, 2NF förbjuder beroenden på äkta delmängder av kandidatnycklar, 3NF förbjuder transitiva beroenden.",
     keyPoints: [
       "Anomalier: uppdateringsanomali — samma faktum lagrat i flera rader måste ändras på flera ställen; insättningsanomali — ett nytt projekt kan inte registreras innan någon är tilldelad det, eftersom nyckeln kräver EmployeeNo; raderingsanomali — att radera en entitet förstör information om en annan. Samma orsak: ett faktum lagras i en relation vars nyckel handlar om något annat.",
-      "Funktionellt beroende: givet relation R funktionellt bestämmer X ett attribut Y om och endast om varje X-värde i R är associerat med precis ett Y-värde i R. Skrivs X → Y.",
+      "Funktionellt beroende (functional dependency): X → Y om två tuples med samma X-värden alltid har samma Y-värden; X är determinant, Y dependent attribute. En affärsregel för varje tillåten population — unika värden i exempeldata bevisar inget, men ett motexempel motbevisar.",
+      "Pilens riktning och delning: X → Y ger inte Y → X, och en determinant behöver inte vara en nyckel. A → {B, C} = A → B och A → C; {A, B} → C kan inte delas upp.",
       "Kandidatnyckel ur beroendena: den minimala attributuppsättning som funktionellt bestämmer alla övriga attribut.",
       "Hölje (attribute closure): X⁺ är allt X bestämmer. Börja med X, lägg till högerledet i varje beroende vars hela vänsterled finns, upprepa tills inget nytt tillkommer.",
       "Superkey och kandidatnyckel: X är superkey om X⁺ innehåller alla attribut; en kandidatnyckel är en minimal superkey.",

@@ -848,7 +848,7 @@ Skriv ut varje relation fullständigt med understruken primärnyckel. Poängen s
     lead: "Anomalierna som motiverar normalisering, funktionella beroenden, 1NF till 3NF med kursens exakta definitioner, dekomposition — och tentans två former: sant/falskt om ett schema, och högsta normalform med motivering.",
     sources: ["Föreläsning 6", "Övningshäftet uppgift 10–17", "Extentorna HT25, uppgift 3", "Föreläsning 6, HT2026-decken (lossless-testet för två delar, dependency preservation)"],
     body: `
-Tentans tredje område, och det mest formella. Definitionerna nedan är kursens egna och återges ordagrant, eftersom det är formuleringarna som prövas.
+Tentans tredje område, och det mest formella. Normalformernas definitioner är kursens egna och återges ordagrant, eftersom det är formuleringarna som prövas.
 
 ## Varför normalisera? Anomalierna
 
@@ -877,16 +877,22 @@ Redundansen är alltså inte bara slöseri med lagring — den är en källa til
 
 ## Funktionellt beroende
 
-> **Funktionellt beroende (functional dependency):** givet en relation R sägs ett attribut X funktionellt bestämma ett annat attribut Y om och endast om varje X-värde i R är associerat med precis ett Y-värde i R. R sägs då uppfylla det funktionella beroendet X → Y.
+> **Funktionellt beroende (functional dependency):** X → Y gäller om två tuples som har samma X-värden alltid också har samma Y-värden. X är **determinant** (vänstersidan), Y är **dependent attribute** (högersidan).
+
+Ett funktionellt beroende är en **affärsregel**. Det ska gälla i varje tillåten population, inte bara i den data som råkar finnas nu. Exempeldata kan motbevisa ett beroende — två tuples med samma X och olika Y räcker — men aldrig bevisa det: att alla namn är unika i dagens tabell betyder inte att Name → EmployeeNo, om regeln tillåter två anställda med samma namn. Ett beroende hindrar inte heller att värden ändras över tid; det kräver bara att alla kopior stämmer i varje tillstånd.
 
 I exemplet ovan gäller:
 
     EmployeeNo → {Name, Address}
     ProjectNo  → {ProjectName, Budget}
 
-Skrivsättet \`EmployeeNo → {Name, Address}\` betyder samma som två separata beroenden: \`EmployeeNo → Name\` och \`EmployeeNo → Address\`.
+Tre saker att hålla isär:
 
-Att läsa av funktionella beroenden ur en kravtext eller ur exempeldata är den färdighet allt annat i kapitlet vilar på. Frågan att ställa: **om jag känner värdet på X, är då Y entydigt bestämt?**
+- **Pilen är riktad.** X → Y ger inte Y → X. EmployeeNo → Name gäller, men Name → EmployeeNo gör det inte: två anställda får heta samma sak.
+- **En determinant behöver inte vara en nyckel.** EmployeeNo bestämmer Name, men inte vilket projekt raden gäller; EmployeeNo är determinant för Name utan att vara nyckel i EmployeeProject.
+- **Högersidan kan delas, vänstersidan inte.** \`EmployeeNo → {Name, Address}\` betyder samma som \`EmployeeNo → Name\` och \`EmployeeNo → Address\`. Men hade relationen haft antal timmar per uppdrag, \`{EmployeeNo, ProjectNo} → Hours\`, kan det inte delas upp i \`EmployeeNo → Hours\` och \`ProjectNo → Hours\` — det är paret som bestämmer.
+
+Frågan att ställa: **om jag känner värdet på X, är då Y entydigt bestämt — enligt verksamhetens regler, inte enligt raderna jag råkar se?**
 
 ## Kandidatnyckel ur beroendena
 
@@ -1616,7 +1622,7 @@ export const glossary = [
   { term: "Kedjade svaga entiteter", definition: "En svag entitet vars ägare själv är svag. Den kompletta identiteten är ägarens kompletta identitet plus den egna partiella identifieraren, så kedjan följs uppåt till en stark entitet: Resa identifieras av {rederiNo, fartygsnamn, avgångsdatum}. Tentans påstående \"identifieras endast av kombinationen av 1. …, 2. samt …, 3. samt …\" räknar upp leden.", chapter: "svaga" },
   { term: "Flerstegspåstående", definition: "Påstående i tentans uppgift 1 som går över flera relationstyper, som att en spelare kan spela i ett lag vars förening spelaren inte är medlem i. Sant om ingen restriktion i diagrammet binder ihop vägarna — det som inte förbjuds är tillåtet; regler notationen saknar symbol för står i uppgiftstexten.", chapter: "svaga" },
   { term: "Främmande nyckel (foreign key)", definition: "Ett eller flera attribut vars värden måste matcha en kandidatnyckel, normalt primärnyckeln, i en annan eller samma relation. Värdet får upprepas, den refererade tupeln måste finnas, och den tvingar inte i sig fram deltagande.", chapter: "kap3" },
-  { term: "Funktionellt beroende", definition: "X bestämmer funktionellt Y om och endast om varje X-värde i relationen är associerat med precis ett Y-värde. Skrivs X → Y.", chapter: "kap7" },
+  { term: "Funktionellt beroende (functional dependency)", definition: "X → Y: två tuples med samma X-värden har alltid samma Y-värden. X är determinant, Y dependent attribute. En affärsregel som ska gälla i varje tillåten population — unika värden i ett exempel bevisar inget. Pilen är riktad (X → Y ger inte Y → X), och en determinant behöver inte vara en nyckel. A → {B, C} = A → B och A → C; {A, B} → C kan inte delas upp.", chapter: "kap7" },
   { term: "Grad (degree)", definition: "Antalet attribut i en relation.", chapter: "kap2" },
   { term: "GROUP BY-regeln", definition: "Varje kolumn i SELECT måste stå i GROUP BY eller inuti en aggregatfunktion; annars vägrar SQL Server: 'Column … is invalid in the select list because it is not contained in either an aggregate function or the GROUP BY clause'.", chapter: "kap9" },
   { term: "HAVING", definition: "Villkor på grupper, utvärderat efter GROUP BY och aggregaten; får innehålla aggregat. WHERE filtrerar rader före grupperingen och får inte innehålla aggregat. Logisk ordning: FROM, WHERE, GROUP BY, aggregat, HAVING, SELECT, ORDER BY.", chapter: "kap9" },

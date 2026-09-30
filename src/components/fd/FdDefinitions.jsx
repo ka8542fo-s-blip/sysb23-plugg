@@ -3,7 +3,7 @@
 // ordlistan (reading.js).
 
 const DEFINITIONS = [
-  ["Functional dependency", "funktionellt beroende", "X → Y om två tuples med samma X-värden alltid har samma Y-värden. Det ska gälla i varje tillåten population, inte bara i den data som råkar finnas nu. Vänsterledet X kallas determinant."],
+  ["Functional dependency", "funktionellt beroende", "X → Y om två tuples med samma X-värden alltid har samma Y-värden. X är determinant, Y dependent attribute. En affärsregel som ska gälla i varje tillåten population, inte bara i den data som råkar finnas nu — unika värden i ett exempel bevisar inget. Pilen är riktad: X → Y ger inte Y → X. En determinant behöver inte vara en nyckel."],
   ["Trivial dependency", "trivialt beroende", "X → Y där Y ⊆ X, till exempel {A, B} → A — säger ingenting. A → {B, C} betyder A → B och A → C, men {A, B} → C kan inte delas upp i A → C och B → C."],
   ["Attribute closure X⁺", "hölje", "Allt X bestämmer. Starta med X; när hela vänsterledet i ett beroende finns i mängden, lägg till högerledet; upprepa tills inget nytt tillkommer."],
   ["Superkey", "supernyckel", "En mängd X vars hölje X⁺ innehåller alla attribut i relationen."],

@@ -250,7 +250,8 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
   sant/falskt-styckena om beroendebevarande och lossless join, ordlistans
   lossless join, och kapitel 8:s tillägg efter nya Fö6 (anomalierna,
   höljesavsnittet med exemplet, spurious tuples, ordlistans nya termer
-  insättningsanomali, spurious tuples, nyckelsökning i fem steg),
+  insättningsanomali, spurious tuples, nyckelsökning i fem steg, den nya
+  definitionen av funktionellt beroende),
   kärnpunkten och fallgropsraden om beroendebevarande i `topics.js`, tre
   nya ordlistetermer (hölje, superkey, trivialt beroende) och förklaringarna
   (inte alternativen) i dbq-48, som lärde ut "samma relation" som krav.
@@ -430,10 +431,12 @@ data" i Statistik rensar allt. Progress är per webbläsare och domän.
   normalformerna (closure-algoritmen, superkey, CK = minimal superkey, de
   fem stegen, genomräknat exempel = egen uppgift 4 med CK {A, B} och
   {A, C}), spurious tuples i lossless-stycket, ordlistans "Atomärt värde"
-  med deckens innebörd (ett enda värde, får ha komponenter). Kvar som inte
-  är ändrat: definitionen av funktionellt beroende i kapitlet är den gamla
-  ordagranna ("varje X-värde i R är associerat med precis ett Y-värde");
-  decken betonar att det ska gälla i varje tillåten population.
+  med deckens innebörd (ett enda värde, får ha komponenter), och
+  definitionen av functional dependency (två tuples med samma X har samma
+  Y; determinant/dependent attribute; affärsregel för varje tillåten
+  population; pilen riktad; determinant behöver inte vara nyckel;
+  högersidan delbar, vänstersidan inte). **Kapitel 8 är klart mot nya Fö6
+  (2026-09-30).**
 
 ## Essächecklistornas form (2026-09-18, lärarbesked)
 
