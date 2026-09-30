@@ -4,151 +4,46 @@
 // primärnyckel (inga främmande nycklar). Uppdelningen rättas med samma
 // rättare som ER-uppgifterna (lib/modelCheck.js), som mängder.
 //
-// Här finns också en liten motor för funktionella beroenden: hölje,
-// kandidatnycklar, högsta normalform med kapitel 8:s motivering, projicerade
-// beroenden, lossless join (två i taget) och beroendebevarande. Den används
-// för att härleda motiveringarna och för att kontrollera facit i testsviten
-// — inte för att godkänna andra nedbrytningar än facits.
+// FD-motorn ligger i lib/fd.js (hölje, alla kandidatnycklar, högsta
+// normalform med brytande beroenden, lossless join, beroendebevarande).
+// Här byggs kapitel 8:s motiveringstexter ovanpå den, och den används för
+// att kontrollera facit — inte för att godkänna andra nedbrytningar än
+// facits.
 import { norm, parseSchema, checkModel } from "./modelCheck.js";
+import { attrsOf, setText, parseFd, fdText, closure, isSuperkey, allCandidateKeys, highestNF, projectFds, NF_NAME, properSubset, subset, sameSet, has } from "./fd.js";
 
-export const attrsOf = (s) => String(s).split(",").map((x) => x.trim()).filter(Boolean);
+export { attrsOf, setText, parseFd, fdText, closure };
+export const candidateKeys = allCandidateKeys;
 const eq = (a, b) => norm(a) === norm(b);
-const has = (set, a) => set.some((x) => eq(x, a));
-const subset = (a, b) => a.every((x) => has(b, x));
-const properSubset = (a, b) => subset(a, b) && a.length < b.length;
-const sameSet = (a, b) => subset(a, b) && subset(b, a);
-const uniq = (list) => list.filter((x, i) => list.findIndex((y) => eq(x, y)) === i);
-export const setText = (list) => (list.length === 1 ? list[0] : `{${list.join(", ")}}`);
 
-// "{A, B} → C", "A -> {B, C}"
-export function parseFd(text) {
-  const m = /^\s*\{?([^{}→>-]+)\}?\s*(?:→|->)\s*\{?([^{}]+)\}?\s*$/.exec(text);
-  if (!m) throw new Error(`Kunde inte tolka beroendet "${text}".`);
-  return { lhs: attrsOf(m[1]), rhs: attrsOf(m[2]), text: text.trim() };
-}
-export const fdText = (fd) => `${setText(fd.lhs)} → ${setText(fd.rhs)}`;
-
-export function closure(X, fds) {
-  let result = [...X];
-  let grew = true;
-  while (grew) {
-    grew = false;
-    for (const fd of fds) {
-      if (subset(fd.lhs, result)) {
-        for (const a of fd.rhs) if (!has(result, a)) { result.push(a); grew = true; }
-      }
-    }
-  }
-  return result;
-}
-const isSuperkey = (X, attrs, fds) => subset(attrs, closure(X, fds));
-
-function subsetsBySize(attrs) {
-  const out = [];
-  const n = attrs.length;
-  for (let mask = 1; mask < 1 << n; mask++) out.push(attrs.filter((_, i) => mask & (1 << i)));
-  out.sort((a, b) => a.length - b.length);
-  return out;
-}
-
-// Alla minimala superkeys, i attributens ordning.
-export function candidateKeys(attrs, fds) {
-  const keys = [];
-  for (const X of subsetsBySize(attrs)) {
-    if (keys.some((k) => subset(k, X))) continue;
-    if (isSuperkey(X, attrs, fds)) keys.push(X);
-  }
-  return keys;
-}
-
-// Högsta normalform med kapitel 8:s motivering. Partiellt beroende söks via
-// höljet av varje äkta delmängd av en kandidatnyckel, transitivt via de
-// givna beroendena med icke-nyckel som vänsterled.
+// Högsta normalform med kapitel 8:s motivering, formulerad ur det första
+// brytande beroendet i uppgiften.
 export function analyze(attrsText, fdTexts) {
   const attrs = attrsOf(attrsText);
-  const fds = fdTexts.map(parseFd);
-  const cks = candidateKeys(attrs, fds);
-  const prime = uniq(cks.flat());
-  const nonPrime = attrs.filter((a) => !has(prime, a));
+  const fds = fdTexts.map((f) => (typeof f === "string" ? parseFd(f) : f));
+  const { nf: level, cks, prime, nonPrime, violations } = highestNF(attrs, fds);
   const ckList = cks.map(setText).join(", ");
+  const partial = violations.find((v) => v.type === "partial");
+  const transitive = level === 2 ? violations.find((v) => v.type === "transitive") : null;
 
-  let partial = null;
-  for (const ck of cks) {
-    if (partial) break;
-    for (const X of subsetsBySize(ck)) {
-      if (X.length === ck.length) continue;
-      const gained = closure(X, fds).filter((a) => !has(X, a) && has(nonPrime, a));
-      if (gained.length) { partial = { X, ck, attr: gained[0] }; break; }
-    }
-  }
-  let transitive = null;
-  if (!partial) {
-    for (const fd of fds) {
-      const a = fd.rhs.find((x) => !has(fd.lhs, x) && has(nonPrime, x));
-      if (a && !isSuperkey(fd.lhs, attrs, fds)) { transitive = { X: fd.lhs, attr: a, ck: cks[0] }; break; }
-    }
-  }
-
-  const nf = partial ? "1NF" : transitive ? "2NF" : "3NF";
+  const nf = NF_NAME[level];
   const compositeCk = cks.some((k) => k.length > 1);
   const why2 = compositeCk
     ? "ingen äkta delmängd av en kandidatnyckel bestämmer ett icke-primärattribut"
     : `kandidatnyckeln ${ckList} är enkel, så inget partiellt beroende kan finnas`;
   const reasons = {};
-  if (partial) reasons["1NF"] = `äkta delmängden ${setText(partial.X)} av kandidatnyckeln ${setText(partial.ck)} bestämmer funktionellt icke-primärattributet ${partial.attr}`;
-  if (transitive) reasons["2NF"] = `${why2}, men icke-primärattributet ${transitive.attr} är transitivt beroende av kandidatnyckeln ${setText(transitive.ck)} (${setText(transitive.X)} → ${transitive.attr}, och ${setText(transitive.X)} är ingen kandidatnyckel)`;
+  if (level === 1) reasons["1NF"] = `äkta delmängden ${setText(partial.via)} av kandidatnyckeln ${setText(partial.ck)} bestämmer funktionellt icke-primärattributet ${partial.attr}`;
+  if (transitive) reasons["2NF"] = `${why2}, men icke-primärattributet ${transitive.attr} är transitivt beroende av kandidatnyckeln ${setText(transitive.ck)} (${setText(transitive.via)} → ${transitive.attr}, och ${setText(transitive.via)} är ingen kandidatnyckel)`;
   if (nf === "3NF") {
     reasons["3NF"] = nonPrime.length === 0
       ? `alla attribut är primärattribut (kandidatnycklar: ${ckList}), så inget icke-primärattribut kan bero partiellt eller transitivt`
       : `varje beroende har en kandidatnyckel som vänsterled eller bara primärattribut till höger (kandidatnycklar: ${ckList}; icke-primärattribut: ${nonPrime.join(", ")})`;
   }
-  return { attrs, fds, cks, prime, nonPrime, nf, reasons, ckList };
-}
-
-// Beroendena som gäller inom en delrelation: höljet av varje delmängd,
-// skuret mot relationens attribut.
-export function projectFds(relAttrs, fds) {
-  const out = [];
-  for (const X of subsetsBySize(relAttrs)) {
-    const Y = closure(X, fds).filter((a) => has(relAttrs, a) && !has(X, a));
-    if (Y.length) out.push({ lhs: X, rhs: Y });
-  }
-  return out;
-}
-
-// Lossless join enligt kursbokens regel, två i taget: två relationer får
-// slås ihop om de gemensamma attributen är superkey i minst en av dem.
-export function isLossless(relationAttrs, fds) {
-  let parts = relationAttrs.map((r) => [...r]);
-  while (parts.length > 1) {
-    let merged = false;
-    outer: for (let i = 0; i < parts.length; i++) {
-      for (let j = i + 1; j < parts.length; j++) {
-        const common = parts[i].filter((a) => has(parts[j], a));
-        if (!common.length) continue;
-        const c = closure(common, fds);
-        if (subset(parts[i], c) || subset(parts[j], c)) {
-          const union = uniq([...parts[i], ...parts[j]]);
-          parts = parts.filter((_, k) => k !== i && k !== j);
-          parts.push(union);
-          merged = true;
-          break outer;
-        }
-      }
-    }
-    if (!merged) return false;
-  }
-  return true;
-}
-
-export function preservesDependencies(relationAttrs, fds) {
-  const projected = relationAttrs.flatMap((r) => projectFds(r, fds));
-  return fds.every((fd) => subset(fd.rhs, closure(fd.lhs, projected)));
+  return { attrs, fds, cks, prime, nonPrime, nf, reasons, ckList, violations };
 }
 
 export function relationIn3NF(relAttrs, fds) {
-  const local = projectFds(relAttrs, fds);
-  return analyze(relAttrs.join(", "), local.map(fdText)).nf === "3NF";
+  return highestNF(relAttrs, projectFds(relAttrs, fds)).nf === 3;
 }
 
 // ---------- Facit ----------

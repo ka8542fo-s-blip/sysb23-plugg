@@ -547,8 +547,8 @@ export const questions = [
     options: [
       { text: "Sant — {A, B} → C och C → {F, G} står i R1 och D → E i R2, alltså är alla bevarade", explain: "Fyra av fem beroenden är bevarade. Det femte, B → D, är det inte, och ett räcker för att fälla påståendet." },
       { text: "Falskt — ett beroende bevaras bara om hela R står kvar i en och samma relation", explain: "Då vore ingen nedbrytning beroendebevarande. Regeln gäller per beroende, inte per relation." },
-      { text: "Falskt — B → D har B i R1 och D i R2, så beroendet finns inte i någon relation", explain: "Ett beroende är bevarat om dess attribut finns i samma relation. Gå igenom dem: {A, B} → C i R1, C → F och C → G i R1, D → E i R2 — men B → D har attributen i olika relationer. Ett förlorat beroende gör påståendet falskt." },
-      { text: "Sant — varje attribut ur R återfinns i någon av de två relationerna, och det räcker", explain: "Att attributen finns kvar är ett annat krav. Bevarande kräver att båda attributen i ett beroende står i samma relation." },
+      { text: "Falskt — B → D har B i R1 och D i R2, så beroendet finns inte i någon relation", explain: "Gå igenom dem: {A, B} → C, C → F och C → G står i R1 och D → E i R2 — bevarade. B → D har attributen i olika relationer, och det går inte heller att härleda ur de lokala beroendena: inom R1 bestämmer B ensamt ingenting, och R2 innehåller inte B. Ett förlorat beroende gör påståendet falskt." },
+      { text: "Sant — varje attribut ur R återfinns i någon av de två relationerna, och det räcker", explain: "Att attributen finns kvar är ett annat krav. Bevarande kräver att varje beroende följer av de beroenden som gäller inom relationerna — och B → D gör inte det." },
     ],
     correct: 2, source: "Kompendiet kap. 8 · tentans uppgift 3a–e", reviewed: false },
 

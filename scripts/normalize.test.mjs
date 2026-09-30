@@ -1,7 +1,8 @@
 // Normaliseringssteget: motorn för beroenden, facit 11–13 och rättningen.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { analyze, facitVariants, facitRules, checkNormalization, isLossless, preservesDependencies, relationIn3NF, attrsOf, parseFd } from "../src/lib/normalize.js";
+import { analyze, facitVariants, facitRules, checkNormalization, relationIn3NF } from "../src/lib/normalize.js";
+import { isLossless, isDependencyPreserving, attrsOf, parseFd } from "../src/lib/fd.js";
 import { parseSchema } from "../src/lib/modelCheck.js";
 import { normalizeExercises } from "../src/data/databaser/normalizeExercises.js";
 
@@ -12,17 +13,21 @@ const check = (id, nf, text) => checkNormalization(byId[id], { nf, text });
 // Häftets 12:9 har R4(B, D); det är inte lossless (se normalizeExercises.js).
 const KEY_ISSUES = { "norm-12-09": 0 }; // id -> variantindex som inte är lossless
 
-test("38 poster: 12 + 14 + 12, unika id", () => {
-  assert.equal(normalizeExercises.length, 38);
-  assert.equal(new Set(normalizeExercises.map((e) => e.id)).size, 38);
+test("64 poster: 16 + 12 + 14 + 12 + 10 egna, unika id", () => {
+  assert.equal(normalizeExercises.length, 64);
+  assert.equal(new Set(normalizeExercises.map((e) => e.id)).size, 64);
+  assert.equal(normalizeExercises.filter((e) => e.exercise === 10).length, 16);
+  assert.equal(normalizeExercises.filter((e) => e.exercise === 11).length, 12);
   assert.equal(normalizeExercises.filter((e) => e.exercise === 12).length, 14);
+  assert.equal(normalizeExercises.filter((e) => e.exercise === 13).length, 12);
+  assert.ok(normalizeExercises.filter((e) => e.exercise === 10).every((e) => e.nfOnly && !e.facit));
 });
 
 test("motorn ger samma högsta normalform som facit för varje post", () => {
   for (const item of normalizeExercises) {
     const a = analyze(item.attrs, item.fds);
     assert.equal(a.nf, item.nf, `${item.id}: motorn ${a.nf}, facit ${item.nf} (${a.ckList})`);
-    assert.equal(Boolean(item.facit), item.nf !== "3NF", `${item.id}: facit och 3NF hänger inte ihop`);
+    if (!item.nfOnly) assert.equal(Boolean(item.facit), item.nf !== "3NF", `${item.id}: facit och 3NF hänger inte ihop`);
   }
 });
 
@@ -37,15 +42,16 @@ test("varje facitvariant: alla relationer i 3NF, lossless join, beroendebevarand
       const all = attrsOf(item.attrs);
       assert.ok(all.every((a) => parts.flat().includes(a)), `${item.id}: attribut tappas`);
       for (const r of schema.relations) assert.ok(relationIn3NF(r.attrs, fds), `${item.id} variant ${i}: ${r.name} är inte i 3NF`);
-      assert.ok(preservesDependencies(parts, fds), `${item.id} variant ${i}: beroende tappas`);
+      assert.ok(isDependencyPreserving(all, fds, parts), `${item.id} variant ${i}: beroende tappas`);
       const expectLossless = KEY_ISSUES[item.id] !== i;
-      assert.equal(isLossless(parts, fds), expectLossless, `${item.id} variant ${i}: lossless ${expectLossless ? "saknas" : "borde saknas"}`);
+      assert.equal(isLossless(all, fds, parts), expectLossless, `${item.id} variant ${i}: lossless ${expectLossless ? "saknas" : "borde saknas"}`);
     });
   }
 });
 
 test("facit rättar sig självt, i alla PK-alternativ", () => {
   for (const item of normalizeExercises) {
+    if (item.nfOnly) continue;
     if (!item.facit) {
       assert.equal(check(item.id, "3NF", "").status, "correct", item.id);
       continue;

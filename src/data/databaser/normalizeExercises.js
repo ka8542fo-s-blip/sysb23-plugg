@@ -1,4 +1,4 @@
-// Normaliseringssteget i modellverkstaden: häftets uppgift 11–13, samma
+// Normaliseringssteget i modellverkstaden: häftets uppgift 10–13, samma
 // form som tentans 3f och 3g. Varje post är en relation R med beroenden;
 // svaret är högsta normalform och en uppdelning till 3NF med primärnyckel
 // understruken, eller "R är redan i 3NF".
@@ -16,9 +16,35 @@
 // gäller inte och joinen av R1 och R4 över B ger tupler som inte fanns i R — R4(A, D) är den
 // nyckelrelation som ger lossless join. Häftets variant står kvar som
 // facit, den härledda som alternativ, tills Björn svarat.
+//
+// Uppgift 10 (`nfOnly`) frågar bara efter högsta normalform; relationerna
+// är lästa ur häftet och kontrollerade mot sidan, normalformen är häftets
+// facit. De egna uppgifterna (`exercise: "egen"`) riktar sig mot var sin
+// fälla, beskriven i `trap` och visad efter rättningen; testsviten
+// verifierar deras normalform, nycklar och facit i FD-motorn.
 const R = (name, attrs, pk, pkAlso) => ({ name, attrs, pk: [pk], ...(pkAlso ? { pkAlso } : {}) });
 
+const NF10 = (number, attrs, fds, nf) => ({ id: `norm-10-${String(number).padStart(2, "0")}`, exercise: 10, number, attrs, fds, nf, facit: null, nfOnly: true });
+
 export const normalizeExercises = [
+  // ---- Uppgift 10: bara högsta normalform ----
+  NF10(1, "A, B, C", ["A → B", "A → C"], "3NF"),
+  NF10(2, "A, B, C", ["A → B"], "1NF"),
+  NF10(3, "A, B, C, D, E", ["{A, B} → C", "C → D", "D → E"], "2NF"),
+  NF10(4, "A, B, C, D, E", ["A → B", "B → {A, C}", "C → {D, E}"], "2NF"),
+  NF10(5, "A, B, C, D, E", ["A → B", "B → A", "C → D", "D → E"], "1NF"),
+  NF10(6, "A, B, C, D, E", ["{A, B} → C", "C → A", "C → B", "A → D", "B → E"], "1NF"),
+  NF10(7, "A, B, C, D, E, F", ["A → B", "B → C", "D → E", "E → C"], "1NF"),
+  NF10(8, "A, B, C", ["A → C", "B → C"], "1NF"),
+  NF10(9, "A, B, C, D", ["{A, B} → C", "B → D"], "1NF"),
+  NF10(10, "A, B, C", ["{A, B} → C"], "3NF"),
+  NF10(11, "A, B, C", ["A → {B, C}", "B → {A, C}", "C → A"], "3NF"),
+  NF10(12, "A, B, C, D, E, F, G", ["A → B", "B → {A, C}", "C → D", "D → {E, F}", "E → G"], "2NF"),
+  NF10(13, "A, B, C, D, E, F, G", ["A → B", "B → {A, C}", "C → {B, D, E}", "D → {C, F, G}"], "3NF"),
+  NF10(14, "A, B, C, D", ["A → {B, C}", "B → {A, C}", "C → {B, A}"], "3NF"),
+  NF10(15, "A, B, C, D, E, F", ["{A, B} → C", "C → D", "D → E", "E → F"], "2NF"),
+  NF10(16, "A, B, C, D", [], "3NF"),
+
   // ---- Uppgift 11 ----
   { id: "norm-11-01", exercise: 11, number: 1, attrs: "A, B, C", fds: ["A → B", "B → C"], nf: "2NF",
     facit: [R("R1", "A, B", "A"), R("R2", "B, C", "B")] },
@@ -99,13 +125,46 @@ export const normalizeExercises = [
     facit: [R("R1", "A, B, C", "A, B"), R("R2", "C, D, F", "C", ["D"]), R("R3", "F, E", "F")] },
   { id: "norm-13-12", exercise: 13, number: 12, attrs: "A, B, C, D, E, F", fds: ["{A, B} → C", "C → {D, E}", "D → {C, E, F}"], nf: "2NF",
     facit: [R("R1", "A, B, C", "A, B"), R("R2", "C, D, E, F", "C", ["D"])] },
+
+  // ---- Egna, en fälla var ----
+  { id: "norm-egen-01", exercise: "egen", number: 1, attrs: "A, B, C, D", fds: ["A → B", "B → A", "B → {C, D}"], nf: "3NF", facit: null,
+    trap: "A → B och B → C ser ut som en transitiv kedja, men B → A gäller: B är själv kandidatnyckel, så C och D beror direkt på en kandidatnyckel." },
+  { id: "norm-egen-02", exercise: "egen", number: 2, attrs: "A, B, C, D, E", fds: ["A → {B, C}", "C → D"], nf: "1NF",
+    trap: "E står inte till höger om någon pil och måste därför ingå i varje kandidatnyckel: {A, E}. Utan nyckelrelationen R3(A, E) går lossless join förlorad.",
+    facit: [R("R1", "A, B, C", "A"), R("R2", "C, D", "C"), R("R3", "A, E", "A, E")] },
+  { id: "norm-egen-03", exercise: "egen", number: 3, attrs: "A, B, C", fds: [], nf: "3NF", facit: null,
+    trap: "Utan beroenden är hela attributmängden {A, B, C} kandidatnyckel. Alla attribut är primära, så inget kan bero partiellt eller transitivt: 3NF." },
+  { id: "norm-egen-04", exercise: "egen", number: 4, attrs: "A, B, C, D", fds: ["{A, B} → {C, D}", "C → B"], nf: "3NF", facit: null,
+    trap: "C → B ser partiellt ut, men B är primärattribut, och 2NF och 3NF gäller bara icke-primärattribut. {A, C} är också kandidatnyckel ({A, C}⁺ = {A, B, C, D}), så C är själv primärt." },
+  { id: "norm-egen-05", exercise: "egen", number: 5, attrs: "A, B, C, D, E", fds: ["A → B", "B → C", "C → D", "D → A", "B → E"], nf: "3NF", facit: null,
+    trap: "Kedjan A → B → C → D sluter sig med D → A. Alla fyra är kandidatnycklar, och E beror direkt på kandidatnyckeln B. Rätt svar är att inte göra något." },
+  { id: "norm-egen-06", exercise: "egen", number: 6, attrs: "A, B, C, D", fds: ["A → B", "B → C", "C → D"], nf: "2NF",
+    trap: "Två relationer räcker inte: i (A, B, C) är C fortfarande transitivt beroende av A via B. Ett beroende per relation ger tre.",
+    facit: [R("R1", "A, B", "A"), R("R2", "B, C", "B"), R("R3", "C, D", "C")] },
+  { id: "norm-egen-07", exercise: "egen", number: 7, attrs: "A, B, C, D", fds: ["A → {B, C}", "B → A", "C → D"], nf: "2NF",
+    trap: "B → A och A → C gör inte C transitivt beroende: B är själv kandidatnyckel. Bara C → D bryts ut. Att dela R1(A, B, C) i (A, B) och (A, C) är övernormalisering.",
+    facit: [R("R1", "A, B, C", "A", ["B"]), R("R2", "C, D", "C")] },
+  { id: "norm-egen-08", exercise: "egen", number: 8, attrs: "A, B, C, D, E", fds: ["{A, B} → C", "B → D", "D → E"], nf: "1NF",
+    trap: "Både partiellt (B → D) och transitivt (D → E) i samma relation. R2(B, D, E) vore inte i 3NF: E är transitivt beroende av B via D.",
+    facit: [R("R1", "A, B, C", "A, B"), R("R2", "B, D", "B"), R("R3", "D, E", "D")] },
+  { id: "norm-egen-09", exercise: "egen", number: 9, attrs: "A, B, C, D, E", fds: ["A → C", "B → D", "C → E"], nf: "1NF",
+    trap: "Inget beroende har hela nyckeln {A, B} som vänsterled, men nyckeln måste ändå stå i en relation: R4(A, B) är nyckelrelationen som ger lossless join.",
+    facit: [R("R1", "A, C", "A"), R("R2", "C, E", "C"), R("R3", "B, D", "B"), R("R4", "A, B", "A, B")] },
+  { id: "norm-egen-10", exercise: "egen", number: 10, attrs: "A, B, C, D", fds: ["A → B", "{B, C} → D"], nf: "1NF",
+    trap: "{B, C} är sammansatt men ingen del av kandidatnyckeln {A, C}, så D är transitivt beroende, inte partiellt. Högsta normalform avgörs ändå av A → B, som är partiellt.",
+    facit: [R("R1", "A, B", "A"), R("R2", "B, C, D", "B, C"), R("R3", "A, C", "A, C")] },
 ];
 
 export const NORMALIZE_GROUPS = [
+  { exercise: 10, source: "Övningshäftet uppgift 10", label: "Uppgift 10" },
   { exercise: 11, source: "Övningshäftet uppgift 11" },
   { exercise: 12, source: "Övningshäftet uppgift 12" },
   { exercise: 13, source: "Övningshäftet uppgift 13" },
+  { exercise: "egen", source: "Egen uppgift", label: "Egna" },
 ];
+
+export const itemLabel = (item) => (item.exercise === "egen" ? `Egen uppgift ${item.number}` : `Uppgift ${item.exercise}, relation ${item.number}`);
+export const groupLabel = (group) => group.label || `Uppgift ${group.exercise}`;
 
 // Relationen och beroendena som förformaterat block, som i Öva.
 export const contextOf = (item) => [`R(${item.attrs})`, ...(item.fds.length ? item.fds : ["Inga funktionella beroenden"])].join("\n");

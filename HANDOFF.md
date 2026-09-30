@@ -16,10 +16,11 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 153 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-09-29.
+- **Test:** `npm test` = 198 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-09-30.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
-  Fö4, Fö5, Fö6, Fö7 och övningshäftet `sysb23-database-exercises.pdf`),
+  Fö4, Fö5, Fö6, Fö7); övningshäftet ligger bredvid, i
+  `~/Desktop/Skola/SKOLA T3/sysb23-database-exercises.pdf` (inte i exportmappen),
   extentorna i `~/Desktop/Skola/SKOLA T3/Previous_e_ams_export` (omtentan
   24 okt 2025, uppsamlingen 25 maj 2026; ordinarie 16 sep 2025 finns som
   riktig export i `~/Downloads/`, filen i exportmappen är en trasig
@@ -97,14 +98,47 @@ kapitel: allt UI läser `chapter.number`.
   indraget och drar in efter "(", knappar ₁–₄ och Option/Alt + siffra (även Ctrl + siffra) sätter in
   små siffror; etiketten säger ⌥ Option på Mac. Facit visas efter Rätta även vid tolkningsfel. OBS:
   browserpanelens `key`-verktyg når inte Reacts onKeyDown — testa
-  tangenterna med dispatchade KeyboardEvent i javascript_tool. *Normalisering till 3NF*: `normalizeExercises.js`,
-  häftets 11–13 som 38 poster, val 1NF/2NF/"R är redan i 3NF",
-  FD-motorn `lib/normalize.js` (hölje, kandidatnycklar, högsta normalform
-  med kapitel 8:s motivering, projicerade beroenden, lossless två i taget,
-  beroendebevarande) härleder regeltaggar och "varför"; extra relation
-  vars attribut ryms i en facitrelation = övernormalisering. Framsteg för
+  tangenterna med dispatchade KeyboardEvent i javascript_tool. *Normalisering till 3NF* (ombyggd 2026-09-30 till rit- och analysyta):
+  `normalizeExercises.js` har 64 poster — häftets 10 (16 relationer,
+  `nfOnly`: bara normalform, ingen nedbrytning), 11–13 (38) och 10 egna
+  (`exercise: "egen"`, en fälla var i `trap`, visas efter Rätta/Visa
+  facit). **FD-motorn** `lib/fd.js` körs i appen och i testerna: `closure`,
+  `allCandidateKeys` (alla), `prime`/`nonPrime`, `isSuperkey`,
+  `highestNF` → 1|2|3 + `violations` ({fd, index, type partial|transitive,
+  attr, ck, via}) valda bland de GIVNA beroendena (härlett partiellt bara
+  om inget givet visar 2NF-brottet), `isLossless` (exakt tablåprov) +
+  `losslessSteps` (kursbokens två-i-taget som förklaring),
+  `isDependencyPreserving`/`dependencyReport` (closure av unionen av
+  lokala beroenden, inte "samma relation"), `projectFds`, `relationNF`.
+  `lib/normalize.js` bygger motiveringstexterna och faciträttningen av
+  nedbrytningen ovanpå den (oförändrad princip: annan nedbrytning än
+  facits godtas inte, eftersom övernormaliseringar klarar lossless och DP).
+  **Ritytan** `components/fd/FdCanvas.jsx`: eget SVG + pointer events,
+  värld 640×420, ruta 46 (`lib/fdDiagram.js`: modell, geometri, träffprov,
+  `compareDrawing` mot givna beroenden som par (vänsterled, attribut),
+  `arrowTypes`, autolayout `layoutFromFds`). Verktyg Flytta/Pil/Penna;
+  hylla + "Lägg ut alla"; pil via handtagsprick eller tryck källa → mål;
+  grupp = sammansatt determinant (shift-klick/ram + G/Gruppera); Delete,
+  ⌘Z/⇧⌘Z, piltangenter, Tab, bokstavstangent sätter bokstav på markerad
+  ruta. Frihandsläget klassar streck geometriskt (`lib/strokes.js`: box,
+  group, arrow, erase, unknown som tonas bort). Bokstäver: chips + tangent,
+  ingen handskriftsigenkänning (se "Medvetet inte byggt"). "Rita från
+  FD:erna" syns först när en pil ritats eller efter "Visa ritahjälp".
+  "Kontrollera ritningen": saknade pilar streckade, fel röda. Efter Rätta:
+  partiell pil röd med P, transitiv brass med T, legend under. Smal yta
+  (< 520 px): kvadratisk vy zoomad mot innehållet. Testa i browserpanelen
+  med syntetiska PointerEvent på `svg[data-fd-surface]` (världskoordinater
+  → klient via `getScreenCTM()`). Ritningen i
+  `sysb23:fdritning:<id>`, svaren i `sysb23:fdsvar:<id>`. **Svarspanelen**
+  `FdAnswer.jsx` + rättning `lib/fdGrade.js`: CK (mängd av mängder), PA/NP
+  per attribut, NF, motivering (rättas på valt beroende + attribut + typ;
+  alla korrekta brytande godtas; engelsk mallmening ur dina egna CK,
+  redigerbar), nedbrytning mot facit + informativ lossless/DP/NF per
+  relation. Klar = alla fält rätt. Definitionspanelen
+  `FdDefinitions.jsx` i sidokolumnen. Framsteg för
   alla tre: `sysb23:modell:<id>` = "solved", nollställs bara via knapp.
-  Tester: `model-check`, `model-figures`, `normalize`, `statements`.
+  Tester: `model-check`, `model-figures`, `normalize`, `fd`, `fd-drawing`,
+  `fd-grade`, `statements`.
 - **Statistik**, **Schema (Pluggkalender)** och **Hem** som för Strategi.
 
 ## Regler (följ dem)
@@ -202,6 +236,13 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
   svar är att inte göra något" — exemplet är verifierat i FD-motorn: fyra
   enkla kandidatnycklar, 3NF) och kapitel 10 är skrivna mot decken men
   inte granskade av användaren.
+- **Normaliseringens rit- och analysyta (2026-09-30):** de tio egna
+  uppgifterna (fällorna och `trap`-texterna), definitionspanelen, kapitel
+  8:s omskrivna dependency preservation-stycke och sant/falskt-stycke,
+  kärnpunkten och fallgropsraden om beroendebevarande i `topics.js`, tre
+  nya ordlistetermer (hölje, superkey, trivialt beroende) och förklaringarna
+  (inte alternativen) i dbq-48, som lärde ut "samma relation" som krav.
+  Häftets uppgift 10 är avläst och kontrollerad mot sidan som bild.
 - **Granskade:** kapitel 7–9 mot Fö5/Fö6/Fö7 + häftet (2026-09-05),
   kapitel 2, 3, 7 omskrivna mot nya Fö5 (2026-09-07). Kapitel 1–6 väntar
   på användarens granskning.
@@ -221,6 +262,23 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
    kursintroduktionen. Kapitel 3 och 7 säger "kursen har placerat dem
    olika, på tentan kommer de i uppgift 2". Rätta inte förrän Björn svarat.
 
+3. **Dependency preservation:** Fö6 säger att ett beroende är bevarat om
+   dess två attribut står i samma relation, och räknar i exemplet med
+   Employee(EmployeeNo, Name, Address, ProjectNo) och Project(ProjectNo,
+   Name, Budget) ett beroende som förlorat (sajten har tolkat det som
+   EmployeeNo → ProjectName). Med definitionen (lokala beroenden medför
+   tillsammans alla ursprungliga) följer EmployeeNo → ProjectName ur
+   EmployeeNo → ProjectNo och ProjectNo → ProjectName, alltså bevarat.
+   Kapitel 8, ordlistan och motorn följer definitionen sedan 2026-09-30
+   (användarbeslut); frågan är hur 3a–e rättas när regeln och definitionen
+   ger olika svar. Sajten skriver ProjectName i Project där decken skriver
+   Name.
+
+Observation, ingen fråga: häftets facit 13:9 har R1(A, B, C) och
+R2(A, B, D) med samma nyckel {A, B}, som sajtens egen regel om
+övernormalisering ({A, B} → {C, D} ska inte delas) skulle underkänna. Facit
+står kvar som det är; motorn godkänner det (3NF, lossless, DP).
+
 Känt men inte en fråga: Fö5:s sammanfattning av normaliseringssteget
 ("every non-trivial determinant is a key") är BCNF-liknande; kursen
 använder 2NF/3NF-definitionerna och sajten följer dem. Fö5:s DDL-exempel
@@ -233,11 +291,20 @@ kräver surrogatnycklar och inte namn — kapitel 9 följer tentan.
   flerval. Öva prövar förståelse av läsmaterialet utan poäng. Tas tillbaka
   bara om tentaformatet visar sig vara flerval.
 - **Automatisk "annan giltig nedbrytning" i normaliseringen:** FD-motorn
-  kan pröva lossless och beroendebevarande, men övernormaliseringar klarar
-  nästan alltid båda proven och ger ändå avdrag på tentan. Facit är
-  därför enda måttet; härledda PK-alternativ (`pkAlso`) är tillagda där
-  relationen har fler kandidatnycklar än facit strukit under, efter
-  häftets eget mönster i 11:7 och 11:11.
+  prövar lossless och beroendebevarande för din nedbrytning och visar det
+  (sedan 2026-09-30), men övernormaliseringar klarar nästan alltid båda
+  proven och ger ändå avdrag på tentan. Facit är därför enda måttet för
+  rätt/fel; härledda PK-alternativ (`pkAlso`) är tillagda där relationen
+  har fler kandidatnycklar än facit strukit under, efter häftets eget
+  mönster i 11:7 och 11:11.
+- **Handskriftsigenkänning av bokstäver på ritytan:** provat med $P
+  point-cloud recognizer (en mall per bokstav A–G, testströck i en annan
+  "handstil" med skevning, rotation och brus): 82,5 % träff bland sju
+  bokstäver, 91 % bland fyra, 95,7 % bland två — redan på syntetiska
+  streck. En felgissning sätter fel attribut i diagrammet utan att synas,
+  medan chipsen kostar ett tryck. Därför chips + bokstavstangent.
+- **Tunga ritbibliotek (tldraw, Excalidraw):** tldraw kräver licens eller
+  vattenmärke, båda är stora; ritytan är eget SVG.
 - **Spaced repetition, poäng, streaks och pass i Öva:** användarbeslut —
   tillståndet är per fråga, klar = två rätt i rad, ingen viktad slump,
   inget svårighetsfilter, ingen dagsintervall.
@@ -292,7 +359,8 @@ kräver surrogatnycklar och inte namn — kapitel 9 följer tentan.
   varje kandidat körs innan den visas). Schemapanel med InfoTips ur
   `schemaGlossary.js`. WASM kopieras av `scripts/copy-sql-wasm.mjs`.
 - **Modellera** — se ovan. Layout som verkstaden: uppgiftslista (Läsa
-  diagram och ER: rader; normalisering: sifferknappar per häftesuppgift),
+  diagram och ER: rader; normalisering: sifferknappar per häftesuppgift
+  10–13 och E1–E10, definitionspanelen under listan),
   underlag, inmatning, Rätta, resultatpanel, facit efter rättning.
 - **Schema (Pluggkalender)** — data i `src/data/schedule.js` (TimeEdit
   2026-08-30), passlista ovanför tentaöversikten (2026-09-07), Lista/

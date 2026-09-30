@@ -37,7 +37,7 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
   const [result, setResult] = useState(null);
   const [confirmReset, setConfirmReset] = useState(false);
   // Tre steg som tentans uppgifter: läsa diagram (1), ER-diagram → schema
-  // (häftets 4–10, tankemodellen bakom uppgift 2) och normalisering (11–13, 3f–g).
+  // (häftets 4–10, tankemodellen bakom uppgift 2) och normalisering (10–13 och egna, 3f–g).
   const [mode, setMode] = useState("er");
 
   const exercise = exercises.find((e) => e.id === currentId) || exercises[0];
@@ -82,9 +82,10 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
         )}
         {mode === "norm" && (
           <p className="mt-1 max-w-reading text-[15px] text-ink/70">
-            En relation R med sina funktionella beroenden, som i tentans uppgift 3f och 3g. Ange
-            högsta normalform och, om R inte redan är i 3NF, uppdelningen med primärnyckel för varje
-            relation. Rättas som mängder mot facit; att dela upp mer än 3NF kräver är övernormalisering.
+            En relation R med sina funktionella beroenden, som i tentans uppgift 3f och 3g. Rita
+            beroendediagrammet som på tavlan, ange kandidatnycklar, prime och non-prime, högsta
+            normalform med motivering och, om R inte redan är i 3NF, uppdelningen med primärnyckel för
+            varje relation. Varje fält rättas för sig; att dela upp mer än 3NF kräver är övernormalisering.
           </p>
         )}
         {mode === "stmt" && (
