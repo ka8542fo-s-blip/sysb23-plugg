@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 199 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-09-30.
+- **Test:** `npm test` = 207 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-09-30.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -124,7 +124,13 @@ kapitel: allt UI läser `chapter.number`.
   `compareDrawing` mot givna beroenden som par (vänsterled, attribut),
   `arrowTypes`, autolayout `layoutFromFds`). Verktyg Flytta/Pil/Penna;
   hylla + "Lägg ut alla"; pil via handtagsprick eller tryck källa → mål;
-  grupp = sammansatt determinant (shift-klick/ram + G/Gruppera); Delete,
+  grupp = sammansatt determinant (shift-klick/ram + G/Gruppera, eller
+  släpp en ruta på en annan: mittpunkten inom målrutan → ny grupp, inom en
+  grupps ram → läggs till; dra ut en ruta ur gruppens ram som den var vid
+  dragstart → lyfts ut, en grupp med en ruta kvar upplöses och dess pilar
+  flyttas till rutan; `dropOutcome`/`applyDrop`/`leaveGroup`/`joinGroup`
+  i `fdDiagram.js`, markering "Släpp: gruppera" + streckad inre ram under
+  dragningen; ångra-historiken `historyReducer` ligger också där); Delete,
   ⌘Z/⇧⌘Z, piltangenter, Tab, bokstavstangent sätter bokstav på markerad
   ruta. Frihandsläget klassar streck geometriskt (`lib/strokes.js`: box,
   group, arrow, erase, unknown som tonas bort). Bokstäver: chips + tangent,

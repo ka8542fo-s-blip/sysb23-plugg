@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import {
   WORLD, BOX, emptyDiagram, newId, boxRect, groupRect, shapeRect, arrowGeometry, hitTest, removeElements, addGroup, addArrow,
-  clampPoint, freeSlot, placeAll, compareDrawing, arrowTypes, layoutFromFds, pairText,
+  clampPoint, freeSlot, placeAll, compareDrawing, arrowTypes, layoutFromFds, pairText, dropOutcome, applyDrop, historyReducer,
 } from "../../lib/fdDiagram.js";
 import { classifyStroke } from "../../lib/strokes.js";
 import { attrsOf } from "../../lib/fd.js";
@@ -18,28 +18,10 @@ const TOOLS = [
 ];
 
 const HINTS = {
-  select: "Dra ut rutor ur hyllan. En pil: dra från pricken på en ruta till en annan. Markera flera med shift-klick eller en ram, G grupperar.",
+  select: "Dra ut rutor ur hyllan. En pil: dra från pricken på en ruta till en annan. Gruppera: släpp en ruta på en annan (eller markera flera och tryck G); dra ut en ruta ur en grupp för att lyfta ut den.",
   arrow: "Tryck på källan (en ruta eller en grupp), sedan på målet.",
   pen: "Rita en fyrkant för en ruta, en slinga runt rutor för en grupp, ett streck mellan två rutor för en pil. Klottra över något för att radera.",
 };
-
-function reducer(state, action) {
-  switch (action.type) {
-    case "commit":
-      if (action.diagram === (action.before ?? state.diagram)) return { ...state, diagram: action.diagram };
-      return { diagram: action.diagram, past: [...state.past, action.before ?? state.diagram].slice(-100), future: [] };
-    case "live":
-      return { ...state, diagram: action.diagram };
-    case "undo":
-      if (!state.past.length) return state;
-      return { diagram: state.past[state.past.length - 1], past: state.past.slice(0, -1), future: [state.diagram, ...state.future] };
-    case "redo":
-      if (!state.future.length) return state;
-      return { diagram: state.future[0], past: [...state.past, state.diagram], future: state.future.slice(1) };
-    default:
-      return state;
-  }
-}
 
 function validDiagram(d) {
   return d && Array.isArray(d.boxes) && Array.isArray(d.groups) && Array.isArray(d.arrows) ? d : null;
@@ -55,7 +37,7 @@ const labelOf = (diagram, ref) => {
 export default function FdCanvas({ item, graded }) {
   const attrs = useMemo(() => attrsOf(item.attrs), [item.attrs]);
   const storageKey = `fdritning:${item.id}`;
-  const [state, dispatch] = useReducer(reducer, null, () => ({ diagram: validDiagram(load(storageKey, null)) || emptyDiagram(), past: [], future: [] }));
+  const [state, dispatch] = useReducer(historyReducer, null, () => ({ diagram: validDiagram(load(storageKey, null)) || emptyDiagram(), past: [], future: [] }));
   const { diagram } = state;
   const diagramRef = useRef(diagram);
   diagramRef.current = diagram;
@@ -67,6 +49,9 @@ export default function FdCanvas({ item, graded }) {
   const dragRef = useRef(null);
   const [fading, setFading] = useState([]);
   const [hover, setHover] = useState(null);
+  // Under dragning av en enda ruta: vad ett släpp skulle göra (målruta
+  // eller målgrupp, grupper som lämnas), för markeringen.
+  const [dropHint, setDropHint] = useState(null);
   const [showCheck, setShowCheck] = useState(false);
   const [helperShown, setHelperShown] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
@@ -207,7 +192,8 @@ export default function FdCanvas({ item, graded }) {
     if (hit.kind === "arrow") return;
     const moving = boxesToMove(sel, d);
     const orig = Object.fromEntries(d.boxes.filter((b) => moving.has(b.id)).map((b) => [b.id, { x: b.x, y: b.y }]));
-    dragRef.current = { type: "move", start: p, before: d, orig, moved: false };
+    const lone = hit.kind === "box" && sel.length === 1 && Object.keys(orig).length === 1 ? hit.id : null;
+    dragRef.current = { type: "move", start: p, before: d, orig, moved: false, single: lone };
   }
 
   function onPointerMove(e) {
@@ -231,6 +217,10 @@ export default function FdCanvas({ item, graded }) {
       const boxes = d.boxes.map((b) => (dr.orig[b.id] ? { ...b, ...clampPoint({ x: dr.orig[b.id].x + dx, y: dr.orig[b.id].y + dy }) } : b));
       dr.current = { ...d, boxes };
       dispatch({ type: "live", diagram: dr.current });
+      if (dr.single) {
+        const o = dropOutcome(dr.current, dr.single, dr.before);
+        setDropHint(o.target || o.leave.length ? { ...o, box: dr.single } : null);
+      }
     } else if (dr.type === "marquee" || dr.type === "link") {
       dr.point = p;
       if (dr.type === "link" && Math.hypot(p.x - dr.start.x, p.y - dr.start.y) > 6 / scale()) dr.moved = true;
@@ -251,7 +241,23 @@ export default function FdCanvas({ item, graded }) {
     const d = diagramRef.current;
     const p = e.type === "pointercancel" ? dr.point || dr.start : toWorld(e);
     if (dr.type === "move") {
-      if (dr.moved && dr.current) commit(dr.current, dr.before);
+      setDropHint(null);
+      if (dr.moved && dr.current) {
+        if (dr.single) {
+          const o = dropOutcome(dr.current, dr.single, dr.before);
+          const next = applyDrop(dr.current, dr.single, o, dr.before);
+          commit(next, dr.before);
+          const label = (dg, ref) => labelOf(dg, ref);
+          if (o.target) {
+            const g = next.groups.find((x) => x.members.includes(dr.single) && (o.target.kind === "group" ? x.id === o.target.id : x.members.includes(o.target.id)));
+            if (g) { setSelection([g.id]); say(`Grupp ${label(next, { kind: "group", id: g.id })}.`); }
+          } else if (o.leave.length) {
+            say(`${label(next, { kind: "box", id: dr.single })} lyft ur gruppen.`);
+          }
+        } else {
+          commit(dr.current, dr.before);
+        }
+      }
     } else if (dr.type === "marquee") {
       const x1 = Math.min(dr.start.x, p.x), x2 = Math.max(dr.start.x, p.x);
       const y1 = Math.min(dr.start.y, p.y), y2 = Math.max(dr.start.y, p.y);
@@ -370,7 +376,7 @@ export default function FdCanvas({ item, graded }) {
     if (mod && k.toLowerCase() === "y") { e.preventDefault(); dispatch({ type: "redo" }); return; }
     if (mod) return;
     if (k === "Delete" || k === "Backspace") { if (selection.length) { e.preventDefault(); deleteSelection(); } return; }
-    if (k === "Escape") { setSelection([]); setPending(null); dragRef.current = null; setDrag(null); return; }
+    if (k === "Escape") { setSelection([]); setPending(null); dragRef.current = null; setDrag(null); setDropHint(null); return; }
     if (k.startsWith("Arrow") && selectedBoxes.length + selection.filter((id) => diagram.groups.some((g) => g.id === id)).length) {
       e.preventDefault();
       const step = e.shiftKey ? 24 : 8;
@@ -590,10 +596,20 @@ export default function FdCanvas({ item, graded }) {
           )}
 
           {diagram.groups.map((g) => {
-            const r = groupRect(g, diagram);
+            const leaving = dropHint?.leave.includes(g.id);
+            const r = groupRect(leaving ? { ...g, members: g.members.filter((m) => m !== dropHint.box) } : g, diagram);
             if (!r) return null;
             const sel = selection.includes(g.id);
-            return <rect key={g.id} x={r.x} y={r.y} width={r.w} height={r.h} rx="10" className={`${sel ? "stroke-pine" : "stroke-ink"} fill-none`} strokeWidth={sel ? 2.5 : 1.6} />;
+            const isTarget = dropHint?.target?.kind === "group" && dropHint.target.id === g.id;
+            return (
+              <rect
+                key={g.id} x={r.x} y={r.y} width={r.w} height={r.h} rx="10"
+                className={`${sel || isTarget ? "stroke-pine" : "stroke-ink"} ${isTarget ? "fill-pine/[0.06]" : "fill-none"}`}
+                strokeWidth={isTarget ? 3 : sel ? 2.5 : 1.6}
+                strokeDasharray={leaving ? "5 4" : undefined}
+                opacity={leaving ? 0.6 : 1}
+              />
+            );
           })}
 
           {ghosts.map((gh) => (
@@ -621,13 +637,14 @@ export default function FdCanvas({ item, graded }) {
             );
           })}
 
-          {diagram.boxes.map((b) => {
+          {[...diagram.boxes].sort((a, b) => (a.id === dropHint?.box) - (b.id === dropHint?.box)).map((b) => {
             const r = boxRect(b);
             const sel = selection.includes(b.id);
             const isPending = pending?.id === b.id;
+            const isTarget = dropHint?.target?.kind === "box" && dropHint.target.id === b.id;
             return (
-              <g key={b.id}>
-                <rect x={r.x} y={r.y} width={r.w} height={r.h} rx="5" className={`fill-white ${sel || isPending ? "stroke-pine" : "stroke-ink"}`} strokeWidth={sel || isPending ? 2.6 : 1.6} />
+              <g key={b.id} opacity={dropHint?.target && dropHint.box === b.id ? 0.55 : 1}>
+                <rect x={r.x} y={r.y} width={r.w} height={r.h} rx="5" className={`fill-white ${sel || isPending || isTarget ? "stroke-pine" : "stroke-ink"}`} strokeWidth={sel || isPending || isTarget ? 2.6 : 1.6} />
                 <text x={b.x} y={b.y + 7} textAnchor="middle" fontSize="20" className={b.attr ? "fill-ink" : "fill-ink/35"} style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}>
                   {b.attr || "?"}
                 </text>
@@ -635,12 +652,26 @@ export default function FdCanvas({ item, graded }) {
             );
           })}
 
+          {dropHint?.target && (() => {
+            const r = shapeRect(dropHint.target, diagram);
+            if (!r) return null;
+            const inset = dropHint.target.kind === "box" ? 5 : 4;
+            return (
+              <g className="pointer-events-none">
+                <rect x={r.x + inset} y={r.y + inset} width={r.w - 2 * inset} height={r.h - 2 * inset} rx="4" className="fill-pine/[0.08] stroke-pine" strokeWidth="2.2" strokeDasharray="4 3" />
+                <text x={r.x + r.w / 2} y={r.y - 8} textAnchor="middle" fontSize="13" fontWeight="600" className="fill-pine">
+                  {dropHint.target.kind === "box" ? "Släpp: gruppera" : "Släpp: lägg till i gruppen"}
+                </text>
+              </g>
+            );
+          })()}
+
           {pending?.kind === "group" && (() => {
             const r = shapeRect(pending, diagram);
             return r ? <rect x={r.x} y={r.y} width={r.w} height={r.h} rx="10" className="fill-none stroke-pine" strokeWidth="2.6" /> : null;
           })()}
 
-          {tool === "select" && !drag && handleShapes().map((ref) => {
+          {tool === "select" && !drag && !dropHint && handleShapes().map((ref) => {
             const h = handlePos(ref);
             return h ? <circle key={"h" + ref.id} cx={h.x} cy={h.y} r="6" className="fill-pine stroke-white" strokeWidth="2" /> : null;
           })}

@@ -6,6 +6,7 @@ import { classifyStroke, features } from "../src/lib/strokes.js";
 import {
   compareDrawing, drawnPairs, arrowTypes, layoutFromFds, removeElements, addGroup, addArrow, placeAll,
   groupRect, boxRect, arrowGeometry, hitTest, BOX, WORLD, emptyDiagram,
+  dropOutcome, applyDrop, leaveGroup, joinGroup, historyReducer,
 } from "../src/lib/fdDiagram.js";
 import { normalizeExercises } from "../src/data/databaser/normalizeExercises.js";
 
@@ -258,4 +259,128 @@ test("placeAll lägger ut de attribut som saknas utan att flytta de som finns", 
   assert.deepEqual(d.boxes[0], { id: "x", attr: "B", x: 60, y: 56 });
   const pos = new Set(d.boxes.map((b) => `${b.x},${b.y}`));
   assert.equal(pos.size, 3);
+});
+
+// ---------- Gruppera genom att släppa en ruta på en annan ----------
+
+const moveBox = (d, id, x, y) => ({ ...d, boxes: d.boxes.map((b) => (b.id === id ? { ...b, x, y } : b)) });
+const drop = (start, id, x, y) => {
+  const moved = moveBox(start, id, x, y);
+  const o = dropOutcome(moved, id, start);
+  return { o, next: applyDrop(moved, id, o, start) };
+};
+const noOverlap = (d) => d.boxes.every((a) => d.boxes.every((b) => a.id >= b.id || Math.abs(a.x - b.x) >= BOX || Math.abs(a.y - b.y) >= BOX));
+const four = () => ({
+  boxes: [{ id: "A", attr: "A", x: 80, y: 80 }, { id: "B", attr: "B", x: 240, y: 80 }, { id: "C", attr: "C", x: 400, y: 80 }, { id: "D", attr: "D", x: 240, y: 260 }],
+  groups: [], arrows: [],
+});
+
+test("släpp A på B: ny grupp {A, B}, A läggs bredvid B", () => {
+  const { o, next } = drop(four(), "A", 235, 85);
+  assert.deepEqual(o, { target: { kind: "box", id: "B" }, leave: [] });
+  assert.equal(next.groups.length, 1);
+  assert.deepEqual([...next.groups[0].members].sort(), ["A", "B"]);
+  assert.ok(noOverlap(next), "rutorna ligger ovanpå varandra");
+  const a = next.boxes.find((b) => b.id === "A");
+  assert.ok(a.x < 240 && a.y === 80, "A kom från vänster och hamnar till vänster om B");
+});
+
+test("mittpunkten utanför målrutan är en vanlig flytt", () => {
+  // A:s ruta överlappar B men mittpunkten ligger utanför B.
+  const { o, next } = drop(four(), "A", 240 - BOX / 2 - 6, 80);
+  assert.equal(o.target, null);
+  assert.equal(next.groups.length, 0);
+  assert.equal(next.boxes.find((b) => b.id === "A").x, 240 - BOX / 2 - 6);
+});
+
+test("släpp C på en befintlig grupp: C läggs till, pilar från gruppen följer med", () => {
+  let d = four();
+  const g = addGroup(d, ["A", "B"]);
+  d = addArrow(g.diagram, { kind: "group", id: g.id }, { kind: "box", id: "D" }).diagram;
+  d = addArrow(d, { kind: "group", id: g.id }, { kind: "box", id: "C" }).diagram;
+  d = addArrow(d, { kind: "box", id: "D" }, { kind: "box", id: "C" }).diagram;
+  const r = groupRect(d.groups[0], d);
+  // Inne i gruppens ram men på ingen av dess rutor: i marginalen under A.
+  const { o, next } = drop(d, "C", 80, r.y + r.h - 3);
+  assert.deepEqual(o.target, { kind: "group", id: g.id });
+  assert.deepEqual([...next.groups[0].members].sort(), ["A", "B", "C"]);
+  // Gruppen → D ligger kvar; gruppen → C (nu en egen medlem) tas bort; D → C ligger kvar på rutan.
+  assert.deepEqual(next.arrows.map((a) => `${a.from.id}>${a.to.id}`).sort(), [`${g.id}>D`, "D>C"].sort());
+  assert.ok(noOverlap(next));
+});
+
+test("dra ut en ruta ur en grupp: den lämnar gruppen, gruppen och dess pilar finns kvar", () => {
+  let d = four();
+  const g = addGroup(d, ["A", "B", "C"]);
+  d = addArrow(g.diagram, { kind: "group", id: g.id }, { kind: "box", id: "D" }).diagram;
+  const { o, next } = drop(d, "C", 500, 330);
+  assert.deepEqual(o, { target: null, leave: [g.id] });
+  assert.deepEqual([...next.groups[0].members].sort(), ["A", "B"]);
+  assert.equal(next.arrows[0].from.id, g.id);
+  // En flytt inom gruppens ram lämnar den inte.
+  assert.deepEqual(drop(d, "C", 380, 90).o.leave, []);
+});
+
+test("en grupp med en enda ruta kvar upplöses; pilarna flyttas till rutan", () => {
+  let d = four();
+  const g = addGroup(d, ["A", "B"]);
+  d = addArrow(g.diagram, { kind: "group", id: g.id }, { kind: "box", id: "D" }).diagram;
+  d = addArrow(d, { kind: "box", id: "C" }, { kind: "group", id: g.id }).diagram;
+  const { next } = drop(d, "A", 80, 380);
+  assert.equal(next.groups.length, 0);
+  assert.deepEqual(next.arrows.map((a) => `${a.from.id}>${a.to.id}`).sort(), ["B>D", "C>B"]);
+  // Direkt anrop, och en pil som skulle peka på sig själv försvinner.
+  const e = addArrow(addGroup(four(), ["A", "B"]).diagram, { kind: "box", id: "A" }, { kind: "box", id: "C" }).diagram;
+  const gid = e.groups[0].id;
+  const f = addArrow(e, { kind: "group", id: gid }, { kind: "box", id: "A" }).diagram;
+  assert.deepEqual(leaveGroup(f, "B", gid).arrows.map((a) => `${a.from.id}>${a.to.id}`), ["A>C"]);
+});
+
+test("lyft ur en grupp och släpp på en annan ruta i samma drag", () => {
+  const g = addGroup(four(), ["A", "B"]);
+  const { o, next } = drop(g.diagram, "A", 245, 255);
+  assert.deepEqual(o, { target: { kind: "box", id: "D" }, leave: [g.id] });
+  assert.equal(next.groups.length, 1);
+  assert.deepEqual([...next.groups[0].members].sort(), ["A", "D"]);
+  assert.ok(noOverlap(next));
+});
+
+test("joinGroup lägger inte till en dubblett av en annan grupp", () => {
+  let d = addGroup(four(), ["A", "B"]).diagram;
+  d = addGroup(d, ["A", "B", "C"]).diagram;
+  const small = d.groups.find((x) => x.members.length === 2);
+  assert.equal(joinGroup(d, "C", small.id), d);
+});
+
+test("ångra och gör om fungerar för gruppera, lägga till och lyfta ut", () => {
+  let state = { diagram: four(), past: [], future: [] };
+  const steps = [];
+  const commit = (next, before) => { state = historyReducer(state, { type: "commit", diagram: next, before }); steps.push(state.diagram); };
+  // Dragningen uppdaterar diagrammet live; släppet sparas med läget före dragningen.
+  const dragDrop = (id, x, y) => {
+    const before = state.diagram;
+    const moved = moveBox(before, id, x, y);
+    state = historyReducer(state, { type: "live", diagram: moved });
+    commit(applyDrop(moved, id, dropOutcome(moved, id, before), before), before);
+  };
+  dragDrop("A", 235, 85); // gruppera {A, B}
+  const r = groupRect(state.diagram.groups[0], state.diagram);
+  dragDrop("C", r.x + r.w - 3, 80); // lägg till C
+  dragDrop("C", 500, 330); // lyft ut C igen
+  assert.equal(state.past.length, 3);
+  const members = (d) => d.groups.map((g) => [...g.members].sort().join("")).join("|");
+  assert.equal(members(state.diagram), "AB");
+  state = historyReducer(state, { type: "undo" });
+  assert.equal(members(state.diagram), "ABC");
+  state = historyReducer(state, { type: "undo" });
+  assert.equal(members(state.diagram), "AB");
+  state = historyReducer(state, { type: "undo" });
+  assert.equal(members(state.diagram), "");
+  assert.deepEqual(state.diagram, four());
+  state = historyReducer(state, { type: "redo" });
+  state = historyReducer(state, { type: "redo" });
+  assert.equal(members(state.diagram), "ABC");
+  state = historyReducer(state, { type: "redo" });
+  assert.equal(members(state.diagram), "AB");
+  assert.equal(historyReducer(state, { type: "redo" }), state, "inget mer att göra om");
 });

@@ -199,6 +199,132 @@ export function addArrow(diagram, from, to) {
   return { diagram: { ...diagram, arrows: [...diagram.arrows, { id, from: { kind: from.kind, id: from.id }, to: { kind: to.kind, id: to.id } }] }, id };
 }
 
+// ---------- Gruppera genom att släppa en ruta på en annan ----------
+
+// Vad som händer när en enda ruta släpps: `target` är rutan eller gruppen
+// dess mittpunkt ligger inom (ruta före grupp, minsta gruppen först), och
+// `leave` är de grupper den dragits ut ur — mittpunkten utanför gruppens
+// ram som den var när dragningen började. Ramen i början räknas med rutan
+// själv, så att en flytt inom gruppen inte lämnar den.
+export function dropOutcome(diagram, boxId, startDiagram = diagram) {
+  const box = diagram.boxes.find((b) => b.id === boxId);
+  if (!box) return { target: null, leave: [] };
+  const c = { x: box.x, y: box.y };
+  const leave = startDiagram.groups
+    .filter((g) => g.members.includes(boxId))
+    .filter((g) => {
+      const r = groupRect(g, startDiagram);
+      return r && !inside(c, r);
+    })
+    .map((g) => g.id);
+  let target = null;
+  const onBox = diagram.boxes.find((b) => b.id !== boxId && inside(c, boxRect(b)));
+  if (onBox) target = { kind: "box", id: onBox.id };
+  else {
+    const group = diagram.groups
+      .filter((g) => !g.members.includes(boxId))
+      .map((g) => ({ g, r: groupRect(g, diagram) }))
+      .filter(({ r }) => r && inside(c, r))
+      .sort((a, b) => a.r.w * a.r.h - b.r.w * b.r.h)[0];
+    if (group) target = { kind: "group", id: group.g.id };
+  }
+  return { target, leave };
+}
+
+// Lägg rutan bredvid en annan ruta, på den sida den kom från, på första
+// lediga plats.
+function placeBeside(diagram, boxId, anchor, fromLeft) {
+  const step = BOX + 16;
+  const spots = [
+    { x: anchor.x + (fromLeft ? -step : step), y: anchor.y },
+    { x: anchor.x + (fromLeft ? step : -step), y: anchor.y },
+    { x: anchor.x, y: anchor.y + step },
+    { x: anchor.x, y: anchor.y - step },
+  ].map(clampPoint);
+  const free = (p) => !diagram.boxes.some((b) => b.id !== boxId && Math.abs(b.x - p.x) < BOX + 4 && Math.abs(b.y - p.y) < BOX + 4);
+  const spot = spots.find(free) || spots[0];
+  return { ...diagram, boxes: diagram.boxes.map((b) => (b.id === boxId ? { ...b, ...spot } : b)) };
+}
+
+// Rutan lämnar en grupp. Blir en enda ruta kvar upplöses gruppen, och
+// gruppens pilar flyttas till den rutan (dubbletter slås ihop).
+export function leaveGroup(diagram, boxId, groupId) {
+  const g = diagram.groups.find((x) => x.id === groupId);
+  if (!g || !g.members.includes(boxId)) return diagram;
+  const members = g.members.filter((m) => m !== boxId);
+  if (members.length >= 2) return { ...diagram, groups: diagram.groups.map((x) => (x.id === groupId ? { ...x, members } : x)) };
+  const rest = members[0];
+  let next = { ...diagram, groups: diagram.groups.filter((x) => x.id !== groupId), arrows: diagram.arrows.filter((a) => a.from.id !== groupId && a.to.id !== groupId) };
+  if (rest) {
+    for (const a of diagram.arrows) {
+      if (a.from.id !== groupId && a.to.id !== groupId) continue;
+      const from = a.from.id === groupId ? { kind: "box", id: rest } : a.from;
+      const to = a.to.id === groupId ? { kind: "box", id: rest } : a.to;
+      if (from.id === to.id) continue;
+      if (next.arrows.some((x) => x.from.id === from.id && x.to.id === to.id)) continue;
+      next = { ...next, arrows: [...next.arrows, { id: a.id, from, to }] };
+    }
+  }
+  return next;
+}
+
+// Rutan läggs till i en befintlig grupp. Pilar mellan gruppen och rutan
+// blir meningslösa (en determinant som pekar på sig själv) och tas bort.
+export function joinGroup(diagram, boxId, groupId) {
+  const g = diagram.groups.find((x) => x.id === groupId);
+  if (!g || g.members.includes(boxId)) return diagram;
+  const members = [...g.members, boxId];
+  const twin = diagram.groups.find((x) => x.id !== groupId && x.members.length === members.length && members.every((m) => x.members.includes(m)));
+  if (twin) return diagram;
+  return {
+    ...diagram,
+    groups: diagram.groups.map((x) => (x.id === groupId ? { ...x, members } : x)),
+    arrows: diagram.arrows.filter((a) => !((a.from.id === groupId && a.to.id === boxId) || (a.from.id === boxId && a.to.id === groupId))),
+  };
+}
+
+// Släppet som en ändring: lämna grupper först, sedan gruppera med målet.
+// Rutan läggs bredvid målet så att inga rutor hamnar ovanpå varandra.
+export function applyDrop(diagram, boxId, { target, leave }, startDiagram = diagram) {
+  let next = diagram;
+  for (const gid of leave) next = leaveGroup(next, boxId, gid);
+  if (!target) return next;
+  const start = startDiagram.boxes.find((b) => b.id === boxId);
+  if (target.kind === "box") {
+    const anchor = next.boxes.find((b) => b.id === target.id);
+    if (!anchor) return next;
+    next = addGroup(next, [boxId, target.id]).diagram;
+    return placeBeside(next, boxId, anchor, (start?.x ?? anchor.x) < anchor.x);
+  }
+  const g = next.groups.find((x) => x.id === target.id);
+  if (!g) return next;
+  const box = next.boxes.find((b) => b.id === boxId);
+  const members = next.boxes.filter((b) => g.members.includes(b.id));
+  next = joinGroup(next, boxId, target.id);
+  const anchor = [...members].sort((a, b) => Math.hypot(a.x - box.x, a.y - box.y) - Math.hypot(b.x - box.x, b.y - box.y))[0];
+  return anchor ? placeBeside(next, boxId, anchor, box.x < anchor.x) : next;
+}
+
+// ---------- Historik (ångra/gör om) ----------
+
+export function historyReducer(state, action) {
+  switch (action.type) {
+    case "commit":
+      if (action.diagram === (action.before ?? state.diagram)) return { ...state, diagram: action.diagram };
+      return { diagram: action.diagram, past: [...state.past, action.before ?? state.diagram].slice(-100), future: [] };
+    case "live":
+      return { ...state, diagram: action.diagram };
+    case "undo":
+      if (!state.past.length) return state;
+      return { diagram: state.past[state.past.length - 1], past: state.past.slice(0, -1), future: [state.diagram, ...state.future] };
+    case "redo":
+      if (!state.future.length) return state;
+      return { diagram: state.future[0], past: [...state.past, state.diagram], future: state.future.slice(1) };
+    default:
+      return state;
+  }
+}
+
 const clampX = (x) => Math.max(BOX / 2 + 4, Math.min(WORLD.w - BOX / 2 - 4, x));
 const clampY = (y) => Math.max(BOX / 2 + 4, Math.min(WORLD.h - BOX / 2 - 4, y));
 export const clampPoint = (p) => ({ x: clampX(p.x), y: clampY(p.y) });
