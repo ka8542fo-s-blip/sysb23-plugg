@@ -6,8 +6,7 @@
 //
 // Källäget (2026-09-29): Weavers föreläsningar F1–F3, Björns BPMN-genomgång
 // och övningshäfte, de fyra artiklarna och HT25-tentorna. HT24-tentorna (den
-// förra lärarens) används sedan 2026-09-30 inte som källa i kap 1–9; BPMN-
-// kapitlen nämner dem där genomgången saknar ett elementnamn. Jeston (2022)
+// förra lärarens) används inte som källa sedan 2026-09-30. Jeston (2022)
 // och Silver (2017) finns inte tillgängliga; allt som sägs om dem kommer från
 // föreläsningarna eller tentafrågorna och anges i `sources`. Kapitel som
 // bygger på tentafrågor snarare än föreläsning är märkta "preliminärt" i
@@ -144,7 +143,7 @@ Weaver ger två skäl till den kritiska blicken. Det första är att normativ li
     title: "Hur BPM växte fram",
     readingMinutes: 10,
     lead: "Från Taylor och kvalitetsrörelsen via BPR och workflowforskningen till BPMS, RPA och agentisk AI — och varför BPR gick för långt.",
-    sources: ["F1 (Weaver 22 sep 2026; BPR:s empowerment, RPA och UiPath)", "F2 del 1 (RPA i praktiken)", "Hammer (1990) s. 104–112", "Reijers (2021) s. 4", "Rosemann et al. (2024) s. 420–421", "Tenta HT25 ord 2(b), omtenta 8", "HT24 fråga 10 (CPI), 13 (Lean)"],
+    sources: ["F1 (Weaver 22 sep 2026; BPR:s empowerment, RPA och UiPath)", "F2 del 1 (RPA i praktiken)", "Hammer (1990) s. 104–112", "Reijers (2021) s. 4", "Rosemann et al. (2024) s. 420–421", "Tenta HT25 ord 2(b), omtenta 8", "F1 (kvalitetsrörelsen: CPI, Lean, Six Sigma)"],
     body: `
 BPM är inte en uppfinning utan ett resultat av flera strömningar som möttes kring år 2000. Tentan prövar framför allt två saker härifrån: **varför BPR misslyckades** och **varför RPA inte skalade**. Resten är bakgrund som gör de två begripliga.
 
@@ -817,7 +816,7 @@ En egen tolkning: en handläggare kan visa vilken regel i beslutstabellen som ga
     title: "BPMN: grunderna",
     readingMinutes: 12,
     lead: "Vad BPMN passar för, aktiviteter och task-typer, namngivning, gateways, pooler och lanes, message flow, subprocesser och call activity — och DMN i korthet.",
-    sources: ["Björn Svenssons BPMN-genomgång (efter Silver 2017), s. 2–41", "Övningshäftet 1.1–1.3 (facit)", "Tenta HT25 omtenta 13, 14; HT24 fråga 15–25, 34–42, 46, 48", "DMN: F1 (inlämningsuppgiften), F2 (business rules engine) — preliminärt till F5 (12 okt)"],
+    sources: ["Björn Svenssons BPMN-genomgång (efter Silver 2017), s. 2–41", "Övningshäftet 1.1–1.3 (facit)", "Tenta HT25 omtenta 13, 14", "BPMN-standardens begrepp enligt Silver (2017): script task, connecting objects, loop marker", "DMN: F1 (inlämningsuppgiften), F2 (business rules engine) — preliminärt till F5 (12 okt)"],
     body: `
 **BPMN** (Business Process Model and Notation) är en standard för att rita affärsprocesser. Den ägs inte av något enskilt företag utan förvaltas av Object Management Group (OMG). Kursens BPMN-material följer Bruce Silvers *Method and Style*. Det är en uppsättning regler ovanpå standarden som gör diagrammen entydiga.
 
@@ -831,14 +830,14 @@ Tentan prövade det med fyra förslag. Rätt svar var ersättningshanteringen f�
 
 ## Aktiviteter och task-typer
 
-En **aktivitet** är en arbetsenhet som tar tid. Den namnges **verb–objekt**: "Review loan application", inte "Loan application review". Typen visar hur arbetet utförs. Källorna skiljer sig åt: genomgången beskriver bara user och service task, några typer syns i tentans och häftets diagram, och resten finns bara som påståenden i HT24, som saknar facit.
+En **aktivitet** är en arbetsenhet som tar tid. Den namnges **verb–objekt**: "Review loan application", inte "Loan application review". Typen visar hur arbetet utförs. Källorna skiljer sig åt: genomgången beskriver bara user och service task, några typer syns i tentans och häftets diagram, och resten är BPMN-standardens begrepp (Silver 2017) som genomgången inte tar upp.
 
 - **User task** (en person), ur genomgången: utförs av en människa. Även när en person klickar på en knapp och systemet gör resten räknas det som user task.
 - **Service task** (kugghjul), ur genomgången: automatiserad, utan mänsklig interaktion.
 - **Send task** (fyllt kuvert) och **receive task** (ofyllt kuvert), ur tentans elementfråga och häftets facit: skickar respektive väntar på ett meddelande.
 - **Manual task** (hand), ur tentans diagram: utförs för hand.
-- **Script task**, ur HT24: kör ett skript.
-- **Business rule task**, ur HT24: anropar en beslutsregel, till exempel en DMN-beslutstabell.
+- **Script task**, ur BPMN-standarden (Silver 2017), inte i genomgången: kör ett skript.
+- **Business rule task**, ur BPMN-standarden: anropar en beslutsregel, till exempel en DMN-beslutstabell. Den kopplar till F2:s bild om **business rules engine**, där beslutsreglerna ligger i beslutstabeller och byggs upp med ett DRD, och till HT25:s fråga 3(a) om hur BPMN och DMN tillsammans gör automatiserade beslut förklarbara.
 
 Valet av typ beror på aktivitetens natur och hur automatiserad den är. En automatisk e-postavisering är ingen user task, och ett chefsbeslut om en inköpsbegäran är ingen service task.
 
@@ -861,7 +860,7 @@ En **gateway** (romb) delar upp eller slår ihop sekvensflöden (heldragna pilar
 - **Association:** kopplar artefakter som textannoteringar och data till flödesobjekt.
 - **Data store:** information i en applikation, databas eller fil som processen och externa parter kan läsa och skriva. Den kopplas med data associations och är ett alternativ till message flow för att föra över information.
 
-Sequence flow, message flow och association kallas i en HT24-fråga för BPMN:s **connecting objects**.
+Sequence flow, message flow och association kallas i BPMN-standarden (Silver 2017) för **connecting objects**. Begreppet tas inte upp i genomgången.
 
 ## Namngivning
 
@@ -885,11 +884,11 @@ En **subprocess** består själv av aktiviteter. Den ritas **kollapsad**, med et
 1. Det måste ha en **otriggad start** (tom cirkel), eftersom det startas av att sekvensflödet når subprocessen i föräldern.
 2. Om subprocessen följs av en gateway i föräldern ska **antalet sluthändelser i barnet vara lika med antalet gates**. I övningshäftets blombud slutar leveranssubprocessen i "Delivery succeeded" och "Delivery failed", och XOR-gatewayen efter den har exakt de två vägarna.
 
-En **call activity** har **tjock ram**. Den anropar en fristående process som är modellerad separat och kan återanvändas av flera processer, till exempel en verifiering av finansiella uppgifter som både kreditkortsansökan och kontouppgraderingen använder. En **loop marker** betyder enligt ett HT24-påstående att aktiviteten upprepas tills ett villkor är uppfyllt. Tre lodräta streck, som på element A i omtentans elementfråga, är en parallell **multi-instance**-markör. Dess betydelse förklaras inte i kursmaterialet.
+En **call activity** har **tjock ram**. Den anropar en fristående process som är modellerad separat och kan återanvändas av flera processer, till exempel en verifiering av finansiella uppgifter som både kreditkortsansökan och kontouppgraderingen använder. En **loop marker** betyder enligt BPMN-standarden (Silver 2017) att aktiviteten upprepas tills ett villkor är uppfyllt. Tre lodräta streck, som på element A i omtentans elementfråga, är en parallell **multi-instance**-markör. Dess betydelse förklaras inte i kursmaterialet.
 
 ## DMN i korthet
 
-**DMN** (Decision Model and Notation) beskriver **beslut** på samma sätt som BPMN beskriver processer. Beslutsreglerna läggs i **beslutstabeller**, och sambanden mellan beslut och deras indata visas i ett **DRD** (Decision Requirements Diagram). En processmotors business rules engine kan köra tabellerna. I BPMN-diagrammet kopplas beslutet in med en **business rule task**. Ett beslut kräver inte en XOR-gateway direkt efter sig. En gateway behövs bara om flödet faktiskt ska dela sig på utfallet. Gruppuppgiften använder DMN. På salstentan har DMN förekommit i HT24 fråga 23 (om ett beslut kräver en XOR efteråt, och hur DMN kopplas in via business rule task) och i HT25 (hur BPMN och DMN stödjer förklarbarhet, kapitel 9).
+**DMN** (Decision Model and Notation) beskriver **beslut** på samma sätt som BPMN beskriver processer. Beslutsreglerna läggs i **beslutstabeller**, och sambanden mellan beslut och deras indata visas i ett **DRD** (Decision Requirements Diagram). En processmotors business rules engine kan köra tabellerna. I BPMN-diagrammet kopplas beslutet in med en **business rule task**. Ett beslut kräver inte en XOR-gateway direkt efter sig. En gateway behövs bara om flödet faktiskt ska dela sig på utfallet. Gruppuppgiften använder DMN. På salstentan har DMN förekommit i HT25 (hur BPMN och DMN stödjer förklarbarhet, kapitel 9).
 `,
   },
   {
@@ -898,7 +897,7 @@ En **call activity** har **tjock ram**. Den anropar en fristående process som �
     title: "BPMN: händelser och att köra en process",
     readingMinutes: 13,
     lead: "Starthändelser, throw och catch, timers, event-based gateway, boundary events, error, event subprocesser, terminate och OR-join — och hur du kör ett diagram steg för steg, som på tentan.",
-    sources: ["Björn Svenssons BPMN-genomgång (efter Silver 2017), s. 27–66", "Tenta HT25 ord 3(b)–3(d), omtenta 13, 15, 16", "HT24 fråga 20, 44"],
+    sources: ["Björn Svenssons BPMN-genomgång (efter Silver 2017), s. 27–66", "Tenta HT25 ord 3(b)–3(d), omtenta 13, 15, 16", "BPMN-standarden enligt Silver (2017)", "F2 (business rules engine)"],
     body: `
 BPMN-frågorna ger upp till sju poäng styck, och de flesta går ut på att **köra ett diagram**. Det här kapitlet går igenom händelserna och sedan metoden. Diagrammen och övningarna finns i vyn Kör processen.
 

@@ -171,3 +171,10 @@ test("process: parkerade frågor står utanför banken, och ingen aktiv fråga h
   for (const q of bpmPending) assert.ok(!ids.has(q.id), `${q.id} är både parkerad och aktiv`);
   for (const q of bpmQ.questions) assert.doesNotMatch(q.source, /HT24/, `${q.id}: HT24 som källa`);
 });
+
+test("process: kompendiet har inte HT24 som källa, varken i sources eller i löptexten", () => {
+  for (const c of bpmChapters) {
+    for (const s of c.sources ?? []) assert.doesNotMatch(s, /HT24/, `${c.id}: HT24 i sources`);
+    assert.doesNotMatch(c.body, /HT24/, `${c.id}: HT24 i texten`);
+  }
+});
