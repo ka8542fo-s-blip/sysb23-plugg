@@ -1,114 +1,13 @@
-// Ritytan: streckklassificering med syntetiska streck, pilar mot beroenden
-// som mängder, autolayouten och ändringar i diagrammet.
+// Ritytan: pilar mot beroenden som mängder, autolayouten, ändringar i
+// diagrammet och gruppering genom att släppa en ruta på en annan.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { classifyStroke, features } from "../src/lib/strokes.js";
 import {
   compareDrawing, drawnPairs, arrowTypes, layoutFromFds, removeElements, addGroup, addArrow, placeAll,
   groupRect, boxRect, arrowGeometry, hitTest, BOX, WORLD, emptyDiagram,
   dropOutcome, applyDrop, leaveGroup, joinGroup, historyReducer,
 } from "../src/lib/fdDiagram.js";
 import { normalizeExercises } from "../src/data/databaser/normalizeExercises.js";
-
-// ---------- Syntetiska streck ----------
-
-// Deterministisk slump, så att testet ger samma streck varje gång.
-function rng(seed) {
-  let s = seed;
-  return () => ((s = (s * 16807) % 2147483647) / 2147483647);
-}
-const jitter = (pts, amount, seed = 1) => {
-  const r = rng(seed);
-  return pts.map((p) => ({ x: p.x + (r() - 0.5) * 2 * amount, y: p.y + (r() - 0.5) * 2 * amount }));
-};
-const line = (a, b, n = 20) => Array.from({ length: n + 1 }, (_, i) => ({ x: a.x + ((b.x - a.x) * i) / n, y: a.y + ((b.y - a.y) * i) / n }));
-const polyline = (corners, n = 12) => corners.slice(1).flatMap((c, i) => line(corners[i], c, n).slice(i ? 1 : 0));
-const rectStroke = (x, y, w, h, overshoot = 0) => polyline([{ x, y }, { x: x + w, y }, { x: x + w, y: y + h }, { x, y: y + h }, { x, y: y + overshoot }]);
-const ellipse = (cx, cy, rx, ry, n = 40, from = 0, sweep = 2 * Math.PI) =>
-  Array.from({ length: n + 1 }, (_, i) => ({ x: cx + rx * Math.cos(from + (sweep * i) / n), y: cy + ry * Math.sin(from + (sweep * i) / n) }));
-const zigzag = (x, y, w, h, times) => polyline(Array.from({ length: times * 2 + 1 }, (_, i) => ({ x: x + (i % 2 ? w : 0), y: y + (h * i) / (times * 2) })), 6);
-
-// Scen: A och B bredvid varandra i en grupp, C under, D för sig.
-const rect = (cx, cy) => ({ x: cx - BOX / 2, y: cy - BOX / 2, w: BOX, h: BOX });
-const scene = {
-  boxes: [
-    { id: "A", rect: rect(100, 80) },
-    { id: "B", rect: rect(180, 80) },
-    { id: "C", rect: rect(140, 220) },
-    { id: "D", rect: rect(400, 220) },
-  ],
-  groups: [{ id: "G", rect: { x: 100 - BOX / 2 - 10, y: 80 - BOX / 2 - 10, w: 80 + BOX + 20, h: BOX + 20 }, members: ["A", "B"] }],
-  arrows: [{ id: "arrowCD", p1: { x: 163, y: 220 }, p2: { x: 377, y: 220 } }],
-};
-
-test("box: en ungefärlig fyrkant på en tom plats blir en ruta", () => {
-  for (const [i, pts] of [
-    rectStroke(480, 60, 50, 46),
-    jitter(rectStroke(480, 60, 50, 46, 6), 3, 7),
-    ellipse(510, 90, 30, 26),
-    jitter(ellipse(510, 90, 28, 24, 40, 0.3, 2 * Math.PI - 0.25), 2, 3),
-    rectStroke(470, 300, 90, 60),
-  ].entries()) {
-    const r = classifyStroke(pts, scene);
-    assert.equal(r.kind, "box", `fall ${i}: ${JSON.stringify(r)} ${JSON.stringify(features(pts), ["ratio", "gap", "winding", "reversals"])}`);
-  }
-  const r = classifyStroke(rectStroke(480, 60, 50, 46), scene);
-  assert.ok(Math.abs(r.center.x - 505) < 2 && Math.abs(r.center.y - 83) < 2);
-});
-
-test("group: en slinga runt två rutor blir en sammansatt determinant", () => {
-  const r = classifyStroke(jitter(ellipse(140, 80, 95, 45), 3, 2), scene);
-  assert.equal(r.kind, "group");
-  assert.deepEqual(r.members.sort(), ["A", "B"]);
-  const s = classifyStroke(rectStroke(60, 40, 170, 230), scene);
-  assert.equal(s.kind, "group");
-  assert.deepEqual(s.members.sort(), ["A", "B", "C"]);
-});
-
-test("arrow: ett streck från en ruta till en annan blir en pil", () => {
-  // Från C till D, med och utan pilhuvud i samma streck.
-  assert.deepEqual(classifyStroke(line({ x: 150, y: 215 }, { x: 395, y: 205 }), scene), { kind: "arrow", from: { kind: "box", id: "C" }, to: { kind: "box", id: "D" } });
-  const hooked = [...line({ x: 150, y: 230 }, { x: 390, y: 228 }), { x: 380, y: 218 }, { x: 390, y: 228 }, { x: 380, y: 238 }];
-  assert.equal(classifyStroke(jitter(hooked, 1.5, 5), scene).kind, "arrow");
-  // Börjar strax utanför rutan: snäpps till den.
-  const near = classifyStroke(line({ x: 140, y: 255 }, { x: 405, y: 250 }), scene);
-  assert.deepEqual([near.from.id, near.to.id], ["C", "D"]);
-  // Från gruppens ram (inte inne i A eller B) till C: pilen går från gruppen.
-  const fromGroup = classifyStroke(line({ x: 140, y: 118 }, { x: 140, y: 205 }), scene);
-  assert.deepEqual(fromGroup.from, { kind: "group", id: "G" });
-  assert.deepEqual(fromGroup.to, { kind: "box", id: "C" });
-  // Inne i A till C: pilen går från A.
-  assert.deepEqual(classifyStroke(line({ x: 100, y: 90 }, { x: 138, y: 210 }), scene).from, { kind: "box", id: "A" });
-  // Svagt böjt streck.
-  const quad = (a, c, b, n = 30) => Array.from({ length: n + 1 }, (_, i) => {
-    const t = i / n;
-    return { x: (1 - t) ** 2 * a.x + 2 * (1 - t) * t * c.x + t * t * b.x, y: (1 - t) ** 2 * a.y + 2 * (1 - t) * t * c.y + t * t * b.y };
-  });
-  const bent = jitter(quad({ x: 150, y: 212 }, { x: 270, y: 120 }, { x: 392, y: 212 }), 2, 11);
-  assert.equal(classifyStroke(bent, { ...scene, groups: [] }).kind, "arrow", JSON.stringify(features(bent), ["ratio"]));
-});
-
-test("erase: klotter över ett element raderar det", () => {
-  const r = classifyStroke(zigzag(385, 200, 30, 40, 4), scene);
-  assert.equal(r.kind, "erase");
-  assert.ok(r.ids.includes("D"));
-  const overArrow = classifyStroke(zigzag(260, 205, 40, 30, 4), scene);
-  assert.deepEqual(overArrow, { kind: "erase", ids: ["arrowCD"] });
-});
-
-test("unknown: det som inte känns igen", () => {
-  // Kort streck, klotter på tom yta, öppen båge i tomma luften, slinga runt en enda ruta,
-  // pil som bara börjar vid en ruta, jättestor slinga på tom yta.
-  const cases = [
-    line({ x: 500, y: 350 }, { x: 505, y: 352 }),
-    zigzag(520, 320, 30, 40, 4),
-    ellipse(520, 150, 40, 40, 20, 0, Math.PI),
-    ellipse(400, 220, 40, 40),
-    line({ x: 400, y: 245 }, { x: 560, y: 390 }),
-    rectStroke(300, 20, 320, 60),
-  ];
-  cases.forEach((pts, i) => assert.equal(classifyStroke(pts, scene).kind, "unknown", `fall ${i}`));
-});
 
 // ---------- Diagrammet mot beroendena ----------
 
@@ -251,6 +150,16 @@ test("pilar åt båda hållen blir symmetriska: raka, parallella, lika långt fr
     assert.ok(onEdge(ab.p1, { x: 60, y: 60 }) && onEdge(ab.p2, { x: bx, y: by }));
     assert.ok(onEdge(ba.p1, { x: bx, y: by }) && onEdge(ba.p2, { x: 60, y: 60 }));
   }
+});
+
+test("placeAll på en tom yta ger ett kompakt rutnät (högst tre per rad)", () => {
+  const d = placeAll(emptyDiagram(), ["A", "B", "C", "D", "E", "F", "G"]);
+  assert.equal(d.boxes.length, 7);
+  const rows = new Set(d.boxes.map((b) => b.y));
+  assert.equal(rows.size, 3);
+  const xs = d.boxes.map((b) => b.x);
+  assert.ok(Math.max(...xs) - Math.min(...xs) <= 2 * 130, "högst tre i bredd");
+  for (const a of d.boxes) for (const b of d.boxes) if (a.id < b.id) assert.ok(Math.abs(a.x - b.x) >= BOX || Math.abs(a.y - b.y) >= BOX);
 });
 
 test("placeAll lägger ut de attribut som saknas utan att flytta de som finns", () => {

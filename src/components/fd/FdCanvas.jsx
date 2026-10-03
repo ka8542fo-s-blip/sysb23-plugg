@@ -3,24 +3,23 @@ import {
   WORLD, BOX, emptyDiagram, newId, boxRect, groupRect, shapeRect, arrowGeometry, hitTest, removeElements, addGroup, addArrow,
   clampPoint, freeSlot, placeAll, compareDrawing, arrowTypes, layoutFromFds, pairText, dropOutcome, applyDrop, historyReducer,
 } from "../../lib/fdDiagram.js";
-import { classifyStroke } from "../../lib/strokes.js";
 import { attrsOf } from "../../lib/fd.js";
 import { load, save } from "../../lib/storage.js";
 
 // Ritytan för beroendediagram, i Björns tavelstil. Eget SVG med pointer
-// events, så att mus, styrplatta, penna och finger fungerar likadant.
+// events, så att mus, styrplatta och finger fungerar likadant. Pilar ser
+// alltid likadana ut; en ny pil markeras inte, markering visas som en tunn
+// kontur, och bara rättningen (och ritkontrollen) färgar pilar.
 // Ritningen sparas per uppgift i localStorage (sysb23:fdritning:<id>).
 
 const TOOLS = [
   ["select", "Flytta"],
   ["arrow", "Pil"],
-  ["pen", "Penna"],
 ];
 
 const HINTS = {
   select: "Dra ut rutor ur hyllan. En pil: dra från pricken på en ruta till en annan. Gruppera: släpp en ruta på en annan (eller markera flera och tryck G); dra ut en ruta ur en grupp för att lyfta ut den.",
   arrow: "Tryck på källan (en ruta eller en grupp), sedan på målet.",
-  pen: "Rita en fyrkant för en ruta, en slinga runt rutor för en grupp, ett streck mellan två rutor för en pil. Klottra över något för att radera.",
 };
 
 function validDiagram(d) {
@@ -47,7 +46,6 @@ export default function FdCanvas({ item, graded }) {
   const [pending, setPending] = useState(null);
   const [drag, setDrag] = useState(null);
   const dragRef = useRef(null);
-  const [fading, setFading] = useState([]);
   const [hover, setHover] = useState(null);
   // Under dragning av en enda ruta: vad ett släpp skulle göra (målruta
   // eller målgrupp, grupper som lämnas), för markeringen.
@@ -68,10 +66,15 @@ export default function FdCanvas({ item, graded }) {
   const [narrow, setNarrow] = useState(false);
   useEffect(() => {
     const el = containerRef.current;
-    if (!el || typeof ResizeObserver === "undefined") return undefined;
-    const ro = new ResizeObserver(([entry]) => setNarrow(entry.contentRect.width < 520));
-    ro.observe(el);
-    return () => ro.disconnect();
+    if (!el) return undefined;
+    // Mät direkt (ResizeObserver avfyras inte i en flik som inte ritas), och
+    // följ sedan ändringar både via observatören och fönstrets resize.
+    const measure = () => setNarrow(el.getBoundingClientRect().width < 520);
+    measure();
+    window.addEventListener("resize", measure);
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(measure) : null;
+    ro?.observe(el);
+    return () => { window.removeEventListener("resize", measure); ro?.disconnect(); };
   }, []);
   // Smal yta: kvadratisk vy runt innehållet (hela ytans höjd när den är tom).
   const [view, setView] = useState(null);
@@ -118,7 +121,7 @@ export default function FdCanvas({ item, graded }) {
   const selectedBoxes = selection.filter((id) => diagram.boxes.some((b) => b.id === id));
   const single = selection.length === 1 ? selection[0] : null;
   const handleShapes = () => {
-    const ids = new Set([...(tool !== "pen" ? selection : []), ...(hover && tool === "select" ? [hover] : [])]);
+    const ids = new Set([...selection, ...(hover && tool === "select" ? [hover] : [])]);
     return [...ids]
       .map((id) => (diagram.boxes.some((b) => b.id === id) ? { kind: "box", id } : diagram.groups.some((g) => g.id === id) ? { kind: "group", id } : null))
       .filter(Boolean);
@@ -156,11 +159,6 @@ export default function FdCanvas({ item, graded }) {
     containerRef.current?.focus({ preventScroll: true });
     setConfirmClear(false);
 
-    if (tool === "pen") {
-      dragRef.current = { type: "stroke", points: [p] };
-      setDrag({ type: "stroke", points: [p] });
-      return;
-    }
     const handle = handleAt(p);
     if (handle) {
       dragRef.current = { type: "link", from: handle, moved: false, start: p, point: p };
@@ -225,11 +223,6 @@ export default function FdCanvas({ item, graded }) {
       dr.point = p;
       if (dr.type === "link" && Math.hypot(p.x - dr.start.x, p.y - dr.start.y) > 6 / scale()) dr.moved = true;
       setDrag({ ...drag, type: dr.type, from: dr.from, start: dr.start, point: p });
-    } else if (dr.type === "stroke") {
-      const last = dr.points[dr.points.length - 1];
-      if (Math.hypot(p.x - last.x, p.y - last.y) < 1.5) return;
-      dr.points.push(p);
-      setDrag({ type: "stroke", points: [...dr.points] });
     }
   }
 
@@ -280,8 +273,6 @@ export default function FdCanvas({ item, graded }) {
           say(`Källa ${labelOf(d, dr.from)} — tryck på målet.`);
         }
       }
-    } else if (dr.type === "stroke") {
-      applyStroke(dr.points);
     }
   }
 
@@ -290,44 +281,10 @@ export default function FdCanvas({ item, graded }) {
     const r = addArrow(d, from, to);
     if (!r.id) { say("Ingen pil: en grupp kan inte peka på sina egna rutor."); return; }
     if (r.diagram !== d) commit(r.diagram);
-    setSelection([r.id]);
+    // En ny pil markeras inte: alla pilar ska se likadana ut.
+    setSelection([]);
+    setPending(null);
     say(`Pil ${labelOf(d, from)} → ${labelOf(d, to)}.`);
-  }
-
-  function applyStroke(points) {
-    const d = diagramRef.current;
-    const scene = {
-      boxes: d.boxes.map((b) => ({ id: b.id, rect: boxRect(b) })),
-      groups: d.groups.map((g) => ({ id: g.id, rect: groupRect(g, d), members: g.members })).filter((g) => g.rect),
-      arrows: d.arrows.flatMap((a) => {
-        const geo = arrowGeometry(a, d);
-        if (!geo) return [];
-        return geo.kind === "curve" ? [{ id: a.id, p1: geo.p1, p2: geo.mid }, { id: a.id, p1: geo.mid, p2: geo.p2 }] : [{ id: a.id, p1: geo.p1, p2: geo.p2 }];
-      }),
-    };
-    const r = classifyStroke(points, scene, { tol: Math.max(14, 16 / scale()), boxSize: BOX });
-    if (r.kind === "box") {
-      const id = newId("b");
-      commit({ ...d, boxes: [...d.boxes, { id, attr: null, ...clampPoint(r.center) }] });
-      setSelection([id]);
-      say("Ny ruta — välj bokstav.");
-    } else if (r.kind === "group") {
-      const g = addGroup(d, r.members);
-      if (g.diagram !== d) commit(g.diagram);
-      setSelection(g.id ? [g.id] : []);
-      say(`Grupp ${labelOf(g.diagram, { kind: "group", id: g.id })}.`);
-    } else if (r.kind === "arrow") {
-      link(r.from, r.to);
-    } else if (r.kind === "erase") {
-      commit(removeElements(d, r.ids));
-      setSelection([]);
-      say("Raderat.");
-    } else {
-      const id = newId("s");
-      setFading((list) => [...list, { id, points }]);
-      setTimeout(() => setFading((list) => list.filter((s) => s.id !== id)), 1100);
-      say("Strecket kändes inte igen.");
-    }
   }
 
   // ---------- Åtgärder ----------
@@ -486,7 +443,6 @@ export default function FdCanvas({ item, graded }) {
 
   // ---------- Rendering ----------
   const arrowClass = (a) => {
-    if (selection.includes(a.id)) return "stroke-pine";
     if (showCheck && check.wrongArrowIds.has(a.id)) return "stroke-wrong";
     if (graded && types[a.id] === "partial") return "stroke-wrong";
     if (graded && types[a.id] === "transitive") return "stroke-brass";
@@ -569,7 +525,7 @@ export default function FdCanvas({ item, graded }) {
           ref={svgRef}
           data-fd-surface=""
           viewBox={view ? `${view.x} ${view.y} ${view.w} ${view.h}` : `0 0 ${WORLD.w} ${WORLD.h}`}
-          className={`block h-auto w-full touch-none select-none ${tool === "pen" ? "cursor-crosshair" : ""}`}
+          className="block h-auto w-full touch-none select-none"
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
@@ -591,7 +547,7 @@ export default function FdCanvas({ item, graded }) {
           {view && <rect width={WORLD.w} height={WORLD.h} className="fill-none stroke-line" strokeWidth="2" />}
           {!hasContent && (
             <text x={WORLD.w / 2} y={WORLD.h / 2} textAnchor="middle" className="fill-ink/40" fontSize="15">
-              Dra ut attributen ur hyllan, eller rita med pennan
+              Dra ut attributen ur hyllan
             </text>
           )}
 
@@ -626,7 +582,8 @@ export default function FdCanvas({ item, graded }) {
             const t = graded ? types[a.id] : null;
             return (
               <g key={a.id}>
-                <path d={geo.d} className={`${cls} fill-none`} strokeWidth={selection.includes(a.id) ? 2.8 : 1.8} markerEnd={markerFor(cls)} />
+                {selection.includes(a.id) && <path d={geo.d} className="fill-none stroke-pine/25" strokeWidth="9" strokeLinecap="round" />}
+                <path d={geo.d} className={`${cls} fill-none`} strokeWidth="1.8" markerEnd={markerFor(cls)} />
                 {t && (
                   <g transform={`translate(${geo.mid.x} ${geo.mid.y})`}>
                     <circle r="10" className={t === "partial" ? "fill-wrong" : "fill-brass"} />
@@ -688,12 +645,6 @@ export default function FdCanvas({ item, graded }) {
             if (!r) return null;
             return <line x1={r.x + r.w / 2} y1={r.y + r.h / 2} x2={drag.point.x} y2={drag.point.y} className="stroke-pine" strokeWidth="2" strokeDasharray="5 4" markerEnd="url(#fd-head-pine)" />;
           })()}
-          {drag?.type === "stroke" && drag.points.length > 1 && (
-            <polyline points={drag.points.map((q) => `${q.x},${q.y}`).join(" ")} className="fill-none stroke-ink/70" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-          )}
-          {fading.map((s) => (
-            <polyline key={s.id} points={s.points.map((q) => `${q.x},${q.y}`).join(" ")} className="fd-fade fill-none stroke-ink/50" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-          ))}
           {drag?.type === "ghost" && drag.point && (
             <g opacity="0.6">
               <rect x={drag.point.x - BOX / 2} y={drag.point.y - BOX / 2} width={BOX} height={BOX} rx="5" className="fill-white stroke-pine" strokeWidth="2" />

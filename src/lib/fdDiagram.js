@@ -342,7 +342,25 @@ export function freeSlot(diagram, extra = []) {
   return { x: WORLD.w / 2, y: WORLD.h / 2 };
 }
 
+// På en tom yta läggs alla ut i ett centrerat, kompakt rutnät (högst tre per
+// rad, 2 × 2 för fyra), så att lådorna blir stora nog för fingret när ytan
+// zoomar in på mobilen. Annars fylls lediga platser i raden överst.
+function compactGrid(attrs) {
+  const cols = attrs.length <= 3 ? attrs.length : attrs.length === 4 ? 2 : 3;
+  const rows = Math.ceil(attrs.length / Math.max(cols, 1));
+  const gx = 130;
+  const gy = 120;
+  const y0 = WORLD.h / 2 - ((rows - 1) * gy) / 2;
+  return attrs.map((attr, i) => {
+    const row = Math.floor(i / cols);
+    const inRow = Math.min(cols, attrs.length - row * cols);
+    const x0 = WORLD.w / 2 - ((inRow - 1) * gx) / 2;
+    return { id: newId("b"), attr, x: x0 + (i % cols) * gx, y: y0 + row * gy };
+  });
+}
+
 export function placeAll(diagram, attrs) {
+  if (!diagram.boxes.length) return { ...diagram, boxes: compactGrid(attrs) };
   const placed = new Set(diagram.boxes.map((b) => b.attr).filter(Boolean));
   const boxes = [...diagram.boxes];
   for (const attr of attrs) {

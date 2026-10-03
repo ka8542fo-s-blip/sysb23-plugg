@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 207 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-09-30.
+- **Test:** `npm test` = 203 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-10-03.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -122,7 +122,7 @@ kapitel: allt UI läser `chapter.number`.
   båda hållen ritas som två raka parallella pilar ±7 från mittlinjen, en
   pil som skulle gå genom en annan ruta böjs —, träffprov,
   `compareDrawing` mot givna beroenden som par (vänsterled, attribut),
-  `arrowTypes`, autolayout `layoutFromFds`). Verktyg Flytta/Pil/Penna;
+  `arrowTypes`, autolayout `layoutFromFds`). Verktyg Flytta/Pil;
   hylla + "Lägg ut alla"; pil via handtagsprick eller tryck källa → mål;
   grupp = sammansatt determinant (shift-klick/ram + G/Gruppera, eller
   släpp en ruta på en annan: mittpunkten inom målrutan → ny grupp, inom en
@@ -132,16 +132,24 @@ kapitel: allt UI läser `chapter.number`.
   i `fdDiagram.js`, markering "Släpp: gruppera" + streckad inre ram under
   dragningen; ångra-historiken `historyReducer` ligger också där); Delete,
   ⌘Z/⇧⌘Z, piltangenter, Tab, bokstavstangent sätter bokstav på markerad
-  ruta. Frihandsläget klassar streck geometriskt (`lib/strokes.js`: box,
-  group, arrow, erase, unknown som tonas bort). Bokstäver: chips + tangent,
-  ingen handskriftsigenkänning (se "Medvetet inte byggt"). "Rita från
+  ruta. Inget frihandsläge (borttaget 2026-10-03 med `lib/strokes.js` och
+  dess tester). Bokstäver: chips + tangent, ingen handskriftsigenkänning
+  (se "Medvetet inte byggt"). "Rita från
   FD:erna" syns först när en pil ritats eller efter "Visa ritahjälp".
   "Kontrollera ritningen": saknade pilar streckade, fel röda. Efter Rätta:
-  partiell pil röd med P, transitiv brass med T, legend under. Smal yta
-  (< 520 px): kvadratisk vy zoomad mot innehållet. Testa i browserpanelen
+  partiell pil röd med P, transitiv brass med T, legend under. Pilar ser
+  alltid likadana ut: en ny pil markeras inte, och en pil du själv klickar
+  på får bara en svag kontur (halo) — ingen annan färg eller tjocklek;
+  färg kommer bara från Rätta (och från "Kontrollera ritningen", som
+  markerar felaktiga pilar röda). "Lägg ut alla" på en tom yta ger ett
+  kompakt rutnät (högst tre per rad). Smal yta
+  (< 520 px, mätt direkt + resize + ResizeObserver, som inte avfyras i en
+  dold flik): kvadratisk vy zoomad mot innehållet. Testa i browserpanelen
   med syntetiska PointerEvent på `svg[data-fd-surface]` (världskoordinater
   → klient via `getScreenCTM()`). Ritningen i
-  `sysb23:fdritning:<id>`, svaren i `sysb23:fdsvar:<id>`. **Svarspanelen**
+  `sysb23:fdritning:<id>`, svaren i `sysb23:fdsvar:<id>` (svar sparade av
+  den återställda 85850cf, med `v: 2`, `step` och `done`, laddas som de är;
+  de extra fälten ignoreras — kontrollerat i webbläsaren). **Svarspanelen**
   `FdAnswer.jsx` + rättning `lib/fdGrade.js`: CK (mängd av mängder), PA/NP
   per attribut, NF, motivering (rättas på valt beroende + attribut + typ;
   alla korrekta brytande godtas; engelsk mallmening ur dina egna CK,
@@ -308,12 +316,20 @@ kräver surrogatnycklar och inte namn — kapitel 9 följer tentan.
   rätt/fel; härledda PK-alternativ (`pkAlso`) är tillagda där relationen
   har fler kandidatnycklar än facit strukit under, efter häftets eget
   mönster i 11:7 och 11:11.
-- **Handskriftsigenkänning av bokstäver på ritytan:** provat med $P
-  point-cloud recognizer (en mall per bokstav A–G, testströck i en annan
-  "handstil" med skevning, rotation och brus): 82,5 % träff bland sju
-  bokstäver, 91 % bland fyra, 95,7 % bland två — redan på syntetiska
-  streck. En felgissning sätter fel attribut i diagrammet utan att synas,
-  medan chipsen kostar ett tryck. Därför chips + bokstavstangent.
+- **Frihandsläge och handskriftsigenkänning:** frihandsläget (penna med
+  geometrisk streckklassning) byggdes 2026-09-30 och togs bort 2026-10-03.
+  $P-igenkänning av bokstäver valdes bort redan från början: 82,5 % träff
+  bland sju bokstäver, 91 % bland fyra, 95,7 % bland två på syntetiska
+  streck, och en felgissning sätter fel attribut utan att synas.
+- **Guidat stegflöde och drag-gester (provat och valt bort av Kasper,
+  2026-10-03):** 85850cf byggde om normaliseringen till ett steg öppet åt
+  gången (rita, CK, PA/NP, NF, motivering, nedbrytning, med kontroll och
+  facit per steg och motiveringen vald genom att trycka på en pil) och en
+  rityta utan verktyg och hylla där snabbt drag låda→låda gav pil och
+  håll-in/markera + drag grupperade. Kasper föredrog den tidigare vyn med
+  alla fält samtidigt; 85850cf är återställd med `git revert` (12f8e29).
+  Koden (`lib/fdGesture.js`, `lib/fdSteps.js`, `FdSteps.jsx`) finns kvar i
+  historiken om idén tas upp igen.
 - **Tunga ritbibliotek (tldraw, Excalidraw):** tldraw kräver licens eller
   vattenmärke, båda är stora; ritytan är eget SVG.
 - **Spaced repetition, poäng, streaks och pass i Öva:** användarbeslut —

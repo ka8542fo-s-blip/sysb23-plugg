@@ -200,16 +200,6 @@
     @apply cursor-not-allowed text-ink/35;
   }
 
-  /* Streck som frihandsläget inte kände igen tonas bort. */
-  .fd-fade {
-    animation: fd-fade 1s ease-in forwards;
-  }
-
-  @keyframes fd-fade {
-    from { opacity: 1; }
-    to { opacity: 0; }
-  }
-
   /* Klickbar yta som inte är en knapp i första hand: kort och listrader. */
   .card-action {
     @apply card w-full text-left transition-colors duration-150
