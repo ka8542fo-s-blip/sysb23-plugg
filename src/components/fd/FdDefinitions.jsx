@@ -1,5 +1,3 @@
-import { useEffect, useRef, useState } from "react";
-
 // Hopfällbar definitionspanel bredvid ritytan: kursens engelska termer med
 // svensk förklaring, med egna ord nära nya Fö6. Termerna är desamma som i
 // ordlistan (reading.js).
@@ -20,31 +18,16 @@ const DEFINITIONS = [
   ["Dependency preservation", "beroendebevarande", "Delrelationernas lokala beroenden medför TILLSAMMANS alla ursprungliga. A → B i R1 och B → C i R2 bevarar A → C. Att båda attributen står i samma relation räcker för att visa att ett beroende är bevarat, men inte för att visa att det gått förlorat."],
 ];
 
-export const definitionId = (term) => `def-${term.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
-
-// `focus` = { term, n }: öppna panelen och scrolla till termen (n ändras vid
-// varje tryck på "?", så att samma term kan visas igen).
-export default function FdDefinitions({ focus }) {
-  const ref = useRef(null);
-  const [flash, setFlash] = useState(null);
-  useEffect(() => {
-    if (!focus?.term || !ref.current) return undefined;
-    ref.current.open = true;
-    const el = document.getElementById(definitionId(focus.term));
-    el?.scrollIntoView({ behavior: "smooth", block: "center" });
-    setFlash(focus.term);
-    const t = setTimeout(() => setFlash(null), 1600);
-    return () => clearTimeout(t);
-  }, [focus]);
+export default function FdDefinitions() {
   return (
-    <details ref={ref} className="card group p-4">
+    <details className="card group p-4">
       <summary className="cursor-pointer list-none font-display text-[15px] text-pine">
         <span className="mr-1 inline-block transition-transform duration-150 group-open:rotate-90" aria-hidden="true">›</span>
         Definitioner
       </summary>
       <dl className="mt-3 space-y-3 text-sm">
         {DEFINITIONS.map(([term, sv, text]) => (
-          <div key={term} id={definitionId(term)} className={`-mx-2 rounded-lg px-2 py-1 transition-colors duration-500 ${flash === term ? "bg-pine/10" : ""}`}>
+          <div key={term}>
             <dt className="font-medium text-ink">{term}{sv && <span className="font-normal text-ink/60"> ({sv})</span>}</dt>
             <dd className="mt-0.5 leading-relaxed text-ink/80">{text}</dd>
           </div>

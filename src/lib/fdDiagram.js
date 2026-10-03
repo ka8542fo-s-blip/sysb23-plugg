@@ -353,40 +353,6 @@ export function placeAll(diagram, attrs) {
   return { ...diagram, boxes };
 }
 
-// Startläget: alla attribut utlagda i ett centrerat, kompakt rutnät (högst
-// tre per rad, 2 × 2 för fyra), med plats för pilar emellan — kompakt så att
-// lådorna blir stora nog för fingret när ytan zoomar in på mobilen.
-export function gridDiagram(attrs) {
-  const list = attrsOf(attrs);
-  const cols = list.length <= 3 ? list.length : list.length === 4 ? 2 : 3;
-  const rows = Math.ceil(list.length / Math.max(cols, 1));
-  const gx = 130;
-  const gy = 120;
-  const y0 = WORLD.h / 2 - ((rows - 1) * gy) / 2;
-  const boxes = list.map((attr, i) => {
-    const row = Math.floor(i / cols);
-    const inRow = Math.min(cols, list.length - row * cols);
-    const x0 = WORLD.w / 2 - ((inRow - 1) * gx) / 2;
-    return { id: newId("b"), attr, x: x0 + (i % cols) * gx, y: y0 + row * gy };
-  });
-  return { boxes, groups: [], arrows: [] };
-}
-
-// En sparad ritning från äldre versioner: lådor utan bokstav (frihandsläget)
-// tas bort, attribut som saknas läggs ut. Tom eller ogiltig → rutnätet.
-export function normalizeDiagram(stored, attrs) {
-  const list = attrsOf(attrs);
-  if (!stored || !Array.isArray(stored.boxes) || !Array.isArray(stored.groups) || !Array.isArray(stored.arrows)) return gridDiagram(list);
-  const strays = stored.boxes.filter((b) => !b.attr || !list.includes(b.attr)).map((b) => b.id);
-  let d = strays.length ? removeElements(stored, strays) : stored;
-  // En låda per attribut; dubbletter tas bort.
-  const seen = new Set();
-  const dupes = d.boxes.filter((b) => (seen.has(b.attr) ? true : (seen.add(b.attr), false))).map((b) => b.id);
-  if (dupes.length) d = removeElements(d, dupes);
-  if (!d.boxes.length) return gridDiagram(list);
-  return d.boxes.length < list.length ? placeAll(d, list) : d;
-}
-
 // ---------- Tolkning mot beroendena ----------
 
 // Varje pil som par (vänsterled, ett attribut). En pil från en grupp har
