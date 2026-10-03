@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 207 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-09-30.
+- **Test:** `npm test` = 222 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-10-03.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -117,40 +117,59 @@ kapitel: allt UI läser `chapter.number`.
   `lib/normalize.js` bygger motiveringstexterna och faciträttningen av
   nedbrytningen ovanpå den (oförändrad princip: annan nedbrytning än
   facits godtas inte, eftersom övernormaliseringar klarar lossless och DP).
-  **Ritytan** `components/fd/FdCanvas.jsx`: eget SVG + pointer events,
-  värld 640×420, ruta 46 (`lib/fdDiagram.js`: modell, geometri — pilar åt
-  båda hållen ritas som två raka parallella pilar ±7 från mittlinjen, en
-  pil som skulle gå genom en annan ruta böjs —, träffprov,
-  `compareDrawing` mot givna beroenden som par (vänsterled, attribut),
-  `arrowTypes`, autolayout `layoutFromFds`). Verktyg Flytta/Pil/Penna;
-  hylla + "Lägg ut alla"; pil via handtagsprick eller tryck källa → mål;
-  grupp = sammansatt determinant (shift-klick/ram + G/Gruppera, eller
-  släpp en ruta på en annan: mittpunkten inom målrutan → ny grupp, inom en
-  grupps ram → läggs till; dra ut en ruta ur gruppens ram som den var vid
-  dragstart → lyfts ut, en grupp med en ruta kvar upplöses och dess pilar
-  flyttas till rutan; `dropOutcome`/`applyDrop`/`leaveGroup`/`joinGroup`
-  i `fdDiagram.js`, markering "Släpp: gruppera" + streckad inre ram under
-  dragningen; ångra-historiken `historyReducer` ligger också där); Delete,
-  ⌘Z/⇧⌘Z, piltangenter, Tab, bokstavstangent sätter bokstav på markerad
-  ruta. Frihandsläget klassar streck geometriskt (`lib/strokes.js`: box,
-  group, arrow, erase, unknown som tonas bort). Bokstäver: chips + tangent,
-  ingen handskriftsigenkänning (se "Medvetet inte byggt"). "Rita från
-  FD:erna" syns först när en pil ritats eller efter "Visa ritahjälp".
-  "Kontrollera ritningen": saknade pilar streckade, fel röda. Efter Rätta:
-  partiell pil röd med P, transitiv brass med T, legend under. Smal yta
-  (< 520 px): kvadratisk vy zoomad mot innehållet. Testa i browserpanelen
-  med syntetiska PointerEvent på `svg[data-fd-surface]` (världskoordinater
-  → klient via `getScreenCTM()`). Ritningen i
-  `sysb23:fdritning:<id>`, svaren i `sysb23:fdsvar:<id>`. **Svarspanelen**
-  `FdAnswer.jsx` + rättning `lib/fdGrade.js`: CK (mängd av mängder), PA/NP
-  per attribut, NF, motivering (rättas på valt beroende + attribut + typ;
-  alla korrekta brytande godtas; engelsk mallmening ur dina egna CK,
-  redigerbar), nedbrytning mot facit + informativ lossless/DP/NF per
-  relation. Klar = alla fält rätt. Definitionspanelen
-  `FdDefinitions.jsx` i sidokolumnen. Framsteg för
-  alla tre: `sysb23:modell:<id>` = "solved", nollställs bara via knapp.
+  **Förenklad 2026-10-03** (användarkrav: vyn var rörig). **Ritytan**
+  `components/fd/FdCanvas.jsx`: eget SVG + pointer events, värld 640×420,
+  låda 46, inga verktyg, ingen hylla, inget frihandsläge (borttaget med
+  `lib/strokes.js` och dess tester). Alla attribut ligger utlagda från
+  start i ett kompakt rutnät (`gridDiagram`, högst tre per rad, 2 × 2 för
+  fyra); äldre sparade ritningar normaliseras (`normalizeDiagram`: lådor
+  utan bokstav bort, saknade attribut läggs ut). Gesterna är rena
+  funktioner i `lib/fdGesture.js` (`press`/`hold`/`drag`/`release`):
+  snabbt drag från låda eller gruppram → pil; tryck på låda (markerar) och
+  sedan på en annan → pil; drag av markerad låda, eller efter att ha
+  hållit in 350 ms (`HOLD_MS`) → flytt, och släppt med mittpunkten på en
+  annan låda → grupp, på en grupps ram → läggs till, utanför sin grupp →
+  lyfts ut (en grupp med en låda kvar upplöses, pilarna flyttas till
+  lådan; `dropOutcome`/`applyDrop` i `fdDiagram.js`); markeringsram/shift
+  + G grupperar. Ta bort: markera + Delete eller ×-knappen — bara pilar
+  och grupper; lådorna är relationens attribut och går inte att ta bort.
+  En ny pil markeras aldrig; markering visas som tunn kontur (pilar: svag
+  halo), aldrig större eller i annan färg — bara rättningen (P röd, T
+  brass, vid sammanfattningen) och ritkontrollen färgar pilar. Hjälprad
+  ovanför ytan. "Rita från FD:erna" (bakom "Visa ritahjälp" tills en pil
+  ritats) och "Börja om" (tillbaka till rutnätet). Fokusram bara vid
+  tangentbord. Smal yta (< 520 px, mätt direkt + resize + ResizeObserver,
+  som inte avfyras i en dold flik): kvadratisk vy zoomad mot innehållet,
+  lådor ca 46 px på 375 px-skärm. Ritningen i `sysb23:fdritning:<id>`.
+  **Guidat flöde** (`views/Normalizing.jsx`, `components/fd/FdSteps.jsx`,
+  modell `lib/fdSteps.js`): ritytan överst, sedan ett steg öppet åt
+  gången — 1 Rita (frivilligt, "Hoppa över"), 2 Kandidatnycklar (tydliga
+  av/på-chips, "+ Ytterligare kandidatnyckel"), 3 Prime/non-prime
+  (förifyllt ur dina CK med `prefillRoles` när du går vidare från steg 2,
+  om du inte ändrat själv), 4 Normalform (inget förvalt), 5 Motivering
+  (bara om du svarat < 3NF: tryck på pilen i diagrammet — `pickMode`,
+  `optionForPair` — eller välj i listan; typen föreslås ur dina CK med
+  `suggestType`; mall-meningen som text, "Redigera" öppnar fritext;
+  ytan scrollas fram om den inte syns), 6 Nedbrytning (11–13 + egna, inte
+  uppgift 10). Tidigare steg komprimerade med svaret och "Ändra";
+  "Kontrollera" rättar bara steget (man får gå vidare vid fel); "Visa
+  facit" per steg och för hela uppgiften; "?" öppnar definitionspanelen
+  och scrollar till steget definition (`STEP_DEFINITION`). Sist en
+  sammanfattning per steg + "Nästa uppgift" (`nextItemId`). Klar = alla
+  rättade fält rätt (ritningen räknas inte). Svaren i
+  `sysb23:fdsvar:<id>` med `v: 2`, `step`, `done`, `checked`,
+  `rolesEdited`; äldre utkast migreras (`migrateDraft`: steg med innehåll
+  = klara, öppet steg = första ofärdiga). Rättning `lib/fdGrade.js`: CK
+  (mängd av mängder), PA/NP per attribut, NF, motivering (rättas på valt
+  beroende + attribut + typ; alla korrekta brytande godtas), nedbrytning
+  mot facit + informativ lossless/DP/NF per relation. Testa i
+  browserpanelen med syntetiska PointerEvent på `svg[data-fd-surface]`
+  (världskoordinater → klient via `getScreenCTM()`), eller med panelens
+  riktiga musdrag (`left_click_drag`; skärmdumpens koordinater är skalade
+  ca 0,78 mot klientens). Framsteg för alla tre:
+  `sysb23:modell:<id>` = "solved", nollställs bara via knapp.
   Tester: `model-check`, `model-figures`, `normalize`, `fd`, `fd-drawing`,
-  `fd-grade`, `statements`.
+  `fd-gesture`, `fd-steps`, `fd-grade`, `statements`.
 - **Statistik**, **Schema (Pluggkalender)** och **Hem** som för Strategi.
 
 ## Regler (följ dem)
@@ -308,12 +327,11 @@ kräver surrogatnycklar och inte namn — kapitel 9 följer tentan.
   rätt/fel; härledda PK-alternativ (`pkAlso`) är tillagda där relationen
   har fler kandidatnycklar än facit strukit under, efter häftets eget
   mönster i 11:7 och 11:11.
-- **Handskriftsigenkänning av bokstäver på ritytan:** provat med $P
-  point-cloud recognizer (en mall per bokstav A–G, testströck i en annan
-  "handstil" med skevning, rotation och brus): 82,5 % träff bland sju
-  bokstäver, 91 % bland fyra, 95,7 % bland två — redan på syntetiska
-  streck. En felgissning sätter fel attribut i diagrammet utan att synas,
-  medan chipsen kostar ett tryck. Därför chips + bokstavstangent.
+- **Frihandsläge och handskriftsigenkänning:** frihandsläget (penna med
+  geometrisk streckklassning) byggdes 2026-09-30 och togs bort 2026-10-03
+  för att vyn blev rörig; lådor, pilar och grupper görs med drag. $P-igen-
+  känning av bokstäver provades och valdes bort redan då (82,5 % bland sju
+  bokstäver på syntetiska streck).
 - **Tunga ritbibliotek (tldraw, Excalidraw):** tldraw kräver licens eller
   vattenmärke, båda är stora; ritytan är eget SVG.
 - **Spaced repetition, poäng, streaks och pass i Öva:** användarbeslut —
