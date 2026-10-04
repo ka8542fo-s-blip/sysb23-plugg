@@ -2,8 +2,8 @@ export const schedule = {
   term: "HT 2026",
   termStart: "2026-08-31",
   termEnd: "2027-01-17",
-  verifiedOn: "2026-09-29",
-  lastChecked: "2026-09-29",
+  verifiedOn: "2026-10-04",
+  lastChecked: "2026-10-04",
   source: "TimeEdit, sökning \"Informationssystems- och verksamhetsutveckling, SYSB23\", intervall 2026-08-31 – 2027-02-28.",
   note: "Samtliga tentor är digitala och kräver egen laptop samt anmälan i Ladok senast en vecka innan. MA-skrivsalarna ligger i Matteannexet, Sölvegatan 20. Sparta ligger på Tunavägen 39.",
 
@@ -12,7 +12,7 @@ export const schedule = {
     { id: "databaser", name: "Databaser", short: "Databaser", hp: 3.0, teacher: "Björn Svensson (laborationer: Nils Törnqvist)", start: "2026-09-01", end: "2026-11-17", color: "--c-databaser", contentId: "databaser" },
     { id: "process", name: "Processorienterad verksamhetsutveckling", short: "Processorienterad", hp: 3.0, teacher: "Benjamin Weaver", start: "2026-09-22", end: "2026-11-13", color: "--c-process", contentId: "process" },
     { id: "arkitektur", name: "Verksamhetsarkitektur", short: "Verksamhetsarkitektur", hp: 2.0, teacher: "Umberto Fiaccadori", start: "2026-11-18", end: "2026-11-27", color: "--c-arkitektur", contentId: null },
-    { id: "sakerhet", name: "Säkerhet i informationssystem", short: "Säkerhet", hp: 2.0, teacher: "Miranda Kajtazi", start: "2026-11-10", end: "2026-12-03", color: "--c-sakerhet", contentId: null },
+    { id: "sakerhet", name: "Säkerhet i informationssystem", short: "Säkerhet", hp: 2.0, teacher: "Miranda Kajtazi", start: "2026-11-06", end: "2026-12-03", color: "--c-sakerhet", contentId: null },
     { id: "ansvarsfull", name: "Ansvarsfull verksamhetsutveckling", short: "Ansvarsfull", hp: 1.0, teacher: "Miranda Kajtazi", start: "2026-11-25", end: "2026-12-02", color: "--c-ansvarsfull", contentId: null },
     { id: "isprojekt", name: "Informationssystemsprojekt", short: "IS-projekt", hp: 7.0, teacher: "Weaver, Kajtazi och Fiaccadori", start: "2026-12-08", end: "2027-01-17", color: "--c-isprojekt", contentId: null }
   ],
@@ -32,13 +32,13 @@ export const schedule = {
 
   periods: [
     { from: "2026-08-31", to: "2026-09-21", subcourses: ["strategi", "databaser"], label: "Strategi och ekonomistyrning + Databaser." },
-    { from: "2026-09-22", to: "2026-11-08", subcourses: ["databaser", "process"], label: "Databaser + Processorienterad verksamhetsutveckling. Processorienterad startar dagen efter Strategi-tentan — sömlöst byte." },
-    { from: "2026-11-09", to: "2026-11-17", subcourses: ["databaser", "process", "sakerhet"], label: "Redovisningar 9–12 nov, processtentan 13 nov och databastentan 17 nov — samtidigt som Säkerhet startar 10 nov, med föreläsning även på tentadagen 13 nov.", warning: true },
+    { from: "2026-09-22", to: "2026-11-08", subcourses: ["databaser", "process", "sakerhet"], label: "Databaser + Processorienterad verksamhetsutveckling. Processorienterad startar dagen efter Strategi-tentan — sömlöst byte. Säkerhet har sin introduktionsföreläsning fredag 6 nov, eftermiddagen efter Strategis omtenta." },
+    { from: "2026-11-09", to: "2026-11-17", subcourses: ["databaser", "process", "sakerhet"], label: "Redovisningar 9–12 nov, processtentan 13 nov och databastentan 17 nov — samtidigt som Säkerhet har kommit igång (start 6 nov), med föreläsning även på tentadagen 13 nov.", warning: true },
     { from: "2026-11-18", to: "2026-12-03", subcourses: ["arkitektur", "sakerhet", "ansvarsfull"], label: "Verksamhetsarkitektur, Säkerhet i informationssystem och Ansvarsfull verksamhetsutveckling överlappar, med tre gästföreläsningar i Säkerhet. Onsdag 25 november har tre olika delkurser samma dag.", warning: true },
     { from: "2026-12-08", to: "2027-01-17", subcourses: ["isprojekt"], label: "Bara informationssystemsprojektet, med handledning i block och lång ledig sträcka över jul och nyår." }
   ],
 
-  heaviestStretch: { from: "2026-11-09", to: "2026-12-03", label: "Tyngsta sträckan: redovisningar 9–12 nov, tenta 13 nov med Säkerhetsföreläsning samma eftermiddag, tenta 17 nov, tre delkurser parallellt 18 nov–3 dec, tenta 27 nov och tenta 3 dec. Fyra salstentor på tre veckor — och Säkerhet har flyttat sin start till 10 nov, mitt i redovisningsveckan." },
+  heaviestStretch: { from: "2026-11-09", to: "2026-12-03", label: "Tyngsta sträckan: redovisningar 9–12 nov, tenta 13 nov med Säkerhetsföreläsning samma eftermiddag, tenta 17 nov, tre delkurser parallellt 18 nov–3 dec, tenta 27 nov och tenta 3 dec. Fyra salstentor på tre veckor — och Säkerhet har redan startat 6 nov, veckan före." },
 
   weeks: [
     { week: 36, from: "2026-08-31", to: "2026-09-06", sessions: 6, load: "hög" },
@@ -50,8 +50,8 @@ export const schedule = {
     { week: 42, from: "2026-10-12", to: "2026-10-18", sessions: 5, load: "hög" },
     { week: 43, from: "2026-10-19", to: "2026-10-25", sessions: 3, load: "låg" },
     { week: 44, from: "2026-10-26", to: "2026-11-01", sessions: 2, load: "låg" },
-    { week: 45, from: "2026-11-02", to: "2026-11-08", sessions: 0, load: "tom" },
-    { week: 46, from: "2026-11-09", to: "2026-11-15", sessions: 7, load: "tenta" },
+    { week: 45, from: "2026-11-02", to: "2026-11-08", sessions: 1, load: "låg" },
+    { week: 46, from: "2026-11-09", to: "2026-11-15", sessions: 6, load: "tenta" },
     { week: 47, from: "2026-11-16", to: "2026-11-22", sessions: 7, load: "tenta" },
     { week: 48, from: "2026-11-23", to: "2026-11-29", sessions: 5, load: "tenta" },
     { week: 49, from: "2026-11-30", to: "2026-12-06", sessions: 2, load: "tenta" },
@@ -103,9 +103,9 @@ export const schedule = {
     { date: "2026-10-27", time: "08:00–12:00", subcourse: "process", title: "Handledning", place: "EC2:241 Verona", kind: "handledning" },
     { date: "2026-10-29", time: "13:00 / 15:00", subcourse: "databaser", title: "Laboration 9 (grupp 1&2 / 3&4)", place: "EC2:PC011/015/059", kind: "laboration" },
     { date: "2026-11-06", time: "08:00–11:00", subcourse: "strategi", title: "Omtentamen", place: "Skrivsal MA 9", kind: "tenta" },
+    { date: "2026-11-06", time: "13:00–15:00", subcourse: "sakerhet", title: "Introduktionsföreläsning", place: "MA 3", kind: "föreläsning" },
     { date: "2026-11-09", time: "08:00–10:00", subcourse: "databaser", title: "Redovisning", place: "EC2:207 Bilbao", kind: "redovisning" },
     { date: "2026-11-09", time: "10:00 / 15:00", subcourse: "databaser", title: "Redovisning av projektuppgift — din bokade tid", place: "EC2:PC059", kind: "redovisning" },
-    { date: "2026-11-10", time: "08:00–10:00", subcourse: "sakerhet", title: "Introduktionsföreläsning", place: "MA 3", kind: "föreläsning" },
     { date: "2026-11-10", time: "10:00–17:00", subcourse: "databaser", title: "Redovisning av projektuppgift — din bokade tid", place: "EC2:PC059", kind: "redovisning" },
     { date: "2026-11-11", dateEnd: "2026-11-12", time: "08:00–17:00", subcourse: "databaser", title: "Redovisning av projektuppgift — din bokade tid", place: "EC2:PC059", kind: "redovisning" },
     { date: "2026-11-13", time: "08:00–13:00", subcourse: "process", title: "Tentamen — skriftlig salstentamen", place: "Skrivsal MA 10", kind: "tenta" },
