@@ -7,11 +7,11 @@ const SUBS = ["₁", "₂", "₃", "₄"];
 const IS_MAC = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent || "");
 const MOD_LABEL = IS_MAC ? "⌥ Option" : "Alt";
 
-// Kodruta för relationsscheman: mörk yta, radnummer, Tab gör indrag
+// Kodruta för relationsscheman och DDL: mörk yta, radnummer, Tab gör indrag
 // (Shift+Tab tar bort), Enter behåller indraget och drar in efter en rad
 // som slutar med "(", och små siffror för CK₁/PK₁/FK₂ sätts in med
 // knapparna eller Alt + siffra. Esc lämnar fältet.
-export default function SchemaEditor({ id, value, onChange, placeholder, rows = 16, label }) {
+export default function SchemaEditor({ id, value, onChange, placeholder, rows = 16, label, subscripts = true }) {
   const ref = useRef(null);
 
   function replaceSelection(insert, cursorOffset = insert.length) {
@@ -52,7 +52,7 @@ export default function SchemaEditor({ id, value, onChange, placeholder, rows = 
       replaceSelection("\n" + current + extra);
       return;
     }
-    if ((event.altKey || event.ctrlKey) && !event.metaKey && /^[0-9]$/.test(event.key)) {
+    if (subscripts && (event.altKey || event.ctrlKey) && !event.metaKey && /^[0-9]$/.test(event.key)) {
       event.preventDefault();
       replaceSelection("₀₁₂₃₄₅₆₇₈₉"[Number(event.key)]);
       return;
@@ -66,7 +66,7 @@ export default function SchemaEditor({ id, value, onChange, placeholder, rows = 
     <div>
       <div className="flex flex-wrap items-center justify-between gap-2 rounded-t-lg border border-b-0 border-ink/60 bg-ink px-3 py-1.5">
         <span className="font-mono text-xs text-paper/60">{label}</span>
-        <div className="flex items-center gap-1" role="group" aria-label="Små siffror">
+        {subscripts && <div className="flex items-center gap-1" role="group" aria-label="Små siffror">
           <span className="mr-1 text-xs text-paper/60">Liten siffra:</span>
           {SUBS.map((c) => (
             <button
@@ -79,7 +79,7 @@ export default function SchemaEditor({ id, value, onChange, placeholder, rows = 
               {c}
             </button>
           ))}
-        </div>
+        </div>}
       </div>
       <div className="flex rounded-b-lg border border-ink/60 bg-ink font-mono text-[14px] leading-6">
         <pre aria-hidden="true" className="select-none border-r border-paper/15 px-2 py-3 text-right text-paper/40">
@@ -102,7 +102,11 @@ export default function SchemaEditor({ id, value, onChange, placeholder, rows = 
           className="min-h-0 w-full resize-y bg-transparent px-3 py-3 font-mono text-[14px] leading-6 text-paper placeholder:text-paper/35 focus:outline-none"
         />
       </div>
-      <p className="mt-1 text-xs text-ink/65">Tab gör indrag, Enter behåller det, {MOD_LABEL} + siffra (eller Ctrl + siffra) ger liten siffra, Esc lämnar rutan.</p>
+      <p className="mt-1 text-xs text-ink/65">
+        {subscripts
+          ? <>Tab gör indrag, Enter behåller det, {MOD_LABEL} + siffra (eller Ctrl + siffra) ger liten siffra, Esc lämnar rutan.</>
+          : <>Tab gör indrag (Shift+Tab tar bort), Enter behåller det och drar in efter "(", Esc lämnar rutan.</>}
+      </p>
     </div>
   );
 }

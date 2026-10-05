@@ -3,13 +3,20 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { statementExercises } from "../src/data/databaser/statementExercises.js";
 import { DIAGRAM_IDS } from "../src/components/knowledge/diagrams/ids.js";
+import { MODEL_FIGURE_IDS } from "../src/components/model/modelFigureIds.js";
+
+// Häftets uppgift 3 följer häftet: tolv påståenden, sju sanna enligt facit.
+// Gränserna nedan gäller våra egna diagram i tentans form, inte häftets.
+const HAFTET = new Set(["stmt-haftet3"]);
 import { scoreStatements, MAX_POINTS } from "../src/lib/statementScore.js";
 
 test("varje uppgift: 8–10 påståenden, under hälften sanna, känt diagram, skäl på alla", () => {
   assert.equal(new Set(statementExercises.map((e) => e.id)).size, statementExercises.length);
   for (const ex of statementExercises) {
-    assert.ok(DIAGRAM_IDS.includes(ex.diagram), `${ex.id}: okänt diagram ${ex.diagram}`);
+    assert.ok(DIAGRAM_IDS.includes(ex.diagram) || MODEL_FIGURE_IDS.includes(ex.diagram), `${ex.id}: okänt diagram ${ex.diagram}`);
     const n = ex.statements.length;
+    for (const s of ex.statements) assert.ok(s.why && s.text && typeof s.truth === "boolean", `${ex.id}: ofullständigt påstående`);
+    if (HAFTET.has(ex.id)) continue;
     assert.ok(n >= 8 && n <= 10, `${ex.id}: ${n} påståenden`);
     const truths = ex.statements.filter((s) => s.truth).length;
     assert.ok(truths * 2 < n, `${ex.id}: ${truths} sanna av ${n} är inte under hälften`);

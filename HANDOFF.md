@@ -78,10 +78,13 @@ kapitel: allt UI läser `chapter.number`.
   Reader/Book/HasRead(Rating) i `hospitalSeed.js`; nivå 10 (id n9) ligger
   över tentans nivå. Slumpövningar och fritt läge. T-SQL först, översatt
   till SQLite (`lib/tsql.js`).
-- **Modellera:** tre flikar som tentans modelleringsuppgifter.
-  *Läsa diagram* (uppgift 1): `statementExercises.js`, tre uppgifter, en
+- **Modellera:** fyra flikar som tentans modelleringsuppgifter.
+  *Läsa diagram* (uppgift 1): `statementExercises.js`, fyra uppgifter, en
   per diagram i kapitel 6 (föreningen, biblioteket, rederiet), tio
-  påståenden var med under hälften sanna, tentans poängregel i
+  påståenden var med under hälften sanna, plus häftets uppgift 3
+  (`stmt-haftet3`, 12 påståenden, 7 sanna enligt häftets facit, undantagen
+  från tentaformens gränser i `statements.test.mjs`; figuren är modell-
+  figuren `stmt-haftet3`, `Statements.jsx` ritar via `ExerciseFigure`), tentans poängregel i
   `lib/statementScore.js` (+5/−3/0, alla och endast de sanna = 25, summan
   golvad vid 0), per påstående skäl; klar när markeringen är exakt rätt.
   *ER-diagram till schema*: `modelExercises.js`, häftets 4–9 plus egen
@@ -97,7 +100,28 @@ kapitel: allt UI läser `chapter.number`.
   släpande komman och tabbar tillåtna, små siffror ₀–₉ = vanliga, `PK1 =
   CK1` och `FK` utan kolon tillåtna, `{a, b)` tolereras. `unfoldBlocks` i
   modelCheck.js vecklar ut blocken med originalradnummer i felen;
-  enradsformen fungerar fortfarande. Kodrutan `SchemaEditor.jsx`: mörk
+  enradsformen fungerar fortfarande.
+  *ER-diagram till DDL* (2026-10-05, tentans uppgift 2): `ddlExercises.js`,
+  häftets 18–22 (18 omritad i Chen från häftets UML) plus E1–E4 på
+  befintliga figurer (förening = kapitel 9:s facit, bibliotek, rederi,
+  Festival). Vy `views/DdlModeling.jsx`, rättare `lib/ddlCheck.js`: egen
+  parser för CREATE TABLE-delmängden (inte tsql.js/sql.js — IDENTITY och
+  PK-constrainten försvinner i toSqliteDdl, SQLite är slappare och
+  felraderna skulle peka på omskriven kod). Jämför struktur: tabeller via
+  namn/alias (skiftläge, _, å/ä/ö fälls) eller kolumnöverlapp, FK-kolumner
+  via måltabell (unära par som multimängd), PK och UNIQUE som mängder.
+  Facit är strukturdata (kind entity/weak/junction/multivalued, surrogate,
+  columns, fks med notNull/rel/tag, unique, optionalUnique), `folded` =
+  relationer som blir FK-kolumner (förklarar en överflödig tabell),
+  `composites`. Fel bär regeltaggar (surrogat, naturlig nyckel, svag
+  entitet, total deltagande, 1:N, M:N, unär, flervärt) plus tabellens
+  "varför". Facit skrivs ut av `toDdl` i tentans form, refererade tabeller
+  först. Tester: `ddl-check.test.mjs`. **Häftets facitavvikelser:** 19
+  saknar komma i C (efter BID) och R4 (efter DID) — rättat; 21:s 1:1 R3
+  har ingen UNIQUE på C.DID — båda godtas (optionalUnique) i väntan på
+  Björn; 18–22 skapar refererande tabeller före refererade (kör inte i
+  den ordningen). Häftets facittext ligger inte i repot.
+  Kodrutan `SchemaEditor.jsx` (prop `subscripts={false}` i DDL-fliken): mörk
   yta (ink/paper-tokens), radnummer, Tab/Shift+Tab indrag, Enter behåller
   indraget och drar in efter "(", knappar ₁–₄ och Option/Alt + siffra (även Ctrl + siffra) sätter in
   små siffror; etiketten säger ⌥ Option på Mac. Facit visas efter Rätta även vid tolkningsfel. OBS:
@@ -253,9 +277,13 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
 - **SQL-verkstaden:** sql-54…62 (tentaspåret), facit verifierade i motorn
   men uppgiftstexterna ogranskade. sql-62 är den nya med aggregat som
   jämförelsevärde (resultat B1 med 3 läsare, B2 med 2).
-- **Modellera / Läsa diagram:** alla tre påståendeuppgifterna
-  (`reviewed: false` i datat) — påståenden och skäl skrivna mot sajtens
-  egna diagram, inte mot en tenta.
+- **Modellera / Läsa diagram:** alla fyra påståendeuppgifterna
+  (`reviewed: false` i datat) — de tre egna skrivna mot sajtens diagram;
+  häftets uppgift 3 har sant/falskt ur häftets facit men egna skäl, och
+  den omritade figuren `stmt-haftet3` är ogranskad mot förlagan.
+- **Modellera / ER-diagram till DDL:** E1–E4 (`reviewed: false`, egna
+  facit), de fem omritade figurerna `ddl-18…22` mot häftets sidor 5–9, och
+  tolkningen av B:s sammansatta UML-nyckel i 18 som Chen-identifieraren BK.
 - **Kapitel 6, genomgång 3** (rederiet) och figuren `pastaenden-rederi`,
   kapitel 8:s tillägg 2026-09-08 (kandidatnyckel i 3e-regeln, "När rätt
   svar är att inte göra något" — exemplet är verifierat i FD-motorn: fyra
@@ -387,7 +415,7 @@ kräver surrogatnycklar och inte namn — kapitel 9 följer tentan.
   varje kandidat körs innan den visas). Schemapanel med InfoTips ur
   `schemaGlossary.js`. WASM kopieras av `scripts/copy-sql-wasm.mjs`.
 - **Modellera** — se ovan. Layout som verkstaden: uppgiftslista (Läsa
-  diagram och ER: rader; normalisering: sifferknappar per häftesuppgift
+  diagram, ER och DDL: rader; normalisering: sifferknappar per häftesuppgift
   10–13 och E1–E10, definitionspanelen under listan),
   underlag, inmatning, Rätta, resultatpanel, facit efter rättning.
 - **Schema (Pluggkalender)** — data i `src/data/schedule.js` (TimeEdit

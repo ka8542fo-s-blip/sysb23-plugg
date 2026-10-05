@@ -6,6 +6,8 @@ import SchemaEditor from "../components/model/SchemaEditor.jsx";
 import { ModelFigure } from "../components/model/modelFigures.jsx";
 import Normalizing from "./Normalizing.jsx";
 import Statements from "./Statements.jsx";
+import DdlModeling from "./DdlModeling.jsx";
+import { ddlExercises } from "../data/databaser/ddlExercises.js";
 import { statementExercises } from "../data/databaser/statementExercises.js";
 import { normalizeExercises } from "../data/databaser/normalizeExercises.js";
 
@@ -36,8 +38,9 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
   const [drafts, setDrafts] = useState({});
   const [result, setResult] = useState(null);
   const [confirmReset, setConfirmReset] = useState(false);
-  // Tre steg som tentans uppgifter: läsa diagram (1), ER-diagram → schema
-  // (häftets 4–10, tankemodellen bakom uppgift 2) och normalisering (10–13 och egna, 3f–g).
+  // Fyra steg som tentans uppgifter: läsa diagram (1), ER-diagram → schema
+  // (häftets 4–10, tankemodellen bakom uppgift 2), ER-diagram → DDL (häftets
+  // 18–22, uppgift 2 som den skrivs) och normalisering (10–13 och egna, 3f–g).
   const [mode, setMode] = useState("er");
 
   const exercise = exercises.find((e) => e.id === currentId) || exercises[0];
@@ -47,6 +50,7 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
   const solvedCount = exercises.filter((e) => modelProgress[e.id]).length;
   const normSolved = normalizeExercises.filter((e) => modelProgress[e.id]).length;
   const stmtSolved = statementExercises.filter((e) => modelProgress[e.id]).length;
+  const ddlSolved = ddlExercises.filter((e) => modelProgress[e.id]).length;
 
   useEffect(() => { setResult(null); setConfirmReset(false); }, [currentId]);
 
@@ -80,6 +84,14 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
             Bredvid textrutan ritas ditt schema i häftets form, med understrykningarna som på tentan.
           </p>
         )}
+        {mode === "ddl" && (
+          <p className="mt-1 max-w-reading text-[15px] text-ink/70">
+            Tentans uppgift 2, 25 poäng: ett Chen-diagram blir CREATE TABLE-kod direkt, utan logiskt
+            steg. Du skriver koden, appen rättar strukturen — surrogatnycklar, naturliga nycklar som NOT
+            NULL och UNIQUE, främmande nycklar på rätt sida med NOT NULL där deltagandet är totalt — och
+            förklarar varje fel med regeln bakom.
+          </p>
+        )}
         {mode === "norm" && (
           <p className="mt-1 max-w-reading text-[15px] text-ink/70">
             En relation R med sina funktionella beroenden, som i tentans uppgift 3f och 3g. Rita
@@ -95,7 +107,7 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
           </p>
         )}
         <div className="mt-3 flex flex-wrap gap-2" role="tablist" aria-label="Steg">
-          {[["stmt", `Läsa diagram · ${stmtSolved} av ${statementExercises.length}`], ["er", `ER-diagram till schema · ${solvedCount} av ${exercises.length}`], ["norm", `Normalisering till 3NF · ${normSolved} av ${normalizeExercises.length}`]].map(([key, label]) => (
+          {[["stmt", `Läsa diagram · ${stmtSolved} av ${statementExercises.length}`], ["er", `ER-diagram till schema · ${solvedCount} av ${exercises.length}`], ["ddl", `ER-diagram till DDL · ${ddlSolved} av ${ddlExercises.length}`], ["norm", `Normalisering till 3NF · ${normSolved} av ${normalizeExercises.length}`]].map(([key, label]) => (
             <button
               key={key}
               type="button"
@@ -111,6 +123,7 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
       </section>
 
       {mode === "stmt" && <Statements modelProgress={modelProgress} onSolve={onSolve} onReset={onReset} />}
+      {mode === "ddl" && <DdlModeling modelProgress={modelProgress} onSolve={onSolve} onReset={onReset} />}
       {mode === "norm" && <Normalizing modelProgress={modelProgress} onSolve={onSolve} onReset={onReset} />}
 
       {mode === "er" && <div className="lg:flex lg:gap-8">

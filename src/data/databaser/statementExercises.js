@@ -4,6 +4,11 @@
 // påstående bär ett skäl som pekar på sin plats i diagrammet. Påståendena
 // är andra än genomgångarnas i kapitel 6, så facit där inte ger svaret här.
 // Alla tre är ogranskade mot kursmaterialet (reviewed: false).
+//
+// Uppgift 4 är övningshäftets uppgift 3: tolv påståenden, varav sju sanna
+// enligt häftets facit. Den följer häftet och inte tentans form (tio
+// påståenden, under hälften sanna), och är därför undantagen i
+// statements.test.mjs. Diagrammet är omritat (modellfiguren stmt-haftet3).
 export const statementExercises = [
   {
     id: "stmt-forening", number: 1, title: "Föreningen", diagram: "pastaenden-forening", reviewed: false,
@@ -51,6 +56,24 @@ export const statementExercises = [
       { text: "En resa kan sakna hamn.", truth: false, why: "Linjen vid Resa i Anlöper är dubbel: varje resa anlöper minst en hamn." },
       { text: "Ett fartyg kan ägas av två rederier.", truth: false, why: "Ratiot bredvid Rederi i Äger är 1: högst ett rederi per fartyg." },
       { text: "Rederiets nummer ingår inte i resans identitet.", truth: false, why: "Kedjan Resa → Fartyg → Rederi: Resas kompletta identitet är {rederiNo, fartygsnamn, avgångsdatum}." },
+    ],
+  },
+  {
+    id: "stmt-haftet3", number: 4, title: "Employee, Order och Customer", diagram: "stmt-haftet3", reviewed: false,
+    source: "Övningshäftet uppgift 3 — sant och falskt ur häftets facit, skälen egna",
+    statements: [
+      { text: "Två anställda kan ha samma EmployeeNo.", truth: false, why: "EmployeeNo är understruket: identifieraren, unik för varje anställd." },
+      { text: "En anställd kan ha flera adresser.", truth: true, why: "Address är en dubbel oval: ett flervärt attribut." },
+      { text: "En anställd måste ha minst en adress.", truth: false, why: "Ett flervärt attribut säger att det får finnas flera värden, inte att det måste finnas något. Häftets facit: falskt." },
+      { text: "Två anställda kan ha samma adress.", truth: true, why: "Address är inte understruket. Inget i diagrammet hindrar två anställda från att dela adress." },
+      { text: "En anställd måste ha en handledare.", truth: true, why: "Linjen vid rollen Supervised_by i den unära Supervise är dubbel: varje anställd deltar som den som handleds." },
+      { text: "Två olika anställda kan arbeta på samma kontor.", truth: true, why: "Work är M:N. Ratiot M bredvid Employee, läst tvärs över: ett kontor får ha många anställda." },
+      { text: "En anställd måste arbeta på ett kontor.", truth: false, why: "Linjen vid Employee i Work är enkel: en anställd får stå utan kontor." },
+      { text: "En kund måste ha kontakt med exakt ett kontor.", truth: true, why: "Linjen vid Customer i Contact är dubbel (minst ett) och ratiot bredvid Office är 1 (högst ett)." },
+      { text: "Två kunder kan ha samma adress.", truth: true, why: "Customers identifierare är kombinationen av Address och Name. Address ensam är inte unik." },
+      { text: "Två kunder kan ha samma kombination av namn och adress.", truth: false, why: "Kombinationen är identifieraren Identifier: den är unik för varje kund." },
+      { text: "Det kan finnas ordrar som ingen kund har lagt.", truth: false, why: "Linjen vid Order i Places är dubbel: varje order läggs av en kund." },
+      { text: "En order måste innehålla minst en produkt.", truth: true, why: "Linjen vid Order i Include är dubbel: varje order deltar minst en gång." },
     ],
   },
 ];

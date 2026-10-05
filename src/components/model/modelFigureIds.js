@@ -8,4 +8,10 @@ export const MODEL_FIGURE_IDS = [
   "mod-employee-department",
   "mod-team-office",
   "mod-festival",
+  "ddl-18",
+  "ddl-19",
+  "ddl-20",
+  "ddl-21",
+  "ddl-22",
+  "stmt-haftet3",
 ];

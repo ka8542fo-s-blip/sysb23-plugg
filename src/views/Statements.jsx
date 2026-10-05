@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { statementExercises } from "../data/databaser/statementExercises.js";
-import { Diagram } from "../components/knowledge/diagrams/index.jsx";
+import { ExerciseFigure } from "../components/model/modelFigures.jsx";
 import { scoreStatements, MAX_POINTS } from "../lib/statementScore.js";
 
 // Tentans uppgift 1: ett diagram, tio påståenden, markera alla sanna.
@@ -65,7 +65,7 @@ export default function Statements({ modelProgress, onSolve, onReset }) {
             påstående du markerar, −3 för varje felaktigt, 0 för omarkerat. Alla och endast de korrekta ger {MAX_POINTS} poäng.
           </p>
 
-          <Diagram id={item.diagram} />
+          <ExerciseFigure id={item.diagram} />
 
           <ul className="mt-4 space-y-2" aria-label="Påståenden">
             {item.statements.map((st, i) => {
