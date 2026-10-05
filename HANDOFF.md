@@ -154,7 +154,8 @@ kapitel: allt UI läser `chapter.number`.
   per attribut, NF, motivering (rättas på valt beroende + attribut + typ;
   alla korrekta brytande godtas; engelsk mallmening ur dina egna CK,
   redigerbar), nedbrytning mot facit + informativ lossless/DP/NF per
-  relation. Klar = alla fält rätt. Definitionspanelen
+  relation. Klar = alla fält rätt. Under rättningsrutan: "Nästa: 10:3 →"
+  (nästa uppgift i listan, runt om; scrollar upp till uppgiften). Definitionspanelen
   `FdDefinitions.jsx` i sidokolumnen. Framsteg för
   alla tre: `sysb23:modell:<id>` = "solved", nollställs bara via knapp.
   Tester: `model-check`, `model-figures`, `normalize`, `fd`, `fd-drawing`,

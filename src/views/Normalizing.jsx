@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { normalizeExercises, NORMALIZE_GROUPS, contextOf, itemLabel, groupLabel } from "../data/databaser/normalizeExercises.js";
 import { parseSchema, norm, toBlockNotation } from "../lib/modelCheck.js";
 import { facitVariants } from "../lib/normalize.js";
@@ -48,6 +48,14 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
 
   useEffect(() => { setResult(null); setShowFacit(false); setConfirmReset(false); }, [currentId]);
 
+  // Efter rättningen: direkt vidare till nästa uppgift i listan (runt om).
+  const sectionRef = useRef(null);
+  const nextItem = items[(items.findIndex((e) => e.id === item.id) + 1) % items.length];
+  function goNext() {
+    setCurrentId(nextItem.id);
+    sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   const setDraft = (patch) => setDrafts((prev) => {
     const next = { ...(prev[item.id] ?? draft), ...patch };
     save(`fdsvar:${item.id}`, next);
@@ -78,7 +86,7 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
   return (
     <div className="lg:flex lg:gap-8">
       <div className="lg:order-2 lg:min-w-0 lg:flex-1">
-        <section className="card p-5">
+        <section ref={sectionRef} className="card scroll-mt-24 p-5">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <p className="text-sm text-ink/65">
               {itemLabel(item)} · {NORMALIZE_GROUPS.find((g) => g.exercise === item.exercise)?.source}
@@ -185,6 +193,13 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
               </ul>
               {item.trap && <p className="mt-3 text-[15px] text-ink/85"><span className="font-medium">Fällan:</span> {item.trap}</p>}
               {item.keyNote && <p className="mt-2 text-sm text-ink/65">Anmärkning: {item.keyNote}</p>}
+            </div>
+          )}
+          {result && (
+            <div className="mt-3 flex justify-end">
+              <button type="button" className="btn-emphasis px-4 py-2 text-sm" onClick={goNext}>
+                Nästa: {nextItem.exercise === "egen" ? `Egen ${nextItem.number}` : `${nextItem.exercise}:${nextItem.number}`} →
+              </button>
             </div>
           )}
 
