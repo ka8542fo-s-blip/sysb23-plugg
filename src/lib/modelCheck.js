@@ -341,15 +341,23 @@ export function checkModel(answerText, facitVariants, rules = {}, options = {}) 
   return { ...best, answer };
 }
 
-// Facit i föreläsningens blockform, som man skriver det på tentan.
+// Facit i Björns blockform från HT2026 (nya Fö1, Fö4, Fö5): attributen
+// inom parentesen, nyckelraderna efter den avslutande parentesen.
+//
+//   R1(
+//     A,
+//     B
+//   )
+//   CK₁ = {A, B}
+//   PK = CK₁
+//
+// Parsern godtar också den äldre formen med nyckelraderna inom parentesen.
 export function toBlockNotation(schema) {
   return schema.relations.map((rel) => {
-    const rows = rel.attrs.map((a) => `  ${a},`);
-    rows.push(`  CK${subscript("1")} = {${rel.pk.join(", ")}},`);
-    rows.push(`  PK = CK${subscript("1")}${rel.fks.length ? "," : ""}`);
+    const keys = [`CK${subscript("1")} = {${rel.pk.join(", ")}}`, `PK = CK${subscript("1")}`];
     rel.fks.forEach((fk, i) => {
-      rows.push(`  FK${subscript(String(i + 1))} (${fk.cols.join(", ")}) REF ${fk.target}(${fk.targetCols.join(", ")})${i < rel.fks.length - 1 ? "," : ""}`);
+      keys.push(`FK${subscript(String(i + 1))} (${fk.cols.join(", ")}) REF ${fk.target}(${fk.targetCols.join(", ")})`);
     });
-    return `${rel.name}(\n${rows.join("\n")}\n)`;
+    return `${rel.name}(\n${rel.attrs.map((a) => `  ${a}`).join(",\n")}\n)\n${keys.join("\n")}`;
   }).join("\n\n");
 }

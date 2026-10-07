@@ -13,18 +13,18 @@ import { normalizeExercises } from "../data/databaser/normalizeExercises.js";
 
 const TEMPLATE = `Teacher(
   EmployeeNo,
-  Name,
-  CK₁ = {EmployeeNo},
-  PK = CK₁
+  Name
 )
+CK₁ = {EmployeeNo}
+PK = CK₁
 
 Course(
   CourseCode,
-  ResponsibleNo,
-  CK₁ = {CourseCode},
-  PK = CK₁,
-  FK (ResponsibleNo) REF Teacher(EmployeeNo)
-)`;
+  ResponsibleNo
+)
+CK₁ = {CourseCode}
+PK = CK₁
+FK₁ (ResponsibleNo) REF Teacher(EmployeeNo)`;
 
 // Modellverkstaden: ett ER-diagram, du skriver relationsschemat i Fö5:s
 // notation, appen rättar som mängder och visar facit i samma
@@ -160,7 +160,7 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
                   rows={16}
                 />
                 <p className="mt-1 text-xs text-ink/65">
-                  Som i föreläsningen: relationsnamn och (, attributen ett per rad, CK₁ = {"{…}"}, PK = CK₁ och FK (…) REF MÅL(…) på egna rader, avslutat med ). Enradsformen NAMN(a, b) med PK = {"{…}"} på egen rad fungerar också.
+                  Som i föreläsningen: relationsnamn och (, attributen ett per rad, avslutat med ), och därefter CK₁ = {"{…}"}, PK = CK₁ och FK (…) REF MÅL(…) på egna rader. Nyckelraderna inom parentesen går också bra. Enradsformen NAMN(a, b) med PK = {"{…}"} på egen rad fungerar också.
                 </p>
               </div>
               <div>

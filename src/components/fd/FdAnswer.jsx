@@ -11,15 +11,17 @@ import SchemaEditor from "../model/SchemaEditor.jsx";
 
 const TEMPLATE = `R₁(
   A,
-  B,
-  PK = {A}
+  B
 )
+CK₁ = {A}
+PK = CK₁
 
 R₂(
   B,
-  C,
-  PK = {B}
-)`;
+  C
+)
+CK₁ = {B}
+PK = CK₁`;
 
 const ROLE_NEXT = { undefined: "PA", PA: "NP", NP: undefined };
 const ROLE_LABEL = { PA: "PA", NP: "NP" };
@@ -190,7 +192,7 @@ export default function FdAnswer({ item, draft, setDraft, highlight, parsed, res
               placeholder={TEMPLATE}
               rows={11}
             />
-            <p className="mt-1 text-xs text-ink/65">Relationsnamn och (, attributen, en rad PK = {"{…}"}, avslutat med ). Namnen R₁, R₂ … spelar ingen roll.</p>
+            <p className="mt-1 text-xs text-ink/65">Relationsnamn och (, attributen, avslutat med ), och därefter CK₁ = {"{…}"} och PK = CK₁ på egna rader (PK = {"{…}"} direkt går också). Namnen R₁, R₂ … spelar ingen roll.</p>
           </div>
           <div>
             <p className="mb-1 text-sm font-medium text-ink/80">Så ser det ut på tentan</p>

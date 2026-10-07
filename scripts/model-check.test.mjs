@@ -271,23 +271,24 @@ test("blockform: radnumren i felen pekar på originalraderna", () => {
 test("facit skrivs ut i blockform med små siffror, riktiga namn i FK-felen", async () => {
   const { toBlockNotation } = await import("../src/lib/modelCheck.js");
   const text = toBlockNotation(parseSchema(byId["mod-04"].facit[0]));
+  // Björns HT2026-form: nyckelraderna efter den avslutande parentesen.
   assert.equal(text, `PERSON(
   Name,
   Address,
-  Salary,
-  CK₁ = {Name},
-  PK = CK₁
+  Salary
 )
+CK₁ = {Name}
+PK = CK₁
 
 CAR(
   LicenseNumber,
   Brand,
   Speed,
-  OwnerName,
-  CK₁ = {LicenseNumber},
-  PK = CK₁,
-  FK₁ (OwnerName) REF PERSON(Name)
-)`);
+  OwnerName
+)
+CK₁ = {LicenseNumber}
+PK = CK₁
+FK₁ (OwnerName) REF PERSON(Name)`);
   assert.equal(checkModel(text, byId["mod-04"].facit, byId["mod-04"].rules).status, "correct");
   const r = checkModel(`PERSON(Name, Address, Salary)\nPK = {Name}\n\nCAR(LicenseNumber, Brand, Speed, OwnerName)\nPK = {LicenseNumber}`, byId["mod-04"].facit, byId["mod-04"].rules);
   assert.ok(rel(r, "CAR").problems.includes("Saknar främmande nyckel mot PERSON(Name)."), JSON.stringify(rel(r, "CAR").problems));
@@ -389,4 +390,37 @@ test("formtolerans stoppar ändå sakfel: okänt FK-attribut, fel REF-mål, fel 
   assert.equal(rel(bad2, "COURSE").status, "diff");
   const bad3 = check(TEACH_TEACHER.replace("PK = {EmployeeNo, CourseCode}", "PK = {EmployeeNo}") + "\n\n" + COURSE_BLOCK("FK₁ = {EmployeeNo} REF Teacher(EmployeeNo)"));
   assert.equal(rel(bad3, "TEACH").status, "diff");
+});
+
+test("båda blockformerna godtas: nycklarna efter eller inom parentesen", () => {
+  const after = `TEACHER(
+  EmployeeNo,
+  Name,
+  Salary
+)
+CK₁ = {EmployeeNo}
+PK = CK₁
+
+COURSE(
+  CourseCode,
+  Name,
+  Credits,
+  EmployeeNo
+)
+CK₁ = {CourseCode}
+PK = CK₁
+FK₁ (EmployeeNo) REF TEACHER(EmployeeNo)
+
+TEACH(
+  EmployeeNo,
+  CourseCode
+)
+CK₁ = {EmployeeNo, CourseCode}
+PK = CK₁
+FK₁ (EmployeeNo) REF TEACHER(EmployeeNo)
+FK₂ (CourseCode) REF COURSE(CourseCode)`;
+  assert.equal(check(after).status, "correct");
+  const inside = after.replace(/\n\)\n((?:(?:CK|PK|FK)[^\n]*\n?)+)/g, (_, keys) => ",\n" + keys.trim().split("\n").map((k) => "  " + k).join(",\n") + "\n)\n");
+  assert.match(inside, /  PK = CK₁,\n  FK₁/);
+  assert.equal(check(inside).status, "correct");
 });
