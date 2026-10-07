@@ -34,7 +34,12 @@ import {
 } from "./lib/storage.js";
 
 export default function App() {
-  const [view, setView] = useState("hem");
+  // Öppen flik överlever också en omladdning. Finns den inte i den valda
+  // delkursen skickar delkurseffekten nedan till Hem.
+  const [view, setView] = useState(() => {
+    const saved = load(KEYS.view, "hem");
+    return typeof saved === "string" ? saved : "hem";
+  });
   const [viewParams, setViewParams] = useState(null);
   // Tillbakalänken lever bara i vy-state — den ska inte överleva en omladdning.
   const [backLink, setBackLink] = useState(null);
@@ -63,6 +68,7 @@ export default function App() {
   useEffect(() => save(KEYS.essays, essayState), [essayState]);
   useEffect(() => save(KEYS.settings, settings), [settings]);
   useEffect(() => save(KEYS.course, courseId), [courseId]);
+  useEffect(() => save(KEYS.view, view), [view]);
 
   const course = useMemo(() => getCourse(courseId), [courseId]);
 

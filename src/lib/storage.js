@@ -9,6 +9,8 @@ export const KEYS = {
   settings: "settings", // { timerOn, timerMinutes, practiceTopics, practiceDifficulty }
   readSegment: "lasSegment", // "kompendium" | "begrepp" | "ordlista"
   course: "delkurs", // senast valda delkursen
+  view: "flik", // senast öppna fliken ("hem", "las", "modell" …)
+  modelMode: "modellFlik", // Modelleras underflik: "stmt" | "er" | "ddl" | "norm"
   scheduleView: "schemaVy", // "lista" | "kalender"
   ttsRate: "upplasningstakt", // uppläsningens hastighet (t.ex. 1.15)
   ttsVoice: "upplasningsrost", // vald rösts namn, t.ex. "Alva"

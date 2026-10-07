@@ -5,6 +5,7 @@ import SchemaView from "../components/model/SchemaView.jsx";
 import SchemaEditor from "../components/model/SchemaEditor.jsx";
 import { ModelFigure } from "../components/model/modelFigures.jsx";
 import Normalizing from "./Normalizing.jsx";
+import { load, save, KEYS } from "../lib/storage.js";
 import Statements from "./Statements.jsx";
 import DdlModeling from "./DdlModeling.jsx";
 import { ddlExercises } from "../data/databaser/ddlExercises.js";
@@ -41,7 +42,11 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
   // Fyra steg som tentans uppgifter: läsa diagram (1), ER-diagram → schema
   // (häftets 4–10, tankemodellen bakom uppgift 2), ER-diagram → DDL (häftets
   // 18–22, uppgift 2 som den skrivs) och normalisering (10–13 och egna, 3f–g).
-  const [mode, setMode] = useState("er");
+  const [mode, setModeState] = useState(() => {
+    const saved = load(KEYS.modelMode, "er");
+    return ["stmt", "er", "ddl", "norm"].includes(saved) ? saved : "er";
+  });
+  const setMode = (next) => { setModeState(next); save(KEYS.modelMode, next); };
 
   const exercise = exercises.find((e) => e.id === currentId) || exercises[0];
   const code = drafts[exercise.id] ?? "";

@@ -180,6 +180,8 @@ kapitel: allt UI läser `chapter.number`.
   redigerbar), nedbrytning mot facit + informativ lossless/DP/NF per
   relation. Klar = alla fält rätt. Under rättningsrutan: "Nästa: 10:3 →"
   (nästa uppgift i listan, runt om; scrollar upp till uppgiften).
+  Öppen flik och Modelleras underflik överlever en omladdning (2026-10-07,
+  `sysb23:flik` och `sysb23:modellFlik`; saknar delkursen fliken blir det Hem).
   Rättnings- och facitrutan kan fällas ihop (2026-10-07, "Dölj"/"Visa" i
   rubrikraden) till en rad: "Delvis rätt – 3 av 4 delar" (`partsSummary` i
   fdGrade.js) respektive "Facit – CK {…} · 2NF". Läget sparas per ruta i
