@@ -33,7 +33,7 @@ const labelOf = (diagram, ref) => {
   return g ? `{${g.members.map((m) => diagram.boxes.find((b) => b.id === m)?.attr || "?").join(", ")}}` : "";
 };
 
-export default function FdCanvas({ item, graded }) {
+export default function FdCanvas({ item, graded, onDiagramChange }) {
   const attrs = useMemo(() => attrsOf(item.attrs), [item.attrs]);
   const storageKey = `fdritning:${item.id}`;
   const [state, dispatch] = useReducer(historyReducer, null, () => ({ diagram: validDiagram(load(storageKey, null)) || emptyDiagram(), past: [], future: [] }));
@@ -59,6 +59,8 @@ export default function FdCanvas({ item, graded }) {
   const shelfRef = useRef(null);
 
   useEffect(() => { save(storageKey, diagram); }, [storageKey, diagram]);
+  // Miniatyren bredvid nedbrytningsrutan följer ritningen.
+  useEffect(() => { onDiagramChange?.(diagram); }, [diagram, onDiagramChange]);
 
   // På smala skärmar zoomar ytan in mot innehållet, så att rutorna blir
   // stora nog att träffa med fingret. Vyn räknas om först när en dragning

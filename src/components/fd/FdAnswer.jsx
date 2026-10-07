@@ -3,6 +3,7 @@ import { attrsOf, setText, braceText, properSubset, has } from "../../lib/fd.js"
 import { motivationOptions } from "../../lib/fdGrade.js";
 import SchemaView from "../model/SchemaView.jsx";
 import SchemaEditor from "../model/SchemaEditor.jsx";
+import FdMini from "./FdMini.jsx";
 
 // Svarspanelen i Björns ordning: CK, PA och NP, högsta normalform,
 // motivering (när R inte är i 3NF) och nedbrytningen (uppgift 11–13 och de
@@ -40,7 +41,7 @@ export function templateFor(option, attr, type, userCks) {
   return `Non-prime attribute ${attr} is transitively dependent on candidate key ${key ? braceText(key) : "{…}"} via ${setText(lhs)}.`;
 }
 
-export default function FdAnswer({ item, draft, setDraft, highlight, parsed, result }) {
+export default function FdAnswer({ item, draft, setDraft, highlight, parsed, result, diagram }) {
   const attrs = useMemo(() => attrsOf(item.attrs), [item.attrs]);
   const options = useMemo(() => motivationOptions(item), [item]);
   const cks = draft.cks?.length ? draft.cks : [[]];
@@ -195,6 +196,10 @@ export default function FdAnswer({ item, draft, setDraft, highlight, parsed, res
             <p className="mt-1 text-xs text-ink/65">Relationsnamn och (, attributen, avslutat med ), och därefter CK₁ = {"{…}"} och PK = CK₁ på egna rader (PK = {"{…}"} direkt går också). Namnen R₁, R₂ … spelar ingen roll.</p>
           </div>
           <div>
+            <p className="mb-1 text-sm font-medium text-ink/80">Ditt beroendediagram</p>
+            <div className="mb-3 rounded-lg border border-line bg-white p-2">
+              <FdMini diagram={diagram} />
+            </div>
             <p className="mb-1 text-sm font-medium text-ink/80">Så ser det ut på tentan</p>
             <div className="rounded-lg border border-line bg-paper p-3">
               <SchemaView schema={parsed} highlight={highlight} />

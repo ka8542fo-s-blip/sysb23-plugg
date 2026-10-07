@@ -182,6 +182,9 @@ kapitel: allt UI läser `chapter.number`.
   (nästa uppgift i listan, runt om; scrollar upp till uppgiften).
   Öppen flik och Modelleras underflik överlever en omladdning (2026-10-07,
   `sysb23:flik` och `sysb23:modellFlik`; saknar delkursen fliken blir det Hem).
+  Bredvid nedbrytningsrutan visas ritningen i miniatyr (2026-10-07,
+  `components/fd/FdMini.jsx`, skrivskyddad, beskuren runt innehållet);
+  FdCanvas skickar varje ändring via `onDiagramChange` till Normalizing.
   Rättnings- och facitrutan kan fällas ihop (2026-10-07, "Dölj"/"Visa" i
   rubrikraden) till en rad: "Delvis rätt – 3 av 4 delar" (`partsSummary` i
   fdGrade.js) respektive "Facit – CK {…} · 2NF". Läget sparas per ruta i

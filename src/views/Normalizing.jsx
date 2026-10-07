@@ -53,6 +53,8 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
   const [drafts, setDrafts] = useState({});
   const [result, setResult] = useState(null);
   const [showFacit, setShowFacit] = useState(false);
+  // Ritytans aktuella ritning, för miniatyren bredvid nedbrytningsrutan.
+  const [liveDiagram, setLiveDiagram] = useState(null);
   const [confirmReset, setConfirmReset] = useState(false);
   // Ihopfällt läge för rättnings- och facitrutan: gäller alla uppgifter och
   // sparas tills man ändrar det. Rätta igen byter innehållet, inte läget.
@@ -137,9 +139,9 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
 
           <pre className="mt-4 overflow-x-auto rounded-lg border border-line bg-paper p-3 font-mono text-[14.5px] leading-relaxed text-ink">{contextOf(item)}</pre>
 
-          <FdCanvas key={item.id} item={item} graded={Boolean(result)} />
+          <FdCanvas key={item.id} item={item} graded={Boolean(result)} onDiagramChange={setLiveDiagram} />
 
-          <FdAnswer key={"a" + item.id} item={item} draft={draft} setDraft={setDraft} highlight={highlight} parsed={parsed} result={result} />
+          <FdAnswer key={"a" + item.id} item={item} draft={draft} setDraft={setDraft} highlight={highlight} parsed={parsed} result={result} diagram={liveDiagram} />
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <button type="button" className="btn-primary" onClick={grade} disabled={!canGrade}>Rätta</button>
