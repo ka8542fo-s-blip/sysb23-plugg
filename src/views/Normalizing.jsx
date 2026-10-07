@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { normalizeExercises, NORMALIZE_GROUPS, contextOf, itemLabel, groupLabel } from "../data/databaser/normalizeExercises.js";
 import { parseSchema, norm, toBlockNotation } from "../lib/modelCheck.js";
 import { facitVariants } from "../lib/normalize.js";
-import { gradeAnswer } from "../lib/fdGrade.js";
+import { gradeAnswer, partsSummary } from "../lib/fdGrade.js";
 import { highestNF, braceText, NF_NAME } from "../lib/fd.js";
 import { load, save } from "../lib/storage.js";
 import FdCanvas from "../components/fd/FdCanvas.jsx";
@@ -15,6 +15,25 @@ import SchemaView from "../components/model/SchemaView.jsx";
 // och — i uppgift 11–13 och de egna — nedbrytningen till 3NF. Varje fält
 // rättas för sig med höljet som skäl; nedbrytningen rättas mot facit som
 // förut. Ritning och svar sparas per uppgift i localStorage.
+
+const COLLAPSE_RESULT = "normalisering:rattning-ihopfalld";
+const COLLAPSE_FACIT = "normalisering:facit-ihopfalld";
+
+// Dölj/Visa i en rutas rubrikrad.
+function CollapseButton({ collapsed, onClick, controls, what }) {
+  return (
+    <button
+      type="button"
+      className="btn-quiet shrink-0 px-2 py-1 text-sm"
+      onClick={onClick}
+      aria-expanded={!collapsed}
+      aria-controls={controls}
+      aria-label={`${collapsed ? "Visa" : "Dölj"} ${what}`}
+    >
+      {collapsed ? "Visa" : "Dölj"}
+    </button>
+  );
+}
 
 const emptyDraft = () => ({ cks: [[]], roles: {}, nf: null, motivation: {}, text: "" });
 
@@ -35,6 +54,12 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
   const [result, setResult] = useState(null);
   const [showFacit, setShowFacit] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
+  // Ihopfällt läge för rättnings- och facitrutan: gäller alla uppgifter och
+  // sparas tills man ändrar det. Rätta igen byter innehållet, inte läget.
+  const [resultCollapsed, setResultCollapsed] = useState(() => load(COLLAPSE_RESULT, false) === true);
+  const [facitCollapsed, setFacitCollapsed] = useState(() => load(COLLAPSE_FACIT, false) === true);
+  const toggleResult = () => setResultCollapsed((v) => { save(COLLAPSE_RESULT, !v); return !v; });
+  const toggleFacit = () => setFacitCollapsed((v) => { save(COLLAPSE_FACIT, !v); return !v; });
 
   const item = items.find((e) => e.id === currentId) || items[0];
   const draft = drafts[item.id] ?? load(`fdsvar:${item.id}`, null) ?? emptyDraft();
@@ -80,7 +105,8 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
     }
     for (const e of decResult.extra || []) highlight[norm(e.name)] = "diff";
   }
-  const verdict = result?.status === "correct" ? "Rätt." : result?.status === "partial" ? "Delvis rätt." : result?.status === "wrong" ? "Fel." : null;
+  const verdict = result?.status === "correct" ? "Rätt" : result?.status === "partial" ? "Delvis rätt" : result?.status === "wrong" ? "Fel" : null;
+  const parts = partsSummary(result);
   const title = item.nfOnly ? "Högsta normalform" : "Högsta normalform och normalisering till 3NF";
 
   return (
@@ -122,8 +148,15 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
           </div>
 
           {result && (
-            <div className={`mt-4 rounded-lg border-l-2 p-4 ${result.status === "correct" ? "border-correct bg-correct-bg" : "border-wrong bg-wrong-bg"}`} role="status">
-              <p className="font-display text-lg">{verdict}</p>
+            <div className={`mt-4 rounded-lg border-l-2 ${resultCollapsed ? "px-4 py-2" : "p-4"} ${result.status === "correct" ? "border-correct bg-correct-bg" : "border-wrong bg-wrong-bg"}`} role="status">
+              <div className="flex items-center justify-between gap-3">
+                <p className="min-w-0">
+                  <span className="font-display text-lg">{verdict}</span>
+                  <span className="tabular text-[15px] text-ink/70"> – {parts.ok} av {parts.total} delar</span>
+                </p>
+                <CollapseButton collapsed={resultCollapsed} onClick={toggleResult} controls="norm-rattning" what="rättningen" />
+              </div>
+              {!resultCollapsed && <div id="norm-rattning">
               <ul className="mt-2 space-y-3 text-[15px]">
                 <FieldResult label="Kandidatnycklar" field={result.fields.ck}>
                   <ul className="ml-4 mt-1 list-disc space-y-0.5 text-ink/85">
@@ -193,6 +226,7 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
               </ul>
               {item.trap && <p className="mt-3 text-[15px] text-ink/85"><span className="font-medium">Fällan:</span> {item.trap}</p>}
               {item.keyNote && <p className="mt-2 text-sm text-ink/65">Anmärkning: {item.keyNote}</p>}
+              </div>}
             </div>
           )}
           {result && (
@@ -204,8 +238,15 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
           )}
 
           {showFacit && (
-            <div className="mt-4 rounded-lg border border-line bg-paper p-4">
-              <p className="font-display text-lg">Facit</p>
+            <div className={`mt-4 rounded-lg border border-line bg-paper ${facitCollapsed ? "px-4 py-2" : "p-4"}`}>
+              <div className="flex items-center justify-between gap-3">
+                <p className="min-w-0">
+                  <span className="font-display text-lg">Facit</span>
+                  {facitCollapsed && <span className="tabular text-[15px] text-ink/70"> – CK {facit.cks.map(braceText).join(", ")} · {NF_NAME[facit.nf]}</span>}
+                </p>
+                <CollapseButton collapsed={facitCollapsed} onClick={toggleFacit} controls="norm-facit" what="facit" />
+              </div>
+              {!facitCollapsed && <div id="norm-facit">
               <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 font-mono text-[14.5px]">
                 <dt className="text-ink/65">CK</dt><dd>{facit.cks.map(braceText).join(", ")}</dd>
                 <dt className="text-ink/65">PA</dt><dd>{facit.prime.join(", ") || "–"}</dd>
@@ -235,6 +276,7 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
               )}
               {facit.nf === 3 && !item.nfOnly && <p className="mt-3 text-[15px]">R är redan i 3NF — ingen nedbrytning.</p>}
               {item.trap && <p className="mt-3 text-[15px]"><span className="font-medium">Fällan:</span> {item.trap}</p>}
+              </div>}
             </div>
           )}
         </section>

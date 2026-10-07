@@ -103,6 +103,14 @@ export function decompositionProperties(item, text) {
 
 // answer: { cks: [[attr]], roles: { A: "PA" | "NP" }, nf: "1NF" | "2NF" | "3NF",
 //           motivation: { option, attr, type, text }, text }
+// Sammanfattningen i den ihopfällda rättningsrutan: "3 av 4 delar".
+// Delar som inte finns i uppgiften (motivering i 3NF, nedbrytning i
+// nf-only) räknas inte.
+export function partsSummary(result) {
+  const parts = Object.values(result?.fields ?? {}).filter(Boolean);
+  return { ok: parts.filter((f) => f.ok).length, total: parts.length };
+}
+
 export function gradeAnswer(item, answer) {
   const R = attrsOf(item.attrs);
   const F = item.fds;

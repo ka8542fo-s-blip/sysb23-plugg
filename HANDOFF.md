@@ -179,7 +179,12 @@ kapitel: allt UI läser `chapter.number`.
   alla korrekta brytande godtas; engelsk mallmening ur dina egna CK,
   redigerbar), nedbrytning mot facit + informativ lossless/DP/NF per
   relation. Klar = alla fält rätt. Under rättningsrutan: "Nästa: 10:3 →"
-  (nästa uppgift i listan, runt om; scrollar upp till uppgiften). Definitionspanelen
+  (nästa uppgift i listan, runt om; scrollar upp till uppgiften).
+  Rättnings- och facitrutan kan fällas ihop (2026-10-07, "Dölj"/"Visa" i
+  rubrikraden) till en rad: "Delvis rätt – 3 av 4 delar" (`partsSummary` i
+  fdGrade.js) respektive "Facit – CK {…} · 2NF". Läget sparas per ruta i
+  `sysb23:normalisering:rattning-ihopfalld` och `…:facit-ihopfalld`, gäller
+  alla uppgifter och behålls när man rättar igen. Definitionspanelen
   `FdDefinitions.jsx` i sidokolumnen. Framsteg för
   alla tre: `sysb23:modell:<id>` = "solved", nollställs bara via knapp.
   Tester: `model-check`, `model-figures`, `normalize`, `fd`, `fd-drawing`,

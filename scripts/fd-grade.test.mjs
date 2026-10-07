@@ -127,3 +127,14 @@ test("uppgift 10 har ingen nedbrytning", () => {
   const r = gradeAnswer(item, perfect(item));
   assert.deepEqual(r.required, ["ck", "roles", "nf", "motivation"]);
 });
+
+test("sammanfattningen i den ihopfällda rättningsrutan räknar bara uppgiftens delar", async () => {
+  const { partsSummary } = await import("../src/lib/fdGrade.js");
+  assert.deepEqual(partsSummary(null), { ok: 0, total: 0 });
+  assert.deepEqual(partsSummary({ fields: { ck: { ok: true }, roles: { ok: false }, nf: { ok: true }, motivation: undefined } }), { ok: 2, total: 3 });
+  const item = normalizeExercises.find((e) => !e.nfOnly && e.facit);
+  const r = gradeAnswer(item, { cks: [[]], roles: {}, nf: "1NF", motivation: {}, text: "" });
+  const s = partsSummary(r);
+  assert.equal(s.total, Object.values(r.fields).filter(Boolean).length);
+  assert.ok(s.ok < s.total);
+});
