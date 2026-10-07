@@ -10,17 +10,11 @@ import FdMini from "./FdMini.jsx";
 // egna). Motiveringens mall-mening fylls i ur valet och går att skriva om;
 // rättningen sker på valet.
 
-const TEMPLATE = `R₁(
-  A,
-  B
-)
+const TEMPLATE = `R₁(A, B)
 CK₁ = {A}
 PK = CK₁
 
-R₂(
-  B,
-  C
-)
+R₂(B, C)
 CK₁ = {B}
 PK = CK₁`;
 
@@ -193,7 +187,7 @@ export default function FdAnswer({ item, draft, setDraft, highlight, parsed, res
               placeholder={TEMPLATE}
               rows={11}
             />
-            <p className="mt-1 text-xs text-ink/65">Relationsnamn och (, attributen, avslutat med ), och därefter CK₁ = {"{…}"} och PK = CK₁ på egna rader (PK = {"{…}"} direkt går också). Namnen R₁, R₂ … spelar ingen roll.</p>
+            <p className="mt-1 text-xs text-ink/65">Relationen på en rad, R₁(A, B), och därefter CK₁ = {"{…}"} (CK₂ … om det finns fler) och PK = CK₁ på egna rader. Ett attribut per rad och PK = {"{…}"} direkt går också. Namnen R₁, R₂ … spelar ingen roll.</p>
           </div>
           <div>
             <p className="mb-1 text-sm font-medium text-ink/80">Ditt beroendediagram</p>

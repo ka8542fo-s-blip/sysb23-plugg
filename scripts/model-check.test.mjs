@@ -271,21 +271,12 @@ test("blockform: radnumren i felen pekar på originalraderna", () => {
 test("facit skrivs ut i blockform med små siffror, riktiga namn i FK-felen", async () => {
   const { toBlockNotation } = await import("../src/lib/modelCheck.js");
   const text = toBlockNotation(parseSchema(byId["mod-04"].facit[0]));
-  // Björns HT2026-form: nyckelraderna efter den avslutande parentesen.
-  assert.equal(text, `PERSON(
-  Name,
-  Address,
-  Salary
-)
+  // Relationen på en rad, nyckelraderna efter (Kasper 2026-10-07).
+  assert.equal(text, `PERSON(Name, Address, Salary)
 CK₁ = {Name}
 PK = CK₁
 
-CAR(
-  LicenseNumber,
-  Brand,
-  Speed,
-  OwnerName
-)
+CAR(LicenseNumber, Brand, Speed, OwnerName)
 CK₁ = {LicenseNumber}
 PK = CK₁
 FK₁ (OwnerName) REF PERSON(Name)`);
@@ -423,4 +414,21 @@ FK₂ (CourseCode) REF COURSE(CourseCode)`;
   const inside = after.replace(/\n\)\n((?:(?:CK|PK|FK)[^\n]*\n?)+)/g, (_, keys) => ",\n" + keys.trim().split("\n").map((k) => "  " + k).join(",\n") + "\n)\n");
   assert.match(inside, /  PK = CK₁,\n  FK₁/);
   assert.equal(check(inside).status, "correct");
+});
+
+test("facit: sänkt siffra i R-namnet, flera kandidatnycklar som CK₁, CK₂ med PK = CK₁, och utskriften tolkas tillbaka", async () => {
+  const { toBlockNotation } = await import("../src/lib/modelCheck.js");
+  const schema = parseSchema("R1(A, C)\nPK = {A}\n\nR2(A, B, D)\nPK = {B}");
+  const text = toBlockNotation(schema, { ckOf: (rel) => (rel.name === "R2" ? [["A"], ["B"]] : [["A"]]) });
+  assert.equal(text, `R₁(A, C)
+CK₁ = {A}
+PK = CK₁
+
+R₂(A, B, D)
+CK₁ = {B}
+CK₂ = {A}
+PK = CK₁`);
+  const back = parseSchema(text);
+  assert.deepEqual(back.errors, []);
+  assert.deepEqual(back.relations.map((r) => [r.name, r.attrs, r.pk]), [["R1", ["A", "C"], ["A"]], ["R2", ["A", "B", "D"], ["B"]]]);
 });

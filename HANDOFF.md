@@ -182,6 +182,11 @@ kapitel: allt UI läser `chapter.number`.
   (nästa uppgift i listan, runt om; scrollar upp till uppgiften).
   Öppen flik och Modelleras underflik överlever en omladdning (2026-10-07,
   `sysb23:flik` och `sysb23:modellFlik`; saknar delkursen fliken blir det Hem).
+  Facit skrivs (2026-10-07, Kaspers form) med relationen på en rad och
+  sänkt siffra, R₁(A, C), sedan CK₁, CK₂ … (kandidatnycklarna räknade ur
+  de projicerade beroendena, PK först) och PK = CK₁. Samma
+  `toBlockNotation` skriver facit i ER-diagram till schema. Parsern godtar
+  alla former.
   Bredvid nedbrytningsrutan visas ritningen i miniatyr (2026-10-07,
   `components/fd/FdMini.jsx`, skrivskyddad, beskuren runt innehållet);
   FdCanvas skickar varje ändring via `onDiagramChange` till Normalizing.

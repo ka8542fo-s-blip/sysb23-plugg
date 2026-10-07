@@ -3,7 +3,7 @@ import { normalizeExercises, NORMALIZE_GROUPS, contextOf, itemLabel, groupLabel 
 import { parseSchema, norm, toBlockNotation } from "../lib/modelCheck.js";
 import { facitVariants } from "../lib/normalize.js";
 import { gradeAnswer, partsSummary } from "../lib/fdGrade.js";
-import { highestNF, braceText, NF_NAME } from "../lib/fd.js";
+import { highestNF, braceText, NF_NAME, allCandidateKeys, projectFds, toFds } from "../lib/fd.js";
 import { load, save } from "../lib/storage.js";
 import FdCanvas from "../components/fd/FdCanvas.jsx";
 import FdAnswer from "../components/fd/FdAnswer.jsx";
@@ -273,7 +273,7 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
                 <div className="mt-3">
                   <p className="mb-1 text-sm font-medium text-ink/80">Nedbrytning</p>
                   <div className="rounded-lg border border-line bg-white p-3"><SchemaView schema={facit.schema} highlight={facitHighlight} /></div>
-                  <pre className="mt-2 overflow-x-auto rounded-lg border border-line bg-white px-4 py-3 font-mono text-[13.5px] leading-relaxed text-ink">{toBlockNotation(facit.schema)}</pre>
+                  <pre className="mt-2 overflow-x-auto rounded-lg border border-line bg-white px-4 py-3 font-mono text-[13.5px] leading-relaxed text-ink">{toBlockNotation(facit.schema, { ckOf: (rel) => allCandidateKeys(rel.attrs, projectFds(rel.attrs, toFds(item.fds))) })}</pre>
                 </div>
               )}
               {facit.nf === 3 && !item.nfOnly && <p className="mt-3 text-[15px]">R är redan i 3NF — ingen nedbrytning.</p>}

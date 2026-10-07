@@ -12,17 +12,11 @@ import { ddlExercises } from "../data/databaser/ddlExercises.js";
 import { statementExercises } from "../data/databaser/statementExercises.js";
 import { normalizeExercises } from "../data/databaser/normalizeExercises.js";
 
-const TEMPLATE = `Teacher(
-  EmployeeNo,
-  Name
-)
+const TEMPLATE = `Teacher(EmployeeNo, Name)
 CK₁ = {EmployeeNo}
 PK = CK₁
 
-Course(
-  CourseCode,
-  ResponsibleNo
-)
+Course(CourseCode, ResponsibleNo)
 CK₁ = {CourseCode}
 PK = CK₁
 FK₁ (ResponsibleNo) REF Teacher(EmployeeNo)`;
@@ -165,7 +159,7 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
                   rows={16}
                 />
                 <p className="mt-1 text-xs text-ink/65">
-                  Som i föreläsningen: relationsnamn och (, attributen ett per rad, avslutat med ), och därefter CK₁ = {"{…}"}, PK = CK₁ och FK (…) REF MÅL(…) på egna rader. Nyckelraderna inom parentesen går också bra. Enradsformen NAMN(a, b) med PK = {"{…}"} på egen rad fungerar också.
+                  Relationen på en rad, NAMN(a, b), och därefter CK₁ = {"{…}"}, PK = CK₁ och FK (…) REF MÅL(…) på egna rader. Ett attribut per rad och nyckelraderna inom parentesen går också bra. Enradsformen NAMN(a, b) med PK = {"{…}"} på egen rad fungerar också.
                 </p>
               </div>
               <div>

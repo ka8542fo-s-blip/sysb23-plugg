@@ -341,23 +341,30 @@ export function checkModel(answerText, facitVariants, rules = {}, options = {}) 
   return { ...best, answer };
 }
 
-// Facit i Björns blockform från HT2026 (nya Fö1, Fö4, Fö5): attributen
-// inom parentesen, nyckelraderna efter den avslutande parentesen.
+// Facit i Kaspers form (2026-10-07): hela relationen på en rad, R-namnets
+// siffra sänkt, sedan nyckelraderna och en tom rad mellan relationerna.
 //
-//   R1(
-//     A,
-//     B
-//   )
-//   CK₁ = {A, B}
+//   R₁(A, C)
+//   CK₁ = {A}
 //   PK = CK₁
 //
-// Parsern godtar också den äldre formen med nyckelraderna inom parentesen.
-export function toBlockNotation(schema) {
+// Har relationen flera kandidatnycklar skrivs de CK₁, CK₂ … med
+// primärnyckeln som CK₁. `ckOf(rel)` kan ge kandidatnycklarna (i
+// normaliseringen räknade ur beroendena); annars används CK-raderna i
+// facit, och saknas de primärnyckeln. Parsern godtar alla former: en rad,
+// ett attribut per rad, nycklarna inom eller efter parentesen.
+export function toBlockNotation(schema, { ckOf } = {}) {
+  const same = (a, b) => a.length === b.length && a.every((x) => b.some((y) => norm(y) === norm(x)));
   return schema.relations.map((rel) => {
-    const keys = [`CK${subscript("1")} = {${rel.pk.join(", ")}}`, `PK = CK${subscript("1")}`];
+    const given = ckOf?.(rel) ?? Object.values(rel.cks ?? {});
+    const others = given.filter((ck) => !same(ck, rel.pk));
+    const cks = [rel.pk, ...others];
+    const keys = cks.map((ck, i) => `CK${subscript(String(i + 1))} = {${ck.join(", ")}}`);
+    keys.push(`PK = CK${subscript("1")}`);
     rel.fks.forEach((fk, i) => {
       keys.push(`FK${subscript(String(i + 1))} (${fk.cols.join(", ")}) REF ${fk.target}(${fk.targetCols.join(", ")})`);
     });
-    return `${rel.name}(\n${rel.attrs.map((a) => `  ${a}`).join(",\n")}\n)\n${keys.join("\n")}`;
+    const name = rel.name.replace(/(\d+)$/, (d) => subscript(d));
+    return `${name}(${rel.attrs.join(", ")})\n${keys.join("\n")}`;
   }).join("\n\n");
 }
