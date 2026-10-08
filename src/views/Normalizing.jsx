@@ -188,40 +188,35 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
                 </FieldResult>
                 {dec && (
                   <li>
-                    <span className={dec.ok ? "font-medium text-correct" : "font-medium text-wrong"}>Nedbrytning: {dec.ok ? "rätt" : "fel"}</span>
-                    {decResult.status === "parse-error" ? (
-                      <ul className="ml-4 mt-1 list-disc">{decResult.errors.map((err) => <li key={err.line + err.message}>{err.message}</li>)}</ul>
+                    <span className={dec.ok ? "font-medium text-correct" : "font-medium text-wrong"}>Nedbrytning: {dec.feedback.headline}</span>
+                    {dec.feedback.parseErrors.length > 0 ? (
+                      <ul className="ml-4 mt-1 list-disc">{dec.feedback.parseErrors.map((err) => <li key={err}>{err}</li>)}</ul>
                     ) : (
-                      <ul className="ml-4 mt-1 space-y-2">
-                        {(decResult.relations || []).map((r) => (
-                          <li key={r.name}>
-                            <span className={r.status === "ok" ? "text-correct" : "text-wrong"}>
-                              {r.name}{r.answerName && norm(r.answerName) !== norm(r.name) ? ` (${r.answerName})` : ""}: {r.status === "ok" ? "rätt" : r.status === "missing" ? "saknas" : "fel"}
-                            </span>
-                            {r.problems.length > 0 && <ul className="ml-4 list-disc">{r.problems.map((p) => <li key={p}>{p}</li>)}</ul>}
-                            {r.status !== "ok" && r.rule && <p className="mt-0.5 text-ink/80"><span className="font-medium">{r.rule.rule}:</span> {r.rule.why}</p>}
+                      <ul className="mt-1 space-y-1">
+                        {dec.feedback.lines.map((l, k) => (
+                          <li key={k} className="flex gap-2">
+                            <span aria-hidden="true" className={`shrink-0 font-medium ${l.ok ? "text-correct" : "text-wrong"}`}>{l.ok ? "✓" : "✗"}</span>
+                            <span className="text-ink/85"><span className="sr-only">{l.ok ? "Rätt: " : "Ändra: "}</span>{l.text}</span>
                           </li>
-                        ))}
-                        {(decResult.extra || []).map((e) => (
-                          <li key={"extra-" + e.name}><span className="text-wrong">{e.name}: extra</span><p className="mt-0.5 text-ink/80">{e.message}</p></li>
                         ))}
                       </ul>
                     )}
                     {dec.properties && (
-                      <div className="mt-3 rounded-lg border border-line bg-white/70 p-3 text-sm">
-                        <p className="font-medium text-ink/85">Din nedbrytning, prövad med beroendena</p>
-                        {dec.properties.missingAttrs.length > 0 && <p className="mt-1 text-wrong">Attribut som inte finns i någon relation: {dec.properties.missingAttrs.join(", ")}.</p>}
-                        {dec.properties.unknown.length > 0 && <p className="mt-1 text-wrong">Finns inte i R: {dec.properties.unknown.join(", ")}.</p>}
-                        <p className="mt-1">
-                          <span className={dec.properties.relations.every((r) => r.nf === 3) ? "text-correct" : "text-wrong"}>Normalform per relation:</span>{" "}
-                          {dec.properties.relations.map((r) => `${r.name} ${NF_NAME[r.nf]}`).join(", ")}.
-                        </p>
-                        <p className="mt-1"><span className={dec.properties.lossless ? "text-correct" : "text-wrong"}>Lossless join: {dec.properties.lossless ? "ja" : "nej"}.</span></p>
-                        <ul className="ml-4 list-disc text-ink/80">{dec.properties.lossText.map((t) => <li key={t}>{t}</li>)}</ul>
-                        <p className="mt-1"><span className={dec.properties.preserving ? "text-correct" : "text-wrong"}>Dependency preservation: {dec.properties.preserving ? "ja" : "nej"}.</span></p>
-                        <ul className="ml-4 list-disc text-ink/80">{dec.properties.depText.map((t) => <li key={t.text} className={t.ok ? "" : "text-wrong"}>{t.text}</li>)}</ul>
-                        <p className="mt-2 text-xs text-ink/65">Lossless och beroendebevarande räcker inte för rätt: en övernormaliserad nedbrytning klarar oftast båda och ger ändå avdrag. Rättningen ovan sker mot facit.</p>
-                      </div>
+                      <details className="group mt-3 rounded-lg border border-line bg-white/70 px-3 py-2 text-sm">
+                        <summary className="cursor-pointer list-none text-ink/70">
+                          <span className="mr-1 inline-block transition-transform duration-150 group-open:rotate-90" aria-hidden="true">›</span>
+                          Visa detaljer
+                        </summary>
+                        <div className="mt-2">
+                          {dec.properties.missingAttrs.length > 0 && <p>Attribut som inte finns i någon tabell: {dec.properties.missingAttrs.join(", ")}.</p>}
+                          {dec.properties.unknown.length > 0 && <p>Finns inte i R: {dec.properties.unknown.join(", ")}.</p>}
+                          <p>Normalform per tabell: {dec.properties.relations.map((r) => `${r.name} ${NF_NAME[r.nf]}`).join(", ")}.</p>
+                          <p className="mt-2">Lossless join: {dec.properties.lossless ? "ja" : "nej"}.</p>
+                          <ul className="ml-4 list-disc text-ink/80">{dec.properties.lossText.map((t) => <li key={t}>{t}</li>)}</ul>
+                          <p className="mt-2">Dependency preservation: {dec.properties.preserving ? "ja" : "nej"}.</p>
+                          <ul className="ml-4 list-disc text-ink/80">{dec.properties.depText.map((t) => <li key={t.text}>{t.text}</li>)}</ul>
+                        </div>
+                      </details>
                     )}
                   </li>
                 )}

@@ -9,6 +9,7 @@ import {
   losslessSteps, dependencyReport, relationNF, toFds, fdText,
 } from "./fd.js";
 import { checkNormalization } from "./normalize.js";
+import { decompositionFeedback, headline } from "./decompFeedback.js";
 import { parseSchema } from "./modelCheck.js";
 
 const closureText = (X, F, R) => {
@@ -75,7 +76,7 @@ export function decompositionProperties(item, text) {
   const decomposition = parts.map((p) => p.attrs.filter((a) => has(R, a)));
   const relations = parts.map((p, i) => ({ name: p.name, attrs: decomposition[i], nf: relationNF(decomposition[i], F).nf }));
   const loss = losslessSteps(R, F, decomposition);
-  const name = (idx) => idx.map((i) => parts[i].name).join(" ⋈ ");
+  const name = (idx) => idx.map((i) => parts[i].name).join(" join ");
   const lossText = loss.lossless
     ? loss.byPairs
       ? loss.steps.map((s) => `${name(s.left.names)} och ${name(s.right.names)} delar ${braceText(s.common)}, och ${closureText(s.common, F, R)} täcker ${s.covers === "right" ? name(s.right.names) : name(s.left.names)}.`)
@@ -190,7 +191,19 @@ export function gradeAnswer(item, answer) {
     const nfForCheck = expectedNf === "3NF" ? answer.nf : expectedNf;
     const result = checkNormalization(item, { nf: nfForCheck, text: answer.text || "" });
     const ok = expectedNf !== "3NF" && result.status === "correct";
-    fields.decomposition = { ok, result, properties: decompositionProperties(item, answer.text) };
+    // Återkopplingen i klartext. Säger den "inget att ändra" fast svaret
+    // inte stämmer med facit, läggs facitjämförelsens skäl till som rader.
+    const feedback = decompositionFeedback(item, answer.text);
+    if (!ok && feedback.count === 0 && result.status !== "parse-error") {
+      const extra = [
+        ...(result.relations || []).filter((r) => r.status !== "ok").map((r) => ({ ok: false, text: `${r.answerName || r.name}: ${r.problems.join(" ") || (r.status === "missing" ? "saknas." : "stämmer inte.")}` })),
+        ...(result.extra || []).map((e) => ({ ok: false, text: e.message })),
+      ];
+      feedback.lines.push(...(extra.length ? extra : [{ ok: false, text: "Nedbrytningen stämmer inte med facit." }]));
+      feedback.count = feedback.lines.filter((l) => !l.ok).length;
+      feedback.headline = headline(feedback.count);
+    }
+    fields.decomposition = { ok: ok && feedback.count === 0, result, feedback, properties: decompositionProperties(item, answer.text) };
   }
 
   const required = ["ck", "roles", "nf", ...(fields.motivation ? ["motivation"] : []), ...(fields.decomposition ? ["decomposition"] : [])];

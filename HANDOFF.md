@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 227 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-10-08.
+- **Test:** `npm test` = 246 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-10-08.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -180,8 +180,23 @@ kapitel: allt UI läser `chapter.number`.
   `FdAnswer.jsx` + rättning `lib/fdGrade.js`: CK (mängd av mängder), PA/NP
   per attribut, NF, motivering (rättas på valt beroende + attribut + typ;
   alla korrekta brytande godtas; engelsk mallmening ur dina egna CK,
-  redigerbar), nedbrytning mot facit + informativ lossless/DP/NF per
-  relation. Klar = alla fält rätt. Under rättningsrutan: "Nästa: 10:3 →"
+  redigerbar), nedbrytning mot facit. **Återkopplingen på nedbrytningen
+  (2026-10-08) är klartext** (`lib/decompFeedback.js`), utifrån de tre
+  reglerna Kasper lärt sig: en tabell per pilstart med allt den pekar
+  direkt på; slå ihop tabeller vars nycklar bestämmer varandra; hela
+  kandidatnyckeln i någon tabell, annars nyckeltabell. Rubrik "Rätt" /
+  "Nästan – 1 sak att ändra" / "Fel – N saker att ändra", en rad per
+  relation (matchad mot facit på attributmängd + PK, inte namn; vald
+  facitvariant = den flest relationer stämmer med), sedan det som saknas.
+  Feltyper: kedja kvar, del av nyckeln bestämmer, saknad tabell, saknad
+  nyckeltabell, övernormaliserat (samma nyckel / nycklar som bestämmer
+  varandra), onödig tabell, fel PK, attribut i fel tabell (också när
+  stegets tabell redan finns), tabell som saknar attribut, R redan i 3NF,
+  okänt attribut. Säger återkopplingen "inget att ändra" fast facit inte
+  stämmer läggs facitjämförelsens skäl till som rader (`fdGrade.js`).
+  Lossless, DP, closure och NF per tabell ligger i hopfällda "Visa
+  detaljer" ("join" i stället för ⋈). Ingen text nämner rättningstekniken.
+  Klar = alla fält rätt. Under rättningsrutan: "Nästa: 10:3 →"
   (nästa uppgift i listan, runt om; scrollar upp till uppgiften).
   Öppen flik och Modelleras underflik överlever en omladdning (2026-10-07,
   `sysb23:flik` och `sysb23:modellFlik`; saknar delkursen fliken blir det Hem).
@@ -201,7 +216,7 @@ kapitel: allt UI läser `chapter.number`.
   `FdDefinitions.jsx` i sidokolumnen. Framsteg för
   alla tre: `sysb23:modell:<id>` = "solved", nollställs bara via knapp.
   Tester: `model-check`, `model-figures`, `normalize`, `fd`, `fd-drawing`,
-  `fd-grade`, `statements`.
+  `fd-grade`, `decomp-feedback`, `statements`.
 - **Statistik**, **Schema (Pluggkalender)** och **Hem** som för Strategi.
 
 ## Regler (följ dem)
