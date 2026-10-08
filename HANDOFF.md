@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 246 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-10-08.
+- **Test:** `npm test` = 250 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-10-08.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -192,7 +192,8 @@ kapitel: allt UI läser `chapter.number`.
   nyckeltabell, övernormaliserat (samma nyckel / nycklar som bestämmer
   varandra), onödig tabell, fel PK, attribut i fel tabell (också när
   stegets tabell redan finns), tabell som saknar attribut, R redan i 3NF,
-  okänt attribut. Säger återkopplingen "inget att ändra" fast facit inte
+  okänt attribut, nyckeltabell utan hela nyckeln (12:9, med spurious
+  tuples), överflödig tabell med samma nyckel som en annan (13:9). Säger återkopplingen "inget att ändra" fast facit inte
   stämmer läggs facitjämförelsens skäl till som rader (`fdGrade.js`).
   Lossless, DP, closure och NF per tabell ligger i hopfällda "Visa
   detaljer" ("join" i stället för ⋈). Ingen text nämner rättningstekniken.
@@ -351,17 +352,7 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
 
 ## Frågor till Björn (öppna)
 
-1. **Häftets facit 12:9** (normalisering): facit ger R4(B, D), men
-   A → B, B → C, D → C ger kandidatnyckeln {A, D}; B → D gäller inte, och
-   joinen av R1(A, B) och R4(B, D) över B ger tupler som inte fanns i R.
-   R4(A, D) är nyckelrelationen. Sajten godtar båda tills svaret kommit
-   (`variants` i `normalizeExercises.js`, `KEY_ISSUES` i testet). Samma
-   fråga i förbigående: 11:8 saknar understrykningar i facit (PK härledd
-   {A, B}, C, D). 11:2 är inget tryckfel (B ↔ C ger två giltiga PK-val).
-2. **Häftets facit 13:9:** R(A, B, C, D) med {A, B} → C, {A, B} → D,
-   D → C; facit ger R1(A, B, C), R2(A, B, D), R3(D, C). R1 är överflödig:
-   {A, B} → D och D → C ger redan C, och R1 och R2 har samma nyckel — mot
-   regeln om övernormalisering. Facit står kvar tills Björn svarat.
+Inga öppna frågor just nu.
 
 Avgjort 2026-10-08 (Björn på föreläsningen om fysisk design: surrogatnycklar "finns bara på fysisk nivå"): kapitel 3, kapitel 9, nyckelpunkterna och ordlistan säger att surrogatnycklar hör till fysisk design och att den logiska modellen använder ER-modellens identifierare som kandidatnycklar. Björn om DEFAULT: krävs inte på tentan, felskrivet ger avdrag — tipset står i kapitel 9:s tentaavsnitt.
 
@@ -511,6 +502,17 @@ data" i Statistik rensar allt. Progress är per webbläsare och domän.
   röstväljaren (`ChapterView`, två röster som heter "Alva (svenska
   (Sverige))") — kosmetiskt, beror på webbläsarens röstlista.
 - Skärmdumpar i browserpanelen kan vara eftersläpande/tomma; DOM gäller.
+- Sajtens facit avviker medvetet från övningshäftet i 12:9 och 13:9 –
+  häftet har fel (användarbeslut 2026-10-08). 12:9: häftets R4(B, D)
+  innehåller inte nyckeln {A, D} och är inte lossless; facit har R4(A, D),
+  och R4(B, D) underkänns med förklaring. 13:9: häftets R1(A, B, C) är
+  överflödig ({A, B} → C följer av {A, B} → D och D → C) och har samma
+  nyckel som R2; facit är R1(A, B, D), R2(D, C), och häftets tre tabeller
+  underkänns med förklaring. Testsviten prövar varje nedbrytningsfacit:
+  3NF, lossless, beroendebevarande, ingen överflödig relation, ingen nyckel
+  två gånger, inga nycklar som bestämmer varandra — 12:9 och 13:9 var de
+  enda som föll. 11:8 saknar understrykningar i häftets facit (PK härledd
+  {A, B}, C, D); 11:2 är inget tryckfel (B ↔ C ger två giltiga PK-val).
 - Gamla Fö6 och YouTube-videon "Lossless Join and Dependency Preservation"
   lär ut samma-relation-regeln; nya Fö6 använder implikationsdefinitionen —
   sajten följer nya Fö6.
@@ -734,8 +736,6 @@ avstämda mot transkripten 2026-09-30):
 
 - Användarens granskning av det ogranskade (listan ovan), i första hand
   Öva-frågorna dbq-33…62 och påståendeuppgifterna.
-- Björns svar på de två frågorna; därefter stryk R4(B, D)-varianten i
-  12:9 respektive ta ställning till 13:9.
 - **BPM efter F4 (5 okt) och F5 (12 okt):** skriv om kapitel 4, 7, 8, 10
   och 11; väv in Canvas-quizzarna BPM och BPMN när de kommer (alla
   tentafrågor finns där enligt Weaver); kontrollera 3(a) efter F5. Kasper

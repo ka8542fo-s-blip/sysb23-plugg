@@ -2,7 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { analyze, facitVariants, facitRules, checkNormalization, relationIn3NF } from "../src/lib/normalize.js";
-import { isLossless, isDependencyPreserving, attrsOf, parseFd } from "../src/lib/fd.js";
+import { isLossless, isDependencyPreserving, attrsOf, parseFd, sameSet, subset, closure } from "../src/lib/fd.js";
 import { parseSchema } from "../src/lib/modelCheck.js";
 import { normalizeExercises } from "../src/data/databaser/normalizeExercises.js";
 
@@ -10,8 +10,6 @@ const byId = Object.fromEntries(normalizeExercises.map((e) => [e.id, e]));
 const rel = (result, name) => result.relations.find((r) => r.name.toLowerCase() === name.toLowerCase());
 const check = (id, nf, text) => checkNormalization(byId[id], { nf, text });
 
-// Häftets 12:9 har R4(B, D); det är inte lossless (se normalizeExercises.js).
-const KEY_ISSUES = { "norm-12-09": 0 }; // id -> variantindex som inte är lossless
 
 test("64 poster: 16 + 12 + 14 + 12 + 10 egna, unika id", () => {
   assert.equal(normalizeExercises.length, 64);
@@ -43,8 +41,7 @@ test("varje facitvariant: alla relationer i 3NF, lossless join, beroendebevarand
       assert.ok(all.every((a) => parts.flat().includes(a)), `${item.id}: attribut tappas`);
       for (const r of schema.relations) assert.ok(relationIn3NF(r.attrs, fds), `${item.id} variant ${i}: ${r.name} är inte i 3NF`);
       assert.ok(isDependencyPreserving(all, fds, parts), `${item.id} variant ${i}: beroende tappas`);
-      const expectLossless = KEY_ISSUES[item.id] !== i;
-      assert.equal(isLossless(all, fds, parts), expectLossless, `${item.id} variant ${i}: lossless ${expectLossless ? "saknas" : "borde saknas"}`);
+      assert.ok(isLossless(all, fds, parts), `${item.id} variant ${i}: inte lossless`);
     });
   }
 });
@@ -156,14 +153,41 @@ test("regeltaggar: partiellt, transitivt, nyckelrelation (12:9)", () => {
   assert.equal(rules.r2.rule, "Transitivt beroende");
   assert.equal(rules.r3.rule, "Partiellt beroende");
   assert.equal(rules.r4.rule, "Nyckelrelation");
-  // Både häftets R4(B, D) och härledda R4(A, D) godtas.
+  // Nyckeltabellen är R4(A, D); övningshäftets R4(B, D) godtas inte.
   const base = `R1(A, B)\nPK = {A}\n\nR2(B, C)\nPK = {B}\n\nR3(D, C)\nPK = {D}\n\n`;
   assert.equal(check("norm-12-09", "1NF", base + `R4(A, D)\nPK = {A, D}`).status, "correct");
-  assert.equal(check("norm-12-09", "1NF", base + `R4(B, D)\nPK = {B, D}`).status, "correct");
+  assert.notEqual(check("norm-12-09", "1NF", base + `R4(B, D)\nPK = {B, D}`).status, "correct");
 });
 
 test("tolkningsfel går igenom oförändrat", () => {
   const r = check("norm-11-01", "2NF", `R1(A, B)\nPK = {X}`);
   assert.equal(r.status, "parse-error");
   assert.match(r.errors[0].message, /^Rad 2: X i PK finns inte/);
+});
+
+test("varje nedbrytningsfacit: ingen överflödig relation, ingen nyckel två gånger, inga nycklar som bestämmer varandra", () => {
+  for (const item of normalizeExercises) {
+    if (!item.facit) continue;
+    const R = attrsOf(item.attrs);
+    for (const rels of [item.facit, ...(item.variants || [])]) {
+      const parts = rels.map((r) => attrsOf(r.attrs));
+      const pks = rels.map((r) => attrsOf(r.pk[0]));
+      parts.forEach((p, i) => {
+        const rest = parts.filter((_, k) => k !== i);
+        const droppable = R.every((a) => rest.flat().includes(a)) && isLossless(R, item.fds, rest) && isDependencyPreserving(R, item.fds, rest);
+        assert.ok(!droppable, `${item.id}: ${rels[i].name} är överflödig`);
+      });
+      pks.forEach((p, i) => pks.forEach((q, j) => {
+        if (i >= j) return;
+        assert.ok(!sameSet(p, q), `${item.id}: ${rels[i].name} och ${rels[j].name} har samma nyckel`);
+        const mutual = subset(q, closure(p, item.fds)) && subset(p, closure(q, item.fds));
+        assert.ok(!mutual, `${item.id}: ${rels[i].name} och ${rels[j].name} har nycklar som bestämmer varandra`);
+      }));
+    }
+  }
+});
+
+test("13:9: övningshäftets tre tabeller godtas inte, sajtens två gör det", () => {
+  assert.equal(check("norm-13-09", "2NF", "R1(A, B, D)\nPK = {A, B}\n\nR2(D, C)\nPK = {D}").status, "correct");
+  assert.notEqual(check("norm-13-09", "2NF", "R1(A, B, C)\nPK = {A, B}\n\nR2(A, B, D)\nPK = {A, B}\n\nR3(D, C)\nPK = {D}").status, "correct");
 });

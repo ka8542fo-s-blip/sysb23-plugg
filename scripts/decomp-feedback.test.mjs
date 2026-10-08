@@ -158,3 +158,22 @@ test("ingen text nämner rättningstekniken eller ⋈", () => {
   const joined = all.join("\n");
   assert.doesNotMatch(joined, /⋈|prövad med|sker mot facit|motorn/);
 });
+
+test("12:9: övningshäftets R4(B, D) underkänns med förklaring", () => {
+  const text = "R1(A, B)\nPK = {A}\n\nR2(B, C)\nPK = {B}\n\nR3(D, C)\nPK = {D}\n\nR4(B, D)\nPK = {B, D}";
+  const r = fb("norm-12-09", text);
+  assert.deepEqual(texts(r).slice(-1), ["✗ Nyckeltabellen ska innehålla hela nyckeln {A, D}. (B, D) kopplar inte ihop A och D – en join via B ger rader som aldrig fanns (spurious tuples)."]);
+  assert.equal(r.count, 1);
+  const d = gradeAnswer(byId["norm-12-09"], { cks: [["A", "D"]], roles: {}, nf: "1NF", motivation: {}, text }).fields.decomposition;
+  assert.equal(d.ok, false);
+});
+
+test("13:9: övningshäftets tre tabeller underkänns med förklaring", () => {
+  const text = "R1(A, B, C)\nPK = {A, B}\n\nR2(A, B, D)\nPK = {A, B}\n\nR3(D, C)\nPK = {D}";
+  const r = fb("norm-13-09", text);
+  assert.equal(texts(r)[0], "✗ R1(A, B, C) behövs inte – C nås redan via {A, B} → D → C. Två tabeller med samma nyckel {A, B} är övernormalisering.");
+  assert.equal(r.count, 1);
+  const d = gradeAnswer(byId["norm-13-09"], { cks: [["A", "B"]], roles: {}, nf: "2NF", motivation: {}, text }).fields.decomposition;
+  assert.equal(d.ok, false);
+  assert.equal(fb("norm-13-09", "R1(A, B, D)\nPK = {A, B}\n\nR2(D, C)\nPK = {D}").headline, "Rätt");
+});

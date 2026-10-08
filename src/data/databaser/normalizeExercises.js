@@ -11,11 +11,17 @@
 // Normalformen för uppgift 11 saknas i häftets facit och är härledd med
 // samma definitioner (testsviten kontrollerar den mot motorn).
 //
-// Avvikelser från häftet, rapporterade: 11:8 saknar understrykningar i
-// facit (PK härledd: {A, B}, C, D). 12:9 har R4(B, D) i facit, men B → D
-// gäller inte och joinen av R1 och R4 över B ger tupler som inte fanns i R — R4(A, D) är den
-// nyckelrelation som ger lossless join. Häftets variant står kvar som
-// facit, den härledda som alternativ, tills Björn svarat.
+// Sajtens facit ska vara korrekt, även där häftet har fel (användarbeslut
+// 2026-10-08). Varje facit prövas i testsviten: 3NF, lossless join,
+// beroendebevarande, ingen överflödig relation, ingen nyckel två gånger.
+// Medvetna avvikelser från häftet:
+// - 12:9: häftet har R4(B, D). B → D gäller inte, (B, D) innehåller inte
+//   nyckeln {A, D}, och joinen via B ger tupler som inte fanns i R. Sajtens
+//   facit har nyckeltabellen R4(A, D); häftets variant godtas inte.
+// - 13:9: häftet har R1(A, B, C), R2(A, B, D), R3(D, C). R1 är överflödig —
+//   {A, B} → C följer av {A, B} → D och D → C — och har samma nyckel som R2.
+//   Sajtens facit: R1(A, B, D), R2(D, C).
+// 11:8 saknar understrykningar i häftets facit (PK härledd: {A, B}, C, D).
 //
 // Uppgift 10 (`nfOnly`) frågar bara efter högsta normalform; relationerna
 // är lästa ur häftet och kontrollerade mot sidan, normalformen är häftets
@@ -59,7 +65,7 @@ export const normalizeExercises = [
   { id: "norm-11-07", exercise: 11, number: 7, attrs: "A, B, C, D, E, F", fds: ["{A, B} → C", "C → {A, B, D}", "D → {E, F}"], nf: "2NF",
     facit: [{ name: "R1", attrs: "A, B, C, D", pk: ["A, B", "C"] }, R("R2", "D, E, F", "D")] },
   { id: "norm-11-08", exercise: 11, number: 8, attrs: "A, B, C, D, E, F", fds: ["{A, B} → C", "C → D", "D → {E, F}"], nf: "2NF",
-    keyNote: "Häftets facit saknar understrykningar här; primärnycklarna är härledda.",
+    keyNote: "Övningshäftets facit anger inga primärnycklar här; de är härledda.",
     facit: [R("R1", "A, B, C", "A, B"), R("R2", "C, D", "C"), R("R3", "D, E, F", "D")] },
   { id: "norm-11-09", exercise: 11, number: 9, attrs: "A, B, C", fds: ["A → B", "B → C", "C → B"], nf: "2NF",
     facit: [R("R1", "A, B", "A"), { name: "R2", attrs: "C, B", pk: ["C", "B"] }] },
@@ -88,9 +94,8 @@ export const normalizeExercises = [
   { id: "norm-12-08", exercise: 12, number: 8, attrs: "A, B, C, D, E", fds: ["A → B", "B → {C, D}", "D → E"], nf: "2NF",
     facit: [R("R1", "A, B", "A"), R("R2", "B, C, D", "B"), R("R3", "D, E", "D")] },
   { id: "norm-12-09", exercise: 12, number: 9, attrs: "A, B, C, D", fds: ["A → B", "B → C", "D → C"], nf: "1NF",
-    keyNote: "Häftets facit har R4(B, D); R4(A, D) är den nyckelrelation som ger lossless join. Båda godtas tills facit är bekräftat.",
-    facit: [R("R1", "A, B", "A"), R("R2", "B, C", "B"), R("R3", "D, C", "D"), R("R4", "B, D", "B, D")],
-    variants: [[R("R1", "A, B", "A"), R("R2", "B, C", "B"), R("R3", "D, C", "D"), R("R4", "A, D", "A, D")]] },
+    keyNote: "Övningshäftet har R4(B, D) här. Den innehåller inte nyckeln {A, D} och ger inte lossless join — nyckeltabellen ska vara R4(A, D).",
+    facit: [R("R1", "A, B", "A"), R("R2", "B, C", "B"), R("R3", "D, C", "D"), R("R4", "A, D", "A, D")] },
   { id: "norm-12-10", exercise: 12, number: 10, attrs: "A, B, C, D, E, F", fds: ["{A, B} → C", "D → {E, F}"], nf: "1NF",
     facit: [R("R1", "A, B, C", "A, B"), R("R2", "D, E, F", "D"), R("R3", "A, B, D", "A, B, D")] },
   { id: "norm-12-11", exercise: 12, number: 11, attrs: "A, B, C, D, E, F", fds: ["{A, B} → C", "C → A", "C → B", "C → D", "D → {C, E}", "E → {D, F}"], nf: "3NF", facit: null },
@@ -118,7 +123,8 @@ export const normalizeExercises = [
   { id: "norm-13-08", exercise: 13, number: 8, attrs: "A, B, C, D, E, F", fds: ["{A, B} → C", "C → D", "D → {C, E}", "E → {D, F}"], nf: "2NF",
     facit: [R("R1", "A, B, C", "A, B"), R("R2", "C, D, E, F", "C", ["D", "E"])] },
   { id: "norm-13-09", exercise: 13, number: 9, attrs: "A, B, C, D", fds: ["{A, B} → C", "{A, B} → D", "D → C"], nf: "2NF",
-    facit: [R("R1", "A, B, C", "A, B"), R("R2", "A, B, D", "A, B"), R("R3", "D, C", "D")] },
+    keyNote: "Övningshäftet har också en tabell (A, B, C). Den behövs inte: C nås redan via {A, B} → D → C.",
+    facit: [R("R1", "A, B, D", "A, B"), R("R2", "D, C", "D")] },
   { id: "norm-13-10", exercise: 13, number: 10, attrs: "A, B, C, D, E, F", fds: ["{A, B} → C", "C → D", "A → E", "B → F"], nf: "1NF",
     facit: [R("R1", "A, B, C", "A, B"), R("R2", "C, D", "C"), R("R3", "A, E", "A"), R("R4", "B, F", "B")] },
   { id: "norm-13-11", exercise: 13, number: 11, attrs: "A, B, C, D, E, F", fds: ["{A, B} → C", "C → D", "D → {C, F}", "F → E"], nf: "2NF",

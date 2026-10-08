@@ -6,7 +6,7 @@
 // Kaspers relationer jämförs med facit på innehåll (attributmängd och
 // primärnyckel), inte på namn. Varje rad säger vad som stämmer eller vad som
 // ska ändras och varför — utan closure och utan tekniska termer.
-import { attrsOf, setText, braceText, closure, has, subset, sameSet, highestNF, projectFds, allCandidateKeys, toFds } from "./fd.js";
+import { attrsOf, setText, braceText, closure, has, subset, sameSet, highestNF, projectFds, allCandidateKeys, toFds, preservedClosure } from "./fd.js";
 import { parseSchema } from "./modelCheck.js";
 
 const list = (xs) => (xs.length <= 1 ? xs.join("") : `${xs.slice(0, -1).join(", ")} och ${xs[xs.length - 1]}`);
@@ -93,6 +93,7 @@ export function decompositionFeedback(item, text) {
   const matched = new Map(); // facitindex → användarindex (exakt träff)
   const groups = new Map(); // facitindex → användarindex som ligger inom tabellen
   const ownTable = []; // determinanter som en rad redan sagt ska ha en egen tabell
+  let keyTableExplained = false; // en rad har redan förklarat nyckeltabellen
 
   // Exakta träffar (samma attribut) först; en andra likadan tabell är onödig.
   user.forEach((u, i) => {
@@ -120,6 +121,26 @@ export function decompositionFeedback(item, text) {
       .sort((a, b) => (b.g.pks.some((p) => sameSet(p, u.pk)) - a.g.pks.some((p) => sameSet(p, u.pk))) || a.g.attrs.length - b.g.attrs.length)[0];
     if (inside) {
       groups.set(inside.gi, [...(groups.get(inside.gi) || []), i]);
+      return;
+    }
+    // En tabell med bara nyckel som ändå inte innehåller hela kandidatnyckeln.
+    if (u.pk.length && sameSet(u.pk, u.attrs) && !cks.some((k) => subset(k, u.attrs))) {
+      const key = cks.find((k) => k.some((a) => has(u.attrs, a))) || cks[0];
+      const via = u.attrs.filter((a) => !has(key, a));
+      keyTableExplained = true;
+      lines[i] = { ok: false, text: `Nyckeltabellen ska innehålla hela nyckeln ${braceText(key)}. (${u.attrs.join(", ")}) kopplar inte ihop ${list(key)}${via.length ? ` – en join via ${list(via)} ger rader som aldrig fanns (spurious tuples)` : ""}.` };
+      return;
+    }
+    // Samma nyckel som en annan tabell, och allt i den nås redan via de andra.
+    const others = user.filter((_, k) => k !== i);
+    const twin = others.find((o) => o.pk.length && sameSet(o.pk, u.pk));
+    if (twin && subset(u.attrs, preservedClosure(u.pk, F, others.map((o) => o.attrs)))) {
+      const rest = u.attrs.filter((a) => !has(u.pk, a));
+      const paths = rest
+        .map((c) => others.find((o) => o !== twin && has(o.attrs, c) && !has(o.pk, c) && subset(o.pk, twin.attrs)))
+        .map((w, k) => (w ? `${setText(u.pk)} → ${setText(w.pk)} → ${rest[k]}` : null));
+      const reached = paths.every(Boolean) ? `nås redan via ${paths.join(" och ")}` : "nås redan via de andra tabellerna";
+      lines[i] = { ok: false, text: `${head(u)} behövs inte – ${list(rest)} ${reached}. Två tabeller med samma nyckel ${braceText(u.pk)} är övernormalisering.` };
       return;
     }
     // Attribut som nyckeln inte bestämmer alls hör hemma någon annanstans.
@@ -201,7 +222,7 @@ export function decompositionFeedback(item, text) {
     const pk = g.pks[0];
     const rest = g.attrs.filter((a) => !has(pk, a));
     if (!rest.length) {
-      if (!hasFullKey) missing.push({ ok: false, text: missingText(g) });
+      if (!hasFullKey && !keyTableExplained) missing.push({ ok: false, text: missingText(g) });
       return;
     }
     if (ownTable.some((d) => g.pks.some((p) => sameSet(p, d)))) return;
