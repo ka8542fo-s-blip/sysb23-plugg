@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 203 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-10-03.
+- **Test:** `npm test` = 227 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-10-08.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -54,18 +54,21 @@ kapitel: allt UI läser `chapter.number`.
 
 **Databaser** (`views: las, sql, modell, ova, statistik`; Prov medvetet borta):
 
-- **Läs:** 10 kapitel i `data/databaser/reading.js` — id/nummer: kap1=1
+- **Läs:** 11 kapitel i `data/databaser/reading.js` — id/nummer: kap1=1
   (grunder, med "Så ser tentan ut"), kap2=2, kap3=3, kap4=4, kap5=5,
   svaga=6 (svaga entiteter, Crow's Foot, "Att läsa påståenden ur ett
   diagram" med tre genomgångar), kap6=7 (transformation, sex regler),
   kap7=8 (normalformer med tentans två former), kap8=9 (fysisk design med
   tentans instruktioner för uppgift 2), kap9=10 (SQL: att resonera fram en
-  fråga, byggt baklänges från uppgift 4). 12 ämnen i `topics.js`, 109
-  ordlistetermer, 14 SVG-figurer (`components/knowledge/diagrams/`,
+  fråga, byggt baklänges från uppgift 4), kap10=11 (applikationsutveckling:
+  Java och JDBC, 2026-10-08, ur Fö8–9 efter Björns besked att HT26-tentan
+  har en Java-fråga; ämnet `applikation` med `examWeight: "låg"`). 13 ämnen
+  i `topics.js`, 125 ordlistetermer, 14 SVG-figurer (`components/knowledge/diagrams/`,
   `[[diagram:namn]]` som ensamt stycke; namnen i `ids.js` är ett API mot
   reading.js, låst av `scripts/diagram-ids.test.mjs`).
-- **Öva:** 65 frågor i `questions.js`, fördelade 4/4/5/7/7/7/5/10/7/9 på
-  kapitel 1–10 (omviktat mot tentan 2026-09-07), former: vanliga, med
+- **Öva:** 73 frågor i `questions.js`, fördelade 4/4/5/7/7/7/5/10/7/9/8 på
+  kapitel 1–11 (omviktat mot tentan 2026-09-07; kapitel 11:s dbq-63…70
+  tillagda 2026-10-08), former: vanliga, med
   `diagram` (ett av sajtens diagram som underlag) och med `context`
   (förformaterat block). Två frågor parkerade i `questions-pending.js`
   (db1-12, db1-14 — Fö1-mekanik utanför kapitlen). Balanstestet
@@ -278,17 +281,26 @@ ger avdrag, och ett 3g där rätt svar är att inte göra något. 4) En
 SQL-fråga, 30 p: Student/Course/HasStudied, join + aggregat + GROUP BY/
 HAVING, "X men inte Y", skalär underfråga, och ordinarie tentans jämförelse
 mot ett aggregat ur en underfråga ("högre än snittbetyget på kurs C1").
-Inte förekommit: application development (listas i kursintroduktionen),
-logisk modell som eget svar, relationsalgebra, Crow's Foot som produktion.
+Inte förekommit: application development (listas i kursintroduktionen) —
+men Björn har aviserat en Java-fråga för HT26, form och poäng okända,
+uppskattat ~10 p (kapitel 1 och 11 säger det). Inte heller: logisk modell som eget svar, relationsalgebra, Crow's Foot som produktion.
 Kap 1 har "Så ser tentan ut" med gränserna: 3a–e svara alltid; uppgift 1
 markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
 
 ## Ogranskat (mot kursmaterialet)
 
-- **Öva:** 43 av 65 frågor bär `reviewed: false` — dbq-01…12 (kapitel
-  1–3, skrivna mot kapiteltexten 2026-09-05) och dbq-33…62 (de 30 nya från
+- **Öva:** 51 av 73 frågor bär `reviewed: false` — dbq-01…12 (kapitel
+  1–3, skrivna mot kapiteltexten 2026-09-05), dbq-63…70 (kapitel 11,
+  2026-10-08) och dbq-33…62 (de 30 nya från
   omviktningen 2026-09-07, inklusive diagram- och context-frågorna och de
   fyra SQL-frågorna db1-11/13/15/16). Flaggan syns inte i UI.
+- **Kapitel 11 (applikationsutveckling, 2026-10-08):** skrivet mot Fö8–9,
+  inte granskat av användaren. Kodexemplen följer föreläsningens men är
+  förenklade: anslutningssträngen har en dokumentations-IP (192.0.2.10) och
+  `password=...` i stället för deckets uppgifter, och `save()` använder
+  `getEmployeeNumber()` genomgående (decket blandar `getEmpNo()` och
+  `getEmployeeNumber()`). Kapitel 1:s "cirka tio poäng" är en uppskattning,
+  inget besked.
 - **SQL-verkstaden:** sql-54…62 (tentaspåret), facit verifierade i motorn
   men uppgiftstexterna ogranskade. sql-62 är den nya med aggregat som
   jämförelsevärde (resultat B1 med 3 läsare, B2 med 2).
@@ -331,16 +343,12 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
    (`variants` i `normalizeExercises.js`, `KEY_ISSUES` i testet). Samma
    fråga i förbigående: 11:8 saknar understrykningar i facit (PK härledd
    {A, B}, C, D). 11:2 är inget tryckfel (B ↔ C ger två giltiga PK-val).
-2. **Surrogatnycklarnas plats:** kursintroduktionen lägger dem i logisk
-   design, föreläsningen om logisk design nämner dem inte, häftet och
-   kapitel 9 lägger dem i fysisk design, fråga db1-07 följer
-   kursintroduktionen. Kapitel 3 och 7 säger "kursen har placerat dem
-   olika, på tentan kommer de i uppgift 2". Rätta inte förrän Björn svarat.
-
-3. **Häftets facit 13:9:** R(A, B, C, D) med {A, B} → C, {A, B} → D,
+2. **Häftets facit 13:9:** R(A, B, C, D) med {A, B} → C, {A, B} → D,
    D → C; facit ger R1(A, B, C), R2(A, B, D), R3(D, C). R1 är överflödig:
    {A, B} → D och D → C ger redan C, och R1 och R2 har samma nyckel — mot
    regeln om övernormalisering. Facit står kvar tills Björn svarat.
+
+Avgjort 2026-10-08 (Björn på föreläsningen om fysisk design: surrogatnycklar "finns bara på fysisk nivå"): kapitel 3, kapitel 9, nyckelpunkterna och ordlistan säger att surrogatnycklar hör till fysisk design och att den logiska modellen använder ER-modellens identifierare som kandidatnycklar. Björn om DEFAULT: krävs inte på tentan, felskrivet ger avdrag — tipset står i kapitel 9:s tentaavsnitt.
 
 Känt men inte en fråga: Fö5:s sammanfattning av normaliseringssteget
 ("every non-trivial determinant is a key") är BCNF-liknande; kursen
@@ -383,8 +391,6 @@ kräver surrogatnycklar och inte namn — kapitel 9 följer tentan.
   stället (Läsa diagram), eftersom uppgiften rättas som helhet med poäng
   och kräver ett helt diagram — det är en verkstadsform, inte en
   kvizzfråga. Öva har kvar diagramfrågor i flervalsform.
-- **Kapitel om application development:** har inte förekommit på någon
-  tenta.
 - **Björns bilder i repot:** alla diagram är ritade om med sajtens
   primitiver; kursmaterialet publiceras aldrig.
 - **Synk av progress mellan enheter:** ingen backend, medvetet.
@@ -713,9 +719,8 @@ avstämda mot transkripten 2026-09-30):
 
 - Användarens granskning av det ogranskade (listan ovan), i första hand
   Öva-frågorna dbq-33…62 och påståendeuppgifterna.
-- Björns svar på de tre frågorna; därefter stryk R4(B, D)-varianten i
-  12:9, rätta surrogatnyckelnoteringen i kapitel 3 och 7 respektive
-  ta ställning till 13:9.
+- Björns svar på de två frågorna; därefter stryk R4(B, D)-varianten i
+  12:9 respektive ta ställning till 13:9.
 - **BPM efter F4 (5 okt) och F5 (12 okt):** skriv om kapitel 4, 7, 8, 10
   och 11; väv in Canvas-quizzarna BPM och BPMN när de kommer (alla
   tentafrågor finns där enligt Weaver); kontrollera 3(a) efter F5. Kasper

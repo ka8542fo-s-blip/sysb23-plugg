@@ -8,7 +8,7 @@
 const reading = {
   title: "Databaser",
   subtitle: "Läskompendium",
-  intro: "Delkursen handlar om hur man kommer från en verksamhets behov till en fungerande databas, och tentan prövar fyra saker: ER-modellering, transformation från konceptuell till fysisk modell, normalisering och SQL. Kompendiet följer den designprocessen i ordning — konceptuell design, logisk design, fysisk design — med relationsmodellen och nycklarna som grund. Läs kapitel 1 till 3 innan du börjar med SQL-verkstaden; resten av kapitlen kan läsas i vilken ordning som helst, men de bygger på varandra. Räkna med ungefär {lästid}. Fackterminologin ges på både svenska och engelska, eftersom tentan är på engelska.",
+  intro: "Delkursen handlar om hur man kommer från en verksamhets behov till en fungerande databas, och tentan prövar fyra saker: ER-modellering, transformation från konceptuell till fysisk modell, normalisering och SQL — och för HT26 dessutom en aviserad fråga om Java, som kapitel 11 täcker. Kompendiet följer den designprocessen i ordning — konceptuell design, logisk design, fysisk design — med relationsmodellen och nycklarna som grund. Läs kapitel 1 till 3 innan du börjar med SQL-verkstaden; resten av kapitlen kan läsas i vilken ordning som helst, men de bygger på varandra. Räkna med ungefär {lästid}. Fackterminologin ges på både svenska och engelska, eftersom tentan är på engelska.",
   chapters: [
 
   {
@@ -74,7 +74,9 @@ De två HT25-tentorna (omtentan 24 oktober 2025 och uppsamlingen 25 maj 2026) ha
 
 **Poängreglernas konsekvens — två gränser.** Uppgift 1: härled varje påstående ur notationen först. För det du inte kan härleda gäller brytpunkten 3/8: markera påståendet om du är mer än ungefär 40 procent säker på att det är sant (väntevärdet 0,4 · 5 − 0,6 · 3 är precis noll), annars lämna det omarkerat — ett omarkerat sant påstående kostar inget. Uppgift 3a–3e: svara alltid, lämna aldrig blankt. Med två alternativ och +2/−1 är även en ren gissning värd +0,5 poäng i snitt, och med beroendena framför dig behöver du sällan gissa. Uppgift 3f–3g: dela inte upp mer än definitionerna kräver — 3NF är målet, inte så många relationer som möjligt.
 
-**Det som inte har förekommit:** den logiska modellen som eget svar, relationsalgebra och Crow's Foot som produktionsnotation — Chen är det man ritar och läser. Kursintroduktionen listar *application development* som ett av tentans fem områden, men det har inte funnits på någon av tentorna.
+**Det som inte har förekommit:** den logiska modellen som eget svar, relationsalgebra och Crow's Foot som produktionsnotation — Chen är det man ritar och läser.
+
+**Nytt för HT26: en fråga om Java.** Föreläsaren har aviserat att tentan har en fråga som har med Java att göra — applikationsutveckling, som kursintroduktionen listar som ett av tentans områden men som inte har funnits på någon av HT25-tentorna. **Formen och poängen är inte kända.** En rimlig uppskattning är en mindre del av tentan, kring tio av 100 poäng, och kodläsning snarare än syntax utantill, eftersom slides är tillåtna. Kapitel 11 går igenom området och slutar med de troliga formerna.
 `
   },
 
@@ -233,9 +235,9 @@ Den notationen står i hjälpmedlen och är den tydligaste när en relation har 
 
 ## Naturliga och surrogatnycklar
 
-En **naturlig nyckel** är ett attribut som har betydelse i verksamheten: personnummer, anställningsnummer, ISBN. En **surrogatnyckel** är ett artificiellt värde som databasen genererar, typiskt ett löpnummer utan innebörd. Skälen att införa en är nyckelstabilitet (värdet ändras aldrig) och prestanda (effektivare joins och index); priset är att raden inte går att identifiera meningsfullt utan uppslag.
+En **naturlig nyckel** (business key, domain key) är ett attribut som har betydelse i verksamheten: personnummer, anställningsnummer, ISBN. En **surrogatnyckel** (synthetic key, pseudokey, factless key, technical key) är ett artificiellt värde som databasen genererar, typiskt ett löpnummer utan innebörd. Skälen att införa en är nyckelstabilitet (värdet ändras aldrig) och prestanda (effektivare joins och index); priset är att raden inte går att identifiera meningsfullt utan uppslag.
 
-Kursen har placerat surrogatnycklarna olika. Föreläsningen om logisk design nämner dem inte alls: den logiska modellen använder ER-modellens (entity–relationship) identifierare som kandidatnycklar rakt av, för att bevara modellens semantik. Kursintroduktionen lägger dem i logisk design. Övningshäftet och kapitel 9 lägger dem i fysisk design. **På tentan avgörs frågan av uppgift 2:** "tabeller som motsvarar vanliga och svaga entiteter ska använda automatiskt inkrementerande surrogatnycklar." De hör alltså till DDL-steget, och i uppgift 3 stryker du under de naturliga nycklarna.
+Surrogatnycklar hör till **fysisk design**. Den logiska modellen använder ER-modellens (entity–relationship) identifierare som kandidatnycklar rakt av, för att bevara modellens semantik; surrogatnyckeln läggs till först när modellen blir \`CREATE TABLE\`-kod. **På tentan dyker de upp i uppgift 2**, på tabeller för vanliga och svaga entiteter men aldrig på kopplingstabeller: "tabeller som motsvarar vanliga och svaga entiteter ska använda automatiskt inkrementerande surrogatnycklar." I uppgift 3, som är logisk design, stryker du under de naturliga nycklarna.
 
 Mönstret att kunna är kursens \`hospital-ddl.sql\`: \`EmployeeID\` (surrogat, primärnyckel) och \`EmpNo\` (naturlig, \`UNIQUE\`). Surrogatnyckeln har lagts till, den naturliga nyckeln har bevarats — tas den bort förloras affärsregeln om unikhet. Ser du det mönstret i en tentauppgift vet du vilket designsteg du befinner dig i.
 `
@@ -1183,7 +1185,7 @@ Namnge dem alltid. Kursens kodstandard föreskriver prefixen \`PK_\`, \`FK_\`, \
 
 ## Surrogatnycklar
 
-Kapitel 3 beskrev hur kursen placerar surrogatnycklarna olika. Här, i DDL-steget, är de i alla fall — och föreläsningens linje är tydlig: från och med nu använder alla tabeller surrogatnyckel som primärnyckel, medan de naturliga nycklarna står kvar som UNIQUE.
+Surrogatnycklarna hör hemma här, i den fysiska designen — den logiska modellen bär ER-modellens identifierare som kandidatnycklar, och surrogatnyckeln läggs till i DDL-steget (kapitel 3). Föreläsningens linje är tydlig: från och med nu använder tabellerna för vanliga och svaga entiteter surrogatnyckel som primärnyckel, medan de naturliga nycklarna står kvar som UNIQUE. Kopplingstabeller får ingen, se nedan.
 
 En **surrogatnyckel** är ett artificiellt, databasgenererat värde utan affärsbetydelse. I SQL Server skapas den med \`IDENTITY(1,1)\`.
 
@@ -1277,6 +1279,8 @@ Uppgift 2 ger ett ER-diagram och ber om DDL-kod för hela modellen med alla cons
 där det första talet är startvärdet (seed) och det andra steget (increment): 1, 2, 3 och så vidare, genererat av databasen. Surrogatkolumnen heter tabellnamnet plus \`ID\`. Kopplingstabeller och tabeller för flervärdesattribut får **ingen** egen surrogatnyckel — deras primärnyckel är de främmande nycklarna, som nu pekar på de refererade tabellernas surrogatnycklar. Föreläsningen ställer frågan själv: varför är EmployeeID i Work inte IDENTITY? Därför att den är en referens, inte en identitet.
 
 **Koden ska vara tydligt formaterad och indenterad.** En tabell per \`CREATE TABLE\`, en kolumn per rad, constraints sist, nyckelord med versaler.
+
+**Lägg inte till constraints som uppgiften inte ber om.** \`DEFAULT\` krävs inte på tentan, och en felskriven extra constraint ger avdrag i stället för poäng. Skriv det diagrammet säger — nycklar, referenser, \`NOT NULL\` och \`UNIQUE\` — och inget mer.
 
 ### Det som ger poängen
 
@@ -1554,6 +1558,242 @@ Läs igenom: tre kolumner, en rad per låntagare, åldersvillkoret filtrerar rad
 
 Verkstaden under SQL kör en riktig databas i webbläsaren, men motorn är SQLite och det du skriver översätts från kursens T-SQL. Tre skillnader som märks just i tentans slags frågor: AVG över heltal ger decimaler i SQLite men heltal i SQL Server; \`TOP n\` blir \`LIMIT n\`; och textsammanslagning med \`+\` blir \`||\`. Allt annat i kapitlet — join, GROUP BY, HAVING, NOT IN, NOT EXISTS, EXCEPT och skalära underfrågor — beter sig likadant. Nivå 4 till 7 i verkstaden tränar byggstenarna en i taget; tentaformens sammansatta frågor får en egen nivå.
 `
+  },
+
+  {
+    id: "kap10",
+    number: 11,
+    title: "Applikationsutveckling: Java och JDBC",
+    readingMinutes: 16,
+    lead: "Hur en Java-applikation pratar med SQL Server: JDBC-kedjan från anslutning till ResultSet, platshållare, felkoder och de fyra lagren — med föreläsningens Employee-app rad för rad, och vad som kan komma på tentan.",
+    sources: ["Föreläsning 8–9 (Database Client Application Development, HT26)", "Föreläsningsanteckningar HT26 (aviserad Java-fråga, surrogatnycklar på fysisk nivå)"],
+    body: `
+Hittills har databasen nåtts direkt, med SQL i ett frågefönster. I verkligheten klickar användaren i en applikation, och applikationen skickar SQL. Det här kapitlet handlar om den länken — hur ett Java-program ansluter till SQL Server, skickar frågor, läser svaren och hanterar fel — och om hur koden delas upp så att databaslogiken inte sprids över hela programmet.
+
+Kapitlet följer föreläsningens exempel hela vägen: tabellerna Employee, Department och Work, klassen EmployeeDao och skärmen EmployeesViewController. Tabellerna har samma form som i kapitel 9:
+
+    CREATE TABLE Employee (
+        EmployeeID  INTEGER IDENTITY(1,1),   -- surrogatnyckel
+        EmpNo       VARCHAR(10) NOT NULL,
+        EmpName     VARCHAR(50),
+        EmpSalary   DECIMAL(19,2),
+        CONSTRAINT PK_Employee_EmployeeID PRIMARY KEY (EmployeeID),
+        CONSTRAINT UQ_Employee_EmpNo UNIQUE (EmpNo)
+    );
+
+Department är byggd likadant med \`UNIQUE\` på DeptName, och Work är kopplingstabellen med (EmployeeID, DepartmentID) som primärnyckel.
+
+## Klient, server och drivrutin
+
+Databasen ligger på en **server**, i kursen SQL Server på en Windows-maskin i molnet. Applikationen är en **klient** som körs på användarens dator och anropar servern över nätet. Mellan dem sitter en **JDBC driver**.
+
+En drivrutin gör två saker. Den ger applikationen en fast uppsättning kommandon, ett **API** (Application Programming Interface), och den översätter anropen till det format målsystemet förstår. Det är samma idé som en skrivardrivrutin: programmet säger "skriv ut", drivrutinen vet hur just den skrivaren vill ha det. **JDBC** (Java Database Connectivity) är API:t du programmerar mot, och SQL Server-drivrutinen gör om dina Java-anrop till något SQL Server förstår.
+
+Drivrutinen är en fil som laddas ned; i kursens projekt sköter Maven det, genom att beroendet skrivs in i projektfilen pom.xml.
+
+## JDBC-kedjan
+
+Allt databasarbete i Java följer samma kedja av klasser ur paketet \`java.sql\`:
+
+1. **DriverManager** öppnar en anslutning utifrån en anslutningssträng och returnerar ett **Connection**-objekt.
+2. **Connection** skapar ett **PreparedStatement** med SQL-frågan: \`prepareStatement(query)\`.
+3. **PreparedStatement** körs: \`executeQuery()\` för SELECT, som returnerar ett **ResultSet**, och \`executeUpdate()\` för INSERT, UPDATE och DELETE, som returnerar antalet påverkade rader.
+4. **ResultSet** innehåller svaret, en rad i taget.
+5. Går något fel kastas ett **SQLException**.
+
+Föreläsningens första program skriver ut alla anställda:
+
+    String query = "SELECT EmpNo, EmpName, EmpSalary FROM Employee";
+    try {
+        Connection conn = DriverManager.getConnection(connectionUrl);
+        PreparedStatement preparedStatement = conn.prepareStatement(query);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        while (resultSet.next()) {
+            System.out.println("Employee " + resultSet.getString("EmpNo") + ":");
+            System.out.println("Name: " + resultSet.getString("EmpName"));
+            System.out.println("Salary: " + resultSet.getDouble("EmpSalary"));
+        }
+
+        resultSet.close();
+        preparedStatement.close();
+        conn.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+Rad för rad, sett från databasen. Frågan är bara en Java-sträng; ingenting har hänt ännu. \`getConnection\` öppnar en anslutning och loggar in — här uppstår det första felet om servern inte svarar. \`prepareStatement\` skickar frågan till servern, som förbereder den. \`executeQuery\` kör den: servern läser Employee och skickar tillbaka raderna, som hamnar i ResultSet. Loopen läser dem en i taget, och de tre \`close\` lämnar tillbaka resurserna. EmployeeID står inte i SELECT-listan — programmet behöver den inte för att visa en anställd.
+
+### Anslutningssträngen
+
+Som en webbläsare behöver en URL behöver JDBC en anslutningssträng (**connection string**):
+
+    static final String connectionUrl = "jdbc:sqlserver://192.0.2.10:1433;"
+        + "databaseName=Company;"
+        + "user=company_user;"
+        + "password=...;"
+        + "encrypt=true;"
+        + "trustServerCertificate=true;";
+
+\`jdbc:sqlserver://\` krävs alltid. Därefter serverns adress — IP-adress eller DNS-namn, \`localhost\` om databasen kör på den egna datorn — och porten, där 1433 är SQL Servers standard. Sedan egenskaper separerade med semikolon: databasen (\`databaseName\`), användaren (\`user\`), lösenordet och två krypteringsegenskaper som nyare drivrutiner kräver.
+
+**Ett lösenord i klartext i koden är en säkerhetsrisk** utanför testsyfte: det hamnar i versionshanteringen och följer med till alla som ser koden. I den färdiga appen läser en hjälpklass uppgifterna ur en konfigurationsfil som hålls utanför repot — samma regel som kodstandarden i kapitel 9.
+
+## PreparedStatement och platshållare
+
+Värden skrivs aldrig in i SQL-texten. Frågan får en **platshållare**, ett frågetecken per värde, och värdena sätts efteråt:
+
+    String query = "INSERT INTO Employee (EmpNo, EmpName, EmpSalary) VALUES (?, ?, ?)";
+    PreparedStatement preparedStatement = connection.prepareStatement(query);
+    preparedStatement.setString(1, "E7");
+    preparedStatement.setString(2, "Ken");
+    preparedStatement.setDouble(3, 45500);
+    preparedStatement.executeUpdate();
+
+Varje \`set\`-metod tar platshållarens nummer och värdet: \`setString\` för text, \`setInt\` för heltal, \`setDouble\` för decimaltal. **Numreringen börjar på 1**, inte på 0 som index i en Java-lista — \`setString(0, …)\` är fel. Satsen är en INSERT och körs därför med \`executeUpdate\`. I databasen blir det en ny rad i Employee; EmployeeID fylls i av IDENTITY, och programmet nämner den aldrig.
+
+PreparedStatement är best practice av två skäl. Frågan förkompileras, vilket lönar sig när samma fråga körs många gånger med olika värden. Och värdena hanteras säkert: de skickas som värden, aldrig som en del av SQL-texten, så användarens inmatning kan inte ändra själva frågan. Samma form gäller sökningar — en anställd med ett visst nummer blir \`WHERE EmpNo = ?\`.
+
+## ResultSet och markören
+
+Ett **ResultSet** är en tabell med frågans svar, och det har en **markör (cursor)** som pekar på en rad i taget. Markören står från början *före* första raden. \`next()\` flyttar den ett steg och returnerar \`true\` om det fanns en rad att flytta till, \`false\` när raderna är slut. Därför ser loopen ut så här:
+
+    while (resultSet.next()) {
+        String empNo = resultSet.getString("EmpNo");
+        double salary = resultSet.getDouble("EmpSalary");
+    }
+
+\`getString\`, \`getDouble\` och \`getInt\` läser alltid **den rad markören står på** — man kan inte be om rad fyra. Glömmer man \`next()\` står markören före första raden och läsningen misslyckas. Skriver man \`if\` i stället för \`while\` läses en rad, vilket är rätt när frågan kan ge högst en.
+
+Använd **kolumnnamn, inte index**: \`getString("EmpNo")\` i stället för \`getString(1)\`. Med namn spelar kolumnernas ordning i SELECT ingen roll, och ett felaktigt index märks först när koden körs.
+
+## Stäng resurserna
+
+Anslutningar och resultat binder resurser både i programmet och på servern. De stängs i omvänd ordning mot hur de öppnades: **ResultSet, PreparedStatement, Connection**. Problemet med \`close\`-raderna i första exemplet är att de aldrig körs om ett fel kastas på vägen.
+
+Lösningen heter **try-with-resources**. Allt som öppnas inom parentesen efter \`try\` stängs automatiskt när blocket tar slut, också vid fel:
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(query);
+         ResultSet resultSet = statement.executeQuery()) {
+        // läs resultatet
+    }
+
+## Felkoder
+
+Varje steg i kedjan kan kasta ett SQLException. Undantaget bär SQL Servers felkod, som läses med \`getErrorCode()\`:
+
+- **2627** — en UNIQUE-constraint bryts, till exempel en andra anställd med EmpNo E1. Koden är densamma för alla UNIQUE-brott, i vilken tabell som helst; meddelandet säger vilken constraint det gällde.
+- **208** — objektet finns inte, till exempel en felstavad tabell.
+- **0** — anslutningen misslyckades, servern gick inte att nå.
+
+Här dyker kapitel 9:s constraints upp i applikationen. \`UQ_Employee_EmpNo\` är databasens regel. När någon försöker spara en dubblett vägrar SQL Server, drivrutinen gör om vägran till ett SQLException med kod 2627, och programmet kan svara med ett begripligt meddelande:
+
+    } catch (SQLException e) {
+        if (e.getErrorCode() == 2627) {
+            System.out.println("Cannot insert duplicate Employee numbers!");
+        } else if (e.getErrorCode() == 0) {
+            System.out.println("Lost connection to server!");
+        } else {
+            System.out.println("Unknown error. Please contact your system administrator.");
+        }
+    }
+
+\`catch (SQLException e)\` fångar bara databasfel. En lön som inte går att tolka som tal ger \`NumberFormatException\` och behöver ett eget block. Ordningen är **SQLException först, sedan de specifika undantag du vet kan uppstå, och \`Exception\` sist** som uppsamling. Ett vanligt \`Exception\` har ingen \`getErrorCode()\` — felkoden finns bara på SQLException.
+
+## Fyra lager
+
+En applikation delas i lager med var sitt ansvar, **separation of concerns**:
+
+- **View** — FXML-filer som Employee.fxml. Placering och utseende för knappar, textfält och tabeller.
+- **Controller** — klasser som EmployeesViewController. Hanterar händelser i gränssnittet, som ett klick på Add, och gör fel från lagret under till meddelanden användaren förstår.
+- **Model** — klasser som Employee och Department. Håller data om domänobjekten och används av alla lager.
+- **Data access** — **DAO**-klasser (Data Access Object) som EmployeeDao, plus hjälpklassen **ConnectionHandler**. All kontakt med databasen: SQL, JDBC och SQLException hör hemma här.
+
+ConnectionHandler läser anslutningsuppgifterna ur konfigurationsfilen, bygger anslutningssträngen och har en metod \`getConnection()\` som alla DAO-klasser återanvänder. EmployeeDao har metoderna \`findAll()\`, \`findByEmpNo()\` och \`save()\`, och en hjälpmetod som gör om raden markören står på till ett Employee-objekt:
+
+    private Employee mapToEmployee(ResultSet resultSet) throws SQLException {
+        return new Employee(
+            resultSet.getString("EmpNo"),
+            resultSet.getString("EmpName"),
+            resultSet.getDouble("EmpSalary")
+        );
+    }
+
+    public Employee findByEmpNo(String empNo) throws SQLException {
+        String query = "SELECT EmpNo, EmpName, EmpSalary FROM Employee WHERE EmpNo = ?";
+        Employee employee = null;
+        try (Connection connection = connectionHandler.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, empNo);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                employee = mapToEmployee(resultSet);
+            }
+        }
+        return employee;
+    }
+
+\`findByEmpNo\` sätter platshållaren till det sökta numret, kör frågan och läser högst en rad — EmpNo är UNIQUE, så \`if\` räcker. Finns ingen anställd med numret returneras \`null\`.
+
+## Tre nivåer av separation
+
+Föreläsningen graderar hur väl lagren hålls isär, och kursen siktar på nivå 2 eller 3.
+
+**Nivå 1, dålig separation.** Det finns inget data access-lager. SQL, ResultSet och SQLException ligger direkt i controllern, som blandar gränssnitt och databaslogik. Omdömet är kort: bygg inte så, det ger underkänt.
+
+**Nivå 2, delvis separation.** En DAO finns och controllern får en \`List<Employee>\`, men DAO-metoderna deklarerar \`throws SQLException\`, så controllern måste fånga databasens egna undantag:
+
+    try {
+        List<Employee> employeeList = employeeDao.findAll();
+        tableViewEmployee.setItems(FXCollections.observableArrayList(employeeList));
+    } catch (SQLException e) {
+        displayErrorMessage("Error loading employees: Could not retrieve employees from the database.");
+    }
+
+**Nivå 3, total separation.** DAO:n fångar SQLException själv och kastar ett eget undantag, **DaoException**, med ett meddelande som redan är begripligt. Controllern fångar bara DaoException, innehåller ingen SQL och vet inte ens om datakällan är SQL Server, en annan databas eller en Excel-fil.
+
+    public void save(Employee employee) {
+        String query = "INSERT INTO Employee (EmpNo, EmpName, EmpSalary) VALUES (?, ?, ?)";
+        try (Connection connection = connectionHandler.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, employee.getEmployeeNumber());
+            statement.setString(2, employee.getName());
+            statement.setDouble(3, employee.getSalary());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 2627) {   // UNIQUE bryts: EmpNo finns redan
+                throw new DaoException("An employee with this Employee No already exists.", e);
+            }
+            throw new DaoException("Error saving employee: " + employee.getEmployeeNumber(), e);
+        }
+    }
+
+I controllern blir det \`catch (DaoException e)\` som visar \`e.getMessage()\` för användaren, följt av ett eget block för \`NumberFormatException\` när lönefältet inte innehåller ett tal. Felkoden tolkas på ett enda ställe: i lagret som vet att det finns en databas.
+
+## Kopplingen till resten av kursen
+
+Titta på modellklassen:
+
+    public class Employee {
+        private String employeeNumber;
+        private String name;
+        private double salary;
+        // konstruktor, getters och setters
+    }
+
+Den har ingen EmployeeID. Surrogatnyckeln hör till den fysiska designen och är databasens sak: användaren ser den aldrig, skriver den aldrig, och IDENTITY fyller i den vid varje INSERT. Det som identifierar en anställd för verksamheten är EmpNo, den naturliga nyckeln — och det är den findByEmpNo söker på. Samma skäl förklarar att klassdiagrammet för Employee och Department saknar identifierare: i programmet pekar objekten på varandra med referenser, och unikheten sköts av databasen.
+
+Kedjan går hela vägen bakåt. Identifieraren i ER-diagrammet (kapitel 4) blev en kandidatnyckel i den logiska modellen (kapitel 7), en \`UNIQUE\`-constraint i DDL-koden (kapitel 9) och här felkod 2627, som användaren får se som "An employee with this Employee No already exists."
+
+## Så kan det komma på tentan
+
+Föreläsaren har aviserat att HT26-tentan har en fråga som har med Java att göra. **Formen och poängen är inte kända** — området har inte funnits på någon tidigare tenta. Tentan tillåter utskrivna slides, så det som prövas är rimligen förståelse och kodläsning, inte syntax utantill. Tre troliga former:
+
+- **Hitta felen i en DAO-metod.** Leta efter \`setString(0, …)\`, \`executeQuery\` på en INSERT eller \`executeUpdate\` på en SELECT, en \`getString\` utan \`next()\` före, \`if\` där frågan kan ge flera rader, resurser som aldrig stängs, och SQL eller SQLException i en controller.
+- **Skriv klart en findBy-metod.** Frågan med \`?\`, \`setString(1, …)\`, \`executeQuery\`, \`if (resultSet.next())\` eller \`while\` beroende på hur många rader frågan kan ge, och try-with-resources runt.
+- **Sant eller falskt om lager och felhantering.** Vilket lager som ansvarar för vad, vilken felkod en dubblett ger, i vilken ordning catch-blocken står och vad som skiljer nivå 2 från nivå 3.
+`
   }
 
   ]
@@ -1572,6 +1812,7 @@ export const CHAPTER_TOPICS = {
   kap7: { topics: ["normalisering"], primaryTopics: ["normalisering"] },
   kap8: { topics: ["fysisk", "nycklar"], primaryTopics: ["fysisk"] },
   kap9: { topics: ["sql"], primaryTopics: ["sql"] },
+  kap10: { topics: ["applikation", "fysisk"], primaryTopics: ["applikation"] },
 };
 
 // Tentans område per kapitel. Sedan föreläsarens besked 2026-08-31 (tentan
@@ -1590,6 +1831,7 @@ export const EXAM_AREAS = {
   kap7: "Normalisering",
   kap8: "Transformation",
   kap9: "SQL",
+  kap10: "Applikationsutveckling",
 };
 
 export const examNote = {
@@ -1638,7 +1880,7 @@ export const glossary = [
   { term: "Minimalitet", definition: "Villkoret att inget attribut kan tas bort ur en kandidatnyckel utan att den garanterade unikheten går förlorad. {EmployeeNo, Name} är unik men inte minimal.", chapter: "kap3" },
   { term: "Motivering (högsta normalform)", definition: "Tentans krav i 3f–3g: en rad för normalformen och en rad för skälet, som namnger definitionens begrepp och relationens attribut — 'äkta delmängden B av kandidatnyckeln {A,B} bestämmer funktionellt icke-primärattributet D'. Krävs inte för 3NF.", chapter: "kap7" },
   { term: "Mängdskillnad i SQL", definition: "'X men inte Y' skrivs med NOT IN, NOT EXISTS eller EXCEPT. NOT IN mot en lista med ett NULL ger tomt resultat; NOT EXISTS är det säkra valet; EXCEPT ger bara de gemensamma kolumnerna.", chapter: "kap9" },
-  { term: "Naturlig nyckel", definition: "Nyckel med affärsbetydelse, t.ex. anställningsnummer eller ISBN. Motsats till surrogatnyckel.", chapter: "kap3" },
+  { term: "Naturlig nyckel", definition: "Nyckel med affärsbetydelse, t.ex. anställningsnummer eller ISBN. Kallas också business key eller domain key. Motsats till surrogatnyckel.", chapter: "kap3" },
   { term: "NoSQL", definition: "Dokumentorienterade databaser, ett alternativ till relationsdatabaser för persistent lagring.", chapter: "kap1" },
   { term: "Nyckelnotation (CK, PK, FK)", definition: "Föreläsningens sätt att skriva nycklar under en relation: CK1 = {…} för varje kandidatnyckel, PK = CK1 för den valda, FK1 : (attribut) REF Relation(attribut) för varje referens. Häftets facit stryker i stället under: hel linje för PK, prickad för FK.", chapter: "kap3" },
   { term: "Partiellt beroende", definition: "Ett icke-primärattribut som beror på en äkta delmängd av en kandidatnyckel. Bryter mot 2NF och kan bara uppstå vid sammansatt nyckel.", chapter: "kap7" },
@@ -1655,7 +1897,7 @@ export const glossary = [
   { term: "Server", definition: "I praktiken en dator som aldrig stängs av, och som betjänar klienter med data ur en databas.", chapter: "kap1" },
   { term: "Skalär underfråga", definition: "Underfråga som ger exakt ett värde och kan jämföras med =, < eller >. Sättet att hämta ett jämförelsevärde ur en annan rad ('yngre än L3') i stället för att kopiera en literal. Fler än ett värde ger felet 'Subquery returned more than 1 value'.", chapter: "kap9" },
   { term: "SQL (Structured Query Language)", definition: "Språket för att skapa, läsa, uppdatera och radera data samt administrera relationsdatabaser.", chapter: "kap1" },
-  { term: "Surrogatnyckel", definition: "Artificiellt, databasgenererat nyckelvärde utan affärsbetydelse; motiven är nyckelstabilitet och prestanda. Kursen placerar den olika (kursintroduktionen i logisk design, häftet i fysisk, föreläsningen om logisk design nämner den inte); på tentan krävs den i DDL-uppgiften.", chapter: "kap3" },
+  { term: "Surrogatnyckel", definition: "Artificiellt, databasgenererat nyckelvärde utan affärsbetydelse; motiven är nyckelstabilitet och prestanda. Kallas också synthetic key, pseudokey, factless key eller technical key. Hör till fysisk design: den logiska modellen använder ER-modellens identifierare som kandidatnycklar, och på tentan krävs surrogatnyckeln i uppgift 2, på tabeller för vanliga och svaga entiteter men aldrig på kopplingstabeller.", chapter: "kap3" },
   { term: "Transitivt beroende", definition: "Ett funktionellt beroende där X → Z indirekt, i kraft av X → Y och Y → Z, och där det inte gäller att Y → X. Bryter mot 3NF.", chapter: "kap7" },
   { term: "Tupel (tuple)", definition: "Formellt en mängd attributvärden där inga två skilda element har samma attributnamn. Informellt en rad eller post.", chapter: "kap2" },
   { term: "UNIQUE-constraint", definition: "Kräver unika värden men tillåter NULL. Här hamnar naturliga nycklar när en surrogatnyckel tagit primärnyckelrollen.", chapter: "kap8" },
@@ -1721,4 +1963,14 @@ export const glossary = [
   { term: "ON DELETE CASCADE", definition: "Tillägg på en främmande nyckel som låter en radering i den refererade tabellen ta de refererande raderna med sig. Visas i föreläsningen; facit för DDL-uppgifterna använder det inte.", chapter: "kap8" },
   { term: "Ändpunktsmönster (endpoint patterns)", definition: "Crow's Foots fyra kombinationer: yttre märke cirkel = optional, streck = required; inre märke streck = one, fork = many. Markörerna sitter vid den ändpunkt vars instanser de räknar.", chapter: "svaga" },
   { term: "Övernormalisering", definition: "Att dela upp mer än definitionerna kräver: bryta ned en relation som redan är i 3NF, eller dela {A,B} → {C,D} i två relationer. Ger poängavdrag på tentan — fler joins utan att någon anomali försvinner, och fler chanser att förlora beroenden eller lossless join.", chapter: "kap7" },
+  { term: "JDBC driver", definition: "Drivrutinen som låter ett Java-program prata med SQL Server. JDBC (Java Database Connectivity) är API:t du programmerar mot; drivrutinen översätter Java-anropen till något databashanteraren förstår, som en skrivardrivrutin gör för en skrivare.", chapter: "kap10" },
+  { term: "Anslutningssträng (connection string)", definition: "Den URL som JDBC ansluter med: jdbc:sqlserver:// följt av serverns IP-adress eller namn, port (1433 är SQL Servers standard) och egenskaper som databaseName och user, separerade med semikolon. Lösenord i klartext i koden är en säkerhetsrisk utanför testsyfte.", chapter: "kap10" },
+  { term: "PreparedStatement", definition: "JDBC-objektet som bär en SQL-fråga med ? som platshållare. Värdena sätts med setString, setInt och setDouble, numrerade från 1. Körs med executeQuery() för SELECT och executeUpdate() för INSERT, UPDATE och DELETE. Best practice: förkompilerad fråga och säker hantering av värden.", chapter: "kap10" },
+  { term: "ResultSet", definition: "Svaret på en SELECT, som en tabell som läses en rad i taget. getString(\"EmpNo\") och liknande läser den rad markören står på; kolumnnamn är bättre än index.", chapter: "kap10" },
+  { term: "Markör (cursor)", definition: "ResultSetets pekare på aktuell rad. Står från början före första raden; next() flyttar den ett steg och returnerar false när raderna är slut, därav while (resultSet.next()).", chapter: "kap10" },
+  { term: "Try-with-resources", definition: "Javaformen try (…) { } där allt som öppnas inom parentesen — Connection, PreparedStatement, ResultSet — stängs automatiskt när blocket tar slut, också vid fel. Ersätter close-anropen i ordningen ResultSet, PreparedStatement, Connection.", chapter: "kap10" },
+  { term: "DAO (Data Access Object)", definition: "Klass i data access-lagret som kapslar in all databaskontakt för en entitet, som EmployeeDao med findAll, findByEmpNo och save. Övriga lager ser modellobjekt, inte SQL.", chapter: "kap10" },
+  { term: "DaoException", definition: "Eget undantag som DAO:n kastar när den fångat ett SQLException, med ett begripligt meddelande. Controllern fångar bara DaoException och behöver inte veta att datakällan är en SQL-databas — nivå 3 av separation of concerns.", chapter: "kap10" },
+  { term: "ConnectionHandler", definition: "Hjälpklass i data access-lagret som läser anslutningsuppgifterna ur en konfigurationsfil, bygger anslutningssträngen och lämnar ut en Connection via getConnection(). Återanvänds av alla DAO-klasser.", chapter: "kap10" },
+  { term: "Separation of concerns", definition: "Att dela applikationen i lager med var sitt ansvar: view (FXML), controller (händelser och felmeddelanden), model (domänobjekten) och data access (DAO och ConnectionHandler). Nivå 1 har SQL i controllern och ger underkänt; nivå 2 har en DAO men låter SQLException nå controllern; nivå 3 kapslar in den i DaoException. Kursen siktar på nivå 2–3.", chapter: "kap10" },
 ];

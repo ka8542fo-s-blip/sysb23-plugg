@@ -11,7 +11,7 @@ export const topics = [
       "Lagring: volatil lagring (RAM, t.ex. en Java-ArrayList) försvinner när programmet stängs; persistent lagring är filer, kalkylblad, RDBMS eller dokumentorienterade databaser (NoSQL).",
       "RDBMS: Relational Database Management System — lagrar data i tabeller och frågas med SQL.",
       "Kursens miljö: SQL Server på en virtuell maskin i Microsoft Azure, ansluten från VS Code via mssql-tillägget, kod i GitHub. En server är i praktiken en dator som aldrig stängs av.",
-      "Tentan: fyra uppgifter på fem timmar, 100 p, utskrivna slides och boken tillåtna — läsa ER-diagram (25 p, +5/−3 per markering), DDL direkt från ER (25 p, surrogatnycklar även på svaga entiteter), normalformer (20 p, sant/falskt à 2 p med −1 vid fel, två uppgifter om högsta normalform där övernormalisering ger avdrag) och en enda SQL-fråga (30 p)."
+      "Tentan: fyra uppgifter på fem timmar, 100 p, utskrivna slides och boken tillåtna — läsa ER-diagram (25 p, +5/−3 per markering), DDL direkt från ER (25 p, surrogatnycklar även på svaga entiteter), normalformer (20 p, sant/falskt à 2 p med −1 vid fel, två uppgifter om högsta normalform där övernormalisering ger avdrag) och en enda SQL-fråga (30 p). För HT26 har föreläsaren dessutom aviserat en fråga om Java och JDBC, med okänd form och poäng (kapitel 11)."
     ],
     pitfalls: [
       "LADOK och TimeEdit är applikationer, inte databaser.",
@@ -44,7 +44,7 @@ export const topics = [
     name: "Nycklar och referensintegritet",
     chapter: "kap3",
     examWeight: "hög",
-    summary: "Kandidatnyckel kräver både unikhet och minimalitet; primärnyckeln är den kandidatnyckel som väljs, PK = CK1. Främmande nycklar måste träffa en existerande nyckel, får upprepas och tvingar inte fram deltagande. Surrogatnycklar: kursen placerar dem olika, tentan kräver dem i DDL.",
+    summary: "Kandidatnyckel kräver både unikhet och minimalitet; primärnyckeln är den kandidatnyckel som väljs, PK = CK1. Främmande nycklar måste träffa en existerande nyckel, får upprepas och tvingar inte fram deltagande. Surrogatnycklar hör till fysisk design; på tentan kommer de i uppgift 2.",
     keyPoints: [
       "Unikhet är en verksamhetsregel: den gäller varje tillåten population. Aktuella rader kan motbevisa en identifierare men aldrig bevisa en regel — leta efter regeln i uppgiftstexten, inte efter mönster i exempeldatan.",
       "Kandidatnyckel (candidate key): en attributmängd K som uppfyller både unikhet (inga två skilda tupler har samma värden i K i något giltigt relationsvärde) och minimalitet (inget attribut kan tas bort ur K utan att unikheten förloras). {EmployeeNo, Name} är unik men inte minimal. En relation kan ha flera, en per unikhetsregel; en sammansatt kandidatnyckel som {EmployeeNo, ProjectNo} är unik som par, inte var för sig, och alla attributen stryks under.",
@@ -54,7 +54,7 @@ export const topics = [
       "Främmande nycklar tvingar inte fram deltagande: att varje WORKS_ON-tupel träffar ett projekt hindrar inte att ett projekt saknas i WORKS_ON. NOT NULL på en främmande nyckel gör många-sidans deltagande obligatoriskt; ett-sidans och M:N-sidans totala deltagande blir en verksamhetsregel utanför constraints. NULL tillåts när deltagandet är frivilligt.",
       "Referensintegritet: databasen vägrar rader som pekar på något som inte finns och vägrar radera det som fortfarande refereras.",
       "Notation: CK1 = {…}, CK2 = {…}, PK = CK1, FK1 : (LeaderEmployeeNo) REF EMPLOYEE(EmployeeNo) — före REF den refererande attributlistan, efter REF den refererade relationen och nyckeln. Häftets facit stryker under: hel linje för PK, prickad för FK; tentans uppgift 3 kräver understrykningen.",
-      "Naturlig och surrogatnyckel: naturlig har affärsbetydelse (anställningsnummer, ISBN), surrogat är artificiell och databasgenererad, motiven nyckelstabilitet och prestanda. Kursen placerar dem olika — föreläsningen om logisk design nämner dem inte, kursintroduktionen lägger dem i logisk design, häftet i fysisk — men på tentan kommer de i uppgift 2: automatiskt inkrementerande surrogatnycklar på vanliga och svaga entiteter. I uppgift 3 stryks de naturliga nycklarna under.",
+      "Naturlig och surrogatnyckel: naturlig (business key, domain key) har affärsbetydelse (anställningsnummer, ISBN), surrogat (synthetic key, pseudokey, factless key, technical key) är artificiell och databasgenererad, motiven nyckelstabilitet och prestanda. Surrogatnycklar hör till fysisk design: den logiska modellen använder ER-modellens identifierare som kandidatnycklar. På tentan kommer de i uppgift 2 — automatiskt inkrementerande surrogatnycklar på vanliga och svaga entiteter, aldrig på kopplingstabeller. I uppgift 3 stryks de naturliga nycklarna under.",
       "Mönstret i praktiken: surrogatnyckel som PRIMARY KEY plus naturlig nyckel som UNIQUE — som EmployeeID och EmpNo i hospital-databasen. Tas den naturliga nyckeln bort förloras affärsregeln om unikhet."
     ],
     pitfalls: [
@@ -266,6 +266,7 @@ export const topics = [
       "Datatyper i SQL Server: INT/BIGINT för heltal, DECIMAL(p,s) för exakta decimaltal och belopp (approximativa numeriska typer bara när exakt precision är mindre viktig), VARCHAR(n)/NVARCHAR(n) för text där N klarar unicode, CHAR(n) för fast längd, DATE/DATETIME/DATETIME2 för tid, BIT för booleskt.",
       "Kodstandard v2.0: tabellnamn i PascalCase och singular (Employee, inte employees), kolumnnamn i PascalCase ofta med tabellprefix, camelCase för Java-variabler och metoder, PascalCase för Java-klasser, SCREAMING_SNAKE_CASE för miljövariabler. Inga hemligheter i repot — anslutningsuppgifter och lösenord i miljövariabler eller konfiguration utanför versionshanteringen; det prövas i databasprojektet.",
       "Tentans uppgift 2: alla kolumner INTEGER (strukturen prövas, inte datatyperna); reserverade ord utskrivna — PRIMARY KEY, FOREIGN KEY, REFERENCES, CONSTRAINT, NOT NULL, UNIQUE; constraintnamn krävs inte, PRIMARY KEY (LagID) utan CONSTRAINT-rad är tillåtet; automatiskt inkrementerande surrogatnyckel stavas INTEGER IDENTITY(1,1) (seed, increment) på tabeller för vanliga OCH svaga entiteter, aldrig på kopplingstabeller; koden indenterad med en kolumn per rad och constraints sist.",
+      "Lägg inte till constraints som uppgiften inte ber om: DEFAULT krävs inte på tentan, och en felskriven extra constraint ger avdrag. Skriv det diagrammet säger och inget mer.",
       "Poängen sitter i det facit läser mot diagrammet: naturliga nycklar UNIQUE och NOT NULL, NOT NULL på främmande nyckel där linjen är dubbel och nullbar där den är enkel, svag entitet med surrogatnyckel plus UNIQUE över partiell nyckel och ägarens främmande nyckel, REFERENCES mot surrogatnyckeln — och refererade tabeller före refererande."
     ],
     pitfalls: [
@@ -274,7 +275,8 @@ export const topics = [
       "Tabellnamn ska vara singular enligt kursens standard.",
       "Naturlig nyckel med bara UNIQUE släpper igenom NULL — NOT NULL måste också anges.",
       "Kopplingstabeller får ingen egen surrogatnyckel; primärnyckeln är de två främmande nycklarna.",
-      "På tentan: en REFERENCES som pekar på den naturliga nyckeln i stället för surrogatnyckeln, en kopplingstabell med egen IDENTITY, eller NOT NULL som inte följer deltagandelinjerna — det är de vanliga avdragen."
+      "På tentan: en REFERENCES som pekar på den naturliga nyckeln i stället för surrogatnyckeln, en kopplingstabell med egen IDENTITY, eller NOT NULL som inte följer deltagandelinjerna — det är de vanliga avdragen.",
+      "En DEFAULT eller annan constraint som uppgiften inte bad om ger inga poäng — men avdrag om den är felskriven."
     ]
   },
   {
@@ -299,6 +301,34 @@ export const topics = [
       "Uppslagen literal (WHERE Alder < 40) i stället för en skalär underfråga — svarar på fel fråga och blir tyst inaktuell.",
       "Radvillkoret för X i WHERE när snittet ska gälla alla lån: villkoret kastar bort de andra raderna före aggregatet. Lägg det som underfråga på nyckeln i stället.",
       "NOT IN mot en underfråga som kan innehålla NULL ger tomt resultat. NOT EXISTS gör det inte."
+    ]
+  },
+  {
+    id: "applikation",
+    name: "Applikationsutveckling: Java och JDBC",
+    chapter: "kap10",
+    examWeight: "låg",
+    summary: "En Java-klient når SQL Server genom JDBC-drivrutinen: DriverManager ger en Connection, som ger ett PreparedStatement med ? som platshållare, som körs till ett ResultSet. Fel kommer som SQLException med felkod. Koden delas i fyra lager, och DAO:n håller SQL borta från controllern. HT26-tentan har en aviserad Java-fråga med okänd form och poäng.",
+    keyPoints: [
+      "JDBC driver: JDBC är API:t du programmerar mot; drivrutinen översätter Java-anropen till något SQL Server förstår. Klienten körs på användarens dator, databasen på servern.",
+      "JDBC-kedjan: DriverManager.getConnection(url) → Connection → prepareStatement(query) → executeQuery() för SELECT, som ger ett ResultSet, eller executeUpdate() för INSERT, UPDATE och DELETE. Fel kastas som SQLException.",
+      "Anslutningssträng: jdbc:sqlserver:// + IP-adress eller servernamn + port 1433 (standard) + egenskaper som databaseName och user, separerade med semikolon. Lösenord i klartext i koden är en säkerhetsrisk utanför testsyfte.",
+      "PreparedStatement: ? som platshållare, värdena sätts med setString, setInt och setDouble, numrerade från 1. Best practice: förkompilerad fråga och säker hantering av värden — inmatningen kan inte ändra frågan.",
+      "ResultSet och markör: markören står före första raden; next() flyttar den och returnerar false när raderna är slut, därav while (rs.next()). getString(\"EmpNo\") läser raden markören står på. Kolumnnamn är bättre än index.",
+      "Stänga resurser: ResultSet, sedan PreparedStatement, sedan Connection. Try-with-resources stänger allt inom parentesen automatiskt, också vid fel.",
+      "Felkoder: getErrorCode() ger 2627 när en UNIQUE-constraint bryts (samma kod för alla UNIQUE-brott), 208 när objektet inte finns och 0 när anslutningen misslyckats. Catch-ordning: SQLException, sedan specifika undantag som NumberFormatException, Exception sist. Vanliga Exception har ingen getErrorCode().",
+      "Fyra lager: view (FXML, utseende), controller (händelser, fel som meddelanden till användaren), model (domänobjekten, som Employee), data access (DAO-klasser och ConnectionHandler, all kontakt med databasen).",
+      "Tre nivåer av separation: (1) SQL i controllern — underkänt; (2) en DAO finns men controllern får SQLException; (3) DAO:n fångar SQLException och kastar DaoException, controllern fångar bara DaoException och innehåller ingen SQL. Kursen siktar på nivå 2–3.",
+      "Kopplingen till modelleringen: modellklassen Employee saknar EmployeeID, för surrogatnyckeln hör till fysisk design och användaren ser eller skriver den aldrig. UNIQUE-constrainten på EmpNo syns i appen som felkod 2627.",
+      "Tentan HT26: föreläsaren har aviserat en Java-fråga; form och poäng är okända. Med utskrivna slides tillåtna prövas rimligen kodläsning och förståelse — hitta felen i en DAO-metod, skriv klart en findBy-metod, sant/falskt om lager och felhantering."
+    ],
+    pitfalls: [
+      "setString(0, …) — platshållarna numreras från 1.",
+      "executeQuery() på en INSERT eller executeUpdate() på en SELECT. Frågan om resultat avgör: SELECT ger ett ResultSet, ändringar ger antal rader.",
+      "getString() utan next() först: markören står före första raden.",
+      "if (rs.next()) där frågan kan ge flera rader läser bara den första; while behövs.",
+      "SQL eller catch (SQLException) i controllern. På nivå 3 fångar controllern bara DaoException.",
+      "catch (Exception e) före catch (SQLException e): det breda blocket ska stå sist."
     ]
   }
 ];

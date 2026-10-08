@@ -702,4 +702,87 @@ export const questions = [
       { text: "B2 2 — L3:s betyg 5 räknas, eftersom HAVING utvärderas före WHERE i logisk ordning", explain: "Ordningen är WHERE, GROUP BY, HAVING. Betyget 5 faller bort först av allt." },
     ],
     correct: 0, source: "Kompendiet kap. 10 · föreläsning 2–3", reviewed: false },
+
+  { id: "dbq-63", topic: "applikation", difficulty: 2,
+    context: "public void save(Employee employee) throws SQLException {\n    String query = \"INSERT INTO Employee (EmpNo, EmpName, EmpSalary) VALUES (?, ?, ?)\";\n    try (Connection connection = connectionHandler.getConnection();\n         PreparedStatement statement = connection.prepareStatement(query)) {\n        statement.setString(0, employee.getEmployeeNumber());\n        statement.setString(1, employee.getName());\n        statement.setDouble(2, employee.getSalary());\n        statement.executeUpdate();\n    }\n}",
+    question: "Metoden ska spara en anställd men misslyckas. Vad är fel?",
+    options: [
+      { text: "Platshållarna numreras från 1, så setString(0, …) och de två efter är förskjutna", explain: "Det första frågetecknet är nummer 1. Med 0, 1, 2 pekar det första anropet på en platshållare som inte finns. Rätt är setString(1, …), setString(2, …), setDouble(3, …)." },
+      { text: "executeUpdate ska vara executeQuery, eftersom satsen skickar data till databasen", explain: "executeQuery är för SELECT, som ger ett ResultSet. En INSERT körs med executeUpdate, som metoden redan gör." },
+      { text: "EmployeeID saknas i INSERT och måste sättas med en egen setInt före EmpNo", explain: "EmployeeID fylls i av IDENTITY. Programmet nämner den aldrig — det är surrogatnyckelns poäng." },
+      { text: "Try-with-resources stänger anslutningen innan executeUpdate hinner köras", explain: "Resurserna stängs när blocket tar slut, alltså efter executeUpdate." }
+    ],
+    correct: 0, source: "Kompendiet kap. 11", reviewed: false },
+
+  { id: "dbq-64", topic: "applikation", difficulty: 2,
+    context: "String query = \"SELECT EmpName FROM Employee WHERE EmpNo = ?\";\nPreparedStatement statement = connection.prepareStatement(query);\nstatement.setString(1, \"E2\");\nResultSet resultSet = statement.executeQuery();\nString name = resultSet.getString(\"EmpName\");",
+    question: "E2 finns i tabellen, men sista raden misslyckas. Varför?",
+    options: [
+      { text: "getString kräver kolumnens index, 1, eftersom frågan bara har en kolumn", explain: "Kolumnnamn fungerar alltid och är dessutom att föredra framför index." },
+      { text: "executeQuery ger inget ResultSet när frågan har en WHERE-sats med platshållare", explain: "executeQuery ger ett ResultSet för varje SELECT, med eller utan WHERE." },
+      { text: "Platshållaren måste sättas med setInt, eftersom EmpNo är en nyckelkolumn", explain: "EmpNo är VARCHAR, alltså setString. Att kolumnen är nyckel påverkar inte valet." },
+      { text: "Markören står före första raden; next() måste anropas innan getString läser", explain: "ResultSetets markör börjar före första raden. Först next() flyttar den till E2:s rad; här räcker if (resultSet.next()), eftersom EmpNo är UNIQUE." }
+    ],
+    correct: 3, source: "Kompendiet kap. 11", reviewed: false },
+
+  { id: "dbq-65", topic: "applikation", difficulty: 2,
+    context: "@FXML\nprivate void buttonEmployeeAdd_OnClick(MouseEvent event) {\n    try (Connection connection = DriverManager.getConnection(connectionUrl)) {\n        PreparedStatement statement = connection.prepareStatement(\n            \"INSERT INTO Employee (EmpNo, EmpName, EmpSalary) VALUES (?, ?, ?)\");\n        statement.setString(1, textFieldEmployeeNumber.getText());\n        statement.setString(2, textFieldEmployeeName.getText());\n        statement.setDouble(3, Double.parseDouble(textFieldEmployeeSalary.getText()));\n        statement.executeUpdate();\n    } catch (SQLException e) {\n        displayErrorMessage(\"Could not save employee.\");\n    }\n}",
+    question: "Koden står i EmployeesViewController. Vilken nivå av separation of concerns är det?",
+    options: [
+      { text: "Nivå 2 — en DAO finns, men controllern fångar fortfarande SQLException själv", explain: "Det finns ingen DAO här: controllern öppnar anslutningen och skriver SQL:en själv." },
+      { text: "Nivå 3 — controllern visar ett eget meddelande i stället för databasens fel", explain: "Nivå 3 kräver att controllern inte ser SQLException alls, bara DaoException från en DAO." },
+      { text: "Nivå 1 — SQL och JDBC ligger i controllern, men de hör hemma i en DAO", explain: "DriverManager, SQL-texten och SQLException i controllern är nivå 1. Föreläsningens omdöme: bygg inte så, det ger underkänt. Flytta databaskontakten till EmployeeDao." },
+      { text: "Nivå 2 — SQL i controllern är godtagbart så länge felen visas för användaren", explain: "Att felen visas räddar inte uppdelningen. SQL i controllern är just det som definierar nivå 1." }
+    ],
+    correct: 2, source: "Kompendiet kap. 11", reviewed: false },
+
+  { id: "dbq-66", topic: "applikation", difficulty: 2,
+    question: "I en applikation på nivå 3: vilket lager gör om felkod 2627 till meddelandet \"An employee with this Employee No already exists.\"?",
+    options: [
+      { text: "Controllern, som läser getErrorCode() och väljer meddelande efter koden", explain: "Då måste controllern fånga SQLException, och det är nivå 2. På nivå 3 ser controllern bara DaoException." },
+      { text: "Data access-lagret: DAO:n fångar SQLException och kastar DaoException", explain: "EmployeeDao.save fångar SQLException, läser felkoden och kastar DaoException med meddelandet. Controllern visar bara e.getMessage()." },
+      { text: "Modellklassen Employee, som kontrollerar att numret är unikt före sparning", explain: "Modellen håller data. Unikheten är databasens UNIQUE-constraint, och felet tolkas i data access-lagret." },
+      { text: "View-lagret, där FXML-filen kopplar felkoden till en etikett för felmeddelanden", explain: "FXML styr placering och utseende. Etiketten visar texten, men vet inget om felkoder." }
+    ],
+    correct: 1, source: "Kompendiet kap. 11", reviewed: false },
+
+  { id: "dbq-67", topic: "applikation", difficulty: 1,
+    question: "Employee har UNIQUE på EmpNo och Department UNIQUE på DeptName. Vad ger getErrorCode() när en INSERT bryter mot var och en?",
+    options: [
+      { text: "2627 för EmpNo och 208 för DeptName — en kod per constraint i databasen", explain: "208 betyder att objektet inte finns, till exempel en felstavad tabell. UNIQUE-brott har en och samma kod." },
+      { text: "0 i båda fallen, eftersom anslutningen avbryts när en constraint bryts", explain: "0 betyder att anslutningen misslyckades. Ett constraintbrott avbryter inte anslutningen." },
+      { text: "2627 i båda fallen; meddelandet säger sedan vilken constraint som bröts", explain: "Alla UNIQUE-brott ger 2627, vilken tabell det än gäller. Vill DAO:n skilja dem åt får den läsa meddelandet eller veta vilken sats den körde." },
+      { text: "Ingen kod alls — ett constraintbrott ger ett vanligt Exception, inte SQLException", explain: "Brottet kommer som SQLException, och det är där getErrorCode() finns. Ett vanligt Exception har ingen felkod." }
+    ],
+    correct: 2, source: "Kompendiet kap. 11", reviewed: false },
+
+  { id: "dbq-68", topic: "applikation", difficulty: 2,
+    question: "Modellklassen Employee har employeeNumber, name och salary men ingen EmployeeID. Varför?",
+    options: [
+      { text: "Surrogatnyckeln hör till fysisk design; användaren ser eller skriver den aldrig", explain: "EmployeeID är databasens sak och fylls i av IDENTITY. Det verksamheten identifierar en anställd med är EmpNo, och det är den findByEmpNo söker på." },
+      { text: "EmployeeID finns bara i Work, och Employee-klassen läser aldrig den tabellen alls", explain: "EmployeeID är primärnyckel i Employee och främmande nyckel i Work. Den finns i båda tabellerna." },
+      { text: "Modellklasser innehåller aldrig nycklar, varken surrogat eller naturliga", explain: "employeeNumber är den naturliga nyckeln, och den finns i klassen. Det är surrogatnyckeln som saknas." },
+      { text: "EmployeeID är den naturliga nyckeln och ersätts därför av employeeNumber", explain: "Tvärtom: EmpNo är den naturliga nyckeln, EmployeeID surrogatnyckeln." }
+    ],
+    correct: 0, source: "Kompendiet kap. 11", reviewed: false },
+
+  { id: "dbq-69", topic: "applikation", difficulty: 1,
+    question: "Vilken kombination av sats och metod är rätt?",
+    options: [
+      { text: "UPDATE med executeQuery, eftersom satsen först letar upp de rader som ska ändras", explain: "Att en UPDATE har en WHERE gör den inte till en fråga. Den ändrar data och körs med executeUpdate." },
+      { text: "SELECT med executeUpdate, eftersom frågan flyttar markören i ResultSet", explain: "executeUpdate ger inget ResultSet, bara antal rader. SELECT körs med executeQuery." },
+      { text: "DELETE med executeQuery, eftersom den returnerar raderna som togs bort", explain: "DELETE ger inget ResultSet. Den körs med executeUpdate, som returnerar antalet borttagna rader." },
+      { text: "INSERT med executeUpdate, eftersom satsen ändrar data och inte ger ResultSet", explain: "executeUpdate är för INSERT, UPDATE och DELETE och returnerar antalet påverkade rader. executeQuery är för SELECT, som ger ett ResultSet." }
+    ],
+    correct: 3, source: "Kompendiet kap. 11", reviewed: false },
+
+  { id: "dbq-70", topic: "applikation", difficulty: 2,
+    question: "Vilket påstående om felhanteringen i en controller som sparar en anställd stämmer?",
+    options: [
+      { text: "catch (Exception e) först fångar allt, och e.getErrorCode() ger då SQL Servers kod", explain: "Ett vanligt Exception har ingen getErrorCode(), och ett brett block först gör de specifika oåtkomliga." },
+      { text: "SQLException först, NumberFormatException sedan och Exception sist som uppsamling", explain: "Föreläsningens struktur: databasfelen, sedan de specifika undantag du vet kan uppstå — lönefältet som inte är ett tal — och sist ett allmänt block med ett generiskt meddelande." },
+      { text: "catch (SQLException e) fångar också NumberFormatException från lönefältet", explain: "SQLException fångar bara databasfel. Double.parseDouble på en felaktig lön kräver ett eget block." },
+      { text: "Felkoden 0 betyder att satsen lyckades, så det fallet behöver inte hanteras", explain: "Lyckas satsen kastas inget undantag alls. Kod 0 betyder att anslutningen misslyckades." }
+    ],
+    correct: 1, source: "Kompendiet kap. 11", reviewed: false }
 ];
