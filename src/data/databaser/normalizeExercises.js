@@ -169,7 +169,7 @@ export const NORMALIZE_GROUPS = [
   { exercise: "egen", source: "Egen uppgift", label: "Egna" },
 ];
 
-export const itemLabel = (item) => (item.exercise === "egen" ? `Egen uppgift ${item.number}` : `Uppgift ${item.exercise}, relation ${item.number}`);
+export const itemLabel = (item) => (item.exercise === "egen" ? `Egen uppgift ${item.number}` : item.exercise === "slump" ? "Slumpuppgift" : `Uppgift ${item.exercise}, relation ${item.number}`);
 export const groupLabel = (group) => group.label || `Uppgift ${group.exercise}`;
 
 // Relationen och beroendena som förformaterat block, som i Öva.

@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 250 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-10-08.
+- **Test:** `npm test` = 257 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-10-09.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -197,7 +197,18 @@ kapitel: allt UI läser `chapter.number`.
   stämmer läggs facitjämförelsens skäl till som rader (`fdGrade.js`).
   Lossless, DP, closure och NF per tabell ligger i hopfällda "Visa
   detaljer" ("join" i stället för ⋈). Ingen text nämner rättningstekniken.
-  Klar = alla fält rätt. Under rättningsrutan: "Nästa: 10:3 →"
+  Klar = alla fält rätt. **Slumpuppgifter (2026-10-09):** kortet
+  "Slumpuppgifter" i sidokolumnen genererar en ny relation
+  (`lib/fdGenerator.js`, frö → samma uppgift, mulberry32): 3–6 attribut
+  A…, 1–4 beroenden utan överflöd, vald normalform (Valfri = jämnt slumpad
+  mellan 1NF/2NF/3NF, annars blir nästan alla 1NF), facit syntetiserat med
+  de tre reglerna och alla lokala kandidatnycklar som PK-alternativ;
+  uppgiften lämnas bara ut om facit klarar samma prov som häftets
+  (`facitIsSound`). Id `norm-slump-<frö>`, `exercise: "slump"`; aktuell
+  uppgift i `sysb23:normalisering:slump-aktuell` ({ seed, target }),
+  antal lösta i `…:slump-losta` (räknas inte i uppgiftslistans framsteg).
+  Ny slumpuppgift tar bort den förras ritning och svar. Efter rättning:
+  "Ny slumpuppgift →". Under rättningsrutan: "Nästa: 10:3 →"
   (nästa uppgift i listan, runt om; scrollar upp till uppgiften).
   Öppen flik och Modelleras underflik överlever en omladdning (2026-10-07,
   `sysb23:flik` och `sysb23:modellFlik`; saknar delkursen fliken blir det Hem).
@@ -217,7 +228,7 @@ kapitel: allt UI läser `chapter.number`.
   `FdDefinitions.jsx` i sidokolumnen. Framsteg för
   alla tre: `sysb23:modell:<id>` = "solved", nollställs bara via knapp.
   Tester: `model-check`, `model-figures`, `normalize`, `fd`, `fd-drawing`,
-  `fd-grade`, `decomp-feedback`, `statements`.
+  `fd-grade`, `decomp-feedback`, `fd-generator`, `statements`.
 - **Statistik**, **Schema (Pluggkalender)** och **Hem** som för Strategi.
 
 ## Regler (följ dem)

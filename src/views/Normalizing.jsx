@@ -5,6 +5,7 @@ import { facitVariants } from "../lib/normalize.js";
 import { gradeAnswer, partsSummary } from "../lib/fdGrade.js";
 import { highestNF, braceText, NF_NAME, allCandidateKeys, projectFds, toFds } from "../lib/fd.js";
 import { load, save } from "../lib/storage.js";
+import { randomExercise, newSeed } from "../lib/fdGenerator.js";
 import FdCanvas from "../components/fd/FdCanvas.jsx";
 import FdAnswer from "../components/fd/FdAnswer.jsx";
 import FdDefinitions from "../components/fd/FdDefinitions.jsx";
@@ -17,6 +18,10 @@ import SchemaView from "../components/model/SchemaView.jsx";
 // förut. Ritning och svar sparas per uppgift i localStorage.
 
 const COLLAPSE_RESULT = "normalisering:rattning-ihopfalld";
+// Slumpläget: aktuell slumpuppgift ({ seed, target }) och antal lösta.
+const RANDOM_CURRENT = "normalisering:slump-aktuell";
+const RANDOM_SOLVED = "normalisering:slump-losta";
+const RANDOM_TARGETS = [[null, "Valfri"], ["1NF", "1NF"], ["2NF", "2NF"], ["3NF", "3NF"]];
 const COLLAPSE_FACIT = "normalisering:facit-ihopfalld";
 
 // Dölj/Visa i en rutas rubrikrad.
@@ -63,7 +68,18 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
   const toggleResult = () => setResultCollapsed((v) => { save(COLLAPSE_RESULT, !v); return !v; });
   const toggleFacit = () => setFacitCollapsed((v) => { save(COLLAPSE_FACIT, !v); return !v; });
 
-  const item = items.find((e) => e.id === currentId) || items[0];
+  // Slumpläget: en genererad relation som inte finns i listan. Den aktuella
+  // sparas (frö + vald normalform) så att den överlever en omladdning.
+  const [randomTarget, setRandomTarget] = useState(() => load(RANDOM_CURRENT, null)?.target ?? null);
+  const [randomItem, setRandomItem] = useState(() => {
+    const saved = load(RANDOM_CURRENT, null);
+    return saved?.seed ? randomExercise(saved.seed, saved.target ?? null) : null;
+  });
+  const [randomSolved, setRandomSolved] = useState(() => Number(load(RANDOM_SOLVED, 0)) || 0);
+  const countedRef = useRef(new Set());
+  const isRandom = (e) => e?.exercise === "slump";
+
+  const item = (randomItem && currentId === randomItem.id ? randomItem : null) || items.find((e) => e.id === currentId) || items[0];
   const draft = drafts[item.id] ?? load(`fdsvar:${item.id}`, null) ?? emptyDraft();
   const parsed = useMemo(() => parseSchema(draft.text || ""), [draft.text]);
   const solvedCount = items.filter((e) => modelProgress[e.id]).length;
@@ -79,7 +95,30 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
   const sectionRef = useRef(null);
   const nextItem = items[(items.findIndex((e) => e.id === item.id) + 1) % items.length];
   function goNext() {
+    if (isRandom(item)) { newRandom(randomTarget); return; }
     setCurrentId(nextItem.id);
+    sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // Ny slumpuppgift. Den förra slumpuppgiftens ritning och svar tas bort, så
+  // att localStorage inte fylls av engångsuppgifter.
+  function newRandom(target = randomTarget) {
+    if (randomItem) {
+      try {
+        localStorage.removeItem(`sysb23:fdsvar:${randomItem.id}`);
+        localStorage.removeItem(`sysb23:fdritning:${randomItem.id}`);
+      } catch { /* privat läge */ }
+    }
+    let ex = null;
+    for (let k = 0; k < 5 && !ex; k++) {
+      const seed = newSeed();
+      ex = randomExercise(seed, target);
+      if (ex) save(RANDOM_CURRENT, { seed, target });
+    }
+    if (!ex) return;
+    setRandomTarget(target);
+    setRandomItem(ex);
+    setCurrentId(ex.id);
     sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
@@ -93,7 +132,13 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
   function grade() {
     const outcome = gradeAnswer(item, draft);
     setResult(outcome);
-    if (outcome.status === "correct") onSolve(item.id, "solved");
+    if (outcome.status === "correct") {
+      if (!isRandom(item)) onSolve(item.id, "solved");
+      else if (!countedRef.current.has(item.id)) {
+        countedRef.current.add(item.id);
+        setRandomSolved((n) => { save(RANDOM_SOLVED, n + 1); return n + 1; });
+      }
+    }
   }
 
   const dec = result?.fields.decomposition;
@@ -117,7 +162,7 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
         <section ref={sectionRef} className="card scroll-mt-24 p-5">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <p className="text-sm text-ink/65">
-              {itemLabel(item)} · {NORMALIZE_GROUPS.find((g) => g.exercise === item.exercise)?.source}
+              {itemLabel(item)} · {NORMALIZE_GROUPS.find((g) => g.exercise === item.exercise)?.source || "Slumpad relation"}
               {modelProgress[item.id] && <span className="ml-2 text-correct">✓ Klar</span>}
             </p>
             {modelProgress[item.id] && !confirmReset && (
@@ -229,7 +274,7 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
           {result && (
             <div className="mt-3 flex justify-end">
               <button type="button" className="btn-emphasis px-4 py-2 text-sm" onClick={goNext}>
-                Nästa: {nextItem.exercise === "egen" ? `Egen ${nextItem.number}` : `${nextItem.exercise}:${nextItem.number}`} →
+                {isRandom(item) ? "Ny slumpuppgift" : `Nästa: ${nextItem.exercise === "egen" ? `Egen ${nextItem.number}` : `${nextItem.exercise}:${nextItem.number}`}`} →
               </button>
             </div>
           )}
@@ -308,6 +353,21 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
             </div>
           ))}
         </nav>
+        <section aria-label="Slumpuppgifter" className="card p-4">
+          <h3 className="font-display text-[15px]">Slumpuppgifter</h3>
+          <p className="mt-1 text-sm text-ink/65">En ny relation med beroenden varje gång, i övningshäftets stil, med facit enligt de tre reglerna.</p>
+          <p className="mt-3 text-sm font-medium text-ink/80">Normalform att träna på</p>
+          <div className="mt-1 flex flex-wrap gap-1.5" role="radiogroup" aria-label="Normalform att träna på">
+            {RANDOM_TARGETS.map(([value, label]) => (
+              <button key={label} type="button" role="radio" aria-checked={randomTarget === value} onClick={() => { setRandomTarget(value); save(RANDOM_CURRENT, { ...(load(RANDOM_CURRENT, null) || {}), target: value }); }} className={`chip chip-sm ${randomTarget === value ? "chip-on" : ""}`}>{label}</button>
+            ))}
+          </div>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <button type="button" className="btn-secondary px-3 py-1.5 text-sm" onClick={() => newRandom(randomTarget)}>Ny slumpuppgift</button>
+            {randomItem && !isRandom(item) && <button type="button" className="btn-quiet px-1 py-0.5 text-sm" onClick={() => setCurrentId(randomItem.id)}>Tillbaka till slumpuppgiften</button>}
+          </div>
+          <p className="tabular mt-2 text-sm text-ink/65">{randomSolved} {randomSolved === 1 ? "slumpuppgift löst" : "slumpuppgifter lösta"}</p>
+        </section>
         <FdDefinitions />
       </div>
     </div>
