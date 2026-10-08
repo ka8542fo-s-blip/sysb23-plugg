@@ -1587,9 +1587,9 @@ Department är byggd likadant med \`UNIQUE\` på DeptName, och Work är koppling
 
 Databasen ligger på en **server**, i kursen SQL Server på en Windows-maskin i molnet. Applikationen är en **klient** som körs på användarens dator och anropar servern över nätet. Mellan dem sitter en **JDBC driver**.
 
-En drivrutin gör två saker. Den ger applikationen en fast uppsättning kommandon, ett **API** (Application Programming Interface), och den översätter anropen till det format målsystemet förstår. Det är samma idé som en skrivardrivrutin: programmet säger "skriv ut", drivrutinen vet hur just den skrivaren vill ha det. **JDBC** (Java Database Connectivity) är API:t du programmerar mot, och SQL Server-drivrutinen gör om dina Java-anrop till något SQL Server förstår.
+En drivrutin gör två saker. Den ger applikationen en fast uppsättning kommandon, ett **API** (Application Programming Interface), och den översätter anropen till det format målsystemet förstår. **JDBC** (Java Database Connectivity) är API:t du programmerar mot, och SQL Server-drivrutinen gör om dina Java-anrop till något SQL Server förstår.
 
-Drivrutinen är en fil som laddas ned; i kursens projekt sköter Maven det, genom att beroendet skrivs in i projektfilen pom.xml.
+Drivrutinen är en fil som laddas ned; i kursens projekt sköter Maven det, genom att beroendet skrivs in i projektfilen pom.xml. Både pom.xml och gränssnittets FXML-filer är XML, ett märkspråk med nästlade element och attribut. Programmet körs i en JVM (Java Virtual Machine), som följer med JDK:n (Java Development Kit) tillsammans med kompilatorn; den fristående JRE:n finns inte längre att ladda ned. Och ODBC är den äldre, språkoberoende motsvarigheten till JDBC, byggd på samma idé om en drivrutin mellan program och databas.
 
 ## JDBC-kedjan
 
@@ -1622,7 +1622,7 @@ Föreläsningens första program skriver ut alla anställda:
         e.printStackTrace();
     }
 
-Rad för rad, sett från databasen. Frågan är bara en Java-sträng; ingenting har hänt ännu. \`getConnection\` öppnar en anslutning och loggar in — här uppstår det första felet om servern inte svarar. \`prepareStatement\` skickar frågan till servern, som förbereder den. \`executeQuery\` kör den: servern läser Employee och skickar tillbaka raderna, som hamnar i ResultSet. Loopen läser dem en i taget, och de tre \`close\` lämnar tillbaka resurserna. EmployeeID står inte i SELECT-listan — programmet behöver den inte för att visa en anställd.
+Rad för rad, sett från databasen. Frågan är bara en Java-sträng; ingenting har hänt ännu. \`getConnection\` öppnar en anslutning och loggar in — här uppstår det första felet om servern inte svarar. \`prepareStatement\` skickar frågan till servern, som förbereder den. \`executeQuery\` kör den: servern läser Employee och skickar tillbaka raderna, som hamnar i ResultSet. Loopen läser dem en i taget, och de tre \`close\` lämnar tillbaka resurserna.
 
 ### Anslutningssträngen
 
@@ -1652,7 +1652,7 @@ Värden skrivs aldrig in i SQL-texten. Frågan får en **platshållare**, ett fr
 
 Varje \`set\`-metod tar platshållarens nummer och värdet: \`setString\` för text, \`setInt\` för heltal, \`setDouble\` för decimaltal. **Numreringen börjar på 1**, inte på 0 som index i en Java-lista — \`setString(0, …)\` är fel. Satsen är en INSERT och körs därför med \`executeUpdate\`. I databasen blir det en ny rad i Employee; EmployeeID fylls i av IDENTITY, och programmet nämner den aldrig.
 
-PreparedStatement är best practice av två skäl. Frågan förkompileras, vilket lönar sig när samma fråga körs många gånger med olika värden. Och värdena hanteras säkert: de skickas som värden, aldrig som en del av SQL-texten, så användarens inmatning kan inte ändra själva frågan. Samma form gäller sökningar — en anställd med ett visst nummer blir \`WHERE EmpNo = ?\`.
+PreparedStatement är best practice av två skäl. Frågan förkompileras, vilket lönar sig när samma fråga körs många gånger med olika värden. Och värdena hanteras säkert: de skickas som värden, aldrig som en del av SQL-texten, så användarens inmatning kan inte ändra själva frågan.
 
 ## ResultSet och markören
 
