@@ -289,9 +289,9 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
 
 ## Ogranskat (mot kursmaterialet)
 
-- **Öva:** 51 av 73 frågor bär `reviewed: false` — dbq-01…12 (kapitel
-  1–3, skrivna mot kapiteltexten 2026-09-05), dbq-63…70 (kapitel 11,
-  2026-10-08) och dbq-33…62 (de 30 nya från
+- **Öva:** 45 av 73 frågor bär `reviewed: false` — dbq-01…12 (kapitel
+  1–3, skrivna mot kapiteltexten 2026-09-05), dbq-65 och dbq-70 (kapitel 11,
+  omskrivna efter Kaspers granskning 2026-10-08; dbq-63, 64, 66–69 granskade) och dbq-33…62 (de 30 nya från
   omviktningen 2026-09-07, inklusive diagram- och context-frågorna och de
   fyra SQL-frågorna db1-11/13/15/16). Flaggan syns inte i UI.
 - **Kapitel 11 (applikationsutveckling, 2026-10-08):** skrivet mot Fö8–9,

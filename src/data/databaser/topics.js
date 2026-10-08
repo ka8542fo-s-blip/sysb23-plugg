@@ -316,7 +316,7 @@ export const topics = [
       "PreparedStatement: ? som platshållare, värdena sätts med setString, setInt och setDouble, numrerade från 1. Best practice: förkompilerad fråga och säker hantering av värden — inmatningen kan inte ändra frågan.",
       "ResultSet och markör: markören står före första raden; next() flyttar den och returnerar false när raderna är slut, därav while (rs.next()). getString(\"EmpNo\") läser raden markören står på. Kolumnnamn är bättre än index.",
       "Stänga resurser: ResultSet, sedan PreparedStatement, sedan Connection. Try-with-resources stänger allt inom parentesen automatiskt, också vid fel.",
-      "Felkoder: getErrorCode() ger 2627 när en UNIQUE-constraint bryts (samma kod för alla UNIQUE-brott), 208 när objektet inte finns och 0 när anslutningen misslyckats. Catch-ordning: SQLException, sedan specifika undantag som NumberFormatException, Exception sist. Vanliga Exception har ingen getErrorCode().",
+      "Felkoder: getErrorCode() ger 2627 när en UNIQUE-constraint bryts (samma kod för alla UNIQUE-brott), 208 när objektet inte finns och 0 när anslutningen misslyckats. Catch-ordning: Exception sist som uppsamling är ett krav (annars kompilerar koden inte); föreläsningen visar SQLException före NumberFormatException, men deras inbördes ordning spelar ingen roll. Vanliga Exception har ingen getErrorCode().",
       "Fyra lager: view (FXML, utseende), controller (händelser, fel som meddelanden till användaren), model (domänobjekten, som Employee), data access (DAO-klasser och ConnectionHandler, all kontakt med databasen).",
       "Tre nivåer av separation: (1) SQL i controllern — underkänt; (2) en DAO finns men controllern får SQLException; (3) DAO:n fångar SQLException och kastar DaoException, controllern fångar bara DaoException och innehåller ingen SQL. Kursen siktar på nivå 2–3.",
       "Kopplingen till modelleringen: modellklassen Employee saknar EmployeeID, för surrogatnyckeln hör till fysisk design och användaren ser eller skriver den aldrig. UNIQUE-constrainten på EmpNo syns i appen som felkod 2627.",
@@ -328,7 +328,7 @@ export const topics = [
       "getString() utan next() först: markören står före första raden.",
       "if (rs.next()) där frågan kan ge flera rader läser bara den första; while behövs.",
       "SQL eller catch (SQLException) i controllern. På nivå 3 fångar controllern bara DaoException.",
-      "catch (Exception e) före catch (SQLException e): det breda blocket ska stå sist."
+      "catch (Exception e) före catch (SQLException e): det breda blocket ska stå sist, annars kompilerar koden inte. SQLException och NumberFormatException får stå i valfri ordning."
     ]
   }
 ];

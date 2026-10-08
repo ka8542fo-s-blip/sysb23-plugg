@@ -712,7 +712,7 @@ export const questions = [
       { text: "EmployeeID saknas i INSERT och måste sättas med en egen setInt före EmpNo", explain: "EmployeeID fylls i av IDENTITY. Programmet nämner den aldrig — det är surrogatnyckelns poäng." },
       { text: "Try-with-resources stänger anslutningen innan executeUpdate hinner köras", explain: "Resurserna stängs när blocket tar slut, alltså efter executeUpdate." }
     ],
-    correct: 0, source: "Kompendiet kap. 11", reviewed: false },
+    correct: 0, source: "Kompendiet kap. 11", reviewed: true },
 
   { id: "dbq-64", topic: "applikation", difficulty: 2,
     context: "String query = \"SELECT EmpName FROM Employee WHERE EmpNo = ?\";\nPreparedStatement statement = connection.prepareStatement(query);\nstatement.setString(1, \"E2\");\nResultSet resultSet = statement.executeQuery();\nString name = resultSet.getString(\"EmpName\");",
@@ -723,7 +723,7 @@ export const questions = [
       { text: "Platshållaren måste sättas med setInt, eftersom EmpNo är en nyckelkolumn", explain: "EmpNo är VARCHAR, alltså setString. Att kolumnen är nyckel påverkar inte valet." },
       { text: "Markören står före första raden; next() måste anropas innan getString läser", explain: "ResultSetets markör börjar före första raden. Först next() flyttar den till E2:s rad; här räcker if (resultSet.next()), eftersom EmpNo är UNIQUE." }
     ],
-    correct: 3, source: "Kompendiet kap. 11", reviewed: false },
+    correct: 3, source: "Kompendiet kap. 11", reviewed: true },
 
   { id: "dbq-65", topic: "applikation", difficulty: 2,
     context: "@FXML\nprivate void buttonEmployeeAdd_OnClick(MouseEvent event) {\n    try (Connection connection = DriverManager.getConnection(connectionUrl)) {\n        PreparedStatement statement = connection.prepareStatement(\n            \"INSERT INTO Employee (EmpNo, EmpName, EmpSalary) VALUES (?, ?, ?)\");\n        statement.setString(1, textFieldEmployeeNumber.getText());\n        statement.setString(2, textFieldEmployeeName.getText());\n        statement.setDouble(3, Double.parseDouble(textFieldEmployeeSalary.getText()));\n        statement.executeUpdate();\n    } catch (SQLException e) {\n        displayErrorMessage(\"Could not save employee.\");\n    }\n}",
@@ -731,8 +731,8 @@ export const questions = [
     options: [
       { text: "Nivå 2 — en DAO finns, men controllern fångar fortfarande SQLException själv", explain: "Det finns ingen DAO här: controllern öppnar anslutningen och skriver SQL:en själv." },
       { text: "Nivå 3 — controllern visar ett eget meddelande i stället för databasens fel", explain: "Nivå 3 kräver att controllern inte ser SQLException alls, bara DaoException från en DAO." },
-      { text: "Nivå 1 — SQL och JDBC ligger i controllern, men de hör hemma i en DAO", explain: "DriverManager, SQL-texten och SQLException i controllern är nivå 1. Föreläsningens omdöme: bygg inte så, det ger underkänt. Flytta databaskontakten till EmployeeDao." },
-      { text: "Nivå 2 — SQL i controllern är godtagbart så länge felen visas för användaren", explain: "Att felen visas räddar inte uppdelningen. SQL i controllern är just det som definierar nivå 1." }
+      { text: "Nivå 1 — SQL och JDBC ligger i controllern, men de hör hemma i en DAO", explain: "DriverManager, SQL-texten och SQLException i controllern är nivå 1. Föreläsningens omdöme: bygg inte så, det ger underkänt på projektet. Flytta databaskontakten till EmployeeDao." },
+      { text: "Nivå 3 — try-with-resources stänger anslutningen, så inga databasresurser läcker", explain: "Att resurserna stängs rätt säger inget om lagren. Nivå 3 kräver en DAO som fångar SQLException och kastar DaoException — här finns ingen DAO alls." }
     ],
     correct: 2, source: "Kompendiet kap. 11", reviewed: false },
 
@@ -744,7 +744,7 @@ export const questions = [
       { text: "Modellklassen Employee, som kontrollerar att numret är unikt före sparning", explain: "Modellen håller data. Unikheten är databasens UNIQUE-constraint, och felet tolkas i data access-lagret." },
       { text: "View-lagret, där FXML-filen kopplar felkoden till en etikett för felmeddelanden", explain: "FXML styr placering och utseende. Etiketten visar texten, men vet inget om felkoder." }
     ],
-    correct: 1, source: "Kompendiet kap. 11", reviewed: false },
+    correct: 1, source: "Kompendiet kap. 11", reviewed: true },
 
   { id: "dbq-67", topic: "applikation", difficulty: 1,
     question: "Employee har UNIQUE på EmpNo och Department UNIQUE på DeptName. Vad ger getErrorCode() när en INSERT bryter mot var och en?",
@@ -754,7 +754,7 @@ export const questions = [
       { text: "2627 i båda fallen; meddelandet säger sedan vilken constraint som bröts", explain: "Alla UNIQUE-brott ger 2627, vilken tabell det än gäller. Vill DAO:n skilja dem åt får den läsa meddelandet eller veta vilken sats den körde." },
       { text: "Ingen kod alls — ett constraintbrott ger ett vanligt Exception, inte SQLException", explain: "Brottet kommer som SQLException, och det är där getErrorCode() finns. Ett vanligt Exception har ingen felkod." }
     ],
-    correct: 2, source: "Kompendiet kap. 11", reviewed: false },
+    correct: 2, source: "Kompendiet kap. 11", reviewed: true },
 
   { id: "dbq-68", topic: "applikation", difficulty: 2,
     question: "Modellklassen Employee har employeeNumber, name och salary men ingen EmployeeID. Varför?",
@@ -764,7 +764,7 @@ export const questions = [
       { text: "Modellklasser innehåller aldrig nycklar, varken surrogat eller naturliga", explain: "employeeNumber är den naturliga nyckeln, och den finns i klassen. Det är surrogatnyckeln som saknas." },
       { text: "EmployeeID är den naturliga nyckeln och ersätts därför av employeeNumber", explain: "Tvärtom: EmpNo är den naturliga nyckeln, EmployeeID surrogatnyckeln." }
     ],
-    correct: 0, source: "Kompendiet kap. 11", reviewed: false },
+    correct: 0, source: "Kompendiet kap. 11", reviewed: true },
 
   { id: "dbq-69", topic: "applikation", difficulty: 1,
     question: "Vilken kombination av sats och metod är rätt?",
@@ -774,13 +774,13 @@ export const questions = [
       { text: "DELETE med executeQuery, eftersom den returnerar raderna som togs bort", explain: "DELETE ger inget ResultSet. Den körs med executeUpdate, som returnerar antalet borttagna rader." },
       { text: "INSERT med executeUpdate, eftersom satsen ändrar data och inte ger ResultSet", explain: "executeUpdate är för INSERT, UPDATE och DELETE och returnerar antalet påverkade rader. executeQuery är för SELECT, som ger ett ResultSet." }
     ],
-    correct: 3, source: "Kompendiet kap. 11", reviewed: false },
+    correct: 3, source: "Kompendiet kap. 11", reviewed: true },
 
   { id: "dbq-70", topic: "applikation", difficulty: 2,
-    question: "Vilket påstående om felhanteringen i en controller som sparar en anställd stämmer?",
+    question: "Vilket påstående om felhanteringen i en metod som sparar en anställd stämmer?",
     options: [
-      { text: "catch (Exception e) först fångar allt, och e.getErrorCode() ger då SQL Servers kod", explain: "Ett vanligt Exception har ingen getErrorCode(), och ett brett block först gör de specifika oåtkomliga." },
-      { text: "SQLException först, NumberFormatException sedan och Exception sist som uppsamling", explain: "Föreläsningens struktur: databasfelen, sedan de specifika undantag du vet kan uppstå — lönefältet som inte är ett tal — och sist ett allmänt block med ett generiskt meddelande." },
+      { text: "SQLException måste stå före NumberFormatException, och Exception sist av alla", explain: "Bara den sista delen är ett krav. SQLException och NumberFormatException är inte släkt, så deras inbördes ordning är fri — föreläsningen visar SQLException först, men omvänt kompilerar lika bra." },
+      { text: "catch (Exception e) måste stå sist, annars kompilerar koden inte alls", explain: "Exception är det allmännaste undantaget. Står det före ett mer specifikt block blir det blocket oåtkomligt, och Java vägrar kompilera. Därför står Exception sist som uppsamling." },
       { text: "catch (SQLException e) fångar också NumberFormatException från lönefältet", explain: "SQLException fångar bara databasfel. Double.parseDouble på en felaktig lön kräver ett eget block." },
       { text: "Felkoden 0 betyder att satsen lyckades, så det fallet behöver inte hanteras", explain: "Lyckas satsen kastas inget undantag alls. Kod 0 betyder att anslutningen misslyckades." }
     ],

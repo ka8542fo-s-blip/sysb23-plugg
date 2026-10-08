@@ -1622,7 +1622,7 @@ Föreläsningens första program skriver ut alla anställda:
         e.printStackTrace();
     }
 
-Rad för rad, sett från databasen. Frågan är bara en Java-sträng; ingenting har hänt ännu. \`getConnection\` öppnar en anslutning och loggar in — här uppstår det första felet om servern inte svarar. \`prepareStatement\` skickar frågan till servern, som förbereder den. \`executeQuery\` kör den: servern läser Employee och skickar tillbaka raderna, som hamnar i ResultSet. Loopen läser dem en i taget, och de tre \`close\` lämnar tillbaka resurserna.
+Rad för rad, sett från databasen. Frågan är bara en Java-sträng; ingenting har hänt ännu. \`getConnection\` öppnar en anslutning och loggar in — här uppstår det första felet om servern inte svarar. \`prepareStatement\` förkompilerar frågan. \`executeQuery\` kör den: servern läser Employee och skickar tillbaka raderna, som hamnar i ResultSet. Loopen läser dem en i taget, och de tre \`close\` lämnar tillbaka resurserna.
 
 ### Anslutningssträngen
 
@@ -1699,7 +1699,7 @@ Här dyker kapitel 9:s constraints upp i applikationen. \`UQ_Employee_EmpNo\` ä
         }
     }
 
-\`catch (SQLException e)\` fångar bara databasfel. En lön som inte går att tolka som tal ger \`NumberFormatException\` och behöver ett eget block. Ordningen är **SQLException först, sedan de specifika undantag du vet kan uppstå, och \`Exception\` sist** som uppsamling. Ett vanligt \`Exception\` har ingen \`getErrorCode()\` — felkoden finns bara på SQLException.
+\`catch (SQLException e)\` fångar bara databasfel. En lön som inte går att tolka som tal ger \`NumberFormatException\` och behöver ett eget block. **\`Exception\` sist som uppsamling är ett krav**: ett allmänt undantag före ett mer specifikt gör det specifika blocket oåtkomligt, och då kompilerar koden inte. Föreläsningen visar SQLException före NumberFormatException, men deras inbördes ordning spelar ingen roll — de är inte släkt. Ett vanligt \`Exception\` har ingen \`getErrorCode()\` — felkoden finns bara på SQLException.
 
 ## Fyra lager
 
@@ -1740,7 +1740,7 @@ ConnectionHandler läser anslutningsuppgifterna ur konfigurationsfilen, bygger a
 
 Föreläsningen graderar hur väl lagren hålls isär, och kursen siktar på nivå 2 eller 3.
 
-**Nivå 1, dålig separation.** Det finns inget data access-lager. SQL, ResultSet och SQLException ligger direkt i controllern, som blandar gränssnitt och databaslogik. Omdömet är kort: bygg inte så, det ger underkänt.
+**Nivå 1, dålig separation.** Det finns inget data access-lager. SQL, ResultSet och SQLException ligger direkt i controllern, som blandar gränssnitt och databaslogik. Omdömet är kort: bygg inte så — en applikation byggd så ger underkänt på projektet.
 
 **Nivå 2, delvis separation.** En DAO finns och controllern får en \`List<Employee>\`, men DAO-metoderna deklarerar \`throws SQLException\`, så controllern måste fånga databasens egna undantag:
 
@@ -1769,7 +1769,7 @@ Föreläsningen graderar hur väl lagren hålls isär, och kursen siktar på niv
         }
     }
 
-I controllern blir det \`catch (DaoException e)\` som visar \`e.getMessage()\` för användaren, följt av ett eget block för \`NumberFormatException\` när lönefältet inte innehåller ett tal. Felkoden tolkas på ett enda ställe: i lagret som vet att det finns en databas.
+DaoException ärver från \`RuntimeException\` och behöver därför inte deklareras — det är därför \`save()\` på nivå 3 saknar \`throws\`, medan DAO-metoderna på nivå 2 måste skriva \`throws SQLException\`. I controllern blir det \`catch (DaoException e)\` som visar \`e.getMessage()\` för användaren, följt av ett eget block för \`NumberFormatException\` när lönefältet inte innehåller ett tal. Felkoden tolkas på ett enda ställe: i lagret som vet att det finns en databas.
 
 ## Kopplingen till resten av kursen
 
@@ -1792,7 +1792,7 @@ Föreläsaren har aviserat att HT26-tentan har en fråga som har med Java att g�
 
 - **Hitta felen i en DAO-metod.** Leta efter \`setString(0, …)\`, \`executeQuery\` på en INSERT eller \`executeUpdate\` på en SELECT, en \`getString\` utan \`next()\` före, \`if\` där frågan kan ge flera rader, resurser som aldrig stängs, och SQL eller SQLException i en controller.
 - **Skriv klart en findBy-metod.** Frågan med \`?\`, \`setString(1, …)\`, \`executeQuery\`, \`if (resultSet.next())\` eller \`while\` beroende på hur många rader frågan kan ge, och try-with-resources runt.
-- **Sant eller falskt om lager och felhantering.** Vilket lager som ansvarar för vad, vilken felkod en dubblett ger, i vilken ordning catch-blocken står och vad som skiljer nivå 2 från nivå 3.
+- **Sant eller falskt om lager och felhantering.** Vilket lager som ansvarar för vad, vilken felkod en dubblett ger, att \`Exception\` måste stå sist bland catch-blocken och vad som skiljer nivå 2 från nivå 3.
 `
   }
 
@@ -1900,7 +1900,7 @@ export const glossary = [
   { term: "Surrogatnyckel", definition: "Artificiellt, databasgenererat nyckelvärde utan affärsbetydelse; motiven är nyckelstabilitet och prestanda. Kallas också synthetic key, pseudokey, factless key eller technical key. Hör till fysisk design: den logiska modellen använder ER-modellens identifierare som kandidatnycklar, och på tentan krävs surrogatnyckeln i uppgift 2, på tabeller för vanliga och svaga entiteter men aldrig på kopplingstabeller.", chapter: "kap3" },
   { term: "Transitivt beroende", definition: "Ett funktionellt beroende där X → Z indirekt, i kraft av X → Y och Y → Z, och där det inte gäller att Y → X. Bryter mot 3NF.", chapter: "kap7" },
   { term: "Tupel (tuple)", definition: "Formellt en mängd attributvärden där inga två skilda element har samma attributnamn. Informellt en rad eller post.", chapter: "kap2" },
-  { term: "UNIQUE-constraint", definition: "Kräver unika värden men tillåter NULL. Här hamnar naturliga nycklar när en surrogatnyckel tagit primärnyckelrollen.", chapter: "kap8" },
+  { term: "UNIQUE-constraint", definition: "Kräver unika värden. Tillåter NULL, men i SQL Server högst en rad med NULL — därför krävs NOT NULL på naturliga nycklar. Här hamnar naturliga nycklar när en surrogatnyckel tagit primärnyckelrollen.", chapter: "kap8" },
   { term: "Uppdateringsanomali (update anomaly)", definition: "Att samma faktum lagras i flera rader så att en ändring måste göras på flera ställen, med risk för inkonsekvens.", chapter: "kap7" },
   { term: "Fysisk databasdesign", definition: "Tredje steget: den logiska modellen implementeras som DDL-satser, med surrogatnycklar, datatyper och constraints.", chapter: "kap1" },
   { term: "Insättningsanomali (insertion anomaly)", definition: "Att ett faktum inte kan registreras förrän något annat finns: ett nytt projekt kan inte läggas in innan någon är tilldelad det, när nyckeln kräver EmployeeNo.", chapter: "kap7" },
