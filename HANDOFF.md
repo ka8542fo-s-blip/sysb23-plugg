@@ -114,7 +114,7 @@ kapitel: allt UI läser `chapter.number`.
   namn/alias (skiftläge, _, å/ä/ö fälls) eller kolumnöverlapp, FK-kolumner
   via måltabell (unära par som multimängd), PK och UNIQUE som mängder.
   Facit är strukturdata (kind entity/weak/junction/multivalued, surrogate,
-  columns, fks med notNull/rel/tag, unique, optionalUnique, oneToOneUnique), `folded` =
+  columns, fks med notNull/rel/tag, unique, oneToOneUnique), `folded` =
   relationer som blir FK-kolumner (förklarar en överflödig tabell),
   `composites`. Fel bär regeltaggar (surrogat, naturlig nyckel, svag
   entitet, total deltagande, 1:N, M:N, unär, flervärt) plus tabellens
@@ -242,7 +242,8 @@ kapitel: allt UI läser `chapter.number`.
   `oneToOneUnique: [{ cols, rel }]` i facit skriver ut UNIQUE, godtar svar
   utan den och ger då en anmärkning — inget avdrag, eftersom häftets 21
   saknar den. Gäller uppsamlingens R5 och Modelleras ddl-21 (R3), som
-  tidigare hade `optionalUnique` utan UNIQUE i facit och utan kommentar.
+  tidigare godtog båda utan UNIQUE i facit och utan kommentar (fältet
+  `optionalUnique` är borttaget 2026-10-09).
   Uppgift 1: `scoreStatements` (oförändrad — den följde
   redan regeln: +5/−3, golv 0, tak 25, exakt rätt = 25 oavsett antal sanna;
   följd av taket: med sex sanna kostar en felmarkering inget, 27 → 25).

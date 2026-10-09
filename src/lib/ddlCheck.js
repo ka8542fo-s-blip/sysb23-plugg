@@ -300,7 +300,6 @@ export function parseDdl(text) {
 //     fks: [{ name, to, notNull?, rel, tag }], // tag: "1:N", "svag entitet", "unär" …
 //     pk?: ["BID", "CID"],                     // junction/multivalued; namn ur columns/fks
 //     unique?: [["A1"], ["B1", "AID"]],
-//     optionalUnique?: [["DID"]],              // godtas men krävs inte
 //     oneToOneUnique?: [{ cols: ["DID"], rel: "R3" }] } // 1:1: står i facit,
 //       godtas utan (häftets uppgift 21 saknar den) men ger då en anmärkning
 
@@ -492,7 +491,7 @@ function compareTable(f, a, ctx) {
 
   // 3. Naturliga nycklar och svag entitets UNIQUE.
   const required = (f.unique ?? []).map((u) => ({ cols: u, key: setKey(u.map((c) => facitIdentity(f, c))) }));
-  const optional = [...(f.optionalUnique ?? []), ...(f.oneToOneUnique ?? []).map((u) => u.cols)].map((u) => setKey(u.map((c) => facitIdentity(f, c))));
+  const optional = (f.oneToOneUnique ?? []).map((u) => setKey(u.cols.map((c) => facitIdentity(f, c))));
   const answerUniques = a.uniques.map((u) => ({ cols: u.cols, key: setKey(u.cols.map(identityA)) }));
   const pkKey = setKey(pkCols.map(identityA));
   for (const u of f.oneToOneUnique ?? []) {
