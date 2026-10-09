@@ -9,6 +9,7 @@ import Stats from "./views/Stats.jsx";
 import Schedule from "./views/Schedule.jsx";
 import SqlWorkshop from "./views/SqlWorkshop.jsx";
 import Modeling from "./views/Modeling.jsx";
+import DbExam from "./views/DbExam.jsx";
 import ProcessRun from "./views/ProcessRun.jsx";
 import { modelExercises } from "./data/databaser/modelExercises.js";
 import { normalizeExercises } from "./data/databaser/normalizeExercises.js";
@@ -270,6 +271,7 @@ export default function App() {
         {view === "modell" && (
           <Modeling modelProgress={modelProgress} onSolve={solveModelExercise} onReset={resetModelExercise} />
         )}
+        {view === "tenta" && <DbExam />}
         {view === "bpmn" && (
           <ProcessRun modelProgress={modelProgress} onSolve={solveModelExercise} onReset={resetModelExercise} />
         )}

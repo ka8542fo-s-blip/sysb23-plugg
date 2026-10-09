@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 257 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-10-09.
+- **Test:** `npm test` = 283 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-10-09.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -52,7 +52,7 @@ kapitel: allt UI läser `chapter.number`.
 | process | aktiv (2026-09-29) | se "Processorienterad verksamhetsutveckling (BPM)" nedan |
 | arkitektur, sakerhet | kommande | platshållare i manifestet |
 
-**Databaser** (`views: las, sql, modell, ova, statistik`; Prov medvetet borta):
+**Databaser** (`views: las, sql, modell, tenta, ova, statistik`; Prov medvetet borta):
 
 - **Läs:** 11 kapitel i `data/databaser/reading.js` — id/nummer: kap1=1
   (grunder, med "Så ser tentan ut"), kap2=2, kap3=3, kap4=4, kap5=5,
@@ -229,6 +229,29 @@ kapitel: allt UI läser `chapter.number`.
   alla tre: `sysb23:modell:<id>` = "solved", nollställs bara via knapp.
   Tester: `model-check`, `model-figures`, `normalize`, `fd`, `fd-drawing`,
   `fd-grade`, `decomp-feedback`, `fd-generator`, `statements`.
+- **Tenta** (2026-10-09): de tre HT25-tentorna med exakt deras uppgifter
+  (`data/databaser/oldExams.js`, vy `views/DbExam.jsx`, poäng
+  `lib/examGrade.js`, test `scripts/old-exams.test.mjs`). Startsidan visar
+  senaste resultat per tenta och uppgift; i en tenta fyra flikar, Rätta per
+  uppgift, "Ändra svaret" låser upp, summa "x av 100" (orättat = 0), "Börja
+  om" med bekräftelse. Inget betyg, ingen tid, ingen regeltext. Svaren i
+  `sysb23:tenta:<id>`. Uppgift 1: `scoreStatements` (oförändrad — den följde
+  redan regeln: +5/−3, golv 0, tak 25, exakt rätt = 25 oavsett antal sanna;
+  följd av taket: med sex sanna kostar en felmarkering inget, 27 → 25).
+  Uppgift 2: `checkDdl` + uppskattade avdrag (`DDL_DEDUCTIONS`: tabell 5, pk
+  3, fk 3, unique 2, notnull 2, surrogat 2, överflödig 3, kolumn 1 — kolumn
+  är tillagd, fanns inte i uppdraget); varje fel i ddlCheck bär nu `kind`.
+  Uppgift 3a–e: `claim` per påstående avgörs av FD-motorn (`claimTruth`),
+  +2/−1/0; 3f–g: FdAnswer (ny flagga `showDiagram={false}`) + `gradeAnswer`,
+  uppskattat 2 p NF+motivering (1 p om NF rätt men motivering fel) och 3 p
+  nedbrytning (lossless, beroendebevarande, 3NF utan övernormalisering; 3 p
+  direkt om facit), i 3NF-fallet 3 p för att inte dela upp. Uppgift 3 golvas
+  vid 0. Uppgift 4: sql.js + tsql som verkstaden, rätt resultat 30 p,
+  annars 0 + checklista med självbedömd poäng 0–30; godtar SQL Servers
+  resultat (`expected`, AVG över INT trunkerat) eller facitfrågans
+  SQLite-resultat; uppsamlingen (tomt resultat på tentans data) rättas även
+  mot kontrolldata där S4 är 26 år. Diagrammen omritade i
+  `modelFigures.jsx` (`tenta-250916-1` … `tenta-260525-2`).
 - **Statistik**, **Schema (Pluggkalender)** och **Hem** som för Strategi.
 
 ## Regler (följ dem)
@@ -315,6 +338,18 @@ Kap 1 har "Så ser tentan ut" med gränserna: 3a–e svara alltid; uppgift 1
 markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
 
 ## Ogranskat (mot kursmaterialet)
+
+- **Fliken Tenta (2026-10-09):** allt facit är sajtens eget (`reviewed:
+  false`), liksom de sex omritade diagrammen. Osäkert: ordinarie 1.1 ("måste
+  svara chef för minst en annan anställd" — dubbel linje vid chef_för, men
+  diagrammet hindrar inte självreferens; satt sant), ordinarie 1.6 ("en bil
+  har en unik kombination av namn och id" — två separata identifierare,
+  kombinationen unik men inte minimal; satt sant), omtentan 3f (E står i
+  både R2(A, D, E) och R3(B, E, F) för att bevara A → E och B → E), omtentan
+  3g (R2(C, D, E, F) med CK C och E, inte två relationer), uppsamlingen
+  R5 1:1 (UNIQUE på C:s FK godtas men krävs inte, som häftets 21),
+  ordinarie uppgift 4 (tolkat som betyget på C1 högre än snittet på C1).
+  Poängen för uppgift 2 och 3f–g är uppskattningar.
 
 - **Öva:** 45 av 73 frågor bär `reviewed: false` — dbq-01…12 (kapitel
   1–3, skrivna mot kapiteltexten 2026-09-05), dbq-65 och dbq-70 (kapitel 11,
@@ -499,7 +534,8 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
 `practiceOrder`, `practiceTopics`), `lasSegment`, `delkurs`, `schemaVy`,
 `upplasningstakt`, `upplasningsrost`, `sqlSlump`, `read:<kurs>:<kapitel>`,
 `sql:<övningsId>` (= "solved" | "solved-with-help"), `modell:<uppgiftsId>`
-(= "solved"; mod-, norm- och stmt-id), `examreg:<examId>`. "Nollställ min
+(= "solved"; mod-, norm- och stmt-id), `examreg:<examId>`, `tenta:<tentaId>`
+(svar, rättade uppgifter och senaste poäng i fliken Tenta). "Nollställ min
 data" i Statistik rensar allt. Progress är per webbläsare och domän.
 
 ## Kända egenheter (inte buggar)

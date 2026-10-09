@@ -35,7 +35,8 @@ export function templateFor(option, attr, type, userCks) {
   return `Non-prime attribute ${attr} is transitively dependent on candidate key ${key ? braceText(key) : "{…}"} via ${setText(lhs)}.`;
 }
 
-export default function FdAnswer({ item, draft, setDraft, highlight, parsed, result, diagram }) {
+// showDiagram={false}: utan miniatyren av beroendediagrammet (fliken Tenta har ingen rityta).
+export default function FdAnswer({ item, draft, setDraft, highlight, parsed, result, diagram, showDiagram = true }) {
   const attrs = useMemo(() => attrsOf(item.attrs), [item.attrs]);
   const options = useMemo(() => motivationOptions(item), [item]);
   const cks = draft.cks?.length ? draft.cks : [[]];
@@ -190,10 +191,14 @@ export default function FdAnswer({ item, draft, setDraft, highlight, parsed, res
             <p className="mt-1 text-xs text-ink/65">Relationen på en rad, R₁(A, B), och därefter CK₁ = {"{…}"} (CK₂ … om det finns fler) och PK = CK₁ på egna rader. Ett attribut per rad och PK = {"{…}"} direkt går också. Namnen R₁, R₂ … spelar ingen roll.</p>
           </div>
           <div>
-            <p className="mb-1 text-sm font-medium text-ink/80">Ditt beroendediagram</p>
-            <div className="mb-3 rounded-lg border border-line bg-white p-2">
-              <FdMini diagram={diagram} />
-            </div>
+            {showDiagram && (
+              <>
+                <p className="mb-1 text-sm font-medium text-ink/80">Ditt beroendediagram</p>
+                <div className="mb-3 rounded-lg border border-line bg-white p-2">
+                  <FdMini diagram={diagram} />
+                </div>
+              </>
+            )}
             <p className="mb-1 text-sm font-medium text-ink/80">Så ser det ut på tentan</p>
             <div className="rounded-lg border border-line bg-paper p-3">
               <SchemaView schema={parsed} highlight={highlight} />

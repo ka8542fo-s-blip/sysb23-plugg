@@ -587,6 +587,342 @@ function Haftet3() {
   );
 }
 
+// ---- Fliken Tenta: HT25-tentornas diagram, omritade efter tentorna ----
+
+// Ordinarie tentan 2025-09-16, uppgift 1.
+function Tenta250916Task1() {
+  return (
+    <Figure viewBox="0 0 800 380" maxWidth={800} label="Chen-diagram: Anställd är svag (dubbel rektangel) med Namn och Email streckat understrukna. Unär relation Chef ovanför Anställd: rollen chef_för med M och dubbel linje till vänster, har_som_chef med N och enkel linje till höger. Anställd — Utför — Leverans: M vid Anställd med dubbel linje, 1 vid Leverans. Leverans har Namn understruket och Id. Anställd — Arbeta (identifierande, dubbel romb) — Avdelning: M vid Anställd med dubbel linje, 1 vid Avdelning. Avdelning identifieras av det sammansatta Id (understruket) med delarna Namn och Adress. Avdelning — Tillhör — Bil: M vid Avdelning med dubbel linje, 1 vid Bil. Bil har Namn och Id, båda understrukna." caption="Ordinarie tentan, uppgift 1.">
+      <RelationshipDiamond cx={260} cy={42} w={100} h={40} label="Chef" />
+      <Connector x1={206} y1={112} x2={210} y2={42} total />
+      <Ratio x={222} y={104} text="M" />
+      <Role x={196} y={72} text="chef_för" anchor="end" />
+      <Connector x1={314} y1={112} x2={310} y2={42} />
+      <Ratio x={298} y={104} text="N" />
+      <Role x={324} y={72} text="har_som_chef" anchor="start" />
+      <AttributeOval cx={110} cy={112} rx={40} label="Namn" identifier="dashed" />
+      <AttributeOval cx={110} cy={162} rx={40} label="Email" identifier="dashed" />
+      <AttributeLink x1={150} y1={114} x2={198} y2={134} />
+      <AttributeLink x1={150} y1={160} x2={198} y2={140} />
+      <EntityBox x={198} y={112} w={124} h={46} label="Anställd" weak />
+      <Connector x1={322} y1={135} x2={392} y2={135} total />
+      <Ratio x={340} y={126} text="M" />
+      <RelationshipDiamond cx={442} cy={135} w={100} h={44} label="Utför" />
+      <Connector x1={492} y1={135} x2={562} y2={135} />
+      <Ratio x={546} y={126} text="1" />
+      <EntityBox x={562} y={112} w={124} h={46} label="Leverans" />
+      <AttributeOval cx={748} cy={116} rx={40} label="Namn" identifier="solid" />
+      <AttributeOval cx={740} cy={168} rx={32} label="Id" />
+      <AttributeLink x1={708} y1={118} x2={686} y2={130} />
+      <AttributeLink x1={714} y1={160} x2={686} y2={145} />
+      <Connector x1={260} y1={158} x2={260} y2={196} total />
+      <Ratio x={276} y={180} text="M" />
+      <RelationshipDiamond cx={260} cy={220} w={100} h={48} label="Arbeta" identifying />
+      <Connector x1={260} y1={244} x2={260} y2={292} />
+      <Ratio x={276} y={282} text="1" />
+      <EntityBox x={198} y={292} w={124} h={46} label="Avdelning" />
+      <AttributeOval cx={140} cy={315} rx={26} label="Id" identifier="solid" />
+      <AttributeOval cx={52} cy={286} rx={42} label="Namn" />
+      <AttributeOval cx={52} cy={346} rx={44} label="Adress" />
+      <AttributeLink x1={166} y1={315} x2={198} y2={315} />
+      <AttributeLink x1={88} y1={294} x2={116} y2={308} />
+      <AttributeLink x1={90} y1={338} x2={118} y2={323} />
+      <Connector x1={322} y1={315} x2={392} y2={315} total />
+      <Ratio x={340} y={306} text="M" />
+      <RelationshipDiamond cx={442} cy={315} w={100} h={44} label="Tillhör" />
+      <Connector x1={492} y1={315} x2={562} y2={315} />
+      <Ratio x={546} y={306} text="1" />
+      <EntityBox x={562} y={292} w={124} h={46} label="Bil" />
+      <AttributeOval cx={748} cy={296} rx={40} label="Namn" identifier="solid" />
+      <AttributeOval cx={748} cy={346} rx={32} label="Id" identifier="solid" />
+      <AttributeLink x1={708} y1={298} x2={686} y2={310} />
+      <AttributeLink x1={716} y1={342} x2={686} y2={325} />
+    </Figure>
+  );
+}
+
+// Ordinarie tentan 2025-09-16, uppgift 2.
+function Tenta250916Task2() {
+  return (
+    <Figure viewBox="0 0 790 480" maxWidth={790} label="Chen-diagram: B är svag med B1 streckat understruket och B2. Unär R2 ovanför B: M till vänster, 1 till höger, enkla linjer. B — R3 (identifierande) — C: 1 vid B, N vid C med dubbel linje. C är svag med C1 streckat understruket och flervärdesattributet C2. C — R4 — D: M vid C med dubbel linje, 1 vid D; R4 har attributet R4a. D har den sammansatta identifieraren D1 (understruken) med delarna D2 och D3, samt D4. B — R1 (identifierande) — A: M vid B med dubbel linje, 1 vid A. A har A1 understruket och A2. A — R5 — D: M vid A, N vid D, enkla linjer; R5 har attributet R5a." caption="Ordinarie tentan, uppgift 2.">
+      <RelationshipDiamond cx={185} cy={42} w={90} h={38} label="R2" />
+      <Connector x1={130} y1={112} x2={140} y2={42} />
+      <Ratio x={118} y={98} text="M" />
+      <Connector x1={240} y1={112} x2={230} y2={42} />
+      <Ratio x={252} y={98} text="1" />
+      <AttributeOval cx={50} cy={110} rx={34} label="B1" identifier="dashed" />
+      <AttributeOval cx={50} cy={162} rx={34} label="B2" />
+      <AttributeLink x1={84} y1={112} x2={120} y2={130} />
+      <AttributeLink x1={84} y1={158} x2={120} y2={142} />
+      <EntityBox x={120} y={112} w={130} h={46} label="B" weak />
+      <Connector x1={250} y1={135} x2={345} y2={135} />
+      <Ratio x={266} y={154} text="1" />
+      <RelationshipDiamond cx={400} cy={135} w={110} h={48} label="R3" identifying />
+      <Connector x1={455} y1={135} x2={540} y2={135} total />
+      <Ratio x={524} y={154} text="N" />
+      <EntityBox x={540} y={112} w={130} h={46} label="C" weak />
+      <AttributeOval cx={560} cy={62} rx={34} label="C1" identifier="dashed" />
+      <AttributeOval cx={700} cy={62} rx={42} label="C2" multivalued />
+      <AttributeLink x1={572} y1={76} x2={595} y2={112} />
+      <AttributeLink x1={680} y1={76} x2={615} y2={112} />
+      <Connector x1={605} y1={158} x2={605} y2={226} total />
+      <Ratio x={622} y={178} text="M" />
+      <RelationshipDiamond cx={605} cy={250} w={96} h={46} label="R4" />
+      <AttributeOval cx={470} cy={250} rx={38} label="R4a" />
+      <AttributeLink x1={508} y1={250} x2={557} y2={250} />
+      <Connector x1={605} y1={273} x2={605} y2={332} />
+      <Ratio x={622} y={322} text="1" />
+      <EntityBox x={540} y={332} w={130} h={46} label="D" />
+      <AttributeOval cx={605} cy={412} rx={32} label="D1" identifier="solid" />
+      <AttributeOval cx={530} cy={452} rx={34} label="D2" />
+      <AttributeOval cx={680} cy={452} rx={34} label="D3" />
+      <AttributeOval cx={738} cy={378} rx={34} label="D4" />
+      <AttributeLink x1={605} y1={378} x2={605} y2={397} />
+      <AttributeLink x1={584} y1={423} x2={552} y2={440} />
+      <AttributeLink x1={626} y1={423} x2={658} y2={440} />
+      <AttributeLink x1={670} y1={366} x2={706} y2={374} />
+      <Connector x1={185} y1={158} x2={185} y2={226} total />
+      <Ratio x={202} y={178} text="M" />
+      <RelationshipDiamond cx={185} cy={250} w={100} h={48} label="R1" identifying />
+      <Connector x1={185} y1={274} x2={185} y2={332} />
+      <Ratio x={202} y={322} text="1" />
+      <EntityBox x={120} y={332} w={130} h={46} label="A" />
+      <AttributeOval cx={140} cy={420} rx={34} label="A1" identifier="solid" />
+      <AttributeOval cx={235} cy={420} rx={34} label="A2" />
+      <AttributeLink x1={146} y1={405} x2={170} y2={378} />
+      <AttributeLink x1={228} y1={405} x2={205} y2={378} />
+      <Connector x1={250} y1={355} x2={345} y2={355} />
+      <Ratio x={266} y={346} text="M" />
+      <RelationshipDiamond cx={395} cy={355} w={100} h={44} label="R5" />
+      <AttributeOval cx={395} cy={295} rx={38} label="R5a" />
+      <AttributeLink x1={395} y1={310} x2={395} y2={333} />
+      <Connector x1={445} y1={355} x2={540} y2={355} />
+      <Ratio x={524} y={346} text="N" />
+    </Figure>
+  );
+}
+
+// Omtentan 2025-10-24, uppgift 1.
+function Tenta251024Task1() {
+  return (
+    <Figure viewBox="0 0 830 380" maxWidth={830} label="Chen-diagram: Kurs är svag med Namn streckat understruket och Poäng. Unär relation Delkurs ovanför Kurs: rollen har_som_delkurs med 1 och dubbel linje till vänster, delkurs_för med 1 och enkel linje till höger. Kurs — Erbjuder (identifierande) — Avdelning: M vid Kurs med dubbel linje, 1 vid Avdelning. Avdelning är svag med Namn streckat understruket och Adress. Avdelning — Tillhör (identifierande) — Universitet: M vid Avdelning med dubbel linje, 1 vid Universitet. Universitet har Adress understruket och Namn. Kurs — Examination — Student: 1 vid Kurs, M vid Student, enkla linjer; Examination har attributet Betyg. Student har Namn och Adress understruket. Student — Inskriven — Universitet: M vid Student med enkel linje, 1 vid Universitet med dubbel linje." caption="Omtentan, uppgift 1.">
+      <RelationshipDiamond cx={262} cy={42} w={100} h={40} label="Delkurs" />
+      <Connector x1={208} y1={112} x2={212} y2={42} total />
+      <Ratio x={224} y={104} text="1" />
+      <Role x={198} y={72} text="har_som_delkurs" anchor="end" />
+      <Connector x1={316} y1={112} x2={312} y2={42} />
+      <Ratio x={300} y={104} text="1" />
+      <Role x={326} y={72} text="delkurs_för" anchor="start" />
+      <AttributeOval cx={112} cy={112} rx={40} label="Namn" identifier="dashed" />
+      <AttributeOval cx={112} cy={162} rx={40} label="Poäng" />
+      <AttributeLink x1={152} y1={114} x2={200} y2={134} />
+      <AttributeLink x1={152} y1={160} x2={200} y2={140} />
+      <EntityBox x={200} y={112} w={124} h={46} label="Kurs" weak />
+      <Connector x1={324} y1={135} x2={395} y2={135} total />
+      <Ratio x={342} y={126} text="M" />
+      <RelationshipDiamond cx={450} cy={135} w={110} h={48} label="Erbjuder" identifying />
+      <Connector x1={505} y1={135} x2={570} y2={135} />
+      <Ratio x={554} y={126} text="1" />
+      <EntityBox x={570} y={112} w={130} h={46} label="Avdelning" weak />
+      <AttributeOval cx={772} cy={112} rx={40} label="Namn" identifier="dashed" />
+      <AttributeOval cx={772} cy={162} rx={44} label="Adress" />
+      <AttributeLink x1={732} y1={114} x2={700} y2={130} />
+      <AttributeLink x1={728} y1={158} x2={700} y2={142} />
+      <Connector x1={635} y1={158} x2={635} y2={194} total />
+      <Ratio x={651} y={180} text="M" />
+      <RelationshipDiamond cx={635} cy={218} w={106} h={48} label="Tillhör" identifying />
+      <Connector x1={635} y1={242} x2={635} y2={292} />
+      <Ratio x={651} y={282} text="1" />
+      <EntityBox x={570} y={292} w={130} h={46} label="Universitet" />
+      <AttributeOval cx={772} cy={296} rx={44} label="Adress" identifier="solid" />
+      <AttributeOval cx={772} cy={346} rx={40} label="Namn" />
+      <AttributeLink x1={728} y1={298} x2={700} y2={310} />
+      <AttributeLink x1={732} y1={342} x2={700} y2={326} />
+      <Connector x1={262} y1={158} x2={262} y2={196} />
+      <Ratio x={278} y={180} text="1" />
+      <RelationshipDiamond cx={262} cy={220} w={120} h={46} label="Examination" />
+      <AttributeOval cx={110} cy={220} rx={40} label="Betyg" />
+      <AttributeLink x1={150} y1={220} x2={202} y2={220} />
+      <Connector x1={262} y1={243} x2={262} y2={292} />
+      <Ratio x={278} y={282} text="M" />
+      <EntityBox x={200} y={292} w={124} h={46} label="Student" />
+      <AttributeOval cx={112} cy={292} rx={40} label="Namn" />
+      <AttributeOval cx={112} cy={346} rx={44} label="Adress" identifier="solid" />
+      <AttributeLink x1={152} y1={296} x2={200} y2={312} />
+      <AttributeLink x1={156} y1={340} x2={200} y2={322} />
+      <Connector x1={324} y1={315} x2={400} y2={315} />
+      <Ratio x={342} y={306} text="M" />
+      <RelationshipDiamond cx={450} cy={315} w={100} h={44} label="Inskriven" />
+      <Connector x1={500} y1={315} x2={570} y2={315} total />
+      <Ratio x={554} y={306} text="1" />
+    </Figure>
+  );
+}
+
+// Omtentan 2025-10-24, uppgift 2.
+function Tenta251024Task2() {
+  return (
+    <Figure viewBox="0 0 790 500" maxWidth={790} label="Chen-diagram: B är svag med B1 streckat understruket och B2. Unär R2 ovanför B: M till vänster, N till höger, enkla linjer. B — R3 — C: M vid B med dubbel linje, 1 vid C. C är svag med C1 streckat understruket och det sammansatta attributet C2 med delarna C3 och C4. B — R1 (identifierande) — A: M vid B med dubbel linje, 1 vid A. A har A1 understruket och flervärdesattributet A2. C — R4 (identifierande) — D: M vid C med dubbel linje, 1 vid D. D har D1 och D2, båda understrukna. A — R5 — D: 1 vid A, N vid D, enkla linjer; R5 har attributet R5a." caption="Omtentan, uppgift 2.">
+      <RelationshipDiamond cx={185} cy={78} w={90} h={38} label="R2" />
+      <Connector x1={130} y1={150} x2={140} y2={78} />
+      <Ratio x={118} y={136} text="M" />
+      <Connector x1={240} y1={150} x2={230} y2={78} />
+      <Ratio x={252} y={136} text="N" />
+      <AttributeOval cx={50} cy={148} rx={34} label="B1" identifier="dashed" />
+      <AttributeOval cx={50} cy={200} rx={34} label="B2" />
+      <AttributeLink x1={84} y1={150} x2={120} y2={168} />
+      <AttributeLink x1={84} y1={196} x2={120} y2={180} />
+      <EntityBox x={120} y={150} w={130} h={46} label="B" weak />
+      <Connector x1={250} y1={173} x2={350} y2={173} total />
+      <Ratio x={266} y={192} text="M" />
+      <RelationshipDiamond cx={400} cy={173} w={100} h={44} label="R3" />
+      <Connector x1={450} y1={173} x2={540} y2={173} />
+      <Ratio x={524} y={192} text="1" />
+      <EntityBox x={540} y={150} w={130} h={46} label="C" weak />
+      <AttributeOval cx={548} cy={100} rx={34} label="C1" identifier="dashed" />
+      <AttributeOval cx={668} cy={100} rx={34} label="C2" />
+      <AttributeOval cx={612} cy={36} rx={34} label="C3" />
+      <AttributeOval cx={736} cy={40} rx={34} label="C4" />
+      <AttributeLink x1={560} y1={114} x2={590} y2={150} />
+      <AttributeLink x1={660} y1={115} x2={625} y2={150} />
+      <AttributeLink x1={626} y1={50} x2={652} y2={86} />
+      <AttributeLink x1={718} y1={53} x2={690} y2={88} />
+      <Connector x1={185} y1={196} x2={185} y2={266} total />
+      <Ratio x={202} y={218} text="M" />
+      <RelationshipDiamond cx={185} cy={290} w={100} h={48} label="R1" identifying />
+      <Connector x1={185} y1={314} x2={185} y2={372} />
+      <Ratio x={202} y={362} text="1" />
+      <EntityBox x={120} y={372} w={130} h={46} label="A" />
+      <AttributeOval cx={140} cy={460} rx={34} label="A1" identifier="solid" />
+      <AttributeOval cx={238} cy={460} rx={38} label="A2" multivalued />
+      <AttributeLink x1={146} y1={445} x2={170} y2={418} />
+      <AttributeLink x1={230} y1={445} x2={205} y2={418} />
+      <Connector x1={605} y1={196} x2={605} y2={266} total />
+      <Ratio x={622} y={218} text="M" />
+      <RelationshipDiamond cx={605} cy={290} w={100} h={48} label="R4" identifying />
+      <Connector x1={605} y1={314} x2={605} y2={372} />
+      <Ratio x={622} y={362} text="1" />
+      <EntityBox x={540} y={372} w={130} h={46} label="D" />
+      <AttributeOval cx={562} cy={460} rx={34} label="D1" identifier="solid" />
+      <AttributeOval cx={660} cy={460} rx={34} label="D2" identifier="solid" />
+      <AttributeLink x1={568} y1={445} x2={590} y2={418} />
+      <AttributeLink x1={652} y1={445} x2={625} y2={418} />
+      <Connector x1={250} y1={395} x2={345} y2={395} />
+      <Ratio x={266} y={386} text="1" />
+      <RelationshipDiamond cx={395} cy={395} w={100} h={44} label="R5" />
+      <AttributeOval cx={395} cy={335} rx={38} label="R5a" />
+      <AttributeLink x1={395} y1={350} x2={395} y2={373} />
+      <Connector x1={445} y1={395} x2={540} y2={395} />
+      <Ratio x={524} y={386} text="N" />
+    </Figure>
+  );
+}
+
+// Uppsamlingen 2026-05-25, uppgift 1.
+function Tenta260525Task1() {
+  return (
+    <Figure viewBox="0 0 820 310" maxWidth={820} label="Chen-diagram: Kund är svag med Namn och Email streckat understruket. Kund — Skapa (identifierande) — Order: 1 vid Kund med enkel linje, M vid Order med dubbel linje. Order är svag med Namn och Id streckat understruket. Kund — Bor (identifierande) — Adress: M vid Kund med dubbel linje, 1 vid Adress. Adress identifieras av det sammansatta Id (understruket) med delarna Gata och Stad. Order — Tillhör — Produkt: M vid Order med dubbel linje, 1 vid Produkt. Produkt har Namn understruket och Id. Adress — Leverans — Produkt: 1 vid Adress, M vid Produkt, enkla linjer." caption="Uppsamlingen, uppgift 1.">
+      <AttributeOval cx={112} cy={60} rx={40} label="Namn" />
+      <AttributeOval cx={112} cy={110} rx={40} label="Email" identifier="dashed" />
+      <AttributeLink x1={152} y1={62} x2={200} y2={80} />
+      <AttributeLink x1={152} y1={108} x2={200} y2={90} />
+      <EntityBox x={200} y={62} w={124} h={46} label="Kund" weak />
+      <Connector x1={324} y1={85} x2={395} y2={85} />
+      <Ratio x={342} y={76} text="1" />
+      <RelationshipDiamond cx={450} cy={85} w={110} h={48} label="Skapa" identifying />
+      <Connector x1={505} y1={85} x2={570} y2={85} total />
+      <Ratio x={554} y={76} text="M" />
+      <EntityBox x={570} y={62} w={124} h={46} label="Order" weak />
+      <AttributeOval cx={768} cy={64} rx={40} label="Namn" />
+      <AttributeOval cx={756} cy={116} rx={30} label="Id" identifier="dashed" />
+      <AttributeLink x1={728} y1={66} x2={694} y2={80} />
+      <AttributeLink x1={728} y1={110} x2={694} y2={94} />
+      <Connector x1={262} y1={108} x2={262} y2={146} total />
+      <Ratio x={278} y={130} text="M" />
+      <RelationshipDiamond cx={262} cy={170} w={100} h={48} label="Bor" identifying />
+      <Connector x1={262} y1={194} x2={262} y2={232} />
+      <Ratio x={278} y={224} text="1" />
+      <EntityBox x={200} y={232} w={124} h={46} label="Adress" />
+      <AttributeOval cx={146} cy={255} rx={26} label="Id" identifier="solid" />
+      <AttributeOval cx={56} cy={226} rx={40} label="Gata" />
+      <AttributeOval cx={56} cy={286} rx={40} label="Stad" />
+      <AttributeLink x1={172} y1={255} x2={200} y2={255} />
+      <AttributeLink x1={92} y1={234} x2={122} y2={248} />
+      <AttributeLink x1={92} y1={278} x2={122} y2={263} />
+      <Connector x1={632} y1={108} x2={632} y2={148} total />
+      <Ratio x={648} y={130} text="M" />
+      <RelationshipDiamond cx={632} cy={170} w={100} h={44} label="Tillhör" />
+      <Connector x1={632} y1={192} x2={632} y2={232} />
+      <Ratio x={648} y={224} text="1" />
+      <EntityBox x={570} y={232} w={124} h={46} label="Produkt" />
+      <AttributeOval cx={768} cy={236} rx={40} label="Namn" identifier="solid" />
+      <AttributeOval cx={768} cy={286} rx={32} label="Id" />
+      <AttributeLink x1={728} y1={238} x2={694} y2={250} />
+      <AttributeLink x1={736} y1={282} x2={694} y2={266} />
+      <Connector x1={324} y1={255} x2={400} y2={255} />
+      <Ratio x={342} y={246} text="1" />
+      <RelationshipDiamond cx={450} cy={255} w={100} h={44} label="Leverans" />
+      <Connector x1={500} y1={255} x2={570} y2={255} />
+      <Ratio x={554} y={246} text="M" />
+    </Figure>
+  );
+}
+
+// Uppsamlingen 2026-05-25, uppgift 2.
+function Tenta260525Task2() {
+  return (
+    <Figure viewBox="0 0 800 510" maxWidth={800} label="Chen-diagram: B är svag med B1 streckat understruket och B2. B — R2 — C: 1 vid B, M vid C, enkla linjer; R2 har attributet R2a. C har C1 understruket. Unär R3 ovanför C: M till vänster, N till höger, enkla linjer; R3 har attributet R3a. B — R1 (identifierande) — A: M vid B med dubbel linje, 1 vid A. A har A1 och A2, båda understrukna. C — R4 — D: 1 vid C, M vid D, enkla linjer. C — R5 — D: 1 vid C med dubbel linje, 1 vid D med enkel linje. D har D1 understruket och flervärdesattributet D2." caption="Uppsamlingen, uppgift 2.">
+      <AttributeOval cx={120} cy={96} rx={34} label="B1" identifier="dashed" />
+      <AttributeOval cx={215} cy={96} rx={34} label="B2" />
+      <AttributeLink x1={130} y1={111} x2={155} y2={150} />
+      <AttributeLink x1={205} y1={111} x2={180} y2={150} />
+      <EntityBox x={100} y={150} w={130} h={46} label="B" weak />
+      <Connector x1={230} y1={173} x2={340} y2={173} />
+      <Ratio x={246} y={192} text="1" />
+      <RelationshipDiamond cx={390} cy={173} w={100} h={44} label="R2" />
+      <AttributeOval cx={390} cy={110} rx={38} label="R2a" />
+      <AttributeLink x1={390} y1={125} x2={390} y2={151} />
+      <Connector x1={440} y1={173} x2={540} y2={173} />
+      <Ratio x={524} y={192} text="M" />
+      <RelationshipDiamond cx={605} cy={86} w={90} h={38} label="R3" />
+      <AttributeOval cx={605} cy={26} rx={38} label="R3a" />
+      <AttributeLink x1={605} y1={41} x2={605} y2={67} />
+      <Connector x1={550} y1={150} x2={560} y2={86} />
+      <Ratio x={538} y={136} text="M" />
+      <Connector x1={660} y1={150} x2={650} y2={86} />
+      <Ratio x={672} y={136} text="N" />
+      <EntityBox x={540} y={150} w={130} h={46} label="C" />
+      <AttributeOval cx={748} cy={173} rx={34} label="C1" identifier="solid" />
+      <AttributeLink x1={670} y1={173} x2={714} y2={173} />
+      <Connector x1={165} y1={196} x2={165} y2={276} total />
+      <Ratio x={182} y={218} text="M" />
+      <RelationshipDiamond cx={165} cy={300} w={100} h={48} label="R1" identifying />
+      <Connector x1={165} y1={324} x2={165} y2={400} />
+      <Ratio x={182} y={390} text="1" />
+      <EntityBox x={100} y={400} w={130} h={46} label="A" />
+      <AttributeOval cx={115} cy={482} rx={34} label="A1" identifier="solid" />
+      <AttributeOval cx={218} cy={482} rx={34} label="A2" identifier="solid" />
+      <AttributeLink x1={122} y1={467} x2={145} y2={446} />
+      <AttributeLink x1={210} y1={467} x2={190} y2={446} />
+      <Connector x1={566} y1={196} x2={545} y2={280} />
+      <Ratio x={572} y={218} text="1" />
+      <RelationshipDiamond cx={540} cy={302} w={90} h={44} label="R4" />
+      <Connector x1={545} y1={324} x2={568} y2={400} />
+      <Ratio x={584} y={390} text="M" />
+      <Connector x1={648} y1={196} x2={675} y2={280} total />
+      <Ratio x={644} y={218} text="1" />
+      <RelationshipDiamond cx={680} cy={302} w={90} h={44} label="R5" />
+      <Connector x1={675} y1={324} x2={650} y2={400} />
+      <Ratio x={676} y={390} text="1" />
+      <EntityBox x={540} y={400} w={130} h={46} label="D" />
+      <AttributeOval cx={560} cy={482} rx={34} label="D1" identifier="solid" />
+      <AttributeOval cx={660} cy={482} rx={38} label="D2" multivalued />
+      <AttributeLink x1={566} y1={467} x2={585} y2={446} />
+      <AttributeLink x1={652} y1={467} x2={630} y2={446} />
+    </Figure>
+  );
+}
+
 export const MODEL_FIGURES = {
   "mod-person-car": PersonCar,
   "mod-teacher-course": TeacherCourse,
@@ -601,6 +937,12 @@ export const MODEL_FIGURES = {
   "ddl-21": Ddl21,
   "ddl-22": Ddl22,
   "stmt-haftet3": Haftet3,
+  "tenta-250916-1": Tenta250916Task1,
+  "tenta-250916-2": Tenta250916Task2,
+  "tenta-251024-1": Tenta251024Task1,
+  "tenta-251024-2": Tenta251024Task2,
+  "tenta-260525-1": Tenta260525Task1,
+  "tenta-260525-2": Tenta260525Task2,
 };
 
 if (import.meta.env?.DEV) {

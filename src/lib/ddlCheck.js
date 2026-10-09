@@ -419,7 +419,9 @@ const TAGS = {
 
 function compareTable(f, a, ctx) {
   const problems = [];
-  const add = (tag, text) => problems.push({ tag, text });
+  // kind: vad felet gäller (surrogat, pk, fk, unique, notnull, kolumn) —
+  // används av tentaflikens poänguppskattning, inte av rättningen här.
+  const addK = (kind, tag, text) => problems.push({ tag, text, kind });
   const notes = [];
   if (fold(a.name) !== fold(f.name) && !(f.aliases ?? []).some((x) => fold(x) === fold(a.name))) {
     notes.push(`Tabellen heter ${a.name} hos dig och ${f.name} i facit — samma sak.`);
@@ -440,22 +442,22 @@ function compareTable(f, a, ctx) {
   // 1. Surrogatnyckeln.
   if (isEntity) {
     if (identityCols.length === 0) {
-      add(TAGS.surrogat, `Ingen surrogatnyckel: ${f.kind === "weak" ? "en svag entitet" : "en vanlig entitet"} ska ha en kolumn INTEGER IDENTITY(1,1) som PRIMARY KEY${pkCols.length ? ` — du har PRIMARY KEY (${pkCols.join(", ")})` : ""}.`);
+      addK("surrogat", TAGS.surrogat, `Ingen surrogatnyckel: ${f.kind === "weak" ? "en svag entitet" : "en vanlig entitet"} ska ha en kolumn INTEGER IDENTITY(1,1) som PRIMARY KEY${pkCols.length ? ` — du har PRIMARY KEY (${pkCols.join(", ")})` : ""}.`);
     } else if (!a.pk) {
-      add(TAGS.surrogat, `PRIMARY KEY saknas. IDENTITY gör inte ${identityCols[0].name} till primärnyckel — skriv PRIMARY KEY (${identityCols[0].name}).`);
+      addK("pk", TAGS.surrogat, `PRIMARY KEY saknas. IDENTITY gör inte ${identityCols[0].name} till primärnyckel — skriv PRIMARY KEY (${identityCols[0].name}).`);
     } else if (!(pkCols.length === 1 && fold(pkCols[0]) === fold(identityCols[0].name))) {
-      add(TAGS.surrogat, `PRIMARY KEY ska vara surrogatnyckeln ${identityCols[0].name} ensam, du har (${pkCols.join(", ")}).`);
+      addK("pk", TAGS.surrogat, `PRIMARY KEY ska vara surrogatnyckeln ${identityCols[0].name} ensam, du har (${pkCols.join(", ")}).`);
     }
   } else {
     if (identityCols.length) {
-      add(TAGS.surrogat, `${identityCols[0].name} är IDENTITY, men en ${f.kind === "junction" ? "sambandstabell" : "tabell för ett flervärt attribut"} ska inte ha egen surrogatnyckel: primärnyckeln är ${f.kind === "junction" ? "de främmande nycklarna" : "ägarens främmande nyckel plus värdet"}.`);
+      addK("surrogat", TAGS.surrogat, `${identityCols[0].name} är IDENTITY, men en ${f.kind === "junction" ? "sambandstabell" : "tabell för ett flervärt attribut"} ska inte ha egen surrogatnyckel: primärnyckeln är ${f.kind === "junction" ? "de främmande nycklarna" : "ägarens främmande nyckel plus värdet"}.`);
     }
     const want = f.pk.map((c) => facitIdentity(f, c));
     const got = pkCols.map(identityA);
-    if (!a.pk) add(f.kind === "junction" ? (f.fks.length === 2 && fold(f.fks[0].to) === fold(f.fks[1].to) ? TAGS.unary : TAGS.mn) : TAGS.multi, `PRIMARY KEY saknas — den ska vara (${f.pk.join(", ")}).`);
+    if (!a.pk) addK("pk", f.kind === "junction" ? (f.fks.length === 2 && fold(f.fks[0].to) === fold(f.fks[1].to) ? TAGS.unary : TAGS.mn) : TAGS.multi, `PRIMARY KEY saknas — den ska vara (${f.pk.join(", ")}).`);
     else if (!sameMultiset(want, got)) {
       const tag = f.kind === "multivalued" ? TAGS.multi : f.fks.length === 2 && fold(f.fks[0].to) === fold(f.fks[1].to) ? TAGS.unary : TAGS.mn;
-      add(tag, `PRIMARY KEY ska vara (${f.pk.join(", ")}), du har (${pkCols.join(", ")}).`);
+      addK("pk", tag, `PRIMARY KEY ska vara (${f.pk.join(", ")}), du har (${pkCols.join(", ")}).`);
     }
   }
 
@@ -475,15 +477,15 @@ function compareTable(f, a, ctx) {
   for (const c of f.columns) {
     if (plainA.some((x) => fold(x.name) === fold(c.name))) continue;
     const tag = f.kind === "multivalued" ? TAGS.multi : keyCols.has(fold(c.name)) ? (f.kind === "weak" && (f.unique ?? []).some((u) => u.length > 1 && u.some((x) => facitIdentity(f, x).startsWith("→")) && u.map(fold).includes(fold(c.name))) ? TAGS.weak : TAGS.natural) : f.kind === "junction" ? TAGS.mn : null;
-    add(tag, `Kolumnen ${c.name} saknas.`);
+    addK("kolumn", tag, `Kolumnen ${c.name} saknas.`);
   }
   for (const c of plainA) {
     if (wantPlain.includes(fold(c.name))) continue;
     const mv = ctx.multivalued.find((m) => fold(m.owner) === fold(f.name) && fold(m.attr) === fold(c.name));
-    if (mv) { add(TAGS.multi, `${c.name} är flervärt (dubbel ellips) och ska vara en egen tabell ${mv.table} med (ägarens FK, ${mv.attr}) som PRIMARY KEY, inte en kolumn här.`); continue; }
+    if (mv) { addK("kolumn", TAGS.multi, `${c.name} är flervärt (dubbel ellips) och ska vara en egen tabell ${mv.table} med (ägarens FK, ${mv.attr}) som PRIMARY KEY, inte en kolumn här.`); continue; }
     const looksFk = [...missingFkTargets].find((t) => fold(c.name).includes(t.slice(1)) || f.fks.some((fk) => fold(fk.name) === fold(c.name) && `→${fold(fk.to)}` === t));
-    if (looksFk) { add(ctx.fkTag(f, looksFk), `${c.name} ser ut att vara främmande nyckeln mot ${ctx.realName(looksFk.slice(1))}, men saknar FOREIGN KEY (${c.name}) REFERENCES ${ctx.realName(looksFk.slice(1))}(…).`); continue; }
-    add(ctx.isComposite(c.name) ? TAGS.natural : null, `Kolumnen ${c.name} finns inte i diagrammet${ctx.isComposite(c.name) ? " — det sammansatta attributet blir sina delar, inte en egen kolumn" : ""}.`);
+    if (looksFk) { addK("fk", ctx.fkTag(f, looksFk), `${c.name} ser ut att vara främmande nyckeln mot ${ctx.realName(looksFk.slice(1))}, men saknar FOREIGN KEY (${c.name}) REFERENCES ${ctx.realName(looksFk.slice(1))}(…).`); continue; }
+    addK("kolumn", ctx.isComposite(c.name) ? TAGS.natural : null, `Kolumnen ${c.name} finns inte i diagrammet${ctx.isComposite(c.name) ? " — det sammansatta attributet blir sina delar, inte en egen kolumn" : ""}.`);
   }
 
   // 3. Naturliga nycklar och svag entitets UNIQUE.
@@ -497,22 +499,22 @@ function compareTable(f, a, ctx) {
       if (isWeakKey) {
         const partial = u.cols.filter((c) => !facitIdentity(f, c).startsWith("→"));
         const alone = answerUniques.find((x) => x.key === setKey(partial.map(fold)));
-        add(TAGS.weak, alone
+        addK("unique", TAGS.weak, alone
           ? `UNIQUE (${alone.cols.join(", ")}) ensam är för strängt: den partiella nyckeln är unik bara inom ägaren. Skriv UNIQUE (${u.cols.join(", ")}) — partiell nyckel plus ägarens främmande nyckel.`
           : `UNIQUE (${u.cols.join(", ")}) saknas: den partiella nyckeln är unik bara tillsammans med ägarens främmande nyckel.`);
       } else if (u.cols.length > 1 && u.cols.every((c) => answerUniques.some((x) => x.key === fold(c)))) {
-        add(TAGS.natural, `UNIQUE på ${u.cols.join(" och ")} var för sig är för strängt: identifieraren är kombinationen, UNIQUE (${u.cols.join(", ")}).`);
+        addK("unique", TAGS.natural, `UNIQUE på ${u.cols.join(" och ")} var för sig är för strängt: identifieraren är kombinationen, UNIQUE (${u.cols.join(", ")}).`);
       } else if (pkKey === u.key && isEntity) {
         // Redan rapporterat under surrogat (naturlig nyckel som PRIMARY KEY).
       } else {
-        add(TAGS.natural, `UNIQUE (${u.cols.join(", ")}) saknas: identifieraren i diagrammet ska vara både NOT NULL och UNIQUE när surrogatnyckeln tagit primärnyckelrollen.`);
+        addK("unique", TAGS.natural, `UNIQUE (${u.cols.join(", ")}) saknas: identifieraren i diagrammet ska vara både NOT NULL och UNIQUE när surrogatnyckeln tagit primärnyckelrollen.`);
       }
     }
     for (const c of u.cols) {
       if (facitIdentity(f, c).startsWith("→")) continue;
       const col = colOf(c);
       const inPk = pkCols.some((x) => fold(x) === fold(c));
-      if (col && !col.notNull && !inPk) add(isWeakKey ? TAGS.weak : TAGS.natural, `${col.name} ingår i ${isWeakKey ? "den partiella nyckeln" : "identifieraren"} och ska vara NOT NULL — UNIQUE släpper igenom NULL.`);
+      if (col && !col.notNull && !inPk) addK("notnull", isWeakKey ? TAGS.weak : TAGS.natural, `${col.name} ingår i ${isWeakKey ? "den partiella nyckeln" : "identifieraren"} och ska vara NOT NULL — UNIQUE släpper igenom NULL.`);
     }
   }
   const reportedSplit = new Set(required.filter((u) => u.cols.length > 1).flatMap((u) => u.cols.map(fold)));
@@ -522,7 +524,7 @@ function compareTable(f, a, ctx) {
     // Kolumner som inte ska finnas alls är redan rapporterade ovan.
     if (x.cols.some((c) => !colOf(c) || (!fkOfCol(c) && !colOf(c).identity && !wantPlain.includes(fold(c))))) continue;
     if (required.some((u) => u.cols.some((c) => facitIdentity(f, c).startsWith("→")) && x.key === setKey(u.cols.filter((c) => !facitIdentity(f, c).startsWith("→")).map(fold)))) continue;
-    add(TAGS.natural, `UNIQUE (${x.cols.join(", ")}) har inget stöd i diagrammet — bara identifierare (understrukna) blir UNIQUE.`);
+    addK("unique", TAGS.natural, `UNIQUE (${x.cols.join(", ")}) har inget stöd i diagrammet — bara identifierare (understrukna) blir UNIQUE.`);
   }
 
   // 4. Främmande nycklar: mål, antal, NOT NULL och vad de refererar.
@@ -532,12 +534,12 @@ function compareTable(f, a, ctx) {
     const name = ctx.realName(t.slice(1));
     if (got.length < want.length) {
       const fk = want[got.length];
-      add(fk.tag ?? TAGS.oneN, `Främmande nyckel mot ${name} saknas${fk.rel ? ` (${fk.rel})` : ""}.`);
+      addK("fk", fk.tag ?? TAGS.oneN, `Främmande nyckel mot ${name} saknas${fk.rel ? ` (${fk.rel})` : ""}.`);
       continue;
     }
     if (got.length > want.length) {
       const reversed = ctx.facitTable(t.slice(1))?.fks.some((fk) => fold(fk.to) === fold(f.name));
-      add(TAGS.oneN, reversed
+      addK("fk", TAGS.oneN, reversed
         ? `Främmande nyckeln mot ${name} sitter på fel sida: i facit pekar ${name} på ${f.name}, inte tvärtom. I 1:N läggs ett-sidans nyckel i många-sidans tabell.`
         : `Främmande nyckel mot ${name} hör inte hemma i ${f.name}.`);
       continue;
@@ -545,14 +547,14 @@ function compareTable(f, a, ctx) {
     if (isEntity && want.length === 1) {
       const fk = want[0];
       const col = colOf(got[0].cols[0]);
-      if (fk.notNull && col && !col.notNull) add(TAGS.total, `${col.name} ska vara NOT NULL: dubbel linje${fk.rel ? ` vid ${f.name} i ${fk.rel}` : ""} betyder totalt deltagande — varje rad måste ha en ${name}.`);
-      if (!fk.notNull && col?.notNull) add(TAGS.total, `${col.name} ska få vara NULL: enkel linje${fk.rel ? ` vid ${f.name} i ${fk.rel}` : ""} betyder partiellt deltagande.`);
+      if (fk.notNull && col && !col.notNull) addK("notnull", TAGS.total, `${col.name} ska vara NOT NULL: dubbel linje${fk.rel ? ` vid ${f.name} i ${fk.rel}` : ""} betyder totalt deltagande — varje rad måste ha en ${name}.`);
+      if (!fk.notNull && col?.notNull) addK("notnull", TAGS.total, `${col.name} ska få vara NULL: enkel linje${fk.rel ? ` vid ${f.name} i ${fk.rel}` : ""} betyder partiellt deltagande.`);
     }
     for (const g of got) {
       const target = ctx.answerTable(g.target);
       const targetPk = target?.pk?.cols ?? null;
       if (g.refCols && targetPk && !sameMultiset(g.refCols.map(fold), targetPk.map(fold))) {
-        add(TAGS.surrogat, `REFERENCES ${g.target}(${g.refCols.join(", ")}) ska peka på ${g.target}:s primärnyckel (${targetPk.join(", ")}), surrogatnyckeln — inte på den naturliga nyckeln.`);
+        addK("fk", TAGS.surrogat, `REFERENCES ${g.target}(${g.refCols.join(", ")}) ska peka på ${g.target}:s primärnyckel (${targetPk.join(", ")}), surrogatnyckeln — inte på den naturliga nyckeln.`);
       }
     }
   }
@@ -587,7 +589,7 @@ export function checkDdl(text, exercise) {
     const a = pairs.get(f);
     if (!a) {
       const tag = f.kind === "junction" ? (f.fks.length === 2 && fold(f.fks[0].to) === fold(f.fks[1].to) ? TAGS.unary : TAGS.mn) : f.kind === "multivalued" ? TAGS.multi : f.kind === "weak" ? TAGS.weak : TAGS.surrogat;
-      return { name: f.name, answerName: null, status: "missing", problems: [{ tag, text: `Tabellen ${f.name} saknas.` }], notes: [], rule: exercise.rules?.[fold(f.name)] ?? null };
+      return { name: f.name, answerName: null, status: "missing", problems: [{ tag, text: `Tabellen ${f.name} saknas.`, kind: "tabell" }], notes: [], rule: exercise.rules?.[fold(f.name)] ?? null };
     }
     return compareTable(f, a, ctx);
   });
