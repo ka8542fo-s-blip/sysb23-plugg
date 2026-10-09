@@ -6,8 +6,10 @@
 // strukturdata och läst mot diagrammen. Avvikelser mellan häftets facit och
 // diagrammet (2026-10-05):
 //   19: kommatecken saknas i tabell C (efter BID) och i R4 (efter DID) — rättat.
-//   21: R3 är 1:1, men facit ger C.DID ingen UNIQUE. Utan den kan flera C
-//       peka på samma D. Båda godtas (optionalUnique) i väntan på Björn.
+//   21: R3 är 1:1, men facit ger C.DID ingen UNIQUE. Kursens regel för 1:1
+//       (logisk design) är att FK:n också är kandidatnyckel, så sajtens facit
+//       har UNIQUE (DID) (oneToOneUnique, 2026-10-09). Ett svar utan den ger
+//       inget avdrag men en anmärkning som förklarar regeln.
 //   18–22: facit skapar tabeller som refererar tabeller längre ned (A före
 //       B i 18, D före E i 19 …), så koden kör inte i den ordningen i SQL
 //       Server. Ordningen rättas inte; facit här skrivs ut med refererade
@@ -108,14 +110,14 @@ export const ddlExercises = [
   },
   {
     id: "ddl-21", number: 21, title: "Kedjad svag entitet och 1:1", diagram: "ddl-21",
-    source: "Övningshäftet uppgift 21 (1:1-relationen R3: UNIQUE på C.DID godtas med och utan)",
+    source: "Övningshäftet uppgift 21 (1:1-relationen R3: facit har UNIQUE på C.DID, svar utan godtas med en anmärkning)",
     intro: "B är svag under C via R2 och A svag under B via R1 — två led. A har flervärdesattributet A2. R3 är 1:1 med totalt deltagande vid C, R4 unär M:N på D, R5 1:M mellan D och A.",
     composites: ["B2"],
     facit: [
       { name: "A", kind: "weak", surrogate: "AID", columns: [{ name: "A1", notNull: true }], fks: [{ name: "BID", to: "B", notNull: true, rel: "R1", tag: "svag entitet" }, { name: "DID", to: "D", notNull: false, rel: "R5", tag: "1:N" }], unique: [["A1", "BID"]] },
       { name: "A2", aliases: ["AA2", "A_A2"], kind: "multivalued", columns: [{ name: "A2" }], fks: [{ name: "AID", to: "A" }], pk: ["AID", "A2"] },
       { name: "B", kind: "weak", surrogate: "BID", columns: [{ name: "B1", notNull: true }, { name: "B3" }, { name: "B4" }], fks: [{ name: "CID", to: "C", notNull: true, rel: "R2", tag: "svag entitet" }], unique: [["B1", "CID"]] },
-      { name: "C", kind: "entity", surrogate: "CID", columns: [{ name: "C1", notNull: true }, { name: "C2" }], fks: [{ name: "DID", to: "D", notNull: true, rel: "R3", tag: "1:N" }], unique: [["C1"]], optionalUnique: [["DID"]] },
+      { name: "C", kind: "entity", surrogate: "CID", columns: [{ name: "C1", notNull: true }, { name: "C2" }], fks: [{ name: "DID", to: "D", notNull: true, rel: "R3", tag: "1:N" }], unique: [["C1"]], oneToOneUnique: [{ cols: ["DID"], rel: "R3" }] },
       { name: "D", kind: "entity", surrogate: "DID", columns: [{ name: "D1", notNull: true }, { name: "D2", notNull: true }], fks: [], unique: [["D1"], ["D2"]] },
       { name: "R4", kind: "junction", columns: [], fks: [{ name: "DID", to: "D" }, { name: "R4DID", to: "D" }], pk: ["DID", "R4DID"] },
     ],
@@ -129,7 +131,7 @@ export const ddlExercises = [
       a: r("Kedjad svag entitet", "A:s ägare är B, som själv är svag. A refererar bara B:s surrogatnyckel och har UNIQUE (A1, BID); C kommer med via B. R5 ger en nullbar främmande nyckel mot D."),
       a2: r("Flervärt attribut", "Egen tabell med PRIMARY KEY (AID, A2), utan surrogatnyckel."),
       b: r("Svag entitet", "B2 är sammansatt och blir sina delar B3 och B4 — utan NOT NULL, eftersom B2 inte är identifierare. UNIQUE (B1, CID) med ägarens nyckel."),
-      c: r("Vanlig entitet, 1:1", "R3 är 1:1 med dubbel linje vid C: D:s nyckel läggs i C som NOT NULL. Häftets facit har ingen UNIQUE på den; UNIQUE (DID) gör 1:1 strikt och godtas också."),
+      c: r("Vanlig entitet, 1:1", "R3 är 1:1 med dubbel linje vid C: D:s nyckel läggs i C som NOT NULL och UNIQUE — FK:n är också kandidatnyckel, annars kan flera C peka på samma D. Häftets facit saknar UNIQUE; ett svar utan den godtas med en anmärkning."),
       d: r("Två identifierare", "D1 och D2 är var sin identifierare: båda NOT NULL med var sin UNIQUE."),
       r4: r("Unär M:N", "Sambandstabell med två kolumner som båda refererar D och tillsammans är PRIMARY KEY."),
     },

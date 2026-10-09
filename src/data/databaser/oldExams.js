@@ -2,7 +2,9 @@
 // Uppgiftstexterna är tentornas, ordagrant (Inspera-text som "Skriv ditt svar
 // här" och sidhuvuden är borttagna); diagrammen är omritade som SVG i
 // components/model/modelFigures.jsx. Tentorna har inget facit — allt facit
-// här är sajtens eget och märkt reviewed: false tills Kasper granskat det.
+// här är sajtens eget. Kasper granskade facit för uppgift 1, 3a–g och 4
+// mot tentorna 2026-10-09 (reviewed: true per uppgift); DDL-facit i uppgift
+// 2 är ogranskat tills han gjort uppgiften själv.
 //
 // Uppgift 1: sant/falskt per påstående avgjort ur diagrammet med kapitel 6:s
 // regler, med ett skäl per påstående. Uppgift 2: facit som strukturdata för
@@ -80,8 +82,8 @@ export const oldExams = [
     date: "2025-09-16",
     title: "Ordinarie tentamen",
     dateLabel: "16 september 2025",
-    reviewed: false,
     task1: {
+      reviewed: true,
       diagram: "tenta-250916-1",
       intro: "Givet är följande ER-diagram:",
       instruction: "Markera samtliga påståenden som är korrekta utifrån det givna ER-diagrammet.",
@@ -102,6 +104,7 @@ export const oldExams = [
       ],
     },
     task2: {
+      reviewed: false,
       diagram: "tenta-250916-2",
       text: TASK2_TEXT,
       composites: ["D1"],
@@ -129,6 +132,7 @@ export const oldExams = [
       },
     },
     task3: {
+      reviewed: true,
       relation: "R(A, B, C, D, E, F, G)",
       attrs: "A, B, C, D, E, F, G",
       fds: ["{A, B} → C", "A → D", "B → {E, F}", "F → G"],
@@ -149,6 +153,7 @@ export const oldExams = [
       g: { id: "tenta-250916-3g", label: "3g", relation: "R(A, B, C, D, E, F)", attrs: "A, B, C, D, E, F", fds: ["A → B", "B → {A, C}", "C → {B, D}", "D → {C, E, F}"], nf: "3NF", facit: null },
     },
     task4: {
+      reviewed: true,
       tables: TABLES,
       ask: "Studentnummer, namn och antal lästa kurser för samtliga studenter som fått högre än snittbetyg på kurs C1",
       tail: [TASK4_TAIL + " Indentera din kod för läsbarhet."],
@@ -190,8 +195,8 @@ GROUP BY
     date: "2025-10-24",
     title: "Omtentamen",
     dateLabel: "24 oktober 2025",
-    reviewed: false,
     task1: {
+      reviewed: true,
       diagram: "tenta-251024-1",
       intro: "Givet är följande ER-diagram:",
       instruction: "Markera samtliga påståenden som är korrekta utifrån det givna ER-diagrammet.",
@@ -211,6 +216,7 @@ GROUP BY
       ],
     },
     task2: {
+      reviewed: false,
       diagram: "tenta-251024-2",
       text: TASK2_TEXT,
       composites: ["C2"],
@@ -238,6 +244,7 @@ GROUP BY
       },
     },
     task3: {
+      reviewed: true,
       relation: "R(A, B, C, D, E, F, G, H)",
       attrs: "A, B, C, D, E, F, G, H",
       fds: ["{A, B} → {C, D}", "D → {E, F}", "E → G", "F → H"],
@@ -259,6 +266,7 @@ GROUP BY
         facit: [{ name: "R1", attrs: "A, B, C", pk: ["A", "B"] }, { name: "R2", attrs: "C, D, E, F", pk: ["C", "E"] }] },
     },
     task4: {
+      reviewed: true,
       tables: TABLES,
       ask: "Kurskod, namn, och snittresultat för kurser som läses av student S1, men inte av student S2",
       tail: [TASK4_TAIL + " Indentera din kod för läsbarhet."],
@@ -302,8 +310,8 @@ GROUP BY
     date: "2026-05-25",
     title: "Uppsamlingstentamen",
     dateLabel: "25 maj 2026",
-    reviewed: false,
     task1: {
+      reviewed: true,
       diagram: "tenta-260525-1",
       intro: "Givet är följande ER-diagram:",
       instruction: "Markera samtliga påståenden som är korrekta utifrån det givna ER-diagrammet.",
@@ -322,13 +330,14 @@ GROUP BY
       ],
     },
     task2: {
+      reviewed: false,
       diagram: "tenta-260525-2",
       text: [...TASK2_TEXT, FORMAT_LINE],
       composites: [],
       facit: [
         { name: "A", kind: "entity", surrogate: "AID", columns: [{ name: "A1", notNull: true }, { name: "A2", notNull: true }], fks: [], unique: [["A1"], ["A2"]] },
         { name: "B", kind: "weak", surrogate: "BID", columns: [{ name: "B1", notNull: true }, { name: "B2" }], fks: [{ name: "AID", to: "A", notNull: true, rel: "R1", tag: "svag entitet" }], unique: [["B1", "AID"]] },
-        { name: "C", kind: "entity", surrogate: "CID", columns: [{ name: "C1", notNull: true }, { name: "R2a" }], fks: [{ name: "BID", to: "B", notNull: false, rel: "R2", tag: "1:N" }, { name: "DIDR5", to: "D", notNull: true, rel: "R5", tag: "1:N" }], unique: [["C1"]], optionalUnique: [["DIDR5"]] },
+        { name: "C", kind: "entity", surrogate: "CID", columns: [{ name: "C1", notNull: true }, { name: "R2a" }], fks: [{ name: "BID", to: "B", notNull: false, rel: "R2", tag: "1:N" }, { name: "DIDR5", to: "D", notNull: true, rel: "R5", tag: "1:N" }], unique: [["C1"]], oneToOneUnique: [{ cols: ["DIDR5"], rel: "R5" }] },
         { name: "R3", kind: "junction", columns: [{ name: "R3a" }], fks: [{ name: "CID", to: "C" }, { name: "R3CID", to: "C" }], pk: ["CID", "R3CID"] },
         { name: "D", kind: "entity", surrogate: "DID", columns: [{ name: "D1", notNull: true }], fks: [{ name: "CIDR4", to: "C", notNull: false, rel: "R4", tag: "1:N" }], unique: [["D1"]] },
         { name: "D2", aliases: ["DD2", "D_D2"], kind: "multivalued", columns: [{ name: "D2" }], fks: [{ name: "DID", to: "D" }], pk: ["DID", "D2"] },
@@ -342,13 +351,14 @@ GROUP BY
       rules: {
         a: r("Två identifierare", "A1 och A2 är var sin identifierare: båda NOT NULL med var sin UNIQUE."),
         b: r("Svag entitet", "Egen surrogatnyckel, A:s nyckel som NOT NULL främmande nyckel och UNIQUE (B1, AID): B1 är unik bara inom A."),
-        c: r("1:M med attribut och 1:1", "R2 är 1:M med enkla linjer: B:s nyckel som nullbar främmande nyckel i C, och R2a som kolumn i C. R5 är 1:1 med dubbel linje vid C: D:s nyckel i C som NOT NULL. UNIQUE på den gör 1:1 strikt och godtas, men krävs inte — samma linje som häftets uppgift 21. C och D refererar varandra; i SQL Server läggs den ena FOREIGN KEY till med ALTER TABLE efteråt, vilket inte rättas här."),
+        c: r("1:M med attribut och 1:1", "R2 är 1:M med enkla linjer: B:s nyckel som nullbar främmande nyckel i C, och R2a som kolumn i C. R5 är 1:1 med dubbel linje vid C: D:s nyckel i C som NOT NULL och UNIQUE — den främmande nyckeln är också kandidatnyckel, annars bevaras inte 1:1. Ett svar utan UNIQUE ger inget avdrag (häftets uppgift 21 saknar den) men en anmärkning. C och D refererar varandra; i SQL Server läggs den ena FOREIGN KEY till med ALTER TABLE efteråt, vilket inte rättas här."),
         r3: r("Unär M:N med attribut", "Sambandstabell med två kolumner som båda refererar C och tillsammans är PRIMARY KEY, och R3a som vanlig kolumn."),
         d: r("Vanlig entitet, 1:M", "D1 som NOT NULL + UNIQUE. R4 är 1:M med enkla linjer: C:s nyckel som nullbar främmande nyckel i D. D2 är flervärt och blir en egen tabell."),
         d2: r("Flervärt attribut", "Egen tabell med PRIMARY KEY (DID, D2), utan surrogatnyckel."),
       },
     },
     task3: {
+      reviewed: true,
       relation: "R(A, B, C, D, E, F, G)",
       attrs: "A, B, C, D, E, F, G",
       fds: ["{A, B} → C", "C → {D, E}", "E → F", "F → G"],
@@ -370,6 +380,7 @@ GROUP BY
         facit: [R("R1", "A, B, C", "A, B"), R("R2", "C, D", "C"), R("R3", "D, E", "D"), R("R4", "E, F", "E")] },
     },
     task4: {
+      reviewed: true,
       tables: TABLES,
       ask: "Studentnummer, namn, och högsta betyg för studenter som är äldre än student S4 och har läst 2 eller fler kurser",
       tail: [TASK4_TAIL, FORMAT_LINE],
@@ -407,4 +418,8 @@ HAVING
 ];
 
 export const TASK_POINTS = { 1: 25, 2: 25, 3: 20, 4: 30 };
+
+// Betygsskalan från tentornas instruktionssida, i procent av 100 poäng.
+export const GRADE_LIMITS = [["A", 85], ["B", 75], ["C", 65], ["D", 55], ["E", 50]];
+export const gradeFor = (points) => GRADE_LIMITS.find(([, min]) => points >= min)?.[0] ?? "U";
 export { TASK3_RULE, TASK3_INTRO, TASK3FG_TEXT };

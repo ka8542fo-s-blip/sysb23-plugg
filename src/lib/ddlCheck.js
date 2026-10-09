@@ -300,7 +300,9 @@ export function parseDdl(text) {
 //     fks: [{ name, to, notNull?, rel, tag }], // tag: "1:N", "svag entitet", "unär" …
 //     pk?: ["BID", "CID"],                     // junction/multivalued; namn ur columns/fks
 //     unique?: [["A1"], ["B1", "AID"]],
-//     optionalUnique?: [["DID"]] }             // godtas men krävs inte
+//     optionalUnique?: [["DID"]],              // godtas men krävs inte
+//     oneToOneUnique?: [{ cols: ["DID"], rel: "R3" }] } // 1:1: står i facit,
+//       godtas utan (häftets uppgift 21 saknar den) men ger då en anmärkning
 
 const SURR = "#surrogat";
 
@@ -351,7 +353,7 @@ export function toDdl(facit) {
     const width = Math.max(...cols.map(([n]) => n.length)) + 2;
     const rows = cols.map(([n, rest]) => `    ${n.padEnd(width)}${rest}`);
     rows.push(`    PRIMARY KEY (${(t.surrogate ? [t.surrogate] : t.pk).join(", ")})`);
-    for (const u of t.unique ?? []) rows.push(`    UNIQUE (${u.join(", ")})`);
+    for (const u of [...(t.unique ?? []), ...(t.oneToOneUnique ?? []).map((x) => x.cols)]) rows.push(`    UNIQUE (${u.join(", ")})`);
     for (const f of t.fks) rows.push(`    FOREIGN KEY (${f.name}) REFERENCES ${f.to}(${surrogateOf(f.to)})`);
     return `CREATE TABLE ${t.name} (\n${rows.join(",\n")}\n);`;
   }).join("\n\n");
@@ -490,9 +492,15 @@ function compareTable(f, a, ctx) {
 
   // 3. Naturliga nycklar och svag entitets UNIQUE.
   const required = (f.unique ?? []).map((u) => ({ cols: u, key: setKey(u.map((c) => facitIdentity(f, c))) }));
-  const optional = (f.optionalUnique ?? []).map((u) => setKey(u.map((c) => facitIdentity(f, c))));
+  const optional = [...(f.optionalUnique ?? []), ...(f.oneToOneUnique ?? []).map((u) => u.cols)].map((u) => setKey(u.map((c) => facitIdentity(f, c))));
   const answerUniques = a.uniques.map((u) => ({ cols: u.cols, key: setKey(u.cols.map(identityA)) }));
   const pkKey = setKey(pkCols.map(identityA));
+  for (const u of f.oneToOneUnique ?? []) {
+    const key = setKey(u.cols.map((c) => facitIdentity(f, c)));
+    if (answerUniques.some((x) => x.key === key)) continue;
+    const fk = f.fks.find((x) => u.cols.some((c) => fold(c) === fold(x.name)));
+    notes.push(`UNIQUE (${u.cols.join(", ")}) saknas i ${f.name}. ${u.rel} är 1:1: den främmande nyckeln ska också vara kandidatnyckel, annars kan flera ${f.name} peka på samma ${fk?.to ?? "rad"} och 1:1 bevaras inte. Det ger inget avdrag här, eftersom övningshäftets facit för uppgift 21 saknar den.`);
+  }
   for (const u of required) {
     const isWeakKey = u.cols.some((c) => facitIdentity(f, c).startsWith("→"));
     if (!answerUniques.some((x) => x.key === u.key)) {

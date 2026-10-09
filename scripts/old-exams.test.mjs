@@ -5,7 +5,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import initSqlJs from "sql.js";
-import { oldExams, TASK_POINTS } from "../src/data/databaser/oldExams.js";
+import { oldExams, TASK_POINTS, GRADE_LIMITS, gradeFor } from "../src/data/databaser/oldExams.js";
 import { scoreStatements, MAX_POINTS } from "../src/lib/statementScore.js";
 import { checkDdl, toDdl } from "../src/lib/ddlCheck.js";
 import { gradeAnswer } from "../src/lib/fdGrade.js";
@@ -16,11 +16,11 @@ import { MODEL_FIGURE_IDS } from "../src/components/model/modelFigureIds.js";
 const SQL = await initSqlJs();
 const byId = Object.fromEntries(oldExams.map((e) => [e.id, e]));
 
-test("tre tentor, fyra uppgifter, 100 poäng, allt facit ogranskat", () => {
+test("tre tentor, fyra uppgifter, 100 poäng; DDL-facit ogranskat, övrigt granskat", () => {
   assert.deepEqual(oldExams.map((e) => e.id), ["tenta-250916", "tenta-251024", "tenta-260525"]);
   assert.equal(Object.values(TASK_POINTS).reduce((a, b) => a + b, 0), 100);
   for (const e of oldExams) {
-    assert.equal(e.reviewed, false, `${e.id}: facit ska vara ogranskat`);
+    assert.deepEqual([e.task1.reviewed, e.task2.reviewed, e.task3.reviewed, e.task4.reviewed], [true, false, true, true], e.id);
     assert.ok(MODEL_FIGURE_IDS.includes(e.task1.diagram), `${e.id}: diagram ${e.task1.diagram}`);
     assert.ok(MODEL_FIGURE_IDS.includes(e.task2.diagram), `${e.id}: diagram ${e.task2.diagram}`);
   }
@@ -201,4 +201,21 @@ test("uppgift 4: AVG över INTEGER — SQL Servers 6 och SQLites 6,5 godtas båd
   assert.equal(gradeTask4(SQL, omt, integer).points, 30);
   // Seeden innehåller exakt tentans rader.
   assert.match(examSeed(omt.tables), /\('S2', 'C1', 9\)/);
+});
+
+test("betygsgränserna från tentornas instruktionssida: A 85, B 75, C 65, D 55, E 50, U under", () => {
+  assert.deepEqual(GRADE_LIMITS, [["A", 85], ["B", 75], ["C", 65], ["D", 55], ["E", 50]]);
+  assert.deepEqual([100, 85, 84, 75, 74, 65, 64, 55, 54, 50, 49, 0].map(gradeFor), ["A", "A", "B", "B", "C", "C", "D", "D", "E", "E", "U", "U"]);
+});
+
+test("1:1 i uppsamlingens uppgift 2: facit har UNIQUE på FK:n, svar utan ger anmärkning men inget avdrag", () => {
+  const e = byId["tenta-260525"];
+  const facit = toDdl(e.task2.facit);
+  assert.match(facit, /UNIQUE \(DIDR5\)/);
+  const without = facit.replace(/,\n    UNIQUE \(DIDR5\)/, "");
+  const r = checkDdl(without, e.task2);
+  assert.equal(r.status, "correct");
+  assert.equal(estimateDdl(r).points, 25);
+  assert.ok(r.remarks.some((n) => /R5 är 1:1/.test(n)), JSON.stringify(r.remarks));
+  assert.ok(!checkDdl(facit, e.task2).remarks.some((n) => /1:1/.test(n)));
 });

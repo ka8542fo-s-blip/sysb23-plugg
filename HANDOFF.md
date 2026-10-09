@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 283 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-10-09.
+- **Test:** `npm test` = 285 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-10-09.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -114,15 +114,15 @@ kapitel: allt UI läser `chapter.number`.
   namn/alias (skiftläge, _, å/ä/ö fälls) eller kolumnöverlapp, FK-kolumner
   via måltabell (unära par som multimängd), PK och UNIQUE som mängder.
   Facit är strukturdata (kind entity/weak/junction/multivalued, surrogate,
-  columns, fks med notNull/rel/tag, unique, optionalUnique), `folded` =
+  columns, fks med notNull/rel/tag, unique, optionalUnique, oneToOneUnique), `folded` =
   relationer som blir FK-kolumner (förklarar en överflödig tabell),
   `composites`. Fel bär regeltaggar (surrogat, naturlig nyckel, svag
   entitet, total deltagande, 1:N, M:N, unär, flervärt) plus tabellens
   "varför". Facit skrivs ut av `toDdl` i tentans form, refererade tabeller
   först. Tester: `ddl-check.test.mjs`. **Häftets facitavvikelser:** 19
   saknar komma i C (efter BID) och R4 (efter DID) — rättat; 21:s 1:1 R3
-  har ingen UNIQUE på C.DID — båda godtas (optionalUnique) i väntan på
-  Björn; 18–22 skapar refererande tabeller före refererade (kör inte i
+  har ingen UNIQUE på C.DID — sajtens facit har den, svar utan godtas
+  med en anmärkning (oneToOneUnique); 18–22 skapar refererande tabeller före refererade (kör inte i
   den ordningen). Häftets facittext ligger inte i repot.
   Kodrutan `SchemaEditor.jsx` (prop `subscripts={false}` i DDL-fliken): mörk
   yta (ink/paper-tokens), radnummer, Tab/Shift+Tab indrag, Enter behåller
@@ -234,8 +234,16 @@ kapitel: allt UI läser `chapter.number`.
   `lib/examGrade.js`, test `scripts/old-exams.test.mjs`). Startsidan visar
   senaste resultat per tenta och uppgift; i en tenta fyra flikar, Rätta per
   uppgift, "Ändra svaret" låser upp, summa "x av 100" (orättat = 0), "Börja
-  om" med bekräftelse. Inget betyg, ingen tid, ingen regeltext. Svaren i
-  `sysb23:tenta:<id>`. Uppgift 1: `scoreStatements` (oförändrad — den följde
+  om" med bekräftelse. Betyg bredvid summan (`GRADE_LIMITS` i oldExams.js,
+  tentornas skala A 85/B 75/C 65/D 55/E 50/U), märkt att det gäller om alla
+  uppgifter rättats. Ingen tid, ingen regeltext. Svaren i
+  `sysb23:tenta:<id>`. **1:1 i DDL (2026-10-09):** facit har UNIQUE på den
+  främmande nyckeln (kursens regel: FK:n ska också vara kandidatnyckel).
+  `oneToOneUnique: [{ cols, rel }]` i facit skriver ut UNIQUE, godtar svar
+  utan den och ger då en anmärkning — inget avdrag, eftersom häftets 21
+  saknar den. Gäller uppsamlingens R5 och Modelleras ddl-21 (R3), som
+  tidigare hade `optionalUnique` utan UNIQUE i facit och utan kommentar.
+  Uppgift 1: `scoreStatements` (oförändrad — den följde
   redan regeln: +5/−3, golv 0, tak 25, exakt rätt = 25 oavsett antal sanna;
   följd av taket: med sex sanna kostar en felmarkering inget, 27 → 25).
   Uppgift 2: `checkDdl` + uppskattade avdrag (`DDL_DEDUCTIONS`: tabell 5, pk
@@ -339,16 +347,17 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
 
 ## Ogranskat (mot kursmaterialet)
 
-- **Fliken Tenta (2026-10-09):** allt facit är sajtens eget (`reviewed:
-  false`), liksom de sex omritade diagrammen. Osäkert: ordinarie 1.1 ("måste
+- **Fliken Tenta (2026-10-09):** Kasper har granskat facit för uppgift 1,
+  3a–g och 4 mot tentorna (`reviewed: true` per uppgift). DDL-facit i
+  uppgift 2 är ogranskat (`reviewed: false`) tills han gjort uppgiften själv;
+  de sex omritade diagrammen är kontrollerade mot tentorna. Granskat men
+  noterat: Osäkert: ordinarie 1.1 ("måste
   svara chef för minst en annan anställd" — dubbel linje vid chef_för, men
   diagrammet hindrar inte självreferens; satt sant), ordinarie 1.6 ("en bil
   har en unik kombination av namn och id" — två separata identifierare,
   kombinationen unik men inte minimal; satt sant), omtentan 3f (E står i
   både R2(A, D, E) och R3(B, E, F) för att bevara A → E och B → E), omtentan
-  3g (R2(C, D, E, F) med CK C och E, inte två relationer), uppsamlingen
-  R5 1:1 (UNIQUE på C:s FK godtas men krävs inte, som häftets 21),
-  ordinarie uppgift 4 (tolkat som betyget på C1 högre än snittet på C1).
+  3g (R2(C, D, E, F) med CK C och E, inte två relationer), ordinarie uppgift 4 (tolkat som betyget på C1 högre än snittet på C1).
   Poängen för uppgift 2 och 3f–g är uppskattningar.
 
 - **Öva:** 45 av 73 frågor bär `reviewed: false` — dbq-01…12 (kapitel

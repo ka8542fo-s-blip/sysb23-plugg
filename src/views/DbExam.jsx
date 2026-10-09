@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { oldExams, TASK_POINTS, TASK3_RULE, TASK3_INTRO, TASK3FG_TEXT } from "../data/databaser/oldExams.js";
+import { oldExams, TASK_POINTS, gradeFor, TASK3_RULE, TASK3_INTRO, TASK3FG_TEXT } from "../data/databaser/oldExams.js";
 import { ExerciseFigure } from "../components/model/modelFigures.jsx";
 import SchemaEditor from "../components/model/SchemaEditor.jsx";
 import FdAnswer from "../components/fd/FdAnswer.jsx";
@@ -151,8 +151,13 @@ function ExamRoom({ exam, onBack }) {
           <h1 className="font-display text-3xl">{exam.title}</h1>
         </div>
         <div className="text-right">
-          <p className="tabular font-display text-3xl" aria-live="polite">{total(scores)} <span className="font-body text-lg text-ink/70">av 100</span></p>
-          <p className="text-xs text-ink/60">Orättade uppgifter räknas som 0.</p>
+          <p className="tabular font-display text-3xl" aria-live="polite">
+            {total(scores)} <span className="font-body text-lg text-ink/70">av 100</span>
+            <span className="ml-3 font-body text-lg">Betyg <span className="font-display text-2xl">{gradeFor(total(scores))}</span></span>
+          </p>
+          <p className="text-xs text-ink/60">
+            {[1, 2, 3, 4].every((n) => scores[n] !== null) ? "Alla uppgifter rättade." : "Betyget gäller om alla uppgifter rättats — orättade räknas som 0."}
+          </p>
         </div>
       </div>
 

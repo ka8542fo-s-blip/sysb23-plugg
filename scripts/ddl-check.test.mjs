@@ -201,11 +201,16 @@ test("REFERENCES mot den naturliga nyckeln i stället för surrogatnyckeln", () 
   assert.ok(table(r, "A").problems.some((p) => p.tag === "surrogat" && /naturliga nyckeln/.test(p.text)));
 });
 
-test("1:1 i uppgift 21: UNIQUE på C.DID godtas med och utan", () => {
+test("1:1 i uppgift 21: facit har UNIQUE på C.DID; utan godtas, med en anmärkning om regeln", () => {
   const e = ex("ddl-21");
   const base = toDdl(e.facit);
-  assert.equal(checkDdl(base, e).status, "correct");
-  assert.equal(checkDdl(base.replace("UNIQUE (C1),", "UNIQUE (C1),\n    UNIQUE (DID),"), e).status, "correct");
+  assert.match(base, /UNIQUE \(DID\)/);
+  const withUnique = checkDdl(base, e);
+  assert.equal(withUnique.status, "correct");
+  assert.ok(!withUnique.remarks.some((n) => /1:1/.test(n)));
+  const without = checkDdl(base.replace(/,\n    UNIQUE \(DID\)/, ""), e);
+  assert.equal(without.status, "correct");
+  assert.ok(without.remarks.some((n) => /R3 är 1:1/.test(n)), JSON.stringify(without.remarks));
 });
 
 test("tabellnamn med å, ä, ö matchar facit utan", () => {
