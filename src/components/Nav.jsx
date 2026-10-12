@@ -1,3 +1,4 @@
+import UpdateBanner from "./UpdateBanner.jsx";
 import CourseSwitcher from "./CourseSwitcher.jsx";
 
 export const VIEW_LABELS = {
@@ -35,6 +36,9 @@ export default function Nav({
   const tabs = viewsForCourse(course);
   return (
     <header className="sticky top-0 z-10 border-b border-line bg-paper/95 backdrop-blur">
+      {/* Uppdateringsnotisen ligger i den klistrade headern, så att den syns
+          även när man har skrollat ned i ett kapitel. */}
+      <UpdateBanner />
       <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-2.5 sm:gap-3 sm:px-6 sm:py-3 lg:px-8">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
           {/* På mobil bär delkursväljarens etikett kursnamnet i stället —
