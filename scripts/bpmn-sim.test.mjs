@@ -7,7 +7,7 @@ import { simulate } from "../src/lib/bpmnSim.js";
 import { diagrams, diagramById } from "../src/data/process/bpmnDiagrams.js";
 import { tasks, answerFromResult, correctIndex } from "../src/data/process/bpmnTasks.js";
 
-for (const task of tasks.filter((t) => t.kind !== "element")) {
+for (const task of tasks.filter((t) => t.kind !== "element" && t.kind !== "stil")) {
   test(`${task.id}: simulatorn ger facit (${task.answer})`, () => {
     const result = simulate(diagramById[task.diagram], task.scenario);
     assert.ok(result.finished, `${task.id}: processen avslutades inte`);
@@ -161,4 +161,14 @@ test("default flow tas bara när inget villkor är sant (XOR och OR)", () => {
   assert.equal(letters(simulate(mk("xor"), { conditions: { g: "x" } })), "A");
   assert.equal(letters(simulate(mk("or"), { conditions: { g: [] } })), "D");
   assert.equal(letters(simulate(mk("or"), { conditions: { g: ["x", "y"] } })), "AB");
+});
+
+test("stiluppgifterna (Method and Style): facit finns bland alternativen och diagrammet finns", () => {
+  const stil = tasks.filter((t) => t.kind === "stil");
+  assert.equal(stil.length, 2);
+  for (const task of stil) {
+    assert.ok(diagramById[task.diagram], `${task.id}: diagrammet ${task.diagram}`);
+    assert.equal(task.options.filter((o) => o === task.answer).length, 1, task.id);
+    assert.ok(correctIndex(task) >= 0, task.id);
+  }
 });

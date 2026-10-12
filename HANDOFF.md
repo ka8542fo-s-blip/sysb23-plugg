@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 285 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-10-09.
+- **Test:** `npm test` = 286 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-10-12.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -660,16 +660,17 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   och 3 p/4 alt 0; **3(d) 4 p/6 alt −0,17**. Kapitel 1 och Kör processen
   (per fråga) säger det.
 - **Läs:** 11 kapitel i `data/process/reading.js` (kap1–kap11 = nr 1–11),
-  15 ämnen i `topics.js`, 121 ordlistetermer. Alla ämnen `karna`; `essa`
+  15 ämnen i `topics.js`, 139 ordlistetermer. Alla ämnen `karna`; `essa`
   på automatisera, ramverk, foundations, manniskor (HT25:s fyra
   essäfrågor), enablement (process asset, Weavers betoning) och sedan F4
   launch och understand (Weaver: Foundations, Enablement och Launch "kanske
   de viktiga", Understand och Innovate "väldigt viktiga"), låst i
   `exam-priority.test.mjs`. Det Weaver tonar ned (husets delar, stegen i
   Foundations/Enablement/Launch, PSM) står under rubriker märkta
-  "(bakgrund)" i kapiteltexten; varje fas börjar med syfte och output. **Preliminärt** (märkt i
-  `sources`, inget i UI): kap 10 (DMN, bara F1/F2 och tentan) till F5.
-  Kap 4, 7, 8 och 9 är omskrivna mot F4 (2026-10-12, se nedan). Kap 9:s LPM-avsnitt är skrivet mot LPM-texten
+  "(bakgrund)" i kapiteltexten; varje fas börjar med syfte och output. Alla fem
+  föreläsningarna är inlagda (2026-10-12); inga kapitel är längre märkta
+  preliminära. Kap 4, 7, 8 och 9 är omskrivna mot F4, kap 9 och 10 mot F5
+  (se nedan). OBS: `sources` visas i kapitelhuvudet — håll dem korta. Kap 9:s LPM-avsnitt är skrivet mot LPM-texten
   (2026-09-29). Kap 10:s namngivning följer Canvas-konventionerna
   (message flow = substantiv, message start = "Received …", aktivitet =
   verb–objekt, XOR = fråga med "?" och Yes/No, sluthändelse =
@@ -679,7 +680,7 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   Kap 1 har raden att rätt svar var ensamt längst i 14 av 20 HT25-BPM-
   frågor (omtentans 12 delad förstaplats), räknat ur de ordagranna
   frågorna.
-- **Öva:** 82 frågor i `questions.js`, 5–10 per kapitel. `bpm-t01…t22` =
+- **Öva:** 87 frågor i `questions.js`, 5–10 per kapitel (kap 7–10 har 10). `bpm-t01…t22` =
   HT25-tentornas flervalsfrågor nära ordagrant (i `LENGTH_FLAGGED` med
   skälet "tentafråga ordagrant", räknas inte i balansmåtten — på tentan
   var rätt svar längst i ungefär tre fall av fyra). `bpm-q01…q49` egna (q48 = gateway-namngivning, q49 = OR-join-fallet på genomgången s. 37–38; q46 = terminate end-fallet s. 35–36),
@@ -688,9 +689,13 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   omskrivet efter F4) tillbaka från parkeringen 2026-10-12 och nya
   `bpm-q50…q61` (F4: riskjämförelsen, quick wins, Process Worth Matrix,
   rotorsaker, processbeslut, baseline, Realize som tråd och livscykel,
-  Sustainability, process mining, Green BPM-hindren); bara q16
-  (F-gruppernas namn) parkerad i `questions-pending.js`; t19 och q59 har
-  `group: "green-bpm"`,
+  Sustainability, process mining, Green BPM-hindren) och efter F5
+  `bpm-q80`, `q82`, `q85`, `q88`, `q89` (ISO, modellspråkets fyra
+  komponenter, körbar BPMN, AI-förordningen art. 86, Trelleborg).
+  Parkerade i `questions-pending.js`: q16 (F-gruppernas namn) och F5:s
+  q81, q83, q84, q86, q87 — kapitel 10 nådde taket tio frågor; Method and
+  Style och business rule task prövas i Kör processen i stället. t19 och
+  q59 har `group: "green-bpm"`,
   `bpm-q25` flaggad (rollnamn). Alla `reviewed: false`. Balanstestet
   `fragebank-balans.test.mjs` är tabelldrivet per delkurs: Databaser
   oförändrad, BPM med Strategis gränser (spridning 1,5, unikt längst
@@ -698,9 +703,12 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
 - **Essä:** 6 i `essays.js`: HT25:s fyra med exakt lydelse + två egna
   (top-down/bottom-up, BPR mot BPM). `essa-struktur.test.mjs` täcker båda
   delkurserna.
-- **Kör processen** (vy `bpmn`, `views/ProcessRun.jsx`): 25 uppgifter i
+- **Kör processen** (vy `bpmn`, `views/ProcessRun.jsx`): 28 uppgifter i
   `bpmnTasks.js` — HT25:s fem körfrågor, elementfrågan (omtenta 13), sju
-  varianter, 11 uppgifter på fem egna diagram (boundary events, OR,
+  varianter, efter F5 en elementfråga om business rule task (`kp-f5-brt`)
+  och två uppgifter av typen `kind: "stil"` på Silvers Method and
+  Style-exempel (`kp-f5-ms-1` dålig men korrekt BPMN, `kp-f5-ms-2` bra
+  BPMN; diagrammen `f5-ms-bad`/`f5-ms-good` visas men körs inte), 11 uppgifter på fem egna diagram (boundary events, OR,
   terminate, loop, event subprocess med timer) och häftets 1.1 (Bouquet
   delivery, sluttillstånd) och 1.3 (Handle critical issue). Diagrammen är
   data i `bpmnDiagrams.js` (noder med `cx/cy`, flöden, pooler, barnvyer)
@@ -765,6 +773,27 @@ fullständighetskritik) och är ogranskade av Kasper. Bildernas egna
 småfel: två bilder heter "steg 10" (quick wins och rapporten), och Develop
 steg 3 har People-stegets RACI-text.
 
+### F5 inlagd (2026-10-12)
+
+Källa: `~/Desktop/Skola/SKOLA T3/course_files_export/02_Lectures/05_BPMN_SYSB23_BPM_HT26 BPMN.pdf`
+(38 bilder). **Transkriptet återstår:** spellistan hade ingen F5-video
+2026-10-12. Stäm av när den kommer (`yt-dlp --flat-playlist` på spellistan,
+samma metod som F4): vad Weaver säger om tentan och BPMN-frågorna,
+examPriority efter hans betoning (i dag oförändrad: förklarbarheten ligger i
+`framtid`, karna, eftersom 3(a) prövats), och om de parkerade q81/q87 ska in.
+Byggt: kap 10 fick BPMN:s historik och ISO (2013), Silvers fördelar och
+begränsningar med heuristikerna för när BPMN inte passar, modellspråkets
+fyra komponenter (Dumas et al.), Method and Style med exemplet dålig mot
+bra, visuell mot körbar BPMN och DMN med rabattexemplet och DMN:s gräns;
+namngivningsstycket noterar att F5:s Silver-exempel också skriver
+"Receive application". Kap 9 fick avsnittet om förklarbarhet (GDPR art. 15
+och 22, AI-förordningen med art. 86, Trelleborg) som nu bär 3(a), och
+process minings fyra användningsområden (F4 räknade tre). **Sakfel i
+F5:** bilden säger att UML och DMN inte är ISO-standarder; DMN stämmer, men
+UML är ISO/IEC 19501 (2005) och 19505 (2012). Kasper beslutade att bara
+DMN nämns och att ingen fråga prövar UML-delen. "Things to avoid in the
+BPMN assignment" gäller gruppuppgiften och är inte inbyggt.
+
 ### Facit och osäkerheter (BPM)
 
 - **3(c):** tentans ritning motsäger sig själv — den kollapsade markören
@@ -776,9 +805,6 @@ steg 3 har People-stegets RACI-text.
 - **Artikelstöd:** 2(e) Green BPM stöds delvis av Houy (s. 76, 78, 90),
   omtenta 8 (RPA via UI) av Rosemann s. 421 och Reijers s. 4 men inte
   kontrasten "inte robust integration".
-- **3(a) (BPMN/DMN och förklarbarhet) saknar källstöd** — inget i
-  artiklarna, F1–F3 eller genomgången. Frågan (`bpm-t21`) och kap 9:s
-  avsnitt ligger kvar; **kontrollera efter föreläsning 5 (12 okt).**
 - **HT24 (den förra lärarens, används inte sedan 2026-09-30):** omtentan
   har samma frågor utom 23, 27, 50 men **omkastade alternativ** —
   positionssvar gäller bara ordinarien. Avvikande
@@ -795,8 +821,8 @@ steg 3 har People-stegets RACI-text.
 
 - Användarens granskning av det ogranskade (listan ovan), i första hand
   Öva-frågorna dbq-33…62 och påståendeuppgifterna.
-- **BPM:** F5 (BPMN, 12 okt) läggs in härnäst; väv in Canvas-quizzarna BPM
-  och BPMN när de kommer (alla tentafrågor finns där enligt Weaver). Kasper
+- **BPM:** när F5-videon finns i spellistan: hämta transkriptet (se "F5
+  inlagd") och stäm av; väv in Canvas-quizzarna BPM och BPMN när de kommer (alla tentafrågor finns där enligt Weaver). Kasper
   granskar själv, Kör processen och kapitel 11 först.
 - Fler delkurser (arkitektur, säkerhet) enligt samma mall: data +
   manifestrad, ingen ny kod.

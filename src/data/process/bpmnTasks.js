@@ -5,8 +5,10 @@
 // är ett fynd som ska rapporteras, inte rättas i tysthet.
 //
 // kind: "aktiviteter" (vilka aktiviteter inträffar) | "tid" (när är processen
-// klar). Alternativen behåller tentans antal (5–6), eftersom gissningsregeln
-// beror på det.
+// klar) | "slut" (vilket sluttillstånd) | "element" (känna igen ett element) |
+// "stil" (vad är fel eller rätt enligt Method and Style; diagrammet visas men
+// körs inte). Alternativen behåller tentans antal (5–6), eftersom
+// gissningsregeln beror på det.
 //
 // answer: aktiviteter som bokstäver ("ABD") eller sluttid ("2025-12-06 kl. 02:01").
 
@@ -86,6 +88,65 @@ export const tasks = [
       "D är samma sak men interrupting (heldragen cirkel). F startar på en timer (klocka).",
       "C och E har heldragen ram: send task (fyllt kuvert) och receive task (ofyllt kuvert).",
       "A har tjock ram: en call activity, här med parallell multi-instance-markör.",
+    ],
+  },
+
+  {
+    id: "kp-f5-brt", kind: "element", points: 5,
+    source: "Egen elementfråga efter F5 (DMN och business rule task)",
+    question: "Vilket av följande BPMN-element (A–F) är en business rule task, som anropar beslutsregler i en DMN-beslutstabell?",
+    elements: [
+      { letter: "A", taskType: "user" },
+      { letter: "B", taskType: "service" },
+      { letter: "C", taskType: "businessRule" },
+      { letter: "D", taskType: "script" },
+      { letter: "E", taskType: "manual" },
+      { letter: "F", taskType: "receive" },
+    ],
+    options: ["C", "A", "B", "D", "E", "F"],
+    answer: "C",
+    explain: [
+      "C: tabellikonen är business rule task. Den anropar beslutet, till exempel rabattens beslutstabell i DMN, i stället för att reglerna ritas som en kedja av gateways.",
+      "B (kugghjul) är en service task: automatiserad, men den anropar en tjänst, inte beslutsregler. I rabattexemplet skapar en service task fakturan efter beslutet.",
+      "D (skriptikon) är en script task, A (person) en user task, E (hand) en manual task och F (ofyllt kuvert) en receive task.",
+    ],
+  },
+
+  // ── F5: Method and Style ─────────────────────────────────────────────
+  {
+    id: "kp-f5-ms-1", diagram: "f5-ms-bad", kind: "stil", points: 5,
+    source: "Egen fråga efter F5 (Silvers exempel på dålig men korrekt BPMN)",
+    question: "Diagrammet är tekniskt korrekt BPMN. Vad är fel med det enligt Silvers Method and Style?",
+    options: [
+      "Gatewayen har ingen bedömning före sig, Yes/No saknar sammanhang och båda utfallen har samma slut",
+      "En XOR-gateway får enligt BPMN-standarden inte följa direkt efter en starthändelse",
+      "Aktiviteterna ska namnges substantiv–verb, som Application approval och Application rejection",
+      "Processen saknar lanes, och utan lanes är diagrammet inte giltig BPMN",
+      "Inget — ett tekniskt korrekt diagram är enligt Silver också ett bra diagram",
+    ],
+    answer: "Gatewayen har ingen bedömning före sig, Yes/No saknar sammanhang och båda utfallen har samma slut",
+    explain: [
+      "Silvers tre anmärkningar: diagrammet visar inte var beslutet fattas (ingen bedömningsaktivitet före XOR), Yes och No svarar inte på någon fråga, och de två utfallen går till samma sluthändelse fast de är olika sluttillstånd.",
+      "Allt i diagrammet är tillåtet i standarden — poängen är att korrekt BPMN inte är samma sak som bra BPMN.",
+      "Verb–objekt är rätt namnform för aktiviteter, och lanes är frivilliga.",
+    ],
+    note: "Jämför med nästa uppgift, där samma process är ritad enligt Method and Style.",
+  },
+  {
+    id: "kp-f5-ms-2", diagram: "f5-ms-good", kind: "stil", points: 5,
+    source: "Egen fråga efter F5 (Silvers exempel på bra och korrekt BPMN)",
+    question: "Samma process ritad enligt Method and Style. Var fattas beslutet om ansökan godkänns?",
+    options: [
+      "I Assess application — XOR-gatewayen testar bara utfallet av bedömningen",
+      "I XOR-gatewayen — det är gatewayen som avgör om ansökan godkänns",
+      "I Receive application, när ansökan tas emot från den sökande",
+      "Hos Applicant, som skickar sitt beslut till processen som meddelande",
+      "Inget av övriga alternativ",
+    ],
+    answer: "I Assess application — XOR-gatewayen testar bara utfallet av bedömningen",
+    explain: [
+      "Silver: en XOR-gateway ska följa en aktivitet vars utfall avgör vägen. Assess application fattar beslutet; gatewayen delar flödet på utfallet Approved eller Rejected.",
+      "Övriga förbättringar mot version 1: processen ligger i en white-box pool med processens namn, den sökande är en black-box pool, starten är ett message start event, villkoren heter Approved och Rejected, de två sluttillstånden har var sin message end event och alla tre message flows är namngivna.",
     ],
   },
 
@@ -315,7 +376,7 @@ export function answerFromResult(task, result) {
 
 // Vilket alternativ som är rätt, härlett ur facit.
 export function correctIndex(task) {
-  if (task.kind === "element") return task.options.indexOf(task.answer);
+  if (task.kind === "element" || task.kind === "stil") return task.options.indexOf(task.answer);
   const i = task.options.findIndex((opt) => {
     if (task.kind === "tid") return opt === task.answer;
     if (task.kind === "slut") return opt.split(" — ")[0] === task.answer;

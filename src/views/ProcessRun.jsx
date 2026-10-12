@@ -29,7 +29,8 @@ export default function ProcessRun({ modelProgress, onSolve, onReset }) {
   const diagram = task.diagram ? diagramById[task.diagram] : null;
   const correct = correctIndex(task);
   const solvedCount = tasks.filter((t) => modelProgress[t.id]).length;
-  const result = useMemo(() => (diagram ? simulate(diagram, task.scenario) : null), [diagram, task]);
+  // Stiluppgifterna visar ett diagram men kör det inte.
+  const result = useMemo(() => (diagram && task.kind !== "stil" ? simulate(diagram, task.scenario) : null), [diagram, task]);
 
   useEffect(() => { setChoice(null); setSubmitted(false); setConfirmReset(false); }, [currentId]);
 

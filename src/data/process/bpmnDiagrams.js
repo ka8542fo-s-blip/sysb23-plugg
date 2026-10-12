@@ -341,6 +341,54 @@ export const diagrams = [
       seq("or", "en"),
     ],
   },
+  // ── F5: Method and Style, dålig mot bra BPMN (Silvers exempel) ───────
+  // Båda är tekniskt korrekta; bara den andra följer Method and Style.
+  // Diagrammen körs inte i Kör processen (uppgiftstyp "stil").
+  {
+    id: "f5-ms-bad",
+    title: "Method and Style: ansökan, version 1",
+    source: "Omritat efter F5 (Silvers exempel på dålig men korrekt BPMN)",
+    views: [{ container: null, width: 620, height: 250 }],
+    pools: [],
+    nodes: [
+      { id: "s", type: "start", event: "none", label: "Start", cx: 50, cy: 125 },
+      { id: "g", type: "gateway", gw: "xor", cx: 150, cy: 125 },
+      task("ap", "Approve application", undefined, 320, 55),
+      task("rj", "Reject application", undefined, 320, 195),
+      { id: "e", type: "end", event: "none", label: "End", cx: 520, cy: 125 },
+    ],
+    flows: [
+      seq("s", "g"),
+      seq("g", "ap", { route: "vh", cond: "Yes" }),
+      seq("g", "rj", { route: "vh", cond: "No" }),
+      seq("ap", "e", { route: "hv" }), seq("rj", "e", { route: "hv" }),
+    ],
+  },
+  {
+    id: "f5-ms-good",
+    title: "Method and Style: ansökan, version 2",
+    source: "Omritat efter F5 (Silvers exempel på bra och korrekt BPMN)",
+    views: [{ container: null, width: 760, height: 340 }],
+    pools: [
+      { id: "applicant", label: "Applicant", x: 10, y: 10, w: 740, h: 56, view: null },
+      { id: "aap", label: "Application Assessment Process", x: 10, y: 92, w: 740, h: 238, view: null },
+    ],
+    nodes: [
+      { id: "s", type: "start", event: "message", message: "Application", label: "Receive application", cx: 100, cy: 210 },
+      task("as", "Assess application", "user", 240, 210),
+      { id: "g", type: "gateway", gw: "xor", cx: 370, cy: 210 },
+      { id: "ok", type: "end", event: "message", message: "Approval notification", label: "Application approved", cx: 540, cy: 150 },
+      { id: "no", type: "end", event: "message", message: "Rejection notification", label: "Application rejected", cx: 650, cy: 270 },
+    ],
+    flows: [
+      seq("s", "as"), seq("as", "g"),
+      seq("g", "ok", { route: "vh", cond: "Approved" }),
+      seq("g", "no", { route: "vh", cond: "Rejected" }),
+      msg("applicant", "s", "Application"),
+      msg("ok", "applicant", "Approval notification"),
+      msg("no", "applicant", "Rejection notification"),
+    ],
+  },
 ];
 
 // Variant av 3(c) där event subprocessens start är heldragen (interrupting).

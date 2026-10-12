@@ -854,4 +854,55 @@ export const questions = [
       { text: "Develop, eftersom de tekniska specifikationerna inte har uppdaterats efter införandet", explain: "Develop bygger lösningen före införandet. Underhållet efteråt hör till Sustainability." }
     ],
     correct: 2, source: "F4a (Sustainability), F4 del 1 (Weaver: fasen tar aldrig slut)", reviewed: false },
+
+  // ── Efter F5 (2026-10-12): BPMN-standarden och förklarbarheten ──
+  { id: "bpm-q80", topic: "bpmn", difficulty: 2,
+    question: "En myndighet kräver i en upphandling att leverantörens process- och beslutsmodeller följer ISO-standarder. Vad stämmer?",
+    options: [
+      { text: "Både BPMN 2.0 och DMN blev ISO-standarder 2013, så båda uppfyller kravet.", explain: "BPMN 2.0 blev ISO-standard 2013. DMN ingår i OMG:s BPM+-familj men är ingen ISO-standard." },
+      { text: "BPMN blev ISO-standard redan 2004, när BPMI.org släppte version 1.0.", explain: "BPMI.org släppte BPMN 1.0 2004, och OMG antog den 2006. ISO-standarden kom 2013 och gäller BPMN 2.0." },
+      { text: "BPMN 2.0 från 2011 är ISO-standard sedan 2013, men DMN är det inte.", explain: "BPMN 2.0 släpptes 2011 och blev ISO-standard 2013. ISO-statusen väger tungt för myndigheter, reglerade branscher och upphandlingar, men gör utvecklingen långsammare. DMN är ingen ISO-standard." },
+      { text: "BPMN blev ISO-standard 2011, när version 2.0 fick en standardiserad XML.", explain: "2011 kom BPMN 2.0 med standardiserad XML och mer omfattande körsemantik. ISO-standard blev den 2013." }
+    ],
+    correct: 2, source: "F5 (BPMN:s historia efter Silver 2019 och Trisotech; BPMN 2.0 som ISO-standard 2013; BPM+)", reviewed: false },
+
+  { id: "bpm-q82", topic: "bpmn", difficulty: 2,
+    question: "En modellerare ritar ett message flow mellan två aktiviteter i samma pool. Vilken av ett modellspråks fyra komponenter bryter diagrammet mot?",
+    options: [
+      { text: "Vocabulary: språkets begrepp, som händelser, aktiviteter och gateways.", explain: "Vocabulary är de begreppsliga elementen. Message flow finns bland dem, så felet gäller inte vilket element som används utan var det kopplas." },
+      { text: "Syntax: reglerna för vilka element som får kopplas ihop och hur.", explain: "Syntax är reglerna för vilka element som får förbindas och hur. Message flow får bara gå mellan pooler, aldrig inom samma pool." },
+      { text: "Notation: hur elementen avbildas med standardiserade symboler.", explain: "Notation är symbolerna. Message flow ritas som vanligt, som en streckad pil med ring i början. Felet är kopplingen." },
+      { text: "Semantics: vilket beteende varje element och koppling representerar.", explain: "Semantics är betydelsen. Message flow betyder envägskommunikation mellan deltagare, och det är regeln för var det får kopplas som bryts." }
+    ],
+    correct: 1, source: "F5 (de fyra komponenterna enligt Dumas et al. 2018); genomgången s. 23–26 (message flow mellan pooler)", reviewed: false },
+
+  { id: "bpm-q85", topic: "bpmn", difficulty: 2,
+    question: "Ett team har ritat \"Check inventory\" som en service task och vill att en processmotor ska köra den. Vad behöver läggas till?",
+    options: [
+      { text: "En lane för motorn, så att det syns vilket system som utför aktiviteten.", explain: "En lane visar vem som utför arbetet. Motorn behöver tekniska uppgifter, som vilken tjänst som anropas och vilka variabler som skickas." },
+      { text: "Fler element i diagrammet, eftersom motorn bara läser det som syns visuellt.", explain: "Motorn läser BPMN XML. En körbar modell kan se lika enkel ut som en visuell, men detaljerna måste finnas under ytan." },
+      { text: "En business rule task före, som talar om för motorn hur tasken ska köras.", explain: "En business rule task anropar beslutsregler. Hur en service task körs anges i dess egna egenskaper." },
+      { text: "Execution properties i BPMN XML, som REST endpoint, variabler och retry.", explain: "Diagrammet visar vad som händer, och execution properties anger hur det utförs. De lagras i BPMN XML och ställs oftast in i verktygets properties-panel. Standardiserad XML och mer omfattande körsemantik kom med BPMN 2.0 år 2011." }
+    ],
+    correct: 3, source: "F5 (visuell och körbar BPMN; execution properties i BPMN XML)", reviewed: false },
+
+  { id: "bpm-q88", topic: "framtid", difficulty: 2,
+    question: "Ett företag sållar jobbansökningar med ett högrisk-AI-system, och en sökande sorteras bort. Vad ger artikel 86 i AI-förordningen den sökande rätt till?",
+    options: [
+      { text: "Att få veta vilka som tar del av personuppgifterna och hur länge de sparas.", explain: "Det är GDPR:s artikel 15, rätten till tillgång. Den ger också rätt att få veta om ett beslut har automatiserats, och i så fall meningsfull information om logiken." },
+      { text: "Att inte bli föremål för ett beslut som enbart grundas på automatiserad behandling.", explain: "Det är GDPR:s artikel 22, med undantag för avtal, lag och uttryckligt samtycke." },
+      { text: "Att få ut källkoden till AI-systemet, så att beslutet kan granskas rad för rad.", explain: "Artikel 86 ger rätt till en förklaring, inte till källkod. I Trelleborg kom koden ut först efter en dom i kammarrätten." },
+      { text: "Att få en meningsfull förklaring av AI-systemets roll och av beslutets huvuddelar.", explain: "Artikel 86 gäller beslut som bygger på utdata från ett högrisk-AI-system, till exempel inom anställning, och som påverkar personen betydligt. Den som påverkas har rätt till en tydlig och meningsfull förklaring." }
+    ],
+    correct: 3, source: "F5 (AI-förordningen art. 86 och riskpyramiden efter Sunyaev et al. 2025; GDPR art. 15 och 22)", reviewed: false },
+
+  { id: "bpm-q89", topic: "framtid", difficulty: 2,
+    question: "Trelleborg lät en RPA fatta beslut om försörjningsstöd och försvarade sig med att roboten var regelstyrd, inte en black-box-algoritm. Vad visar fallet?",
+    options: [
+      { text: "Att en regelstyrd robot är transparent i sig, eftersom den följer samma lagar som handläggarna.", explain: "Det var i stort sett kommunens försvar. Akademikerförbundet SSR fick ändå inget svar på hur roboten fattade besluten." },
+      { text: "Att även en regelstyrd robot kan vara ogenomskinlig när tillämpningen bara finns i kod.", explain: "Koden som till slut lämnades ut var 136 000 rader regler i 127 XML-filer, och utan data gick reglerna inte att förstå med säkerhet. BPMN och DMN föreslås för att göra sådana beslutsflöden och regler synliga." },
+      { text: "Att källkoden är en affärshemlighet, så att en kommun inte behöver lämna ut den.", explain: "Trelleborg hävdade det, men kammarrätten slog fast att koden var en allmän handling." },
+      { text: "Att en RPA faller utanför reglerna om automatiserade beslut, eftersom den inte är AI.", explain: "GDPR:s regler om automatiserade beslut gäller automatiserad behandling, inte bara AI. Akademikerförbundet SSR hänvisade till rätten till meningsfull information om logiken bakom automatiseringen." }
+    ],
+    correct: 1, source: "F5 (Trelleborgsfallet: SvD, Kvalitetsmagasinet, AlgorithmWatch)", reviewed: false },
 ];
