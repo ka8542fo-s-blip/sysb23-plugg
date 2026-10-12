@@ -660,16 +660,16 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   och 3 p/4 alt 0; **3(d) 4 p/6 alt −0,17**. Kapitel 1 och Kör processen
   (per fråga) säger det.
 - **Läs:** 11 kapitel i `data/process/reading.js` (kap1–kap11 = nr 1–11),
-  15 ämnen i `topics.js`, 94 ordlistetermer. Alla ämnen `karna`; `essa`
+  15 ämnen i `topics.js`, 121 ordlistetermer. Alla ämnen `karna`; `essa`
   på automatisera, ramverk, foundations, manniskor (HT25:s fyra
-  essäfrågor) och enablement (process asset, Weavers betoning), låst i
+  essäfrågor), enablement (process asset, Weavers betoning) och sedan F4
+  launch och understand (Weaver: Foundations, Enablement och Launch "kanske
+  de viktiga", Understand och Innovate "väldigt viktiga"), låst i
   `exam-priority.test.mjs`. Det Weaver tonar ned (husets delar, stegen i
   Foundations/Enablement/Launch, PSM) står under rubriker märkta
   "(bakgrund)" i kapiteltexten; varje fas börjar med syfte och output. **Preliminärt** (märkt i
-  `sources`, inget i UI): kap 4 (processoptimeringslösningarna, bara ur
-  omtentans fråga 12), kap 7 (Understand), kap 8 (Innovate–Sustainability,
-  60 % — bara ur HT25-tentafrågorna), kap 10 (DMN, bara
-  F1/F2 och tentan). Kap 9:s LPM-avsnitt är skrivet mot LPM-texten
+  `sources`, inget i UI): kap 10 (DMN, bara F1/F2 och tentan) till F5.
+  Kap 4, 7, 8 och 9 är omskrivna mot F4 (2026-10-12, se nedan). Kap 9:s LPM-avsnitt är skrivet mot LPM-texten
   (2026-09-29). Kap 10:s namngivning följer Canvas-konventionerna
   (message flow = substantiv, message start = "Received …", aktivitet =
   verb–objekt, XOR = fråga med "?" och Yes/No, sluthändelse =
@@ -678,15 +678,19 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   konventionerna; tentans och häftets diagram är ritade som förlagan.
   Kap 1 har raden att rätt svar var ensamt längst i 14 av 20 HT25-BPM-
   frågor (omtentans 12 delad förstaplats), räknat ur de ordagranna
-  frågorna. Skrivs om
-  efter F4 (5 okt) och F5 (12 okt).
-- **Öva:** 67 frågor i `questions.js`, 5–9 per kapitel. `bpm-t01…t22` =
+  frågorna.
+- **Öva:** 82 frågor i `questions.js`, 5–10 per kapitel. `bpm-t01…t22` =
   HT25-tentornas flervalsfrågor nära ordagrant (i `LENGTH_FLAGGED` med
   skälet "tentafråga ordagrant", räknas inte i balansmåtten — på tentan
   var rätt svar längst i ungefär tre fall av fyra). `bpm-q01…q49` egna (q48 = gateway-namngivning, q49 = OR-join-fallet på genomgången s. 37–38; q46 = terminate end-fallet s. 35–36),
-  ingen med HT24 som källa (test i `fragebank-balans.test.mjs`); fyra
-  parkerade i `questions-pending.js` (q16 F-gruppernas namn, q18, q30, q32
-  som bara vilade på HT24),
+  ingen med HT24 som källa (test i `fragebank-balans.test.mjs`); q18
+  (Leadership), q30 (Realize) och q32 (appreciative inquiry, rätt svar
+  omskrivet efter F4) tillbaka från parkeringen 2026-10-12 och nya
+  `bpm-q50…q61` (F4: riskjämförelsen, quick wins, Process Worth Matrix,
+  rotorsaker, processbeslut, baseline, Realize som tråd och livscykel,
+  Sustainability, process mining, Green BPM-hindren); bara q16
+  (F-gruppernas namn) parkerad i `questions-pending.js`; t19 och q59 har
+  `group: "green-bpm"`,
   `bpm-q25` flaggad (rollnamn). Alla `reviewed: false`. Balanstestet
   `fragebank-balans.test.mjs` är tabelldrivet per delkurs: Databaser
   oförändrad, BPM med Strategis gränser (spridning 1,5, unikt längst
@@ -742,26 +746,24 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   snedstreck; `egen-or` följer nu Silvers exempel, vilket ändrade facit:
   kp-egen-or-2 ABDE → ABE, kp-egen-or-3 ABCDE → ABCE (or-1 oförändrad ADE).
 
-### Kontrollera mot F4 (5 okt)
+### F4 inlagd (2026-10-12)
 
-Påståenden som i dag bara vilar på HT25-tentornas svarsalternativ eller
-saknar föreläsningsstöd, och ska stämmas av mot föreläsning 4 (F1–F3 är
-avstämda mot transkripten 2026-09-30):
-- Var identifierade rotorsaker tas fram (antaget: Understand) — kap 7,
-  topics `understand`, förklaringen i bpm-t18.
-- Om Understand också ger quick wins (F3 lägger dem i Launch-fasens
-  intressentintervjuer).
-- Vad People innehåller (antaget: roller och utbildning; utbildningsplaner
-  är enligt 2(h) inte Innovates output) — kap 8, bpm-t18.
-- Vad Develop, Implement, Realize och Sustainability innehåller (i dag
-  bara F2:s översikt: Realize = de strategiska målen, Sustainability =
-  konkurrensfördelen) — kap 8, topics `fullfoljd`, bpm-q31. Pröva om de
-  parkerade q30 (Realize) och q32 (appreciative inquiry) får stöd.
-- 60 % kommunikation och människor: bara ur tentans essäfråga 1(a).
-- Processoptimeringslösningarna (kap 4): bara uppräkningen i omtentans
-  fråga 12 och RPA-exemplet i 2(c); inget i F1–F3.
-- BPM-mognad: bara vision/mål/processarkitektur, IT-grund och tempo;
-  ingen mognadsmodell (Weaver: behöver inte gås igenom).
+Källor: bilderna `04a_SYSB23_BPM_HT26.pdf` (56) och `04b_SYSB23_BPM_HT26.pdf`
+(23) i `~/Downloads`, transkripten 13 och 14 i `BPM_transkript/`. Weaver
+säger inget om tentan i F4. Han betonar Understand och Innovate, metrics
+och baseline, rotorsaker, Process Worth Matrix, quick wins, lösningarnas
+risk, Realize som livscykel, att Sustainability inte är miljö, essentials och
+60 %, och process mining; han rusar igenom Develop och Implement, stegen och
+huset, och kallar cloud "inte riktigt hit", EPC inaktuellt, Green BPM "lite
+skakig" och hinner inte agentisk AI — det står som bakgrund i texten.
+Kasper beslutade: **Process Worth Matrix** hör till Understand steg 8 och
+nämns i Launch bara som F3:s verktyg för processvalet; **essentials** är
+"bedrock" (berggrund), inte F2:s framgångspall; **appreciative inquiry**
+bara med bildens mening (Weaver säger inget). Kapitlen skrevs av ett
+arbetsflöde (utkast, källgranskning, regelgranskning, rättning, kortning,
+fullständighetskritik) och är ogranskade av Kasper. Bildernas egna
+småfel: två bilder heter "steg 10" (quick wins och rapporten), och Develop
+steg 3 har People-stegets RACI-text.
 
 ### Facit och osäkerheter (BPM)
 
@@ -793,9 +795,8 @@ avstämda mot transkripten 2026-09-30):
 
 - Användarens granskning av det ogranskade (listan ovan), i första hand
   Öva-frågorna dbq-33…62 och påståendeuppgifterna.
-- **BPM efter F4 (5 okt) och F5 (12 okt):** skriv om kapitel 4, 7, 8, 10
-  och 11; väv in Canvas-quizzarna BPM och BPMN när de kommer (alla
-  tentafrågor finns där enligt Weaver); kontrollera 3(a) efter F5. Kasper
+- **BPM:** F5 (BPMN, 12 okt) läggs in härnäst; väv in Canvas-quizzarna BPM
+  och BPMN när de kommer (alla tentafrågor finns där enligt Weaver). Kasper
   granskar själv, Kör processen och kapitel 11 först.
 - Fler delkurser (arkitektur, säkerhet) enligt samma mall: data +
   manifestrad, ingen ny kod.

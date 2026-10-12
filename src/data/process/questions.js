@@ -425,7 +425,7 @@ export const questions = [
     question: "Vad är huvudsyftet med modellering i Understand-fasen enligt Jeston?",
     options: [
       { text: "Att skapa fullständiga processbeskrivningar som kan användas direkt vid automatisering i ett BPM-workflow.", explain: "Nulägesmodellen är ett analysverktyg, inte ett automatiseringsunderlag." },
-      { text: "Att definiera detaljerade KPI-er baserat på modellerna för framtida styrning av processerna.", explain: "Processmål sätts i Launch." },
+      { text: "Att definiera detaljerade KPI-er baserat på modellerna för framtida styrning av processerna.", explain: "Understand mäter en baseline för att kunna jämföra as-is med to-be. KPI:er för att styra de nya processerna sätts senare, i People; processmålen sattes i Launch." },
       { text: "Att få fram en gemensam, faktabaserad bild av hur en process faktiskt fungerar i dag för att analysera hur den eventuellt kan optimeras.", explain: "Nulägesmodellen är ett analysverktyg för en gemensam, faktabaserad bild." },
       { text: "Att producera dokumentation för transparens, revision och kvalitetssäkring.", explain: "Dokumentation är en bieffekt, inte syftet." }
     ],
@@ -475,22 +475,22 @@ export const questions = [
   { id: "bpm-t18", topic: "fullfoljd", difficulty: 2,
     question: "Vilket av följande är typiska outputs från Innovate-fasen i Jeston's 7FE-ramverk?",
     options: [
-      { text: "Identifierade rotorsaker", explain: "Enligt tentans svarsalternativ inte Innovates output; kursmaterialet för nulägesanalysen (Understand) gås igenom på F4." },
-      { text: "Projektets riskanalys och riskregister", explain: "Hör till projektledningen, inte till Innovate." },
-      { text: "Design av framtida processer (“to-be”) och validerade lösningsförslag", explain: "To-be och validerade lösningar är Innovates resultat." },
-      { text: "Utbildningsplaner för berörd personal", explain: "Enligt tentans svarsalternativ inte Innovates output; var de hör hemma gås igenom på F4." }
+      { text: "Identifierade rotorsaker", explain: "Rotorsakerna tas fram i Understand, i rotorsaksanalysen (steg 5). I Innovate är de underlag för redesignen." },
+      { text: "Projektets riskanalys och riskregister", explain: "Hör till projektledningen, en av de tre essentials. Innovate prövar lösningarnas genomförbarhet och risker, men det är inte projektets riskhantering." },
+      { text: "Design av framtida processer (“to-be”) och validerade lösningsförslag", explain: "To-be-designen och de validerade lösningsförslagen är Innovates output; till sist lämnas detaljerade affärskrav över till Develop." },
+      { text: "Utbildningsplaner för berörd personal", explain: "Utbildningsplanerna tas fram i People och genomförs i Implement. Innovate pekar bara ut utbildningsbehoven, i gapanalysen mellan as-is och to-be." }
     ],
-    correct: 2, source: "Tenta HT25 ord 2(h)", reviewed: false },
+    correct: 2, source: "Tenta HT25 ord 2(h); F4a (Understand steg 5, Innovate, People steg 7, Implement steg 5)", reviewed: false },
 
   { id: "bpm-q31", topic: "fullfoljd", difficulty: 2,
     question: "Vad betyder Sustainability i 7FE?",
     options: [
-      { text: "Att processerna optimeras för lägre energiförbrukning och utsläpp.", explain: "Det är Green BPM; Sustainability i 7FE betyder inte miljömässig hållbarhet." },
-      { text: "Att projektets business case följs upp mot de strategiska målen.", explain: "Det liknar Realize, den fas som gäller de strategiska målen." },
-      { text: "Att förbättringarna ger en uthållig konkurrensfördel över tid.", explain: "Sustainability står för konkurrensfördelen, fas 10 i gruppen Future." },
-      { text: "Att BPM-teamet avvecklas när de nya processerna är införda.", explain: "7FE ser BPM som en livscykel som fortsätter, inte som ett avslutat projekt." }
+      { text: "Att processerna optimeras för lägre energiförbrukning och utsläpp.", explain: "Det är Green BPM (Houy). Weaver kallar Sustainability ett besvärligt ord: i 7FE betyder det inte miljömässig hållbarhet." },
+      { text: "Att projektets business case följs upp mot de strategiska målen.", explain: "Det liknar Realize, som ser till att nyttorna i business case uppnås och består. Där knyts nyttorna till de strategiska målen." },
+      { text: "Att förbättringarna ger en uthållig konkurrensfördel över tid.", explain: "Jeston menar sustainable competitive advantage: förbättringarna och nyttorna ska underhållas och förbättras kontinuerligt i business as usual." },
+      { text: "Att BPM-teamet avvecklas när de nya processerna är införda.", explain: "Projektteamet lämnar över i Implement, men Sustainability är det som följer: processerna ägs, mäts och förbättras i det dagliga arbetet." }
     ],
-    correct: 2, source: "F2 (7FE:s faser: Sustainability = konkurrensfördelen)", reviewed: false },
+    correct: 2, source: "F4a (Sustainability), Weaver på F4 (\"ett besvärligt ord\"); F2 (7FE:s faser)", reviewed: false },
 
   { id: "bpm-q33", group: "essentials", topic: "manniskor", difficulty: 2,
     question: "Ett BPM-projekt levererar tekniskt korrekta processer, men medarbetarna fortsätter arbeta på det gamla sättet. Vilken essential har troligen försummats?",
@@ -518,20 +518,20 @@ export const questions = [
       { text: "Omkring 20 procent.", explain: "För lågt; Jeston menar att människorna är huvuddelen." },
       { text: "Omkring 40 procent.", explain: "För lågt." },
       { text: "Omkring 60 procent.", explain: "Jestons siffra, som HT25-tentans essäfråga utgick från." },
-      { text: "Omkring 80 procent.", explain: "För högt." }
+      { text: "Omkring 80 procent.", explain: "Inte Jestons siffra. Han säger minst 60 procent, och HT25-essän utgick från cirka 60." }
     ],
     correct: 2, source: "Tenta HT25 ord 1(a)", reviewed: false },
 
   // ── Kapitel 9: AI och hållbarhet ──────────────────────────────────────
-  { id: "bpm-t19", topic: "framtid", difficulty: 2,
+  { id: "bpm-t19", group: "green-bpm", topic: "framtid", difficulty: 2,
     question: "Varför har Green BPM inte fått det breda genomslag som visionerna från (Houy et al.) 2012 förutspådde?",
     options: [
-      { text: "De flesta BPM-verktyg saknar inbyggt stöd för att lagra, räkna och analysera energi-, utsläpps- och resursdata i modellerna", explain: "Houy: verktygen måste anpassas, nyckeltalen saknas och kostnaden går före." },
-      { text: "BPM håller på att ersättas av Agentic AI orchestration", explain: "Inget stöd i artikeln." },
-      { text: "Hållbarhetsdata får inte lagras i BPM- eller ERP-system enligt lagstiftning", explain: "Inget sådant förbud finns." },
-      { text: "Process mining fungerar inte för CO₂-data", explain: "Inget stöd i artikeln." }
+      { text: "De flesta BPM-verktyg saknar inbyggt stöd för att lagra, räkna och analysera energi-, utsläpps- och resursdata i modellerna", explain: "Houy: verktygen måste anpassas, nyckeltalen saknas och kostnaden går före. Hindret finns kvar: få BPM-verktyg kopplar till GHG-databaser eller koldioxidredovisning, och BPMN och DMN byggdes inte för hållbarhetsdata." },
+      { text: "BPM håller på att ersättas av Agentic AI orchestration", explain: "Inget stöd i artikeln eller föreläsningen. Hindren gäller redovisningen, notationerna, verktygen, standarderna och silos." },
+      { text: "Hållbarhetsdata får inte lagras i BPM- eller ERP-system enligt lagstiftning", explain: "Inget sådant förbud finns. CSRD och standarderna är bara inte byggda för processnivån, och redovisningen sköts i egna programvaror utanför BPM." },
+      { text: "Process mining fungerar inte för CO₂-data", explain: "Inget stöd i artikeln. Process mining analyserar hur processerna körs och är ett av de stora spåren i dagens BPM." }
     ],
-    correct: 0, source: "Tenta HT25 ord 2(e); Houy et al. (2012) s. 76, 78, 90", reviewed: false },
+    correct: 0, source: "Tenta HT25 ord 2(e); Houy et al. (2012) s. 76, 78, 90; F4b (Green BPM: vision mot verklighet)", reviewed: false },
 
   { id: "bpm-t20", topic: "framtid", difficulty: 2,
     question: "Vad är huvudpoängen med en LPM (Large Process Model) enligt Kampik et al. (2025)?",
@@ -704,4 +704,154 @@ export const questions = [
       { text: "Gatewayen \"Draft approval\", med True och False på flödena.", explain: "Ett substantiv är message flows form, och svaren ska vara Yes och No." }
     ],
     correct: 0, source: "BPMN Element naming conventions (Canvas)", reviewed: false },
+
+  // ── Efter F4 (2026-10-12): återinförda q18, q30, q32 och nya q50–q59 ──
+  { id: "bpm-q18", topic: "ramverk", difficulty: 2,
+    question: "Vilken beskrivning passar essential-förmågan Leadership i 7FE?",
+    options: [
+      { text: "Att resurser, budget, tidplan, intressenter och leveranser hanteras i hela aktiviteten.", explain: "Det är BPM project management, som ser till att resurser, tid och budget används effektivt och att intressenter och leveranser hanteras." },
+      { text: "Att ledare på alla nivåer ger vision, förtroende och linjering med strategin.", explain: "Leadership ger vision, förtroende och linjering med strategin. Jeston ser det som ett ständigt inflytande på alla nivåer, inte bara hos högsta ledningen." },
+      { text: "Att alla berörda kan och vill ta till sig och bidra till den framtida lösningen.", explain: "Det är people change management: medarbetarna ska både kunna, genom utbildning, och vilja, genom motivation och engagemang." },
+      { text: "Att en Chief Process Officer ansvarar för alla processer i hela organisationen.", explain: "CPO är en roll i process governance (Enablement), inte en essential. Leadership finns dessutom på alla nivåer, inte i en enskild roll." }
+    ],
+    correct: 1, source: "F4a (essentials: Leadership, Project Management, People Change Management), Weaver på F4; F3 (CPO i process governance)", reviewed: false },
+
+  { id: "bpm-q30", topic: "fullfoljd", difficulty: 2,
+    question: "Vad är syftet med Realize-fasen i 7FE?",
+    options: [
+      { text: "Att bygga alla de komponenter som krävs för att kunna införa de nya processerna.", explain: "Det beskriver Develop, där lösningarna och teknikkomponenterna byggs och testas så att de finns på plats innan de nya processerna införs." },
+      { text: "Att säkerställa att nyttan som beskrevs i business case faktiskt realiseras.", explain: "Realize ser till att nyttorna i business case uppnås och består efter införandet. Nyttoregistret upprättades redan i Launch." },
+      { text: "Att föreställa sig det framtida tillståndet i en visionsövning.", explain: "Det är Red Wine Test i Foundations, där deltagarna föreställer sig att BPM-projektet redan är genomfört och lyckat." },
+      { text: "Att hålla igång styrning och ständig förbättring efter projektet.", explain: "Det är Sustainability, där förbättringarna underhålls och förbättras i business as usual. Den fasen tar aldrig slut." }
+    ],
+    correct: 1, source: "F4a (Realize: syfte och nyttoregistret; Develop; Sustainability), F3 (Red Wine Test)", reviewed: false },
+
+  { id: "bpm-q32", topic: "manniskor", difficulty: 1,
+    question: "Vad kännetecknar appreciative inquiry som förändringsansats?",
+    options: [
+      { text: "Den börjar med att kartlägga felen i dagens process och söka rotorsakerna bakom dem.", explain: "Det är rotorsaksanalysen i Understand. Appreciative inquiry beskrivs i stället som framåtblickande." },
+      { text: "Den låter ledningen formulera förändringen och förankra den uppifrån och ned i organisationen.", explain: "Det är en top-down-ansats. Appreciative inquiry är deltagande: människorna är med och formar förändringen." },
+      { text: "Den utgår från en yttre trigger, som en ny lag, och anpassar processerna efter de nya kraven.", explain: "Att anpassa sig efter en trigger utifrån är att reagera på förändringen. Appreciative inquiry skapar förändringen själv." },
+      { text: "Den är framåtblickande och deltagande och skapar förändring i stället för att bara reagera.", explain: "Jeston lyfter ansatsen under people change management: den blickar framåt, låter människor delta och skapar själv förändringen." }
+    ],
+    correct: 3, source: "F4a (People Change Management: appreciative inquiry, Jeston s. 495–500; Understand steg 5); F2 (drivers och triggers, top-down mot bottom-up)", reviewed: false },
+
+  { id: "bpm-q50", topic: "perspektiv", difficulty: 2,
+    question: "Ett företag vill lägga ut sin kundtjänst på en extern leverantör för att snabbt spara pengar. Kundrelationen är kärnan i företagets strategi. Vad säger kursens riskjämförelse av optimeringslösningarna?",
+    options: [
+      { text: "Outsourcing har lägst risk av alla lösningarna, eftersom leverantören tar över ansvaret för processen.", explain: "Tvärtom: outsourcing har flest höga risker av de fyra lösningarna, bland annat för kontrollen. RPA har lägst risk." },
+      { text: "Outsourcing har medelrisk på nästan alla punkter, så valet avgörs av leverantörens pris.", explain: "Mest medel är shared services. Outsourcing har hög risk på fem av tolv punkter, och processens strategiska vikt avgör." },
+      { text: "Outsourcing har låg risk för snabba besparingar men hög för kontroll, kostnader framåt och kompetens.", explain: "Låg risk har den bara för snabba besparingar, lägre rekryteringskostnader och skalbarhet. Är kundprocessen strategisk, som för Amazon, blir risken hög." },
+      { text: "Outsourcing och RPA har ungefär samma risk, eftersom båda tar bort arbete från medarbetarna.", explain: "RPA har lägst risk av alla, med medelrisk bara för kortsiktiga besparingar och implementeringsinsatsen. Outsourcing har flest höga risker." }
+    ],
+    correct: 2, source: "F4a (riskjämförelsen av optimeringslösningarna), Weaver på F4 (Amazon, servicebilen)", reviewed: false },
+
+  { id: "bpm-q51", topic: "understand", difficulty: 2,
+    question: "I en Understand-workshop föreslår en handläggare en enkel ändring av en blankett som skulle ta bort mycket av omarbetet i processen. Hur ska teamet hantera förslaget enligt Jeston?",
+    options: [
+      { text: "Som underlag till Innovate: medarbetarnas idéer får vänta tills to-be-designen är klar.", explain: "Quick wins väntar inte på redesignen. De ska ge nytta tidigt och bygga momentum för det fortsatta arbetet." },
+      { text: "Som ett förslag att lägga åt sidan: Understand ska dokumentera nuläget, inte förbättra det.", explain: "Understand dokumenterar nuläget, men identifierade quick wins är också en del av fasens output och ska ge nytta tidigt." },
+      { text: "Som en quick win: genomförbar inom fyra till åtta veckor, och handläggaren får erkännande.", explain: "Quick wins som kan genomföras inom fyra till åtta veckor är Understand-output. De kommer ofta bottom-up, och förslagsställaren ska få erkännande." },
+      { text: "Som en fråga för ledningen: förbättringar ska komma uppifrån för att vara linjerade med strategin.", explain: "Jeston råder tvärtom att uppmuntra medarbetarna i frontlinjen att föreslå även små idéer. Quick wins kommer ofta bottom-up." }
+    ],
+    correct: 2, source: "F4a (Understand steg 10 och fasens output), Weaver på F4 (bottom-up, förslagslådorna)", reviewed: false },
+
+  { id: "bpm-q52", topic: "understand", difficulty: 2,
+    question: "En bank går igenom sina processer med Process Worth Matrix. Rapporteringen till tillsynsmyndigheten krävs enligt lag. I dag binder den så mycket manuellt arbete att den drar ned bankens resultat. Hur klassas den?",
+    options: [
+      { text: "Mandated och liability: en börda kring regelefterlevnad som kan motivera automatisering.", explain: "Processen krävs av regelverket (Mandated) och förstör snarare värde än tillför det (liability). Sådana bördor kan motivera automatisering eller outsourcing." },
+      { text: "Identity och asset: den definierar bankens varumärke och ska därför prioriteras högst.", explain: "Identity-processerna definierar varumärket och särprägeln, som McDonald's snabba service. Mandated-processerna har lägst strategisk betydelse." },
+      { text: "Priority och liability: den stödjer identitetsprocesserna och ger synliga fel när den brister.", explain: "Priority-processerna stödjer identitetsprocesserna, som en pålitlig leveranskedja. Här är det lagen som gör processen nödvändig." },
+      { text: "Mandated och asset: den krävs av regelverket och ska därför lämnas som den är.", explain: "Rätt salience, men en Mandated-process som drar ned resultatet förstör värde. Den är en liability, och då kan automatisering vara motiverad." }
+    ],
+    correct: 0, source: "F4a (Understand steg 8: Process Worth Matrix), Weaver på F4", reviewed: false },
+
+  { id: "bpm-q53", topic: "understand", difficulty: 2,
+    question: "Understand-workshopparna har visat att reklamationerna tar för lång tid att hantera, och måtten är insamlade. Teamet vill nu gå direkt till Innovate och designa om flödet. Vad saknas framför allt enligt Jeston?",
+    options: [
+      { text: "Ett riskregister för projektet, så att redesignens risker är kartlagda före Innovate.", explain: "Riskregistret hör till projektledningen, en av essentials. Det tar inte fram orsakerna bakom de långa handläggningstiderna." },
+      { text: "En rotorsaksanalys, så att redesignen inte upprepar eller döljer samma problem.", explain: "Rotorsaksanalysen, steg 5 i Understand, tar fram de verkliga orsakerna, inte bara symptomen. Innovate bygger sedan vidare på rotorsakerna." },
+      { text: "En fullständig BPMN-modell av nuläget, eftersom Innovate behöver körbara processer.", explain: "Understand-modellerna ska vara fit for purpose, not perfect, och de görs inte för att skapa körbara processer i ett BPMS." },
+      { text: "En Voice of Customer-undersökning, eftersom kundernas klagomål visar orsaken till förseningen.", explain: "VoC ingår i metrics-analysen (steg 4), och måtten är redan insamlade. Klagomålen visar symptomen som kunderna märker, inte orsakerna bakom dem." }
+    ],
+    correct: 1, source: "F4a (Understand steg 3–5: workshoppar, metrics och VoC, rotorsaksanalys), Weaver på F4; tenta HT25 ord 2(h) (riskregistret hör till projektledningen)", reviewed: false },
+
+  { id: "bpm-q54", topic: "understand", difficulty: 3,
+    question: "Ett företag har lagt ut sin kundtjänst. Understand visar att leverantören inte lever upp till den överenskomna SLA:n, och kundprocesserna är kärnan i företagets strategi. Vilket processbeslut i Understand steg 9 ligger närmast till hands?",
+    options: [
+      { text: "Outsource: kundtjänsten flyttas till en annan leverantör som kan hålla SLA:n.", explain: "Ett leverantörsbyte kan lösa SLA-problemet men lämnar en kärnprocess utanför företaget. Weaver: för ett företag som Amazon vore det hög risk att lägga ut kundprocesserna." },
+      { text: "Amalgamate: processen slås ihop med en annan process inom företaget.", explain: "Amalgamate slår ihop processer med varandra. Det löser inte att leverantören inte håller SLA:n." },
+      { text: "Leave as is: processen lämnas, eftersom den redan ligger utanför företaget.", explain: "Leave as is gäller processer som fungerar tillräckligt bra. Måtten visar att SLA:n inte uppfylls." },
+      { text: "Insource: arbetet som lagts ut på leverantören tas tillbaka in i företaget.", explain: "Insource tar tillbaka arbete som tidigare outsourcats. Är kundprocesserna en kärnkompetens, som för Amazon, hör de hemma internt." }
+    ],
+    correct: 3, source: "F4a (Understand steg 9: processbesluten; steg 4: SLA), Weaver på F4 (outsourcad CRM, Amazon och kärnkompetens)", reviewed: false },
+
+  { id: "bpm-q55", topic: "understand", difficulty: 2,
+    question: "En chef vill hoppa över mätningarna i Understand: \"Vi satte ju processmålen redan i Launch.\" Vad är problemet enligt Jeston?",
+    options: [
+      { text: "Inget, eftersom processmålen från Launch redan beskriver hur processen presterar i dag.", explain: "Processmålen säger vart man vill. Baselinen i Understand visar var man står, och båda behövs för jämförelsen." },
+      { text: "Att KPI:erna för roller och team i de nya processerna då inte kan sättas i Understand.", explain: "KPI:er för roller och team sätts i People (steg 4). Understand mäter nuläget, vilket är något annat än att styra de nya processerna." },
+      { text: "Att modellerna inte kan köras i BPM-systemet utan mått på varje steg i processen.", explain: "Understand-modelleringen görs inte för att skapa körbara processer, och måtten är till för jämförelsen." },
+      { text: "Att det saknas en baseline, så det går inte att visa om de nya processerna blev bättre.", explain: "Måtten blir baseline för att jämföra as-is med to-be och underlag för business case. Weaver: utan mått vet man inte om något blev bättre." }
+    ],
+    correct: 3, source: "F4a (Understand steg 4: metrics och baseline; Realize steg 4), Weaver på F4", reviewed: false },
+
+  { id: "bpm-q56", topic: "fullfoljd", difficulty: 2,
+    question: "Tre månader efter go-live har BPM-projektet kostat mycket, och besparingarna är små. Ledningen undrar om projektet har misslyckats. Vad säger Realize-fasen?",
+    options: [
+      { text: "Avbryt arbetet, eftersom ett BPM-projekt ska ha levererat sin fulla nytta redan vid go-live.", explain: "Många tror felaktigt att projektet är slut vid go-live; nyttorna växer långsamt. Uteblir de inom ett område kan arbetet rättas till eller avbrytas, men först när man vet varför." },
+      { text: "Ta reda på om problemet är verkligt, eftersom nyttan tar tid och inte bara syns i pengar.", explain: "BPM är en livscykel, inte ett vattenfall. Det kräver tålamod och KPI:er för resurser och kundernas syn, inte bara pengar." },
+      { text: "Gå tillbaka till Understand och mät om nuläget, eftersom baselinen troligen är fel.", explain: "Baselinen behövs för att jämföra före och efter. Att resultatet ser svagt ut tidigt betyder inte att den är fel." },
+      { text: "Låt de ekonomiska måtten avgöra, eftersom nyttan i business case anges i kronor och ören.", explain: "Weaver vill ha KPI:er som inte bara handlar om pengar: nöjdare kunder kan ta ett halvår att märka och har ett värde i sig." }
+    ],
+    correct: 1, source: "F4a (Realize: syfte och kurvan över kostnader och nyttor, rectify or cease), Weaver på F4 (livscykel, tålamod, KPI:er utöver pengar)", reviewed: false },
+
+  { id: "bpm-q57", topic: "framtid", difficulty: 2,
+    question: "Ett företag överväger att kartlägga orderprocessen med process mining i stället för med Jestons workshoppar. Vilken begränsning har process mining jämfört med workshopparna?",
+    options: [
+      { text: "Den bygger på intervjuer och observationer, så bilden kan bli subjektiv och ofullständig.", explain: "Det är den traditionella vägens begränsning. Process mining bygger på objektiv data ur händelseloggarna." },
+      { text: "Den kräver att någon först ritar en BPMN-modell för hand som algoritmen utgår från.", explain: "Process discovery rekonstruerar processmodellen automatiskt ur loggarna. Ingen workshop behövs för det." },
+      { text: "Den klarar bara små datamängder, så de flesta processinstanserna måste sorteras bort.", explain: "Tvärtom: genombrottet kom med big data och beräkningskraft, och styrkan är data från miljontals processinstanser." },
+      { text: "Den ser bara det som IT-systemen registrerar, så åsikter och kvalitativa insikter saknas.", explain: "Process mining fångar bara det systemen registrerar, så åsikterna syns inte. Därför kombineras det med Jestons metod." }
+    ],
+    correct: 3, source: "F4b (Jeston 7FE mot process mining), Weaver på F4", reviewed: false },
+
+  { id: "bpm-q58", topic: "framtid", difficulty: 2,
+    question: "Ett år efter ett BPM-projekt misstänker processägaren att handläggarna tar genvägar förbi kontrollsteget i den nya processen. Vilken förmåga i process mining passar?",
+    options: [
+      { text: "Conformance checking, som jämför den upptäckta processen med den avsedda modellen.", explain: "Conformance checking svarar på om medarbetarna följer processen, var avvikelserna uppstår och om compliance-reglerna bryts." },
+      { text: "Process discovery, som rekonstruerar en processmodell ur systemens händelseloggar.", explain: "Discovery tar fram hur processen faktiskt körs, men att jämföra den med den avsedda processen är conformance checking." },
+      { text: "Process improvement, som hittar och gör om flaskhalsar, väntan och omarbete.", explain: "Improvement använder datan för att göra om det som drar ned processen; frågan här gäller avvikelser från den avsedda processen." },
+      { text: "Prediktion, som med maskininlärning förutsäger när processen kommer att gå fel.", explain: "Prediktion förutsäger var och när problem kommer att uppstå, men den jämför inte körningen med den avsedda modellen." }
+    ],
+    correct: 0, source: "F4b (process minings tre förmågor), Weaver på F4 (process mining efter ett BPM-arbete; prediktion med maskininlärning)", reviewed: false },
+
+  { id: "bpm-q59", group: "green-bpm", topic: "framtid", difficulty: 2,
+    question: "Ett företag redovisar sina utsläpp enligt CSRD och GHG Protocol. Varför följs utsläppen ändå sällan per process med Green BPM?",
+    options: [
+      { text: "Det finns redan en gemensam standard för utsläpp per processteg, men BPM-verktygen följer den inte.", explain: "Någon sådan standard finns inte (ännu). Standardiseringen finns på den aggregerade nivån, för hela organisationen." },
+      { text: "Hållbarhetsteamen arbetar redan i BPM-verktygen, så en särskild Green BPM behövs inte.", explain: "Tvärtom: hållbarhetsteamen har egna programvaror och konsulter i ett eget spår, utan BPM. Det är hindret med silos." },
+      { text: "Redovisningen gäller hela organisationen, och BPMN byggdes inte för hållbarhetsdata.", explain: "GHG Protocol räknar organisationens totala utsläpp per år, och CSRD bygger på det. BPMN och DMN byggdes inte för att lagra hållbarhetsdata; de gröna annoteringarna är egna tillägg." },
+      { text: "Process mining har ersatt Green BPM och mäter utsläppen direkt i händelseloggarna.", explain: "Inget stöd i kursen. Hindren gäller redovisningen, notationerna, verktygen, standarderna och silos." }
+    ],
+    correct: 2, source: "F4b (Green BPM: vision mot verklighet), Weaver på F4 (\"lite skakig idag\")", reviewed: false },
+  { id: "bpm-q60", topic: "fullfoljd", difficulty: 2,
+    question: "En projektledare säger: \"Nyttorealiseringen börjar i Realize, när allt är infört.\" Hur ser 7FE på det?",
+    options: [
+      { text: "Den är en tråd genom alla faser: registret skapas i Launch och baseline mäts i Understand", explain: "Realize-stegen är inbäddade i faserna: nyttostyrningens ramverk i Enablement, benefits register i Launch, baseline i Understand, nyttomixen i Innovate och uppföljningen i Realize och Sustainability." },
+      { text: "Den börjar i Implement, eftersom nyttorna först kan mätas när lösningen är i drift", explain: "Implement startar uppföljningen, men nyttorna definieras och mäts långt tidigare. Utan baseline från Understand finns inget att jämföra med." },
+      { text: "Den sköts helt av projektledningen och ingår därför inte i någon av de tio faserna", explain: "Nyttorealiseringen är en egen fas, Realize, och dess steg finns dessutom i de andra faserna." },
+      { text: "Den hör till Sustainability, där förbättringarna underhålls i business as usual", explain: "Sustainability följer upp och vidmakthåller nyttorna, men registret skapades redan i Launch." }
+    ],
+    correct: 0, source: "F4a (Realize: stegen inbäddade i de andra faserna)", reviewed: false },
+
+  { id: "bpm-q61", topic: "fullfoljd", difficulty: 2,
+    question: "Ett halvår efter BPM-projektet har ingen uppdaterat processmodellerna, och ingen vet vem som följer upp KPI:erna. Vilken fas har inte fungerat?",
+    options: [
+      { text: "Implement, eftersom handover och takeover ska avsluta allt BPM-arbete vid go-live", explain: "Handover och takeover lämnar över ägarskapet, men BPM-arbetet tar inte slut vid go-live." },
+      { text: "Realize, eftersom nyttorna i business case inte har följts upp mot baseline", explain: "Realize gäller nyttorna i business case. Frågan gäller vem som äger och underhåller processerna efteråt." },
+      { text: "Sustainability, där ägarskapet, process asseten och KPI-uppföljningen ska fortsätta", explain: "Sustainability gör förbättringarna till business as usual. Fasen tar aldrig slut: någon ska äga processerna, uppdatera process asseten och mäta KPI:erna." },
+      { text: "Develop, eftersom de tekniska specifikationerna inte har uppdaterats efter införandet", explain: "Develop bygger lösningen före införandet. Underhållet efteråt hör till Sustainability." }
+    ],
+    correct: 2, source: "F4a (Sustainability), F4 del 1 (Weaver: fasen tar aldrig slut)", reviewed: false },
 ];

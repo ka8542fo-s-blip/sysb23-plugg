@@ -24,12 +24,13 @@ export const essays = [
       ] },
       { heading: "Konkret", points: [
         "Rädslan är aktuell (Weaver, F3): företag som IKEA säger upp personal och hela yrkesgrupper, som mjukvarutestare, ersätts av AI — ett BPM-projekt möts av den rädslan från start.",
+        "Vad arbetet består av (Weaver, F4): att hantera medarbetarnas motstånd, motivera dem, få dem att förstå och lära upp dem. Ungefär samma 60 procent ser man i dag när företag ska bli AI-redo eller genomföra AI-projekt: en mycket stor del av tiden går till att ta hand om och kommunicera med människorna. Gör man inte det är risken hög att BPM-projektet fallerar.",
         "Att bara lova att ingen sparkas räcker inte alltid; man kan sockra dealen med utbildning och empowerment, så att medarbetaren får mer intressanta uppgifter än att klicka mellan databaser.",
         "Eget exempel: ett nytt ärendeflöde som är tekniskt korrekt men där handläggarna fortsätter med sina egna kalkylark — nyttan i business case uteblir.",
       ] },
       { heading: "Koppling", points: [
         "BPR misslyckades bland annat för att det ignorerade medarbetarnas acceptans och mötte starkt motstånd.",
-        "Kommunikationen återkommer i faserna: sista steget i Foundations, första i Enablement och Launch.",
+        "Kommunikationen är ett steg i varje fas: sist i Foundations, först och genomgående i de andra.",
       ] },
     ],
     outline: "1) BPM är människor, inte teknik — definitionen. 2) Varför: people change management, rädslan, employee-centric. 3) Exempel där tekniken fungerar men människorna inte följer med. 4) Koppling till BPR:s misslyckande och kommunikationen i faserna; riskerna som slutsats." },
@@ -51,8 +52,8 @@ export const essays = [
       { heading: "Konkret", points: [
         "Mekanismen (Weaver, F2): i en dålig process kompenserar erfarna medarbetare som vet hur man tar sig ur fällorna — en automatisering saknar den kunskapen och fastnar hela tiden.",
         "Spreadsheet-testet: Weaver ser varje år i projektkursen företag, även IKEA, som driver en kritisk process i ett kalkylark — ett tecken på att processen måste förbättras först.",
-        "Eget exempel: en attestkedja med fem nivåer där tre bara skickar vidare blir automatiserad bara en snabbare omväg.",
-        "Nyansera: Weaver invänder att förändring i dag inte går att göra utan system — principen gäller ordningen, inte att tekniken är oviktig.",
+        "RPA (Weaver, F4): roboten tar över klicken och klipp-och-klistra mellan de system och databaser som redan finns, till exempel en kundlista i Excel som ska föras över till en annan databas. Det går snabbt och kräver inget stort pådrag från IT, men har fungerat på medarbetarnivå och varit svårt att skala till hela företaget. Egen slutsats: en robot som gör samma klick snabbare gör inte en dålig process bättre.",
+        "Nyansera (Weaver, F2): Jeston tonar ned systemen, men i dag går förändringen inte att göra utan system — principen gäller ordningen, inte att tekniken är oviktig.",
       ] },
       { heading: "Koppling", points: [
         "Hammer 1990: företagen automatiserade gamla arbetssätt — \"don't automate, obliterate\".",
@@ -60,7 +61,7 @@ export const essays = [
         "I 7FE kommer Understand och Innovate före Develop och Implement.",
       ] },
     ],
-    outline: "1) Principen och mekanismen: automatisering förstärker. 2) Konsekvenserna och ordningen. 3) Attestkedjan eller spreadsheet-testet. 4) Hammer och produktivitetsparadoxen, och var principen syns i 7FE." },
+    outline: "1) Principen och mekanismen: automatisering förstärker. 2) Konsekvenserna och ordningen. 3) Weavers RPA-exempel eller spreadsheet-testet. 4) Hammer och produktivitetsparadoxen, och var principen syns i 7FE." },
 
   { id: "bpm-e3",
     question: "Enligt Jeston (2022) misslyckas många organisationer inte med strategiutformning, utan med strategiimplementering. Förklara begreppet ”strategy execution void” och diskutera hur BPM och 7FE-ramverket kan bidra till att överbrygga detta gap.",
@@ -79,6 +80,7 @@ export const essays = [
       { heading: "Konkret", points: [
         "Foundations börjar med att förstå strategin och göra den spårbar till BPM-programmet och Red Wine Test.",
         "TOM beskriver hur organisationens delar ska fungera i framtiden, och Enablement bygger styrning, arkitektur och process asset.",
+        "Process Worth Matrix (Weaver, F4): i Understand bedöms processerna efter strategisk betydelse (salience) och ekonomiskt värde (worth), för att avgöra vilka man investerar i, förbättrar, outsourcar eller tar bort. Weaver kopplar den till RBV och kärnkompetens: för Amazon, med sitt kundfokus, är det som rör kunden troligen en kompetens att ha kvar internt, och att lägga ut det vore hög risk. Ett företag som konkurrerar med produkt och varumärke kan kanske outsourca CRM.",
       ] },
       { heading: "Koppling", points: [
         "Jestons hus: blå zon (management processes) = management effectiveness, röd zon (operational processes) = operational efficiency, grön zon (Business Transformation Program Management, \"Set for Success\") binder ihop dem.",
@@ -103,7 +105,8 @@ export const essays = [
       ] },
       { heading: "Konkret", points: [
         "Eget exempel: en organisation där BPM bara skett i små informella insatser startar ett koncernbrett program — tempot går fortare än mognaden.",
-        "Olika grund gäller också det konkreta (Weaver, F2): vilken IT-arkitektur och vilka system som redan finns eller måste skaffas först.",
+        "Olika grund gäller också det konkreta (Weaver, F2): vilken IT-arkitektur och vilka system som redan finns eller måste skaffas först. Process mining finns enligt Weaver (F4) alltid med när ett moget företag gör BPM i dag, men kräver data av hög kvalitet — en snickare som tar order på telefon har inga digitala spår av det som händer mellan order och leverans.",
+        "Metoden anpassas efter deltagarna (Weaver, F4): det är inte realistiskt att skicka en hel säljorganisation på BPMN-kurs, så Understand-workshoppen kan modellera med flödesscheman, swimlanes, storyboards eller sticky notes — och bara så mycket som behövs.",
         "Eget exempel, inte ur källan: en pilot som visar värde passar bättre än att gå fortare än mognaden tillåter.",
       ] },
       { heading: "Koppling", points: [
@@ -131,6 +134,7 @@ export const essays = [
         "En myndighet som måste anpassa hela verksamheten till nya regler: top-down.",
         "Amazon (Weaver, F2): bara ledningen kan prioritera kundnära processer före leverantörsprocesser utifrån strategin — ett skäl till top-down.",
         "En avdelning utan ledningsstöd och med oklar strategi: börja lokalt med små bottom-up-förbättringar.",
+        "Quick wins kommer ofta underifrån (Weaver, F4): i workshoparna pekar medarbetare på en enkel ändring som löser en stor del av problemen, som i Toyotas tipslådor där månadens bästa förslag belönades. Synliga resultat inom några veckor motiverar både medarbetarna och ledningen att fortsätta.",
       ] },
       { heading: "Koppling", points: [
         "De fyra scenarierna: Under the radar och Pilot är ofta bottom-up, In the driver's seat och Business as usual kräver ledningen.",
@@ -156,6 +160,7 @@ export const essays = [
       { heading: "Konkret", points: [
         "Fords leverantörsreskontra: betala när varorna kommer, 75 % färre anställda — framgången som gjorde BPR till trend.",
         "BPR:s bortglömda syfte var empowerment (Weaver, F1): sekreteraren med dator skulle få mer varierade uppgifter, men i praktiken fick en person göra fyras jobb och resten sparkades.",
+        "Lärdomen används i dag (Weaver, F4): empowerment kallar han en lärdom från BPR. RPA ska inte ersätta medarbetaren utan ta bort de tråkiga momenten — medarbetaren kan själv lära sig bygga roboten med low code och lägga tiden på den roligare delen av jobbet, som att träffa andra människor.",
         "Samma diskussion förs i dag om AI: gör om allt från grunden för att dra nytta av tekniken — och motståndet känns igen.",
       ] },
       { heading: "Koppling", points: [

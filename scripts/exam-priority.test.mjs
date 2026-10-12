@@ -74,9 +74,12 @@ test("delkurser utan klassning påverkas inte", () => {
 // den förra lärarens och används inte). Allt har prövats som flerval; essä =
 // HT25:s fyra essäfrågor (60 % människor, improve before automate, execution
 // void, mognad/one size fits all) plus process asset, som Weaver kallar
-// kanske den viktigaste komponenten (F3, 2026-09-30).
+// kanske den viktigaste komponenten (F3, 2026-09-30), och Launch och
+// Understand: på F4 kallar Weaver Foundations, Enablement och Launch "kanske
+// de viktiga" faserna och Understand och Innovate "väldigt viktiga"
+// (2026-10-12). Innovate ligger i fullfoljd, som han annars rusade igenom.
 test("BPM-delkursens klassning: allt kärna, essä där HT25 frågade eller Weaver betonar", () => {
-  const essa = ["automatisera", "ramverk", "foundations", "enablement", "manniskor"];
+  const essa = ["automatisera", "ramverk", "foundations", "enablement", "launch", "understand", "manniskor"];
   for (const topic of processTopics) {
     const levels = priorityOf(topic);
     assert.ok(levels.includes("karna"), `${topic.id} ska vara kärna`);
