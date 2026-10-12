@@ -8,8 +8,15 @@
 // (spridning 1,5, unikt längst < 35 %), och dess ordagranna tentafrågor
 // står i LENGTH_FLAGGED och räknas inte in i balansmåtten: på HT25-tentan
 // var rätt svar ofta längst, och de ska se ut som på tentan.
+//
+// Mallen är fyra alternativ. En fråga får ha 2–6 bara om den är flaggad
+// (Weavers ordagranna körfrågor har fem–sex); positionsmåttet räknar
+// frågorna med fyra alternativ. "Inget av övriga alternativ" har last: true,
+// står sist och blandas inte.
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { shuffleQuestion } from "../src/lib/shuffle.js";
+import { diagramById as bpmnDiagramById } from "../src/data/process/bpmnDiagrams.js";
 import * as dbQ from "../src/data/databaser/questions.js";
 import { pendingQuestions } from "../src/data/databaser/questions-pending.js";
 import { topics as dbTopics } from "../src/data/databaser/topics.js";
@@ -51,21 +58,30 @@ for (const bank of BANKS) {
   const { name, questions, flagged: flaggedList, topics, chapters } = bank;
   const chapterOf = Object.fromEntries(topics.map((t) => [t.id, t.chapter]));
 
-  test(`${name}: varje fråga är komplett — fyra alternativ med förklaring, ämne, källa`, () => {
+  test(`${name}: varje fråga är komplett — 2–6 alternativ med förklaring, ämne, källa`, () => {
+    const flagged = new Set(flaggedList.map((entry) => entry.id));
     const ids = new Set();
     for (const q of questions) {
       assert.ok(!ids.has(q.id), `dubblett ${q.id}`);
       ids.add(q.id);
-      assert.equal(q.options.length, 4, `${q.id}: fyra alternativ`);
+      const n = q.options.length;
+      assert.ok(n >= 2 && n <= 6, `${q.id}: ${n} alternativ (2–6)`);
+      if (n !== 4) assert.ok(flagged.has(q.id), `${q.id}: ${n} alternativ men inte i LENGTH_FLAGGED`);
       for (const option of q.options) {
         assert.ok(option.text && option.explain, `${q.id}: text och explain per alternativ`);
+        if (/^Inget av övriga alternativ/.test(option.text)) assert.equal(option.last, true, `${q.id}: "${option.text}" ska ha last: true`);
       }
-      assert.ok(q.correct >= 0 && q.correct < 4, `${q.id}: correct`);
+      // Alternativ som står kvar sist får bara följas av fler sådana.
+      const firstLast = q.options.findIndex((option) => option.last);
+      if (firstLast >= 0) assert.ok(q.options.slice(firstLast).every((option) => option.last), `${q.id}: last-alternativen ska stå sist`);
+      assert.ok(q.correct >= 0 && q.correct < n, `${q.id}: correct`);
       assert.ok([1, 2, 3].includes(q.difficulty), `${q.id}: difficulty 1–3`);
       assert.ok(q.source, `${q.id}: källa`);
       assert.ok(chapterOf[q.topic], `${q.id}: ämnet ${q.topic} finns inte i topics.js`);
       if (q.diagram) assert.ok(DIAGRAM_IDS.includes(q.diagram), `${q.id}: okänt diagram ${q.diagram}`);
+      if (q.bpmnDiagram) assert.ok(bpmnDiagramById[q.bpmnDiagram], `${q.id}: okänt BPMN-diagram ${q.bpmnDiagram}`);
       if (q.context) assert.equal(typeof q.context, "string", `${q.id}: context ska vara text`);
+      if (q.lead) assert.equal(typeof q.lead, "string", `${q.id}: lead ska vara text`);
     }
   });
 
@@ -97,6 +113,7 @@ for (const bank of BANKS) {
   test(`${name}: balansmåtten håller mallens regler`, () => {
     const flagged = new Set(flaggedList.map((entry) => entry.id));
     const positions = [0, 0, 0, 0];
+    let fourOption = 0;
     let counted = 0;
     let uniqueLongest = 0;
     let ratioSum = 0;
@@ -107,8 +124,12 @@ for (const bank of BANKS) {
       const min = Math.min(...lens);
       const distractors = lens.filter((_, i) => i !== q.correct);
       const isUniqueLongest = lens.filter((l) => l === max).length === 1 && correctLen === max;
-      // Positionen räknas alltid; Öva blandar ändå alternativen.
-      positions[q.correct]++;
+      // Positionen räknas för alla frågor med fyra alternativ, flaggade
+      // eller inte; Öva blandar ändå alternativen.
+      if (q.options.length === 4) {
+        positions[q.correct]++;
+        fourOption++;
+      }
       if (flagged.has(q.id)) {
         if (bank.flaggedInTotals) {
           assert.ok(!isUniqueLongest, `${q.id} är flaggad men rätt svar är ensamt längst — rätta alternativen`);
@@ -123,9 +144,8 @@ for (const bank of BANKS) {
       ratioSum += correctLen / (distractors.reduce((a, b) => a + b, 0) / distractors.length);
       if (isUniqueLongest) uniqueLongest++;
     }
-    const n = questions.length;
-    const lo = Math.ceil((n / 4) * 0.65);
-    const hi = Math.floor((n / 4) * 1.35);
+    const lo = Math.ceil((fourOption / 4) * 0.65);
+    const hi = Math.floor((fourOption / 4) * 1.35);
     for (const p of positions) {
       assert.ok(p >= lo && p <= hi, `positionsfördelning ${positions.join("/")} utanför ${lo}–${hi}`);
     }
@@ -162,6 +182,27 @@ test("process: HT25-frågorna står i LENGTH_FLAGGED och har tentan som källa",
   for (const q of bpmQ.questions.filter((x) => x.id.startsWith("bpm-t"))) {
     assert.ok(flagged.has(q.id), `${q.id} saknas i LENGTH_FLAGGED`);
     assert.match(q.source, /^Tenta HT25/, `${q.id}: källan ska vara tentan`);
+  }
+});
+
+test("process: Canvas-quizzens tolv frågor är granskade och har quizzet som källa", () => {
+  const quiz = bpmQ.questions.filter((q) => q.source.includes("Canvas-quiz (Weaver) HT26"));
+  assert.deepEqual(
+    quiz.map((q) => q.id).sort(),
+    ["bpm-t04", "bpm-t05", "bpm-t09", "bpm-t10", "bpm-t11", "bpm-t16", "bpm-t19", "bpm-t21", "bpm-t22", "bpm-t23", "bpm-t24", "bpm-t25"],
+  );
+  for (const q of quiz) assert.equal(q.reviewed, true, `${q.id}: reviewed`);
+});
+
+test("process: Inget av övriga alternativ står sist när Öva blandar, och rätt svar följer med", () => {
+  const withLast = bpmQ.questions.filter((q) => q.options.some((o) => o.last));
+  assert.equal(withLast.length, 3);
+  for (const q of withLast) {
+    for (let run = 0; run < 50; run++) {
+      const view = shuffleQuestion(q);
+      assert.equal(view.options.at(-1).text, "Inget av övriga alternativ", q.id);
+      assert.equal(view.options[view.correct].originalIndex, q.correct, q.id);
+    }
   }
 });
 

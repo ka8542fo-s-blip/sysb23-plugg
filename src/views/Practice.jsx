@@ -144,7 +144,7 @@ export default function Practice({
       const tag = event.target?.tagName;
       if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
       if (!current) return;
-      if (["1", "2", "3", "4"].includes(event.key)) {
+      if (/^[1-9]$/.test(event.key) && Number(event.key) <= (view?.options.length ?? 4)) {
         if (revealed) return;
         event.preventDefault();
         setChosen(Number(event.key) - 1);
@@ -160,7 +160,7 @@ export default function Practice({
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [current, revealed, confirm, next]);
+  }, [current, view, revealed, confirm, next]);
 
   if (course.questions.length === 0) {
     return (

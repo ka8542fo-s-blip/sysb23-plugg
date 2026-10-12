@@ -32,7 +32,8 @@ for (const q of questions) {
     uniktLangst++;
   }
 
-  positioner[q.correct]++;
+  // Positionen mäts bara för frågor med fyra alternativ (mallen).
+  if (q.options.length === 4) positioner[q.correct]++;
   summaKvot += correctLen / (lens.reduce((a, b) => a + b, 0) / lens.length);
 
   const spridning = maxLen / minLen;

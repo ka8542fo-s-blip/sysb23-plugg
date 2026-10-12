@@ -680,7 +680,7 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   Kap 1 har raden att rätt svar var ensamt längst i 14 av 20 HT25-BPM-
   frågor (omtentans 12 delad förstaplats), räknat ur de ordagranna
   frågorna.
-- **Öva:** 87 frågor i `questions.js`, 5–10 per kapitel (kap 7–10 har 10). `bpm-t01…t22` =
+- **Öva:** 90 frågor i `questions.js`, 5–10 per kapitel (kap 7–10 har 10, kap 11 nio). `bpm-t01…t22` =
   HT25-tentornas flervalsfrågor nära ordagrant (i `LENGTH_FLAGGED` med
   skälet "tentafråga ordagrant", räknas inte i balansmåtten — på tentan
   var rätt svar längst i ungefär tre fall av fyra). `bpm-q01…q49` egna (q48 = gateway-namngivning, q49 = OR-join-fallet på genomgången s. 37–38; q46 = terminate end-fallet s. 35–36),
@@ -696,7 +696,20 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   q81, q83, q84, q86, q87 — kapitel 10 nådde taket tio frågor; Method and
   Style och business rule task prövas i Kör processen i stället. t19 och
   q59 har `group: "green-bpm"`,
-  `bpm-q25` flaggad (rollnamn). Alla `reviewed: false`. Balanstestet
+  `bpm-q25` flaggad (rollnamn). **Canvas-quizzen (2026-10-12):** Weavers två
+  quiz (BPM och BPMN) är HT25-tentornas frågor. De tolv är invävda, inte
+  dubblerade: nio fanns som t04, t05, t09, t10, t11, t16, t19, t21, t22 och
+  har fått quizzets ordalydelse (skiljetecken, "och och" i t10, två
+  alternativ i t21). Körfrågorna 3(d), 3(b) och omtenta 16 är nya som
+  `bpm-t23…t25` i kap 11. De visar Kör processens diagram via `bpmnDiagram`
+  (ht25-3d, ht25-3b, ht25-om16) med stammens inledning i `lead`, och de
+  behåller Weavers fem–sex alternativ i hans ordning. "Inget av övriga
+  alternativ" har `last: true` och står kvar sist när `shuffleQuestion`
+  blandar. De tolv har "Canvas-quiz (Weaver) HT26" i källan och
+  `reviewed: true` (svaren är kontrollerade); övriga är `reviewed: false`.
+  t23–t25 står i `LENGTH_FLAGGED` med skälet "Weavers ordagranna
+  alternativ (Canvas-quiz)". Testet tillåter 2–6 alternativ bara för
+  flaggade frågor, och positionsmåttet räknar frågorna med fyra. Balanstestet
   `fragebank-balans.test.mjs` är tabelldrivet per delkurs: Databaser
   oförändrad, BPM med Strategis gränser (spridning 1,5, unikt längst
   < 35 %). Mätt: 30 %, kvot 1,08.
@@ -725,7 +738,8 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   utan fält gäller Strategis format (11 × 5, oförändrat, låst i
   `exam-plan.test.mjs`). BPM: 10 BPM-frågor à 5 p (ej ämnena bpmn/
   handelser), 1 BPMN-begreppsfråga à 3 p, 3 körfrågor med tentans poäng,
-  högst en per diagram → max 65–74 p. `scoreExam` tar `points` per post;
+  högst en per diagram → max 65–74 p. Bankens körfrågor (`bpmnDiagram`,
+  t23–t25) dras inte i frågesektionerna. `scoreExam` tar `points` per post;
   sparade prov har `max`, Statistik läser det.
 - **Gjorda avvikelser från prompten (godkända i planen):** Läs committades
   som en helhet (1a+1b), eftersom ämnen och ordlista pekar på alla kapitel.
@@ -822,7 +836,7 @@ BPMN assignment" gäller gruppuppgiften och är inte inbyggt.
 - Användarens granskning av det ogranskade (listan ovan), i första hand
   Öva-frågorna dbq-33…62 och påståendeuppgifterna.
 - **BPM:** när F5-videon finns i spellistan: hämta transkriptet (se "F5
-  inlagd") och stäm av; väv in Canvas-quizzarna BPM och BPMN när de kommer (alla tentafrågor finns där enligt Weaver). Kasper
+  inlagd") och stäm av. Canvas-quizzarna är invävda (2026-10-12, se Öva). Kasper
   granskar själv, Kör processen och kapitel 11 först.
 - Fler delkurser (arkitektur, säkerhet) enligt samma mall: data +
   manifestrad, ingen ny kod.

@@ -10,13 +10,17 @@ export function shuffle(items) {
 
 // Blandar en frågas alternativ och mappar om vilket index som är rätt.
 // Returnerar { options, correct } där options[i].originalIndex pekar tillbaka
-// på ordningen i datafilen.
+// på ordningen i datafilen. Alternativ med `last: true` ("Inget av övriga
+// alternativ") blandas inte utan står kvar sist, som på tentan.
 export function shuffleQuestion(question) {
   const withIndex = question.options.map((option, originalIndex) => ({
     ...option,
     originalIndex,
   }));
-  const options = shuffle(withIndex);
+  const options = [
+    ...shuffle(withIndex.filter((option) => !option.last)),
+    ...withIndex.filter((option) => option.last),
+  ];
   const correct = options.findIndex(
     (option) => option.originalIndex === question.correct,
   );

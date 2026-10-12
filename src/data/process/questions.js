@@ -11,9 +11,19 @@
 // längst — och står därför i LENGTH_FLAGGED och räknas inte in i
 // balansmåtten. HT24-tentorna (den förra lärarens) är inte källa: Weaver säger
 // att de kan strunta i. Frågor som bara vilade på HT24 står i
-// questions-pending.js. Alla frågor är ogranskade.
+// questions-pending.js.
+//
+// Weavers två Canvas-quiz (HT26) består av HT25-tentornas frågor. De tolv
+// quizfrågorna står ordagrant med quizzets ordalydelse, har "Canvas-quiz
+// (Weaver) HT26" i källan och reviewed: true (svaren är kontrollerade). Nio
+// fanns redan som bpm-t-frågor; de tre körfrågorna (bpm-t23–t25) visar
+// Kör processens diagram via bpmnDiagram, behåller Weavers fem–sex
+// alternativ och har "Inget av övriga alternativ" sist (last: true, blandas
+// inte). Övriga frågor är ogranskade.
 
 const VERBATIM = "Tentafråga ordagrant (HT25); alternativen är tentans egna och inte längdbalanserade.";
+const CANVAS = "Weavers ordagranna alternativ (Canvas-quiz)";
+const QUIZ = "Canvas-quiz (Weaver) HT26";
 
 export const LENGTH_FLAGGED = [
   "bpm-t01", "bpm-t02", "bpm-t03", "bpm-t04", "bpm-t05", "bpm-t06", "bpm-t07",
@@ -22,7 +32,7 @@ export const LENGTH_FLAGGED = [
   "bpm-t22",
 ].map((id) => ({ id, reason: VERBATIM })).concat([
   { id: "bpm-q25", reason: "Alternativen är Jestons fyra rollnamn och kan inte längdbalanseras; rätt svar är kortast, inte längst." },
-]);
+], ["bpm-t23", "bpm-t24", "bpm-t25"].map((id) => ({ id, reason: CANVAS })));
 
 export const questions = [
   // ── Kapitel 1: vad BPM är ─────────────────────────────────────────────
@@ -144,9 +154,9 @@ export const questions = [
       { text: "Fokusera på att outsourca problematiska processer", explain: "Outsourcing löser inte bristen på stöd och är en optimeringslösning, inte en startstrategi." },
       { text: "Börja lokalt med små bottom-up-förbättringar för att skapa värde och bygga momentum", explain: "Utan ledningsstöd: börja smått, bygg quick wins och momentum." },
       { text: "Avvakta tills den övergripande strategin är uppdaterad", explain: "Att vänta skapar inget värde; lokala förbättringar kan starta ändå." },
-      { text: "Starta ett transformationsprogram med ett “top-down” angreppssätt", explain: "Utan ledningens stöd ska stora program enligt Jeston inte startas alls." }
+      { text: "Starta ett transformationsprogram med ett \"top-down\" angreppssätt", explain: "Utan ledningens stöd ska stora program enligt Jeston inte startas alls." }
     ],
-    correct: 1, source: "Tenta HT25 ord 2(g)", reviewed: false },
+    correct: 1, source: `Tenta HT25 ord 2(g); ${QUIZ}`, reviewed: true },
 
   { id: "bpm-t05", topic: "start", difficulty: 1,
     question: "Vilket av följande är ett typiskt kännetecken för en quick win i samband med BPM-arbete, enligt Jeston?",
@@ -156,7 +166,7 @@ export const questions = [
       { text: "Den kan genomföras snabbt, utan stora kostnader, och ger omedelbara förbättringar i en verksamhetsprocess.", explain: "Snabbt, billigt och med omedelbar effekt — det bygger förtroende och momentum." },
       { text: "Den reducerar behovet av workshops och andra BPM-aktiviteter som tar lång tid.", explain: "Quick wins ersätter inte det strukturerade arbetet; de bygger förtroende för det." }
     ],
-    correct: 2, source: "Tenta HT25 omtenta 7", reviewed: false },
+    correct: 2, source: `Tenta HT25 omtenta 7; ${QUIZ}`, reviewed: true },
 
   { id: "bpm-t06", topic: "start", difficulty: 2,
     question: "På HR-avdelningen har två processanalytiker själva börjat kartlägga sina processer. Cheferna vet om initiativet men har inte prioriterat det. BPM-aktiviteter sker sporadiskt utan budget eller formell styrning. Vilket av Jestons implementeringsscenarier motsvarar detta?",
@@ -227,17 +237,17 @@ export const questions = [
       { text: "Customer-centric BPM", explain: "Kundens upplevelse styr redesignen." },
       { text: "Employee-centric BPM", explain: "Utgår från medarbetarnas motivation och arbetsmiljö." }
     ],
-    correct: 2, source: "Tenta HT25 ord 2(f)", reviewed: false },
+    correct: 2, source: `Tenta HT25 ord 2(f); ${QUIZ}`, reviewed: true },
 
   { id: "bpm-t10", topic: "perspektiv", difficulty: 2,
     question: "Vilka alternativ räknar Jeston som typiska processoptimeringslösningar som man kan välja mellan?",
     options: [
       { text: "Process redesign, outsourcing, shared services, RPA och cloud computing.", explain: "Jestons lista över typiska processoptimeringslösningar att välja mellan." },
-      { text: "Leadership, project management och och people change management.", explain: "Det är 7FE:s tre essentials." },
+      { text: "Leadership, project management och people change management.", explain: "Det är 7FE:s tre essentials." },
       { text: "Integration-centric BPM, human-centric BPM och customer-centric BPM.", explain: "Det är perspektiv på BPM, inte lösningar." },
-      { text: "Activity-based costing (ABC), process modelling och workflow management.", explain: "Det är tekniker och BPMS-komponenter." }
+      { text: "Activity-based costing (ABC), process modelling och workflow management", explain: "Det är tekniker och BPMS-komponenter." }
     ],
-    correct: 0, source: "Tenta HT25 omtenta 12", reviewed: false },
+    correct: 0, source: `Tenta HT25 omtenta 12; ${QUIZ}`, reviewed: true },
 
   { id: "bpm-q12", topic: "automatisera", difficulty: 2,
     question: "Ett bolag vill automatisera sin attestprocess, där fem nivåer attesterar och tre bara skickar vidare. Vad säger Jestons princip?",
@@ -282,12 +292,12 @@ export const questions = [
   { id: "bpm-t11", topic: "ramverk", difficulty: 1,
     question: "Vad illustrerar Jeston (2022) med sin hus-metafor för Business Process Management?",
     options: [
-      { text: "Att BPM främst ska ses som ett projekt snarare än en del av organisationens struktur.", explain: "Huset visar tvärtom BPM som en del av organisationens struktur och kultur." },
-      { text: "Att BPM bör byggas upp från en tydlig grund av processkartläggning och automatisering innan strategi utvecklas.", explain: "Grunden är strategisk; strategin kommer först." },
-      { text: "Att BPM består av flera lager – från strategiska grunder (fundament) till operativa och innovativa processer som tillsammans skapar en effektiv organisation.", explain: "Från regelverket och grunderna upp till processrummen och taket av styrning och kultur." },
-      { text: "Att BPM handlar om att bygga IT-system steg för steg enligt en arkitekturplan.", explain: "Huset handlar om organisationen, inte om IT-bygge." }
+      { text: "Att BPM främst ska ses som ett projekt snarare än en del av organisationens struktur", explain: "Huset visar tvärtom BPM som en del av organisationens struktur och kultur." },
+      { text: "Att BPM bör byggas upp från en tydlig grund av processkartläggning och automatisering innan strategi utvecklas", explain: "Grunden är strategisk; strategin kommer först." },
+      { text: "Att BPM består av flera lager – från strategiska grunder (fundament) till operativa och innovativa processer som tillsammans skapar en effektiv organisation", explain: "Från regelverket och grunderna upp till processrummen och taket av styrning och kultur." },
+      { text: "Att BPM handlar om att bygga IT-system steg för steg enligt en arkitekturplan", explain: "Huset handlar om organisationen, inte om IT-bygge." }
     ],
-    correct: 2, source: "Tenta HT25 ord 2(d)", reviewed: false },
+    correct: 2, source: `Tenta HT25 ord 2(d); ${QUIZ}`, reviewed: true },
 
   { id: "bpm-q17", group: "essentials", topic: "ramverk", difficulty: 2,
     question: "Vilka är de tre essentials i 7FE?",
@@ -373,12 +383,12 @@ export const questions = [
   { id: "bpm-t16", topic: "enablement", difficulty: 2,
     question: "En incident inträffar som berör en specifik process. Teamet behöver förstå steg, regler, ansvar och beslutspunkter för att analysera problemet. Vilken artefakt ska de använda?",
     options: [
-      { text: "Process Worth Matrix.", explain: "Används för att prioritera processer, inte för att förstå en enskild process." },
-      { text: "Organisationens strategidokument.", explain: "Strategin beskriver inte processens steg och regler." },
-      { text: "Den tidigare utarbetade Target Operating Model (TOM).", explain: "TOM är övergripande och beskriver inte enskilda processer." },
-      { text: "\"Process asset\" för den berörda processen.", explain: "Modeller, regler, roller och risker på ett ställe." }
+      { text: "Process Worth Matrix", explain: "Används för att prioritera processer, inte för att förstå en enskild process." },
+      { text: "Organisationens strategidokument", explain: "Strategin beskriver inte processens steg och regler." },
+      { text: "Den tidigare utarbetade Target Operating Model (TOM)", explain: "TOM är övergripande och beskriver inte enskilda processer." },
+      { text: "\"Process asset\" för den berörda processen", explain: "Modeller, regler, roller och risker på ett ställe." }
     ],
-    correct: 3, source: "Tenta HT25 omtenta 5", reviewed: false },
+    correct: 3, source: `Tenta HT25 omtenta 5; ${QUIZ}`, reviewed: true },
 
   { id: "bpm-q22", topic: "foundations", difficulty: 2,
     question: "Ett företag har effektiviserat sina operativa processer i flera år men står still mot konkurrenterna. Vad kallar Jeston resultatet?",
@@ -531,7 +541,7 @@ export const questions = [
       { text: "Hållbarhetsdata får inte lagras i BPM- eller ERP-system enligt lagstiftning", explain: "Inget sådant förbud finns. CSRD och standarderna är bara inte byggda för processnivån, och redovisningen sköts i egna programvaror utanför BPM." },
       { text: "Process mining fungerar inte för CO₂-data", explain: "Inget stöd i artikeln. Process mining analyserar hur processerna körs och är ett av de stora spåren i dagens BPM." }
     ],
-    correct: 0, source: "Tenta HT25 ord 2(e); Houy et al. (2012) s. 76, 78, 90; F4b (Green BPM: vision mot verklighet)", reviewed: false },
+    correct: 0, source: `Tenta HT25 ord 2(e); ${QUIZ}; Houy et al. (2012) s. 76, 78, 90; F4b (Green BPM: vision mot verklighet)`, reviewed: true },
 
   { id: "bpm-t20", topic: "framtid", difficulty: 2,
     question: "Vad är huvudpoängen med en LPM (Large Process Model) enligt Kampik et al. (2025)?",
@@ -547,11 +557,11 @@ export const questions = [
     question: "Hur stödjer BPMN och DMN regulatoriska krav på förklarbarhet (explainability) i samband med automatiserat beslutsfattande?",
     options: [
       { text: "Genom att översätta processer och beslutsregler till naturligt språk", explain: "Notationerna är visuella och tabellbaserade, inte naturligt språk." },
-      { text: "Genom att göra beslutsflöden visuella och förståeliga, vilket gör det möjligt att bättre förklara för medborgare varför ett beslut blev som det blev", explain: "Visuella beslutsflöden och beslutstabeller gör det möjligt att förklara utfallet." },
-      { text: "Genom att automatiskt generera besluts- och processloggar", explain: "Loggar skapas av motorn, inte av notationen." },
-      { text: "Genom att möjliggöra processoptimisering vilket leder till mindre komplexa beslut", explain: "Förklarbarhet handlar inte om enklare beslut." }
+      { text: "Genom att göra beslutsflöden visuella och förståeliga, vilket gör det möjligt att bättre förklara för medborgare varför ett beslut blev som det blev", explain: "BPMN visar var i processen beslutet fattas och vad som händer före och efter, och DMN visar reglerna som gav utfallet. Då går beslutet att förklara för den som det gäller." },
+      { text: "Genom att automatiskt generera besluts- och processloggar som kan granskas i efterhand", explain: "Loggar skapas av processmotorn när processen körs, inte av notationen. BPMN och DMN gör logiken läsbar men skapar inga loggar av sig själva." },
+      { text: "Genom att möjliggöra processoptimisering vilket kan leda till mindre komplexa beslut", explain: "Förklarbarhet handlar om att kunna visa varför ett beslut blev som det blev, inte om att göra besluten enklare." }
     ],
-    correct: 1, source: "Tenta HT25 ord 3(a)", reviewed: false },
+    correct: 1, source: `Tenta HT25 ord 3(a); ${QUIZ}`, reviewed: true },
 
   { id: "bpm-q36", topic: "framtid", difficulty: 2,
     question: "Ett försäkringsbolag låter en AI fatta beslut om skadeersättning utifrån mål och regler, utan att en människa godkänner. Vilken av Rosemanns drifts beskriver det?",
@@ -582,7 +592,7 @@ export const questions = [
       { text: "Ta fram och uppdatera resepolicyn: ekonomiavdelningen ändrar regler och attestnivåer vid behov, kommunicerar förändringar och reviderar policyn när förutsättningarna ändras.", explain: "Löpande förvaltning utan tydliga instanser." },
       { text: "Ersättningshantering för en reseräkning: en medarbetare skickar in en reseräkning, ekonomi kontrollerar underlag, begär komplettering vid behov, skickar för attest och avslutar med Utbetald eller Avslagen.", explain: "Definierad start och slut, instanser och kända aktiviteter." }
     ],
-    correct: 3, source: "Tenta HT25 omtenta 14", reviewed: false },
+    correct: 3, source: `Tenta HT25 omtenta 14; ${QUIZ}`, reviewed: true },
 
   { id: "bpm-q38", topic: "bpmn", difficulty: 1,
     question: "I en orderprocess skickas en orderbekräftelse automatiskt per e-post när ordern är registrerad. Vilken task-typ passar?",
@@ -694,6 +704,46 @@ export const questions = [
       { text: "Den väljer väg utifrån en DMN-beslutstabell.", explain: "Beslutstabeller anropas med business rule task." }
     ],
     correct: 0, source: "Genomgången s. 60", reviewed: false },
+
+  // Canvas-quizzens körfrågor: samma diagram som i Kör processen (kp-3d,
+  // kp-3b, kp-om16), Weavers alternativ i hans ordning.
+  { id: "bpm-t23", topic: "handelser", difficulty: 2, bpmnDiagram: "ht25-3d",
+    lead: "Utgå från följande BPMN-diagram:",
+    question: "Processen körs under följande förutsättningar: Huvudprocessen startar 2025-12-04 klockan 00.01. Activity A tar 1 timme. Activity B tar 1 timme. Vid vilken tidpunkt har processen avslutats?",
+    options: [
+      { text: "2025-12-06 kl. 03:01", explain: "En timme för sent. A och B tar en timme var och timern 48 timmar däremellan: 1 + 48 + 1 timmar efter 00.01 är 12-06 kl. 02:01." },
+      { text: "2025-12-05 kl. 00:01", explain: "Ett dygn efter starten. Timern väntar 48 timmar, inte 24, och A och B tar en timme var." },
+      { text: "2025-12-06 kl. 00:01", explain: "Fällan: 48 timmar räknade från starten. Varaktigheten räknas från när flödet når timern, alltså efter A, och sedan ska B köras." },
+      { text: "2025-12-06 kl. 02:01", explain: "A är klar 12-04 kl. 01:01. Den catching timern räknar 48 timmar därifrån, till 12-06 kl. 01:01, och B är klar 02:01. Starthändelsen \"4th Day of the Month\" säger bara när processen startar." },
+      { text: "2025-12-06 kl. 01:01", explain: "Då går timern ut och B börjar. B tar en timme till." },
+      { text: "Inget av övriga alternativ", last: true, explain: "Rätt tid, 2025-12-06 kl. 02:01, finns bland alternativen." }
+    ],
+    correct: 3, source: `Tenta HT25 ord 3(d); ${QUIZ}`, reviewed: true },
+
+  { id: "bpm-t24", topic: "handelser", difficulty: 3, bpmnDiagram: "ht25-3b",
+    lead: "Givet följande BPMN-diagram:",
+    question: "Vilken kombination av aktiviteter inträffar om ovanstående process körs under följande förutsättningar: 'Message A' mottages. 'Message B' mottages 2 dagar efter att 'Activity A' avslutats.",
+    options: [
+      { text: "Activity A, C, D", explain: "Så går det om timern på 4 dagar löper ut först. Här kommer Message B efter 2 dagar, så meddelandevägen vinner och C körs aldrig." },
+      { text: "Activity A, B, C, D", explain: "Event-based gatewayen aktiverar bara den väg vars händelse inträffar först. När Message B kommer stängs timervägen, så C körs inte." },
+      { text: "Activity A", explain: "Processen stannar inte efter A. Gatewayen väntar på Message B eller 4 dagar, och Message B kommer efter 2 dagar." },
+      { text: "Activity A, B, D", explain: "Message B kommer efter 2 dagar, före timern på 4 dagar, så vägen med B vinner och timervägen stängs. D har två inkommande sekvensflöden utan gateway, men bara en token kommer fram, så D körs en gång." },
+      { text: "Inget av övriga alternativ", last: true, explain: "A, B, D finns bland alternativen." }
+    ],
+    correct: 3, source: `Tenta HT25 ord 3(b); ${QUIZ}`, reviewed: true },
+
+  { id: "bpm-t25", topic: "handelser", difficulty: 2, bpmnDiagram: "ht25-om16",
+    lead: "Givet följande BPMN-diagram:",
+    question: "Processen körs under följande förutsättningar: Huvudprocessen startar 2026-02-02 kl. 00.01. Activity A tar två timmar. Activity B tar två timmar. Vid vilken tidpunkt har processen avslutats?",
+    options: [
+      { text: "2026-02-03 kl. 18.01", explain: "Två timmar för sent. A tar två timmar, timern 36 och B två: 40 timmar efter 02-02 kl. 00.01 är 02-03 kl. 16.01." },
+      { text: "2026-02-04 kl. 16.01", explain: "Ett dygn för sent. 36 timmar är ett och ett halvt dygn, så timern går ut 02-03 kl. 14.01, inte 02-04." },
+      { text: "2026-02-04 kl. 14.01", explain: "Ett dygn för sent, och B är inte medräknad. Timern går ut 02-03 kl. 14.01, och sedan tar B två timmar." },
+      { text: "2026-02-03 kl. 16.01", explain: "A är klar 02-02 kl. 02.01. Timern räknar 36 timmar därifrån, till 02-03 kl. 14.01, och B är klar 16.01. Att A är en manual task ändrar inget: den tar två timmar enligt förutsättningarna." },
+      { text: "2026-02-03 kl. 14.01", explain: "Då går timern ut och B börjar. B tar två timmar till." },
+      { text: "Inget av övriga alternativ", last: true, explain: "Rätt tid, 2026-02-03 kl. 16.01, finns bland alternativen." }
+    ],
+    correct: 3, source: `Tenta HT25 omtenta fråga 16; ${QUIZ}`, reviewed: true },
 
   { id: "bpm-q48", topic: "bpmn", difficulty: 1,
     question: "En exclusive gateway delar flödet i två vägar efter att ett utkast granskats. Hur namnges den enligt kursens konventioner?",

@@ -40,7 +40,10 @@ export default function QuestionCard({
       </div>
 
       {/* Underlag före stammen: ett av sajtens diagram (tentans uppgift 1) eller
-          ett förformaterat block — R med beroenden och scheman, eller SQL. */}
+          ett förformaterat block — R med beroenden och scheman, eller SQL.
+          `lead` är stammens inledning före diagrammet ("Utgå från följande
+          BPMN-diagram:"), så att en ordagrann fråga kan stå i tentans ordning. */}
+      {question.lead && <p className="mb-3 text-[15px] leading-relaxed text-ink/85">{question.lead}</p>}
       {question.diagram && <Diagram id={question.diagram} />}
       {/* Provets BPMN-frågor: diagrammet eller elementgalleriet plus förutsättningarna. */}
       {question.bpmnDiagram && <BpmnDiagram diagram={diagramById[question.bpmnDiagram]} />}

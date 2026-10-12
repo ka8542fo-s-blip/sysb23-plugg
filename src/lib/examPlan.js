@@ -7,7 +7,8 @@
 //   questions: dras balanserat över ämnena (högst två per ämne) och
 //              alternativen blandas; `points` per fråga (standard 5).
 //              Frågor med samma `group` (nära dubbletter) dras aldrig
-//              tillsammans.
+//              tillsammans. Körfrågor i banken (`bpmnDiagram`) dras inte
+//              här: provet tar dem ur Kör processen, med tentans poäng.
 //   bpmnTasks: Kör processen-uppgifter med sina egna poäng och tentans
 //              alternativordning (sista alternativet är ofta "Inget av
 //              övriga"), högst en per diagram.
@@ -72,6 +73,7 @@ export function pickExam(course) {
       const pool = oneGroupMember(
         (course.questions || []).filter(
           (q) =>
+            !q.bpmnDiagram &&
             (!section.topics || section.topics.includes(q.topic)) &&
             (!section.excludeTopics || !section.excludeTopics.includes(q.topic)) &&
             !(q.group && usedGroups.has(q.group)),
