@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import QuestionCard from "../components/QuestionCard.jsx";
 import TopicFilter from "../components/TopicFilter.jsx";
 import { shuffleQuestion } from "../lib/shuffle.js";
 import { hasPriorities, priorityOf } from "../lib/examPriority.js";
-import { groupKeyFor, practiceGroups, practiceMode } from "../lib/practiceAxis.js";
+import { chapterForQuestion, groupKeyFor, practiceGroups, practiceMode } from "../lib/practiceAxis.js";
 import { COOLDOWN, isDone, nextQuestion, progressFor } from "../lib/practiceQueue.js";
 
 // Öva utan pass: "Fortsätt öva" serverar nästa ofärdiga fråga (fel först,
@@ -124,11 +124,40 @@ export default function Practice({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [presetKey]);
 
+  // Tillbaka från kapitlet ("Tillbaka till frågan"): samma fråga igen,
+  // obesvarad, utan att urvalet ändras. Översiktseffekten nedan körs också
+  // vid monteringen och ska då inte nollställa frågan.
+  const resumedRef = useRef(false);
+  useEffect(() => {
+    const id = params?.questionId;
+    if (!id || !course.questions.some((question) => question.id === id)) return;
+    resumedRef.current = true;
+    setCurrentId(id);
+    setChosen(null);
+    setRevealed(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [presetKey]);
+
   // Byte av delkurs eller urval: tillbaka till översikten.
   useEffect(() => {
+    if (resumedRef.current) {
+      resumedRef.current = false;
+      return;
+    }
     setCurrentId(null);
     setConfirmReset(false);
   }, [course.id, activeTopics]);
+
+  // Läs kapitlet frågan hör till; tillbakalänken där tar en till samma fråga.
+  const currentChapterId = useMemo(() => chapterForQuestion(course, current), [course, current]);
+  const toChapter = useCallback(() => {
+    if (!current || !currentChapterId) return;
+    navigate(
+      "las",
+      { segment: "kompendium", chapterId: currentChapterId },
+      { view: "ova", title: "Tillbaka till frågan", params: { questionId: current.id, nonce: Date.now() } },
+    );
+  }, [current, currentChapterId, navigate]);
 
   const confirm = useCallback(() => {
     if (revealed || chosen === null || !view || !current) return;
@@ -386,6 +415,11 @@ export default function Practice({
               ) : (
                 <button type="button" className="btn-primary" onClick={next}>
                   Nästa fråga
+                </button>
+              )}
+              {navigate && currentChapterId && (
+                <button type="button" className="btn-secondary" onClick={toChapter}>
+                  Tillbaka till kapitlet
                 </button>
               )}
               <button type="button" className="btn-quiet" onClick={stop}>

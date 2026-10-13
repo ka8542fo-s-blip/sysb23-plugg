@@ -34,6 +34,15 @@ export function groupsForTopics(course, topicIds) {
   return [...new Set(topicIds.map((id) => chapterOf[id]).filter(Boolean))];
 }
 
+// Kapitlet en fråga hör till, oavsett hur Öva grupperar (för "Tillbaka till
+// kapitlet"). Frågans eget `chapter` går före ämnets.
+export function chapterForQuestion(course, question) {
+  if (!question) return null;
+  const chapterOf = chapterOfTopic(course);
+  const id = question.chapter ?? chapterOf[question.topic] ?? null;
+  return (course.chapters || []).some((chapter) => chapter.id === id) ? id : null;
+}
+
 // Grupperna ett kapitels "Öva på detta kapitel" ska förvälja.
 export function chapterPracticeGroups(course, chapter) {
   return practiceMode(course) === "chapter" ? [chapter.id] : chapter.topics || [];

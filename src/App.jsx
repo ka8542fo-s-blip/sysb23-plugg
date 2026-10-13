@@ -210,14 +210,17 @@ export default function App() {
       />
 
       <main id="innehall" className="mx-auto max-w-7xl px-4 py-7 sm:px-6 sm:py-10 lg:px-8">
+        {/* backLink: { view, label, title?, params? } — title är länktexten
+            (standard "Tillbaka till schemat"), params skickas med tillbaka. */}
         {backLink && (
           <button
             type="button"
-            onClick={() => navigate(backLink.view)}
+            onClick={() => navigate(backLink.view, backLink.params ?? null)}
             className="btn-quiet mb-5 -ml-2 max-w-full justify-start text-left"
           >
             <span className="truncate">
-              ← Tillbaka till schemat · {backLink.label}
+              ← {backLink.title ?? "Tillbaka till schemat"}
+              {backLink.label ? ` · ${backLink.label}` : ""}
             </span>
           </button>
         )}
