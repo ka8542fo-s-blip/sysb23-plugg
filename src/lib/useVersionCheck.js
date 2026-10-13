@@ -1,19 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CHECK_INTERVAL_MS, MIN_GAP_MS, parseVersion, shouldNotify, versionUrl } from "./versionCheck.js";
-
-// SHA:n som den här versionen byggdes från (Vite define). Saknas i tester.
-const CURRENT = typeof __APP_VERSION__ === "string" ? __APP_VERSION__ : null;
+import { LATEST_NEWS_ID } from "../data/changelog.js";
+import { CHECK_INTERVAL_MS, MIN_GAP_MS, latestId, parseVersion, unseenNews, versionUrl } from "./versionCheck.js";
 
 // Hämtar version.json var femte minut, när fliken blir synlig igen och när
 // fönstret får fokus. Aldrig i dev-läge, aldrig automatisk omladdning, och
-// nätverksfel ignoreras tyst. Kryssat bort gäller tills nästa nya version.
+// nätverksfel ignoreras tyst. Kryssat bort gäller tills nästa nyhet.
 export function useVersionCheck() {
-  const [remote, setRemote] = useState(null);
-  const [dismissed, setDismissed] = useState(null);
+  const [remoteNews, setRemoteNews] = useState([]);
+  const [dismissedId, setDismissedId] = useState(0);
   const lastCheck = useRef(0);
 
   useEffect(() => {
-    if (import.meta.env.DEV || !CURRENT) return undefined;
+    if (import.meta.env.DEV) return undefined;
     let alive = true;
 
     async function check() {
@@ -23,8 +21,8 @@ export function useVersionCheck() {
       try {
         const res = await fetch(versionUrl(import.meta.env.BASE_URL, now), { cache: "no-store" });
         if (!res.ok) return;
-        const sha = parseVersion(await res.json());
-        if (alive && sha) setRemote(sha);
+        const version = parseVersion(await res.json());
+        if (alive && version) setRemoteNews(version.news);
       } catch {
         // Offline eller avbrutet — nästa kontroll får försöka igen.
       }
@@ -44,6 +42,6 @@ export function useVersionCheck() {
     };
   }, []);
 
-  const dismiss = useCallback(() => setDismissed(remote), [remote]);
-  return { show: shouldNotify({ current: CURRENT, remote, dismissed }), dismiss };
+  const dismiss = useCallback(() => setDismissedId(latestId(remoteNews)), [remoteNews]);
+  return { news: unseenNews({ localLatest: LATEST_NEWS_ID, remoteNews, dismissedId }), dismiss };
 }

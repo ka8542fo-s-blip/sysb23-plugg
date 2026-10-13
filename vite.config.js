@@ -1,6 +1,8 @@
 import { execSync } from "node:child_process";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { changelog } from "./src/data/changelog.js";
+import { versionFile as versionContent } from "./src/lib/versionCheck.js";
 
 // Versionen som uppdateringsnotisen jämför (src/lib/versionCheck.js):
 // commitens SHA, GITHUB_SHA i Actions och HEAD lokalt.
@@ -15,12 +17,14 @@ function commitSha() {
 
 const sha = commitSha();
 
-// Skriver dist/version.json med samma SHA som bäddas in i appen.
+// Skriver dist/version.json med samma SHA som bäddas in i appen och de
+// senaste nyheterna ur src/data/changelog.js.
 const versionFile = {
   name: "version-json",
   apply: "build",
   generateBundle() {
-    this.emitFile({ type: "asset", fileName: "version.json", source: `${JSON.stringify({ sha })}\n` });
+    const source = `${JSON.stringify(versionContent(sha, changelog))}\n`;
+    this.emitFile({ type: "asset", fileName: "version.json", source });
   },
 };
 
