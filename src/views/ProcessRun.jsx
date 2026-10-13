@@ -4,7 +4,7 @@ import { diagramById } from "../data/process/bpmnDiagrams.js";
 import { simulate } from "../lib/bpmnSim.js";
 import { BpmnDiagram, ElementGallery, HIGHLIGHT } from "../components/bpmn/BpmnDiagram.jsx";
 
-// Kör processen: tentans BPMN-körfrågor. Diagrammet ritas och körs ur samma
+// BPMN-övningar: tentans BPMN-körfrågor. Diagrammet ritas och körs ur samma
 // data; efter svar visas simulatorns spår steg för steg och de noder som
 // kördes. Poäng som på tentan (frågans poäng, −1 för fel), men inga
 // sparade poäng — klar = rätt svar, som i Modellera.
@@ -154,7 +154,7 @@ export default function ProcessRun({ modelProgress, onSolve, onReset }) {
 
       <div className="mt-6 lg:order-1 lg:mt-0 lg:w-80 lg:shrink-0">
         <nav aria-label="Uppgifter" className="card p-4">
-          <h3 className="font-display text-[15px]">Kör processen</h3>
+          <h3 className="font-display text-[15px]">BPMN-övningar</h3>
           <p className="mt-1 text-sm text-ink/65">
             Tentans BPMN-frågor: följ en token genom diagrammet. {solvedCount} av {tasks.length} klara.
           </p>

@@ -1,4 +1,4 @@
-// Uppgifterna i Kör processen. Varje uppgift har ett diagram (bpmnDiagrams.js),
+// Uppgifterna i BPMN-övningar. Varje uppgift har ett diagram (bpmnDiagrams.js),
 // ett scenario som simulatorn kör, tentans alternativ och poäng, och ett
 // facit (`answer`) som är skrivet för hand. Testet scripts/bpmn-sim.test.mjs
 // kör simulatorn och kräver att den ger samma svar som facit — en avvikelse

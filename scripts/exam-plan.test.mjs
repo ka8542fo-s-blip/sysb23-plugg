@@ -47,7 +47,7 @@ test("BPM: 10 BPM-frågor à 5 p, en BPMN-fråga à 3 p, tre körfrågor med egn
     assert.equal(items[10].points, 3);
     assert.ok(["bpmn", "handelser"].includes(items[10].question.topic));
     // Bankens körfrågor (bpm-t23–t25) dras inte som begreppsfråga; körfrågorna
-    // kommer ur Kör processen med tentans poäng.
+    // kommer ur BPMN-övningar med tentans poäng.
     assert.ok(!items[10].question.bpmnDiagram, `${items[10].question.id} är en körfråga`);
     const runs = items.slice(11);
     assert.ok(runs.every((it) => it.points >= 4 && it.points <= 7), runs.map((r) => r.points).join(","));

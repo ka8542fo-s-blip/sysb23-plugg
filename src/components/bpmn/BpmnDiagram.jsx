@@ -1,4 +1,4 @@
-// BPMN-primitiver och diagramritare för Kör processen och kompendiet.
+// BPMN-primitiver och diagramritare för BPMN-övningar och kompendiet.
 // Ritar direkt ur diagramdatan i src/data/process/bpmnDiagrams.js — samma
 // data som simulatorn kör. Formerna följer BPMN exakt eftersom det är de
 // tentan prövar: tunn/dubbel/tjock cirkel för start/intermediate/end,

@@ -1,4 +1,4 @@
-// Simulatorn mot facit: varje uppgift i Kör processen körs, och svaret
+// Simulatorn mot facit: varje uppgift i BPMN-övningar körs, och svaret
 // måste stämma med det handskrivna facit (tentans svar enligt HANDOFF).
 // Plus konstruktionstester på små diagram, så att semantiken inte glider.
 import { test } from "node:test";

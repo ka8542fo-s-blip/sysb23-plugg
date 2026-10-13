@@ -706,7 +706,7 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   (4–6 alternativ), −1 fel, 0 blankt, inga hjälpmedel. **Gissningsregeln
   räknad om:** väntevärdet är positivt bara när poängen ≥ antalet
   alternativ — BPM-frågorna +0,5; 3(b) +0,4; 7 p/6 alt +0,33; 5 p/6 alt
-  och 3 p/4 alt 0; **3(d) 4 p/6 alt −0,17**. Kapitel 1 och Kör processen
+  och 3 p/4 alt 0; **3(d) 4 p/6 alt −0,17**. Kapitel 1 och BPMN-övningar
   (per fråga) säger det.
 - **Läs:** 11 kapitel i `data/process/reading.js` (kap1–kap11 = nr 1–11),
   15 ämnen i `topics.js`, 141 ordlistetermer. Alla ämnen `karna`; `essa`
@@ -744,14 +744,14 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   Trelleborg; q86 ersatte q85 om execution properties 2026-10-13).
   Parkerade i `questions-pending.js`: q16 (F-gruppernas namn) och F5:s
   q81, q83, q84, q85, q87 — kapitel 10 nådde taket tio frågor; Method and
-  Style och business rule task prövas i Kör processen i stället. t19 och
+  Style och business rule task prövas i BPMN-övningar i stället. t19 och
   q59 har `group: "green-bpm"`,
   `bpm-q25` flaggad (rollnamn). **Canvas-quizzen (2026-10-12):** Weavers två
   quiz (BPM och BPMN) är HT25-tentornas frågor. De tolv är invävda, inte
   dubblerade: nio fanns som t04, t05, t09, t10, t11, t16, t19, t21, t22 och
   har fått quizzets ordalydelse (skiljetecken, "och och" i t10, två
   alternativ i t21). Körfrågorna 3(d), 3(b) och omtenta 16 är nya som
-  `bpm-t23…t25` i kap 11. De visar Kör processens diagram via `bpmnDiagram`
+  `bpm-t23…t25` i kap 11. De visar BPMN-övningarnas diagram via `bpmnDiagram`
   (ht25-3d, ht25-3b, ht25-om16) med stammens inledning i `lead`, och de
   behåller Weavers fem–sex alternativ i hans ordning. "Inget av övriga
   alternativ" har `last: true` och står kvar sist när `shuffleQuestion`
@@ -766,7 +766,7 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
 - **Essä:** 6 i `essays.js`: HT25:s fyra med exakt lydelse + två egna
   (top-down/bottom-up, BPR mot BPM). `essa-struktur.test.mjs` täcker båda
   delkurserna.
-- **Kör processen** (vy `bpmn`, `views/ProcessRun.jsx`): 28 uppgifter i
+- **BPMN-övningar** (vy `bpmn`, `views/ProcessRun.jsx`; hette BPMN-övningar till 2026-10-13): 28 uppgifter i
   `bpmnTasks.js` — HT25:s fem körfrågor, elementfrågan (omtenta 13), sju
   varianter, efter F5 en elementfråga om business rule task (`kp-f5-brt`)
   och två uppgifter av typen `kind: "stil"` på Silvers Method and
@@ -794,7 +794,7 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
 - **Gjorda avvikelser från prompten (godkända i planen):** Läs committades
   som en helhet (1a+1b), eftersom ämnen och ordlista pekar på alla kapitel.
   Kapitel 11:s genomgångar är text, inte renderade diagram (diagrammen
-  finns i Kör processen). Häftets 1.2 har ingen körfråga (linjär med AND
+  finns i BPMN-övningar). Häftets 1.2 har ingen körfråga (linjär med AND
   och en månadstimer, prövar inget nytt).
 
 - **HT24 bort och Weavers transkript in (2026-09-30):** Weaver säger på
@@ -903,6 +903,6 @@ BPMN assignment" gäller gruppuppgiften och är inte inbyggt.
   Öva-frågorna dbq-33…62 och påståendeuppgifterna.
 - **BPM:** F5-transkriptet är avstämt och Canvas-quizzarna invävda. Öppet:
   artikel 86:s datum (se "F5 inlagd"). Kasper granskar själv,
-  Kör processen och kapitel 11 först.
+  BPMN-övningar och kapitel 11 först.
 - Fler delkurser (arkitektur, säkerhet) enligt samma mall: data +
   manifestrad, ingen ny kod.

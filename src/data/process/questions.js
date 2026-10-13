@@ -17,7 +17,7 @@
 // quizfrågorna står ordagrant med quizzets ordalydelse, har "Canvas-quiz
 // (Weaver) HT26" i källan och reviewed: true (svaren är kontrollerade). Nio
 // fanns redan som bpm-t-frågor; de tre körfrågorna (bpm-t23–t25) visar
-// Kör processens diagram via bpmnDiagram, behåller Weavers fem–sex
+// BPMN-övningarnas diagram via bpmnDiagram, behåller Weavers fem–sex
 // alternativ och har "Inget av övriga alternativ" sist (last: true, blandas
 // inte). Övriga frågor är ogranskade.
 
@@ -644,7 +644,7 @@ export const questions = [
     ],
     correct: 1, source: "Genomgången s. 31–34", reviewed: false },
 
-  // ── Kapitel 11: händelser (element och regler; körning i Kör processen) ─
+  // ── Kapitel 11: händelser (element och regler; körning i BPMN-övningar) ─
   { id: "bpm-q43", topic: "handelser", difficulty: 2,
     question: "En kollapsad event subprocess har streckad ram och en streckad cirkel med kuvert i hörnet. Vad betyder det?",
     options: [
@@ -705,7 +705,7 @@ export const questions = [
     ],
     correct: 0, source: "Genomgången s. 60", reviewed: false },
 
-  // Canvas-quizzens körfrågor: samma diagram som i Kör processen (kp-3d,
+  // Canvas-quizzens körfrågor: samma diagram som i BPMN-övningar (kp-3d,
   // kp-3b, kp-om16), Weavers alternativ i hans ordning.
   { id: "bpm-t23", topic: "handelser", difficulty: 2, bpmnDiagram: "ht25-3d",
     lead: "Utgå från följande BPMN-diagram:",

@@ -12,8 +12,8 @@
 // källa (q32 med rätt svar omskrivet efter F4).
 //
 // bpm-q81, q83, q84, q87 (F5, 2026-10-12) — kapitel 10 har nått taket tio
-// frågor i balanstestet. Method and Style (q83, q84) prövas i stället i Kör
-// processen (kp-f5-ms-1, kp-f5-ms-2); q81 (Silvers begränsningar) och q87
+// frågor i balanstestet. Method and Style (q83, q84) prövas i stället i
+// BPMN-övningar (kp-f5-ms-1, kp-f5-ms-2); q81 (Silvers begränsningar) och q87
 // (DMN:s gräns) väntar på att taket höjs eller att en äldre kapitel 10-fråga
 // byts ut.
 // bpm-q85 (execution properties) parkerad 2026-10-13: Weaver säger i

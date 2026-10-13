@@ -1400,7 +1400,7 @@ Med fler än två utgångar blir svaren gatewayens möjliga utfall, till exempel
 
 ## Method and Style: korrekt är inte samma sak som bra
 
-Silvers **Method and Style** består av **method**, ett systematiskt sätt att bygga konsekventa modeller, och **style**, konventioner som gör diagrammen tydliga, kompletta och entydiga. Weaver jämför med en stilguide för journalister, som The Economists: grammatiken räcker inte för att skriva bra. Poängen är att **en BPMN-modell kan vara tekniskt korrekt utan att vara en bra processmodell**: processlogiken ska gå att förstå direkt ur diagrammet. Silvers exempel, en ansökan som godkänns eller avslås, visar skillnaden. Både den dåliga och den bra versionen finns att köra i vyn Kör processen.
+Silvers **Method and Style** består av **method**, ett systematiskt sätt att bygga konsekventa modeller, och **style**, konventioner som gör diagrammen tydliga, kompletta och entydiga. Weaver jämför med en stilguide för journalister, som The Economists: grammatiken räcker inte för att skriva bra. Poängen är att **en BPMN-modell kan vara tekniskt korrekt utan att vara en bra processmodell**: processlogiken ska gå att förstå direkt ur diagrammet. Silvers exempel, en ansökan som godkänns eller avslås, visar skillnaden. Både den dåliga och den bra versionen finns att köra under fliken BPMN-övningar.
 
 ### Dålig men korrekt BPMN
 
@@ -1498,7 +1498,7 @@ Algoritmer, AI och mänskligt omdöme modelleras normalt inte i DMN.
     lead: "Starthändelser, throw och catch, timers, event-based gateway, boundary events, error, event subprocesser, terminate och OR-join — och hur du kör ett diagram steg för steg, som på tentan.",
     sources: ["Björn Svenssons BPMN-genomgång (efter Silver 2017), s. 27–66", "Tenta HT25 ord 3(b)–3(d), omtenta 13, 15, 16", "BPMN-standarden enligt Silver (2017)", "F2 (business rules engine)"],
     body: `
-BPMN-frågorna ger upp till sju poäng styck, och de flesta går ut på att **köra ett diagram**. Det här kapitlet går igenom händelserna och sedan metoden. Diagrammen och övningarna finns i vyn Kör processen.
+BPMN-frågorna ger upp till sju poäng styck, och de flesta går ut på att **köra ett diagram**. Det här kapitlet går igenom händelserna och sedan metoden. Diagrammen och övningarna finns under fliken BPMN-övningar.
 
 ## Händelser: cirklar med tre kanttjocklekar
 

@@ -1,4 +1,4 @@
-// Tokensimulator för BPMN-diagrammen i Kör processen.
+// Tokensimulator för BPMN-diagrammen i BPMN-övningar.
 //
 // Samma diagramdata (src/data/process/bpmnDiagrams.js) ritas som SVG och
 // körs här — en sanningskälla. Semantiken följer Björns genomgång (efter

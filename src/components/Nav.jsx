@@ -10,7 +10,7 @@ export const VIEW_LABELS = {
   sql: "SQL",
   modell: "Modellera",
   tenta: "Tenta",
-  bpmn: "Kör processen",
+  bpmn: "BPMN-övningar",
   statistik: "Statistik",
   schema: "Schema",
 };

@@ -8,8 +8,8 @@
 //              alternativen blandas; `points` per fråga (standard 5).
 //              Frågor med samma `group` (nära dubbletter) dras aldrig
 //              tillsammans. Körfrågor i banken (`bpmnDiagram`) dras inte
-//              här: provet tar dem ur Kör processen, med tentans poäng.
-//   bpmnTasks: Kör processen-uppgifter med sina egna poäng och tentans
+//              här: provet tar dem ur BPMN-övningar, med tentans poäng.
+//   bpmnTasks: uppgifterna i BPMN-övningar, med sina egna poäng och tentans
 //              alternativordning (sista alternativet är ofta "Inget av
 //              övriga"), högst en per diagram.
 import { balancedExamPick } from "./weightedPick.js";
@@ -31,7 +31,7 @@ const KIND_QUESTION = {
   tid: "Vid vilken tidpunkt har processen avslutats?",
 };
 
-// En Kör processen-uppgift i QuestionCard-form.
+// En uppgift ur BPMN-övningar i QuestionCard-form.
 export function taskToQuestion(task) {
   return {
     id: task.id,

@@ -1,4 +1,4 @@
-// BPMN-diagrammen för Kör processen, som data. Samma data ritas som SVG
+// BPMN-diagrammen för BPMN-övningar, som data. Samma data ritas som SVG
 // (components/bpmn/) och körs av simulatorn (lib/bpmnSim.js).
 //
 // Nod: { id, type, label, cx, cy, in? }
@@ -343,7 +343,7 @@ export const diagrams = [
   },
   // ── F5: Method and Style, dålig mot bra BPMN (Silvers exempel) ───────
   // Båda är tekniskt korrekta; bara den andra följer Method and Style.
-  // Diagrammen körs inte i Kör processen (uppgiftstyp "stil").
+  // Diagrammen körs inte i BPMN-övningar (uppgiftstyp "stil").
   {
     id: "f5-ms-bad",
     title: "Method and Style: ansökan, version 1",
