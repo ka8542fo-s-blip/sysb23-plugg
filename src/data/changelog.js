@@ -7,6 +7,7 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 6, date: "2026-10-13", text: "Lyssna härifrån: starta uppläsningen mitt i ett kapitel" },
   { id: 5, date: "2026-10-13", text: "Knappen Tillbaka till kapitlet på övningsfrågorna" },
   { id: 4, date: "2026-10-13", text: "Lästa kapitel syns gröna i kapitellistan" },
   { id: 3, date: "2026-10-13", text: "Uppläsningen går nu också i 1,75× och 2×" },

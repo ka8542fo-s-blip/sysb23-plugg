@@ -475,12 +475,23 @@ kräver surrogatnycklar och inte namn — kapitel 9 följer tentan.
   Processorienterad spelar förgenererat ljud (se nedan), Strategi läser med
   Web Speech. Inget röstval (borttaget 2026-10-13); Web Speech tar den
   naturligaste svenska rösten automatiskt.
-- **Uppdateringsnotis** (`components/UpdateBanner.jsx`, `lib/versionCheck.js`)
-  — bygget skriver `version.json` med commitens SHA och bäddar in samma SHA
-  (`__APP_VERSION__`, `vite.config.js`). Appen hämtar filen var 5:e minut,
-  vid synlig flik och fokus, och visar en rad överst i headern när SHA:n
-  skiljer sig. Aldrig i dev, aldrig automatisk omladdning. Schemastämpeln
-  publicerar varje morgon, så notisen kommer dagligen till öppna flikar.
+- **Uppdateringsnotis** (`components/UpdateBanner.jsx`, `lib/versionCheck.js`,
+  `data/changelog.js`) — bygget skriver `version.json` med commitens SHA och
+  de senaste raderna ur nyhetslistan `src/data/changelog.js`. Appen hämtar
+  filen var 5:e minut, vid synlig flik och fokus, och visar "Nytt på sidan:
+  …" överst i headern för de rader som är nyare än versionen den kör (högst
+  två, sedan "+N till"). En ny SHA utan ny rad, som schemakontrollens
+  dagliga stämpel, ger ingen notis. **Regel:** varje ändring som märks för
+  den som pluggar får en kort rad i `changelog.js` i samma commit (nyast
+  först, id + 1, högst 70 tecken; låst i `version-check.test.mjs`). Aldrig i
+  dev, aldrig automatisk omladdning.
+- **Lyssna härifrån** (`ChapterView`) — en rund ▶ nere till höger när den
+  vanliga lyssnaknappen har skrollats ur bild; startar i första stycket som
+  syns under headern (`tts.playFromVisible`). Döljs på smala skärmar när man
+  skrollar nedåt och kommer tillbaka vid uppskroll eller efter 0,7 s.
+- **Tillbaka till kapitlet** (Öva) — knappen på frågekortet öppnar frågans
+  kapitel (`chapterForQuestion`), och tillbakalänken "← Tillbaka till
+  frågan" serverar samma fråga igen (`params.questionId`).
 - **Tentaprioritet** (Strategi, `lib/examPriority.js`) — `examPriority`
   karna/essa/bakgrund per ämne, `examEvidence` bara där repot dokumenterar
   underlaget. Informerar, styr inte.

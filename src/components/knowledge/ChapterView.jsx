@@ -137,6 +137,50 @@ export default function ChapterView({
   // Byter man kapitel ska inte förra kapitlets röst fortsätta.
   useEffect(() => ttsStop, [chapter.id, ttsStop]);
 
+  // "Lyssna härifrån" flyter i hörnet först när den vanliga lyssnaknappen
+  // har skrollats ur bild (under den klistrade headern), så att det aldrig
+  // finns två samtidigt.
+  const ttsControlsRef = useRef(null);
+  const [ttsControlsInView, setTtsControlsInView] = useState(true);
+  useEffect(() => {
+    function update() {
+      const el = ttsControlsRef.current;
+      if (!el) return;
+      const top = document.querySelector("header.sticky")?.getBoundingClientRect().bottom ?? 0;
+      const rect = el.getBoundingClientRect();
+      setTtsControlsInView(rect.bottom > top && rect.top < window.innerHeight);
+    }
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [chapter.id, tts.status]);
+
+  // På smala skärmar kan knappen skymma slutet av en rad. Den döljs när man
+  // skrollar nedåt och kommer tillbaka när man skrollar uppåt eller stannar.
+  const [ttsTucked, setTtsTucked] = useState(false);
+  useEffect(() => {
+    const narrow = window.matchMedia("(max-width: 1023px)");
+    let lastY = window.scrollY;
+    let timer;
+    function onScroll() {
+      const y = window.scrollY;
+      if (narrow.matches && y > lastY + 4) setTtsTucked(true);
+      else if (y < lastY - 4) setTtsTucked(false);
+      lastY = y;
+      clearTimeout(timer);
+      timer = setTimeout(() => setTtsTucked(false), 700);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(timer);
+    };
+  }, []);
+
   // sources är en lista i datat, men kan vara en sträng i äldre delkurser.
   const sources = Array.isArray(chapter.sources)
     ? chapter.sources.join(" · ")
@@ -245,7 +289,7 @@ export default function ChapterView({
             </p>
 
             {ttsSupported() && tts.status === "idle" && (
-              <div className="mt-4 flex flex-wrap items-center gap-2" data-tts-skip>
+              <div ref={ttsControlsRef} className="mt-4 flex flex-wrap items-center gap-2" data-tts-skip>
                 <button type="button" className="btn-secondary" onClick={tts.play}>
                   ▶ Lyssna på kapitlet
                 </button>
@@ -413,6 +457,19 @@ export default function ChapterView({
             innehållsförteckningen. Mellanslag pausar uppläsningen.
           </p>
         </div>
+
+        {/* Lyssna härifrån: startar i första stycket som syns. */}
+        {ttsSupported() && tts.status === "idle" && !ttsControlsInView && (
+          <button
+            type="button"
+            onClick={tts.playFromVisible}
+            aria-label="Lyssna härifrån"
+            className={`fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] right-4 z-40 flex h-12 w-12 items-center justify-center gap-2 rounded-full bg-pine text-white shadow-lg transition-all duration-200 hover:bg-pine-dark sm:right-6 sm:h-auto sm:w-auto sm:px-4 sm:py-2.5 ${ttsTucked ? "pointer-events-none translate-y-4 opacity-0" : "opacity-100"}`}
+          >
+            <span aria-hidden="true">▶</span>
+            <span className="hidden text-sm font-medium sm:inline">Lyssna härifrån</span>
+          </button>
+        )}
 
         {/* Flytande uppläsningskontroller — följer med när man skrollar. */}
         {tts.status !== "idle" && (

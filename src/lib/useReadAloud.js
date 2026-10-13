@@ -220,7 +220,8 @@ export function useReadAloud(containerRef, { audio: useFiles = false } = {}) {
     speakBlock(index);
   }
 
-  const play = useCallback(() => {
+  // pickStart(blocks) väljer blocket uppläsningen börjar i.
+  const start = useCallback((pickStart) => {
     if (!ttsSupported() || !containerRef.current) return;
     window.speechSynthesis.cancel();
     const blocks = collectBlocks(containerRef.current).map((el) => {
@@ -232,8 +233,20 @@ export function useReadAloud(containerRef, { audio: useFiles = false } = {}) {
     for (const block of blocks) block.el.classList.add(BLOCK_CLASS);
     stoppedRef.current = false;
     setStatus("playing");
-    speakBlock(0);
+    speakBlock(pickStart(blocks));
   }, [containerRef]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const play = useCallback(() => start(() => 0), [start]);
+  // "Lyssna härifrån": första blocket som syns under den klistrade headern.
+  const playFromVisible = useCallback(
+    () =>
+      start((blocks) => {
+        const top = document.querySelector("header.sticky")?.getBoundingClientRect().bottom ?? 0;
+        const index = blocks.findIndex((block) => block.el.getBoundingClientRect().bottom > top + 24);
+        return index === -1 ? 0 : index;
+      }),
+    [start],
+  );
 
   // Under uppläsning är styckena klickbara: klick hoppar dit direkt —
   // läs om, hoppa fram eller tillbaka. Klick på länkar och knappar
@@ -279,6 +292,7 @@ export function useReadAloud(containerRef, { audio: useFiles = false } = {}) {
   return {
     status,
     play,
+    playFromVisible,
     pause,
     resume,
     toggle,
