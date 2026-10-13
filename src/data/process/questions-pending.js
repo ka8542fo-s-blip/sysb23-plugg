@@ -11,11 +11,14 @@
 // bpm-q18, bpm-q30 och bpm-q32 är tillbaka i Öva sedan 2026-10-12, med F4 som
 // källa (q32 med rätt svar omskrivet efter F4).
 //
-// bpm-q81, q83, q84, q86, q87 (F5, 2026-10-12) — kapitel 10 har nått taket
-// tio frågor i balanstestet. Method and Style (q83, q84) och business rule
-// task (q86) prövas i stället i Kör processen (kp-f5-ms-1, kp-f5-ms-2,
-// kp-f5-brt); q81 (Silvers begränsningar) och q87 (DMN:s gräns) väntar på
-// att taket höjs eller att en äldre kapitel 10-fråga byts ut.
+// bpm-q81, q83, q84, q87 (F5, 2026-10-12) — kapitel 10 har nått taket tio
+// frågor i balanstestet. Method and Style (q83, q84) prövas i stället i Kör
+// processen (kp-f5-ms-1, kp-f5-ms-2); q81 (Silvers begränsningar) och q87
+// (DMN:s gräns) väntar på att taket höjs eller att en äldre kapitel 10-fråga
+// byts ut.
+// bpm-q85 (execution properties) parkerad 2026-10-13: Weaver säger i
+// F5-videon att kursen inte går in på körbar BPMN alls ("good to know").
+// I dess ställe kom q86 (rabattexemplet), som han betonar.
 export const pendingQuestions = [
   { id: "bpm-q16", topic: "ramverk", difficulty: 1,
     question: "Vilka tre faser ingår i F-gruppen Fulfilment i 7FE?",
@@ -57,16 +60,6 @@ export const pendingQuestions = [
     ],
     correct: 2, source: "F5 (Silver 2019 enligt föreläsningen: dålig och bra BPMN); BPMN Element naming conventions (Canvas)", reviewed: false },
 
-  { id: "bpm-q86", topic: "bpmn", difficulty: 2,
-    question: "En faktura får rabatt efter ordersumman (0–4 %), och kunder av typ A får en extra procent när ordern ger rabatt. En modellerare ritar reglerna som en kedja av XOR-gateways och service tasks. Hur bör rabattreglerna modelleras i stället?",
-    options: [
-      { text: "En OR-gateway i stället för XOR-kedjan, så att båda rabatterna kan gälla.", explain: "Reglerna ligger fortfarande i flödet. BPMN beskriver flödet, inte beslutslogiken." },
-      { text: "En business rule task, Determine discount, som anropar beslutstabeller i DMN.", explain: "Processen blir Invoice requested, Determine discount, Create invoice och Invoice created. I DMN visar ett DRD hur Total discount bygger på Base discount och Additional discount, med Order value och Customer type som indata. Totalen räknas med ett FEEL-uttryck." },
-      { text: "En subprocess som rymmer gatewaykedjan, så att föräldradiagrammet blir kortare.", explain: "Kedjan ligger kvar i barndiagrammet, och reglerna är fortfarande gateways. Reglerna hör hemma i ett beslut, inte i flödet." },
-      { text: "En user task där en handläggare räknar fram rabatten för hand i ett kalkylark.", explain: "Rabatter är ett typexempel på DMN. Mänskligt omdöme passar ovanliga och tvetydiga fall, som ett ovanligt försäkringsärende." }
-    ],
-    correct: 1, source: "F5 (rabattexemplet: gatewaykedja mot business rule task; DMN i Camunda Modeler)", reviewed: false },
-
   { id: "bpm-q87", topic: "bpmn", difficulty: 3,
     question: "En bank fattar lånebeslut med regler och en riskpoäng från en maskininlärningsmodell. Hur passar DMN in?",
     options: [
@@ -76,4 +69,14 @@ export const pendingQuestions = [
       { text: "DMN behövs inte, eftersom generativ AI kan klassificera hela underlaget.", explain: "Generativ AI passar ostrukturerad information, som kundklagomål. Här finns explicita regler, och dem kan DMN ta." }
     ],
     correct: 0, source: "F5 (DMN:s gräns vid kalkylarkskomplexitet; sätt att fatta beslut)", reviewed: false },
+
+  { id: "bpm-q85", topic: "bpmn", difficulty: 2,
+    question: "Ett team har ritat \"Check inventory\" som en service task och vill att en processmotor ska köra den. Vad behöver läggas till?",
+    options: [
+      { text: "En lane för motorn, så att det syns vilket system som utför aktiviteten.", explain: "En lane visar vem som utför arbetet. Motorn behöver tekniska uppgifter, som vilken tjänst som anropas och vilka variabler som skickas." },
+      { text: "Fler element i diagrammet, eftersom motorn bara läser det som syns visuellt.", explain: "Motorn läser BPMN XML. En körbar modell kan se lika enkel ut som en visuell, men detaljerna måste finnas under ytan." },
+      { text: "En business rule task före, som talar om för motorn hur tasken ska köras.", explain: "En business rule task anropar beslutsregler. Hur en service task körs anges i dess egna egenskaper." },
+      { text: "Execution properties i BPMN XML, som REST endpoint, variabler och retry.", explain: "Diagrammet visar vad som händer, och execution properties anger hur det utförs. De lagras i BPMN XML och ställs oftast in i verktygets properties-panel. Standardiserad XML och mer omfattande körsemantik kom med BPMN 2.0 år 2011." }
+    ],
+    correct: 3, source: "F5 (visuell och körbar BPMN; execution properties i BPMN XML)", reviewed: false },
 ];

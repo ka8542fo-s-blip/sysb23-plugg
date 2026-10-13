@@ -1046,9 +1046,9 @@ Organisationer skiljer sig också i kultur, ledarskap och processerfarenhet, och
     id: "kap9",
     number: 9,
     title: "BPM framåt: AI och hållbarhet",
-    readingMinutes: 23,
+    readingMinutes: 25,
     lead: "Rosemanns tre drifts med Weavers exempel, agentisk AI, Large Process Models, Green BPM i vision och verklighet, Reijers överblick, process mining som komplement till Jestons workshoppar och BPMN/DMN som stöd för förklarbarhet.",
-    sources: ["Rosemann et al. (2024) s. 415–425", "Houy et al. (2012) s. 75–92", "Reijers (2021) s. 1–5", "Kampik et al. (2025), SAP Signavio-bloggen om Large Process Models", "F4b och F4 del 2 (Weaver 5 okt 2026): Green BPM, process mining, drifts, agentisk AI", "F5 (Weaver 12 okt 2026, bilderna): förklarbarhet, GDPR, AI-förordningen, Trelleborg, process minings användningsområden", "Tenta HT25 ord 2(e), 3(a); omtenta 8, 11"],
+    sources: ["Rosemann et al. (2024) s. 415–425", "Houy et al. (2012) s. 75–92", "Reijers (2021) s. 1–5", "Kampik et al. (2025), SAP Signavio-bloggen om Large Process Models", "F4b och F4 del 2 (Weaver 5 okt 2026): Green BPM, process mining, drifts, agentisk AI", "F5 (Weaver 12 okt 2026, bilderna och videon): förklarbarhet, GDPR, AI-förordningen, Trelleborg, process minings användningsområden", "Tenta HT25 ord 2(e), 3(a); omtenta 8, 11"],
     body: `
 ## Rosemann et al. (2024): tre drifts
 
@@ -1196,9 +1196,9 @@ Föreläsning 4 räknade tre förmågor som process mining tillför Jestons trad
 
 ### BPMN och process mining
 
-Process mining utgår från loggarna och kräver ingen BPMN-modell, men en sådan kan komplettera analysen, till exempel vid conformance checking. Enligt van der Aalst har process mining förändrat BPM-forskningen i grunden: BPMN-modeller som säger lite om hur processerna faktiskt går till är inte längre värda tid och pengar. Han vänder sig alltså mot modeller utan koppling till verkligheten, inte mot BPMN.
+Process mining utgår från loggarna och kräver ingen BPMN-modell, men en sådan kan komplettera analysen, till exempel vid conformance checking. Weaver beskriver en spänning mellan Jestons mer traditionella BPM, med workshoppar och intervjuer, och det datadrivna process mining-fältet, som frågar varför man ska lägga tid på att modellera en abstraktion när verkligheten finns i loggarna. Enligt van der Aalst har process mining förändrat BPM-forskningen i grunden: BPMN-modeller som säger lite om hur processerna faktiskt går till är inte längre värda tid och pengar. Han vänder sig alltså mot modeller utan koppling till verkligheten, inte mot BPMN.
 
-BPMN är inte heller process minings egen notation. Resultatet visas ofta som en **directly-follows graph** (**DFG**) över vilka aktiviteter som följer direkt på varandra. **Petri-nät** (kapitel 2) används i forskningen och i process mining, och resultatet kan omvandlas till BPMN. I ett pizzabak pendlar DFG:ns pilar mellan ost, tomat och salami, som lagts på i olika ordning i olika fall. Petri-nätet och BPMN visar dem som parallella vägar, i BPMN mellan AND-split och AND-join (kapitel 10).
+BPMN är inte heller process minings egen notation. Resultatet visas ofta som en **directly-follows graph** (**DFG**) över vilka aktiviteter som följer direkt på varandra. **Petri-nät** (kapitel 2) används i forskningen och i process mining, och resultatet kan omvandlas till BPMN. I ett pizzabak pendlar DFG:ns pilar mellan ost, tomat och salami, som lagts på i olika ordning i olika fall. Petri-nätet och BPMN visar dem som parallella vägar, i BPMN mellan AND-split och AND-join (kapitel 10). Den BPMN som kommer ur process mining är ett enkelt flödesschema, utan den rika notation som Silver använder. Syftena är olika.
 
 ### Ett komplement, inte en ersättare
 
@@ -1218,6 +1218,8 @@ Programvaran finns fristående och i de större BOAT-paketen, som BPM-programvar
 
 Tentan frågade hur BPMN och DMN stödjer regulatoriska krav på **förklarbarhet** (**explainability**) vid automatiserat beslutsfattande. Svaret var att de **gör beslutsflöden och beslutsregler visuella och förståeliga**. Då går det att förklara för den som beslutet gäller, till exempel en medborgare, varför beslutet blev som det blev. BPMN visar var i processen beslutet fattas och vad som händer före och efter. DMN visar reglerna som gav utfallet. Notationerna gör alltså logiken läsbar. De automatiserar inte förklaringen och skapar inga besluts- eller processloggar av sig själva. De översätter inte heller till naturligt språk, och de gör inte besluten enklare.
 
+Det europeiska spåret av BPM arbetar mycket med offentlig sektor, och ett spår handlar enligt Weaver om att använda BPM för transparens i regulatoriska sammanhang. Forskningen om automatiserat beslutsfattande (**ADM**, automated decision-making) i offentlig sektor är kritiskt inriktad. Höga transparenskrav gäller bland annat sociala system, tillgång till bank och kredit, rättsväsendet och sjukvården.
+
 **Kiesel och Grünewald** vid TU Berlin vill utvidga BPM för regulatorisk transparens: ett BPMN-tillägg märker aktiviteterna med det som de personuppgiftsansvariga (**data controllers**) måste dokumentera, händelseloggar registrerar det och process mining, till exempel **transparency conformance checking**, analyserar hur personuppgifterna flödar.
 
 ### GDPR: rätten att få veta och rätten att slippa
@@ -1225,6 +1227,8 @@ Tentan frågade hur BPMN och DMN stödjer regulatoriska krav på **förklarbarhe
 **Artikel 15** i dataskyddsförordningen **GDPR** ger den registrerade, den person som uppgifterna gäller, rätt till tillgång till sina personuppgifter. Där ingår uppgift om det förekommer sådant **automatiserat beslutsfattande** (**automated decision-making**), inklusive **profilering**, som artikel 22 gäller, och åtminstone i de fallen meningsfull information om logiken bakom, betydelsen och de förutsedda följderna.
 
 **Artikel 22** ger rätt att inte bli föremål för ett beslut som **enbart** grundas på automatiserad behandling, om beslutet har rättsliga följder eller på liknande sätt påverkar personen i betydande grad. Undantag: beslutet är nödvändigt för ett avtal, tillåtet enligt EU-rätt eller nationell rätt med lämpliga skyddsåtgärder, eller personen har uttryckligen samtyckt. Vid avtal och samtycke har personen åtminstone rätt till **mänskligt ingripande**, att framföra sin synpunkt och att bestrida beslutet.
+
+Weaver ger ett vardagsexempel: den som får ett automatiskt besked om sin motorcykelförsäkring kan begära att få veta hur beslutet fattades, och bolaget måste svara. Hur detaljerad förklaringen ska vara är däremot inte definierat.
 
 ### AI-förordningen
 
@@ -1236,6 +1240,8 @@ EU:s **AI-förordning** (**AI act**) delar in AI-system efter risk i fyra nivåe
 | **Hög** | Bedömning av överensstämmelse (conformity assessment) | Kritisk infrastruktur, anställning, sjukvård, brottsbekämpning |
 | **Begränsad** | Transparenskrav | Chattbotar, deepfakes |
 | **Minimal** | Uppförandekod | Spamfilter, datorspel |
+
+Förordningen införs stegvis, och enligt Weaver kommer de skarpare delarna, som det ser ut nu, 2027–2028. Transparens är en av dess största frågor. Weavers exempel från utbildningen är högrisksystem: AI som rättar tentor, AI-stödd antagning och AI som letar efter fusk. Förordningen kräver också att man kan se var i ett system de automatiserade besluten fattas, och insyn i hur högrisksystemen tas fram.
 
 Hajo Michael Holst delar in förordningens transparens efter vem den riktar sig till: **regulatory transparency** gäller leverantören (**provider**), **operational transparency** den som använder systemet (**deployer**) och **subject transparency** den person som berörs. Offentliga aktörer, och privata som utför offentliga tjänster, ska göra en **konsekvensbedömning för grundläggande rättigheter** när de använder högrisksystem.
 
@@ -1251,6 +1257,14 @@ Akademikerförbundet SSR ville veta hur algoritmen fattar sina beslut och JO-anm
 
 En journalist fick ut källkoden sedan kammarrätten funnit att den var allmän handling. Koden var 136 000 rader regler i 127 XML-filer, och en del filer verkade innehålla äldre regeluppsättningar som inte användes. Utan datan gick reglerna inte att förstå med säkerhet. Med reglerna i DMN-beslutstabeller och flödet i BPMN blir logiken läsbar för den som beslutet gäller.
 
+Weaver lyfter fyra saker ur fallet:
+- **Begreppen blandas ihop.** Debatten talade om algoritmer och AI, men systemet var RPA, som inte är algoritmiskt beslutsfattande i samma mening.
+- **Ingen hade dokumentationen.** Enligt Weaver programmerades roboten av en dansk utvecklare efter kommunens skiss, och kommunen kunde varken visa teknisk dokumentation eller något diagram.
+- **Fallet blev internationellt.** Den tyska organisationen AlgorithmWatch drev frågan på EU-nivå.
+- **Modellen kom i efterhand.** Ur den utlämnade koden försökte man återskapa en BPMN-modell.
+
+Hade processen modellerats i BPMN och regeln i DMN från början, hade kommunen direkt kunnat visa hur besluten fattas. Som konsult i offentlig sektor kan man därför föreslå en modell just för transparensens skull, särskilt när böter för bristande transparens kan bli aktuella.
+
 ### Vad notationerna kan förklara
 
 DMN kan bara förklara regler upp till ungefär det som går att uttrycka i ett kalkylark eller ett funktionellt skriptspråk (kapitel 10); bortom det blir DMN beslutslagret som anropar externa tjänster eller AI-modeller. Traditionella algoritmer, maskininlärning, generativ AI och mänskligt omdöme modelleras normalt inte i DMN, men resultat från ML och generativ AI kan vara indata till reglerna. I en **hybrid**, till exempel ett lånebeslut med regler och en riskpoäng från en ML-modell, tar DMN den regelbaserade delen.
@@ -1260,15 +1274,15 @@ DMN kan bara förklara regler upp till ungefär det som går att uttrycka i ett 
     id: "kap10",
     number: 10,
     title: "BPMN: grunderna",
-    readingMinutes: 21,
+    readingMinutes: 25,
     lead: "Hur BPMN blev en ISO-standard, ett modellspråks fyra komponenter, vad BPMN passar och inte passar för, elementen och namngivningen, Silvers Method and Style, visuell mot körbar BPMN — och DMN med rabattexemplet.",
-    sources: ["Björn Svenssons BPMN-genomgång (efter Silver 2017)", "Övningshäftet 1.1–1.3 (facit)", "F5 (Weaver 12 okt 2026, bilderna): historik och ISO, Silver (2019) Method and Style, Dumas et al. (2018), visuell och körbar BPMN, DMN", "DMN: F1 (inlämningsuppgiften), F2 (business rules engine), F5 (rabattexemplet)", "Tenta HT25 omtenta 13, 14"],
+    sources: ["Björn Svenssons BPMN-genomgång (efter Silver 2017)", "Övningshäftet 1.1–1.3 (facit)", "F5 (Weaver 12 okt 2026, bilderna och videon): historik och ISO, Silver (2019) Method and Style, Dumas et al. (2018), visuell och körbar BPMN, DMN", "DMN: F1 (inlämningsuppgiften), F2 (business rules engine), F5 (rabattexemplet)", "Tenta HT25 omtenta 13, 14"],
     body: `
 **BPMN** (Business Process Model and Notation) är en standard för att rita affärsprocesser. Den ägs inte av något enskilt företag utan förvaltas av Object Management Group (OMG). Kursens BPMN-material följer Bruce Silvers *Method and Style*. Det är en uppsättning regler ovanpå standarden som gör diagrammen entydiga.
 
 ## BPMN:s historik och standardisering
 
-Behovet av att **beskriva verksamhetens processer visuellt, på ett standardiserat och återanvändbart sätt** uppstod tidigt. Gilbreth och Gilbreth publicerade 1921 **process charts** med symboler för arbetsmomenten, till exempel för hur gevärsgranater laddas, för att hitta "the one best way" att utföra ett arbete. Allan H. Mogensen kallas **"father of work simplification"**. År 1947 standardiserade American Society of Mechanical Engineers (ASME) symbolerna för **flow process charts**, bland annat operation, transport, delay och storage.
+Behovet av att **beskriva verksamhetens processer visuellt, på ett standardiserat och återanvändbart sätt** uppstod tidigt. Gilbreth och Gilbreth publicerade 1921 **process charts** med symboler för arbetsmomenten, till exempel för hur gevärsgranater laddas, för att hitta "the one best way" att utföra ett arbete. Allan H. Mogensen kallas **"father of work simplification"**. Enligt Weaver höll han en Work Simplification Conference från 1930- till 1960-talet, dit nästan alla stora amerikanska företag skickade medarbetare för att lära sig förenkla arbetet med flödesscheman. Den pragmatiska amerikanska traditionen nämns sällan i BPM-böckerna, eftersom BPM som akademiskt ämne främst har europeiska rötter. Ordet *simplification* är just det som Rosemanns drift från förenkling till sofistikering (kapitel 9) lämnar. År 1947 standardiserade American Society of Mechanical Engineers (ASME) symbolerna för **flow process charts**, bland annat operation, transport, delay och storage.
 
 Fem förlöpare är särskilt viktiga:
 
@@ -1283,7 +1297,7 @@ Fem förlöpare är särskilt viktiga:
 Utvecklingen går mot **en enda standard för både processnotation och körning**:
 
 - **2002:** BPMN uppstår inom BPMI.org, som grafisk notation till **Business Process Modeling Language (BPML)**, ett XML-språk för att köra processer.
-- **2004:** BPMI.org släpper BPMN 1.0.
+- **2004:** BPMI.org släpper BPMN 1.0. Den visuella notationen är i stort sett den som används i dag, men kopplingen till XML saknas.
 - **2005:** BPMI.org går upp i OMG, som antar BPMN 1.0 formellt 2006.
 - **2011:** BPMN 2.0, med **standardiserad XML** och utförligare **körsemantik** (execution semantics).
 - **2013:** BPMN 2.0 blir **ISO-standard** (ISO/IEC 19510:2013).
@@ -1317,6 +1331,8 @@ Han ser också fyra **begränsningar**:
 - **Process performance:** modellerar inte handläggningstid, kostnad eller resursutnyttjande direkt.
 - **Business context:** beskriver inte strategi, mål, policyer, resurser eller stödsystem heltäckande.
 
+Weaver kallar BPMN-böckernas vardagsexempel, som att baka pizza eller ordna ett studentevent, dåliga exempel. Sådant arbete är ostrukturerat: telefonen ringer och kunder kommer in, och undantagen går inte att beskriva. Att BPMN inte är byggt för prestation kan enligt honom vara en anledning till att Green BPM aldrig slog igenom (kapitel 9). Verktyg som Trisotech och Camunda låter ändå modelleraren lägga in mått, som tid och kostnad per aktivitet.
+
 ### När BPMN inte passar: fem frågor
 
 Fem **heuristiker** att ställa innan du ritar:
@@ -1330,6 +1346,8 @@ Fem **heuristiker** att ställa innan du ritar:
 | 5. Organisationens struktur eller strategi? | förmågor, ansvar, strategiska samband |
 
 Frågorna följer begränsningarna: 1–2 strukturerade processer, 3 beslutslogik, 4 prestation och 5 sammanhang. De tre felaktiga förslagen i tentafrågan ovan faller redan på den första frågan.
+
+Enligt Weaver är de två–tre första frågorna viktigast. Hans exempel är akuten: stegen kan i teorin bestämmas i förväg, men i praktiken ser varje fall olika ut. Den som främst vill mäta prestation kan gå direkt på till exempel ett balanserat styrkort. Det är en avvägning: en idealiserad modell av akuten kan vara värd att rita, om man är medveten om BPMN:s begränsningar.
 
 ## Aktiviteter och task-typer
 
@@ -1382,7 +1400,7 @@ Med fler än två utgångar blir svaren gatewayens möjliga utfall, till exempel
 
 ## Method and Style: korrekt är inte samma sak som bra
 
-Silvers **Method and Style** består av **method**, ett systematiskt sätt att bygga konsekventa modeller, och **style**, konventioner som gör diagrammen tydliga, kompletta och entydiga. Poängen är att **en BPMN-modell kan vara tekniskt korrekt utan att vara en bra processmodell**: processlogiken ska gå att förstå direkt ur diagrammet. Silvers exempel, en ansökan som godkänns eller avslås, visar skillnaden. Både den dåliga och den bra versionen finns att köra i vyn Kör processen.
+Silvers **Method and Style** består av **method**, ett systematiskt sätt att bygga konsekventa modeller, och **style**, konventioner som gör diagrammen tydliga, kompletta och entydiga. Weaver jämför med en stilguide för journalister, som The Economists: grammatiken räcker inte för att skriva bra. Poängen är att **en BPMN-modell kan vara tekniskt korrekt utan att vara en bra processmodell**: processlogiken ska gå att förstå direkt ur diagrammet. Silvers exempel, en ansökan som godkänns eller avslås, visar skillnaden. Både den dåliga och den bra versionen finns att köra i vyn Kör processen.
 
 ### Dålig men korrekt BPMN
 
@@ -1397,6 +1415,8 @@ En none start (otriggad start, tom cirkel) går direkt till en XOR-gateway utan 
 En **white-box pool**, alltså en pool där processen syns, heter "Application Assessment Process", och den sökande, "Applicant", är en black-box pool. Message start "Receive application" leder till user tasken "Assess application", och XOR-gatewayen styr efter bedömningens utfall, med gates "Approved" och "Rejected" till två message end events (tjock cirkel med fyllt kuvert), "Application approved" och "Application rejected". Tre namngivna message flows går mellan poolerna: "Application" in till starten och "Approval notification" och "Rejection notification" ut från var sin sluthändelse.
 
 Sluthändelserna följer kursens regel, men två saker avviker från kursens namngivning: starten heter "Receive application", inte "Received application", och gatewayen saknar etikett medan gates heter efter utfallen, som i övningshäftets facit, i stället för en fråga med Yes och No. Båda sätten ger vägarna det sammanhang som saknas i det dåliga exemplet.
+
+Den dåliga versionen säger en chef utan BPMN-kunskap ingenting, menar Weaver, medan de flesta kan läsa sig till vad den bra handlar om. Han ritade den bra versionen själv och lät en AI-chatt granska den, och hittade sedan fel som chatten hade missat. AI är alltså inte pålitlig på BPMN.
 
 ## Subprocesser
 
@@ -1413,15 +1433,21 @@ En komplex process blir så en **hierarki av diagram**, från toppdiagrammet (ni
 
 **Visuell modellering** är till för att kommunicera, analysera och förbättra processer. Analytiker, chefer och verksamhetsanvändare läser diagrammen, och tekniska detaljer som systemkonfiguration och integrationer utelämnas. **Körbara processmodeller** körs av en BPM- eller workflowmotor som automatiserar och orkestrerar processen. Diagrammet kan se lika enkelt ut som ett visuellt, men under det måste subprocesser, anropade processer, tjänster, beslut, datamappningar och felhantering vara definierade.
 
-**Diagrammet visar vad som händer. Körbarhetsegenskaperna (execution properties) anger hur det utförs.** De lagras i **BPMN XML** och ställs oftast in i verktygets properties-panel. Typiska egenskaper är REST endpoint, Java class, variabelmappningar, säkerhetsroller och retry policies. Service tasken "Check inventory" kan till exempel köra en Java-klass eller anropa en REST-tjänst med orderns id, försöka igen upp till tre gånger och ha en timeout på 60 sekunder.
+Weaver knyter det till Method and Style: den dåliga versionen av ansökningsexemplet går inte att köra, eftersom båda utfallen slutar i samma sluthändelse. Ska processen skicka två olika meddelanden behövs två sluthändelser. En bra visuell modell är alltså en förutsättning för en körbar.
+
+**RPA ligger på en lägre nivå.** Den automatiserar arbetet inne i en user task, där en människa klickar sig mellan skärmar, och det är **task automation**. En processmotor orkestrerar i stället hela flödet (**process orchestration**). Gränsen är enligt Weaver inte skarp: Microsoft Power Automate har till exempel också RPA-funktioner.
+
+### Hur modellen körs (bakgrund)
+
+Kursen går inte in på det här, säger Weaver, men det är en stor del av varför BPMN används. **Diagrammet visar vad som händer. Körbarhetsegenskaperna (execution properties) anger hur det utförs.** De lagras i **BPMN XML** och ställs oftast in i verktygets properties-panel. Typiska egenskaper är REST endpoint, Java class, variabelmappningar, säkerhetsroller och retry policies. Service tasken "Check inventory" kan till exempel köra en Java-klass eller anropa en REST-tjänst med orderns id, försöka igen upp till tre gånger och ha en timeout på 60 sekunder.
 
 Både **BPMS** och **BOAT**-plattformar (kapitel 2) kan köra BPMN XML i en **processmotor** (process engine). Motorn är kopplad till användarna, till beslutsreglerna i **DMN** och via middleware till ERP, äldre system och externa tjänster. Den ger nyckeltal (KPI) till **business activity monitoring (BAM)**, som återkopplar till processmodellen. Analytikerns modell och utvecklarens körbara detaljer ingår i organisationens **process asset** (kapitel 6).
 
-**BPMN XML är bara ett av flera sätt** att orkestrera och köra automatiserade flöden. Andra är lågkodsplattformar, orkestrering i molnet, kodbaserad orkestrering, arbetsflöden inbyggda i affärssystem och egna lösningar, och de använder i regel inte BPMN. BPMN-motorer bygger på en öppen standard och passar för processer från början till slut, med både system och människor.
+**BPMN XML är bara ett av flera sätt** att orkestrera och köra automatiserade flöden. Andra är lågkodsplattformar (som Power Automate), orkestrering i molnet (till exempel hos Amazon), kodbaserad orkestrering (till exempel i JavaScript), arbetsflöden inbyggda i affärssystem och plattformar som ServiceNow och Salesforce, och egna lösningar. De använder i regel inte BPMN. BPMN-motorer, som europeiska Camunda, bygger på en öppen standard och passar för processer från början till slut, med både system och människor. Poängen är enligt Weaver att slippa låta en programmerare koda varje process och gå in i koden vid varje ändring.
 
 ## DMN: beslutsregler
 
-**DMN** (Decision Model and Notation) beskriver **beslut** på samma sätt som BPMN beskriver processer. Beslutsreglerna läggs i **beslutstabeller**, och sambanden mellan beslut och deras indata visas i ett **DRD** (Decision Requirements Diagram). En processmotors business rules engine kan köra tabellerna. I BPMN-diagrammet kopplas beslutet in med en **business rule task**. Gruppuppgiften använder DMN. På salstentan har DMN förekommit i HT25 (hur BPMN och DMN stödjer förklarbarhet, kapitel 9).
+**DMN** (Decision Model and Notation) beskriver **beslut** på samma sätt som BPMN beskriver processer. Beslutsreglerna läggs i **beslutstabeller**, och sambanden mellan beslut och deras indata visas i ett **DRD** (Decision Requirements Diagram). En processmotors business rules engine kan köra tabellerna. I BPMN-diagrammet kopplas beslutet in med en **business rule task**. Gruppuppgiften använder DMN. På salstentan har DMN förekommit i HT25 (hur BPMN och DMN stödjer förklarbarhet, kapitel 9). Enligt Weaver är DMN bara en liten detalj i kursen.
 
 ### Exemplet: rabatt på fakturan
 
@@ -1436,15 +1462,17 @@ Rabatten på en faktura beror på ordersumman och kundtypen, "Ordinary" eller "A
 
 Om ordern är över 500 tillkommer en tilläggsrabatt efter kundtyp: 0 % för Ordinary och 1 % för A.
 
-**Alternativ 1: reglerna i flödet.** En XOR, "Sum of order?", delar flödet i fyra vägar. Under 500 går direkt till "Create bill". De tre andra har var sin service task som räknar 2, 3 eller 4 % rabatt, följd av en XOR, "customer type?", där typ A leder till aktiviteten "add an extra 1% discount". Det går, men **reglerna hamnar i processflödet**: kundtypsfrågan ritas tre gånger, och en ny rabattnivå kräver en ny gren.
+**Alternativ 1: reglerna i flödet.** En XOR, "Sum of order?", delar flödet i fyra vägar. Under 500 går direkt till "Create bill". De tre andra har var sin service task som räknar 2, 3 eller 4 % rabatt, följd av en XOR, "customer type?", där typ A leder till aktiviteten "add an extra 1% discount". Det går, men **reglerna hamnar i processflödet**: kundtypsfrågan ritas tre gånger, och en ny rabattnivå kräver en ny gren. Weaver kallar varianten tekniskt korrekt men något man aktivt ska undvika, eftersom det blir svårt att se hur beslutet fattas och vilka reglerna är.
 
 **Rätt lösning: en business rule task.** Processen blir "Invoice requested", "Determine discount" (business rule task), "Create invoice" och "Invoice created". Flödet visar var beslutet fattas, och reglerna ligger i DMN. Ett beslut kräver inte en XOR-gateway direkt efter sig. En gateway behövs bara om flödet faktiskt ska dela sig på utfallet.
 
-I DMN:s **DRD** bygger toppbeslutet "Total discount" på de stödjande besluten "Base discount" och "Additional discount". Pilarna mellan elementen kallas **information requirements**. **Input data** är "Order value", som går till båda, och "Customer type", som bara går till "Additional discount". De stödjande besluten har var sin beslutstabell, och toppbeslutet räknas i **FEEL**, DMN:s uttrycksspråk: "if baseDiscount = 0 then 0 else baseDiscount + additionalDiscount". En A-kund med en order under 500 får alltså ingen rabatt alls.
+I DMN:s **DRD** bygger toppbeslutet "Total discount" på de stödjande besluten "Base discount" och "Additional discount". Pilarna mellan elementen kallas **information requirements**. **Input data** är "Order value", som går till båda, och "Customer type", som bara går till "Additional discount". De stödjande besluten har var sin beslutstabell, och toppbeslutet räknas i **FEEL**, DMN:s uttrycksspråk: "if baseDiscount = 0 then 0 else baseDiscount + additionalDiscount". En A-kund med en order under 500 får alltså ingen rabatt alls. FEEL behöver man inte kunna, säger Weaver; AI kan ta fram uttrycken. Det viktiga är att DRD:n visar rätt indata och de beslut som krävs.
 
 ### Var DMN:s gräns går
 
 DMN kan förklara reglerna bakom ett beslut bara upp till en viss komplexitet, och det sätter en gräns för förklarbarheten (kapitel 9). Gränsen går ungefär vid det som ryms i ett **kalkylark** eller ett **funktionellt skriptspråk**, till exempel komplex poängsättning av lånebehörighet eller riskbedömning med flera viktade kriterier. Inom sin deklarativa, tabellbaserade ram med FEEL kan DMN modellera komplexa beslut med många kriterier genom logiska regler. Bortom det, för procedurella eller datadrivna algoritmer, fungerar DMN i regel som det styrande **beslutslagret**, som anropar externa tjänster eller AI-modeller.
+
+Weavers exempel på det som DMN inte klarar själv: dynamisk prissättning av flygresor i realtid, maskininlärning som letar bedrägerier, och generativ AI som läser av tonen i ett mejl eller chattmeddelande och eskalerar en upprörd kund. Är något oklart eller saknas uppgifter kan beslutet lämnas till en människa (**defer to human**). I verkligheten är det ofta en hybrid. DRD:n visar då fortfarande hur besluten hänger ihop, men de beslut som kommer från andra moduler har inga beslutstabeller.
 
 ### Sätt att fatta beslut
 
@@ -1731,16 +1759,18 @@ export const glossary = [
   { term: "Modellspråkets fyra komponenter", definition: "Enligt Dumas et al. (2018): vocabulary (elementen, som händelser, aktiviteter, gateways och sekvensflöden), syntax (vilka element som får kopplas och hur), semantics (vilket beteende elementen och kopplingarna står för) och notation (symbolerna). Ett BPMN-diagram ska stämma på alla fyra.", chapter: "kap10" },
   { term: "White-box pool", definition: "Pool där processen syns, med händelser, aktiviteter och gateways; motsatsen till en black-box pool. I Silvers exempel heter den Application Assessment Process och avgränsar processens omfång.", chapter: "kap10" },
   { term: "Visuell och körbar BPMN", definition: "Två syften med samma notation. Visuell BPMN används av analytiker, chefer och verksamhet för dokumentation, kommunikation och förbättring, utan tekniska detaljer. Körbar BPMN körs av en processmotor (Camunda, IBM BAW, Appian) och kräver tjänster, datamappningar och felhantering under diagrammet.", chapter: "kap10" },
+  { term: "Task automation och process orchestration", definition: "Två nivåer av automatisering. RPA automatiserar arbetet inne i en user task, där en människa annars klickar mellan skärmar (task automation). En processmotor orkestrerar hela flödet från början till slut (process orchestration). Gränsen är enligt Weaver inte skarp; Power Automate har också RPA-funktioner.", chapter: "kap10" },
   { term: "BPMN XML", definition: "Det maskinläsbara formatet för BPMN, standardiserat med BPMN 2.0 (2011). Rymmer diagrammet och dess execution properties och är det en processmotor läser för att köra processen. Ett av flera sätt att köra automatiserade arbetsflöden.", chapter: "kap10" },
   { term: "Execution properties", definition: "De tekniska inställningar som gör ett BPMN-diagram körbart, till exempel REST endpoint, Java-klass, SQL-fråga, variabelmappningar, säkerhetsroller och retry. Lagras i BPMN XML och ställs oftast in i modelleringsverktygets egenskapspanel. Diagrammet visar vad som händer, egenskaperna hur.", chapter: "kap10" },
   { term: "Business activity monitoring (BAM)", definition: "Uppföljning av de nyckeltal (KPI) som processmotorn ger när processerna körs. Resultatet återkopplas till processmodellen.", chapter: "kap10" },
   { term: "DRD (Decision Requirements Diagram)", definition: "DMN:s diagram över hur beslut hänger ihop. Exempel: toppbeslutet Total discount bygger på de stödjande besluten Base discount och Additional discount, som i sin tur bygger på indata (Order value och Customer type) via information requirements.", chapter: "kap10" },
   { term: "Beslutstabell", definition: "DMN:s sätt att skriva beslutsregler: varje rad är en regel som ger ett utfall (Then) när villkoren på indata (When) är uppfyllda. Exempel: tabellen Base discount ger 0–4 procent efter ordervärdet, och Additional discount ger 1 procent för kundtyp A och 0 för Ordinary.", chapter: "kap10" },
-  { term: "FEEL", definition: "DMN:s uttrycksspråk. Exempel: toppbeslutet Total discount räknas ut med if baseDiscount = 0 then 0 else baseDiscount + additionalDiscount, så en order utan grundrabatt får ingen rabatt alls.", chapter: "kap10" },
+  { term: "FEEL", definition: "DMN:s uttrycksspråk. Exempel: toppbeslutet Total discount räknas ut med if baseDiscount = 0 then 0 else baseDiscount + additionalDiscount, så en order utan grundrabatt får ingen rabatt alls. Kursen kräver inte att man kan skriva FEEL (Weaver, F5).", chapter: "kap10" },
   { term: "Directly-follows graph (DFG)", definition: "Process minings typiska resultat: en graf över vilka aktiviteter som följer direkt på varandra i händelseloggen. Den är inte BPMN, men en BPMN-modell kan skapas ur resultatet. Exempel: när ost, tomat och salami läggs på en pizza i valfri ordning går pilar åt båda hållen mellan de tre aktiviteterna i grafen, medan BPMN-modellen lägger dem mellan en AND-split och en AND-join.", chapter: "kap9" },
   { term: "GDPR art. 15", definition: "Rätten till tillgång till sina personuppgifter. Den omfattar bland annat rätten att få veta om automatiserat beslutsfattande, inklusive profilering, förekommer och i så fall få meningsfull information om logiken bakom samt om betydelsen och de förutsedda följderna för den registrerade.", chapter: "kap9" },
   { term: "GDPR art. 22", definition: "Rätten att inte bli föremål för ett beslut som enbart grundas på automatiserad behandling, inklusive profilering, om beslutet har rättslig verkan eller på liknande sätt påverkar personen i betydande grad. Undantag: avtal, lag med skyddsåtgärder och uttryckligt samtycke. Vid avtal och samtycke har personen åtminstone rätt till mänskligt ingripande, att framföra sin synpunkt och att bestrida beslutet.", chapter: "kap9" },
   { term: "AI-förordningen art. 86", definition: "Rätten till förklaring av enskilda beslut i EU:s AI-förordning: den som berörs av ett beslut som tillhandahållaren fattat på grundval av utdata från ett högrisk-AI-system, med rättslig eller liknande betydande verkan som personen anser påverkar hälsa, säkerhet eller grundläggande rättigheter negativt, har rätt att av tillhandahållaren få tydliga och meningsfulla förklaringar av AI-systemets roll i beslutet och beslutets viktigaste delar. Hör till förordningens subject transparency, transparensen mot den berörda personen. Gäller från 2 augusti 2026.", chapter: "kap9" },
   { term: "AI-förordningens riskpyramid", definition: "Fyra risknivåer: oacceptabel risk är förbjuden (social poängsättning, manipulation), hög risk kräver bedömning av överensstämmelse (kritisk infrastruktur, anställning, sjukvård, brottsbekämpning), begränsad risk kräver transparens (chattbotar, deepfakes) och minimal risk en uppförandekod (spamfilter, datorspel).", chapter: "kap9" },
+  { term: "Automatiserat beslutsfattande (ADM)", definition: "Automated decision-making: beslut som fattas helt eller delvis automatiskt, med regler, RPA eller AI. Omfattas av GDPR art. 15 och 22 och, för högrisk-AI, av AI-förordningen. I offentlig sektor ett kritiskt forskningsfält med höga transparenskrav, bland annat för sociala system, bank och kredit, rättsväsende och sjukvård.", chapter: "kap9" },
   { term: "Trelleborgsfallet", definition: "Kursens exempel på bristande transparens: Trelleborgs kommun lät en RPA-robot fatta beslut om försörjningsstöd. Akademikerförbundet SSR åberopade rätten till meningsfull information om logiken bakom, samma rätt som i GDPR art. 15, men kommunen slutade svara, och en journalist som begärde ut källkoden fick nej. Kommunen kallade roboten regelstyrd RPA och ingen black box. Källkoden lämnades ut först efter en dom i kammarrätten: 136 000 rader regler i 127 XML-filer som inte gick att tolka säkert utan datan.", chapter: "kap9" },
 ];

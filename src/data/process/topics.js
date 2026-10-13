@@ -386,6 +386,7 @@ export const topics = [
       "GDPR art. 22: rätt att inte bli föremål för ett beslut som enbart grundas på automatiserad behandling och påverkar en i betydande grad.",
       "AI-förordningen art. 86: rätt till tydliga och meningsfulla förklaringar av AI-systemets roll när ett beslut bygger på högrisk-AI. Gäller från 2 augusti 2026.",
       "Trelleborgsfallet: kommunens RPA beslutade om försörjningsstöd. Den kallades regelstyrd, men källkoden lämnades ut först efter dom i kammarrätten.",
+      "BPM för transparens: med processen i BPMN och reglerna i DMN från början hade Trelleborg direkt kunnat visa hur besluten fattas. Weaver ser det som ett sätt för offentlig sektor att möta transparenskraven.",
     ],
     pitfalls: [
       "Rosemanns drifts ersätter inte första generationens BPM — de utvidgar den. De är dessutom illustrativa, inte en fullständig lista.",
@@ -398,6 +399,7 @@ export const topics = [
       "GDPR art. 15 ger rätt till information om logiken, inte rätt att slippa automatiserade beslut. Det är art. 22.",
       "Art. 86 gäller inte alla AI-beslut, bara beslut grundade på utdata från högrisk-AI-system.",
       "Regelstyrd är inte detsamma som transparent: Trelleborg kallade roboten regelstyrd RPA och ingen black box, men lämnade inte ut hur besluten fattades förrän en domstol tvingade fram källkoden.",
+      "Debatten om Trelleborg blandade ihop AI, algoritmer och RPA. Systemet var en regelstyrd RPA, men kravet på insyn gällde ändå.",
     ],
   },
   {
@@ -433,8 +435,9 @@ export const topics = [
       "Silvers begränsningar: bara strukturerade processer, inte aktiviteternas inre logik eller komplexa beslut, inte prestationsmått, inte affärskontext.",
       "Modellspråkets fyra komponenter: vocabulary (elementen), syntax (reglerna för kopplingar), semantics (betydelsen) och notation (symbolerna).",
       "Method and Style: korrekt BPMN är inte samma sak som bra BPMN. Silvers exempel: XOR utan bedömning före, Yes/No utan sammanhang, samma slut för båda utfallen.",
-      "Visuell mot körbar BPMN: diagrammet visar vad som händer; execution properties i BPMN XML anger hur (REST, Java, SQL, roller). BPMS och BOAT kör BPMN XML.",
-      "DMN: beslutstabeller, DRD och FEEL, inkopplade via en business rule task — i rabattexemplet i stället för en kedja av gateways. Räcker ungefär till kalkylarkskomplexitet.",
+      "Visuell mot körbar BPMN: samma notation för två syften, analys och kommunikation eller körning i en processmotor. En körbar modell kräver en bra modell; hur den körs (BPMN XML, execution properties) är bakgrund enligt Weaver.",
+      "RPA mot processorkestrering: RPA automatiserar arbetet inne i en user task (task automation), en processmotor orkestrerar hela flödet (process orchestration). Gränsen är inte skarp.",
+      "DMN: beslutstabeller, DRD och FEEL, inkopplade via en business rule task — i rabattexemplet i stället för en kedja av gateways. Räcker ungefär till kalkylarkskomplexitet. FEEL behöver man inte kunna skriva.",
     ],
     pitfalls: [
       "Message flow går aldrig inom samma pool.",
@@ -443,7 +446,7 @@ export const topics = [
       "En user task som skickar e-post automatiskt är ingen user task.",
       "Tekniskt korrekt är inte detsamma som bra: Silvers dåliga exempel är giltig BPMN men visar inte var beslutet fattas eller vilka utfall processen har.",
       "Lägg inte beslutsregler i en kedja av gateways. BPMN beskriver flödet, reglerna hör hemma i en business rule task med DMN.",
-      "Ett visuellt diagram är inte körbart i sig. Motorn behöver execution properties i BPMN XML, även när diagrammet ser enkelt ut: de körbara detaljerna ligger under.",
+      "En dålig modell går inte att göra körbar: Silvers dåliga exempel har en sluthändelse för två utfall, men två olika meddelanden kräver två sluthändelser.",
       "DMN är ingen ISO-standard. Det är BPMN 2.0 som blev ISO-standard 2013.",
     ],
   },

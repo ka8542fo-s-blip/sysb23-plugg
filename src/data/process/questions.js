@@ -926,15 +926,15 @@ export const questions = [
     ],
     correct: 1, source: "F5 (de fyra komponenterna enligt Dumas et al. 2018); genomgången s. 23–26 (message flow mellan pooler)", reviewed: false },
 
-  { id: "bpm-q85", topic: "bpmn", difficulty: 2,
-    question: "Ett team har ritat \"Check inventory\" som en service task och vill att en processmotor ska köra den. Vad behöver läggas till?",
+  { id: "bpm-q86", topic: "bpmn", difficulty: 2,
+    question: "En faktura får rabatt efter ordersumman (0–4 %), och kunder av typ A får en extra procent när ordern ger rabatt. En modellerare ritar reglerna som en kedja av XOR-gateways och service tasks. Hur bör rabattreglerna modelleras i stället?",
     options: [
-      { text: "En lane för motorn, så att det syns vilket system som utför aktiviteten.", explain: "En lane visar vem som utför arbetet. Motorn behöver tekniska uppgifter, som vilken tjänst som anropas och vilka variabler som skickas." },
-      { text: "Fler element i diagrammet, eftersom motorn bara läser det som syns visuellt.", explain: "Motorn läser BPMN XML. En körbar modell kan se lika enkel ut som en visuell, men detaljerna måste finnas under ytan." },
-      { text: "En business rule task före, som talar om för motorn hur tasken ska köras.", explain: "En business rule task anropar beslutsregler. Hur en service task körs anges i dess egna egenskaper." },
-      { text: "Execution properties i BPMN XML, som REST endpoint, variabler och retry.", explain: "Diagrammet visar vad som händer, och execution properties anger hur det utförs. De lagras i BPMN XML och ställs oftast in i verktygets properties-panel. Standardiserad XML och mer omfattande körsemantik kom med BPMN 2.0 år 2011." }
+      { text: "En OR-gateway i stället för XOR-kedjan, så att båda rabatterna kan gälla.", explain: "Reglerna ligger fortfarande i flödet. BPMN beskriver flödet, inte beslutslogiken; Weaver kallar regler i gateways något man aktivt ska undvika." },
+      { text: "En business rule task, Determine discount, som anropar beslutstabeller i DMN.", explain: "Processen blir Invoice requested, Determine discount, Create invoice och Invoice created. I DMN visar ett DRD hur Total discount bygger på Base discount och Additional discount, med Order value och Customer type som indata. Totalen räknas med ett FEEL-uttryck." },
+      { text: "En subprocess som rymmer gatewaykedjan, så att föräldradiagrammet blir kortare.", explain: "Kedjan ligger kvar i barndiagrammet, och reglerna är fortfarande gateways. Reglerna hör hemma i ett beslut, inte i flödet." },
+      { text: "En user task där en handläggare räknar fram rabatten för hand i ett kalkylark.", explain: "Rabatter är ett typexempel på DMN. Mänskligt omdöme passar ovanliga och tvetydiga fall, som ett ovanligt försäkringsärende." }
     ],
-    correct: 3, source: "F5 (visuell och körbar BPMN; execution properties i BPMN XML)", reviewed: false },
+    correct: 1, source: "F5 (rabattexemplet: gatewaykedja mot business rule task; DMN i Camunda Modeler), Weaver i F5-videon (gatewaykedjan ska aktivt undvikas)", reviewed: false },
 
   { id: "bpm-q88", topic: "framtid", difficulty: 2,
     question: "Ett företag sållar jobbansökningar med ett högrisk-AI-system, och en sökande sorteras bort. Vad ger artikel 86 i AI-förordningen den sökande rätt till?",
