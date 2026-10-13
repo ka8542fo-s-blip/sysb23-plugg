@@ -23,7 +23,7 @@ import { blockText, collectBlocks, normalizeText, textHash } from "./ttsBlocks.j
 
 const HIGHLIGHT_CLASS = "tts-aktuell";
 const BLOCK_CLASS = "tts-block";
-export const TTS_RATES = [0.85, 1, 1.15, 1.3, 1.5];
+export const TTS_RATES = [0.85, 1, 1.15, 1.3, 1.5, 1.75, 2];
 
 const AUDIO_DIR = `${import.meta.env.BASE_URL}audio/`;
 
