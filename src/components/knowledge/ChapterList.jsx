@@ -3,10 +3,16 @@ import PriorityTag from "./PriorityTag.jsx";
 import { chapterPriority, hasPriorities, isFastTrack } from "../../lib/examPriority.js";
 import { formatReadingTime, totalReadingMinutes, withReadingTime } from "../../lib/readingTime.js";
 
+// Lästa kapitel ska synas på avstånd: grönt kort och fylld grön etikett.
+// Etiketten använder inte .chip, vars hover-stil annars tar bort det gröna.
 const STATUS = {
-  read: { label: "Läst", className: "border-correct text-correct" },
-  reading: { label: "Pågående", className: "border-brass text-brass" },
-  unread: { label: "Oläst", className: "border-line text-ink/65" },
+  read: {
+    label: "✓ Läst",
+    chip: "inline-flex items-center rounded-full border border-correct bg-correct px-3 py-1 font-medium text-white",
+    card: "border-correct/40 bg-correct-bg hover:border-correct hover:bg-correct-bg",
+  },
+  reading: { label: "Pågående", chip: "chip border-brass text-brass", card: "" },
+  unread: { label: "Oläst", chip: "chip border-line text-ink/65", card: "" },
 };
 
 // Etikett för kapitlets tentaområde. null = uttryckligen utanför tentan;
@@ -166,7 +172,7 @@ export default function ChapterList({
               <button
                 type="button"
                 onClick={() => onOpen(chapter.id)}
-                className={`card-action flex gap-4 p-4 ${dimmed ? "opacity-60" : ""}`}
+                className={`card-action flex gap-4 p-4 ${STATUS[status].card} ${dimmed ? "opacity-60" : ""}`}
               >
                 <span className="tabular mt-0.5 font-display text-xl text-brass">
                   {chapter.number ?? index + 1}
@@ -186,7 +192,7 @@ export default function ChapterList({
                   </span>
                 </span>
                 <span
-                  className={`chip h-fit shrink-0 text-xs ${STATUS[status].className}`}
+                  className={`h-fit shrink-0 text-xs ${STATUS[status].chip}`}
                 >
                   {STATUS[status].label}
                 </span>
