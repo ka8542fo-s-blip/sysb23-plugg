@@ -97,9 +97,10 @@ const markdownComponents = {
   code: ({ children }) => (
     <code className="rounded bg-white px-1.5 py-0.5 text-[0.95em]">{children}</code>
   ),
-  // Kapitel med DDL-exempel behöver riktiga kodblock, inte brödtext.
+  // Kapitel med DDL-exempel behöver riktiga kodblock, inte brödtext. Kod
+  // läses aldrig upp (data-tts-skip), inte heller inne i en punktlista.
   pre: ({ children }) => (
-    <pre className="my-5 overflow-x-auto rounded-lg border border-line bg-white p-3 font-mono text-[13px] leading-relaxed">
+    <pre data-tts-skip className="my-5 overflow-x-auto rounded-lg border border-line bg-white p-3 font-mono text-[13px] leading-relaxed">
       {children}
     </pre>
   ),
@@ -131,7 +132,7 @@ export default function ChapterView({
   const headings = useMemo(() => headingsIn(chapter.body), [chapter.body]);
 
   const readColumnRef = useRef(null);
-  const tts = useReadAloud(readColumnRef);
+  const tts = useReadAloud(readColumnRef, { audio: Boolean(course.ttsAudio) });
   const ttsStop = tts.stop;
   // Byter man kapitel ska inte förra kapitlets röst fortsätta.
   useEffect(() => ttsStop, [chapter.id, ttsStop]);
@@ -219,7 +220,8 @@ export default function ChapterView({
       </button>
 
       <div className="mt-4 lg:mx-auto lg:flex lg:max-w-5xl lg:gap-10">
-        <div ref={readColumnRef} className="min-w-0 flex-1">
+        {/* data-tts-root: läskolumnen, som scripts/tts-extract.mjs letar upp. */}
+        <div ref={readColumnRef} data-tts-root className="min-w-0 flex-1">
           <header>
             <p className="tabular text-[11px] font-medium uppercase tracking-[0.14em] text-brass">
               Kapitel {number} av {total}
@@ -248,27 +250,15 @@ export default function ChapterView({
                   ▶ Lyssna på kapitlet
                 </button>
                 <RateSelect tts={tts} />
-                {tts.voices.length > 1 && (
-                  <label className="flex items-center gap-1.5 text-sm text-ink/65">
-                    Röst
-                    <select
-                      value={tts.voice?.name || ""}
-                      onChange={(event) => tts.setVoice(event.target.value)}
-                      className="max-w-56 rounded-lg border border-line bg-white px-2 py-1.5 text-sm"
-                    >
-                      {tts.voices.map((voice) => (
-                        <option key={voice.name} value={voice.name}>
-                          {voice.name}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
+                {/* Tipset och varningen gäller webbläsarens röst, alltså
+                    delkurser utan förgenererat ljud. Något röstval finns inte. */}
+                {!course.ttsAudio && (
+                  <InfoTip
+                    term="Naturligare röst"
+                    text="Rösten kommer gratis från din webbläsare och ditt system. Naturligast idag: Microsoft Edge har neurala svenska röster inbyggda. På macOS och iOS kan du ladda ner en förbättrad svensk röst under Inställningar → Hjälpmedel → Uppläst innehåll → Systemröst/Röster — starta sedan om webbläsaren så väljs den automatiskt. Uppläsningen sker helt lokalt, inget skickas någonstans."
+                  />
                 )}
-                <InfoTip
-                  term="Naturligare röst"
-                  text="Rösterna kommer gratis från din webbläsare och ditt system. Naturligast idag: Microsoft Edge har neurala svenska röster inbyggda. På macOS och iOS kan du ladda ner en förbättrad svensk röst under Inställningar → Hjälpmedel → Uppläst innehåll → Systemröst/Röster — starta sedan om webbläsaren så dyker den upp i röstvalet här och väljs automatiskt. Uppläsningen sker helt lokalt, inget skickas någonstans."
-                />
-                {tts.noSwedishVoice && (
+                {!course.ttsAudio && tts.noSwedishVoice && (
                   <span className="text-sm text-ink/65">
                     Ingen svensk röst hittades i webbläsaren — uttalet kan bli fel.
                   </span>

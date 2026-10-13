@@ -13,7 +13,6 @@ export const KEYS = {
   modelMode: "modellFlik", // Modelleras underflik: "stmt" | "er" | "ddl" | "norm"
   scheduleView: "schemaVy", // "lista" | "kalender"
   ttsRate: "upplasningstakt", // uppläsningens hastighet (t.ex. 1.15)
-  ttsVoice: "upplasningsrost", // vald rösts namn, t.ex. "Alva"
   sqlRandom: "sqlSlump", // antal lösta slumpövningar
 };
 

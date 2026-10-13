@@ -67,6 +67,10 @@ export const courses = [
     views: ["las", "sql", "modell", "tenta", "ova", "statistik"],
     // Öva speglar Läs: kvizzarna grupperas per kapitel, inte per ämne.
     practiceBy: "chapter",
+    // Uppläsningen spelar förgenererat ljud (public/audio, Google Chirp 3
+    // HD) där det finns. Delkurser utan flaggan läses med Web Speech, och
+    // scripts/tts-generate.mjs vägrar generera ljud för dem.
+    ttsAudio: true,
     topics: databaserTopics,
     questions: databaserQuestions,
     chapters: databaserChapters,
@@ -85,6 +89,7 @@ export const courses = [
     // och Prov. Flikarna läggs till när deras innehåll finns.
     views: ["las", "ova", "bpmn", "prov", "essa", "statistik"],
     practiceBy: "chapter",
+    ttsAudio: true, // förgenererat uppläsningsljud, se Databaser
     topics: processTopics,
     questions: processQuestions,
     essays: processEssays,

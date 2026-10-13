@@ -469,10 +469,18 @@ kräver surrogatnycklar och inte namn — kapitel 9 följer tentan.
   filtret "Visa bara tentarelevanta kapitel" döljer sig när alla kapitel
   är relevanta. Läsprogress i kapitel och procent; `{lästid}` i intron
   räknas ur `readingMinutes` (`lib/readingTime.js`). Tangentbord J/K/N/P/
-  Esc. Uppläsning (`lib/useReadAloud.js`): styckvis talsyntes, markerar
-  stycke utan autoscroll, `data-tts-skip` undantar menyer och figurer,
-  flytande pill med paus/stopp/hastighet, klickbara stycken; vid hopp
-  nollas onend/onerror före cancel().
+  Esc. Uppläsning (`lib/useReadAloud.js`): styckvis, markerar stycke utan
+  autoscroll, `data-tts-skip` undantar menyer, figurer och kodblock,
+  flytande pill med paus/stopp/hastighet, klickbara stycken. Databaser och
+  Processorienterad spelar förgenererat ljud (se nedan), Strategi läser med
+  Web Speech. Inget röstval (borttaget 2026-10-13); Web Speech tar den
+  naturligaste svenska rösten automatiskt.
+- **Uppdateringsnotis** (`components/UpdateBanner.jsx`, `lib/versionCheck.js`)
+  — bygget skriver `version.json` med commitens SHA och bäddar in samma SHA
+  (`__APP_VERSION__`, `vite.config.js`). Appen hämtar filen var 5:e minut,
+  vid synlig flik och fokus, och visar en rad överst i headern när SHA:n
+  skiljer sig. Aldrig i dev, aldrig automatisk omladdning. Schemastämpeln
+  publicerar varje morgon, så notisen kommer dagligen till öppna flikar.
 - **Tentaprioritet** (Strategi, `lib/examPriority.js`) — `examPriority`
   karna/essa/bakgrund per ämne, `examEvidence` bara där repot dokumenterar
   underlaget. Informerar, styr inte.
@@ -538,11 +546,44 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
   tester utan `npm ci` och föll på sql.js); lagat 2026-09-29, då fem
   ändringar fördes in.
 
+## Förgenererat uppläsningsljud (Google Chirp 3 HD, 2026-10-13)
+
+- **Vilka delkurser:** `ttsAudio: true` i `src/data/index.js` — Databaser
+  och Processorienterad. Strategi har inget förgenererat ljud (Kaspers
+  beslut) och läses med Web Speech; `useReadAloud` slår inte ens upp
+  manifestet där, eftersom rubriker som "Kärnan i korthet" och "Kapitel 1
+  av 11" har samma hash i alla delkurser.
+- **Nyckel per block:** `lib/ttsBlocks.js` (delas av webbläsaren och
+  skripten): blocken är h1–h3, p, li, blockquote i läskolumnen
+  (`data-tts-root`), utan `data-tts-skip`; texten normaliseras (trim,
+  blanksteg kollapsade) och nyckeln är SHA-1:s första 12 hextecken, i ren
+  JS så att första ljudet startar synkront i klicket (Safari). Ändras ett
+  stycke läses det med Web Speech tills ljudet genereras om.
+- **Spelaren:** finns hashen i `public/audio/manifest.json` spelas
+  `public/audio/<hash>.mp3` med `<audio>` (playbackRate = hastighetsvalet,
+  byts direkt), nästa fil förladdas; går filen inte att spela läses blocket
+  med Web Speech.
+- **Generering** (Node, `.env.local`: `GOOGLE_TTS_API_KEY`, skickas som
+  header): `node scripts/tts-extract.mjs [delkurs] [kapitel]` renderar
+  riktiga ChapterView via Vites SSR + jsdom och skriver `tts/blocks/`.
+  `node scripts/tts-generate.mjs <delkurs> [kapitel]` genererar med rösten
+  `sv-SE-Chirp3-HD-Charon` (vald efter röstprov), ren text (SSML är
+  förhandsversion för Chirp 3 HD), MP3 32 kbit/s, block över 4 500 byte
+  delas på meningsgräns (gränsen är 5 000 byte per anrop), fyra anrop
+  parallellt. Befintliga filer hoppas över; manifestet skrivs om ur
+  katalogen. Vägrar delkurser utan `ttsAudio` och röster som inte är
+  `sv-SE-Chirp3-HD-*`. `voices` listar rösterna, `samples` gör röstprov.
+- **Kostnadsspärr:** tecknen bokförs per kalendermånad i `tts/usage.json`
+  innan varje anrop; skriptet vägrar om månaden skulle passera 900 000.
+  `tts/` (logg, prov, block) och `.env.local` committas aldrig.
+- **Inte byggt:** rensning av filer vars text har ändrats (de ligger kvar
+  i `public/audio` och i manifestet tills någon tar bort dem).
+
 ## Lagringsnycklar
 
 `answers`, `exams`, `essays`, `settings` (bl.a. `practiceRecent`,
 `practiceOrder`, `practiceTopics`), `lasSegment`, `delkurs`, `schemaVy`,
-`upplasningstakt`, `upplasningsrost`, `sqlSlump`, `read:<kurs>:<kapitel>`,
+`upplasningstakt`, `sqlSlump`, `read:<kurs>:<kapitel>`,
 `sql:<övningsId>` (= "solved" | "solved-with-help"), `modell:<uppgiftsId>`
 (= "solved"; mod-, norm- och stmt-id), `examreg:<examId>`, `tenta:<tentaId>`
 (svar, rättade uppgifter och senaste poäng i fliken Tenta). "Nollställ min
@@ -555,9 +596,6 @@ data" i Statistik rensar allt. Progress är per webbläsare och domän.
   korrekt i kapitelsorterad ordlista.
 - hp-talen i `schedule.js` summerar till 20, inte 30 — flaggat, orört.
 - `DELETE FROM Patient` stoppas av FK i fritt läge — korrekt.
-- Konsolen i dev visar en gammal React-varning om dubbla nycklar i
-  röstväljaren (`ChapterView`, två röster som heter "Alva (svenska
-  (Sverige))") — kosmetiskt, beror på webbläsarens röstlista.
 - Skärmdumpar i browserpanelen kan vara eftersläpande/tomma; DOM gäller.
 - Sajtens facit avviker medvetet från övningshäftet i 12:9 och 13:9 –
   häftet har fel (användarbeslut 2026-10-08). 12:9: häftets R4(B, D)
@@ -660,7 +698,7 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   och 3 p/4 alt 0; **3(d) 4 p/6 alt −0,17**. Kapitel 1 och Kör processen
   (per fråga) säger det.
 - **Läs:** 11 kapitel i `data/process/reading.js` (kap1–kap11 = nr 1–11),
-  15 ämnen i `topics.js`, 139 ordlistetermer. Alla ämnen `karna`; `essa`
+  15 ämnen i `topics.js`, 141 ordlistetermer. Alla ämnen `karna`; `essa`
   på automatisera, ramverk, foundations, manniskor (HT25:s fyra
   essäfrågor), enablement (process asset, Weavers betoning) och sedan F4
   launch och understand (Weaver: Foundations, Enablement och Launch "kanske
@@ -690,10 +728,11 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   `bpm-q50…q61` (F4: riskjämförelsen, quick wins, Process Worth Matrix,
   rotorsaker, processbeslut, baseline, Realize som tråd och livscykel,
   Sustainability, process mining, Green BPM-hindren) och efter F5
-  `bpm-q80`, `q82`, `q85`, `q88`, `q89` (ISO, modellspråkets fyra
-  komponenter, körbar BPMN, AI-förordningen art. 86, Trelleborg).
+  `bpm-q80`, `q82`, `q86`, `q88`, `q89` (ISO, modellspråkets fyra
+  komponenter, rabattexemplet med business rule task, AI-förordningen art. 86,
+  Trelleborg; q86 ersatte q85 om execution properties 2026-10-13).
   Parkerade i `questions-pending.js`: q16 (F-gruppernas namn) och F5:s
-  q81, q83, q84, q86, q87 — kapitel 10 nådde taket tio frågor; Method and
+  q81, q83, q84, q85, q87 — kapitel 10 nådde taket tio frågor; Method and
   Style och business rule task prövas i Kör processen i stället. t19 och
   q59 har `group: "green-bpm"`,
   `bpm-q25` flaggad (rollnamn). **Canvas-quizzen (2026-10-12):** Weavers två
@@ -790,11 +829,27 @@ steg 3 har People-stegets RACI-text.
 ### F5 inlagd (2026-10-12)
 
 Källa: `~/Desktop/Skola/SKOLA T3/course_files_export/02_Lectures/05_BPMN_SYSB23_BPM_HT26 BPMN.pdf`
-(38 bilder). **Transkriptet återstår:** spellistan hade ingen F5-video
-2026-10-12. Stäm av när den kommer (`yt-dlp --flat-playlist` på spellistan,
-samma metod som F4): vad Weaver säger om tentan och BPMN-frågorna,
-examPriority efter hans betoning (i dag oförändrad: förklarbarheten ligger i
-`framtid`, karna, eftersom 3(a) prövats), och om de parkerade q81/q87 ska in.
+(38 bilder). **Transkriptet** (videorna F5 del 1 "BPMN bakgrund" och del 2
+"BPMN och DMN", uppladdade 13 okt, nr 15–16 i `BPM_transkript/`) är avstämt
+2026-10-13. Weaver säger inget om tentan. Han tonar ned körbar BPMN ("vi går
+inte in på detta i den här kursen alls", nu under "Hur modellen körs
+(bakgrund)" i kap 10), CMMN ("kan vi strunta i"), DMN ("bara en liten detalj")
+och FEEL ("ska ni inte kunna"). Inlagt i kap 9–10, märkt "enligt Weaver":
+Work Simplification Conference, BPMN 1.0 utan XML, pizzaexemplet som dåligt
+BPMN-exempel, Green BPM och prestation, akuten och styrkortet i heuristikerna,
+stilguiden, AI som missar BPMN-fel, att det dåliga exemplet inte går att köra,
+RPA som task automation mot process orchestration, orkestreringens exempel,
+DMN-gränsens exempel och defer to human, spänningen Jeston mot process
+mining, offentlig sektor och ADM, GDPR-exemplet, AI-förordningens
+utbildningsexempel och tidplan, och Trelleborg enligt Weaver. Gruppuppgiftens
+råd (AI-genererat case, hierarki, export) är inte inbyggda. examPriority är
+oförändrad. q85 (execution properties, som kursen inte tar upp) är
+parkerad och q86 (rabattexemplet, som Weaver betonar) inne i Öva (Kaspers
+beslut). Nyckelpunkterna för bpmn och framtid är justerade efter videon, och
+ordlistan har fått ADM och task automation/process orchestration. **Öppet:**
+artikel 86 i AI-förordningen anges gälla
+från 2 aug 2026, men högriskreglerna kan ha skjutits upp (omnibus); stäm av
+mot EUR-Lex.
 Byggt: kap 10 fick BPMN:s historik och ISO (2013), Silvers fördelar och
 begränsningar med heuristikerna för när BPMN inte passar, modellspråkets
 fyra komponenter (Dumas et al.), Method and Style med exemplet dålig mot
@@ -835,8 +890,8 @@ BPMN assignment" gäller gruppuppgiften och är inte inbyggt.
 
 - Användarens granskning av det ogranskade (listan ovan), i första hand
   Öva-frågorna dbq-33…62 och påståendeuppgifterna.
-- **BPM:** när F5-videon finns i spellistan: hämta transkriptet (se "F5
-  inlagd") och stäm av. Canvas-quizzarna är invävda (2026-10-12, se Öva). Kasper
-  granskar själv, Kör processen och kapitel 11 först.
+- **BPM:** F5-transkriptet är avstämt och Canvas-quizzarna invävda. Öppet:
+  artikel 86:s datum (se "F5 inlagd"). Kasper granskar själv,
+  Kör processen och kapitel 11 först.
 - Fler delkurser (arkitektur, säkerhet) enligt samma mall: data +
   manifestrad, ingen ny kod.
