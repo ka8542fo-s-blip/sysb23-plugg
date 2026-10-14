@@ -557,6 +557,29 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
   tester utan `npm ci` och föll på sql.js); lagat 2026-09-29, då fem
   ändringar fördes in.
 
+## Begreppsfigurer i kompendierna (2026-10-14)
+
+- **Vad:** lärobokslika figurer (lager, steg, cykler, matriser, skalor,
+  jämförelser, hierarkier) i Databaser och Processorienterad, högst tre per
+  kapitel. Strategi har inga. Byggstenarna finns i
+  `components/figures/conceptFigures.jsx`, ritningarna i
+  `databaserFigures.jsx` och `processFigures.jsx`, och figurnummer,
+  figurtext, källrad, `<title>` och `<desc>` i `conceptFigureMeta.js` (ren JS).
+- **Två format:** varje figur ritas brett (640 enheter, från 640 px) och
+  smalt (340 enheter, mobil), så att texten aldrig blir mindre än cirka
+  12 px. Textbredden uppskattas per tecken (kalibrerat mot Inter i Chrome)
+  och radbryts; relationer i understrykningsnotation ritas med `textLength`.
+- **Inbäddning:** `[[diagram:namn]]` som ER-figurerna; namnen kommer in i
+  `DIAGRAM_IDS` via meta-filen. `diagram-ids.test.mjs` låser att varje
+  figur står i rätt delkurs och kapitel och att numren följer kapitlets
+  nummer och ordningen i texten (`Figur 8.2` = andra figuren i kapitel 8).
+- **Uppläsningen:** hela figuren är `data-tts-skip`, så blocken och ljudet
+  påverkas inte. Kapiteltexten är oförändrad utöver platshållarna.
+- **Kontroll:** skärmbilder i 1200 och 375 px med Playwright mot
+  installerade Chrome (skriptet ligger utanför repot; mappen
+  `figure-check/` ignoreras). Skriptet mäter verklig textbredd mot
+  `data-maxw` på varje tspan, text utanför ramen och textstorlek under 12 px.
+
 ## Förgenererat uppläsningsljud (Google Chirp 3 HD, 2026-10-13)
 
 - **Vilka delkurser:** `ttsAudio: true` i `src/data/index.js` — Databaser

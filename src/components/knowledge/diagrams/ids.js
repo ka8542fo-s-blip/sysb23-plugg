@@ -1,6 +1,9 @@
 // Diagramnamnen som kapiteltexterna får referera till som [[diagram:namn]].
 // Ren JS så att testet kan läsa listan utan JSX. Namnen är stabila — de är
-// ett API mot reading.js.
+// ett API mot reading.js. ER-figurerna listas här; begreppsfigurerna
+// (lager, steg, cykler med mera) kommer ur components/figures/conceptFigureMeta.js.
+import { CONCEPT_FIGURES } from "../../figures/conceptFigureMeta.js";
+
 export const DIAGRAM_IDS = [
   "workson",
   "deltagande",
@@ -16,6 +19,7 @@ export const DIAGRAM_IDS = [
   "pastaenden-forening",
   "pastaenden-bibliotek",
   "pastaenden-rederi",
+  ...Object.keys(CONCEPT_FIGURES),
 ];
 
 export const DIAGRAM_RE = /^\[\[diagram:([a-z0-9-]+)\]\]$/;

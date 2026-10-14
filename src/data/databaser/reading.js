@@ -60,6 +60,8 @@ Detta är kompendiets ryggrad, och tentans struktur.
 
 Lägg märke till att SQL kommer sist. Det är först när modellen är genomtänkt som koden skrivs — och det är därför tentan prövar modellering minst lika hårt som SQL.
 
+[[diagram:db-designkedjan]]
+
 ## Så ser tentan ut
 
 De två HT25-tentorna (omtentan 24 oktober 2025 och uppsamlingen 25 maj 2026) har exakt samma fyra uppgifter, så formen är känd. Tentan skrivs i Inspera på fem timmar och ger 100 poäng. **Tillåtna hjälpmedel: utskrivna slides från innevarande kurstillfälle och kursboken i fysiskt format.** Amanuensernas repetitionsmaterial är inte tillåtet. Betygsgränser: A 85, B 75, C 65, D 55, E 50. Uppgift 3 hänvisar till *tentamens medföljande bilaga* med definitioner. Det betyder att tentan mäter tillämpning, inte utantill — decken ligger på bordet, frågan är om du kan använda dem.
@@ -129,6 +131,8 @@ Domänen är inte heller samma sak som en datatyp, även om de överlappar. Dom�
 ## Grad och kardinalitet
 
 **Graden** räknar attribut och ändras bara om schemat ändras. **Kardinaliteten** räknar tuplerna i det aktuella värdet: den fjärde anställda höjer den från tre till fyra, graden är fortfarande tre, och ett tomt värde har kardinalitet noll. Blanda inte ihop den med ER-modellens kardinalitetsvillkor, som begränsar tillåtet deltagande — samma ord, två betydelser.
+
+[[diagram:db-relationens-anatomi]]
 
 ## Ordning saknar betydelse, dubbletter finns inte
 
@@ -214,6 +218,8 @@ Tre saker som föreläsningen lägger tid på:
 - **Ett främmandenyckelvärde får förekomma flera gånger**. Mary kan leda både Atlas och Nova, så E-104 upprepas i PROJECT medan det identifierar exakt en tupel i EMPLOYEE. En främmande nyckel kräver en matchande refererad nyckel; den kräver **inte** i sig unikhet i den refererande relationen. (Vill man ha unikhet, som i 1:1, måste den läggas till separat — kapitel 7.)
 - **Den refererade tupeln måste finnas**. E-999 har rätt form, E-nnn, men ingen anställd har det numret, så tupeln bryter mot främmandenyckelvillkoret. Ett tillåtet domänvärde är inte automatiskt en giltig referens.
 - **Främmande nycklar tvingar inte fram deltagande**. Att varje WORKS_ON-tupel pekar på ett existerande projekt hindrar inte att projekt P-30 saknar tupel i WORKS_ON, trots att Project deltar totalt i WorksOn. Minimideltagandet ligger utanför det främmande nycklar kan garantera — "FKs do not enforce minimum participation". I DDL (Data Definition Language, tabelldefinitionerna) kan \`NOT NULL\` på en främmande nyckel göra många-sidans deltagande obligatoriskt (kapitel 9), men ett-sidans eller M:N-sidans totala deltagande blir en verksamhetsregel utanför constraints.
+
+[[diagram:db-frammande-nyckel]]
 
 Främmande nycklar upprätthåller **referensintegritet**: databasen vägrar rader som pekar på något som inte finns, och vägrar radera det som fortfarande refereras. En främmande nyckel får vara **NULL** om deltagandet är frivilligt — en bil utan ägare har \`EmployeeID = NULL\`. Är deltagandet obligatoriskt sätts kolumnen till \`NOT NULL\`.
 
@@ -474,6 +480,8 @@ Detta är en **notationsgräns**: basic Chen har ingen symbol för någon av reg
 Graden säger hur många entitetstyper som deltar: en unär relation har grad ett, en binär grad två, och metamodellen tillåter **två eller flera** deltaganden i en relationstyp. En **ternär relation** har grad tre och kopplar tre entitetstyper samtidigt. Föreläsningens egna exempel är unära och binära, men principen är densamma.
 
 Det klassiska exemplet är leverantör, produkt och kund. Frestelsen är att modellera det som tre binära M:N-relationer, och det går inte: med tre separata relationer vet du att Amazon levererar stolar, att IKEA levererar stolar och att en viss kund beställer stolar — men **inte vilken leverantör som levererade stolen till just den kunden**. Informationen om trippeln finns inte. Lösningen är en relation som binder alla tre samtidigt, vilket vid transformationen blir en relation med en trippelsammansatt primärnyckel.
+
+[[diagram:db-ternar-relation]]
 `
   },
 
@@ -763,6 +771,8 @@ Stegvis: mappa ägaren först → skapa relationen → enkla attribut och delar 
 
 TaskStep refererar PROJECT_TASK:s hela nyckel, inte TaskNo ensamt — steg 2 i uppgift 1 i P-10 pekar på uppgiften (P-10, 1), som pekar på projektet P-10.
 
+[[diagram:db-svag-nyckelkedja]]
+
 ## Regel 3 — Binär 1:1
 
 > För varje binär 1:1-relationstyp R med deltagande relationer S och T: ta normalt med den ena relationens primärnyckel som främmande nyckel i den andra. Föredra relationen för entitetstypen med **totalt deltagande** som värd för den främmande nyckeln. Gör den kopierade främmande nyckeln till **kandidatnyckel**, så att varje refererad tupel förekommer högst en gång. Ta med R:s enkla attribut i värdrelationen. Deltar båda totalt kan S, T och R i stället slås samman till en relation. Ett tredje, sällan föredraget alternativ är en separat relation med båda primärnycklarna som främmande nycklar och R:s attribut; där är varje deltagarnyckel en kandidatnyckel.
@@ -810,6 +820,8 @@ En tupel är en tilldelning: E-311 arbetar på två projekt, P-10 har två anst�
 Har en deltagare **sammansatt nyckel** kopieras hela nyckeln som **en** sammansatt främmande nyckel: \`WORKS_ON(EmployeeNo, RegistrationYear, SequenceNo)\` med \`FK2 : (RegistrationYear, SequenceNo) REF PROJECT(RegistrationYear, SequenceNo)\` — en referens, inte två oberoende, för (2025, 1) och (2026, 1) är olika projekt och SequenceNo ensamt är ingen projektnyckel.
 
 Det är alltså M:N-regeln som föder alla kopplingstabeller. I sjukhusdatabasen är \`Examines\`, \`Suffers\` och \`HasSuffered\` exakt sådana.
+
+[[diagram:db-binara-regler]]
 
 ## Regel 6 — Flervärdesattribut
 
@@ -874,6 +886,8 @@ Betrakta vad som händer om vi implementerar M:N-exemplet som **en enda** relati
 **Raderingsanomali (deletion anomaly):** raderas de anställda E4 och E5 försvinner samtidigt **all information om projekt P3**.
 
 De tre har **samma orsak**: ett faktum — projektets namn och budget — lagras i en relation vars nyckel handlar om något annat, kopplingen mellan anställd och projekt.
+
+[[diagram:db-anomalier]]
 
 Redundansen är alltså inte bara slöseri med lagring — den är en källa till fel. Och för att förhindra anomalierna måste man förstå varför de uppstår, vilket kräver teorin.
 
@@ -961,6 +975,8 @@ Generellt: relationer i högre normalform har **mindre redundans** och därmed m
 > **Tredje normalformen (3NF):** en relation är i 3NF om och endast om båda följande villkor gäller: relationen är i 2NF, och varje icke-primärattribut i relationen är icke-transitivt beroende av varje kandidatnyckel i relationen.
 
 Lär dig dessa ordagrant. De är korta, de är exakta, och en omskrivning i egna ord tappar nästan alltid något — särskilt "äkta delmängd av **någon** kandidatnyckel" i 2NF och "**varje** kandidatnyckel" i 3NF.
+
+[[diagram:db-normalformstrappan]]
 
 ### 1NF i praktiken
 
@@ -1090,6 +1106,8 @@ Primärnycklarna understrukna: {A, B} i R1, B i R2, D i R3, C i R4. Varje relati
 **Dependency preservation:** {A, B} → C står i R1, B → D i R2, D → E i R3, C → F i R4. Alla fyra bevarade.
 
 **Lossless join:** R1 och R2 delar B, som är nyckel i R2. R2 och R3 delar D, nyckel i R3. R1 och R4 delar C, nyckel i R4. Kedjan hänger ihop och joinen ger tillbaka R.
+
+[[diagram:db-beroendediagram]]
 
 Hade man i stället stannat vid R1(A, B, C, F) med både {A, B} → C och C → F hade F varit transitivt beroende av nyckeln — inte 3NF. Hade man gått längre och delat R1 i (A, B) och (A, B, C) hade det varit övernormalisering: (A, B) bär ingen information som (A, B, C) inte redan bär.
 
@@ -1351,6 +1369,8 @@ Läs koden mot diagrammet en gång till. Fyra entitetstyper, fyra tabeller med I
 5. Flervärdesattribut: egen tabell med ägarens främmande nyckel plus värdet som primärnyckel.
 6. Ordningen: refererade tabeller före refererande, så att koden kör.
 
+[[diagram:db-ddl-fran-diagrammet]]
+
 Det som brukar kosta: glömd \`NOT NULL\` på en naturlig nyckel, \`NOT NULL\` som saknas eller står fel mot deltagandelinjerna, en kopplingstabell som fått en egen IDENTITY, en svag entitet utan \`UNIQUE\` över paret, och en \`REFERENCES\` som pekar på den naturliga nyckeln i stället för surrogatnyckeln.
 `
   },
@@ -1394,6 +1414,8 @@ En INNER JOIN är en kartesisk produkt följd av en selektion: alla kombinatione
 
 Resultatet har **en rad per HarLanat-rad**, med bokens och låntagarens kolumner tillagda. Det är viktigt att se: joinen skapar inte fler rader än kopplingstabellen har, och den tar bort böcker som ingen lånat. Behöver du bara två av tabellerna, joina bara dem — uppgiften "kurskod, namn och snitt" behöver Course och HasStudied, inte Student, om inte villkoret handlar om studenterna.
 
+[[diagram:db-join-kopplingstabell]]
+
 Aliasen \`b\`, \`hl\`, \`l\` är inte kosmetika. Med två tabeller som båda har LantagarNo måste varje kolumn få ett prefix, annars vägrar SQL Server med *ambiguous column name*. Skriv alias med \`AS\` och använd dem konsekvent.
 
 ## Aggregat med GROUP BY: vad som får stå i SELECT
@@ -1418,6 +1440,8 @@ Två detaljer som föreläsningen lyfter. \`COUNT(*)\` räknar rader i gruppen; 
 ## HAVING mot WHERE
 
 Båda filtrerar, men vid olika tidpunkter. SQL:s logiska utförandeordning är FROM, WHERE, GROUP BY, aggregaten, HAVING, SELECT, ORDER BY. **WHERE filtrerar rader innan grupperingen** och får inte innehålla aggregat. **HAVING filtrerar grupper efter grupperingen** och är stället för villkor på aggregat. Minnesregeln från föreläsningen: H kommer efter G i alfabetet.
+
+[[diagram:db-sql-ordning]]
 
     SELECT
         l.LantagarNo,
@@ -1601,6 +1625,8 @@ Allt databasarbete i Java följer samma kedja av klasser ur paketet \`java.sql\`
 4. **ResultSet** innehåller svaret, en rad i taget.
 5. Går något fel kastas ett **SQLException**.
 
+[[diagram:db-jdbc-kedjan]]
+
 Föreläsningens första program skriver ut alla anställda:
 
     String query = "SELECT EmpNo, EmpName, EmpSalary FROM Employee";
@@ -1710,6 +1736,8 @@ En applikation delas i lager med var sitt ansvar, **separation of concerns**:
 - **Model** — klasser som Employee och Department. Håller data om domänobjekten och används av alla lager.
 - **Data access** — **DAO**-klasser (Data Access Object) som EmployeeDao, plus hjälpklassen **ConnectionHandler**. All kontakt med databasen: SQL, JDBC och SQLException hör hemma här.
 
+[[diagram:db-fyra-lager]]
+
 ConnectionHandler läser anslutningsuppgifterna ur konfigurationsfilen, bygger anslutningssträngen och har en metod \`getConnection()\` som alla DAO-klasser återanvänder. EmployeeDao har metoderna \`findAll()\`, \`findByEmpNo()\` och \`save()\`, och en hjälpmetod som gör om raden markören står på till ett Employee-objekt:
 
     private Employee mapToEmployee(ResultSet resultSet) throws SQLException {
@@ -1770,6 +1798,8 @@ Föreläsningen graderar hur väl lagren hålls isär, och kursen siktar på niv
     }
 
 DaoException ärver från \`RuntimeException\` och behöver därför inte deklareras — det är därför \`save()\` på nivå 3 saknar \`throws\`, medan DAO-metoderna på nivå 2 måste skriva \`throws SQLException\`. I controllern blir det \`catch (DaoException e)\` som visar \`e.getMessage()\` för användaren, följt av ett eget block för \`NumberFormatException\` när lönefältet inte innehåller ett tal. Felkoden tolkas på ett enda ställe: i lagret som vet att det finns en databas.
+
+[[diagram:db-separationsnivaer]]
 
 ## Kopplingen till resten av kursen
 

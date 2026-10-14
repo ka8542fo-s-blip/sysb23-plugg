@@ -5,6 +5,7 @@ import {
   EntityPopulationFigure, RelationshipPopulationFigure, AttributeShapesFigure,
   StatementsClubFigure, StatementsLibraryFigure, StatementsShippingFigure,
 } from "./erFigures.jsx";
+import { DATABASER_FIGURES } from "../../figures/databaserFigures.jsx";
 
 const FIGURES = {
   workson: WorksOnFigure,
@@ -21,6 +22,7 @@ const FIGURES = {
   "pastaenden-forening": StatementsClubFigure,
   "pastaenden-bibliotek": StatementsLibraryFigure,
   "pastaenden-rederi": StatementsShippingFigure,
+  ...DATABASER_FIGURES,
 };
 
 if (import.meta.env?.DEV) {
