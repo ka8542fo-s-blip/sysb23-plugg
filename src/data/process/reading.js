@@ -96,6 +96,8 @@ Det akademiska perspektivet beskriver samma sak som en **BPM lifecycle**:
 
 Livscykeln är akademins beskrivning. Jestons eget ramverk, 7FE, kommer i kapitel 5.
 
+[[diagram:bpm-livscykeln]]
+
 ## Svenska termer
 
 På svenska finns flera ord för samma sak, vilket gör det lätt att bli förvirrad:
@@ -117,6 +119,8 @@ BPM och **Enterprise Architecture (EA)** har gemensamma mål: att genomföra str
 - BPM kan ha en processmotor (BPMS) som kör processerna.
 
 Tänk på tre lager: strategin överst, verksamheten i mitten och applikationer och infrastruktur underst. BPM arbetar i mittenlagret och binder ihop de andra två.
+
+[[diagram:bpm-ea-lager]]
 
 ## Jeston avmystifierar BPM
 
@@ -206,6 +210,8 @@ Weaver visar hur snabbt vågen vände. Aktien i UiPath, det största RPA-bolaget
 I dag marknadsförs nästan allt som AI, men BPM-tänkandet och modelleringen finns kvar i bakgrunden. Rena RPA-företag konkurrerar nu med **agentisk AI-orkestrering**, där AI-agenter sköter hela arbetsflöden och fattar beslut på vägen. Visionen är att hela verksamheter automatiseras. Frågan Weaver lämnar öppen är vilken roll människorna då får. BPM-systemen är i dag en del av det som kallas **BOAT** (Business Orchestration and Automation Technologies).
 
 Jestons egen bild av utvecklingen, som han kallar en "hype cycle", är egentligen en tidslinje: från Six Sigma via BPR:s topp och fall, BPM-rörelsen och RPA till generativ AI och AI-agenter.
+
+[[diagram:bpm-tidslinje]]
 `,
   },
   {
@@ -287,6 +293,8 @@ Jeston placerar BPM-insatser efter två dimensioner: **hur stor påverkan** de h
 
 Figuren har också två zoner. **Exceeding mandate** är när påverkan är större än chefens involvering räcker till. **Under ambitious** är när chefen är mer involverad än insatsen utnyttjar. Det fjärde scenariot, **Business as usual**, finns inte i figuren utan bara i Weavers punktlista: BPM är "fully embedded" i organisationens sätt att arbeta.
 
+[[diagram:bpm-scenarier]]
+
 Under the radar är de små informella insatserna med begränsat stöd från ledningen. Tentans exempel är en HR-avdelning där två analytiker själva börjat kartlägga, cheferna vet om det men har inte prioriterat det, och arbetet sker sporadiskt utan budget eller formell styrning. En pilot ska bevisa BPM:s värde. In the driver's seat betyder att BPM är erkänt som strategiskt verktyg med växande styrning. **Business as usual** betyder att BPM är helt inbäddat i organisationens sätt att arbeta. Det betyder inte att BPM-arbetet vilar. Scenariot avgör hur noggrant och brett ramverket används.
 
 ## Quick wins
@@ -322,6 +330,8 @@ Weaver förklarar varför en dålig process är så svår att automatisera. I en
 
 Bakom det ligger Jestons syn på teknik: **technology is an enabler, not a solution.** Tekniken kan inte kompensera för en dålig processdesign. Därför ska man minska komplexiteten och förbättra processen **innan** tekniken införs. Grunderna kommer först: förstå, kartlägg och förbättra processflödet och affärsreglerna, och inför sedan systemet.
 
+[[diagram:bpm-forstarkning]]
+
 Weaver har en invändning mot Jeston. Boken tonar ned systemen och lägger tyngden på kultur, vilket är rimligt, men i dag går förändringen inte att genomföra utan system. Processarbetet är IT-drivet, och någon form av plattform som kan hantera processerna behövs. Principen gäller alltså **ordningen**, inte att tekniken är oviktig.
 
 Principen har en historisk udd. Hammers kritik 1990 var just att företagen automatiserade gamla arbetssätt, och han förklarade produktivitetsparadoxen från kapitel 2 på samma sätt.
@@ -350,6 +360,8 @@ Dagens **iBPM** lägger till RPA och low-code, process mining, avancerad analys 
 ## Customer-centric, employee-centric eller båda
 
 **Customer-centric BPM** utgår från kundens verkliga upplevelse. Jestons poäng är att utmärkta kundmått kan dölja ett djupare missnöje, och att det är **effektivare att ta bort kundens irritationer än att satsa mycket på wow-faktorer** som tillför lite. Hans figur har en irritationszon, en "line of absolute indifference" och en wow-zon. Processer och KPI:er ska spegla kundens upplevelse, inte bara de interna dashboarderna. Tentans exempel: en organisation gör om sin ärendehantering så att kunderna får snabbare svar, färre hand-offs och en tydlig kontaktpunkt. Det är customer-centric.
+
+[[diagram:bpm-kundupplevelsen]]
 
 **Employee-centric BPM** utgår från att motiverade medarbetare är grunden för god service. Medelbra processer som levereras av entusiastiska medarbetare slår ofta utmärkta processer som levereras av oengagerad personal. Fokus ligger på empowerment, omsorg och rätt arbetsmiljö och attityd. Chefen ska vara en **servant leader** som stödjer, coachar och möjliggör i stället för att detaljstyra. FAIL läses som **First Attempt In Learning**, en lärande kultur.
 
@@ -422,6 +434,8 @@ Nerifrån och upp:
 
 Målet för det hela är effektivitet och **uthållig konkurrensfördel**.
 
+[[diagram:bpm-huset]]
+
 ## 7FE: tio faser och tre essentials
 
 Namnet 7FE läses bäst som **"10P3E"**: tio faser (phases) och tre essentials. De tio faserna är det som bär, och boken är upplagd efter dem:
@@ -449,6 +463,8 @@ Se upp för påhittade fasnamn. **Execution, Evaluation, Engagement, Follow-up o
 
 Jeston sammanfattar själv ramverket i en video som Weaver visade. 7FE kan användas för projekt i allmänhet, inte bara BPM. **De första fem faserna är i praktiken ett konsultuppdrag** som slutar i ett mycket robust business case, och därefter kommer bygget och genomförandet. Essentials kallas så för att de genomsyrar allt i projektet.
 
+[[diagram:bpm-7fe]]
+
 Varför behövs ett ramverk alls? Jeston menar att traditionella metoder inte räcker. Enkla redesigninitiativ slutar ofta när processen är införd och glömmer prestationsstyrningen och den strategiska linjeringen. Att göra om en process utan att förstå dess koppling till strategin riskerar att lösa fel problem. Den strukturerade ansatsen ger strategisk linjering över tid genom en återkopplingsslinga av ständig förbättring och organisatoriskt lärande.
 
 Weaver jämför med **DevOps**. Förr byggdes mjukvara, lämnades över och var sedan klar. I dag vet man att mjukvara ständigt förbättras efter behov och omständigheter. En process blir på samma sätt aldrig "klar": den modelleras, analyseras, designas om, införs och följs upp, och sedan börjar varvet om.
@@ -456,6 +472,8 @@ Weaver jämför med **DevOps**. Förr byggdes mjukvara, lämnades över och var 
 ## Allt börjar med strategin
 
 Strategin är drivkraften. Den bestämmer affärsmodellen, alltså hur värde skapas och fångas, och den operativa modellen (business operating model). Att genomföra den kräver förmågor och resurser inom tre områden: **människor** (organisation och kultur), **teknik** och **process**. Jestons **framgångspall** (BPM success stool) har samma logik. Pallens tre ben är **people, tech och process**, och punkterna under benen är resurser och förmågor i den resursbaserade synens mening, som man i princip skulle kunna pröva med VRIO. Olika intressenter uppfattar dessutom BPM olika (Jestons figur 11.3 visar begrepp som mätning, simulering, processförändring och ledarskap). Ramverket behövs för att hålla ihop helheten.
+
+[[diagram:bpm-framgangspallen]]
 
 ## Styrkor och svagheter
 
@@ -524,6 +542,8 @@ Weaver visar det i Jestons hus med tre zoner. Den blå zonen, rummet för **mana
 
 När båda delarna finns på plats ger BPM den disciplin, struktur och synlighet som genomförandet kräver.
 
+[[diagram:bpm-execution-void]]
+
 Weaver kallar själv modellen lite luddig: han förstår vad Jeston menar, men tycker att den är svår att tolka exakt. Håll dig därför till de två delarna, "different sameness" och vad som krävs för att fylla tomrummet.
 
 ### Red Wine Test
@@ -578,6 +598,8 @@ Processerna delas upp i tre slag:
 - **Core processes:** de processer där värdet skapas, både value creation (något som behövs) och value capture (att någon betalar för det).
 - **Support processes:** stödjer kärnprocesserna och skapar värde indirekt, som IT och databaser.
 
+[[diagram:bpm-end-to-end]]
+
 Weavers exempel är Jestons försäkringsbolag, där fyra stora kärnprocesser bär värdeskapandet, från försäljning till kundernas ärenden, med strategi- och stödprocesserna runt omkring. En sådan karta är bra men för övergripande för att arbeta med. Därför behövs nivåerna nedan.
 
 ### Process governance
@@ -605,6 +627,8 @@ En **process asset** gör processerna till en strategisk resurs. Den är ett **c
 - transparens för risk, regelefterlevnad och revision
 
 **Skillnaden mot en processmodell** har prövats på tentan: **modellen är en del av process asseten**, som dessutom rymmer roller, policies, regler, risker och andra styrande element. När något händer i en process och teamet behöver förstå stegen, reglerna, ansvaret och beslutspunkterna är det process asseten för den processen de ska gå till, inte TOM eller strategidokumentet. I moderna BOAT-plattformar kan process asseten bli en levande digital bild av processen, med modeller, regler, system, dokument, ägare, prestationsdata och automation under versionshantering.
+
+[[diagram:bpm-process-asset]]
 
 ### Fem processnivåer
 
@@ -836,6 +860,8 @@ Fasen avslutas med **Understand Phase Report**. Nulägesmodellerna och rotorsaks
     body: `
 Det här kapitlet går igenom de sex sista faserna i 7FE, från Innovate till Sustainability, och de tre essentials som bär ramverket. Weaver kallar Innovate, liksom Understand (kapitel 7), väldigt viktig, eftersom det grundläggande BPM-arbetet sker där. När processerna väl är omdesignade är det mesta gjort, och People, Develop och Implement går han igenom snabbt. Ramverket är komplext, men ger enligt Weaver ett sätt att tänka strukturerat hela vägen.
 
+[[diagram:bpm-faserna-6-10]]
+
 ## Innovate: de framtida processerna designas
 
 **Syfte och output.** I **Innovate** designas de framtida processerna utifrån insikterna från Understand. De ska bli så effektiva, verkningsfulla och framtidssäkra som möjligt, och de förväntade nyttorna och kostnaderna ska **kvantifieras och valideras** så att business case kan förfinas. Outputen är **design av framtida processer ("to-be") och validerade lösningsförslag**, och till sist de detaljerade affärskrav som lämnas över till Develop.
@@ -971,6 +997,8 @@ Weavers poäng med Realize är att BPM **inte är ett vattenfall** och inte "one
 
 Hos Jeston överlappar kostnaderna de första nyttorna, som börjar efter införandet och växer långsamt. Uteblir nyttan inom ett område måste det upptäckas tidigt, så att arbetet kan rättas till eller avbrytas.
 
+[[diagram:bpm-kostnad-nytta]]
+
 ## Sustainability: förbättringarna ska hålla
 
 **Syfte och output.** **Sustainability** är den sista fasen och syftar till **uthållig konkurrensfördel**. Resultatet ska gå över från projektet till **business as usual**, och förbättringarna och nyttorna ska **underhållas och förbättras kontinuerligt**. Annars kan nyttorna erodera när verksamheten förändras, och förtroendet för framtida BPM-arbete skadas. Outputen är processer med fungerande ägarskap, aktuell dokumentation och KPI:er som följs i vardagen.
@@ -1082,6 +1110,8 @@ Artikeln räknar ERP-systemen till den första vågen, medan Weaver nämner dem 
 
 Tidigare automatisering har designats och testats av människor, så utfallet är väntat. En agent som ändrar processen utifrån en kunds input går inte att testa för alla fall. Längst ut tänker sig Weaver en helt autonom avdelning som själv styr upp processen när den går fel, inom mål och begränsningar som människor har satt. Autonomiseringen kan också gälla bara en del av kedjan.
 
+[[diagram:bpm-automatiseringens-steg]]
+
 Weaver nämner också **"SaaSpocalypse"**: SaaS-bolagens (software as a service) värdering har sjunkit kraftigt, liksom aktien i ett RPA-bolag. Marknaden ser framför sig några stora AI-aktörer vars agenter gör nästan allt. Där är vi inte än.
 
 ### Sofistikering: rikare processer
@@ -1122,6 +1152,8 @@ En LPM tar alltså inte bort processanalytikerna, gör inte dokumentationen onö
 **Green BPM** är skärningen mellan BPM och Green IS. Green IS rymmer mer än energisnål IT, nämligen även processer, människor och kultur. Organisatorisk hållbarhet betyder att vinst, sociala behov och miljö hanteras samtidigt. Artikeln fokuserar på miljön och ekonomin. Hållbarhet betyder här något annat än i 7FE-fasen Sustainability (kapitel 8), där det står för uthållig konkurrensfördel och för att förbättringarna underhålls och fortsätter förbättras i det löpande arbetet (business as usual).
 
 Kärnidén är att **varje aktivitet i en processmodell annoteras med sin resursförbrukning och sitt avfall**, till exempel kilowattimmar, bränsle och koldioxid. Värdena summeras sedan per process. Då kan processer jämföras och göras om med miljön som mål. Ett äldre sekventiellt flöde kan till och med vara grönare än ett parallelliserat, om miljön väger tyngre än genomloppstiden. Artikeln föreslår också gröna SLA:er och lyfter att störst effekt väntas i processer mellan organisationer, där transporterna står för mycket. Möjligheterna struktureras längs hela BPM-livscykeln.
+
+[[diagram:bpm-green-bpm]]
 
 Houy pekar också på **utmaningarna**, och tentan frågade varför Green BPM inte fått det genomslag visionen förutspådde:
 - mätbara hållbarhetsnyckeltal måste först tas fram, och förbrukningen kan ibland bara uppskattas
@@ -1468,6 +1500,8 @@ Om ordern är över 500 tillkommer en tilläggsrabatt efter kundtyp: 0 % för Or
 
 I DMN:s **DRD** bygger toppbeslutet "Total discount" på de stödjande besluten "Base discount" och "Additional discount". Pilarna mellan elementen kallas **information requirements**. **Input data** är "Order value", som går till båda, och "Customer type", som bara går till "Additional discount". De stödjande besluten har var sin beslutstabell, och toppbeslutet räknas i **FEEL**, DMN:s uttrycksspråk: "if baseDiscount = 0 then 0 else baseDiscount + additionalDiscount". En A-kund med en order under 500 får alltså ingen rabatt alls. FEEL behöver man inte kunna, säger Weaver; AI kan ta fram uttrycken. Det viktiga är att DRD:n visar rätt indata och de beslut som krävs.
 
+[[diagram:bpm-dmn-drd]]
+
 ### Var DMN:s gräns går
 
 DMN kan förklara reglerna bakom ett beslut bara upp till en viss komplexitet, och det sätter en gräns för förklarbarheten (kapitel 9). Gränsen går ungefär vid det som ryms i ett **kalkylark** eller ett **funktionellt skriptspråk**, till exempel komplex poängsättning av lånebehörighet eller riskbedömning med flera viktade kriterier. Inom sin deklarativa, tabellbaserade ram med FEEL kan DMN modellera komplexa beslut med många kriterier genom logiska regler. Bortom det, för procedurella eller datadrivna algoritmer, fungerar DMN i regel som det styrande **beslutslagret**, som anropar externa tjänster eller AI-modeller.
@@ -1525,6 +1559,8 @@ Ikonen inuti visar vilken sorts signal det gäller, som meddelande (kuvert), tim
 
 En **catching timer** betyder antingen "vänta i [varaktighet]" eller "vänta tills [tidpunkt]". Varaktigheten räknas från när flödet når timern, inte från processens start.
 
+[[diagram:bpm-handelser]]
+
 ### Event-based gateway
 
 En **event-based gateway** följs av catching events. **Bara den väg vars händelse inträffar först aktiveras**. De andra vägarna stängs. Det är skillnaden mot en XOR, som testar data: här avgörs vägen vid körning av vilken händelse som hinner först.
@@ -1537,6 +1573,8 @@ Ett **boundary event** sitter på kanten av en aktivitet och har **inga inkomman
 - **Non-interrupting** (streckad dubbelcirkel): **aktiviteten fortsätter**. Undantagsflödet startar parallellt, och när aktiviteten blir klar följer processen också sitt vanliga flöde.
 
 Message- och timerhändelser kan vara non-interrupting. Genomgångens exempel är ett meddelande om kompletterande uppgifter under granskningen, och en avisering till sökanden om handläggningen dröjer. **Error boundary events är alltid interrupting.**
+
+[[diagram:bpm-interrupting]]
 
 ### Error
 

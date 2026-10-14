@@ -284,3 +284,108 @@ export function ConceptFigure({ id, build, pad = 2 }) {
     </figure>
   );
 }
+
+// ── Cykel ───────────────────────────────────────────────────────────────
+// Brett: rutorna på en ellips med böjda pilar medurs. Smalt: en kolumn med
+// pilar nedåt och en returpil längs högerkanten från sista till första.
+// items: [{ title, text, tone }], center: valfri text i mitten (brett).
+export function cycle(items, { W, narrow, cardW = 150, center, ry: ryOpt }) {
+  if (narrow) {
+    const colW = W - 34;
+    const col = column(items.map((it) => ({ ...it, tone: it.tone || "pine", pad: 8 })), { w: colW, gap: 18, arrows: true });
+    const first = col.positions[0];
+    const last = col.positions[col.positions.length - 1];
+    const node = (
+      <g>
+        {col.node}
+        <path d={`M${colW},${last.y + last.h / 2} H${W - 8} V${first.y + first.h / 2} H${colW + 8}`} fill="none" stroke={BRASS} strokeWidth={1.6} />
+        {head(colW + 2, first.y + first.h / 2, Math.PI, 8, BRASS)}
+      </g>
+    );
+    return { h: col.h, node };
+  }
+  const n = items.length;
+  const cards = items.map((it) => card({ ...it, w: cardW, tone: it.tone || "pine", pad: 8, titleSize: FS_TITLE - 1 }));
+  const H = Math.max(...cards.map((c) => c.h));
+  const rx = (W - cardW) / 2 - 2;
+  const ry = ryOpt ?? Math.max(120, H * 1.9);
+  const cx = W / 2;
+  const cy = ry + H / 2;
+  const pts = items.map((_, i) => {
+    const a = -Math.PI / 2 + (i * 2 * Math.PI) / n;
+    return { x: cx + rx * Math.cos(a), y: cy + ry * Math.sin(a), a };
+  });
+  const arrows = pts.map((p, i) => {
+    const q = pts[(i + 1) % n];
+    // Pilen går mellan rutornas kanter, böjd utåt från mitten.
+    const mid = (p.a + (i + 1 === n ? q.a + 2 * Math.PI : q.a)) / 2;
+    const bend = { x: cx + (rx + 30) * Math.cos(mid), y: cy + (ry + 30) * Math.sin(mid) };
+    const edge = (from, to) => {
+      const dx = to.x - from.x;
+      const dy = to.y - from.y;
+      const sx = Math.abs(dx) > 0 ? (cardW / 2 + 4) / Math.abs(dx) : Infinity;
+      const sy = Math.abs(dy) > 0 ? (H / 2 + 4) / Math.abs(dy) : Infinity;
+      const s = Math.min(sx, sy, 1);
+      return { x: from.x + dx * s, y: from.y + dy * s };
+    };
+    const a = edge(p, bend);
+    const b = edge(q, bend);
+    return <CurvedArrow key={`c${i}`} x1={a.x} y1={a.y} cx={bend.x} cy={bend.y} x2={b.x} y2={b.y} color={BRASS} width={1.6} />;
+  });
+  const centerBlock = center ? textBlock({ x: cx - 110, y: cy - 20, w: 220, text: center, size: FS, fill: MUTED, anchor: "middle", italic: true }) : null;
+  return {
+    h: cy + ry + H / 2 + 4,
+    node: (
+      <g>
+        {arrows}
+        {cards.map((c, i) => <g key={i}>{c.render(pts[i].x - cardW / 2, pts[i].y - H / 2, H)}</g>)}
+        {centerBlock && <g transform={`translate(0 ${-centerBlock.h / 2 + 10})`}>{centerBlock.node}</g>}
+      </g>
+    ),
+  };
+}
+
+// ── Tidslinje ───────────────────────────────────────────────────────────
+// Brett: lodrät axel i mitten med rutorna växelvis till vänster och höger.
+// Smalt: axeln till vänster och rutorna till höger.
+// items: [{ when, title, text, tone }]
+export function timeline(items, { W, narrow, gap = 10 }) {
+  const nodes = [];
+  if (narrow) {
+    const ax = 84;
+    const cw = W - ax - 16;
+    let y = 0;
+    items.forEach((it, i) => {
+      const c = card({ w: cw, title: it.title, text: it.text, tone: it.tone || "plain", pad: 8, titleSize: FS_TITLE - 1 });
+      const when = wrap(it.when, ax - 14, FS_SMALL, 600);
+      nodes.push(<g key={`c${i}`}>{c.render(ax + 16, y)}</g>);
+      nodes.push(<circle key={`d${i}`} cx={ax} cy={y + 16} r={5} fill={BRASS} />);
+      nodes.push(<Lines key={`w${i}`} x={ax - 10} y={y + 9} lines={when} size={FS_SMALL} weight={600} fill={BRASS_TEXT} anchor="end" maxW={ax - 14} />);
+      y += Math.max(c.h, textHeight(when, FS_SMALL) + 12) + gap;
+    });
+    nodes.unshift(<line key="axis" x1={ax} y1={4} x2={ax} y2={y - gap - 4} stroke={BRASS} strokeWidth={2} />);
+    return { h: y - gap, node: <g>{nodes}</g> };
+  }
+  const ax = W / 2;
+  const cw = ax - 92;
+  // En gemensam markör håller ordningen kronologisk; varje sida har sin egen
+  // nederkant så att rutorna på samma sida inte överlappar.
+  let cursor = 0;
+  const bottom = { left: -Infinity, right: -Infinity };
+  items.forEach((it, i) => {
+    const side = i % 2 === 0 ? "left" : "right";
+    const left = side === "left";
+    const c = card({ w: cw, title: it.title, text: it.text, tone: it.tone || "plain", pad: 8, titleSize: FS_TITLE - 1 });
+    const y = Math.max(cursor, bottom[side] + gap);
+    const x = left ? ax - 82 - cw : ax + 82;
+    nodes.push(<g key={`c${i}`}>{c.render(x, y)}</g>);
+    nodes.push(<line key={`l${i}`} x1={left ? x + cw : ax} y1={y + 16} x2={left ? ax : x} y2={y + 16} stroke={BRASS} strokeWidth={1.2} />);
+    nodes.push(<circle key={`d${i}`} cx={ax} cy={y + 16} r={5} fill={BRASS} />);
+    nodes.push(<Lines key={`w${i}`} x={left ? ax + 10 : ax - 10} y={y + 2} lines={wrap(it.when, 70, FS_SMALL, 600)} size={FS_SMALL} weight={600} fill={BRASS_TEXT} anchor={left ? "start" : "end"} maxW={72} />);
+    bottom[side] = y + c.h;
+    cursor = y + 34;
+  });
+  const h = Math.max(bottom.left, bottom.right);
+  nodes.unshift(<line key="axis" x1={ax} y1={4} x2={ax} y2={h} stroke={BRASS} strokeWidth={2} />);
+  return { h, node: <g>{nodes}</g> };
+}

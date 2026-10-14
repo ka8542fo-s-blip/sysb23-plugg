@@ -575,6 +575,11 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
   nummer och ordningen i texten (`Figur 8.2` = andra figuren i kapitel 8).
 - **Uppläsningen:** hela figuren är `data-tts-skip`, så blocken och ljudet
   påverkas inte. Kapiteltexten är oförändrad utöver platshållarna.
+- **Antal:** 15 i Databaser och 19 i Processorienterad (inga i BPM kapitel 7).
+  BPM kapitel 11 ritar händelserna med sajtens BPMN-former (`EventShape`,
+  `ActivityShape` i `components/bpmn/BpmnDiagram.jsx`), så att de ser ut som
+  i BPMN-övningarna. Källraden märker egna modeller ("Egen illustration",
+  eller "egen tolkning" där kursens modell har kompletterats).
 - **Kontroll:** skärmbilder i 1200 och 375 px med Playwright mot
   installerade Chrome (skriptet ligger utanför repot; mappen
   `figure-check/` ignoreras). Skriptet mäter verklig textbredd mot
