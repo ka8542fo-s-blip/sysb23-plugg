@@ -480,8 +480,6 @@ Detta är en **notationsgräns**: basic Chen har ingen symbol för någon av reg
 Graden säger hur många entitetstyper som deltar: en unär relation har grad ett, en binär grad två, och metamodellen tillåter **två eller flera** deltaganden i en relationstyp. En **ternär relation** har grad tre och kopplar tre entitetstyper samtidigt. Föreläsningens egna exempel är unära och binära, men principen är densamma.
 
 Det klassiska exemplet är leverantör, produkt och kund. Frestelsen är att modellera det som tre binära M:N-relationer, och det går inte: med tre separata relationer vet du att Amazon levererar stolar, att IKEA levererar stolar och att en viss kund beställer stolar — men **inte vilken leverantör som levererade stolen till just den kunden**. Informationen om trippeln finns inte. Lösningen är en relation som binder alla tre samtidigt, vilket vid transformationen blir en relation med en trippelsammansatt primärnyckel.
-
-[[diagram:db-ternar-relation]]
 `
   },
 

@@ -30,13 +30,6 @@ export const CONCEPT_FIGURES = {
     title: "Främmande nyckel som referens",
     desc: "PROJECT med LeaderEmployeeNo refererar EMPLOYEE. P-10 Atlas och P-20 Nova pekar båda på E-104 Mary, vilket är tillåtet. En tredje tupel pekar på E-999, som inte finns i EMPLOYEE, och bryter mot främmandenyckelvillkoret.",
   },
-  "db-ternar-relation": {
-    course: "databaser", chapter: "kap5", number: "5.1",
-    caption: "Tre binära M:N-relationer kan inte säga vilken leverantör som levererade produkten till en viss kund. En ternär relation binder alla tre i samma instans.",
-    source: "Egen illustration",
-    title: "Tre binära relationer mot en ternär",
-    desc: "Till vänster Leverantör, Produkt och Kund parvis kopplade med tre binära M:N-relationer, där informationen om trippeln saknas. Till höger samma tre entitetstyper kopplade till en enda relation av grad tre, som vid transformationen ger en relation med trippelsammansatt primärnyckel.",
-  },
   "db-binara-regler": {
     course: "databaser", chapter: "kap6", number: "7.2",
     caption: "Var referensen hamnar i de tre binära reglerna: hos den totala sidan med en kandidatnyckel (1:1), på många-sidan (1:N) och i en ny relation (M:N).",

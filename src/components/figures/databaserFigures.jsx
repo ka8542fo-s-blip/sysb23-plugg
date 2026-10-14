@@ -226,75 +226,7 @@ function frammandeNyckel(W, narrow) {
   return { h: ey + e.h + 16 + rest.h + 10 + fk.h, node: <g>{nodes}</g> };
 }
 
-// ── 5.1 Ternär relation ─────────────────────────────────────────────────
-function Entity({ cx, cy, w = 96, h = 34, label, size = FS }) {
-  return (
-    <g>
-      <rect x={cx - w / 2} y={cy - h / 2} width={w} height={h} fill="white" stroke={PINE} strokeWidth={1.6} />
-      <Lines x={cx} y={cy - size * 0.66} lines={[label]} size={size} weight={600} anchor="middle" maxW={w - 8} />
-    </g>
-  );
-}
-function Diamond({ cx, cy, w = 46, h = 30, label, size = FS_SMALL }) {
-  return (
-    <g>
-      <polygon points={`${cx},${cy - h / 2} ${cx + w / 2},${cy} ${cx},${cy + h / 2} ${cx - w / 2},${cy}`} fill="white" stroke={PINE} strokeWidth={1.6} />
-      {label && <Lines x={cx} y={cy - size * 0.62} lines={[label]} size={size} anchor="middle" maxW={w - 6} />}
-    </g>
-  );
-}
-function ternarPanels(W, narrow) {
-  const pw = narrow ? W : (W - 24) / 2;
-  const panel = (ox, oy, ternary) => {
-    const nodes = [];
-    const hd = heading({ x: ox, y: oy, w: pw, text: ternary ? "En ternär relation" : "Tre binära M:N-relationer" });
-    nodes.push(<g key="h">{hd.node}</g>);
-    const top = oy + hd.h + 12;
-    const L = { x: ox + 56, y: top + 22 };
-    const P = { x: ox + pw - 56, y: top + 22 };
-    const K = { x: ox + pw / 2, y: top + 150 };
-    const line = (a, b, k) => <line key={k} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={PINE} strokeWidth={1.4} />;
-    if (!ternary) {
-      const mid = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
-      nodes.push(line(L, P, "lp"), line(P, K, "pk"), line(L, K, "lk"));
-      [mid(L, P), mid(P, K), mid(L, K)].forEach((m, i) => nodes.push(<Diamond key={`d${i}`} cx={m.x} cy={m.y} label="M:N" />));
-    } else {
-      const C = { x: ox + pw / 2, y: top + 78 };
-      nodes.push(line(L, C, "l"), line(P, C, "p"), line(K, C, "k"));
-      nodes.push(<Diamond key="d" cx={C.x} cy={C.y} w={66} h={42} label="grad 3" />);
-    }
-    nodes.push(<Entity key="L" cx={L.x} cy={L.y} label="Leverantör" w={98} />);
-    nodes.push(<Entity key="P" cx={P.x} cy={P.y} label="Produkt" />);
-    nodes.push(<Entity key="K" cx={K.x} cy={K.y} label="Kund" />);
-    const note = card({
-      w: pw,
-      tone: ternary ? "correct" : "wrong",
-      title: ternary ? "Trippeln finns" : "Trippeln saknas",
-      text: ternary
-        ? "Varje instans binder leverantör, produkt och kund samtidigt. Vid transformationen blir det en relation med trippelsammansatt primärnyckel."
-        : "Amazon levererar stolar, IKEA levererar stolar och en kund beställer stolar — men vilken leverantör levererade stolen till just den kunden?",
-      pad: 8, titleSize: FS_TITLE - 1,
-    });
-    return { nodes, noteTop: K.y + 30, note };
-  };
-  const a = panel(0, 0, false);
-  const b = panel(narrow ? 0 : pw + 24, 0, true);
-  if (!narrow) {
-    const H = Math.max(a.note.h, b.note.h);
-    return {
-      h: a.noteTop + H,
-      node: <g>{a.nodes}{b.nodes}{a.note.render(0, a.noteTop, H)}{b.note.render(pw + 24, b.noteTop, H)}</g>,
-    };
-  }
-  const offset = a.noteTop + a.note.h + 22;
-  const b2 = panel(0, offset, true);
-  return {
-    h: b2.noteTop + b2.note.h,
-    node: <g>{a.nodes}{a.note.render(0, a.noteTop)}{b2.nodes}{b2.note.render(0, b2.noteTop)}</g>,
-  };
-}
-
-// ── 7.1 Regel 3–5 sida vid sida ─────────────────────────────────────────
+// ── 7.2 Regel 3–5 sida vid sida ─────────────────────────────────────────
 function binaraRegler(W, narrow) {
   const rules = [
     {
@@ -353,7 +285,7 @@ function binaraRegler(W, narrow) {
   return { h: y - 14, node: <g>{nodes}</g> };
 }
 
-// ── 7.2 Nyckelkedjan för svaga entiteter ────────────────────────────────
+// ── 7.1 Nyckelkedjan för svaga entiteter ────────────────────────────────
 function svagNyckelkedja(W, narrow) {
   const rels = [
     { name: "PROJECT", attrs: [{ name: "ProjectNo", pk: true }], note: "Ägaren mappas först." },
@@ -575,7 +507,7 @@ function ddlFranDiagrammet(W, narrow) {
   return { h: y - 14, node: <g>{nodes}</g> };
 }
 
-// ── 10.1 SQL:s logiska ordning ──────────────────────────────────────────
+// ── 10.2 SQL:s logiska ordning ──────────────────────────────────────────
 function sqlOrdning(W, narrow) {
   const steps = [
     { t: "FROM", note: null },
@@ -641,7 +573,7 @@ function sqlOrdning(W, narrow) {
   return { h: y - 4 + memo.h, node: <g>{nodes}</g> };
 }
 
-// ── 10.2 Join över kopplingstabellen ───────────────────────────────────
+// ── 10.1 Join över kopplingstabellen ───────────────────────────────────
 function columnsBox({ x, y, w, name, cols, keys, tone = "plain" }) {
   const rowH = 24;
   const t = TONE[tone];
@@ -866,7 +798,6 @@ export const DATABASER_FIGURES = {
   "db-designkedjan": fig("db-designkedjan", designkedjan),
   "db-relationens-anatomi": fig("db-relationens-anatomi", relationensAnatomi),
   "db-frammande-nyckel": fig("db-frammande-nyckel", frammandeNyckel),
-  "db-ternar-relation": fig("db-ternar-relation", ternarPanels),
   "db-binara-regler": fig("db-binara-regler", binaraRegler),
   "db-svag-nyckelkedja": fig("db-svag-nyckelkedja", svagNyckelkedja),
   "db-anomalier": fig("db-anomalier", anomalier),
