@@ -47,7 +47,7 @@ function SessionChip({ session, subcourse }) {
         exam
           ? { backgroundColor: "var(--wrong)", color: "var(--paper)" }
           : {
-              backgroundColor: `color-mix(in srgb, var(${subcourse?.color}) 15%, white)`,
+              backgroundColor: `color-mix(in srgb, var(${subcourse?.color}) 15%, var(--surface))`,
               borderLeft: `3px solid var(${subcourse?.color})`,
             }
       }
@@ -200,7 +200,7 @@ export default function MonthCalendar({ sessions, byId, now, termStart, termEnd 
                         : `${day.sessions.length} pass`
                     }${day.isToday ? ", idag" : ""}`}
                     className={`flex min-h-[3.25rem] min-w-0 flex-col items-stretch px-1 py-1 text-left transition-colors duration-150 hover:bg-pine/[0.06] active:bg-pine/[0.12] sm:min-h-[6.5rem] sm:px-1.5 sm:py-1.5 ${
-                      day.isToday ? "bg-brass/[0.12]" : "bg-white"
+                      day.isToday ? "bg-brass/[0.12]" : "bg-surface"
                     } ${day.inMonth ? "" : "opacity-45"}`}
                   >
                     <span className="flex items-center gap-1.5">
@@ -268,7 +268,7 @@ export default function MonthCalendar({ sessions, byId, now, termStart, termEnd 
         <>
           <div
             aria-hidden="true"
-            className="dagdialog-bakgrund fixed inset-0 z-50 bg-ink/25"
+            className="dagdialog-bakgrund fixed inset-0 z-50 bg-shade/25"
             onClick={closeDay}
           />
           <div
@@ -277,7 +277,7 @@ export default function MonthCalendar({ sessions, byId, now, termStart, termEnd 
             aria-modal="true"
             aria-labelledby="dagdialog-rubrik"
             tabIndex={-1}
-            className="dagdialog fixed left-1/2 top-1/2 z-50 max-h-[82vh] w-[min(30rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-card border border-line bg-white p-6 shadow-xl"
+            className="dagdialog fixed left-1/2 top-1/2 z-50 max-h-[82vh] w-[min(30rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-card border border-line bg-surface p-6 shadow-xl"
           >
             <div className="flex items-start justify-between gap-3">
               <h3 id="dagdialog-rubrik" className="font-display text-2xl">

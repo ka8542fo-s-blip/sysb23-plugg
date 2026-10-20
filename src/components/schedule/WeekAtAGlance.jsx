@@ -211,7 +211,7 @@ export default function WeekAtAGlance({ navigate, onSelectCourse }) {
                 className={`rounded-lg border px-1 py-2 text-center transition-colors duration-150 ${
                   selected
                     ? "border-pine bg-pine text-paper"
-                    : "border-line bg-white hover:border-pine hover:bg-pine/[0.06] active:bg-pine/[0.12]"
+                    : "border-line bg-surface hover:border-pine hover:bg-pine/[0.06] active:bg-pine/[0.12]"
                 } ${day.past && !selected ? "opacity-50" : ""}`}
               >
                 <span

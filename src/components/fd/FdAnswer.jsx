@@ -138,7 +138,7 @@ export default function FdAnswer({ item, draft, setDraft, highlight, parsed, res
           <div className="mt-1 flex flex-wrap items-center gap-2">
             <label className="text-sm">
               <span className="sr-only">Beroende</span>
-              <select value={m.option || ""} onChange={(e) => setMotivation({ option: e.target.value || null })} className="rounded-lg border border-line bg-white px-2 py-1.5 font-mono text-sm">
+              <select value={m.option || ""} onChange={(e) => setMotivation({ option: e.target.value || null })} className="rounded-lg border border-line bg-surface px-2 py-1.5 font-mono text-sm">
                 <option value="">Välj beroende …</option>
                 {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
@@ -146,7 +146,7 @@ export default function FdAnswer({ item, draft, setDraft, highlight, parsed, res
             {rhsChoices.length > 1 && (
               <label className="text-sm">
                 <span className="mr-1 text-ink/65">attribut</span>
-                <select value={m.attr || ""} onChange={(e) => setMotivation({ attr: e.target.value || null })} className="rounded-lg border border-line bg-white px-2 py-1.5 font-mono text-sm">
+                <select value={m.attr || ""} onChange={(e) => setMotivation({ attr: e.target.value || null })} className="rounded-lg border border-line bg-surface px-2 py-1.5 font-mono text-sm">
                   <option value="">…</option>
                   {rhsChoices.map((a) => <option key={a} value={a}>{a}</option>)}
                 </select>
@@ -165,7 +165,7 @@ export default function FdAnswer({ item, draft, setDraft, highlight, parsed, res
               onChange={(e) => setDraft({ motivation: { ...m, text: e.target.value, edited: true } })}
               rows={2}
               placeholder="Välj beroende, attribut och typ så fylls meningen i."
-              className="w-full rounded-lg border border-line bg-white px-3 py-2 text-[15px]"
+              className="w-full rounded-lg border border-line bg-surface px-3 py-2 text-[15px]"
             />
           </label>
           <div className="flex flex-wrap items-center gap-2 text-xs text-ink/65">
@@ -194,7 +194,7 @@ export default function FdAnswer({ item, draft, setDraft, highlight, parsed, res
             {showDiagram && (
               <>
                 <p className="mb-1 text-sm font-medium text-ink/80">Ditt beroendediagram</p>
-                <div className="mb-3 rounded-lg border border-line bg-white p-2">
+                <div className="mb-3 rounded-lg border border-line bg-surface p-2">
                   <FdMini diagram={diagram} />
                 </div>
               </>

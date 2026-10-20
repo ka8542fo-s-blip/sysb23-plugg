@@ -16,7 +16,7 @@ function RateSelect({ tts, compact = false }) {
         value={tts.rate}
         onChange={(event) => tts.setRate(Number(event.target.value))}
         aria-label="Uppläsningshastighet"
-        className="rounded-lg border border-line bg-white px-2 py-1.5 text-sm"
+        className="rounded-lg border border-line bg-surface px-2 py-1.5 text-sm"
       >
         {TTS_RATES.map((rate) => (
           <option key={rate} value={rate}>
@@ -81,7 +81,7 @@ const markdownComponents = {
   li: ({ children }) => <li className="marker:text-brass">{children}</li>,
   // Blockquote blir definitionsruta.
   blockquote: ({ children }) => (
-    <blockquote className="my-6 border-l-[3px] border-pine bg-white py-1 pl-5 pr-4 text-ink">
+    <blockquote className="my-6 border-l-[3px] border-pine bg-surface py-1 pl-5 pr-4 text-ink">
       {children}
     </blockquote>
   ),
@@ -91,16 +91,16 @@ const markdownComponents = {
     </div>
   ),
   th: ({ children }) => (
-    <th className="border border-line bg-white p-2.5 text-left font-medium">{children}</th>
+    <th className="border border-line bg-surface p-2.5 text-left font-medium">{children}</th>
   ),
   td: ({ children }) => <td className="border border-line p-2.5 align-top">{children}</td>,
   code: ({ children }) => (
-    <code className="rounded bg-white px-1.5 py-0.5 text-[0.95em]">{children}</code>
+    <code className="rounded bg-surface px-1.5 py-0.5 text-[0.95em]">{children}</code>
   ),
   // Kapitel med DDL-exempel behöver riktiga kodblock, inte brödtext. Kod
   // läses aldrig upp (data-tts-skip), inte heller inne i en punktlista.
   pre: ({ children }) => (
-    <pre data-tts-skip className="my-5 overflow-x-auto rounded-lg border border-line bg-white p-3 font-mono text-[13px] leading-relaxed">
+    <pre data-tts-skip className="my-5 overflow-x-auto rounded-lg border border-line bg-surface p-3 font-mono text-[13px] leading-relaxed">
       {children}
     </pre>
   ),
@@ -464,7 +464,7 @@ export default function ChapterView({
             type="button"
             onClick={tts.playFromVisible}
             aria-label="Lyssna härifrån"
-            className={`fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] right-4 z-40 flex h-12 w-12 items-center justify-center gap-2 rounded-full bg-pine text-white shadow-lg transition-all duration-200 hover:bg-pine-dark sm:right-6 sm:h-auto sm:w-auto sm:px-4 sm:py-2.5 ${ttsTucked ? "pointer-events-none translate-y-4 opacity-0" : "opacity-100"}`}
+            className={`fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] right-4 z-40 flex h-12 w-12 items-center justify-center gap-2 rounded-full bg-pine text-paper shadow-lg transition-all duration-200 hover:bg-pine-dark sm:right-6 sm:h-auto sm:w-auto sm:px-4 sm:py-2.5 ${ttsTucked ? "pointer-events-none translate-y-4 opacity-0" : "opacity-100"}`}
           >
             <span aria-hidden="true">▶</span>
             <span className="hidden text-sm font-medium sm:inline">Lyssna härifrån</span>
@@ -473,7 +473,7 @@ export default function ChapterView({
 
         {/* Flytande uppläsningskontroller — följer med när man skrollar. */}
         {tts.status !== "idle" && (
-          <div className="fixed bottom-4 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2 rounded-full border border-line bg-white py-2 pl-3 pr-4 shadow-lg">
+          <div className="fixed bottom-4 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2 rounded-full border border-line bg-surface py-2 pl-3 pr-4 shadow-lg">
             <button
               type="button"
               className="btn-secondary px-3 py-1.5 text-sm"

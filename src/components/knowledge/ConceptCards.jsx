@@ -62,7 +62,7 @@ export default function ConceptCards({
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Filtrera korten, t.ex. effektivitet, Barney, styrkort…"
-          className="w-full rounded-lg border border-line bg-white px-4 py-2.5 text-[15px]"
+          className="w-full rounded-lg border border-line bg-surface px-4 py-2.5 text-[15px]"
         />
         <p className="tabular mt-2 text-sm text-ink/65">
           {matches.length} av {course.topics.length} ämnen

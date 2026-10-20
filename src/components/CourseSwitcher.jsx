@@ -66,7 +66,7 @@ export default function CourseSwitcher({ courses, courseId, onSelect, examRunnin
         onClick={() => (open ? close() : setOpen(true))}
         aria-haspopup="menu"
         aria-expanded={open}
-        className={`flex w-full items-center justify-between gap-3 rounded-lg border bg-white px-3 py-2 text-left transition-colors duration-150 ${
+        className={`flex w-full items-center justify-between gap-3 rounded-lg border bg-surface px-3 py-2 text-left transition-colors duration-150 ${
           open
             ? "border-pine bg-pine/[0.04]"
             : "border-line hover:border-pine hover:bg-pine/[0.04]"
@@ -94,7 +94,7 @@ export default function CourseSwitcher({ courses, courseId, onSelect, examRunnin
         <div
           role="menu"
           aria-label="Välj delkurs"
-          className="card absolute left-0 right-0 top-[calc(100%+6px)] z-20 overflow-hidden p-1 shadow-lg shadow-ink/5"
+          className="card absolute left-0 right-0 top-[calc(100%+6px)] z-20 overflow-hidden p-1 shadow-lg shadow-shade/5"
         >
           {courses.map((course) => {
             const isActive = course.status === "aktiv";

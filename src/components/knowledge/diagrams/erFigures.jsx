@@ -246,7 +246,7 @@ export function ChenVsCrowFigure() {
 function Layer({ y, h = 64, title, lines }) {
   return (
     <g>
-      <rect x={140} y={y} width={360} height={h} rx={6} fill="white" stroke="var(--pine)" strokeWidth={1.4} />
+      <rect x={140} y={y} width={360} height={h} rx={6} fill="var(--surface)" stroke="var(--pine)" strokeWidth={1.4} />
       <text x={154} y={y + 20} fontWeight="600" fill="var(--pine)">{title}</text>
       <Note x={154} y={y + 38} size={11} color="var(--ink)" text={lines} />
     </g>
@@ -268,7 +268,7 @@ export function FourLayersFigure() {
       <Arrow x1={320} y1={164} x2={320} y2={188} />
       <Note x={332} y={180} size={11} text="representeras av" />
       <g>
-        <rect x={140} y={190} width={360} height={82} rx={6} fill="white" stroke="var(--pine)" strokeWidth={1.4} />
+        <rect x={140} y={190} width={360} height={82} rx={6} fill="var(--surface)" stroke="var(--pine)" strokeWidth={1.4} />
         <text x={154} y={210} fontWeight="600" fill="var(--pine)">ER-diagram</text>
         <EntityBox x={168} y={228} w={74} h={30} size={11} label="Employee" />
         <Connector x1={242} y1={243} x2={266} y2={243} />

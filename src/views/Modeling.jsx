@@ -113,7 +113,7 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
               role="tab"
               aria-selected={mode === key}
               onClick={() => setMode(key)}
-              className={`tabular rounded-lg border px-3 py-1.5 text-sm transition-colors duration-150 ${mode === key ? "border-pine bg-pine text-white" : "border-line hover:border-pine hover:bg-pine/[0.06]"}`}
+              className={`tabular rounded-lg border px-3 py-1.5 text-sm transition-colors duration-150 ${mode === key ? "border-pine bg-pine text-paper" : "border-line hover:border-pine hover:bg-pine/[0.06]"}`}
             >
               {label}
             </button>

@@ -92,7 +92,7 @@ export default function Essays({ course, essayState, setEssayState }) {
           onChange={(event) => update({ draft: event.target.value })}
           rows={12}
           placeholder="Skriv utan att titta på checklistan först."
-          className="mt-2 w-full rounded-lg border border-line bg-white p-4 text-[15px] leading-relaxed"
+          className="mt-2 w-full rounded-lg border border-line bg-surface p-4 text-[15px] leading-relaxed"
         />
         <p className={`tabular mt-1 text-sm ${overLimit ? "font-medium text-wrong" : "text-ink/65"}`} aria-live="polite">
           Ord: {wordCount}/{WORD_LIMIT}

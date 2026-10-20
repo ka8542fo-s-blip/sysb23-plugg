@@ -3,16 +3,48 @@
 @tailwind utilities;
 
 :root {
-  --paper: #fbfaf6;
-  --ink: #22282a;
-  --pine: #1f4e45;
-  --pine-hover: #173b34;
-  --brass: #b9932f;
-  --correct: #2e7d5b;
-  --correct-bg: #eaf4ef;
-  --wrong: #b3402e;
-  --wrong-bg: #f9ece8;
-  --line: #e5e1d6;
+  /* Färgerna anges som RGB-kanaler, så att Tailwind kan lägga på opacitet
+     (text-ink/70) och SVG-figurerna kan tona (rgb(var(--pine-rgb) / 0.07)).
+     Färgvariablerna under (--paper, --pine …) byggs av kanalerna och följer
+     därför med när temat byts. Mörkt läge sätts med data-theme="dark" på
+     <html> (skriptet i index.html och lib/theme.js) och skriver bara om
+     kanalerna. Det ljusa temat är sajtens ursprungliga palett. */
+  color-scheme: light;
+  --paper-rgb: 251 250 246;
+  --surface-rgb: 255 255 255; /* kort, fält och figurernas fyllning */
+  --ink-rgb: 34 40 42;
+  --pine-rgb: 31 78 69;
+  --pine-dark-rgb: 23 59 52; /* hovring på fylld pine */
+  --brass-rgb: 185 147 47;
+  --brass-text-rgb: 122 93 20; /* mässing som text, med läsbar kontrast */
+  --correct-rgb: 46 125 91;
+  --correct-bg-rgb: 234 244 239;
+  --wrong-rgb: 179 64 46;
+  --wrong-bg-rgb: 249 236 232;
+  --wrong-dark-rgb: 143 51 37; /* hovring på fylld wrong */
+  --line-rgb: 229 225 214;
+  --line-strong-rgb: 207 201 186; /* figurernas neutrala ramar */
+  --shade-rgb: 34 40 42; /* skuggor och dialogens bakgrundsslöja */
+  --solid-rgb: 31 78 69; /* stora fyllda ytor i figurerna (husets tak) */
+  --on-solid-rgb: 251 250 246; /* text på dem */
+  --code-rgb: 34 40 42; /* kodeditorns mörka yta, mörk i båda temana */
+  --code-ink-rgb: 251 250 246;
+
+  --paper: rgb(var(--paper-rgb));
+  --surface: rgb(var(--surface-rgb));
+  --ink: rgb(var(--ink-rgb));
+  --pine: rgb(var(--pine-rgb));
+  --pine-hover: rgb(var(--pine-dark-rgb));
+  --brass: rgb(var(--brass-rgb));
+  --brass-text: rgb(var(--brass-text-rgb));
+  --correct: rgb(var(--correct-rgb));
+  --correct-bg: rgb(var(--correct-bg-rgb));
+  --wrong: rgb(var(--wrong-rgb));
+  --wrong-bg: rgb(var(--wrong-bg-rgb));
+  --line: rgb(var(--line-rgb));
+  --line-strong: rgb(var(--line-strong-rgb));
+  --solid: rgb(var(--solid-rgb));
+  --on-solid: rgb(var(--on-solid-rgb));
 
   /* Delkursfärger — används som prickar, staplar, kanter och chip-tinter,
      aldrig som textfärg på brödtext och aldrig som enda informationsbärare.
@@ -28,6 +60,46 @@
   --c-sakerhet: #8d2b6c; /* mörk hallon */
   --c-ansvarsfull: #0498a2; /* petrol */
   --c-isprojekt: #8768b6; /* ljungviolett */
+}
+
+/* Mörkt läge, för plugg i mörker. Varm, dämpad bakgrund och text som inte
+   är helvit, så att sidan inte bländar. Accenterna är ljusare varianter av
+   samma kulörer: fylld pine bär mörk text (text-paper), så samma klasser
+   fungerar i båda temana. Kontrasterna är uträknade (och låsta i
+   scripts/theme.test.mjs): brödtext 13:1 mot bakgrunden och 11,8:1 mot
+   korten, pine som text 8,6:1, rätt/fel minst 6,2:1 mot sina bakgrunder. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper-rgb: 19 23 24;
+  --surface-rgb: 27 33 35;
+  --ink-rgb: 223 219 209;
+  --pine-rgb: 138 201 182;
+  --pine-dark-rgb: 166 217 201;
+  --brass-rgb: 201 165 72;
+  --brass-text-rgb: 220 189 108;
+  --correct-rgb: 111 199 156;
+  --correct-bg-rgb: 23 48 42;
+  --wrong-rgb: 240 140 120;
+  --wrong-bg-rgb: 59 32 27;
+  --wrong-dark-rgb: 245 166 150;
+  --line-rgb: 45 53 55;
+  --line-strong-rgb: 74 83 85;
+  --shade-rgb: 0 0 0;
+  --solid-rgb: 36 88 77; /* djupgrön i stället för mint: stora ytor ska inte blända */
+  --on-solid-rgb: 236 233 225;
+  --code-rgb: 10 13 14;
+  --code-ink-rgb: 223 219 209;
+
+  /* Delkursfärgerna lyfta jämnt i ljushet (+0,16 i OKLCH, samma kulör och
+     mättnad). Det behåller paletens inbördes avstånd (minsta paravstånd
+     0,160 mot 0,159 i ljust) och ger minst 4:1 mot den mörka ytan. */
+  --c-strategi: #ee9149;
+  --c-databaser: #3f85ce;
+  --c-process: #429261;
+  --c-arkitektur: #f6d476;
+  --c-sakerhet: #c25c9c;
+  --c-ansvarsfull: #56cbd5;
+  --c-isprojekt: #b899eb;
 }
 
 @layer base {
@@ -126,7 +198,7 @@
 
 @layer components {
   .card {
-    @apply rounded-card border border-line bg-white;
+    @apply rounded-card border border-line bg-surface;
   }
 
   .btn {
@@ -136,16 +208,16 @@
   /* Fylld yta är reserverad för valt/aktivt läge och för den ENDA
      huvudåtgärden i en vy — aldrig för vanliga genvägar. */
   .btn-primary {
-    @apply btn bg-pine text-white hover:bg-pine-dark active:bg-pine-dark
+    @apply btn bg-pine text-paper hover:bg-pine-dark active:bg-pine-dark
       disabled:cursor-not-allowed disabled:bg-line disabled:text-ink/40 disabled:hover:bg-line;
   }
 
   .btn-secondary {
-    @apply btn border border-line bg-white text-ink
+    @apply btn border border-line bg-surface text-ink
       hover:border-pine hover:bg-pine/[0.06] hover:text-pine
       active:bg-pine/[0.12]
-      disabled:cursor-not-allowed disabled:border-line disabled:bg-white disabled:text-ink/40
-      disabled:hover:border-line disabled:hover:bg-white disabled:hover:text-ink/40;
+      disabled:cursor-not-allowed disabled:border-line disabled:bg-surface disabled:text-ink/40
+      disabled:hover:border-line disabled:hover:bg-surface disabled:hover:text-ink/40;
   }
 
   .btn-quiet {
@@ -155,14 +227,14 @@
   /* Tydligaste åtgärden i vyer där fylld yta redan betyder "valt" —
      markerad med kraftig kant i stället för fyllning. */
   .btn-emphasis {
-    @apply btn border-2 border-pine bg-white font-semibold text-pine
+    @apply btn border-2 border-pine bg-surface font-semibold text-pine
       hover:bg-pine/[0.08] active:bg-pine/[0.16]
       disabled:cursor-not-allowed disabled:border-line disabled:text-ink/40
-      disabled:hover:bg-white;
+      disabled:hover:bg-surface;
   }
 
   .btn-danger {
-    @apply btn bg-wrong text-white hover:bg-[#8F3325] active:bg-[#7C2C20];
+    @apply btn bg-wrong text-paper hover:bg-wrong-dark active:bg-wrong-dark;
   }
 
   .tabular {
@@ -171,7 +243,7 @@
   }
 
   .chip {
-    @apply inline-flex items-center rounded-full border border-line bg-white px-3 py-1 text-sm transition-colors duration-150;
+    @apply inline-flex items-center rounded-full border border-line bg-surface px-3 py-1 text-sm transition-colors duration-150;
   }
 
   .chip:not(.chip-on):not(:disabled):hover {
@@ -179,7 +251,7 @@
   }
 
   .chip-on {
-    @apply border-pine bg-pine text-white hover:bg-pine-dark;
+    @apply border-pine bg-pine text-paper hover:bg-pine-dark;
   }
 
   /* Lägre chip för verktygsrader, där många chips står på en rad. */

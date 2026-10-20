@@ -8,7 +8,7 @@ import { formatReadingTime, totalReadingMinutes, withReadingTime } from "../../l
 const STATUS = {
   read: {
     label: "✓ Läst",
-    chip: "inline-flex items-center rounded-full border border-correct bg-correct px-3 py-1 font-medium text-white",
+    chip: "inline-flex items-center rounded-full border border-correct bg-correct px-3 py-1 font-medium text-paper",
     card: "border-correct/40 bg-correct-bg hover:border-correct hover:bg-correct-bg",
   },
   reading: { label: "Pågående", chip: "chip border-brass text-brass", card: "" },

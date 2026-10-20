@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Nav from "./components/Nav.jsx";
+import { useTheme } from "./lib/useTheme.js";
 import Home from "./views/Home.jsx";
 import KnowledgeHub from "./views/KnowledgeHub.jsx";
 import Practice from "./views/Practice.jsx";
@@ -35,6 +36,8 @@ import {
 } from "./lib/storage.js";
 
 export default function App() {
+  // Ljust eller mörkt tema; kroken håller data-theme på <html> i takt.
+  const theme = useTheme();
   // Öppen flik överlever också en omladdning. Finns den inte i den valda
   // delkursen skickar delkurseffekten nedan till Hem.
   const [view, setView] = useState(() => {
@@ -194,7 +197,7 @@ export default function App() {
     <div className="min-h-screen">
       <a
         href="#innehall"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-20 focus:rounded-lg focus:bg-white focus:px-3 focus:py-2"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-20 focus:rounded-lg focus:bg-surface focus:px-3 focus:py-2"
       >
         Hoppa till innehållet
       </a>
@@ -207,6 +210,7 @@ export default function App() {
         courseId={course.id}
         onSelectCourse={setCourseId}
         examRunning={examSession?.stage === "running"}
+        theme={theme}
       />
 
       <main id="innehall" className="mx-auto max-w-7xl px-4 py-7 sm:px-6 sm:py-10 lg:px-8">

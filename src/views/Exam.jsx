@@ -216,7 +216,7 @@ export default function Exam({
                   ),
                 }))
               }
-              className="tabular w-20 rounded-lg border border-line bg-white px-3 py-2 disabled:cursor-not-allowed disabled:bg-paper disabled:text-ink/40"
+              className="tabular w-20 rounded-lg border border-line bg-surface px-3 py-2 disabled:cursor-not-allowed disabled:bg-paper disabled:text-ink/40"
             />
           </div>
         </div>
@@ -263,7 +263,7 @@ export default function Exam({
             const state =
               entry.choice !== null ? "answered" : entry.skipped ? "skipped" : "untouched";
             const style = {
-              answered: "border-pine bg-pine text-white hover:bg-pine-dark",
+              answered: "border-pine bg-pine text-paper hover:bg-pine-dark",
               skipped: "border-brass text-brass hover:bg-brass/10",
               untouched: "border-line text-ink/65 hover:border-pine hover:bg-pine/[0.06]",
             }[state];

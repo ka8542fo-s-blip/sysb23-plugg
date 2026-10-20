@@ -8,6 +8,24 @@
       content="Pluggsida för SYSB23 vid Lunds universitet — öva flervalsfrågor, simulera tentan och träna essäsvar."
     />
     <title>SYSB23 Plugg</title>
+    <meta name="theme-color" content="#fbfaf6" />
+    <!-- Temat sätts före första ritningen, så att mörkt läge inte blinkar
+         vitt vid start. Samma logik som src/lib/theme.js (testet jämför). -->
+    <script>
+      (function () {
+        var choice = "auto";
+        try {
+          choice = JSON.parse(localStorage.getItem("sysb23:tema")) || "auto";
+        } catch (e) {}
+        var systemDark = false;
+        try {
+          systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        } catch (e) {}
+        var dark = choice === "mork" || (choice !== "ljust" && systemDark);
+        document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+        if (dark) document.querySelector('meta[name="theme-color"]').setAttribute("content", "#131718");
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

@@ -5,7 +5,7 @@ export default function SegmentedControl({ segments, value, onChange, label, com
     <div
       role="tablist"
       aria-label={label}
-      className="flex w-full rounded-[10px] border border-line bg-white p-1"
+      className="flex w-full rounded-[10px] border border-line bg-surface p-1"
     >
       {segments.map((segment) => {
         const active = segment.id === value;

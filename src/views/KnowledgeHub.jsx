@@ -126,7 +126,7 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Sök i allt — t.ex. satisfiering, alignment, Brundtland…"
-          className="w-full rounded-lg border border-line bg-white px-4 py-3 text-[15px]"
+          className="w-full rounded-lg border border-line bg-surface px-4 py-3 text-[15px]"
         />
       </div>
 

@@ -14,6 +14,7 @@ export const KEYS = {
   scheduleView: "schemaVy", // "lista" | "kalender"
   ttsRate: "upplasningstakt", // uppläsningens hastighet (t.ex. 1.15)
   sqlRandom: "sqlSlump", // antal lösta slumpövningar
+  theme: "tema", // "auto" | "ljust" | "mork" — läses också av skriptet i index.html
 };
 
 // Lösta SQL-övningar: sysb23:sql:<övningsId> = "solved" | "solved-with-help"

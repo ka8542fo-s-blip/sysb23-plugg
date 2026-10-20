@@ -55,7 +55,7 @@ export default function SessionList({ schedule, defaultForwardOnly, now: nowProp
         </p>
       </div>
 
-      <div className="mt-3 flex flex-col gap-2 rounded-card border border-line bg-white p-2">
+      <div className="mt-3 flex flex-col gap-2 rounded-card border border-line bg-surface p-2">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="w-full sm:w-auto">
             <SegmentedControl

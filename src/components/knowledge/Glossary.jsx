@@ -77,7 +77,7 @@ export default function Glossary({ glossary, chapters, onOpenChapter, highlightT
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Slå upp en term…"
-          className="w-full rounded-lg border border-line bg-white px-4 py-2.5 text-[15px]"
+          className="w-full rounded-lg border border-line bg-surface px-4 py-2.5 text-[15px]"
         />
         <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2">
           <div className="flex gap-2" role="group" aria-label="Sortering">

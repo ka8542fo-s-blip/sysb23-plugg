@@ -84,7 +84,7 @@ export default function ExamTimeline({ exams }) {
                   <span className="flex justify-center">
                     <span
                       aria-hidden="true"
-                      className="h-3 w-3 rounded-full border-2 border-white shadow-sm"
+                      className="h-3 w-3 rounded-full border-2 border-surface shadow-sm"
                       style={{ backgroundColor: `var(${exam.subcourseData?.color})` }}
                     />
                   </span>

@@ -3,7 +3,7 @@ const LETTERS = ["1", "2", "3", "4"];
 // state: "idle" | "selected" | "correct" | "wrong" | "missed"
 export default function OptionButton({ index, text, state, disabled, onClick }) {
   const styles = {
-    idle: "border-line bg-white hover:border-pine hover:bg-pine/[0.05] active:bg-pine/[0.09]",
+    idle: "border-line bg-surface hover:border-pine hover:bg-pine/[0.05] active:bg-pine/[0.09]",
     selected: "border-pine bg-pine/[0.07] ring-1 ring-pine",
     correct: "border-correct bg-correct-bg",
     wrong: "border-wrong bg-wrong-bg",
@@ -12,10 +12,10 @@ export default function OptionButton({ index, text, state, disabled, onClick }) 
 
   const badge = {
     idle: "border-line text-ink/65",
-    selected: "border-pine bg-pine text-white",
-    correct: "border-correct bg-correct text-white",
-    wrong: "border-wrong bg-wrong text-white",
-    missed: "border-correct bg-correct text-white",
+    selected: "border-pine bg-pine text-paper",
+    correct: "border-correct bg-correct text-paper",
+    wrong: "border-wrong bg-wrong text-paper",
+    missed: "border-correct bg-correct text-paper",
   }[state];
 
   return (

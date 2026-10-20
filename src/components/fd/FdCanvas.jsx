@@ -487,7 +487,7 @@ export default function FdCanvas({ item, graded, onDiagramChange }) {
             key={a}
             type="button"
             {...shelfHandlers(a)}
-            className="h-9 w-9 touch-none rounded-md border border-ink/60 bg-white font-mono text-[15px] transition-colors duration-150 hover:border-pine hover:bg-pine/[0.06]"
+            className="h-9 w-9 touch-none rounded-md border border-ink/60 bg-surface font-mono text-[15px] transition-colors duration-150 hover:border-pine hover:bg-pine/[0.06]"
             aria-label={`Lägg ut ${a}`}
           >
             {a}
@@ -507,7 +507,7 @@ export default function FdCanvas({ item, graded, onDiagramChange }) {
               key={a}
               type="button"
               onClick={() => assignLetter(letterTarget.id, a)}
-              className={`h-8 min-w-8 rounded-md border px-2 font-mono text-sm transition-colors duration-150 ${letterTarget.attr === a ? "border-pine bg-pine text-white" : "border-line hover:border-pine hover:bg-pine/[0.06]"}`}
+              className={`h-8 min-w-8 rounded-md border px-2 font-mono text-sm transition-colors duration-150 ${letterTarget.attr === a ? "border-pine bg-pine text-paper" : "border-line hover:border-pine hover:bg-pine/[0.06]"}`}
             >
               {a}
             </button>
@@ -519,7 +519,7 @@ export default function FdCanvas({ item, graded, onDiagramChange }) {
         ref={containerRef}
         tabIndex={0}
         onKeyDown={onKeyDown}
-        className="mt-2 overflow-hidden rounded-lg border border-line bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-pine"
+        className="mt-2 overflow-hidden rounded-lg border border-line bg-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-pine"
         aria-label="Rityta för beroendediagram. Tab växlar ruta, piltangenter flyttar, bokstav sätter bokstav, G grupperar, Delete raderar, Cmd/Ctrl+Z ångrar."
         role="group"
       >
@@ -589,7 +589,7 @@ export default function FdCanvas({ item, graded, onDiagramChange }) {
                 {t && (
                   <g transform={`translate(${geo.mid.x} ${geo.mid.y})`}>
                     <circle r="10" className={t === "partial" ? "fill-wrong" : "fill-brass"} />
-                    <text textAnchor="middle" dy="4.5" fontSize="13" fontWeight="600" className="fill-white">{t === "partial" ? "P" : "T"}</text>
+                    <text textAnchor="middle" dy="4.5" fontSize="13" fontWeight="600" className="fill-paper">{t === "partial" ? "P" : "T"}</text>
                   </g>
                 )}
               </g>
@@ -603,7 +603,7 @@ export default function FdCanvas({ item, graded, onDiagramChange }) {
             const isTarget = dropHint?.target?.kind === "box" && dropHint.target.id === b.id;
             return (
               <g key={b.id} opacity={dropHint?.target && dropHint.box === b.id ? 0.55 : 1}>
-                <rect x={r.x} y={r.y} width={r.w} height={r.h} rx="5" className={`fill-white ${sel || isPending || isTarget ? "stroke-pine" : "stroke-ink"}`} strokeWidth={sel || isPending || isTarget ? 2.6 : 1.6} />
+                <rect x={r.x} y={r.y} width={r.w} height={r.h} rx="5" className={`fill-surface ${sel || isPending || isTarget ? "stroke-pine" : "stroke-ink"}`} strokeWidth={sel || isPending || isTarget ? 2.6 : 1.6} />
                 <text x={b.x} y={b.y + 7} textAnchor="middle" fontSize="20" className={b.attr ? "fill-ink" : "fill-ink/35"} style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}>
                   {b.attr || "?"}
                 </text>
@@ -632,7 +632,7 @@ export default function FdCanvas({ item, graded, onDiagramChange }) {
 
           {tool === "select" && !drag && !dropHint && handleShapes().map((ref) => {
             const h = handlePos(ref);
-            return h ? <circle key={"h" + ref.id} cx={h.x} cy={h.y} r="6" className="fill-pine stroke-white" strokeWidth="2" /> : null;
+            return h ? <circle key={"h" + ref.id} cx={h.x} cy={h.y} r="6" className="fill-pine stroke-surface" strokeWidth="2" /> : null;
           })}
 
           {drag?.type === "marquee" && (
@@ -649,7 +649,7 @@ export default function FdCanvas({ item, graded, onDiagramChange }) {
           })()}
           {drag?.type === "ghost" && drag.point && (
             <g opacity="0.6">
-              <rect x={drag.point.x - BOX / 2} y={drag.point.y - BOX / 2} width={BOX} height={BOX} rx="5" className="fill-white stroke-pine" strokeWidth="2" />
+              <rect x={drag.point.x - BOX / 2} y={drag.point.y - BOX / 2} width={BOX} height={BOX} rx="5" className="fill-surface stroke-pine" strokeWidth="2" />
               <text x={drag.point.x} y={drag.point.y + 7} textAnchor="middle" fontSize="20" className="fill-ink">{drag.attr}</text>
             </g>
           )}

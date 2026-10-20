@@ -373,7 +373,7 @@ function Task3({ task, answers, setAnswers, result, onGrade, onEdit }) {
       <p className="mt-3 text-[15px]">{TASK3_INTRO}</p>
       <div className="mt-2 grid gap-3 sm:grid-cols-3">
         {task.schemas.map((s) => (
-          <div key={s.name} className="rounded-lg border border-line bg-white px-3 py-2">
+          <div key={s.name} className="rounded-lg border border-line bg-surface px-3 py-2">
             <p className="text-sm font-medium text-ink/80">{s.name}</p>
             <ul className="mt-1 font-mono text-[14px] leading-relaxed">{s.relations.map(([name, attrs]) => <li key={name}>{name}({attrs})</li>)}</ul>
           </div>
@@ -445,7 +445,7 @@ function Task3fg({ item, draft, setDraft, graded }) {
           )}
           <p className="mt-2 text-sm text-ink/70">{graded.grade?.fields.nf.why}</p>
           <p className="mt-3 text-sm font-medium text-ink/80">Facit</p>
-          <pre className="mt-1 overflow-x-auto rounded-lg border border-line bg-white px-3 py-2 font-mono text-[13.5px] leading-relaxed">{`${item.nf}\n${facitText}`}</pre>
+          <pre className="mt-1 overflow-x-auto rounded-lg border border-line bg-surface px-3 py-2 font-mono text-[13.5px] leading-relaxed">{`${item.nf}\n${facitText}`}</pre>
           {graded.grade?.fields.motivation && <p className="mt-2 text-sm text-ink/80">Godtagen motivering, till exempel: {graded.grade.fields.motivation.accepted[0]?.sentence}</p>}
         </div>
       )}
@@ -492,12 +492,12 @@ function Task4({ task, code, setCode, graded, result, self, setSelf, onGrade, on
               <ul className="mt-1 list-disc space-y-0.5 pl-5 text-[15px] text-ink/85">{task.checklist.map((c) => <li key={c}>{c}</li>)}</ul>
               <label className="mt-2 flex items-center gap-2 text-sm">
                 <span>Självbedömd poäng (0–30):</span>
-                <input type="number" min={0} max={30} value={self ?? ""} onChange={(e) => { const v = e.target.value === "" ? null : Math.max(0, Math.min(30, Math.round(Number(e.target.value)))); setSelf(Number.isFinite(v) ? v : null); }} className="tabular w-20 rounded-lg border border-line bg-white px-2 py-1" />
+                <input type="number" min={0} max={30} value={self ?? ""} onChange={(e) => { const v = e.target.value === "" ? null : Math.max(0, Math.min(30, Math.round(Number(e.target.value)))); setSelf(Number.isFinite(v) ? v : null); }} className="tabular w-20 rounded-lg border border-line bg-surface px-2 py-1" />
               </label>
             </div>
           )}
           <p className="mt-4 text-sm font-medium text-ink/80">Facit</p>
-          <pre className="mt-1 overflow-x-auto rounded-lg border border-line bg-white px-4 py-3 font-mono text-[13px] leading-relaxed">{task.solution}</pre>
+          <pre className="mt-1 overflow-x-auto rounded-lg border border-line bg-surface px-4 py-3 font-mono text-[13px] leading-relaxed">{task.solution}</pre>
           <p className="mt-2 text-[15px] text-ink/80">{task.explanation}</p>
         </ScoreBox>
       )}

@@ -469,7 +469,7 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
                 {freeResult.table ? (
                   <ResultTable result={freeResult.table} caption="Resultat" />
                 ) : (
-                  <p className="rounded-card border border-line bg-white p-4 text-[15px]">
+                  <p className="rounded-card border border-line bg-surface p-4 text-[15px]">
                     Satsen kördes.{" "}
                     {freeResult.changed > 0
                       ? `${freeResult.changed} ${freeResult.changed === 1 ? "rad" : "rader"} ändrades.`

@@ -6,10 +6,10 @@
 const PINE = "var(--pine)";
 const BRASS = "var(--brass)";
 const INK = "var(--ink)";
-const SOFT = "rgba(34,40,42,0.55)";
+const SOFT = "rgb(var(--ink-rgb) / 0.55)";
 const BLUE = "var(--c-databaser)";
-const PINE_FILL = "rgba(31,78,69,0.16)";
-const BRASS_FILL = "rgba(185,147,47,0.22)";
+const PINE_FILL = "rgb(var(--pine-rgb) / 0.16)";
+const BRASS_FILL = "rgb(var(--brass-rgb) / 0.22)";
 const HEAD = 24;
 const ROW = 22;
 
@@ -26,7 +26,7 @@ function KeyIcon({ x, y }) {
 }
 function FieldIcon({ x, y }) {
   return (
-    <g stroke={SOFT} strokeWidth={1} fill="white">
+    <g stroke={SOFT} strokeWidth={1} fill="var(--surface)">
       <rect x={x + 1} y={y - 6} width={10} height={12} rx={1} />
       <line x1={x + 3} y1={y - 2} x2={x + 9} y2={y - 2} />
       <line x1={x + 3} y1={y + 1} x2={x + 9} y2={y + 1} />
@@ -39,7 +39,7 @@ export function VpEntity({ x, y, w = 156, label, attrs }) {
   const h = vpHeight(attrs);
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} rx={10} fill="white" stroke={PINE} strokeWidth={1.8} />
+      <rect x={x} y={y} width={w} height={h} rx={10} fill="var(--surface)" stroke={PINE} strokeWidth={1.8} />
       <rect x={x + 1} y={y + 1} width={w - 2} height={HEAD} rx={9} fill={PINE_FILL} />
       <line x1={x} x2={x + w} y1={y + HEAD} y2={y + HEAD} stroke={PINE} strokeWidth={1.2} />
       <text x={x + w / 2} y={y + HEAD / 2 + 1} textAnchor="middle" dominantBaseline="central" fontWeight="700" fill={PINE}>
@@ -55,7 +55,7 @@ export function VpEntity({ x, y, w = 156, label, attrs }) {
             </text>
             {attr.nullable && (
               <g>
-                <rect x={x + w - 22} y={cy - 7} width={14} height={14} rx={2} fill="rgba(0,85,154,0.10)" stroke={BLUE} strokeWidth={1} />
+                <rect x={x + w - 22} y={cy - 7} width={14} height={14} rx={2} fill="color-mix(in srgb, var(--c-databaser) 10%, transparent)" stroke={BLUE} strokeWidth={1} />
                 <text x={x + w - 15} y={cy + 0.5} textAnchor="middle" dominantBaseline="central" fontSize={10} fill={BLUE} fontWeight="700">N</text>
               </g>
             )}
@@ -80,7 +80,7 @@ function VpEnd({ x, y, dir, one, many, optional, required }) {
         </>
       )}
       {one && <line x1={x + s * 12} y1={y - 8} x2={x + s * 12} y2={y + 8} />}
-      {optional && <circle cx={x + s * 27} cy={y} r={4.5} fill="white" />}
+      {optional && <circle cx={x + s * 27} cy={y} r={4.5} fill="var(--surface)" />}
       {required && <line x1={x + s * 26} y1={y - 8} x2={x + s * 26} y2={y + 8} />}
     </g>
   );

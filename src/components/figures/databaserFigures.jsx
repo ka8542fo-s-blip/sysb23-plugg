@@ -5,7 +5,7 @@
 import {
   ConceptFigure, card, row, column, flow, stack, heading, textBlock, Lines, wrap, measure, measureRaw,
   lineHeight, Arrow, CurvedArrow, TONE, INK, PINE, BRASS, BRASS_TEXT, MUTED, ARROW,
-  FS, FS_TITLE, FS_SMALL,
+  FS, FS_TITLE, FS_SMALL, LINE_STRONG, SURFACE,
 } from "./conceptFigures.jsx";
 
 const WRONG = "var(--wrong)";
@@ -63,14 +63,14 @@ function table({ x, y, w, name, cols, rows, size = FS, rowH = 26 }) {
   const headY = y + nameH;
   const nodes = [];
   if (name) nodes.push(<Lines key="n" x={x} y={y} lines={[name]} size={FS_SMALL} weight={600} fill={BRASS_TEXT} maxW={w} />);
-  nodes.push(<rect key="h" x={x} y={headY} width={w} height={rowH} fill="rgba(31,78,69,0.10)" stroke={PINE} strokeWidth={1.2} />);
+  nodes.push(<rect key="h" x={x} y={headY} width={w} height={rowH} fill="rgb(var(--pine-rgb) / 0.10)" stroke={PINE} strokeWidth={1.2} />);
   cols.forEach((c, i) => {
     nodes.push(<Lines key={`hc${i}`} x={xs[i] + 7} y={headY + (rowH - size) / 2 - 1} lines={[c.label]} size={size} weight={600} fill={PINE} maxW={widths[i] - 10} />);
   });
   rows.forEach((r, ri) => {
     const ry = headY + rowH * (ri + 1);
     const tone = r.tone ? TONE[r.tone] : null;
-    nodes.push(<rect key={`r${ri}`} x={x} y={ry} width={w} height={rowH} fill={tone ? tone.fill : "white"} stroke="#cfc9ba" strokeWidth={1} />);
+    nodes.push(<rect key={`r${ri}`} x={x} y={ry} width={w} height={rowH} fill={tone ? tone.fill : SURFACE} stroke={LINE_STRONG} strokeWidth={1} />);
     r.cells.forEach((cell, ci) => {
       nodes.push(
         <Lines key={`c${ri}-${ci}`} x={xs[ci] + 7} y={ry + (rowH - size) / 2 - 1} lines={[cell]} size={size} fill={tone && r.textTone ? tone.title : INK} maxW={widths[ci] - 10} />,
@@ -78,7 +78,7 @@ function table({ x, y, w, name, cols, rows, size = FS, rowH = 26 }) {
     });
   });
   cols.slice(1).forEach((_, i) => {
-    nodes.push(<line key={`v${i}`} x1={xs[i + 1]} y1={headY} x2={xs[i + 1]} y2={headY + rowH * (rows.length + 1)} stroke="#cfc9ba" strokeWidth={1} />);
+    nodes.push(<line key={`v${i}`} x1={xs[i + 1]} y1={headY} x2={xs[i + 1]} y2={headY + rowH * (rows.length + 1)} stroke={LINE_STRONG} strokeWidth={1} />);
   });
   const h = nameH + rowH * (rows.length + 1);
   const cell = (ri, ci) => ({ x: xs[ci], y: headY + rowH * (ri + 1), w: widths[ci], h: rowH });
@@ -262,7 +262,7 @@ function binaraRegler(W, narrow) {
     return (
       <g>
         {p.head.render(x, y, headH)}
-        <rect x={x} y={y + headH} width={cw} height={hb} fill="white" stroke={PINE} strokeWidth={1.2} />
+        <rect x={x} y={y + headH} width={cw} height={hb} fill={SURFACE} stroke={PINE} strokeWidth={1.2} />
         {rel.node}
         <Lines x={x + pad} y={y + headH + pad + rel.h + 8} lines={p.txt} size={FS} maxW={cw - 2 * pad} />
       </g>
@@ -303,7 +303,7 @@ function svagNyckelkedja(W, narrow) {
     const noteW = narrow ? bw - 2 * pad : W - bx - bw - 20;
     const note = textBlock({ x: 0, y: 0, w: noteW, text: r.note, size: FS_SMALL, fill: MUTED });
     const boxH = pad * 2 + rel.h + (narrow ? note.h + 6 : 0);
-    nodes.push(<rect key={`b${i}`} x={bx} y={y} width={bw} height={boxH} rx={6} fill="white" stroke={PINE} strokeWidth={1.4} />);
+    nodes.push(<rect key={`b${i}`} x={bx} y={y} width={bw} height={boxH} rx={6} fill={SURFACE} stroke={PINE} strokeWidth={1.4} />);
     nodes.push(<g key={`r${i}`}>{rel.node}</g>);
     if (narrow) {
       nodes.push(<g key={`n${i}`}>{textBlock({ x: bx + pad, y: y + pad + rel.h + 6, w: noteW, text: r.note, size: FS_SMALL, fill: MUTED }).node}</g>);
@@ -410,7 +410,7 @@ function beroendediagram(W, narrow) {
   const nodes = [];
   attrs.forEach((a, i) => {
     const prime = i < 2;
-    nodes.push(<rect key={`r${a}`} x={x0 + i * (bw + gap)} y={top} width={bw} height={bh} fill={prime ? "rgba(31,78,69,0.10)" : "white"} stroke={PINE} strokeWidth={1.4} />);
+    nodes.push(<rect key={`r${a}`} x={x0 + i * (bw + gap)} y={top} width={bw} height={bh} fill={prime ? "rgb(var(--pine-rgb) / 0.10)" : SURFACE} stroke={PINE} strokeWidth={1.4} />);
     nodes.push(<Lines key={`t${a}`} x={ax(i)} y={top + bh / 2 - 9} lines={[a]} size={15} weight={600} anchor="middle" maxW={bw - 4} />);
     if (prime) nodes.push(<line key={`u${a}`} x1={ax(i) - 6} y1={top + bh / 2 + 9} x2={ax(i) + 6} y2={top + bh / 2 + 9} stroke={INK} strokeWidth={1.2} />);
   });
@@ -578,14 +578,14 @@ function columnsBox({ x, y, w, name, cols, keys, tone = "plain" }) {
   const rowH = 24;
   const t = TONE[tone];
   const nodes = [
-    <rect key="h" x={x} y={y} width={w} height={rowH + 4} fill="rgba(31,78,69,0.12)" stroke={PINE} strokeWidth={1.3} />,
+    <rect key="h" x={x} y={y} width={w} height={rowH + 4} fill="rgb(var(--pine-rgb) / 0.12)" stroke={PINE} strokeWidth={1.3} />,
     <Lines key="hn" x={x + w / 2} y={y + 6} lines={[name]} size={FS} weight={600} anchor="middle" fill={PINE} maxW={w - 8} />,
   ];
   const ys = {};
   cols.forEach((c, i) => {
     const ry = y + rowH + 4 + i * rowH;
     ys[c] = ry + rowH / 2;
-    nodes.push(<rect key={`r${i}`} x={x} y={ry} width={w} height={rowH} fill={t.fill === "none" ? "white" : t.fill} stroke="#cfc9ba" strokeWidth={1} />);
+    nodes.push(<rect key={`r${i}`} x={x} y={ry} width={w} height={rowH} fill={t.fill === "none" ? SURFACE : t.fill} stroke={LINE_STRONG} strokeWidth={1} />);
     nodes.push(<Lines key={`c${i}`} x={x + 10} y={ry + 5} lines={[c]} size={FS} maxW={w - 16} />);
     if (keys.includes(c)) nodes.push(<line key={`u${i}`} x1={x + 10} y1={ry + 20} x2={x + 10 + measure(c, FS)} y2={ry + 20} stroke={INK} strokeWidth={1.1} />);
   });
@@ -659,7 +659,7 @@ function jdbcKedjan(W, narrow) {
   let y = y0 + hd.h + 10;
   const startY = y;
   chain.forEach((c, i) => {
-    nodes.push(<rect key={`b${i}`} x={0} y={y} width={bw} height={34} rx={6} fill="rgba(31,78,69,0.07)" stroke={PINE} strokeWidth={1.4} />);
+    nodes.push(<rect key={`b${i}`} x={0} y={y} width={bw} height={34} rx={6} fill="rgb(var(--pine-rgb) / 0.07)" stroke={PINE} strokeWidth={1.4} />);
     nodes.push(<Lines key={`t${i}`} x={bw / 2} y={y + 8} lines={[c.cls]} size={FS} weight={600} anchor="middle" fill={PINE} maxW={bw - 8} />);
     const note = narrow
       ? textBlock({ x: 0, y: y + 40, w: W, text: c.note, size: FS, fill: MUTED })
@@ -712,7 +712,7 @@ function fyraLager(W, narrow) {
   if (!narrow) {
     const mx = lw + 18;
     const mh = col.h;
-    nodes.push(<rect key="m" x={mx} y={0} width={sideW} height={mh} rx={8} fill="rgba(185,147,47,0.12)" stroke={BRASS} strokeWidth={1.4} strokeDasharray="5 4" />);
+    nodes.push(<rect key="m" x={mx} y={0} width={sideW} height={mh} rx={8} fill="rgb(var(--brass-rgb) / 0.12)" stroke={BRASS} strokeWidth={1.4} strokeDasharray="5 4" />);
     const t1 = textBlock({ x: mx + 10, y: 12, w: sideW - 20, text: "MODEL", size: FS_SMALL, weight: 600, fill: BRASS_TEXT });
     const t2 = textBlock({ x: mx + 10, y: 12 + t1.h + 4, w: sideW - 20, text: "Employee och Department", size: FS_TITLE, weight: 600, fill: INK });
     const t3 = textBlock({ x: mx + 10, y: 12 + t1.h + 4 + t2.h + 6, w: sideW - 20, text: "Håller data om domänobjekten och används av alla lager.", size: FS, fill: INK });
@@ -766,7 +766,7 @@ function separationsnivaer(W, narrow) {
   const colH = headH + 8 + ctrlH + 18 + daoH + 8 + footH;
   const draw = (p, ox, oy, i) => (
     <g key={i}>
-      <rect x={ox} y={oy} width={cw} height={narrow ? headH + 8 + p.ctrl.h + 18 + p.dao.h + 8 + (p.foot ? p.foot.h + 6 : 0) : colH} rx={8} fill="white" stroke="#cfc9ba" strokeWidth={1.2} />
+      <rect x={ox} y={oy} width={cw} height={narrow ? headH + 8 + p.ctrl.h + 18 + p.dao.h + 8 + (p.foot ? p.foot.h + 6 : 0) : colH} rx={8} fill={SURFACE} stroke={LINE_STRONG} strokeWidth={1.2} />
       {p.head.render(ox, oy, headH)}
       {p.ctrl.render(ox + 8, oy + headH + 8, narrow ? p.ctrl.h : ctrlH)}
       {levels[i].dao && <Arrow x1={ox + cw / 2} y1={oy + headH + 8 + (narrow ? p.ctrl.h : ctrlH) + 2} x2={ox + cw / 2} y2={oy + headH + 8 + (narrow ? p.ctrl.h : ctrlH) + 16} size={6} />}

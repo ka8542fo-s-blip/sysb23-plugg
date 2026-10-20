@@ -11,7 +11,7 @@ const INK = "var(--ink)";
 const PINE = "var(--pine)";
 const BRASS = "var(--brass)";
 const WRONG = "var(--wrong)";
-const SOFT = "rgba(34,40,42,0.55)";
+const SOFT = "rgb(var(--ink-rgb) / 0.55)";
 const FONT = 12;
 
 export const TASK_W = 100;
@@ -37,8 +37,8 @@ export function sizeOf(node) {
 function Envelope({ x, y, w = 14, h = 10, filled = false }) {
   return (
     <g>
-      <rect x={x - w / 2} y={y - h / 2} width={w} height={h} fill={filled ? INK : "white"} stroke={INK} strokeWidth={1.1} />
-      <polyline points={`${x - w / 2},${y - h / 2} ${x},${y + 1} ${x + w / 2},${y - h / 2}`} fill="none" stroke={filled ? "white" : INK} strokeWidth={1.1} />
+      <rect x={x - w / 2} y={y - h / 2} width={w} height={h} fill={filled ? INK : "var(--surface)"} stroke={INK} strokeWidth={1.1} />
+      <polyline points={`${x - w / 2},${y - h / 2} ${x},${y + 1} ${x + w / 2},${y - h / 2}`} fill="none" stroke={filled ? "var(--surface)" : INK} strokeWidth={1.1} />
     </g>
   );
 }
@@ -46,7 +46,7 @@ function Envelope({ x, y, w = 14, h = 10, filled = false }) {
 function Clock({ x, y, r = 8 }) {
   return (
     <g>
-      <circle cx={x} cy={y} r={r} fill="white" stroke={INK} strokeWidth={1.1} />
+      <circle cx={x} cy={y} r={r} fill="var(--surface)" stroke={INK} strokeWidth={1.1} />
       {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((a) => {
         const rad = (a * Math.PI) / 180;
         return <line key={a} x1={x + Math.cos(rad) * (r - 2)} y1={y + Math.sin(rad) * (r - 2)} x2={x + Math.cos(rad) * r} y2={y + Math.sin(rad) * r} stroke={INK} strokeWidth={0.8} />;
@@ -60,14 +60,14 @@ function Bolt({ x, y, filled = false }) {
   return (
     <polygon
       points={`${x - 6},${y + 7} ${x - 2},${y - 5} ${x + 1},${y + 1} ${x + 6},${y - 7} ${x + 2},${y + 5} ${x - 1},${y - 1}`}
-      fill={filled ? INK : "white"} stroke={INK} strokeWidth={1.1} strokeLinejoin="round"
+      fill={filled ? INK : "var(--surface)"} stroke={INK} strokeWidth={1.1} strokeLinejoin="round"
     />
   );
 }
 
 function Person({ x, y }) {
   return (
-    <g fill="white" stroke={INK} strokeWidth={1}>
+    <g fill="var(--surface)" stroke={INK} strokeWidth={1}>
       <path d={`M${x - 6},${y + 7} Q${x - 6},${y} ${x},${y} Q${x + 6},${y} ${x + 6},${y + 7} Z`} />
       <circle cx={x} cy={y - 3} r={3.5} />
     </g>
@@ -83,8 +83,8 @@ function Gear({ x, y }) {
   return (
     <g>
       {teeth}
-      <circle cx={x} cy={y} r={5} fill="white" stroke={INK} strokeWidth={1.1} />
-      <circle cx={x} cy={y} r={2} fill="white" stroke={INK} strokeWidth={1} />
+      <circle cx={x} cy={y} r={5} fill="var(--surface)" stroke={INK} strokeWidth={1.1} />
+      <circle cx={x} cy={y} r={2} fill="var(--surface)" stroke={INK} strokeWidth={1} />
     </g>
   );
 }
@@ -101,7 +101,7 @@ function Hand({ x, y }) {
 function Table({ x, y }) {
   return (
     <g fill="none" stroke={INK} strokeWidth={1}>
-      <rect x={x - 7} y={y - 5} width={14} height={10} fill="white" />
+      <rect x={x - 7} y={y - 5} width={14} height={10} fill="var(--surface)" />
       <line x1={x - 7} y1={y - 1.5} x2={x + 7} y2={y - 1.5} strokeWidth={2} />
       <line x1={x - 2} y1={y - 5} x2={x - 2} y2={y + 5} />
     </g>
@@ -110,7 +110,7 @@ function Table({ x, y }) {
 
 function Script({ x, y }) {
   return (
-    <g fill="white" stroke={INK} strokeWidth={1}>
+    <g fill="var(--surface)" stroke={INK} strokeWidth={1}>
       <path d={`M${x - 5},${y - 7} L${x + 6},${y - 7} Q${x + 2},${y} ${x + 5},${y + 7} L${x - 6},${y + 7} Q${x - 2},${y} ${x - 5},${y - 7} Z`} />
       <line x1={x - 3} y1={y - 3} x2={x + 2} y2={y - 3} />
       <line x1={x - 2} y1={y + 1} x2={x + 3} y2={y + 1} />
@@ -159,7 +159,7 @@ function Label({ x, y, text, max = 16, anchor = "middle", size = FONT - 1, weigh
 export function EventShape({ cx, cy, kind, event = "none", throwing = false, interrupting = true, highlight }) {
   const stroke = highlight?.stroke || INK;
   const dash = interrupting === false ? "4 3" : undefined;
-  const fill = highlight?.fill || "white";
+  const fill = highlight?.fill || "var(--surface)";
   const icon = () => {
     if (event === "message") return <Envelope x={cx} y={cy} filled={throwing || kind === "end"} />;
     if (event === "timer") return <Clock x={cx} y={cy} />;
@@ -192,7 +192,7 @@ export function ActivityShape({ cx, cy, label, taskType, variant = "task", start
     <g>
       <rect
         x={x} y={y} width={TASK_W} height={TASK_H} rx={9}
-        fill={highlight?.fill || "white"} stroke={stroke}
+        fill={highlight?.fill || "var(--surface)"} stroke={stroke}
         strokeWidth={thick ? 3.5 : 1.5} strokeDasharray={dashed ? "2 3" : undefined}
       />
       {Icon && <Icon x={x + 11} y={y + 11} />}
@@ -212,7 +212,7 @@ export function ActivityShape({ cx, cy, label, taskType, variant = "task", start
           })())}
       {collapsed && (
         <g>
-          <rect x={cx - 6} y={y + TASK_H - 15} width={12} height={12} fill="white" stroke={INK} strokeWidth={1.1} />
+          <rect x={cx - 6} y={y + TASK_H - 15} width={12} height={12} fill="var(--surface)" stroke={INK} strokeWidth={1.1} />
           <line x1={cx - 3.5} y1={y + TASK_H - 9} x2={cx + 3.5} y2={y + TASK_H - 9} stroke={INK} strokeWidth={1.2} />
           <line x1={cx} y1={y + TASK_H - 12.5} x2={cx} y2={y + TASK_H - 5.5} stroke={INK} strokeWidth={1.2} />
         </g>
@@ -234,7 +234,7 @@ export function GatewayShape({ cx, cy, gw, highlight }) {
   const pts = `${cx},${cy - GW} ${cx + GW},${cy} ${cx},${cy + GW} ${cx - GW},${cy}`;
   return (
     <g>
-      <polygon points={pts} fill={highlight?.fill || "white"} stroke={stroke} strokeWidth={1.5} />
+      <polygon points={pts} fill={highlight?.fill || "var(--surface)"} stroke={stroke} strokeWidth={1.5} />
       {gw === "and" && (
         <g stroke={INK} strokeWidth={3}>
           <line x1={cx - 9} y1={cy} x2={cx + 9} y2={cy} />
@@ -341,7 +341,7 @@ function MsgFlow({ fromNode, toNode, fromPool, toPool, label, markerId }) {
   return (
     <g>
       <line x1={x} y1={y1} x2={x} y2={y2} stroke={INK} strokeWidth={1.1} strokeDasharray="6 4" markerEnd={`url(#${markerId}-msg)`} />
-      <circle cx={x} cy={y1} r={3} fill="white" stroke={INK} strokeWidth={1.1} />
+      <circle cx={x} cy={y1} r={3} fill="var(--surface)" stroke={INK} strokeWidth={1.1} />
       <text x={x + 7} y={Math.min(y1, y2) + 18} fontSize={FONT - 2} fill={INK}>{label}</text>
     </g>
   );
@@ -350,7 +350,7 @@ function MsgFlow({ fromNode, toNode, fromPool, toPool, label, markerId }) {
 function Pool({ pool }) {
   return (
     <g>
-      <rect x={pool.x} y={pool.y} width={pool.w} height={pool.h} fill="rgba(34,40,42,0.04)" stroke={INK} strokeWidth={1.3} />
+      <rect x={pool.x} y={pool.y} width={pool.w} height={pool.h} fill="rgb(var(--ink-rgb) / 0.04)" stroke={INK} strokeWidth={1.3} />
       <line x1={pool.x + 22} y1={pool.y} x2={pool.x + 22} y2={pool.y + pool.h} stroke={INK} strokeWidth={1.1} />
       <text transform={`translate(${pool.x + 15},${pool.y + pool.h / 2}) rotate(-90)`} textAnchor="middle" fontSize={FONT - 1} fill={INK}>{pool.label}</text>
     </g>
@@ -373,7 +373,7 @@ function View({ diagram, view, highlight, markerId }) {
           <path d="M0,0 L10,5 L0,10 z" fill={INK} />
         </marker>
         <marker id={`${markerId}-msg`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-          <path d="M0,0 L10,5 L0,10 z" fill="white" stroke={INK} strokeWidth={1.2} />
+          <path d="M0,0 L10,5 L0,10 z" fill="var(--surface)" stroke={INK} strokeWidth={1.2} />
         </marker>
       </defs>
       {pools.map((p) => <Pool key={p.id} pool={p} />)}
@@ -438,7 +438,7 @@ export function BpmnDiagram({ diagram, highlight, compact = false }) {
           {view.container && (
             <p className="mb-1 text-sm font-medium text-ink/70">Barndiagram: {view.title}</p>
           )}
-          <div className={compact ? "" : "overflow-x-auto rounded-lg border border-line bg-white p-2"}>
+          <div className={compact ? "" : "overflow-x-auto rounded-lg border border-line bg-surface p-2"}>
             <View diagram={diagram} view={view} highlight={highlight} markerId={`${markerId}-${view.container ?? "m"}`} />
           </div>
         </div>
@@ -448,9 +448,9 @@ export function BpmnDiagram({ diagram, highlight, compact = false }) {
 }
 
 export const HIGHLIGHT = {
-  ran: { stroke: PINE, fill: "rgba(31,78,69,0.12)" },
-  interrupted: { stroke: WRONG, fill: "rgba(179,64,46,0.08)" },
-  event: { stroke: BRASS, fill: "rgba(185,147,47,0.12)" },
+  ran: { stroke: PINE, fill: "rgb(var(--pine-rgb) / 0.12)" },
+  interrupted: { stroke: WRONG, fill: "rgb(var(--wrong-rgb) / 0.08)" },
+  event: { stroke: BRASS, fill: "rgb(var(--brass-rgb) / 0.12)" },
 };
 
 export { SOFT };
@@ -462,7 +462,7 @@ export function ElementGallery({ elements }) {
   const width = elements.length * w + 10;
   return (
     <figure className="my-4" data-tts-skip>
-      <div className="overflow-x-auto rounded-lg border border-line bg-white p-2">
+      <div className="overflow-x-auto rounded-lg border border-line bg-surface p-2">
         <svg viewBox={`0 0 ${width} 100`} className="block h-auto w-full" style={{ maxWidth: width }} role="img" aria-label="Sex BPMN-element A–F" fontFamily="Inter, system-ui, sans-serif">
           {elements.map((el, i) => {
             const cx = 10 + i * w + w / 2 - 5;

@@ -68,7 +68,7 @@ const SqlEditor = forwardRef(function SqlEditor(
         autoComplete="off"
         placeholder="SELECT ..."
         style={{ tabSize: 2 }}
-        className="w-full rounded-lg border border-line bg-white p-3 font-mono text-[14px] leading-relaxed focus:border-pine disabled:bg-paper disabled:text-ink/40"
+        className="w-full rounded-lg border border-line bg-surface p-3 font-mono text-[14px] leading-relaxed focus:border-pine disabled:bg-paper disabled:text-ink/40"
       />
       <p className="mt-1 text-sm text-ink/65">
         Ctrl/Cmd + Enter kör frågan. Tab gör indrag, Esc lämnar fältet.

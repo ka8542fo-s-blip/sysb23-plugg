@@ -12,7 +12,7 @@ export default function ResultBanner({ result, onDismiss }) {
     result.status === "correct"
       ? { box: "border-correct/30 bg-correct-bg", text: "text-correct" }
       : result.status === "empty-input"
-        ? { box: "border-line bg-white", text: "text-ink/80" }
+        ? { box: "border-line bg-surface", text: "text-ink/80" }
         : formOnly
           ? { box: "border-brass/50 bg-brass/[0.07]", text: "text-brass" }
           : { box: "border-wrong/30 bg-wrong-bg", text: "text-wrong" };

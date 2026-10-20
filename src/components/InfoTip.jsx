@@ -95,7 +95,7 @@ export default function InfoTip({ id, term, text, className = "" }) {
             setPinned(true);
           }
         }}
-        className="flex h-[18px] w-[18px] items-center justify-center rounded-full border border-line bg-white text-[11px] font-medium leading-none text-ink/65 transition-colors duration-150 hover:border-pine hover:bg-pine/[0.08] hover:text-pine"
+        className="flex h-[18px] w-[18px] items-center justify-center rounded-full border border-line bg-surface text-[11px] font-medium leading-none text-ink/65 transition-colors duration-150 hover:border-pine hover:bg-pine/[0.08] hover:text-pine"
       >
         <span aria-hidden="true">?</span>
       </button>
@@ -105,7 +105,7 @@ export default function InfoTip({ id, term, text, className = "" }) {
           id={tipId}
           role="tooltip"
           style={{ left: box.left, top: box.top, width: box.width }}
-          className="card fixed z-30 p-3 text-left shadow-lg shadow-ink/5"
+          className="card fixed z-30 p-3 text-left shadow-lg shadow-shade/5"
         >
           <span className="block font-medium text-pine">{label}</span>
           <span className="mt-1 block text-sm font-normal leading-relaxed text-ink/80">

@@ -6,7 +6,7 @@
 const PINE = "var(--pine)";
 const BRASS = "var(--brass)";
 const INK = "var(--ink)";
-const SOFT = "rgba(34,40,42,0.55)";
+const SOFT = "rgb(var(--ink-rgb) / 0.55)";
 
 export const FONT = 13;
 // Ungefärlig teckenbredd i em — räcker för understrykningar av korta
@@ -46,7 +46,7 @@ export function Figure({ viewBox, label, caption, notChen = false, maxWidth = 62
 export function EntityBox({ x, y, w = 124, h = 44, label, weak = false, size = FONT }) {
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} fill="white" stroke={PINE} strokeWidth={1.6} />
+      <rect x={x} y={y} width={w} height={h} fill="var(--surface)" stroke={PINE} strokeWidth={1.6} />
       {weak && (
         <rect x={x + 4} y={y + 4} width={w - 8} height={h - 8} fill="none" stroke={PINE} strokeWidth={1.6} />
       )}
@@ -68,7 +68,7 @@ export function RelationshipDiamond({ cx, cy, w = 128, h = 60, label, identifyin
   const ib = b - (d * hyp) / a;
   return (
     <g>
-      <polygon points={points(a, b)} fill="white" stroke={PINE} strokeWidth={1.6} />
+      <polygon points={points(a, b)} fill="var(--surface)" stroke={PINE} strokeWidth={1.6} />
       {identifying && <polygon points={points(ia, ib)} fill="none" stroke={PINE} strokeWidth={1.6} />}
       <text x={cx} y={cy} textAnchor="middle" dominantBaseline="central" fontWeight="600" fontSize={size}>
         {label}
@@ -84,7 +84,7 @@ export function AttributeOval({
   const tw = textWidth(label, size);
   return (
     <g fontSize={size}>
-      <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill="white" stroke={SOFT} strokeWidth={1.3} strokeDasharray={derived ? "4 3" : undefined} />
+      <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill="var(--surface)" stroke={SOFT} strokeWidth={1.3} strokeDasharray={derived ? "4 3" : undefined} />
       {multivalued && (
         <ellipse cx={cx} cy={cy} rx={rx - 4} ry={ry - 4} fill="none" stroke={SOFT} strokeWidth={1.3} />
       )}
@@ -168,7 +168,7 @@ export function CrowEntity({ x, y, w = 156, label, ids = [], attrs = [] }) {
   const rows = [...ids.map((name) => ({ name, id: true })), ...attrs.map((name) => ({ name, id: false }))];
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} fill="white" stroke={PINE} strokeWidth={1.6} />
+      <rect x={x} y={y} width={w} height={h} fill="var(--surface)" stroke={PINE} strokeWidth={1.6} />
       <text x={x + w / 2} y={y + HEAD / 2 + 1} textAnchor="middle" dominantBaseline="central" fontWeight="600" letterSpacing="0.04em">
         {label}
       </text>
@@ -209,7 +209,7 @@ export function CrowMarks({ x, y, side, optional = false, many = false }) {
         <line x1={x + s * 12} y1={y - 8} x2={x + s * 12} y2={y + 8} />
       )}
       {optional ? (
-        <circle cx={x + s * 26} cy={y} r={4.5} fill="white" />
+        <circle cx={x + s * 26} cy={y} r={4.5} fill="var(--surface)" />
       ) : (
         <line x1={x + s * 25} y1={y - 8} x2={x + s * 25} y2={y + 8} />
       )}
@@ -242,7 +242,7 @@ export function CrowLine({ x1, x2, y, label, left, right, roleLeft, roleRight })
 export function PopulationSet({ x, y, w, h, title, items, layout = "column" }) {
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} rx={14} fill="rgba(31,78,69,0.04)" stroke={SOFT} strokeWidth={1} strokeDasharray="5 4" />
+      <rect x={x} y={y} width={w} height={h} rx={14} fill="rgb(var(--pine-rgb) / 0.04)" stroke={SOFT} strokeWidth={1} strokeDasharray="5 4" />
       <text x={x + 14} y={y + 18} fontSize={FONT - 1} fontWeight="600" fill={PINE}>{title}</text>
       {layout === "row"
         ? items.map((item, i) => {
@@ -250,7 +250,7 @@ export function PopulationSet({ x, y, w, h, title, items, layout = "column" }) {
             const px = x + 14 + i * (pw + 10);
             return (
               <g key={item}>
-                <rect x={px} y={y + 32} width={pw} height={30} rx={15} fill="white" stroke={SOFT} strokeWidth={1} />
+                <rect x={px} y={y + 32} width={pw} height={30} rx={15} fill="var(--surface)" stroke={SOFT} strokeWidth={1} />
                 <text x={px + pw / 2} y={y + 47} textAnchor="middle" dominantBaseline="central" fontSize={FONT - 1}>{item}</text>
               </g>
             );

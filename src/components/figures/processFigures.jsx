@@ -5,7 +5,7 @@
 import {
   ConceptFigure, card, row, column, flow, stack, heading, textBlock, Lines, wrap, measure,
   lineHeight, textHeight, Arrow, CurvedArrow, cycle, timeline, TONE, INK, PINE, BRASS,
-  BRASS_TEXT, MUTED, ARROW, FS, FS_TITLE, FS_SMALL,
+  BRASS_TEXT, MUTED, ARROW, FS, FS_TITLE, FS_SMALL, LINE, LINE_STRONG, SURFACE, SOLID, ON_FILL,
 } from "./conceptFigures.jsx";
 import { EventShape, ActivityShape, TASK_W, TASK_H } from "../bpmn/BpmnDiagram.jsx";
 
@@ -56,7 +56,7 @@ function eaLager(W, narrow) {
   });
   nodes.push(<g key="col">{col.node}</g>);
   const bottom = (narrow ? y : 12) + col.h + inner;
-  nodes.unshift(<rect key="frame" x={left} y={narrow ? 0 : 0} width={lw} height={bottom} rx={10} fill="rgba(31,78,69,0.04)" stroke={PINE} strokeWidth={1.4} strokeDasharray="6 4" />);
+  nodes.unshift(<rect key="frame" x={left} y={narrow ? 0 : 0} width={lw} height={bottom} rx={10} fill="rgb(var(--pine-rgb) / 0.04)" stroke={PINE} strokeWidth={1.4} strokeDasharray="6 4" />);
   if (!narrow) {
     nodes.push(
       <text key="ea" data-rotated fontSize={FS} fontWeight={600} fill={PINE} textAnchor="middle" transform={`translate(${left - 16} ${bottom / 2}) rotate(-90)`}>
@@ -104,11 +104,11 @@ function scenarier(W, narrow) {
   });
   below.forEach(([c, r], i) => {
     const p = cell(c, r);
-    nodes.push(<rect key={`zb${i}`} x={p.x} y={p.y} width={cellW} height={cellH} fill="rgba(185,147,47,0.12)" />);
+    nodes.push(<rect key={`zb${i}`} x={p.x} y={p.y} width={cellW} height={cellH} fill="rgb(var(--brass-rgb) / 0.12)" />);
   });
   for (let i = 0; i <= 3; i++) {
-    nodes.push(<line key={`gv${i}`} x1={gx + i * cellW} y1={gy} x2={gx + i * cellW} y2={gy + gridH} stroke="#d8d2c3" strokeWidth={1} />);
-    nodes.push(<line key={`gh${i}`} x1={gx} y1={gy + i * cellH} x2={W} y2={gy + i * cellH} stroke="#d8d2c3" strokeWidth={1} />);
+    nodes.push(<line key={`gv${i}`} x1={gx + i * cellW} y1={gy} x2={gx + i * cellW} y2={gy + gridH} stroke={LINE_STRONG} strokeWidth={1} />);
+    nodes.push(<line key={`gh${i}`} x1={gx} y1={gy + i * cellH} x2={W} y2={gy + i * cellH} stroke={LINE_STRONG} strokeWidth={1} />);
   }
   const za = cell(0, 2);
   nodes.push(<g key="zat">{textBlock({ x: za.x + 6, y: za.y + 6, w: cellW - 12, text: "Exceeding mandate", size: FS_SMALL, weight: 600, fill: WRONG }).node}</g>);
@@ -191,13 +191,13 @@ function kundupplevelsen(W, narrow) {
   nodes.push(
     <defs key="defs">
       <linearGradient id={`kund-${narrow ? "s" : "b"}`} x1="0" x2="1" y1="0" y2="0">
-        <stop offset="0" stopColor="#f3d9d3" />
-        <stop offset="0.5" stopColor="#f4f1ea" />
-        <stop offset="1" stopColor="#e8f1ea" />
+        <stop offset="0" stopColor="rgb(var(--wrong-rgb) / 0.2)" />
+        <stop offset="0.5" stopColor="var(--paper)" />
+        <stop offset="1" stopColor="rgb(var(--correct-rgb) / 0.12)" />
       </linearGradient>
     </defs>,
   );
-  nodes.push(<rect key="bar" x={0} y={barY} width={W} height={barH} rx={6} fill={`url(#kund-${narrow ? "s" : "b"})`} stroke="#cfc9ba" />);
+  nodes.push(<rect key="bar" x={0} y={barY} width={W} height={barH} rx={6} fill={`url(#kund-${narrow ? "s" : "b"})`} stroke={LINE_STRONG} />);
   nodes.push(<line key="line" x1={mid} y1={barY - 8} x2={mid} y2={barY + barH + 8} stroke={INK} strokeWidth={2} />);
   const zw = mid - 16;
   nodes.push(<g key="l">{textBlock({ x: 8, y: barY + 8, w: zw, text: "Irritationszonen", size: FS, weight: 600, fill: WRONG }).node}</g>);
@@ -224,9 +224,9 @@ function huset(W, narrow) {
   const roofH = narrow ? 128 : 112;
   const eave = narrow ? 2 : 10;
   const roofBase = roofTop + roofH;
-  nodes.push(<polygon key="roof" points={`${eave},${roofBase} ${W / 2},${roofTop} ${W - eave},${roofBase}`} fill={PINE} />);
-  const rt = textBlock({ x: 0, y: 0, w: narrow ? 168 : 260, text: "Taket: ledningen och kulturen", size: narrow ? FS : FS_TITLE, weight: 600, fill: "white", anchor: "middle" });
-  const rs = textBlock({ x: 0, y: 0, w: narrow ? 168 : 260, text: "process governance och prestationsstyrning", size: FS_SMALL, fill: "white", anchor: "middle" });
+  nodes.push(<polygon key="roof" points={`${eave},${roofBase} ${W / 2},${roofTop} ${W - eave},${roofBase}`} fill={SOLID} stroke={PINE} strokeWidth={1.4} strokeLinejoin="round" />);
+  const rt = textBlock({ x: 0, y: 0, w: narrow ? 168 : 260, text: "Taket: ledningen och kulturen", size: narrow ? FS : FS_TITLE, weight: 600, fill: ON_FILL, anchor: "middle" });
+  const rs = textBlock({ x: 0, y: 0, w: narrow ? 168 : 260, text: "process governance och prestationsstyrning", size: FS_SMALL, fill: ON_FILL, anchor: "middle" });
   const rtw = narrow ? 168 : 260;
   nodes.push(<g key="rt" transform={`translate(${W / 2 - rtw / 2} ${roofBase - rt.h - rs.h - 12})`}>{rt.node}<g transform={`translate(0 ${rt.h + 2})`}>{rs.node}</g></g>);
   const wall = narrow ? 6 : 26;
@@ -381,18 +381,18 @@ function endToEnd(W, narrow) {
   const sg = narrow ? 6 : 12;
   const sw = (W - sg * (n - 1)) / n;
   for (let i = 0; i < n; i++) {
-    nodes.push(<rect key={`si${i}`} x={i * (sw + sg)} y={sy} width={sw} height={siloH} rx={6} fill="#f1eee6" stroke="#cfc9ba" />);
+    nodes.push(<rect key={`si${i}`} x={i * (sw + sg)} y={sy} width={sw} height={siloH} rx={6} fill="rgb(var(--ink-rgb) / 0.05)" stroke={LINE_STRONG} />);
     nodes.push(<g key={`st${i}`}>{textBlock({ x: i * (sw + sg) + 4, y: sy + 6, w: sw - 8, text: "Funktion", size: FS_SMALL, fill: MUTED, anchor: "middle" }).node}</g>);
   }
   const ay = sy + siloH / 2 + 6;
-  nodes.push(<rect key="core" x={8} y={ay - 26} width={W - 16} height={52} rx={26} fill={PINE} />);
-  const ct = textBlock({ x: 28, y: 0, w: W - 70, text: "Core process: från försäljning till leverans", size: narrow ? FS : FS_TITLE, weight: 600, fill: "white" });
+  nodes.push(<rect key="core" x={8} y={ay - 26} width={W - 16} height={52} rx={26} fill={SOLID} stroke={PINE} strokeWidth={1.4} />);
+  const ct = textBlock({ x: 28, y: 0, w: W - 70, text: "Core process: från försäljning till leverans", size: narrow ? FS : FS_TITLE, weight: 600, fill: ON_FILL });
   nodes.push(<g key="ct" transform={`translate(0 ${ay - ct.h / 2})`}>{ct.node}</g>);
-  nodes.push(<polygon key="tip" points={`${W - 30},${ay - 12} ${W - 14},${ay} ${W - 30},${ay + 12}`} fill="white" />);
+  nodes.push(<polygon key="tip" points={`${W - 30},${ay - 12} ${W - 14},${ay} ${W - 30},${ay + 12}`} fill={ON_FILL} />);
   const qText = "Vem styr processen från början till slut?";
   const qw = Math.min(W - 16, measure(qText, FS_SMALL, 600) + 28);
   const q = textBlock({ x: (W - qw) / 2 + 10, y: sy + siloH - 32, w: qw - 18, text: qText, size: FS_SMALL, weight: 600, fill: BRASS_TEXT, anchor: "middle" });
-  nodes.push(<rect key="qb" x={(W - qw) / 2} y={sy + siloH - 37} width={qw} height={q.h + 10} rx={(q.h + 10) / 2} fill="white" stroke={BRASS} strokeWidth={1.2} />);
+  nodes.push(<rect key="qb" x={(W - qw) / 2} y={sy + siloH - 37} width={qw} height={q.h + 10} rx={(q.h + 10) / 2} fill={SURFACE} stroke={BRASS} strokeWidth={1.2} />);
   nodes.push(<g key="q">{q.node}</g>);
   const supY = sy + siloH + 12;
   const sup = card({ w: W, kicker: "Support processes", title: "Stödjer kärnprocesserna", text: "Skapar värde indirekt, som IT och databaser.", tone: "plain", pad: 8, titleSize: FS });
@@ -429,7 +429,7 @@ function processAsset(W, narrow) {
       const leftSide = i < 3;
       const x = leftSide ? 0 : W - cw;
       const cy = (i % 3) * (ch + rowGap);
-      nodes.push(<line key={`k${i}`} x1={leftSide ? x + cw : x} y1={cy + ch / 2} x2={leftSide ? hubX : hubX + hubW} y2={hubY + hub.h / 2} stroke={i === 0 ? BRASS : "#bdb6a6"} strokeWidth={i === 0 ? 2 : 1.3} />);
+      nodes.push(<line key={`k${i}`} x1={leftSide ? x + cw : x} y1={cy + ch / 2} x2={leftSide ? hubX : hubX + hubW} y2={hubY + hub.h / 2} stroke={i === 0 ? BRASS : LINE_STRONG} strokeWidth={i === 0 ? 2 : 1.3} />);
       nodes.push(<g key={`c${i}`}>{c.render(x, cy, ch)}</g>);
     });
     nodes.push(<g key="hub">{hub.render(hubX, hubY)}</g>);
@@ -446,7 +446,7 @@ function processAsset(W, narrow) {
       const cy = gy + Math.floor(i / 2) * (ch + 8);
       nodes.push(<g key={`c${i}`}>{c.render(x, cy, ch)}</g>);
     });
-    nodes.push(<line key="k" x1={W / 2} y1={hub.h} x2={W / 2} y2={gy} stroke="#bdb6a6" strokeWidth={1.3} />);
+    nodes.push(<line key="k" x1={W / 2} y1={hub.h} x2={W / 2} y2={gy} stroke={LINE_STRONG} strokeWidth={1.3} />);
     y = gy + 3 * (ch + 8) + 14;
   }
   const chain = [
@@ -606,9 +606,9 @@ function greenBpm(W, narrow) {
     const y = 4;
     for (let i = 0; i < n; i++) {
       const x = i * (aw + 24);
-      nodes.push(<rect key={`a${i}`} x={x} y={y} width={aw} height={52} rx={9} fill="white" stroke={INK} strokeWidth={1.5} />);
+      nodes.push(<rect key={`a${i}`} x={x} y={y} width={aw} height={52} rx={9} fill={SURFACE} stroke={INK} strokeWidth={1.5} />);
       nodes.push(<g key={`at${i}`}>{textBlock({ x, y: y + 16, w: aw, text: `Aktivitet ${i + 1}`, size: FS, anchor: "middle" }).node}</g>);
-      nodes.push(<rect key={`t${i}`} x={x + 4} y={y + 62} width={aw - 8} height={tagH} rx={5} fill="rgba(46,125,91,0.12)" stroke={CORRECT} />);
+      nodes.push(<rect key={`t${i}`} x={x + 4} y={y + 62} width={aw - 8} height={tagH} rx={5} fill="rgb(var(--correct-rgb) / 0.12)" stroke={CORRECT} />);
       nodes.push(<g key={`tt${i}`}>{textBlock({ x: x + 4, y: y + 66, w: aw - 8, text: "kWh · bränsle · CO₂", size: FS_SMALL, fill: CORRECT, anchor: "middle" }).node}</g>);
       if (i > 0) nodes.push(<Arrow key={`f${i}`} x1={x - 22} y1={y + 26} x2={x - 2} y2={y + 26} size={7} />);
       nodes.push(<line key={`s${i}`} x1={x + aw / 2} y1={y + 62 + tagH} x2={x + aw / 2} y2={y + 112} stroke={CORRECT} strokeWidth={1.2} strokeDasharray="3 3" />);
@@ -633,9 +633,9 @@ function greenBpm(W, narrow) {
   const sumX = W - 10;
   const tagW = sumX - 14 - tagX;
   for (let i = 0; i < n; i++) {
-    nodes.push(<rect key={`a${i}`} x={0} y={y} width={actW} height={44} rx={9} fill="white" stroke={INK} strokeWidth={1.5} />);
+    nodes.push(<rect key={`a${i}`} x={0} y={y} width={actW} height={44} rx={9} fill={SURFACE} stroke={INK} strokeWidth={1.5} />);
     nodes.push(<g key={`at${i}`}>{textBlock({ x: 0, y: y + 13, w: actW, text: `Aktivitet ${i + 1}`, size: FS, anchor: "middle" }).node}</g>);
-    nodes.push(<rect key={`t${i}`} x={tagX} y={y + 10} width={tagW} height={tagH} rx={5} fill="rgba(46,125,91,0.12)" stroke={CORRECT} />);
+    nodes.push(<rect key={`t${i}`} x={tagX} y={y + 10} width={tagW} height={tagH} rx={5} fill="rgb(var(--correct-rgb) / 0.12)" stroke={CORRECT} />);
     nodes.push(<g key={`tt${i}`}>{textBlock({ x: tagX, y: y + 14, w: tagW, text: "kWh · bränsle · CO₂", size: FS_SMALL, fill: CORRECT, anchor: "middle" }).node}</g>);
     nodes.push(<line key={`s${i}`} x1={tagX + tagW} y1={y + 22} x2={sumX} y2={y + 22} stroke={CORRECT} strokeWidth={1.2} strokeDasharray="3 3" />);
     if (i < n - 1) nodes.push(<Arrow key={`f${i}`} x1={actW / 2} y1={y + 46} x2={actW / 2} y2={y + 62} size={6} />);
@@ -655,7 +655,7 @@ function greenBpm(W, narrow) {
 function Decision({ x, y, w, h = 44, title, sub }) {
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} fill="white" stroke={PINE} strokeWidth={1.6} />
+      <rect x={x} y={y} width={w} height={h} fill={SURFACE} stroke={PINE} strokeWidth={1.6} />
       <Lines x={x + w / 2} y={y + (sub ? 6 : 13)} lines={[title]} size={FS} weight={600} anchor="middle" fill={PINE} maxW={w - 8} />
       {sub && <Lines x={x + w / 2} y={y + 24} lines={[sub]} size={FS_SMALL} anchor="middle" fill={MUTED} maxW={w - 8} />}
     </g>
@@ -664,7 +664,7 @@ function Decision({ x, y, w, h = 44, title, sub }) {
 function InputData({ x, y, w, h = 36, title }) {
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} rx={h / 2} fill="rgba(185,147,47,0.12)" stroke={BRASS} strokeWidth={1.6} />
+      <rect x={x} y={y} width={w} height={h} rx={h / 2} fill="rgb(var(--brass-rgb) / 0.12)" stroke={BRASS} strokeWidth={1.6} />
       <Lines x={x + w / 2} y={y + 9} lines={[title]} size={FS} anchor="middle" fill={BRASS_TEXT} maxW={w - 16} />
     </g>
   );
@@ -755,7 +755,7 @@ function handelser(W, narrow) {
       rowH = Math.max(rowH, 48 + lb.h);
     });
     y = rowTop + rowH + (narrow ? 16 : 14);
-    if (ri < rows.length - 1) nodes.push(<line key={`sep${ri}`} x1={0} y1={y - 7} x2={W} y2={y - 7} stroke="#e1dccf" />);
+    if (ri < rows.length - 1) nodes.push(<line key={`sep${ri}`} x1={0} y1={y - 7} x2={W} y2={y - 7} stroke={LINE} />);
   });
   const note = textBlock({ x: 0, y, w: W, text: "Ofylld ikon: catching, processen väntar på signalen. Fylld ikon: throwing, signalen skickas direkt.", size: FS, fill: MUTED });
   nodes.push(<g key="n">{note.node}</g>);
@@ -774,7 +774,7 @@ function interruptingPanel({ x, y, w, interrupting }) {
   nodes.push(<EventShape key="be" cx={bx} cy={by} kind="boundary" event="message" interrupting={interrupting} />);
   // Normalflödet åt höger, undantagsflödet nedåt.
   const nx = ax + TASK_W / 2;
-  nodes.push(<Arrow key="norm" x1={nx} y1={ay} x2={x + w - 6} y2={ay} color={interrupting ? "rgba(34,40,42,0.25)" : INK} dashed={interrupting} size={7} />);
+  nodes.push(<Arrow key="norm" x1={nx} y1={ay} x2={x + w - 6} y2={ay} color={interrupting ? "rgb(var(--ink-rgb) / 0.25)" : INK} dashed={interrupting} size={7} />);
   nodes.push(<g key="nl">{textBlock({ x: nx + 6, y: ay - 22, w: x + w - nx - 12, text: interrupting ? "Vanliga flödet: används inte" : "Vanliga flödet: fortsätter", size: FS_SMALL, fill: interrupting ? MUTED : INK, anchor: "end" }).node}</g>);
   nodes.push(<Arrow key="exc" x1={bx} y1={by + 18} x2={bx} y2={by + 50} color={interrupting ? WRONG : BRASS} size={7} />);
   nodes.push(<g key="el">{textBlock({ x: bx + 10, y: by + 26, w: x + w - bx - 14, text: "Undantagsflödet", size: FS_SMALL, weight: 600, fill: interrupting ? WRONG : BRASS_TEXT }).node}</g>);

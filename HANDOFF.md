@@ -313,6 +313,8 @@ undvik kategoriska distraktorer; `LENGTH_FLAGGED` kräver skäl.
 huvudåtgärd; allt klickbart har hover; inga nya färger (delkursfärgerna är
 en validerad helhet); Fraunces rubriker, Inter brödtext; desktop ≥1024 px
 har 17 px-rot med px-omskrivningar sist i `index.css`; mobil intakt.
+Färger bara via tokens, aldrig `white`, hex eller `rgba(…)` i komponenter —
+annars lyser de i mörkt läge (`theme.test.mjs` stoppar det).
 
 **Commit:** svenska meddelanden med imperativ rubrik och varför-stycke,
 trailer `Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>`, push,
@@ -556,6 +558,34 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
 - Bevakningen körde 2026-09-14–28 aldrig jämförelsen (teststeget körde alla
   tester utan `npm ci` och föll på sql.js); lagat 2026-09-29, då fem
   ändringar fördes in.
+
+## Ljust och mörkt tema (2026-10-20)
+
+- **Val:** Tema i headern, bredvid delkursväljaren: Auto (följer enheten,
+  standard), Ljust eller Mörkt. Sparas som `sysb23:tema`.
+- **Tokens:** färgerna står som RGB-kanaler i `index.css` (`--pine-rgb:
+  31 78 69`), och `--pine` m.fl. byggs av dem. `:root[data-theme="dark"]`
+  skriver bara om kanalerna. Tailwind läser kanalerna
+  (`rgb(var(--pine-rgb) / <alpha-value>)`), så `text-ink/70` och alla andra
+  klasser byter med temat. Det ljusa temat har exakt de gamla värdena.
+- **Nya tokens:** `surface` (kort och fält, var `bg-white`), `brass-text`,
+  `wrong-dark`, `line-strong`, `shade` (skuggor och dialogslöja), `code` och
+  `code-ink` (schemaeditorn, mörk i båda temana) och `solid`/`on-solid`
+  (stora fyllda ytor i figurerna: djupgrön i mörkt läge i stället för mint).
+- **Text på fylld yta:** `text-paper`, inte `text-white`. Fylld pine är mint
+  i mörkt läge och bär då mörk text; samma klass fungerar i båda temana.
+- **Figurerna:** `SURFACE`, `SOLID`, `ON_FILL`, `LINE_STRONG` och toningar
+  som `rgb(var(--pine-rgb) / 0.07)` i `conceptFigures.jsx`; BPMN, ER, VP och
+  FD använder `var(--surface)` för formernas fyllning.
+- **Delkursfärgerna i mörkt:** samma kulör och mättnad, ljushet +0,16 i
+  OKLCH. Minsta paravstånd är oförändrat (0,160 mot 0,159), minst 4:1 mot
+  ytan. Justera aldrig en enskild färg.
+- **Ingen vit blixt:** skriptet i `index.html` sätter `data-theme` och
+  `theme-color` före första ritningen; `lib/theme.js` och `lib/useTheme.js`
+  tar över sedan (lyssnar på enhetens läge, och läser om när fliken blir
+  synlig). `theme.test.mjs` låser att skriptet och koden är i takt, att varje
+  kanal har ett mörkt värde, kontrasterna (brödtext 13:1, pine 8,6:1, rätt/fel
+  minst 6,2:1) och att komponenterna inte hårdkodar färger.
 
 ## Begreppsfigurer i kompendierna (2026-10-14)
 

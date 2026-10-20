@@ -6,8 +6,10 @@
 // höjd efter sin text. Varje tspan bär data-maxw, så att kontrollskriptet
 // kan mäta den verkliga textbredden mot utrymmet.
 //
-// Färgerna är sajtens tokens (index.css). Appen har ett enda ljust tema, så
-// tokens används rakt av i stället för currentColor.
+// Färgerna är sajtens tokens (index.css) och byter med temat: SURFACE är
+// rutornas fyllning, SOLID stora fyllda ytor med ON_FILL som text, och toningar skrivs som
+// rgb(var(--pine-rgb) / 0.07). Skriv aldrig "white" eller hex här — det
+// syns som ljusa fläckar i mörkt läge.
 import { CONCEPT_FIGURES } from "./conceptFigureMeta.js";
 
 export const WIDE = 640;
@@ -19,19 +21,23 @@ export const FS_SMALL = 12.5; // etiketter; lägsta storleken i smalt format
 export const INK = "var(--ink)";
 export const PINE = "var(--pine)";
 export const BRASS = "var(--brass)";
-export const BRASS_TEXT = "#7a5d14"; // mässing som text, med läsbar kontrast
+export const BRASS_TEXT = "var(--brass-text)"; // mässing som text, med läsbar kontrast
 export const LINE = "var(--line)";
-export const MUTED = "rgba(34,40,42,0.66)";
-export const ARROW = "rgba(34,40,42,0.55)";
+export const LINE_STRONG = "var(--line-strong)"; // neutrala ramar
+export const SURFACE = "var(--surface)"; // rutornas fyllning
+export const SOLID = "var(--solid)"; // stora fyllda ytor (djupgrön i mörkt läge)
+export const ON_FILL = "var(--on-solid)"; // text på SOLID
+export const MUTED = "rgb(var(--ink-rgb) / 0.66)";
+export const ARROW = "rgb(var(--ink-rgb) / 0.55)";
 
 export const TONE = {
-  pine: { stroke: PINE, fill: "rgba(31,78,69,0.07)", title: PINE, text: INK },
-  brass: { stroke: BRASS, fill: "rgba(185,147,47,0.12)", title: BRASS_TEXT, text: INK },
-  plain: { stroke: "#cfc9ba", fill: "white", title: INK, text: INK },
+  pine: { stroke: PINE, fill: "rgb(var(--pine-rgb) / 0.07)", title: PINE, text: INK },
+  brass: { stroke: BRASS, fill: "rgb(var(--brass-rgb) / 0.12)", title: BRASS_TEXT, text: INK },
+  plain: { stroke: LINE_STRONG, fill: SURFACE, title: INK, text: INK },
   correct: { stroke: "var(--correct)", fill: "var(--correct-bg)", title: "var(--correct)", text: INK },
   wrong: { stroke: "var(--wrong)", fill: "var(--wrong-bg)", title: "var(--wrong)", text: INK },
-  solid: { stroke: PINE, fill: PINE, title: "white", text: "white" },
-  ghost: { stroke: "#cfc9ba", fill: "none", title: INK, text: INK, dash: "5 4" },
+  solid: { stroke: PINE, fill: SOLID, title: ON_FILL, text: ON_FILL },
+  ghost: { stroke: LINE_STRONG, fill: "none", title: INK, text: INK, dash: "5 4" },
 };
 
 // ── Text ────────────────────────────────────────────────────────────────
@@ -133,7 +139,7 @@ export function card(opts) {
     return (
       <g>
         <rect x={x} y={y} width={w} height={H} rx={rx} fill={t.fill} stroke={t.stroke} strokeWidth={1.4} strokeDasharray={t.dash} />
-        <Lines x={tx} y={top} lines={kLines} size={FS_SMALL} weight={600} fill={t.title === "white" ? "white" : BRASS_TEXT} anchor={align} maxW={inner} />
+        <Lines x={tx} y={top} lines={kLines} size={FS_SMALL} weight={600} fill={t.title === ON_FILL ? ON_FILL : BRASS_TEXT} anchor={align} maxW={inner} />
         <Lines x={tx} y={top + kH + gap1} lines={tLines} size={titleSize} weight={600} fill={t.title} anchor={align} maxW={inner} />
         <Lines x={tx} y={top + kH + gap1 + tH + gap2} lines={xLines} size={textSize} fill={t.text} anchor={align} maxW={inner} />
       </g>

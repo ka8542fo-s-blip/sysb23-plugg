@@ -1,5 +1,6 @@
 import UpdateBanner from "./UpdateBanner.jsx";
 import CourseSwitcher from "./CourseSwitcher.jsx";
+import ThemeToggle from "./ThemeToggle.jsx";
 
 export const VIEW_LABELS = {
   hem: "Hem",
@@ -32,6 +33,7 @@ export default function Nav({
   courseId,
   onSelectCourse,
   examRunning,
+  theme,
 }) {
   const tabs = viewsForCourse(course);
   return (
@@ -50,12 +52,18 @@ export default function Nav({
           >
             SYSB23 Plugg
           </button>
-          <CourseSwitcher
-            courses={courses}
-            courseId={courseId}
-            onSelect={onSelectCourse}
-            examRunning={examRunning}
-          />
+          {/* Temaväljaren står bredvid delkursväljaren, i samma höjd. */}
+          <div className="flex items-stretch gap-2">
+            <div className="min-w-0 flex-1 sm:flex-none">
+              <CourseSwitcher
+                courses={courses}
+                courseId={courseId}
+                onSelect={onSelectCourse}
+                examRunning={examRunning}
+              />
+            </div>
+            <ThemeToggle choice={theme.choice} theme={theme.theme} onChange={theme.setChoice} />
+          </div>
         </div>
 
         <nav aria-label="Huvudmeny" className="relative">
@@ -71,7 +79,7 @@ export default function Nav({
                     aria-current={active ? "page" : undefined}
                     className={`flex items-center gap-1 whitespace-nowrap rounded-lg px-2 py-1.5 text-[14px] transition-colors duration-150 sm:gap-1.5 sm:px-3 sm:text-[15px] ${
                       active
-                        ? "bg-pine font-medium text-white hover:bg-pine-dark"
+                        ? "bg-pine font-medium text-paper hover:bg-pine-dark"
                         : "text-ink/70 hover:bg-pine/[0.08] hover:text-pine active:bg-pine/[0.14]"
                     }`}
                   >

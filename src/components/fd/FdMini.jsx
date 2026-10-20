@@ -40,7 +40,7 @@ export default function FdMini({ diagram, maxHeight = 150 }) {
         const r = boxRect(b);
         return (
           <g key={b.id}>
-            <rect x={r.x} y={r.y} width={r.w} height={r.h} rx="5" className="fill-white stroke-ink" strokeWidth="1.6" />
+            <rect x={r.x} y={r.y} width={r.w} height={r.h} rx="5" className="fill-surface stroke-ink" strokeWidth="1.6" />
             <text x={b.x} y={b.y + 7} textAnchor="middle" fontSize="20" className={b.attr ? "fill-ink" : "fill-ink/35"} style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}>
               {b.attr || "?"}
             </text>

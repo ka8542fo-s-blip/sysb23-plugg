@@ -7,6 +7,7 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 10, date: "2026-10-20", text: "Mörkt läge: välj Auto, Ljust eller Mörkt under Tema i headern" },
   { id: 9, date: "2026-10-14", text: "Figurer som förklarar modellerna i Processorienterad" },
   { id: 8, date: "2026-10-14", text: "Figurer som förklarar modellerna i Databaser-kompendiet" },
   { id: 7, date: "2026-10-13", text: "Fliken Kör processen heter nu BPMN-övningar" },

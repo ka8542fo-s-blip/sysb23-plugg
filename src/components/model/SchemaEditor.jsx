@@ -64,25 +64,25 @@ export default function SchemaEditor({ id, value, onChange, placeholder, rows = 
 
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-t-lg border border-b-0 border-ink/60 bg-ink px-3 py-1.5">
-        <span className="font-mono text-xs text-paper/60">{label}</span>
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-t-lg border border-b-0 border-code/60 bg-code px-3 py-1.5">
+        <span className="font-mono text-xs text-code-ink/60">{label}</span>
         {subscripts && <div className="flex items-center gap-1" role="group" aria-label="Små siffror">
-          <span className="mr-1 text-xs text-paper/60">Liten siffra:</span>
+          <span className="mr-1 text-xs text-code-ink/60">Liten siffra:</span>
           {SUBS.map((c) => (
             <button
               key={c}
               type="button"
               onClick={() => replaceSelection(c)}
               title={`Sätt in ${c} (${MOD_LABEL} + ${"₁₂₃₄".indexOf(c) + 1})`}
-              className="h-7 min-w-7 rounded border border-paper/25 px-1.5 font-mono text-sm text-paper transition-colors duration-150 hover:border-paper hover:bg-paper/15"
+              className="h-7 min-w-7 rounded border border-code-ink/25 px-1.5 font-mono text-sm text-code-ink transition-colors duration-150 hover:border-code-ink hover:bg-code-ink/15"
             >
               {c}
             </button>
           ))}
         </div>}
       </div>
-      <div className="flex rounded-b-lg border border-ink/60 bg-ink font-mono text-[14px] leading-6">
-        <pre aria-hidden="true" className="select-none border-r border-paper/15 px-2 py-3 text-right text-paper/40">
+      <div className="flex rounded-b-lg border border-code/60 bg-code font-mono text-[14px] leading-6">
+        <pre aria-hidden="true" className="select-none border-r border-code-ink/15 px-2 py-3 text-right text-code-ink/40">
           {Array.from({ length: lineCount }, (_, i) => i + 1).join("\n")}
         </pre>
         <textarea
@@ -99,7 +99,7 @@ export default function SchemaEditor({ id, value, onChange, placeholder, rows = 
           autoCorrect="off"
           autoComplete="off"
           style={{ tabSize: 2, caretColor: "var(--paper)" }}
-          className="min-h-0 w-full resize-y bg-transparent px-3 py-3 font-mono text-[14px] leading-6 text-paper placeholder:text-paper/35 focus:outline-none"
+          className="min-h-0 w-full resize-y bg-transparent px-3 py-3 font-mono text-[14px] leading-6 text-code-ink placeholder:text-code-ink/35 focus:outline-none"
         />
       </div>
       <p className="mt-1 text-xs text-ink/65">

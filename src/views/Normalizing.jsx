@@ -247,7 +247,7 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
                       </ul>
                     )}
                     {dec.properties && (
-                      <details className="group mt-3 rounded-lg border border-line bg-white/70 px-3 py-2 text-sm">
+                      <details className="group mt-3 rounded-lg border border-line bg-surface/70 px-3 py-2 text-sm">
                         <summary className="cursor-pointer list-none text-ink/70">
                           <span className="mr-1 inline-block transition-transform duration-150 group-open:rotate-90" aria-hidden="true">›</span>
                           Visa detaljer
@@ -312,8 +312,8 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
               {facit.schema && (
                 <div className="mt-3">
                   <p className="mb-1 text-sm font-medium text-ink/80">Nedbrytning</p>
-                  <div className="rounded-lg border border-line bg-white p-3"><SchemaView schema={facit.schema} highlight={facitHighlight} /></div>
-                  <pre className="mt-2 overflow-x-auto rounded-lg border border-line bg-white px-4 py-3 font-mono text-[13.5px] leading-relaxed text-ink">{toBlockNotation(facit.schema, { ckOf: (rel) => allCandidateKeys(rel.attrs, projectFds(rel.attrs, toFds(item.fds))) })}</pre>
+                  <div className="rounded-lg border border-line bg-surface p-3"><SchemaView schema={facit.schema} highlight={facitHighlight} /></div>
+                  <pre className="mt-2 overflow-x-auto rounded-lg border border-line bg-surface px-4 py-3 font-mono text-[13.5px] leading-relaxed text-ink">{toBlockNotation(facit.schema, { ckOf: (rel) => allCandidateKeys(rel.attrs, projectFds(rel.attrs, toFds(item.fds))) })}</pre>
                 </div>
               )}
               {facit.nf === 3 && !item.nfOnly && <p className="mt-3 text-[15px]">R är redan i 3NF — ingen nedbrytning.</p>}
@@ -342,7 +342,7 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
                         onClick={() => setCurrentId(e.id)}
                         aria-current={active ? "true" : undefined}
                         aria-label={`${itemLabel(e)}${solved ? ", klar" : ""}`}
-                        className={`tabular flex h-9 w-9 items-center justify-center rounded-lg border text-sm transition-colors duration-150 ${active ? "border-pine bg-pine text-white" : solved ? "border-correct/40 bg-correct-bg text-correct hover:border-pine" : "border-line hover:border-pine hover:bg-pine/[0.06]"}`}
+                        className={`tabular flex h-9 w-9 items-center justify-center rounded-lg border text-sm transition-colors duration-150 ${active ? "border-pine bg-pine text-paper" : solved ? "border-correct/40 bg-correct-bg text-correct hover:border-pine" : "border-line hover:border-pine hover:bg-pine/[0.06]"}`}
                       >
                         {e.exercise === "egen" ? `E${e.number}` : e.number}
                       </button>
