@@ -58,7 +58,9 @@ export default function QuestionCard({
           {question.context}
         </pre>
       )}
-      <h2 className="font-display text-[22px] leading-snug text-ink sm:text-[26px]">
+      {/* Frågan är läsetext, inte en rubrik: Inter medium som svarsalternativen,
+          men större. Fraunces var tung att läsa över tre–fyra rader. */}
+      <h2 className="font-sans text-[18px] font-medium leading-normal tracking-[-0.005em] text-ink [font-variation-settings:normal] sm:text-[20px]">
         {question.question}
       </h2>
 

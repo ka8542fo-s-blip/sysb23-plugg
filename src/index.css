@@ -279,6 +279,16 @@
   }
 }
 
+/* Fraunces optiska storlek: rubrikerna är satta i varianten för stora
+   rubriker ("opsz" 100). Små rubriker (upp till text-xl, 20 px) får i
+   stället den variant som är ritad för sin storlek — stadigare streck och
+   luftigare bokstäver, lättare att läsa. Stora rubriker är oförändrade.
+   Ligger utanför @layer så att regeln alltid kommer med i bygget. */
+:is(h1, h2, h3, h4, .font-display):is(.text-xs, .text-sm, .text-base, .text-lg, .text-xl, .text-\[15px\], .text-\[17px\]) {
+  font-variation-settings: normal;
+  font-optical-sizing: auto;
+}
+
 /* Respektera reducerad rörelse */
 @media (prefers-reduced-motion: reduce) {
   *,

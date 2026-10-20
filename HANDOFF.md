@@ -311,7 +311,10 @@ undvik kategoriska distraktorer; `LENGTH_FLAGGED` kräver skäl.
 
 **Design ("Läsesalen"):** fylld pine-yta = valt tillstånd + vyns enda
 huvudåtgärd; allt klickbart har hover; inga nya färger (delkursfärgerna är
-en validerad helhet); Fraunces rubriker, Inter brödtext; desktop ≥1024 px
+en validerad helhet); Fraunces rubriker, Inter brödtext och frågetext
+(frågekortet är Inter medium 18/20 px — Fraunces blev tung över flera
+rader); små rubriker (≤ text-xl) följer textstorleken i Fraunces optiska
+storlek, stora har "opsz" 100; desktop ≥1024 px
 har 17 px-rot med px-omskrivningar sist i `index.css`; mobil intakt.
 Färger bara via tokens, aldrig `white`, hex eller `rgba(…)` i komponenter —
 annars lyser de i mörkt läge (`theme.test.mjs` stoppar det).
