@@ -14,6 +14,11 @@
 // inte längre den markeringen. Ingen markering i UI.
 //
 // Kapitelschema: { id, number, title, lead, readingMinutes, sources, body }
+//
+// Översikten (overview.js) står först. Den har number 0 och overview: true:
+// UI:t kallar den "Översikt", kapitel 1–11 behåller sina nummer, och Öva
+// hoppar över den (practiceAxis.js).
+import { overviewChapter } from "./overview.js";
 
 export const CHAPTER_TOPICS = {
   kap1: { topics: ["grunder"], primaryTopics: ["grunder"] },
@@ -1664,7 +1669,7 @@ Distraktorn "A, E, F" är det svar en **interrupting** event subprocess skulle g
   },
 ];
 
-export const chapters = rawChapters.map((chapter) => ({
+export const chapters = [overviewChapter, ...rawChapters].map((chapter) => ({
   ...chapter,
   ...(CHAPTER_TOPICS[chapter.id] || { topics: [], primaryTopics: [] }),
 }));

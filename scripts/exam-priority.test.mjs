@@ -86,7 +86,9 @@ test("BPM-delkursens klassning: allt kärna, essä där HT25 frågade eller Weav
     assert.equal(levels.includes("essa"), essa.includes(topic.id), topic.id);
     assert.ok(!levels.includes("bakgrund"), topic.id);
   }
-  for (const chapter of processChapters) {
+  // Översikten har inga ämnen och därmed ingen klassning; den tonas aldrig
+  // ned i snabbspåret (ChapterList), så den räknas inte här.
+  for (const chapter of processChapters.filter((c) => !c.overview)) {
     assert.ok(isFastTrack(chapterPriority(chapter, processTopics)), chapter.id);
   }
 });

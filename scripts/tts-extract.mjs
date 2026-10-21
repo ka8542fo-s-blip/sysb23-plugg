@@ -18,6 +18,7 @@ import { JSDOM } from "jsdom";
 import { createServer } from "vite";
 import { courses } from "../src/data/index.js";
 import { blockText, collectBlocks, normalizeText, textHash } from "../src/lib/ttsBlocks.js";
+import { numberedChapterCount } from "../src/lib/chapterNumbering.js";
 
 const ROOT = new URL("..", import.meta.url);
 const noop = () => {};
@@ -45,7 +46,9 @@ export async function extractChapters(courseId = null, chapterId = null) {
           createElement(ChapterView, {
             chapter,
             number: chapter.number ?? index + 1,
-            total: chapters.length,
+            total: numberedChapterCount(chapters),
+            isFirst: index === 0,
+            isLast: index === chapters.length - 1,
             course,
             isRead: false,
             onToggleRead: noop,

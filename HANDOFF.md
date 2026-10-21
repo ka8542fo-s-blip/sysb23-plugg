@@ -562,6 +562,29 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
   tester utan `npm ci` och föll på sql.js); lagat 2026-09-29, då fem
   ändringar fördes in.
 
+## BPM-översikten (2026-10-21)
+
+- **Vad:** ett sammanfattningskapitel först i Läs för Processorienterad
+  (`src/data/process/overview.js`): kursen på en sida, med fyra figurer
+  (0.1–0.4 i `components/figures/overviewFigures.jsx`). Kasper tyckte att
+  kapitel 1–6 var röriga; översikten är kartan man läser först.
+- **Regel:** inget nytt i sak. Allt ska redan stå i kapitel 1–11, och varje
+  avsnitt slutar med "Mer: kapitel N". Ändras ett kapitel så att översikten
+  blir fel, rättas översikten.
+- **Numrering:** kapitlet har `number: 0` och `overview: true`. UI:t kallar
+  det "Översikt · läs först" (inte "Kapitel 0 av 11"), listan visar 0 och
+  "Läs först", och "Kapitel N av 11" räknar bara numrerade kapitel. Kapitel
+  1–11 behåller nummer, id:n och text, så hänvisningar som "kapitel 7" och det
+  inspelade ljudet för dem gäller. Föregående/nästa går på position i listan.
+  Räkningen ligger i `lib/chapterNumbering.js`, som också `tts-extract.mjs`
+  använder: rubriken läses upp och måste vara densamma i appen och i ljudet.
+- **Öva:** kapitlet har inga frågor och är uttryckligen undantaget:
+  `practiceGroups` och `chapterPracticeGroups` hoppar över `overview`,
+  balanstestet och snabbspårstestet filtrerar bort det, och
+  `practice-axis.test.mjs` låser undantaget. Snabbspåret tonar aldrig ned det.
+- **Ljud:** genererat som för övriga kapitel (`tts-generate.mjs process
+  oversikt`). Tabellerna läses inte upp, som i alla kapitel.
+
 ## Ljust och mörkt tema (2026-10-20)
 
 - **Val:** Tema i headern, bredvid delkursväljaren: Auto (följer enheten,

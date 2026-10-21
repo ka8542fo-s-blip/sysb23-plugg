@@ -116,6 +116,8 @@ export default function ChapterView({
   chapter,
   number,
   total,
+  isFirst = number === 1,
+  isLast = number === total,
   course,
   isRead,
   onToggleRead,
@@ -268,7 +270,7 @@ export default function ChapterView({
         <div ref={readColumnRef} data-tts-root className="min-w-0 flex-1">
           <header>
             <p className="tabular text-[11px] font-medium uppercase tracking-[0.14em] text-brass">
-              Kapitel {number} av {total}
+              {chapter.overview ? "Översikt · läs först" : `Kapitel ${number} av ${total}`}
             </p>
             <h1 className="mt-1 font-display text-3xl leading-tight sm:text-4xl">
               {chapter.title}
@@ -438,7 +440,7 @@ export default function ChapterView({
               type="button"
               className="btn-secondary"
               onClick={onPrev}
-              disabled={number === 1}
+              disabled={isFirst}
             >
               ← Föregående kapitel
             </button>
@@ -446,7 +448,7 @@ export default function ChapterView({
               type="button"
               className="btn-secondary"
               onClick={onNext}
-              disabled={number === total}
+              disabled={isLast}
             >
               Nästa kapitel →
             </button>

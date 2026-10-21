@@ -87,13 +87,16 @@ for (const bank of BANKS) {
 
   test(`${name}: Öva speglar Läs — varje kapitel har ${bank.perChapter.join("–")} frågor`, () => {
     const [lo, hi] = bank.perChapter;
-    const counts = Object.fromEntries(chapters.map((c) => [c.id, 0]));
+    // Översiktskapitlet (overview: true) är uttryckligen undantaget: det har
+    // inga frågor och är ingen grupp i Öva (practiceAxis.js).
+    const practiced = chapters.filter((c) => !c.overview);
+    const counts = Object.fromEntries(practiced.map((c) => [c.id, 0]));
     for (const q of questions) {
       const chapter = chapterOf[q.topic];
-      assert.ok(chapter in counts, `${q.id}: kapitlet ${chapter} finns inte`);
+      assert.ok(chapter in counts, `${q.id}: kapitlet ${chapter} finns inte eller är en översikt`);
       counts[chapter]++;
     }
-    for (const c of chapters) {
+    for (const c of practiced) {
       assert.ok(counts[c.id] >= lo && counts[c.id] <= hi, `${c.id} har ${counts[c.id]} frågor (spann ${lo}–${hi})`);
     }
   });

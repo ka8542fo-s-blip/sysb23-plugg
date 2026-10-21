@@ -8,6 +8,7 @@ import SearchResults from "../components/knowledge/SearchResults.jsx";
 import { searchKnowledge } from "../lib/knowledgeSearch.js";
 import { chapterPracticeGroups, groupsForTopics, practicedGroupIds } from "../lib/practiceAxis.js";
 import { KEYS, load, save } from "../lib/storage.js";
+import { numberedChapterCount } from "../lib/chapterNumbering.js";
 
 const SEGMENTS = [
   { id: "kompendium", label: "Kompendium" },
@@ -156,7 +157,11 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
               <ChapterView
                 chapter={current}
                 number={chapters[index].number ?? index + 1}
-                total={chapters.length}
+                // "Kapitel N av M" räknar bara numrerade kapitel: en översikt
+                // först (overview: true) ändrar inte numren 1–11.
+                total={numberedChapterCount(chapters)}
+                isFirst={index === 0}
+                isLast={index === chapters.length - 1}
                 course={course}
                 isRead={Boolean(readChapters[current.id])}
                 onToggleRead={onToggleRead}

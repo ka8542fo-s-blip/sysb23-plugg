@@ -7,6 +7,7 @@ import {
 } from "./erFigures.jsx";
 import { DATABASER_FIGURES } from "../../figures/databaserFigures.jsx";
 import { PROCESS_FIGURES } from "../../figures/processFigures.jsx";
+import { OVERVIEW_FIGURES } from "../../figures/overviewFigures.jsx";
 
 const FIGURES = {
   workson: WorksOnFigure,
@@ -25,6 +26,7 @@ const FIGURES = {
   "pastaenden-rederi": StatementsShippingFigure,
   ...DATABASER_FIGURES,
   ...PROCESS_FIGURES,
+  ...OVERVIEW_FIGURES,
 };
 
 if (import.meta.env?.DEV) {
