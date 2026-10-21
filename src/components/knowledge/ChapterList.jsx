@@ -199,7 +199,7 @@ export default function ChapterList({
               <button
                 type="button"
                 onClick={() => onOpen(chapter.id)}
-                className={`card-action flex gap-4 p-4 ${STATUS[status].card} ${dimmed ? "opacity-60" : ""}`}
+                className={`card-action flex h-full gap-4 p-4 ${STATUS[status].card} ${dimmed ? "opacity-60" : ""}`}
               >
                 <span className="tabular mt-0.5 font-display text-xl text-brass">
                   {chapter.number ?? index + 1}

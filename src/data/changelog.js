@@ -7,6 +7,7 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 14, date: "2026-10-21", text: "Kapitelkorten i Läs är lika höga, utan glapp mellan raderna" },
   { id: 13, date: "2026-10-21", text: "Sammanfattningen ligger nu ovanför kapitlen i Läs" },
   { id: 12, date: "2026-10-21", text: "Översikt över hela BPM-kursen först i Läs, med fyra figurer" },
   { id: 11, date: "2026-10-20", text: "Frågorna i Öva och Prov är lättare att läsa" },
