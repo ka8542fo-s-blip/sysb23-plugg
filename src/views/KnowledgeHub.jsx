@@ -8,7 +8,6 @@ import SearchResults from "../components/knowledge/SearchResults.jsx";
 import { searchKnowledge } from "../lib/knowledgeSearch.js";
 import { chapterPracticeGroups, groupsForTopics, practicedGroupIds } from "../lib/practiceAxis.js";
 import { KEYS, load, save } from "../lib/storage.js";
-import { numberedChapterCount } from "../lib/chapterNumbering.js";
 
 const SEGMENTS = [
   { id: "kompendium", label: "Kompendium" },
@@ -88,11 +87,15 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
     navigate("ova", { topics: topicIds, nonce: Date.now() });
   }
 
-  const index = chapters.findIndex((chapter) => chapter.id === chapterId);
-  const current = index === -1 ? null : chapters[index];
+  // Sammanfattningen (BPM) öppnas i samma läsvy men är inget kapitel: den
+  // står först i bläddringsordningen, så "Nästa" tar en till kapitel 1.
+  const summary = course.summary || null;
+  const readingOrder = summary ? [summary, ...chapters] : chapters;
+  const index = readingOrder.findIndex((chapter) => chapter.id === chapterId);
+  const current = index === -1 ? null : readingOrder[index];
 
   function step(delta) {
-    const next = chapters[index + delta];
+    const next = readingOrder[index + delta];
     if (next) openChapter(next.id);
   }
 
@@ -156,12 +159,10 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
             (current ? (
               <ChapterView
                 chapter={current}
-                number={chapters[index].number ?? index + 1}
-                // "Kapitel N av M" räknar bara numrerade kapitel: en översikt
-                // först (overview: true) ändrar inte numren 1–11.
-                total={numberedChapterCount(chapters)}
+                number={current.summary ? null : current.number ?? chapters.indexOf(current) + 1}
+                total={chapters.length}
                 isFirst={index === 0}
-                isLast={index === chapters.length - 1}
+                isLast={index === readingOrder.length - 1}
                 course={course}
                 isRead={Boolean(readChapters[current.id])}
                 onToggleRead={onToggleRead}
@@ -177,6 +178,7 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
             ) : (
               <ChapterList
                 chapters={chapters}
+                summary={summary}
                 readChapters={readChapters}
                 currentId={chapterId}
                 onOpen={openChapter}

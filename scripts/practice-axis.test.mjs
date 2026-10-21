@@ -3,7 +3,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { getCourse } from "../src/data/index.js";
-import { numberedChapterCount } from "../src/lib/chapterNumbering.js";
 import {
   chapterPracticeGroups, groupKeyFor, groupsForTopics, orderByGroup, practiceGroups, practicedGroupIds,
 } from "../src/lib/practiceAxis.js";
@@ -50,20 +49,16 @@ test("kapitel för kapitel ger Läs-ordning och bankens ordning inom kapitlet", 
   assert.equal(ordered.length, databaser.questions.length);
 });
 
-// Översiktskapitlet i BPM står först i Läs men har inga frågor. Det ska vara
-// uttryckligen undantaget från Öva, inte visas som en tom grupp.
-test("översiktskapitlet: först i Läs, ingen grupp i Öva och inga frågor", () => {
+// Sammanfattningen i BPM är inget kapitel: den står som ett eget kort ovanför
+// kapitlen i Läs och har inga frågor. Kapitlen och Öva ska inte märka av den.
+test("sammanfattningen: inget kapitel, ingen grupp i Öva", () => {
   const course = getCourse("process");
-  const [first, ...rest] = course.chapters;
-  assert.equal(first.overview, true);
-  assert.equal(first.number, 0);
+  assert.equal(course.summary.id, "sammanfattning");
+  assert.ok(!course.chapters.some((c) => c.id === course.summary.id));
   // Kapitel 1–11 behåller sina nummer, så "kapitel 7" i löptexten stämmer.
-  assert.deepEqual(rest.map((c) => c.number), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
-  assert.ok(!practiceGroups(course).some((g) => g.id === first.id));
-  assert.deepEqual(chapterPracticeGroups(course, first), []);
-  assert.ok(!practicedGroupIds(course).has(first.id));
-  // "Kapitel N av 11" i UI:t och i ljudet räknar inte översikten.
-  assert.equal(numberedChapterCount(course.chapters), 11);
-  // Bara BPM har en översikt.
-  for (const other of [databaser, strategi]) assert.ok(!other.chapters.some((c) => c.overview), other.id);
+  assert.deepEqual(course.chapters.map((c) => c.number), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+  assert.ok(!practiceGroups(course).some((g) => g.id === course.summary.id));
+  assert.deepEqual(chapterPracticeGroups(course, course.summary), []);
+  // Bara BPM har en sammanfattning.
+  for (const other of [databaser, strategi]) assert.equal(other.summary, undefined, other.id);
 });

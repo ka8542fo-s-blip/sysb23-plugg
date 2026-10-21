@@ -24,6 +24,7 @@ import {
   glossary as processGlossary,
   intro as processIntro,
   examNote as processExamNote,
+  summary as processSummary,
 } from "./process/reading.js";
 
 // Tomma listor för delkurser som ännu inte har den sortens material.
@@ -109,6 +110,8 @@ export const courses = [
       howto: "Provet är flervalsdelen: tio BPM-frågor balanserat dragna över ämnena, en BPMN-begreppsfråga à 3 p och tre körfrågor ur BPMN-övningar med tentans poäng och alternativ.",
     },
     chapters: processChapters,
+    // Sammanfattningen: ett brett kort ovanför kapitlen i Läs, inget kapitel.
+    summary: processSummary,
     glossary: processGlossary,
     readingIntro: processIntro,
     examNote: processExamNote,

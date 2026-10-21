@@ -110,28 +110,28 @@ export const CONCEPT_FIGURES = {
 
   // ── Processorienterad verksamhetsutveckling ─────────────────────────
   "bpm-processkedjan": {
-    course: "process", chapter: "oversikt", number: "0.1",
+    course: "process", chapter: "sammanfattning", number: "S.1",
     caption: "En beställning går genom flera avdelningar innan den når kunden. Varje avdelning äger sitt steg; BPM styr och förbättrar hela kedjan.",
     source: "Egen illustration",
     title: "En process genom flera avdelningar",
     desc: "En kund beställer på nätet. Ordern går från försäljningen till lagret, ekonomin och transporten och når sedan kunden. En streckad ram runt hela kedjan märkt BPM visar att BPM styr kedjan från början till slut, medan varje avdelning bara äger sitt eget steg.",
   },
   "bpm-7fe-tidslinje": {
-    course: "process", chapter: "oversikt", number: "0.2",
+    course: "process", chapter: "sammanfattning", number: "S.2",
     caption: "7FE:s tio faser i ordning, grupperade som i kapitel 6–8. People och Develop löper parallellt, och de tre essentials går som ett band genom alla faser.",
     source: "Egen illustration efter Jeston (2022)",
     title: "7FE som tidslinje",
     desc: "En tidslinje med faserna 1 Foundations, 2 Enablement, 3 Launch, 4 Understand, 5 Innovate, 6 People och 7 Develop parallellt, 8 Implement, 9 Realize och 10 Sustainability. Klamrar visar att faserna 1–2 står i kapitel 6, 3–4 i kapitel 7 och 5–10 i kapitel 8. Under linjen ett band med essentials: Leadership, BPM project management och People change management.",
   },
   "bpm-nyttotraden": {
-    course: "process", chapter: "oversikt", number: "0.3",
+    course: "process", chapter: "sammanfattning", number: "S.3",
     caption: "Nyttan följs genom hela ramverket, från ramverket i Enablement till bevakningen i Sustainability. Uppföljningen börjar i Implement, inte i Realize.",
     source: "Egen illustration efter kapitel 7 och 8",
     title: "Nyttotråden genom 7FE",
-    desc: "Samma tidslinje som figur 0.2. Markeringar: Enablement, ramverk för nyttostyrning. Launch, business case och benefits register. Understand, baseline. Innovate, nyttorna räknas om. Implement, uppföljningen börjar. Realize, nyttorna drivs fram och följs upp. Sustainability, nyttorna bevakas i vardagen.",
+    desc: "Samma tidslinje som figur S.2. Markeringar: Enablement, ramverk för nyttostyrning. Launch, business case och benefits register. Understand, baseline. Innovate, nyttorna räknas om. Implement, uppföljningen börjar. Realize, nyttorna drivs fram och följs upp. Sustainability, nyttorna bevakas i vardagen.",
   },
   "bpm-bpmn-grundformer": {
-    course: "process", chapter: "oversikt", number: "0.4",
+    course: "process", chapter: "sammanfattning", number: "S.4",
     caption: "BPMN:s grundformer i ett minimalt exempel: händelser (cirklar), aktiviteter (rundade rektanglar), en gateway (romb) och två banor (lanes).",
     source: "Egen illustration",
     title: "BPMN:s grundformer",

@@ -1,20 +1,20 @@
-// Översiktskapitlet: kartan man läser först. Det står först i Läs men har
-// inget kapitelnummer i gränssnittet ("Översikt" i stället för "Kapitel N
-// av 11"), så att kapitel 1–11 och alla hänvisningar till dem behåller sina
-// nummer. number: 0 ger figurnumren 0.1–0.4. overview: true undantar
-// kapitlet från Öva (inga frågor, se practiceAxis.js) och från snabbspårets
-// nedtoning.
+// Sammanfattningen: kartan man läser först. Den är inget kapitel — den
+// står som ett brett kort ovanför kapitellistan i Läs (ChapterList), har
+// inget nummer, räknas inte i "X av 11 kapitel lästa" och finns inte i Öva.
+// Kursmanifestet bär den som `summary` (src/data/index.js). Figurerna heter
+// S.1–S.4.
 //
 // Regel: inget nytt i sak. Allt här står redan i kapitel 1–11; texten
 // sammanfattar och hänvisar dit ("Mer: kapitel N").
-export const overviewChapter = {
-  id: "oversikt",
-  number: 0,
-  overview: true,
-  title: "Översikt: hela kursen på en sida",
+export const summary = {
+  id: "sammanfattning",
+  summary: true,
+  title: "Sammanfattning",
   readingMinutes: 13, // ~1 900 ord i sajtens lästempo (~145 ord/min); skummad 10–12 min
-  lead: "Kartan att läsa först: kursens viktigaste idéer i vanlig svenska, hur de hänger ihop och var du läser mer.",
-  sources: ["Sammanfattning av kapitel 1–11"],
+  lead: "Hela kursen på en sida: de viktigaste idéerna i vanlig svenska, hur de hänger ihop och var du läser mer.",
+  sources: ["Bygger på kapitel 1–11"],
+  topics: [],
+  primaryTopics: [],
   body: `
 ## Grundidén
 

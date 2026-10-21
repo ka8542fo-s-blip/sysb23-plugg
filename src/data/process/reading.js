@@ -15,10 +15,8 @@
 //
 // Kapitelschema: { id, number, title, lead, readingMinutes, sources, body }
 //
-// Översikten (overview.js) står först. Den har number 0 och overview: true:
-// UI:t kallar den "Översikt", kapitel 1–11 behåller sina nummer, och Öva
-// hoppar över den (practiceAxis.js).
-import { overviewChapter } from "./overview.js";
+// Sammanfattningen (summary.js) är inget kapitel och står inte här.
+export { summary } from "./summary.js";
 
 export const CHAPTER_TOPICS = {
   kap1: { topics: ["grunder"], primaryTopics: ["grunder"] },
@@ -1669,7 +1667,7 @@ Distraktorn "A, E, F" är det svar en **interrupting** event subprocess skulle g
   },
 ];
 
-export const chapters = [overviewChapter, ...rawChapters].map((chapter) => ({
+export const chapters = rawChapters.map((chapter) => ({
   ...chapter,
   ...(CHAPTER_TOPICS[chapter.id] || { topics: [], primaryTopics: [] }),
 }));

@@ -13,12 +13,9 @@ function chapterOfTopic(course) {
 }
 
 // Grupperna som Öva filtrerar på: { id, name } i visningsordning.
-// Översiktskapitel (overview: true) har inga frågor och är ingen grupp.
 export function practiceGroups(course) {
   if (practiceMode(course) === "chapter") {
-    return (course.chapters || [])
-      .filter((chapter) => !chapter.overview)
-      .map((chapter) => ({ id: chapter.id, name: chapter.title }));
+    return (course.chapters || []).map((chapter) => ({ id: chapter.id, name: chapter.title }));
   }
   return (course.topics || []).map((topic) => ({ id: topic.id, name: topic.name }));
 }
@@ -48,7 +45,7 @@ export function chapterForQuestion(course, question) {
 
 // Grupperna ett kapitels "Öva på detta kapitel" ska förvälja.
 export function chapterPracticeGroups(course, chapter) {
-  if (chapter.overview) return [];
+  if (chapter.summary) return [];
   return practiceMode(course) === "chapter" ? [chapter.id] : chapter.topics || [];
 }
 

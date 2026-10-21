@@ -6,11 +6,12 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { chapters } from "../src/data/databaser/reading.js";
 import { chapters as strategi } from "../src/data/strategi/reading.js";
-import { chapters as processChapters } from "../src/data/process/reading.js";
+import { chapters as processChapters, summary as processSummary } from "../src/data/process/reading.js";
 import { DIAGRAM_IDS, DIAGRAM_RE } from "../src/components/knowledge/diagrams/ids.js";
 import { CONCEPT_FIGURES } from "../src/components/figures/conceptFigureMeta.js";
 
-const courses = [["databaser", chapters], ["strategi", strategi], ["process", processChapters]];
+// Sammanfattningen (process) är inget kapitel men har figurer, S.1–S.4.
+const courses = [["databaser", chapters], ["strategi", strategi], ["process", [processSummary, ...processChapters]]];
 const all = courses.flatMap(([, list]) => list);
 
 test("varje platshållare har en figur och varje figur används", () => {
@@ -46,7 +47,7 @@ test("begreppsfigurerna: rätt delkurs och kapitel, nummer i textens ordning, fi
         seen.add(match[1]);
         assert.equal(meta.course, course, `${match[1]}: delkurs`);
         assert.equal(meta.chapter, chapter.id, `${match[1]}: kapitel`);
-        assert.equal(meta.number, `${chapter.number}.${n}`, `${match[1]}: figurnummer`);
+        assert.equal(meta.number, `${chapter.summary ? "S" : chapter.number}.${n}`, `${match[1]}: figurnummer`);
         for (const field of ["caption", "source", "title", "desc"]) {
           assert.ok(typeof meta[field] === "string" && meta[field].length > 0, `${match[1]}: ${field} saknas`);
         }

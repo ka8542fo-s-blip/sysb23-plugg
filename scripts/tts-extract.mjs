@@ -18,7 +18,6 @@ import { JSDOM } from "jsdom";
 import { createServer } from "vite";
 import { courses } from "../src/data/index.js";
 import { blockText, collectBlocks, normalizeText, textHash } from "../src/lib/ttsBlocks.js";
-import { numberedChapterCount } from "../src/lib/chapterNumbering.js";
 
 const ROOT = new URL("..", import.meta.url);
 const noop = () => {};
@@ -39,16 +38,18 @@ export async function extractChapters(courseId = null, chapterId = null) {
     const result = [];
     for (const course of selected) {
       const chapters = course.chapters;
-      chapters.forEach((chapter, index) => {
+      // Sammanfattningen (BPM) läses i samma vy men är inget kapitel.
+      const readingOrder = course.summary ? [course.summary, ...chapters] : chapters;
+      readingOrder.forEach((chapter, index) => {
         if (chapterId && chapter.id !== chapterId) return;
         // Samma props som KnowledgeHub ger kapitlet; knapparna läses inte.
         const html = renderToStaticMarkup(
           createElement(ChapterView, {
             chapter,
-            number: chapter.number ?? index + 1,
-            total: numberedChapterCount(chapters),
+            number: chapter.summary ? null : chapter.number ?? chapters.indexOf(chapter) + 1,
+            total: chapters.length,
             isFirst: index === 0,
-            isLast: index === chapters.length - 1,
+            isLast: index === readingOrder.length - 1,
             course,
             isRead: false,
             onToggleRead: noop,

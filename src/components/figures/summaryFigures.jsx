@@ -1,4 +1,4 @@
-// Figurerna i BPM-översikten (kapitel 0). Samma byggstenar och regler som
+// Figurerna i BPM-sammanfattningen (S.1–S.4). Samma byggstenar och regler som
 // processFigures.jsx: build(W, narrow) => { h, node }, tokens i stället för
 // fasta färger, och smalt format för mobilen. 7FE-tidslinjen och nyttotråden
 // delar geometri (phaseTimeline), så att de läses som samma linje.
@@ -10,7 +10,7 @@ import { EventShape, GatewayShape } from "../bpmn/BpmnDiagram.jsx";
 
 const clamp = (value, lo, hi) => Math.min(Math.max(value, lo), hi);
 
-// ── 0.1 Processkedjan ───────────────────────────────────────────────────
+// ── S.1 Processkedjan ───────────────────────────────────────────────────
 const STEPS = [
   { kicker: "Försäljning", title: "Tar emot ordern" },
   { kicker: "Lager", title: "Plockar och packar" },
@@ -93,7 +93,7 @@ function processkedjan(W, narrow) {
   return { h: y + note.h, node: <g>{nodes}</g> };
 }
 
-// ── Faslinjen (0.2 och 0.3) ─────────────────────────────────────────────
+// ── Faslinjen (S.2 och S.3) ─────────────────────────────────────────────
 // Nio lägen på linjen: People och Develop delar ett, eftersom de löper
 // parallellt.
 const PHASES = [
@@ -205,7 +205,7 @@ function phaseTimeline(W, narrow, { groups = false, notes = [], band = null }) {
   return { h: y, node: <g>{nodes}</g> };
 }
 
-// ── 0.2 7FE som tidslinje ───────────────────────────────────────────────
+// ── S.2 7FE som tidslinje ───────────────────────────────────────────────
 function fasLinje(W, narrow) {
   return phaseTimeline(W, narrow, {
     groups: true,
@@ -216,7 +216,7 @@ function fasLinje(W, narrow) {
   });
 }
 
-// ── 0.3 Nyttotråden ─────────────────────────────────────────────────────
+// ── S.3 Nyttotråden ─────────────────────────────────────────────────────
 function nyttotraden(W, narrow) {
   return phaseTimeline(W, narrow, {
     notes: [
@@ -231,7 +231,7 @@ function nyttotraden(W, narrow) {
   });
 }
 
-// ── 0.4 BPMN:s grundformer ──────────────────────────────────────────────
+// ── S.4 BPMN:s grundformer ──────────────────────────────────────────────
 function Task({ cx, cy, w, h = 56, text }) {
   const t = textBlock({ x: cx - w / 2 + 4, y: 0, w: w - 8, text, size: FS_SMALL, anchor: "middle" });
   return (
@@ -324,7 +324,7 @@ const fig = (id, build) => {
   return Component;
 };
 
-export const OVERVIEW_FIGURES = {
+export const SUMMARY_FIGURES = {
   "bpm-processkedjan": fig("bpm-processkedjan", processkedjan),
   "bpm-7fe-tidslinje": fig("bpm-7fe-tidslinje", fasLinje),
   "bpm-nyttotraden": fig("bpm-nyttotraden", nyttotraden),

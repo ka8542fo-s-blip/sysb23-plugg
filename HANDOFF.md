@@ -562,28 +562,25 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
   tester utan `npm ci` och föll på sql.js); lagat 2026-09-29, då fem
   ändringar fördes in.
 
-## BPM-översikten (2026-10-21)
+## BPM-sammanfattningen (2026-10-21)
 
-- **Vad:** ett sammanfattningskapitel först i Läs för Processorienterad
-  (`src/data/process/overview.js`): kursen på en sida, med fyra figurer
-  (0.1–0.4 i `components/figures/overviewFigures.jsx`). Kasper tyckte att
-  kapitel 1–6 var röriga; översikten är kartan man läser först.
+- **Vad:** kursen på en sida (`src/data/process/summary.js`), med fyra
+  figurer (S.1–S.4 i `components/figures/summaryFigures.jsx`). Kasper tyckte
+  att kapitel 1–6 var röriga; sammanfattningen är kartan man läser först.
+- **Inget kapitel:** den står som ett brett kort, "Sammanfattning", ovanför
+  kapitellistan i Läs (ChapterList), utan nummer. Den räknas inte i "X av 11
+  kapitel lästa", finns inte i Öva och inte i sökningen. Kursmanifestet bär den
+  som `summary`; `course.chapters` är orört, så kapitelnummer, hänvisningar
+  ("kapitel 7") och deras ljud är oförändrade. Läsvyn är densamma
+  (ChapterView, rubriken "Läs först"), och i bläddringsordningen står den före
+  kapitel 1 (KnowledgeHub och tts-extract gör likadant).
 - **Regel:** inget nytt i sak. Allt ska redan stå i kapitel 1–11, och varje
-  avsnitt slutar med "Mer: kapitel N". Ändras ett kapitel så att översikten
-  blir fel, rättas översikten.
-- **Numrering:** kapitlet har `number: 0` och `overview: true`. UI:t kallar
-  det "Översikt · läs först" (inte "Kapitel 0 av 11"), listan visar 0 och
-  "Läs först", och "Kapitel N av 11" räknar bara numrerade kapitel. Kapitel
-  1–11 behåller nummer, id:n och text, så hänvisningar som "kapitel 7" och det
-  inspelade ljudet för dem gäller. Föregående/nästa går på position i listan.
-  Räkningen ligger i `lib/chapterNumbering.js`, som också `tts-extract.mjs`
-  använder: rubriken läses upp och måste vara densamma i appen och i ljudet.
-- **Öva:** kapitlet har inga frågor och är uttryckligen undantaget:
-  `practiceGroups` och `chapterPracticeGroups` hoppar över `overview`,
-  balanstestet och snabbspårstestet filtrerar bort det, och
-  `practice-axis.test.mjs` låser undantaget. Snabbspåret tonar aldrig ned det.
-- **Ljud:** genererat som för övriga kapitel (`tts-generate.mjs process
-  oversikt`). Tabellerna läses inte upp, som i alla kapitel.
+  avsnitt slutar med "Mer: kapitel N". Ändras ett kapitel så att
+  sammanfattningen blir fel, rättas sammanfattningen.
+- **Tester:** `practice-axis.test.mjs` låser att den inte är ett kapitel och
+  inte en Öva-grupp; `diagram-ids.test.mjs` räknar dess figurer som S.n.
+- **Ljud:** genererat som för kapitlen (`tts-generate.mjs process
+  sammanfattning`). Tabellerna läses inte upp, som i alla kapitel.
 
 ## Ljust och mörkt tema (2026-10-20)
 

@@ -29,6 +29,7 @@ export function ExamAreaTag({ area }) {
 // Kompendiets landningsläge: innehållsförteckning med progress.
 export default function ChapterList({
   chapters,
+  summary = null,
   readChapters,
   currentId,
   onOpen,
@@ -158,6 +159,32 @@ export default function ChapterList({
         </button>
       )}
 
+      {/* Sammanfattningen är inget kapitel: ett brett kort ovanför listan,
+          utan nummer, som inte räknas i läsprogressen. */}
+      {summary && (
+        <button
+          type="button"
+          onClick={() => onOpen(summary.id)}
+          className={`card-action flex flex-wrap items-center gap-x-5 gap-y-2 p-4 sm:p-5 ${
+            readChapters[summary.id] ? STATUS.read.card : "border-pine/40"
+          }`}
+        >
+          <span className="min-w-0 flex-1 basis-64">
+            <span className="block font-display text-xl text-pine">Sammanfattning</span>
+            {summary.lead && (
+              <span className="mt-0.5 block text-sm text-ink/70">{summary.lead}</span>
+            )}
+          </span>
+          <span className="flex shrink-0 flex-wrap items-center gap-2">
+            <span className="tabular text-sm text-ink/65">ca {summary.readingMinutes} min</span>
+            <span className="chip shrink-0 border-pine/50 py-0 text-xs text-pine">Läs först</span>
+            {readChapters[summary.id] && (
+              <span className={`h-fit text-xs ${STATUS.read.chip}`}>{STATUS.read.label}</span>
+            )}
+          </span>
+        </button>
+      )}
+
       <ol className="grid gap-2 lg:grid-cols-2">
         {shown.map((chapter, index) => {
           const status = readChapters[chapter.id]
@@ -166,8 +193,7 @@ export default function ChapterList({
               ? "reading"
               : "unread";
           const levels = priorities.get(chapter.id) || [];
-          // Översikten tonas aldrig ned: den är kartan till snabbspåret också.
-          const dimmed = fastTrack && !chapter.overview && !isFastTrack(levels);
+          const dimmed = fastTrack && !isFastTrack(levels);
           return (
             <li key={chapter.id}>
               <button
@@ -188,9 +214,6 @@ export default function ChapterList({
                       ca {chapter.readingMinutes} min
                     </span>
                     <ExamAreaTag area={"examArea" in chapter ? chapter.examArea : undefined} />
-                    {chapter.overview && (
-                      <span className="chip shrink-0 border-pine/50 py-0 text-xs text-pine">Läs först</span>
-                    )}
                     <PriorityTag levels={levels} />
                     {dimmed && <span className="text-sm text-ink/65">Läs om tid finns</span>}
                   </span>
