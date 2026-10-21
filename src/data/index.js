@@ -13,6 +13,7 @@ import {
   glossary as databaserGlossary,
   intro as databaserIntro,
   examNote as databaserExamNote,
+  summary as databaserSummary,
 } from "./databaser/reading.js";
 import { intro as strategiIntro } from "./strategi/reading.js";
 import { topics as processTopics } from "./process/topics.js";
@@ -75,6 +76,8 @@ export const courses = [
     topics: databaserTopics,
     questions: databaserQuestions,
     chapters: databaserChapters,
+    // Sammanfattningen: ett brett kort ovanför kapitlen i Läs, inget kapitel.
+    summary: databaserSummary,
     glossary: databaserGlossary,
     readingIntro: databaserIntro,
     examNote: databaserExamNote,

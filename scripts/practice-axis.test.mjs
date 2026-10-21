@@ -49,16 +49,25 @@ test("kapitel för kapitel ger Läs-ordning och bankens ordning inom kapitlet", 
   assert.equal(ordered.length, databaser.questions.length);
 });
 
-// Sammanfattningen i BPM är inget kapitel: den står som ett eget kort ovanför
-// kapitlen i Läs och har inga frågor. Kapitlen och Öva ska inte märka av den.
-test("sammanfattningen: inget kapitel, ingen grupp i Öva", () => {
-  const course = getCourse("process");
-  assert.equal(course.summary.id, "sammanfattning");
-  assert.ok(!course.chapters.some((c) => c.id === course.summary.id));
-  // Kapitel 1–11 behåller sina nummer, så "kapitel 7" i löptexten stämmer.
-  assert.deepEqual(course.chapters.map((c) => c.number), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
-  assert.ok(!practiceGroups(course).some((g) => g.id === course.summary.id));
-  assert.deepEqual(chapterPracticeGroups(course, course.summary), []);
-  // Bara BPM har en sammanfattning.
-  for (const other of [databaser, strategi]) assert.equal(other.summary, undefined, other.id);
+// Sammanfattningarna (BPM och Databaser) är inga kapitel: de står som ett
+// eget kort ovanför kapitlen i Läs och har inga frågor. Kapitlen och Öva ska
+// inte märka av dem.
+for (const [id, numbers] of [
+  ["process", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]],
+  ["databaser", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]],
+]) {
+  test(`sammanfattningen i ${id}: inget kapitel, ingen grupp i Öva`, () => {
+    const course = getCourse(id);
+    assert.equal(course.summary.id, "sammanfattning");
+    assert.equal(course.summary.summary, true);
+    assert.ok(!course.chapters.some((c) => c.id === course.summary.id));
+    // Kapitlen behåller sina nummer, så "kapitel 7" i löptexten stämmer.
+    assert.deepEqual(course.chapters.map((c) => c.number), numbers);
+    assert.ok(!practiceGroups(course).some((g) => g.id === course.summary.id));
+    assert.deepEqual(chapterPracticeGroups(course, course.summary), []);
+  });
+}
+
+test("Strategi har ingen sammanfattning", () => {
+  assert.equal(strategi.summary, undefined);
 });

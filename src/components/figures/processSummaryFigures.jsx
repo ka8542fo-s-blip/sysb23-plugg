@@ -324,7 +324,7 @@ const fig = (id, build) => {
   return Component;
 };
 
-export const SUMMARY_FIGURES = {
+export const PROCESS_SUMMARY_FIGURES = {
   "bpm-processkedjan": fig("bpm-processkedjan", processkedjan),
   "bpm-7fe-tidslinje": fig("bpm-7fe-tidslinje", fasLinje),
   "bpm-nyttotraden": fig("bpm-nyttotraden", nyttotraden),

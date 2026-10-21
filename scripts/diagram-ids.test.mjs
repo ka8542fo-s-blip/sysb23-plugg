@@ -4,14 +4,18 @@
 // fångar inte styckerenderaren den).
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { chapters } from "../src/data/databaser/reading.js";
+import { chapters, summary as databaserSummary } from "../src/data/databaser/reading.js";
 import { chapters as strategi } from "../src/data/strategi/reading.js";
 import { chapters as processChapters, summary as processSummary } from "../src/data/process/reading.js";
 import { DIAGRAM_IDS, DIAGRAM_RE } from "../src/components/knowledge/diagrams/ids.js";
 import { CONCEPT_FIGURES } from "../src/components/figures/conceptFigureMeta.js";
 
-// Sammanfattningen (process) är inget kapitel men har figurer, S.1–S.4.
-const courses = [["databaser", chapters], ["strategi", strategi], ["process", [processSummary, ...processChapters]]];
+// Sammanfattningarna är inga kapitel men har figurer, S.1–S.n.
+const courses = [
+  ["databaser", [databaserSummary, ...chapters]],
+  ["strategi", strategi],
+  ["process", [processSummary, ...processChapters]],
+];
 const all = courses.flatMap(([, list]) => list);
 
 test("varje platshållare har en figur och varje figur används", () => {

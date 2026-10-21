@@ -562,25 +562,36 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
   tester utan `npm ci` och föll på sql.js); lagat 2026-09-29, då fem
   ändringar fördes in.
 
-## BPM-sammanfattningen (2026-10-21)
+## Sammanfattningarna i Läs (BPM och Databaser, 2026-10-21)
 
-- **Vad:** kursen på en sida (`src/data/process/summary.js`), med fyra
-  figurer (S.1–S.4 i `components/figures/summaryFigures.jsx`). Kasper tyckte
-  att kapitel 1–6 var röriga; sammanfattningen är kartan man läser först.
+- **Vad:** kursen på en sida, för Processorienterad
+  (`src/data/process/summary.js`, figurer S.1–S.4 i
+  `components/figures/processSummaryFigures.jsx`) och för Databaser
+  (`src/data/databaser/summary.js`, figurer S.1–S.3 i
+  `databaserSummaryFigures.jsx`: kurskartan, tre regler genom kedjan och
+  beslutsvägen i uppgift 3). Kasper tyckte att kapitlen var röriga; en
+  sammanfattning är kartan man läser först.
 - **Inget kapitel:** den står som ett brett kort, "Sammanfattning", ovanför
   kapitellistan i Läs (ChapterList), utan nummer. Den räknas inte i "X av 11
-  kapitel lästa", finns inte i Öva och inte i sökningen. Kursmanifestet bär den
-  som `summary`; `course.chapters` är orört, så kapitelnummer, hänvisningar
-  ("kapitel 7") och deras ljud är oförändrade. Läsvyn är densamma
-  (ChapterView, rubriken "Läs först"), och i bläddringsordningen står den före
-  kapitel 1 (KnowledgeHub och tts-extract gör likadant).
-- **Regel:** inget nytt i sak. Allt ska redan stå i kapitel 1–11, och varje
-  avsnitt slutar med "Mer: kapitel N". Ändras ett kapitel så att
-  sammanfattningen blir fel, rättas sammanfattningen.
-- **Tester:** `practice-axis.test.mjs` låser att den inte är ett kapitel och
-  inte en Öva-grupp; `diagram-ids.test.mjs` räknar dess figurer som S.n.
-- **Ljud:** genererat som för kapitlen (`tts-generate.mjs process
+  kapitel lästa", finns inte i Öva och inte i sökningen. Kursmanifestet bär
+  den som `summary`; `course.chapters` är orört, så kapitelnummer,
+  hänvisningar ("kapitel 7") och deras ljud är oförändrade. Läsvyn är
+  densamma (ChapterView, rubriken "Läs först"), och i bläddringsordningen
+  står den före kapitel 1. Allt detta är generellt: en delkurs får en
+  sammanfattning genom att exportera `summary` ur sin reading.js och sätta
+  den i manifestet (Strategi har ingen).
+- **Regel:** inget nytt i sak. Allt ska redan stå i kapitlen, och varje
+  avsnitt slutar med "Mer: kapitel N" (det visade numret — i Databaser är
+  Svaga entiteter kapitel 6 och Java kapitel 11). Båda är faktagranskade mot
+  kapitlen. Ändras ett kapitel så att en sammanfattning blir fel, rättas
+  sammanfattningen.
+- **Tester:** `practice-axis.test.mjs` låser för båda delkurserna att
+  sammanfattningen inte är ett kapitel och inte en Öva-grupp;
+  `diagram-ids.test.mjs` räknar deras figurer som S.n.
+- **Ljud:** genererat som för kapitlen (`tts-generate.mjs <delkurs>
   sammanfattning`). Tabellerna läses inte upp, som i alla kapitel.
+  Skriptet har ingen `--confirm`-flagga; spärren är månadstaket
+  (`MONTHLY_CAP`).
 
 ## Ljust och mörkt tema (2026-10-20)
 

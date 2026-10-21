@@ -1869,6 +1869,9 @@ export const examNote = {
 
 export const intro = reading.intro;
 
+// Sammanfattningen (summary.js) är inget kapitel och står inte i listan nedan.
+export { summary } from "./summary.js";
+
 export const chapters = reading.chapters.map((chapter) => ({
   ...chapter,
   ...(CHAPTER_TOPICS[chapter.id] || { topics: [], primaryTopics: [] }),

@@ -108,6 +108,28 @@ export const CONCEPT_FIGURES = {
     desc: "Nivå 1: SQL, ResultSet och SQLException ligger i controllern. Nivå 2: en DAO finns, men den kastar SQLException som controllern måste fånga. Nivå 3: DAO:n fångar SQLException och kastar DaoException, och controllern innehåller ingen SQL.",
   },
 
+  // ── Databaser: sammanfattningen ──────────────────────────────────────
+  "db-kurskartan": {
+    course: "databaser", chapter: "sammanfattning", number: "S.1",
+    caption: "Kurskartan: designkedjan från krav till applikation, vilka kapitel som hör till varje steg och vilken tentauppgift som prövar det. Grunden är relationsmodellen och nycklarna.",
+    source: "Egen illustration efter kapitel 1",
+    title: "Kurskartan",
+    desc: "Sju steg uppifrån och ned: krav i text (kapitel 1), konceptuell design med ER-diagram (kapitel 4–6, uppgift 1, 25 p), logisk design (kapitel 7, tankemodellen för uppgift 2), normalisering som del av den logiska designen (kapitel 8, uppgift 3, 20 p), fysisk design med CREATE TABLE (kapitel 9, uppgift 2, 25 p), SQL (kapitel 10, uppgift 4, 30 p) och applikation i Java (kapitel 11, Java-frågan med okänd form). Längst ned grunden: relationsmodellen och nycklarna, kapitel 2–3.",
+  },
+  "db-tre-regler": {
+    course: "databaser", chapter: "sammanfattning", number: "S.2",
+    caption: "Tre regler genom hela kedjan: samma regel i ER-diagrammet, i den logiska modellen, i DDL och sedan i applikationen eller SQL-frågan.",
+    source: "Egen illustration efter kapitel 3, 7, 9, 10 och 11",
+    title: "Tre regler genom kedjan",
+    desc: "Identifieraren: understruket employeeNo i ER, kandidatnyckeln {EmpNo} i den logiska modellen, NOT NULL och UNIQUE i DDL, och felkod 2627 när en dubblett nekas i Java. Deltagandet: dubbel linje vid Employee i ER, en referens som krävs, NOT NULL på den främmande nyckeln, men minimideltagande på ett-sidan eller i M:N kan ingen constraint uttrycka. M:N: relationen WorksOn, relationen WORKS_ON med båda nycklarna som primärnyckel, en kopplingstabell utan IDENTITY, och en SQL-fråga som joinar över kopplingstabellen.",
+  },
+  "db-beslutsvagen": {
+    course: "databaser", chapter: "sammanfattning", number: "S.3",
+    caption: "Beslutsvägen i uppgift 3f–3g: från alla kandidatnycklar till högsta normalform, och när det är rätt att stanna.",
+    source: "Egen illustration efter kapitel 8",
+    title: "Beslutsvägen till högsta normalform",
+    desc: "Hitta alla kandidatnycklar och dela in attributen i primära och icke-primära. Fråga 1: är någon kandidatnyckel sammansatt? Nej: 2NF kan inte brytas, gå till fråga 3. Ja: fråga 2, beror ett icke-primärattribut på en äkta delmängd av den? Ja: högsta normalform är 1NF. Nej: fråga 3, beror ett icke-primärattribut transitivt på en kandidatnyckel? Ja: 2NF. Nej: 3NF, ange det och stanna. Är relationen inte i 3NF bryts beroendena ut till relationer med vänsterledet som primärnyckel, med sikte på lossless join och dependency preservation, och nedbrytningen stannar när varje relation är i 3NF.",
+  },
   // ── Processorienterad verksamhetsutveckling ─────────────────────────
   "bpm-processkedjan": {
     course: "process", chapter: "sammanfattning", number: "S.1",

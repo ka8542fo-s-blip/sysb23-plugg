@@ -7,7 +7,8 @@ import {
 } from "./erFigures.jsx";
 import { DATABASER_FIGURES } from "../../figures/databaserFigures.jsx";
 import { PROCESS_FIGURES } from "../../figures/processFigures.jsx";
-import { SUMMARY_FIGURES } from "../../figures/summaryFigures.jsx";
+import { PROCESS_SUMMARY_FIGURES } from "../../figures/processSummaryFigures.jsx";
+import { DATABASER_SUMMARY_FIGURES } from "../../figures/databaserSummaryFigures.jsx";
 
 const FIGURES = {
   workson: WorksOnFigure,
@@ -26,7 +27,8 @@ const FIGURES = {
   "pastaenden-rederi": StatementsShippingFigure,
   ...DATABASER_FIGURES,
   ...PROCESS_FIGURES,
-  ...SUMMARY_FIGURES,
+  ...PROCESS_SUMMARY_FIGURES,
+  ...DATABASER_SUMMARY_FIGURES,
 };
 
 if (import.meta.env?.DEV) {
