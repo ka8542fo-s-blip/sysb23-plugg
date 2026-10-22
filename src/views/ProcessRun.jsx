@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { tasks, correctIndex } from "../data/process/bpmnTasks.js";
 import { diagramById } from "../data/process/bpmnDiagrams.js";
 import { simulate } from "../lib/bpmnSim.js";
@@ -40,13 +40,38 @@ export default function ProcessRun({ modelProgress, onSolve, onReset }) {
   }
 
   const task = tasks.find((t) => t.id === currentId) || tasks[0];
+  const taskIndex = tasks.indexOf(task);
+  const nextTask = tasks[taskIndex + 1] || null;
+  const cardRef = useRef(null);
+  const scrollToCard = useRef(false);
   const diagram = task.diagram ? diagramById[task.diagram] : null;
   const correct = correctIndex(task);
   const solvedCount = tasks.filter((t) => modelProgress[t.id]).length;
   // Stiluppgifterna visar ett diagram men kör det inte.
   const result = useMemo(() => (diagram && task.kind !== "stil" ? simulate(diagram, task.scenario) : null), [diagram, task]);
 
-  useEffect(() => { setChoice(null); setSubmitted(false); setConfirmReset(false); }, [currentId]);
+  useEffect(() => {
+    setChoice(null);
+    setSubmitted(false);
+    setConfirmReset(false);
+    // Efter "Nästa uppgift" står man längst ned i den förra; visa början av
+    // den nya, under den klistrade headern.
+    if (scrollToCard.current && cardRef.current) {
+      scrollToCard.current = false;
+      const header = document.querySelector("header")?.offsetHeight ?? 0;
+      const top = cardRef.current.getBoundingClientRect().top + window.scrollY - header - 12;
+      if (top < window.scrollY) {
+        const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+        window.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
+      }
+    }
+  }, [currentId]);
+
+  function goNext() {
+    if (!nextTask) return;
+    scrollToCard.current = true;
+    setCurrentId(nextTask.id);
+  }
 
   const highlight = useMemo(() => {
     if (!submitted || !result) return undefined;
@@ -68,7 +93,7 @@ export default function ProcessRun({ modelProgress, onSolve, onReset }) {
   return (
     <div className="lg:flex lg:gap-8">
       <div className="lg:order-2 lg:min-w-0 lg:flex-1">
-        <section className="card p-5">
+        <section ref={cardRef} className="card p-5">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <p className="text-sm text-ink/65">
               {shortSource(task)} · {task.points} poäng, fel ger −1
@@ -126,6 +151,18 @@ export default function ProcessRun({ modelProgress, onSolve, onReset }) {
             ) : (
               <button type="button" className="btn-secondary" onClick={() => { setChoice(null); setSubmitted(false); }}>Försök igen</button>
             )}
+            {/* Före svaret är Nästa en tyst genväg förbi uppgiften. Efter svaret
+                finns huvudknappen sist i förklaringen, där man har läst klart. */}
+            {nextTask && (
+              <button
+                type="button"
+                className={submitted ? "btn-secondary" : "btn-quiet"}
+                onClick={goNext}
+                title={`Uppgift ${taskIndex + 2}: ${titleOf(nextTask)}`}
+              >
+                Nästa uppgift →
+              </button>
+            )}
             <span className="text-sm text-ink/65">
               Ren gissning ger {guessValue >= 0 ? "+" : "−"}{Math.abs(guessValue).toFixed(2).replace(".", ",")} p i snitt här
               ({task.options.length} alternativ, {task.points} p).
@@ -161,6 +198,11 @@ export default function ProcessRun({ modelProgress, onSolve, onReset }) {
               )}
               {task.note && <p className="mt-3 text-sm text-ink/75">{task.note}</p>}
               {result && <p className="mt-3 text-xs text-ink/60">Markerat i diagrammet: det som kördes (grönt) och det som avbröts (rött).</p>}
+              {nextTask && (
+                <button type="button" className="btn-primary mt-4" onClick={goNext} title={`Uppgift ${taskIndex + 2}: ${titleOf(nextTask)}`}>
+                  Nästa uppgift →
+                </button>
+              )}
             </div>
           )}
         </section>
