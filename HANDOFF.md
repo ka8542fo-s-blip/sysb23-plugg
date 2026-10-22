@@ -508,7 +508,36 @@ kräver surrogatnycklar och inte namn — kapitel 9 följer tentan.
   är kortare. Översikt först ("klara per kapitel/totalt"), nollställning
   per delkurs. Gruppering via `lib/practiceAxis.js` (`practiceBy:
   "chapter"` = Öva speglar Läs). QuestionCard renderar `diagram` och
-  `context`; chipen "Ogranskad" är borttagen.
+  `context`; chipen "Ogranskad" är borttagen. Tentafokus (kärnämnen först)
+  togs bort 2026-10-22: det gjorde inget i BPM, där alla ämnen är kärna,
+  och fick det att se ut som om ett tentaläge redan fanns. I Strategi
+  (9 av 14 ämnen kärna) lade det kärnfrågorna först och försvann utan
+  ersättning; Kärna-märkningen i Läs finns kvar.
+- **Tentafrågor i Öva** (2026-10-22, BPM) — växeln Alla frågor/Tentafrågor
+  överst i Öva, ingen egen flik (användarens val). Läget visar bara gamla
+  tentors flervalsdelar ur `course.pastExams` (`data/process/pastExams.js`:
+  tentorna i tentans ordning, del → `question`, `task` eller `essay`, med
+  nummer och poäng). Medlemskap läses aldrig ur `source`: bpm-q33, q35,
+  q43 och q53 nämner tentan där utan att vara tentafrågor. BPM: 28 delar,
+  14 per HT25-tenta — 25 `bpm-t` ur banken plus kp-3c, kp-om13 och kp-om15
+  ur BPMN-övningar (via `taskToQuestion`, "Inget av övriga alternativ" märkt
+  `last` så att blandningen inte avslöjar det). 3(b), 3(d) och omtenta 16
+  räknas via bankens t24, t23 och t25; kp-tvillingarna är bara länken "Kör
+  diagrammet i BPMN-övningar" (`run`, `params.taskId` i ProcessRun).
+  Essäerna räknas inte utan länkas till Essä (`params.essayId`). **Svaren
+  räknas för sig** (användarbeslut 2026-10-22): `sysb23:tentafragor` i
+  samma form som `answers`, egen karens `practiceRecent["<kurs>:tenta"]`,
+  ingen `onSeen`. Läget rör alltså inte Alla frågor, Statistik, Hem eller
+  BPMN-övningarnas bockar, och Prov-svar räknas inte i läget. Översikten
+  (`components/practice/PastExamOverview.jsx`) har ett block per tenta med
+  rutnät över tentans nummer (✓ klar, ✕ senast fel, • ett rätt); klick på
+  en ruta öppnar just den frågan. Ordning: tentans (standard) eller
+  blandat, per delkurs. Strategi har inget läge (användarbeslut: bara BPM;
+  HT25:s elva flerval finns inte ordagrant i banken), Databaser inte heller
+  (dess tentor är konstruktionsuppgifter i fliken Tenta). Ny tenta = ett
+  objekt i `pastExams.js`; testet `past-exams.test.mjs` håller numren i
+  takt med bpm-t-frågornas källor. 13 av de 25 bpm-t-frågorna är
+  `reviewed: false`; översikten säger att tentorna saknar facit.
 - **Prov** (Strategi) — HT25-format sedan 2026-09-17: 11 frågor à 5 p, −1/0, betyget räknas på 55 flervalspoäng (essäerna 3 à 15 p, max 300 ord, ligger utanför), balanserad dragning, deadline-timer,
   lever i App-state (försvinner vid omladdning, avsiktligt).
 - **SQL** — sql.js/WASM, färsk databas per körning. T-SQL först:
@@ -686,8 +715,10 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
 
 ## Lagringsnycklar
 
-`answers`, `exams`, `essays`, `settings` (bl.a. `practiceRecent`,
-`practiceOrder`, `practiceTopics`), `lasSegment`, `delkurs`, `schemaVy`,
+`answers`, `tentafragor` (Tentafrågor i Öva, samma form som `answers`),
+`exams`, `essays`, `settings` (bl.a. `practiceRecent` — per delkurs och
+`"<kurs>:tenta"` —, `practiceOrder`, `practiceTopics`, `practiceScope`,
+`practiceExams`, `practiceExamOrder`), `lasSegment`, `delkurs`, `schemaVy`,
 `upplasningstakt`, `sqlSlump`, `read:<kurs>:<kapitel>`,
 `sql:<övningsId>` (= "solved" | "solved-with-help"), `modell:<uppgiftsId>`
 (= "solved"; mod-, norm- och stmt-id), `examreg:<examId>`, `tenta:<tentaId>`

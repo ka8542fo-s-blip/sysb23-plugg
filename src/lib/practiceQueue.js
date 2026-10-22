@@ -59,8 +59,7 @@ function shuffle(items, random) {
 // Alla kandidater i serveringsordning. `questions` ska redan vara filtrerade
 // på kapitelval och stå i kapitelordning.
 export function orderCandidates({
-  questions, answers, order = "blandat", examFocus = false, coreTopics = new Set(),
-  includeDone = false, random = Math.random,
+  questions, answers, order = "blandat", includeDone = false, random = Math.random,
 }) {
   const wrong = [];
   const unseen = [];
@@ -80,16 +79,17 @@ export function orderCandidates({
   done.sort(byTime);
   const groups = [wrong, order === "grupp" ? unseen : shuffle(unseen, random), pending];
   if (includeDone) groups.push(done);
-  const focus = (list) =>
-    examFocus
-      ? [...list.filter((q) => coreTopics.has(q.topic)), ...list.filter((q) => !coreTopics.has(q.topic))]
-      : list;
-  return groups.flatMap(focus);
+  return groups.flat();
 }
 
 export function nextQuestion({ recent = [], ...rest }) {
   const ordered = orderCandidates(rest);
   if (ordered.length === 0) return null;
   const cooling = new Set(recent.slice(-COOLDOWN));
-  return ordered.find((question) => !cooling.has(question.id)) || ordered[0];
+  const free = ordered.find((question) => !cooling.has(question.id));
+  if (free) return free;
+  // Alla är i karens (kort kö): den som serverades för längst sedan, så att
+  // en fråga man just svarat fel på inte kommer direkt igen när det finns andra.
+  const servedAt = (question) => recent.lastIndexOf(question.id);
+  return ordered.reduce((oldest, question) => (servedAt(question) < servedAt(oldest) ? question : oldest));
 }

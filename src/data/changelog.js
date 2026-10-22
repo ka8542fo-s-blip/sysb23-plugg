@@ -7,6 +7,9 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 22, date: "2026-10-22", text: "BPMN-övningarna visar deluppgiften, till exempel ord 3(c)" },
+  { id: 21, date: "2026-10-22", text: "Tentafokus i Öva är borttaget; BPM har i stället läget Tentafrågor" },
+  { id: 20, date: "2026-10-22", text: "Tentafrågor i Öva: BPM-tentornas frågor, tenta för tenta" },
   { id: 19, date: "2026-10-22", text: "Essäfrågorna står i samma lättlästa typsnitt som övriga frågor" },
   { id: 18, date: "2026-10-22", text: "BPMN-symboler: alla former och vad de betyder, i BPMN-övningarna" },
   { id: 17, date: "2026-10-22", text: "Knappen Nästa uppgift i BPMN-övningarna" },

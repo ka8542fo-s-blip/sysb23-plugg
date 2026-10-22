@@ -5,8 +5,11 @@ const WORD_LIMIT = 300;
 // någon enskild fråga, så den bor i vyn.
 const CLOSING = "Max 300 ord. Fyra stycken, ett per rubrik. Punkt 4 är den som höjer betyget.";
 
-export default function Essays({ course, essayState, setEssayState }) {
-  const [activeId, setActiveId] = useState(course.essays[0]?.id);
+export default function Essays({ course, params, essayState, setEssayState }) {
+  // params.essayId: från Tentafrågor, som länkar till tentans egen essä.
+  const [activeId, setActiveId] = useState(() =>
+    course.essays.some((item) => item.id === params?.essayId) ? params.essayId : course.essays[0]?.id,
+  );
   const essay = course.essays.find((item) => item.id === activeId) || course.essays[0];
   const state = essayState[essay.id] || { draft: "", checked: [] };
   const [showChecklist, setShowChecklist] = useState(false);

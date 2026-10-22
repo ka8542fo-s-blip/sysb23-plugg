@@ -1,15 +1,22 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import QuestionCard from "../components/QuestionCard.jsx";
 import TopicFilter from "../components/TopicFilter.jsx";
+import PastExamOverview from "../components/practice/PastExamOverview.jsx";
 import { shuffleQuestion } from "../lib/shuffle.js";
-import { hasPriorities, priorityOf } from "../lib/examPriority.js";
 import { chapterForQuestion, groupKeyFor, practiceGroups, practiceMode } from "../lib/practiceAxis.js";
 import { COOLDOWN, isDone, nextQuestion, progressFor } from "../lib/practiceQueue.js";
+import { examLabel, pastExamItems, pastExamsOf, tally } from "../lib/pastExams.js";
+import { KEYS, clearAnswersFor, load, recordAnswer, save } from "../lib/storage.js";
 
 // Öva utan pass: "Fortsätt öva" serverar nästa ofärdiga fråga (fel först,
 // sedan obesvarade, sedan de som väntar på sitt andra rätt), och man slutar
 // när man slutar. Allt tillstånd som betyder något ligger per fråga i
 // localStorage (answers) — bara den fråga som visas just nu är komponentstate.
+//
+// Tentafrågor (delkurser med `pastExams`): samma kö, men bara gamla tentors
+// flervalsdelar, märkta med tenta, nummer och poäng. Svaren räknas för sig
+// (sysb23:tentafragor) och rör varken Alla frågor, Statistik eller
+// BPMN-övningar — läget börjar från noll (användarbeslut 2026-10-22).
 export default function Practice({
   course,
   answers,
@@ -25,22 +32,12 @@ export default function Practice({
   const keyOf = useMemo(() => groupKeyFor(course), [course]);
   const byChapter = practiceMode(course) === "chapter";
   const order = settings.practiceOrder === "grupp" ? "grupp" : "blandat";
-  const examFocus = settings.practiceExamFocus === true;
-  const showExamFocus = hasPriorities(course.topics);
-  const coreTopics = useMemo(
-    () =>
-      new Set(
-        course.topics.filter((topic) => priorityOf(topic).includes("karna")).map((topic) => topic.id),
-      ),
-    [course],
-  );
   // Inställningarna delas mellan delkurserna: val som hör till en annan
   // delkurs ignoreras.
   const activeTopics = useMemo(
     () => settings.practiceTopics.filter((id) => groups.some((group) => group.id === id)),
     [settings.practiceTopics, groups],
   );
-  const recent = settings.practiceRecent?.[course.id] || [];
 
   const questionsFor = useCallback(
     (topicIds) =>
@@ -64,33 +61,92 @@ export default function Practice({
     return counts;
   }, [groups, course, keyOf, answers]);
 
+  // Tentafrågor. Posterna byggs en gång per delkurs, så att alternativens
+  // blandning (view nedan) ligger still medan man svarar.
+  const exams = useMemo(() => pastExamsOf(course), [course]);
+  const examItems = useMemo(() => pastExamItems(course), [course]);
+  const hasExamMode = examItems.length > 0;
+  const examMode = hasExamMode && settings.practiceScope?.[course.id] === "tenta";
+  const examIdsKey = (settings.practiceExams?.[course.id] || [])
+    .filter((id) => exams.some((exam) => exam.id === id))
+    .join(",");
+  const activeExams = useMemo(() => (examIdsKey ? examIdsKey.split(",") : []), [examIdsKey]);
+  const selectedExams = useMemo(
+    () => exams.filter((exam) => activeExams.length === 0 || activeExams.includes(exam.id)),
+    [exams, activeExams],
+  );
+  const examOrder = settings.practiceExamOrder?.[course.id] === "blandat" ? "blandat" : "grupp";
+  const examPool = useMemo(
+    () => examItems.filter((item) => activeExams.length === 0 || activeExams.includes(item.exam)),
+    [examItems, activeExams],
+  );
+  const [examAnswers, setExamAnswers] = useState(() => load(KEYS.examAnswers, {}));
+  useEffect(() => save(KEYS.examAnswers, examAnswers), [examAnswers]);
+  const perExam = useMemo(() => {
+    const counts = {};
+    for (const exam of exams) {
+      const { done, total } = tally(examItems.filter((item) => item.exam === exam.id), examAnswers);
+      counts[exam.id] = { done, total };
+    }
+    return counts;
+  }, [exams, examItems, examAnswers]);
+
   const [filterOpen, setFilterOpen] = useState(
     () => typeof window === "undefined" || window.innerWidth >= 640,
   );
   const [currentId, setCurrentId] = useState(null);
+  // Räknas upp vid varje servering, så att samma fråga igen (sista kvar i
+  // kön) också får ny blandning, scroll och fokus.
+  const [served, setServed] = useState(0);
   const [chosen, setChosen] = useState(null);
   const [revealed, setRevealed] = useState(false);
   const [includeDone, setIncludeDone] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
+  const cardRef = useRef(null);
+  const scrollToCard = useRef(false);
 
-  const current = useMemo(
-    () => (currentId ? course.questions.find((question) => question.id === currentId) : null),
-    [course, currentId],
-  );
+  const current = useMemo(() => {
+    if (!currentId) return null;
+    const list = examMode ? examItems : course.questions;
+    return list.find((question) => question.id === currentId) || null;
+  }, [course, examItems, examMode, currentId]);
   // Ny blandning av alternativen varje gång en fråga serveras.
-  const view = useMemo(() => (current ? shuffleQuestion(current) : null), [current]);
+  const view = useMemo(() => (current ? shuffleQuestion(current) : null), [current, served]);
 
-  // Servera nästa fråga. Visningen bokförs och frågan läggs sist i karensen,
-  // så att den inte återkommer förrän COOLDOWN andra frågor serverats.
+  // Visa en fråga. Visningen bokförs (bara i Alla frågor) och frågan läggs
+  // sist i lägets karens, så att den inte återkommer förrän COOLDOWN andra
+  // frågor serverats. Tentafrågor har en egen karens.
+  const show = useCallback(
+    (id, tenta) => {
+      setCurrentId(id);
+      setServed((count) => count + 1);
+      setChosen(null);
+      setRevealed(false);
+      scrollToCard.current = true;
+      if (!tenta) onSeen(id);
+      const key = tenta ? `${course.id}:tenta` : course.id;
+      setSettings((prev) => {
+        const list = prev.practiceRecent?.[key] || [];
+        return {
+          ...prev,
+          practiceRecent: {
+            ...(prev.practiceRecent || {}),
+            [key]: [...list.filter((item) => item !== id), id].slice(-COOLDOWN),
+          },
+        };
+      });
+    },
+    [onSeen, setSettings, course.id],
+  );
+
+  // Servera nästa fråga ur `questions` med lägets svar, ordning och karens.
   const serve = useCallback(
-    (questions, withDone) => {
+    (questions, withDone, tenta = examMode) => {
       const next = nextQuestion({
         questions,
-        answers,
-        recent,
-        order,
-        examFocus,
-        coreTopics,
+        answers: tenta ? examAnswers : answers,
+        recent: settings.practiceRecent?.[tenta ? `${course.id}:tenta` : course.id] || [],
+        order: tenta ? examOrder : order,
         includeDone: withDone,
       });
       if (!next) {
@@ -98,39 +154,60 @@ export default function Practice({
         return;
       }
       setIncludeDone(withDone);
-      setCurrentId(next.id);
-      setChosen(null);
-      setRevealed(false);
-      onSeen(next.id);
-      setSettings((prev) => ({
-        ...prev,
-        practiceRecent: {
-          ...(prev.practiceRecent || {}),
-          [course.id]: [...recent.filter((id) => id !== next.id), next.id].slice(-COOLDOWN),
-        },
-      }));
+      show(next.id, tenta);
     },
-    [answers, recent, order, examFocus, coreTopics, onSeen, setSettings, course.id],
+    [examMode, examAnswers, answers, settings.practiceRecent, course.id, examOrder, order, show],
   );
 
-  // "Öva på detta" från Läs: förvalt kapitel och rakt in på första frågan.
+  const setScope = useCallback(
+    (scope) => {
+      setSettings((prev) => ({
+        ...prev,
+        practiceScope: { ...(prev.practiceScope || {}), [course.id]: scope },
+      }));
+      setCurrentId(null);
+      setConfirmReset(false);
+    },
+    [setSettings, course.id],
+  );
+
+  // "Öva på detta" från Läs: förvalt kapitel och rakt in på första frågan,
+  // alltid i Alla frågor. presetTopicsRef håller urvalet tills det slagit
+  // igenom, så att översiktseffekten nedan inte nollställer frågan.
   const presetKey = params?.nonce ?? null;
+  const presetTopicsRef = useRef(null);
   useEffect(() => {
     const preset = params?.topics;
     if (!Array.isArray(preset)) return;
     const valid = preset.filter((id) => groups.some((group) => group.id === id));
-    setSettings((prev) => ({ ...prev, practiceTopics: valid }));
-    serve(questionsFor(valid), false);
+    setSettings((prev) => ({
+      ...prev,
+      practiceTopics: valid,
+      practiceScope: { ...(prev.practiceScope || {}), [course.id]: "alla" },
+    }));
+    presetTopicsRef.current = valid.join(",");
+    serve(questionsFor(valid), false, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [presetKey]);
 
-  // Tillbaka från kapitlet ("Tillbaka till frågan"): samma fråga igen,
-  // obesvarad, utan att urvalet ändras. Översiktseffekten nedan körs också
-  // vid monteringen och ska då inte nollställa frågan.
+  // Tillbaka från kapitlet, Essä eller BPMN-övningar: samma läge, och samma
+  // fråga igen obesvarad om en sådan anges, utan att urvalet ändras.
+  // Översiktseffekten nedan körs också vid monteringen och ska då inte
+  // nollställa frågan.
   const resumedRef = useRef(false);
   useEffect(() => {
+    const scope = params?.scope;
+    if (scope !== "tenta" && scope !== "alla" && !params?.questionId) return;
+    const tenta = scope === "tenta" && hasExamMode;
+    if (hasExamMode && scope) {
+      setSettings((prev) => ({
+        ...prev,
+        practiceScope: { ...(prev.practiceScope || {}), [course.id]: tenta ? "tenta" : "alla" },
+      }));
+    }
     const id = params?.questionId;
-    if (!id || !course.questions.some((question) => question.id === id)) return;
+    const list = tenta ? examItems : course.questions;
+    if (!id || !list.some((question) => question.id === id)) return;
     resumedRef.current = true;
     setCurrentId(id);
     setChosen(null);
@@ -138,15 +215,36 @@ export default function Practice({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [presetKey]);
 
-  // Byte av delkurs eller urval: tillbaka till översikten.
+  // Byte av delkurs eller urval: tillbaka till översikten. Byte av läge
+  // och tentaurval gör det i sina egna handlers. Urvalet jämförs på
+  // innehåll: förvalet från Läs skriver alltid en ny lista.
+  const topicsKey = activeTopics.join(",");
   useEffect(() => {
+    if (presetTopicsRef.current !== null) {
+      if (presetTopicsRef.current === topicsKey) presetTopicsRef.current = null;
+      return;
+    }
     if (resumedRef.current) {
       resumedRef.current = false;
       return;
     }
     setCurrentId(null);
     setConfirmReset(false);
-  }, [course.id, activeTopics]);
+  }, [course.id, topicsKey]);
+
+  // Efter "Nästa fråga" eller ett val i rutnätet: visa början av frågan,
+  // under den klistrade headern, och flytta fokus dit.
+  useEffect(() => {
+    if (!scrollToCard.current || !cardRef.current) return;
+    scrollToCard.current = false;
+    const header = document.querySelector("header")?.offsetHeight ?? 0;
+    const top = cardRef.current.getBoundingClientRect().top + window.scrollY - header - 12;
+    if (top < window.scrollY) {
+      const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
+    }
+    cardRef.current.focus({ preventScroll: true });
+  }, [currentId, served]);
 
   // Läs kapitlet frågan hör till; tillbakalänken där tar en till samma fråga.
   const currentChapterId = useMemo(() => chapterForQuestion(course, current), [course, current]);
@@ -155,34 +253,78 @@ export default function Practice({
     navigate(
       "las",
       { segment: "kompendium", chapterId: currentChapterId },
-      { view: "ova", title: "Tillbaka till frågan", params: { questionId: current.id, nonce: Date.now() } },
+      {
+        view: "ova",
+        title: "Tillbaka till frågan",
+        params: { questionId: current.id, scope: examMode ? "tenta" : "alla", nonce: Date.now() },
+      },
     );
-  }, [current, currentChapterId, navigate]);
+  }, [current, currentChapterId, navigate, examMode]);
+
+  // Körfrågorna finns också i BPMN-övningar, där svaret visar körningen
+  // steg för steg.
+  const toRun = useCallback(() => {
+    if (!current?.run) return;
+    navigate(
+      "bpmn",
+      { taskId: current.run, nonce: Date.now() },
+      { view: "ova", title: "Tillbaka till frågan", params: { questionId: current.id, scope: "tenta", nonce: Date.now() } },
+    );
+  }, [current, navigate]);
+
+  const toEssay = useCallback(
+    (essayId) =>
+      navigate(
+        "essa",
+        { essayId },
+        { view: "ova", title: "Tillbaka till tentafrågorna", params: { scope: "tenta", nonce: Date.now() } },
+      ),
+    [navigate],
+  );
 
   const confirm = useCallback(() => {
     if (revealed || chosen === null || !view || !current) return;
     setRevealed(true);
-    onAnswer(current.id, chosen === view.correct);
-  }, [revealed, chosen, view, current, onAnswer]);
+    const wasCorrect = chosen === view.correct;
+    if (examMode) setExamAnswers((prev) => recordAnswer(prev, current.id, wasCorrect));
+    else onAnswer(current.id, wasCorrect);
+  }, [revealed, chosen, view, current, examMode, onAnswer]);
 
-  const next = useCallback(() => serve(filtered, includeDone), [serve, filtered, includeDone]);
+  const pool = examMode ? examPool : filtered;
+  const next = useCallback(() => serve(pool, includeDone), [serve, pool, includeDone]);
   const stop = useCallback(() => setCurrentId(null), []);
+  // Ett val i rutnätet: just den frågan, även om den är klar.
+  const pick = useCallback(
+    (id) => {
+      setIncludeDone(tally(examPool, examAnswers).done === examPool.length);
+      show(id, true);
+    },
+    [examPool, examAnswers, show],
+  );
 
   useEffect(() => {
     function onKeyDown(event) {
       const tag = event.target?.tagName;
       if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
       if (!current) return;
+      // Enter på en annan kontroll (zoomknapparna, växeln, Kör diagrammet,
+      // länkar) tillhör den kontrollen; Svara och Nästa gör samma sak med
+      // sitt eget klick. Pil höger tillhör den scrollbara diagramramen.
+      // Svarsalternativen, kortet och sidan i övrigt har genvägarna.
+      const control = event.target?.closest?.("button, a[href], [tabindex='0']");
+      const foreign = control && !control.closest("[aria-label='Svarsalternativ']");
+      const scrolls = Boolean(event.target?.closest?.("[tabindex='0']"));
       if (/^[1-9]$/.test(event.key) && Number(event.key) <= (view?.options.length ?? 4)) {
         if (revealed) return;
         event.preventDefault();
         setChosen(Number(event.key) - 1);
       } else if (event.key === "Enter") {
+        if (foreign) return;
         event.preventDefault();
         if (revealed) next();
         else confirm();
       } else if (event.key === "ArrowRight") {
-        if (!revealed) return;
+        if (!revealed || scrolls) return;
         event.preventDefault();
         next();
       }
@@ -203,22 +345,84 @@ export default function Practice({
     );
   }
 
-  const groupName = current ? groups.find((group) => group.id === keyOf(current))?.name : undefined;
-  const currentGroup = current ? perGroup[keyOf(current)] : null;
   const allDone = filtered.length > 0 && progress.done === progress.total;
   const singleChapter = byChapter && activeTopics.length === 1;
-  const counter = currentGroup
-    ? `Klara: ${currentGroup.done} av ${currentGroup.total} i ${byChapter ? "kapitlet" : "ämnet"} · ${courseProgress.done} av ${courseProgress.total} totalt`
-    : undefined;
+
+  // Kortets huvud: i Tentafrågor tentan, numret och poängen; annars kapitlet.
+  const currentExam = examMode && current ? exams.find((exam) => exam.id === current.exam) : null;
+  let counter;
+  let tag;
+  let groupName;
+  if (currentExam) {
+    const inExam = perExam[currentExam.id];
+    const inPool = tally(examPool, examAnswers);
+    counter = `Klara: ${inExam.done} av ${inExam.total} i tentan${
+      selectedExams.length > 1 ? ` · ${inPool.done} av ${inPool.total} totalt` : ""
+    }`;
+    tag = (
+      <>
+        <span className="rounded-full border border-brass/50 px-2.5 py-0.5 text-xs font-medium text-brass-text">
+          {examLabel(currentExam)} · fråga {current.no}
+        </span>
+        <span className="tabular text-ink/70">{current.points} p</span>
+      </>
+    );
+  } else if (current) {
+    groupName = groups.find((group) => group.id === keyOf(current))?.name;
+    const currentGroup = perGroup[keyOf(current)];
+    counter = currentGroup
+      ? `Klara: ${currentGroup.done} av ${currentGroup.total} i ${byChapter ? "kapitlet" : "ämnet"} · ${courseProgress.done} av ${courseProgress.total} totalt`
+      : undefined;
+  }
+
+  const reset = () => {
+    if (examMode) {
+      setExamAnswers((prev) => clearAnswersFor(prev, examItems.map((item) => item.id)));
+    } else {
+      onResetPractice(course.questions.map((question) => question.id));
+    }
+    const key = examMode ? `${course.id}:tenta` : course.id;
+    setSettings((prev) => ({
+      ...prev,
+      practiceRecent: { ...(prev.practiceRecent || {}), [key]: [] },
+    }));
+    setCurrentId(null);
+    setConfirmReset(false);
+  };
 
   return (
     <div className="space-y-6 lg:flex lg:items-start lg:gap-8 lg:space-y-0">
       <section className="card p-5 lg:sticky lg:top-36 lg:max-h-[calc(100vh-11rem)] lg:w-80 lg:shrink-0 lg:overflow-y-auto">
         <h1 className="font-display text-2xl">Öva</h1>
-        <p className="mt-1 text-[15px] text-ink/70">
-          En fråga är klar när du svarat rätt två gånger i rad. Fel kommer
-          först, sedan obesvarade, sedan de som väntar på sitt andra rätt. Sluta
-          när du vill — du fortsätter där du var.
+
+        {hasExamMode && (
+          <div className="mt-3 flex rounded-[10px] border border-line bg-surface p-1" role="group" aria-label="Vilka frågor">
+            {[
+              { id: "alla", label: "Alla frågor" },
+              { id: "tenta", label: "Tentafrågor" },
+            ].map((segment) => {
+              const active = (segment.id === "tenta") === examMode;
+              return (
+                <button
+                  key={segment.id}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => !active && setScope(segment.id)}
+                  className={`flex-1 rounded-md px-3 py-1.5 text-[15px] transition-colors duration-150 ${
+                    active ? "bg-pine font-medium text-paper hover:bg-pine-dark" : "text-ink hover:bg-pine/[0.08] hover:text-pine"
+                  }`}
+                >
+                  {segment.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        <p className={`${hasExamMode ? "mt-3" : "mt-1"} text-[15px] text-ink/70`}>
+          {examMode
+            ? "Bara frågor som kommit på gamla tentor, med tentans nummer och poäng. Svaren här räknas för sig och påverkar inte resten av Öva eller Statistik."
+            : "En fråga är klar när du svarat rätt två gånger i rad. Fel kommer först, sedan obesvarade, sedan de som väntar på sitt andra rätt. Sluta när du vill — du fortsätter där du var."}
         </p>
 
         <button
@@ -227,84 +431,102 @@ export default function Practice({
           aria-expanded={filterOpen}
           className="btn-secondary mt-4 sm:hidden"
         >
-          {filterOpen ? "Dölj urval" : byChapter ? "Välj kapitel och ordning" : "Välj ämne och ordning"}
+          {filterOpen
+            ? "Dölj urval"
+            : examMode
+              ? "Välj tenta och ordning"
+              : byChapter
+                ? "Välj kapitel och ordning"
+                : "Välj ämne och ordning"}
         </button>
 
-        {showExamFocus && (
-          <div className={filterOpen ? "mt-5" : "mt-5 hidden"}>
-            <h3 className="mb-2 font-display text-lg">Förval</h3>
-            <button
-              type="button"
-              onClick={() => setSettings((prev) => ({ ...prev, practiceExamFocus: !examFocus }))}
-              aria-pressed={examFocus}
-              className={`chip ${examFocus ? "chip-on" : "hover:border-pine"}`}
-            >
-              Tentafokus
-            </button>
-            <p className="mt-2 text-sm text-ink/65">
-              Ämnen som prövats som flervalsfrågor kommer först i varje grupp.
-              Inga frågor tas bort ur urvalet.
-            </p>
-          </div>
-        )}
-
         <div className={filterOpen ? "mt-5" : "mt-5 hidden"}>
-          <TopicFilter
-            topics={groups}
-            label={byChapter ? "Kapitel" : "Ämnen"}
-            selected={activeTopics}
-            counts={perGroup}
-            onChange={(topics) => setSettings((prev) => ({ ...prev, practiceTopics: topics }))}
-          />
+          {examMode ? (
+            <TopicFilter
+              topics={exams.map((exam) => ({ id: exam.id, name: exam.short }))}
+              label="Tentor"
+              selected={activeExams}
+              counts={perExam}
+              onChange={(ids) => {
+                setSettings((prev) => ({
+                  ...prev,
+                  practiceExams: { ...(prev.practiceExams || {}), [course.id]: ids },
+                }));
+                setCurrentId(null);
+              }}
+            />
+          ) : (
+            <TopicFilter
+              topics={groups}
+              label={byChapter ? "Kapitel" : "Ämnen"}
+              selected={activeTopics}
+              counts={perGroup}
+              onChange={(topics) => setSettings((prev) => ({ ...prev, practiceTopics: topics }))}
+            />
+          )}
         </div>
 
         <div className={filterOpen ? "mt-5" : "mt-5 hidden"}>
           <h3 className="mb-2 font-display text-lg">Ordning</h3>
           <div className="flex flex-wrap gap-2" role="group" aria-label="Ordning">
-            {[
-              { id: "blandat", label: "Blandat" },
-              { id: "grupp", label: byChapter ? "Kapitel för kapitel" : "Ämne för ämne" },
-            ].map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setSettings((prev) => ({ ...prev, practiceOrder: item.id }))}
-                aria-pressed={order === item.id}
-                className={`chip ${order === item.id ? "chip-on" : "hover:border-pine"}`}
-              >
-                {item.label}
-              </button>
-            ))}
+            {(examMode
+              ? [
+                  { id: "grupp", label: "I tentans ordning" },
+                  { id: "blandat", label: "Blandat" },
+                ]
+              : [
+                  { id: "blandat", label: "Blandat" },
+                  { id: "grupp", label: byChapter ? "Kapitel för kapitel" : "Ämne för ämne" },
+                ]
+            ).map((item) => {
+              const on = (examMode ? examOrder : order) === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() =>
+                    setSettings((prev) =>
+                      examMode
+                        ? {
+                            ...prev,
+                            practiceExamOrder: {
+                              ...(prev.practiceExamOrder || {}),
+                              [course.id]: item.id === "grupp" ? "tenta" : "blandat",
+                            },
+                          }
+                        : { ...prev, practiceOrder: item.id },
+                    )
+                  }
+                  aria-pressed={on}
+                  className={`chip ${on ? "chip-on" : "hover:border-pine"}`}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
           </div>
           <p className="mt-2 text-sm text-ink/65">
-            {order === "grupp"
-              ? `Obesvarade frågor kommer i samma ordning som ${byChapter ? "kapitlen i Läs" : "ämnena"}.`
-              : "Obesvarade frågor kommer blandat."}
+            {examMode
+              ? examOrder === "grupp"
+                ? "Obesvarade frågor kommer i tentans ordning, tenta för tenta."
+                : "Obesvarade frågor kommer blandat."
+              : order === "grupp"
+                ? `Obesvarade frågor kommer i samma ordning som ${byChapter ? "kapitlen i Läs" : "ämnena"}.`
+                : "Obesvarade frågor kommer blandat."}
           </p>
         </div>
 
-        {/* Enda vägen att nollställa: tydlig knapp med bekräftelse, per delkurs. */}
+        {/* Enda vägen att nollställa: tydlig knapp med bekräftelse, per delkurs och läge. */}
         <div className={filterOpen ? "mt-6 border-t border-line pt-4" : "mt-6 hidden"}>
           {confirmReset ? (
             <div>
               <p className="text-sm text-ink/70">
-                Alla svar och all klar-status för {course.name} raderas. Läsning
-                och SQL-övningar rörs inte.
+                {examMode
+                  ? `Alla svar i Tentafrågor för ${course.name} raderas. Resten av Öva och Statistik rörs inte.`
+                  : `Alla svar och all klar-status för ${course.name} raderas. Läsning och SQL-övningar rörs inte${hasExamMode ? ", och inte heller Tentafrågor" : ""}.`}
               </p>
               <div className="mt-2 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  className="btn-secondary"
-                  onClick={() => {
-                    onResetPractice(course.questions.map((question) => question.id));
-                    setSettings((prev) => ({
-                      ...prev,
-                      practiceRecent: { ...(prev.practiceRecent || {}), [course.id]: [] },
-                    }));
-                    setCurrentId(null);
-                    setConfirmReset(false);
-                  }}
-                >
+                <button type="button" className="btn-secondary" onClick={reset}>
                   Ja, nollställ
                 </button>
                 <button type="button" className="btn-quiet" onClick={() => setConfirmReset(false)}>
@@ -314,14 +536,25 @@ export default function Practice({
             </div>
           ) : (
             <button type="button" className="btn-quiet px-0 text-sm" onClick={() => setConfirmReset(true)}>
-              Nollställ övningsläget för {course.name}
+              {examMode ? "Nollställ tentafrågorna" : `Nollställ övningsläget för ${course.name}`}
             </button>
           )}
         </div>
       </section>
 
       <div className="min-w-0 flex-1 space-y-6">
-        {!current && (
+        {!current && examMode && (
+          <PastExamOverview
+            exams={selectedExams}
+            items={examPool}
+            answers={examAnswers}
+            onPick={pick}
+            onStart={(withDone) => serve(examPool, withDone, true)}
+            onEssay={navigate && course.views?.includes("essa") ? toEssay : null}
+          />
+        )}
+
+        {!current && !examMode && (
           <section className="card mx-auto w-full max-w-reading p-5 sm:p-7">
             <p className="text-sm text-ink/65">
               {activeTopics.length === 0
@@ -385,7 +618,7 @@ export default function Practice({
                     </button>
                   )}
                   <span className="text-sm text-ink/65">
-                    Alla frågor i urvalet är klara. Att fortsätta ändrar ingen klar-status.
+                    Alla frågor i urvalet är klara. Svarar du fel på en klar fråga blir den ofärdig igen.
                   </span>
                 </>
               ) : (
@@ -398,38 +631,47 @@ export default function Practice({
         )}
 
         {current && view && (
-          <QuestionCard
-            question={current}
-            view={view}
-            chosen={chosen}
-            revealed={revealed}
-            onChoose={setChosen}
-            topicName={groupName}
-            counter={counter}
-          >
-            <div className="flex flex-wrap items-center gap-3">
-              {!revealed ? (
-                <button type="button" className="btn-primary" disabled={chosen === null} onClick={confirm}>
-                  Svara
+          <div ref={cardRef} tabIndex={-1} className="focus:outline-none">
+            <QuestionCard
+              question={current}
+              view={view}
+              chosen={chosen}
+              revealed={revealed}
+              onChoose={setChosen}
+              topicName={groupName}
+              counter={counter}
+              tag={tag}
+              zoomable
+            >
+              <div className="flex flex-wrap items-center gap-3">
+                {!revealed ? (
+                  <button type="button" className="btn-primary" disabled={chosen === null} onClick={confirm}>
+                    Svara
+                  </button>
+                ) : (
+                  <button type="button" className="btn-primary" onClick={next}>
+                    {examMode ? "Nästa tentafråga" : "Nästa fråga"}
+                  </button>
+                )}
+                {revealed && examMode && current.run && navigate && course.views?.includes("bpmn") && (
+                  <button type="button" className="btn-secondary" onClick={toRun}>
+                    Kör diagrammet i BPMN-övningar
+                  </button>
+                )}
+                {navigate && currentChapterId && (
+                  <button type="button" className="btn-secondary" onClick={toChapter}>
+                    Tillbaka till kapitlet
+                  </button>
+                )}
+                <button type="button" className="btn-quiet" onClick={stop}>
+                  {examMode ? "Till översikten" : "Klar för nu"}
                 </button>
-              ) : (
-                <button type="button" className="btn-primary" onClick={next}>
-                  Nästa fråga
-                </button>
-              )}
-              {navigate && currentChapterId && (
-                <button type="button" className="btn-secondary" onClick={toChapter}>
-                  Tillbaka till kapitlet
-                </button>
-              )}
-              <button type="button" className="btn-quiet" onClick={stop}>
-                Klar för nu
-              </button>
-              <span className="text-sm text-ink/65">
-                Tangentbord: 1–4 väljer, Enter bekräftar, → nästa.
-              </span>
-            </div>
-          </QuestionCard>
+                <span className="text-sm text-ink/65">
+                  Tangentbord: 1–{view.options.length} väljer, Enter bekräftar, → nästa.
+                </span>
+              </div>
+            </QuestionCard>
+          </div>
         )}
       </div>
     </div>

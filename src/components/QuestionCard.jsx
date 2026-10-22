@@ -18,6 +18,8 @@ export default function QuestionCard({
   onChoose,
   topicName,
   counter,
+  tag,
+  zoomable = false,
   children,
 }) {
   function stateFor(index) {
@@ -29,6 +31,8 @@ export default function QuestionCard({
   return (
     <article className="card mx-auto w-full max-w-reading p-5 sm:p-7">
       <div className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-ink/65">
+        {/* tag: varifrån frågan kommer (Tentafrågor: tenta, nummer och poäng). */}
+        {tag}
         {counter && <span className="tabular font-medium text-ink/70">{counter}</span>}
         {topicName && <span>{topicName}</span>}
         {question.difficulty && (
@@ -46,7 +50,9 @@ export default function QuestionCard({
       {question.lead && <p className="mb-3 text-[15px] leading-relaxed text-ink/85">{question.lead}</p>}
       {question.diagram && <Diagram id={question.diagram} />}
       {/* Provets BPMN-frågor: diagrammet eller elementgalleriet plus förutsättningarna. */}
-      {question.bpmnDiagram && <BpmnDiagram diagram={diagramById[question.bpmnDiagram]} />}
+      {question.bpmnDiagram && (
+        <BpmnDiagram diagram={diagramById[question.bpmnDiagram]} zoomable={zoomable} />
+      )}
       {question.elements && <ElementGallery elements={question.elements} />}
       {question.premises && (
         <ul className="mb-4 list-disc pl-5 text-[15px] leading-relaxed text-ink/85">

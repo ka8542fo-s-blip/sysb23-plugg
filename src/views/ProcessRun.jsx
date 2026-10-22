@@ -16,8 +16,9 @@ const KIND_QUESTION = {
 };
 
 // Källan visas utan sidhänvisning (HANDOFF: inga slidehänvisningar i det
-// läsaren ser); hela källan står kvar i datat.
-const shortSource = (task) => task.source.replace(/\s*\(.*\)$/, "");
+// läsaren ser); hela källan står kvar i datat. Bara en parentes efter
+// mellanslag tas bort, så att "ord 3(c)" behåller sin bokstav.
+const shortSource = (task) => task.source.replace(/\s+\(.*\)$/, "");
 
 const titleOf = (task) => (task.kind === "element" ? "Känna igen ett element" : diagramById[task.diagram].title);
 const sourceTag = (task) => shortSource(task).replace(/^Tenta /, "").replace(/^Variant av tenta /, "variant ");
@@ -25,8 +26,14 @@ const sourceTag = (task) => shortSource(task).replace(/^Tenta /, "").replace(/^V
 // I läget Anpassa får diagrammen växa till 150 % när det finns plats.
 const MAX_FIT_SCALE = 1.5;
 
-export default function ProcessRun({ modelProgress, onSolve, onReset }) {
-  const [currentId, setCurrentId] = useState(() => tasks.find((t) => !modelProgress[t.id])?.id || tasks[0].id);
+// params.taskId: från Tentafrågor i Öva ("Kör diagrammet"), som öppnar
+// just den uppgiften; annars första olösta.
+export default function ProcessRun({ params, modelProgress, onSolve, onReset }) {
+  const [currentId, setCurrentId] = useState(() =>
+    tasks.some((t) => t.id === params?.taskId)
+      ? params.taskId
+      : tasks.find((t) => !modelProgress[t.id])?.id || tasks[0].id,
+  );
   const [choice, setChoice] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
@@ -304,6 +311,7 @@ export default function ProcessRun({ modelProgress, onSolve, onReset }) {
                     type="button"
                     onClick={() => setCurrentId(t.id)}
                     aria-current={active ? "true" : undefined}
+                    title={`${titleOf(t)} · ${sourceTag(t)}`}
                     className={`flex w-full items-baseline gap-2 rounded-lg border px-3 py-2 text-left text-sm transition-colors duration-150 ${active ? "border-pine bg-pine/[0.08] text-pine" : "border-transparent hover:border-pine hover:bg-pine/[0.06]"}`}
                   >
                     <span className="tabular w-6 shrink-0 text-ink/65">{i + 1}</span>

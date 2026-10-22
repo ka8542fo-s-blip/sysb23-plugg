@@ -265,7 +265,7 @@ export default function App() {
           />
         )}
         {view === "essa" && (
-          <Essays {...shared} essayState={essayState} setEssayState={setEssayState} />
+          <Essays {...shared} params={viewParams} essayState={essayState} setEssayState={setEssayState} />
         )}
         {view === "sql" && (
           <SqlWorkshop
@@ -280,7 +280,12 @@ export default function App() {
         )}
         {view === "tenta" && <DbExam />}
         {view === "bpmn" && (
-          <ProcessRun modelProgress={modelProgress} onSolve={solveModelExercise} onReset={resetModelExercise} />
+          <ProcessRun
+            params={viewParams}
+            modelProgress={modelProgress}
+            onSolve={solveModelExercise}
+            onReset={resetModelExercise}
+          />
         )}
         {view === "schema" && (
           <Schedule

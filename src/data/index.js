@@ -20,6 +20,7 @@ import { topics as processTopics } from "./process/topics.js";
 import { questions as processQuestions } from "./process/questions.js";
 import { essays as processEssays } from "./process/essays.js";
 import { tasks as processBpmnTasks } from "./process/bpmnTasks.js";
+import { pastExams as processPastExams } from "./process/pastExams.js";
 import {
   chapters as processChapters,
   glossary as processGlossary,
@@ -37,6 +38,9 @@ const noContent = {
   glossary: [],
   sqlLevels: [],
   sqlExercises: [],
+  // Gamla tentors flervalsfrågor för läget Tentafrågor i Öva (data/<kurs>/pastExams.js).
+  // Inte samma sak som Databasers oldExams: de är konstruktionsuppgifter i fliken Tenta.
+  pastExams: [],
 };
 
 // Manifest över delkurser. `views` styr vilka flikar delkursen har —
@@ -98,6 +102,8 @@ export const courses = [
     questions: processQuestions,
     essays: processEssays,
     bpmnTasks: processBpmnTasks,
+    // Tentafrågor i Öva: HT25-tentornas flervalsdelar i tentans ordning.
+    pastExams: processPastExams,
     // Provet i HT25-tentans form: 10 BPM-frågor à 5 p, sedan BPMN-delen
     // som på tentan — en begreppsfråga à 3 p och tre körfrågor ur
     // BPMN-övningar med tentans poäng (4–7 p). Essäerna (2 à 15 p) ligger utanför.

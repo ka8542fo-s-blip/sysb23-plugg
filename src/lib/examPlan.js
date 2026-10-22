@@ -42,7 +42,8 @@ export function taskToQuestion(task) {
     elements: task.elements || null,
     options: task.options.map((text) => ({ text, explain: "" })),
     correct: correctIndex(task),
-    source: task.source.replace(/\s*\(.*\)$/, ""),
+    // Bara en parentes efter mellanslag är en sidhänvisning; "ord 3(c)" behåller (c).
+    source: task.source.replace(/\s+\(.*\)$/, ""),
     explanation: task.note || (task.explain ? task.explain.join(" ") : ""),
   };
 }

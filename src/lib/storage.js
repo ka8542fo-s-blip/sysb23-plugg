@@ -15,6 +15,7 @@ export const KEYS = {
   ttsRate: "upplasningstakt", // uppläsningens hastighet (t.ex. 1.15)
   sqlRandom: "sqlSlump", // antal lösta slumpövningar
   bpmnMenu: "bpmnMeny", // "full" | "smal" — BPMN-övningarnas meny, ihopfälld till siffror
+  examAnswers: "tentafragor", // { [frågeId]: samma form som answers } — läget Tentafrågor i Öva, räknas för sig
   theme: "tema", // "auto" | "ljust" | "mork" — läses också av skriptet i index.html
 };
 
@@ -152,8 +153,10 @@ export const defaultSettings = {
   timerMinutes: 20,
   practiceTopics: [], // tom lista = alla ämnen
   practiceDifficulty: 0, // 0 = alla
-  practiceExamFocus: false, // kärnämnen först i varje grupp i Öva
-  practiceRecent: {}, // { [courseId]: [senast serverade fråge-id] } — karensen i Öva
+  practiceRecent: {}, // { [courseId | "<kurs>:tenta"]: [senast serverade fråge-id] } — karensen i Öva
+  practiceScope: {}, // { [courseId]: "alla" | "tenta" } — Alla frågor eller Tentafrågor i Öva
+  practiceExams: {}, // { [courseId]: [tentaId] } — tentor valda i Tentafrågor, tom = alla
+  practiceExamOrder: {}, // { [courseId]: "tenta" | "blandat" } — standard: tentans ordning
 };
 
 // Registrerar ett svar på en fråga i historiken.

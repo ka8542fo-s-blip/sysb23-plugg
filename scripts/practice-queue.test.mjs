@@ -65,11 +65,14 @@ test("kort kö: regeln viker i stället för att ge tomt", () => {
   assert.equal(nextQuestion({ questions: [], answers: {}, recent: [] }), null);
 });
 
-test("tentafokus lägger kärnämnen först inom varje grupp, aldrig före en annan grupp", () => {
-  const answers = { q7: { correct: 0, wrong: 1, last: "wrong", lastAt: at(1), recent: [false] } };
-  const ordered = orderCandidates({ questions: qs, answers, order: "grupp", examFocus: true, coreTopics: new Set(["b"]) }).map((q) => q.id);
-  assert.equal(ordered[0], "q7");
-  assert.deepEqual(ordered.slice(1, 6), ["q8", "q9", "q10", "q11", "q12"]);
+test("kort kö: den som serverades för längst sedan kommer före den man just svarat fel på", () => {
+  const two = qs.slice(0, 2);
+  const answers = {
+    q1: { correct: 0, wrong: 1, last: "wrong", lastAt: at(2), recent: [false] },
+    q2: { correct: 1, wrong: 0, last: "correct", lastAt: at(1), recent: [true] },
+  };
+  const next = nextQuestion({ questions: two, answers, recent: ["q2", "q1"], order: "grupp" });
+  assert.equal(next.id, "q2", "q1 besvarades fel nyss; q2 har väntat längre");
 });
 
 test("nollställning tar bara delkursens frågor", () => {
