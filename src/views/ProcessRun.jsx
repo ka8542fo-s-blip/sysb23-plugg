@@ -3,6 +3,7 @@ import { tasks, correctIndex } from "../data/process/bpmnTasks.js";
 import { diagramById } from "../data/process/bpmnDiagrams.js";
 import { simulate } from "../lib/bpmnSim.js";
 import { BpmnDiagram, ElementGallery, HIGHLIGHT } from "../components/bpmn/BpmnDiagram.jsx";
+import { KEYS, load, save } from "../lib/storage.js";
 
 // BPMN-övningar: tentans BPMN-körfrågor. Diagrammet ritas och körs ur samma
 // data; efter svar visas simulatorns spår steg för steg och de noder som
@@ -18,12 +19,25 @@ const KIND_QUESTION = {
 const shortSource = (task) => task.source.replace(/\s*\(.*\)$/, "");
 
 const titleOf = (task) => (task.kind === "element" ? "Känna igen ett element" : diagramById[task.diagram].title);
+const sourceTag = (task) => shortSource(task).replace(/^Tenta /, "").replace(/^Variant av tenta /, "variant ");
+
+// I läget Anpassa får diagrammen växa till 150 % när det finns plats.
+const MAX_FIT_SCALE = 1.5;
 
 export default function ProcessRun({ modelProgress, onSolve, onReset }) {
   const [currentId, setCurrentId] = useState(() => tasks.find((t) => !modelProgress[t.id])?.id || tasks[0].id);
   const [choice, setChoice] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
+  // Menyn kan fällas ihop till en list med siffror, så att diagrammet får
+  // plats att växa. Valet sparas; det gäller bara bred skärm.
+  const [menu, setMenu] = useState(() => (load(KEYS.bpmnMenu, "full") === "smal" ? "smal" : "full"));
+  const narrowMenu = menu === "smal";
+  function toggleMenu() {
+    const next = narrowMenu ? "full" : "smal";
+    setMenu(next);
+    save(KEYS.bpmnMenu, next);
+  }
 
   const task = tasks.find((t) => t.id === currentId) || tasks[0];
   const diagram = task.diagram ? diagramById[task.diagram] : null;
@@ -72,7 +86,7 @@ export default function ProcessRun({ modelProgress, onSolve, onReset }) {
           </div>
           <h2 className="mt-1 font-display text-xl">{titleOf(task)}</h2>
 
-          {diagram ? <BpmnDiagram diagram={diagram} highlight={highlight} /> : <ElementGallery elements={task.elements} />}
+          {diagram ? <BpmnDiagram diagram={diagram} highlight={highlight} zoomable maxScale={MAX_FIT_SCALE} /> : <ElementGallery elements={task.elements} />}
 
           {task.premises && (
             <>
@@ -152,9 +166,65 @@ export default function ProcessRun({ modelProgress, onSolve, onReset }) {
         </section>
       </div>
 
-      <div className="mt-6 lg:order-1 lg:mt-0 lg:w-80 lg:shrink-0">
-        <nav aria-label="Uppgifter" className="card p-4">
-          <h3 className="font-display text-[15px]">BPMN-övningar</h3>
+      <div className={`mt-6 lg:order-1 lg:mt-0 lg:shrink-0 lg:transition-[width] lg:duration-200 ${narrowMenu ? "lg:w-24" : "lg:w-80"}`}>
+        {/* Ihopfälld: bara siffrorna, på bred skärm. Mobilen visar alltid hela
+            listan, under uppgiften. */}
+        {narrowMenu && (
+          <nav aria-label="Uppgifter" className="card hidden p-2 lg:block">
+            <button
+              type="button"
+              onClick={toggleMenu}
+              className="flex h-8 w-full items-center justify-center rounded-md text-ink/65 transition-colors duration-150 hover:bg-pine/[0.08] hover:text-pine"
+              aria-label="Visa hela menyn"
+              title="Visa hela menyn"
+            >
+              <span aria-hidden="true">»</span>
+            </button>
+            <p className="tabular mt-1 text-center text-xs text-ink/65" title={`${solvedCount} av ${tasks.length} klara`}>
+              {solvedCount}/{tasks.length}
+            </p>
+            <ul className="mt-2 grid grid-cols-2 gap-1.5">
+              {tasks.map((t, i) => {
+                const active = t.id === currentId;
+                const done = Boolean(modelProgress[t.id]);
+                const label = `Uppgift ${i + 1}: ${titleOf(t)} · ${sourceTag(t)}${done ? " · klar" : ""}`;
+                return (
+                  <li key={t.id}>
+                    <button
+                      type="button"
+                      onClick={() => setCurrentId(t.id)}
+                      aria-current={active ? "true" : undefined}
+                      aria-label={label}
+                      title={label}
+                      className={`tabular flex h-9 w-full items-center justify-center rounded-lg border text-sm transition-colors duration-150 ${
+                        active
+                          ? "border-pine bg-pine font-medium text-paper"
+                          : done
+                            ? "border-correct/50 bg-correct-bg text-correct hover:border-correct"
+                            : "border-line hover:border-pine hover:bg-pine/[0.06] hover:text-pine"
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+        )}
+        <nav aria-label="Uppgifter" className={`card p-4 ${narrowMenu ? "lg:hidden" : ""}`}>
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-display text-[15px]">BPMN-övningar</h3>
+            <button
+              type="button"
+              onClick={toggleMenu}
+              className="-mr-1 -mt-1 hidden h-8 w-8 shrink-0 items-center justify-center rounded-md text-ink/65 transition-colors duration-150 hover:bg-pine/[0.08] hover:text-pine lg:flex"
+              aria-label="Fäll ihop menyn"
+              title="Fäll ihop menyn, så att diagrammet får mer plats"
+            >
+              <span aria-hidden="true">«</span>
+            </button>
+          </div>
           <p className="mt-1 text-sm text-ink/65">
             Tentans BPMN-frågor: följ en token genom diagrammet. {solvedCount} av {tasks.length} klara.
           </p>
@@ -170,7 +240,7 @@ export default function ProcessRun({ modelProgress, onSolve, onReset }) {
                     className={`flex w-full items-baseline gap-2 rounded-lg border px-3 py-2 text-left text-sm transition-colors duration-150 ${active ? "border-pine bg-pine/[0.08] text-pine" : "border-transparent hover:border-pine hover:bg-pine/[0.06]"}`}
                   >
                     <span className="tabular w-6 shrink-0 text-ink/65">{i + 1}</span>
-                    <span className="min-w-0 flex-1 truncate">{titleOf(t)} · {shortSource(t).replace(/^Tenta /, "").replace(/^Variant av tenta /, "variant ")}</span>
+                    <span className="min-w-0 flex-1 truncate">{titleOf(t)} · {sourceTag(t)}</span>
                     {modelProgress[t.id] && <span className="shrink-0 text-correct" title="Klar">✓<span className="sr-only"> Klar</span></span>}
                   </button>
                 </li>

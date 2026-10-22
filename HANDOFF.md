@@ -860,6 +860,14 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
 - **Essä:** 6 i `essays.js`: HT25:s fyra med exakt lydelse + två egna
   (top-down/bottom-up, BPR mot BPM). `essa-struktur.test.mjs` täcker båda
   delkurserna.
+- **BPMN-övningarnas diagram (2026-10-22):** menyn kan fällas ihop till en
+  list med siffror (valet sparas som `sysb23:bpmnMeny`, bara bred skärm;
+  mobilen visar alltid hela listan). Diagrammen har zoomknappar (−, +,
+  Anpassa; stegen i `lib/diagramZoom.js`) och får i Anpassa växa till 150 %;
+  zoomat större än rutan scrollar de och går att dra med musen. Allt är
+  opt-in i `BpmnDiagram` (`zoomable`, `maxScale`) — kompendiet och Öva ritar
+  som förut, högst 100 %. Mätt vid 1 280 px: minsta skala 0,63 → 0,83 med
+  ihopfälld meny, median 1,02 → 1,33.
 - **BPMN-övningar** (vy `bpmn`, `views/ProcessRun.jsx`; hette BPMN-övningar till 2026-10-13): 28 uppgifter i
   `bpmnTasks.js` — HT25:s fem körfrågor, elementfrågan (omtenta 13), sju
   varianter, efter F5 en elementfråga om business rule task (`kp-f5-brt`)

@@ -5,7 +5,8 @@
 // streckad cirkel för non-interrupting, fylld ikon för throw, streckad ram
 // för event subprocess, tjock ram för call activity, plustecken för
 // kollapsad subprocess. Färgerna är Läsesalens tokens.
-import { Fragment } from "react";
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { MAX_ZOOM, MIN_ZOOM, currentScale, fitScale, percent, stepZoom } from "../../lib/diagramZoom.js";
 
 const INK = "var(--ink)";
 const PINE = "var(--pine)";
@@ -358,7 +359,7 @@ function Pool({ pool }) {
 }
 
 // ── En vy (huvuddiagram eller barndiagram) ──────────────────────────────
-function View({ diagram, view, highlight, markerId }) {
+function View({ diagram, view, highlight, markerId, zoom = "fit", maxScale = 1 }) {
   const inView = (n) => (n.in || null) === view.container;
   const nodes = diagram.nodes.filter(inView);
   const byId = Object.fromEntries(diagram.nodes.map((n) => [n.id, n]));
@@ -367,7 +368,16 @@ function View({ diagram, view, highlight, markerId }) {
   const hl = (id) => highlight?.[id];
 
   return (
-    <svg viewBox={`0 0 ${view.width} ${view.height}`} className="block h-auto w-full" style={{ maxWidth: view.width }} role="img" aria-label={view.title || diagram.title} fontFamily="Inter, system-ui, sans-serif">
+    <svg
+      viewBox={`0 0 ${view.width} ${view.height}`}
+      // Anpassa: fyll bredden, upp till maxScale. Zoomat: en fast bredd som
+      // får vara större än rutan, som då scrollar.
+      className={zoom === "fit" ? "block h-auto w-full" : "block h-auto"}
+      style={zoom === "fit" ? { maxWidth: view.width * maxScale } : { width: view.width * zoom, maxWidth: "none" }}
+      role="img"
+      aria-label={view.title || diagram.title}
+      fontFamily="Inter, system-ui, sans-serif"
+    >
       <defs>
         <marker id={`${markerId}-seq`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
           <path d="M0,0 L10,5 L0,10 z" fill={INK} />
@@ -429,21 +439,147 @@ function NodeShape({ node: n, diagram, highlight }) {
 let diagramSeq = 0;
 
 // highlight: { nodId: { stroke, fill } } — markerar körda/avbrutna noder.
-export function BpmnDiagram({ diagram, highlight, compact = false }) {
-  const markerId = `bpmn-${diagram.id}-${(diagramSeq = (diagramSeq + 1) % 1e6)}`;
+// zoomable: zoomknappar (−, +, Anpassa) ovanför diagrammet, och diagrammet
+// får växa till maxScale i läget Anpassa. Zoomat större än rutan går det att
+// dra i diagrammet med musen (eller scrolla) för att se resten. Utan
+// zoomable ser diagrammet ut som förut: högst sin egen storlek.
+export function BpmnDiagram({ diagram, highlight, compact = false, zoomable = false, maxScale = 1 }) {
+  const seq = useRef(null);
+  if (seq.current === null) seq.current = diagramSeq = (diagramSeq + 1) % 1e6;
+  const markerId = `bpmn-${diagram.id}-${seq.current}`;
+  const [zoom, setZoom] = useState("fit");
+  const [fit, setFit] = useState(null);
+  const firstFrame = useRef(null);
+  const effectiveMax = zoomable ? maxScale : 1;
+
+  // Nytt diagram börjar alltid i Anpassa.
+  useEffect(() => setZoom("fit"), [diagram.id]);
+
+  // Skalan i Anpassa följer rutans bredd, också när menyn bredvid fälls ihop.
+  useLayoutEffect(() => {
+    if (!zoomable || !firstFrame.current) return undefined;
+    const frame = firstFrame.current;
+    const measure = () => {
+      const style = getComputedStyle(frame);
+      const inner = frame.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+      const next = fitScale(inner, diagram.views[0].width, effectiveMax);
+      // Bara verkliga ändringar: en rullist som kommer och går får inte
+      // starta en slinga av omritningar.
+      setFit((prev) => (prev != null && next != null && Math.abs(prev - next) < 0.005 ? prev : next));
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(frame);
+    return () => observer.disconnect();
+  }, [zoomable, diagram, effectiveMax]);
+
+  const scale = currentScale(zoom, fit);
+  const zoomed = zoomable && zoom !== "fit";
+
   return (
     <figure className="my-4 space-y-4" data-tts-skip>
-      {diagram.views.map((view) => (
+      {zoomable && !compact && (
+        <ZoomBar
+          scale={scale}
+          fitted={zoom === "fit"}
+          onOut={() => setZoom(stepZoom(scale, -1))}
+          onIn={() => setZoom(stepZoom(scale, 1))}
+          onFit={() => setZoom("fit")}
+        />
+      )}
+      {diagram.views.map((view, index) => (
         <div key={view.container ?? "main"}>
           {view.container && (
             <p className="mb-1 text-sm font-medium text-ink/70">Barndiagram: {view.title}</p>
           )}
-          <div className={compact ? "" : "overflow-x-auto rounded-lg border border-line bg-surface p-2"}>
-            <View diagram={diagram} view={view} highlight={highlight} markerId={`${markerId}-${view.container ?? "m"}`} />
-          </div>
+          <PanFrame
+            frameRef={index === 0 ? firstFrame : undefined}
+            className={compact ? "" : "rounded-lg border border-line bg-surface p-2"}
+            pannable={zoomed}
+          >
+            <View
+              diagram={diagram}
+              view={view}
+              highlight={highlight}
+              markerId={`${markerId}-${view.container ?? "m"}`}
+              zoom={zoomable ? zoom : "fit"}
+              maxScale={effectiveMax}
+            />
+          </PanFrame>
         </div>
       ))}
     </figure>
+  );
+}
+
+// Zoomraden: − och + i steg, procenten som gäller nu, och Anpassa.
+function ZoomBar({ scale, fitted, onOut, onIn, onFit }) {
+  const button = "flex h-8 min-w-8 items-center justify-center rounded-md border border-line bg-surface px-2 text-[15px] leading-none transition-colors duration-150 hover:border-pine hover:bg-pine/[0.06] hover:text-pine disabled:cursor-not-allowed disabled:text-ink/30 disabled:hover:border-line disabled:hover:bg-surface";
+  return (
+    <div className="-mb-2 flex items-center justify-end gap-1.5" role="group" aria-label="Zooma diagrammet">
+      <button type="button" className={button} onClick={onOut} disabled={scale != null && scale <= MIN_ZOOM + 0.005} aria-label="Förminska diagrammet" title="Förminska">
+        −
+      </button>
+      <span className="tabular min-w-[3.5rem] text-center text-sm text-ink/65" aria-live="polite">
+        {percent(scale)}
+      </span>
+      <button type="button" className={button} onClick={onIn} disabled={scale != null && scale >= MAX_ZOOM - 0.005} aria-label="Förstora diagrammet" title="Förstora">
+        +
+      </button>
+      <button
+        type="button"
+        className={`${button} ml-1 text-sm ${fitted ? "border-pine/50 text-pine" : ""}`}
+        onClick={onFit}
+        aria-pressed={fitted}
+        title="Anpassa till bredden"
+      >
+        Anpassa
+      </button>
+    </div>
+  );
+}
+
+// Ram som scrollar när diagrammet är större än den. Med musen går det att
+// dra i diagrammet; pekskärmar scrollar som vanligt.
+function PanFrame({ frameRef, className, pannable, children }) {
+  const ownRef = useRef(null);
+  const ref = frameRef || ownRef;
+  const drag = useRef(null);
+  const [dragging, setDragging] = useState(false);
+
+  function onPointerDown(event) {
+    if (!pannable || event.pointerType !== "mouse" || event.button !== 0) return;
+    const frame = ref.current;
+    drag.current = { x: event.clientX, y: event.clientY, left: frame.scrollLeft, top: frame.scrollTop };
+    frame.setPointerCapture(event.pointerId);
+    setDragging(true);
+  }
+  function onPointerMove(event) {
+    if (!drag.current) return;
+    const frame = ref.current;
+    frame.scrollLeft = drag.current.left - (event.clientX - drag.current.x);
+    frame.scrollTop = drag.current.top - (event.clientY - drag.current.y);
+  }
+  function onPointerUp(event) {
+    if (!drag.current) return;
+    drag.current = null;
+    ref.current.releasePointerCapture?.(event.pointerId);
+    setDragging(false);
+  }
+
+  return (
+    <div
+      ref={ref}
+      className={`${className} ${pannable ? `max-h-[75vh] overflow-auto ${dragging ? "cursor-grabbing select-none" : "cursor-grab"}` : "overflow-x-auto"}`}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
+      tabIndex={pannable ? 0 : undefined}
+      aria-label={pannable ? "Diagrammet, går att scrolla" : undefined}
+    >
+      {children}
+    </div>
   );
 }
 
