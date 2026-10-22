@@ -79,7 +79,7 @@ export default function Essays({ course, essayState, setEssayState }) {
         <div className={showChecklist ? "lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(22rem,26rem)] lg:gap-10" : ""}>
         <div className="min-w-0">
         <p className="text-sm text-ink/65">{essay.context}</p>
-        <h2 className="mt-2 font-display text-[22px] leading-snug text-ink">
+        <h2 className="mt-2 font-sans text-[18px] font-medium leading-normal tracking-[-0.005em] text-ink [font-variation-settings:normal] sm:text-[20px]">
           {essay.question}
         </h2>
 
