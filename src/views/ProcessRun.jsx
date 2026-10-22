@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { tasks, correctIndex } from "../data/process/bpmnTasks.js";
 import { diagramById } from "../data/process/bpmnDiagrams.js";
 import { simulate } from "../lib/bpmnSim.js";
 import { BpmnDiagram, ElementGallery, HIGHLIGHT } from "../components/bpmn/BpmnDiagram.jsx";
 import { KEYS, load, save } from "../lib/storage.js";
+import BpmnLegend from "../components/bpmn/BpmnLegend.jsx";
 
 // BPMN-övningar: tentans BPMN-körfrågor. Diagrammet ritas och körs ur samma
 // data; efter svar visas simulatorns spår steg för steg och de noder som
@@ -87,6 +88,16 @@ export default function ProcessRun({ modelProgress, onSolve, onReset }) {
     if (choice === correct) onSolve(task.id, "solved");
   }
 
+  // Symbolförklaringen. På elementfrågorna ("vilket element är X?") skulle
+  // den avslöja svaret, så där visas den först när man har svarat.
+  const [legendOpen, setLegendOpen] = useState(false);
+  const legendButton = useRef(null);
+  const legendAllowed = task.kind !== "element" || submitted;
+  const closeLegend = useCallback(() => {
+    setLegendOpen(false);
+    legendButton.current?.focus();
+  }, []);
+
   const isRight = submitted && choice === correct;
   const guessValue = (task.points / task.options.length) - (1 - 1 / task.options.length);
 
@@ -94,20 +105,34 @@ export default function ProcessRun({ modelProgress, onSolve, onReset }) {
     <div className="lg:flex lg:gap-8">
       <div className="lg:order-2 lg:min-w-0 lg:flex-1">
         <section ref={cardRef} className="card p-5">
-          <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-sm text-ink/65">
               {shortSource(task)} · {task.points} poäng, fel ger −1
               {modelProgress[task.id] && <span className="ml-2 text-correct">✓ Klar</span>}
             </p>
-            {modelProgress[task.id] && !confirmReset && (
-              <button type="button" className="btn-quiet text-sm" onClick={() => setConfirmReset(true)}>Nollställ uppgiften</button>
-            )}
-            {confirmReset && (
-              <span className="flex gap-2 text-sm">
-                <button type="button" className="btn-secondary" onClick={() => { onReset(task.id); setConfirmReset(false); }}>Ja, nollställ</button>
-                <button type="button" className="btn-quiet" onClick={() => setConfirmReset(false)}>Avbryt</button>
-              </span>
-            )}
+            <div className="flex flex-wrap items-center gap-2">
+              {modelProgress[task.id] && !confirmReset && (
+                <button type="button" className="btn-quiet text-sm" onClick={() => setConfirmReset(true)}>Nollställ uppgiften</button>
+              )}
+              {confirmReset && (
+                <span className="flex gap-2 text-sm">
+                  <button type="button" className="btn-secondary" onClick={() => { onReset(task.id); setConfirmReset(false); }}>Ja, nollställ</button>
+                  <button type="button" className="btn-quiet" onClick={() => setConfirmReset(false)}>Avbryt</button>
+                </span>
+              )}
+              {legendAllowed && (
+                <button
+                  ref={legendButton}
+                  type="button"
+                  className="btn-secondary px-3 py-1.5 text-sm"
+                  onClick={() => setLegendOpen(true)}
+                  aria-haspopup="dialog"
+                >
+                  <span aria-hidden="true" className="font-display text-base leading-none text-pine">◇</span>
+                  BPMN-symboler
+                </button>
+              )}
+            </div>
           </div>
           <h2 className="mt-1 font-display text-xl">{titleOf(task)}</h2>
 
@@ -291,6 +316,7 @@ export default function ProcessRun({ modelProgress, onSolve, onReset }) {
           </ul>
         </nav>
       </div>
+      {legendOpen && <BpmnLegend onClose={closeLegend} />}
     </div>
   );
 }

@@ -868,6 +868,15 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   opt-in i `BpmnDiagram` (`zoomable`, `maxScale`) — kompendiet och Öva ritar
   som förut, högst 100 %. Mätt vid 1 280 px: minsta skala 0,63 → 0,83 med
   ihopfälld meny, median 1,02 → 1,33.
+- **BPMN-symboler (2026-10-22):** knappen ◇ BPMN-symboler i
+  BPMN-övningarnas rubrikrad öppnar `components/bpmn/BpmnLegend.jsx`, en
+  ruta med alla former (36 st: händelser, boundary events, aktiviteter,
+  gateways, flöden och banor) ritade med samma `ActivityShape`,
+  `EventShape` och `GatewayShape` som diagrammen, plus kapitel 11:s nio
+  körregler. Texterna följer kapitel 10–11. Knappen döljs på
+  elementfrågor ("Känna igen ett element") tills man har svarat, så att
+  rutan inte avslöjar svaret. Esc, klick utanför och ✕ stänger; fokus
+  stannar i rutan och går tillbaka till knappen.
 - **BPMN-övningar** (vy `bpmn`, `views/ProcessRun.jsx`; hette BPMN-övningar till 2026-10-13): 28 uppgifter i
   `bpmnTasks.js` — HT25:s fem körfrågor, elementfrågan (omtenta 13), sju
   varianter, efter F5 en elementfråga om business rule task (`kp-f5-brt`)

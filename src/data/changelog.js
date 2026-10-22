@@ -7,6 +7,7 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 18, date: "2026-10-22", text: "BPMN-symboler: alla former och vad de betyder, i BPMN-övningarna" },
   { id: 17, date: "2026-10-22", text: "Knappen Nästa uppgift i BPMN-övningarna" },
   { id: 16, date: "2026-10-21", text: "BPMN-övningar: fäll ihop menyn och zooma diagrammen med − och +" },
   { id: 15, date: "2026-10-21", text: "Sammanfattning ovanför kapitlen i Databasers Läs, med tre figurer" },
