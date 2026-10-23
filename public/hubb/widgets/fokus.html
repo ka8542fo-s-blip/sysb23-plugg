@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Fokustimer</title>
+<style>
+@font-face{font-family:"Bebas Neue";src:url("../fonts/bebas-neue-latin-400-normal.woff2") format("woff2");font-display:block}
+@font-face{font-family:Inter;font-weight:400;src:url("../fonts/inter-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:Inter;font-weight:600;src:url("../fonts/inter-latin-600-normal.woff2") format("woff2")}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:transparent}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;-webkit-font-smoothing:antialiased;overflow:hidden}
+.card{position:absolute;inset:2px;border-radius:12px;overflow:hidden;background:#111 url("fokus-bakgrund.jpg") center/cover;
+  box-shadow:0 0 0 1px #2c2c2c;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,4vh,16px);padding:14px}
+.card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.22),rgba(10,10,10,.6))}
+.card>*{position:relative}
+.modes{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.mode{font:inherit;font-size:12px;font-weight:600;cursor:pointer;height:26px;padding:0 12px;border-radius:13px;
+  border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.28);color:#f2f2f2}
+.mode.on{background:#f2f2f2;border-color:#f2f2f2;color:#b3261e}
+.time{font-family:"Bebas Neue",Impact,sans-serif;font-size:clamp(52px,26vh,96px);line-height:.9;letter-spacing:.03em;
+  text-shadow:0 0 24px rgba(255,60,50,.45);font-variant-numeric:tabular-nums}
+.bar{width:min(70%,220px);height:4px;border-radius:2px;background:rgba(255,255,255,.18);overflow:hidden}
+.fill{height:100%;width:0;background:#e5453d;box-shadow:0 0 10px #e5453d;transition:width .3s linear}
+.ctrl{display:flex;gap:8px;align-items:center}
+.go{font:inherit;font-weight:600;cursor:pointer;height:34px;padding:0 22px;border:0;border-radius:17px;background:#e5453d;color:#fff;
+  box-shadow:0 0 18px rgba(229,69,61,.55)}
+.go:hover{background:#ef5148}
+.reset{width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:17px;
+  border:1px solid rgba(255,255,255,.28);background:rgba(0,0,0,.3);color:#f2f2f2}
+.foot{font-size:12px;color:#c9c9c9}
+.card.paus .fill{background:#bdbdbd;box-shadow:none}
+.card.paus .go{background:#f2f2f2;color:#1a1a1a;box-shadow:none}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="modes" id="modes">
+    <button class="mode on" data-m="fokus">Fokus</button>
+    <button class="mode" data-m="kort">Paus</button>
+    <button class="mode" data-m="lang">Lång paus</button>
+  </div>
+  <div class="time" id="time">25:00</div>
+  <div class="bar" aria-hidden="true"><div class="fill" id="fill"></div></div>
+  <div class="ctrl">
+    <button class="go" id="go">Starta</button>
+    <button class="reset" id="reset" aria-label="Börja om"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path></svg></button>
+  </div>
+  <div class="foot" id="foot">Pass idag: 0</div>
+</div>
+<script>
+(function () {
+  var MODES = { fokus: 25 * 60, kort: 5 * 60, lang: 15 * 60 };
+  var mode = 'fokus', total = MODES.fokus, left = total, endAt = 0, timer = null, ctx = null, memCount = 0;
+  var el = function (id) { return document.getElementById(id); };
+  function key() { var d = new Date(); return 'hubb-fokus-' + d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+  function readCount() { try { return parseInt(localStorage.getItem(key()) || '0', 10) || 0; } catch (e) { return memCount; } }
+  function writeCount(n) { memCount = n; try { localStorage.setItem(key(), String(n)); } catch (e) {} }
+  function fmt(s) { var m = Math.floor(s / 60), r = s % 60; return (m < 10 ? '0' : '') + m + ':' + (r < 10 ? '0' : '') + r; }
+  function render() {
+    el('time').textContent = fmt(left);
+    el('fill').style.width = (100 * (1 - left / total)) + '%';
+    var n = readCount();
+    el('foot').textContent = 'Pass idag: ' + n + (n ? ' · ' + (n * 25) + ' min fokus' : '');
+    document.title = timer ? fmt(left) + ' · Fokus' : 'Fokustimer';
+  }
+  function stop(label) { if (timer) { clearInterval(timer); timer = null; } el('go').textContent = label || 'Fortsätt'; }
+  function setMode(m) {
+    stop('Starta'); mode = m; total = MODES[m]; left = total;
+    var bs = document.querySelectorAll('.mode');
+    for (var i = 0; i < bs.length; i++) bs[i].classList.toggle('on', bs[i].getAttribute('data-m') === m);
+    el('card').classList.toggle('paus', m !== 'fokus');
+    render();
+  }
+  function chime() {
+    try {
+      if (!ctx) return;
+      [0, 0.35, 0.7].forEach(function (t) {
+        var o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = 'sine'; o.frequency.value = 880;
+        g.gain.setValueAtTime(0.0001, ctx.currentTime + t);
+        g.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + t + 0.3);
+        o.connect(g); g.connect(ctx.destination); o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + 0.32);
+      });
+    } catch (e) {}
+  }
+  function tick() {
+    left = Math.max(0, Math.round((endAt - Date.now()) / 1000));
+    render();
+    if (left === 0) {
+      stop('Starta'); chime();
+      if (mode === 'fokus') { var n = readCount() + 1; writeCount(n); setMode(n % 4 === 0 ? 'lang' : 'kort'); }
+      else { setMode('fokus'); }
+    }
+  }
+  function start() {
+    try { if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)(); if (ctx.state === 'suspended') ctx.resume(); } catch (e) {}
+    endAt = Date.now() + left * 1000;
+    timer = setInterval(tick, 250);
+    el('go').textContent = 'Pausa';
+  }
+  el('go').addEventListener('click', function () { if (timer) { stop(); } else { if (left === 0) left = total; start(); } });
+  el('reset').addEventListener('click', function () { setMode(mode); });
+  el('modes').addEventListener('click', function (e) { var m = e.target.getAttribute && e.target.getAttribute('data-m'); if (m) setMode(m); });
+  render();
+})();
+</script>
+</body>
+</html>

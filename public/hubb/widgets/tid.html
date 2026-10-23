@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Tiden just nu</title>
+<style>
+@font-face{font-family:Inter;font-weight:400;src:url("../fonts/inter-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:Inter;font-weight:600;src:url("../fonts/inter-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:Inter;font-weight:700;font-style:italic;src:url("../fonts/inter-latin-700-italic.woff2") format("woff2")}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;background:transparent}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#d4d4d4;font-size:14px;-webkit-font-smoothing:antialiased;overflow:hidden}
+.card{position:absolute;inset:2px;border-radius:12px;background:#1f1f1f;box-shadow:0 0 0 1px #2c2c2c;
+  padding:clamp(12px,5vh,18px) 18px;display:flex;flex-direction:column;justify-content:space-between;gap:6px}
+.head{display:flex;justify-content:space-between;align-items:baseline}
+.title{font-weight:700;font-style:italic;color:#e3e3e3}
+.date{font-size:12px;color:#9b9b9b}
+.row{display:grid;grid-template-columns:1fr auto;row-gap:4px}
+.lbl,.pct{font-weight:600}
+.pct{font-variant-numeric:tabular-nums}
+.track{grid-column:1/-1;height:6px;border-radius:3px;background:#2e2e2e;overflow:hidden}
+.fill{height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,#8e1b16,#e5453d);transition:width .6s ease}
+.row.term .fill{background:linear-gradient(90deg,#5a5a5a,#bdbdbd)}
+.left{grid-column:1/-1;font-size:11.5px;color:#8a8a8a}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="head"><span class="title">Tiden just nu</span><span class="date" id="date">&nbsp;</span></div>
+  <div id="rows" style="display:flex;flex-direction:column;justify-content:space-evenly;flex:1;gap:8px"></div>
+</div>
+<script>
+(function () {
+  // Terminer vid Lunds universitet (lu.se, terminstider). Slutdatum är dagen efter sista terminsdag.
+  var TERMS = [
+    { name: 'HT26', start: new Date(2026, 7, 31), end: new Date(2027, 0, 18) }
+  ];
+  var fmt = new Intl.DateTimeFormat('sv-SE', { weekday: 'short', day: 'numeric', month: 'short' });
+  function days(ms) { var d = Math.ceil(ms / 864e5); return d <= 0 ? 'sista dagen' : d + (d === 1 ? ' dag kvar' : ' dagar kvar'); }
+  function rows(now) {
+    var y = now.getFullYear(), mo = now.getMonth(), d = now.getDate();
+    var d0 = new Date(y, mo, d), d1 = new Date(y, mo, d + 1);
+    var wd = (now.getDay() + 6) % 7, w0 = new Date(y, mo, d - wd), w1 = new Date(y, mo, d - wd + 7);
+    var mins = Math.max(0, Math.round((d1 - now) / 6e4));
+    var out = [
+      ['Dag', d0, d1, Math.floor(mins / 60) + ' h ' + (mins % 60) + ' min kvar'],
+      ['Vecka', w0, w1, days(w1 - now)],
+      ['Månad', new Date(y, mo, 1), new Date(y, mo + 1, 1), days(new Date(y, mo + 1, 1) - now)],
+      ['År', new Date(y, 0, 1), new Date(y + 1, 0, 1), days(new Date(y + 1, 0, 1) - now)]
+    ];
+    TERMS.forEach(function (t) {
+      if (now >= t.start && now < t.end) out.push(['Termin', t.start, t.end, days(t.end - now) + ' av ' + t.name, 'term']);
+    });
+    return out;
+  }
+  var box = document.getElementById('rows');
+  function draw() {
+    var now = new Date();
+    var s = fmt.format(now).replace('.', '');
+    document.getElementById('date').textContent = s;
+    box.innerHTML = rows(now).map(function (r) {
+      var p = Math.min(100, Math.max(0, 100 * (now - r[1]) / (r[2] - r[1])));
+      return '<div class="row ' + (r[4] || '') + '"><span class="lbl">' + r[0] + '</span><span class="pct">' + Math.floor(p) +
+        ' %</span><div class="track"><div class="fill" data-w="' + p.toFixed(1) + '"></div></div><span class="left">' + r[3] + '</span></div>';
+    }).join('');
+    requestAnimationFrame(function () {
+      var fs = box.querySelectorAll('.fill');
+      for (var i = 0; i < fs.length; i++) fs[i].style.width = fs[i].getAttribute('data-w') + '%';
+    });
+  }
+  draw();
+  setInterval(draw, 60000);
+})();
+</script>
+</body>
+</html>
