@@ -74,7 +74,7 @@ export default function DdlModeling({ modelProgress, onSolve, onReset }) {
             </ul>
           </div>
 
-          <div className="mt-4 grid gap-4 xl:grid-cols-2">
+          <div className={`mt-4 grid gap-4 ${result ? "xl:grid-cols-2" : ""}`}>
             <div>
               <SchemaEditor
                 id="ddl-input"

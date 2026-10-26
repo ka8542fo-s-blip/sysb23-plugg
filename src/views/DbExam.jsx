@@ -298,7 +298,7 @@ function Task2({ task, code, setCode, result, onGrade, onEdit }) {
       <TaskHead n={2} points={est?.points} />
       {task.text.map((p) => <p key={p} className="mt-2 max-w-reading text-[15px] leading-relaxed">{p}</p>)}
       <ExerciseFigure id={task.diagram} />
-      <div className="grid gap-4 xl:grid-cols-2">
+      <div className={`grid gap-4 ${result ? "xl:grid-cols-2" : ""}`}>
         <div>
           <SchemaEditor id="tenta-ddl" label="Ditt svar" value={code} onChange={(text) => { if (!result) setCode(text); }} rows={24} subscripts={false} />
           <p className="mt-1 text-xs text-ink/65">Rättas som struktur: ordning, namn på surrogat- och FK-kolumner, INT eller INTEGER och var en constraint står spelar ingen roll.</p>
