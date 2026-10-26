@@ -11,7 +11,7 @@ export const topics = [
       "Lagring: volatil lagring (RAM, t.ex. en Java-ArrayList) försvinner när programmet stängs; persistent lagring är filer, kalkylblad, RDBMS eller dokumentorienterade databaser (NoSQL).",
       "RDBMS: Relational Database Management System — lagrar data i tabeller och frågas med SQL.",
       "Kursens miljö: SQL Server på en virtuell maskin i Microsoft Azure, ansluten från VS Code via mssql-tillägget, kod i GitHub. En server är i praktiken en dator som aldrig stängs av.",
-      "Tentan: fyra uppgifter på fem timmar, 100 p, utskrivna slides och boken tillåtna — läsa ER-diagram (25 p, +5/−3 per markering), DDL direkt från ER (25 p, surrogatnycklar även på svaga entiteter), normalformer (20 p, sant/falskt à 2 p med −1 vid fel, två uppgifter om högsta normalform där övernormalisering ger avdrag) och en enda SQL-fråga (30 p). För HT26 har föreläsaren dessutom aviserat en fråga om Java och JDBC, med okänd form och poäng (kapitel 11)."
+      "Tentan: fyra uppgifter på fem timmar, 100 p, utskrivna slides och boken tillåtna — läsa ER-diagram (25 p, +5/−3 per markering), DDL direkt från ER (25 p, surrogatnycklar även på svaga entiteter), normalformer (20 p, sant/falskt à 2 p med −1 vid fel, två uppgifter om högsta normalform där övernormalisering ger avdrag) och en enda SQL-fråga (30 p). För HT26 har föreläsaren dessutom aviserat en fråga om Java och JDBC. Hans exempeltenta visar formen, en hel DAO-metod skriven för hand, men poängen är okänd (kapitel 11)."
     ],
     pitfalls: [
       "LADOK och TimeEdit är applikationer, inte databaser.",
@@ -308,7 +308,7 @@ export const topics = [
     name: "Applikationsutveckling: Java och JDBC",
     chapter: "kap10",
     examWeight: "låg",
-    summary: "En Java-klient når SQL Server genom JDBC-drivrutinen: DriverManager ger en Connection, som ger ett PreparedStatement med ? som platshållare, som körs till ett ResultSet. Fel kommer som SQLException med felkod. Koden delas i fyra lager, och DAO:n håller SQL borta från controllern. HT26-tentan har en aviserad Java-fråga med okänd form och poäng.",
+    summary: "En Java-klient når SQL Server genom JDBC-drivrutinen: DriverManager ger en Connection, som ger ett PreparedStatement med ? som platshållare, som körs till ett ResultSet. Fel kommer som SQLException med felkod. Koden delas i fyra lager, och DAO:n håller SQL borta från controllern. HT26-tentans Java-fråga är enligt föreläsarens exempeltenta att skriva en hel DAO-metod för hand; poängen är okänd.",
     keyPoints: [
       "JDBC driver: JDBC är API:t du programmerar mot; drivrutinen översätter Java-anropen till något SQL Server förstår. Klienten körs på användarens dator, databasen på servern.",
       "JDBC-kedjan: DriverManager.getConnection(url) → Connection → prepareStatement(query) → executeQuery() för SELECT, som ger ett ResultSet, eller executeUpdate() för INSERT, UPDATE och DELETE. Fel kastas som SQLException.",
@@ -320,7 +320,7 @@ export const topics = [
       "Fyra lager: view (FXML, utseende), controller (händelser, fel som meddelanden till användaren), model (domänobjekten, som Employee), data access (DAO-klasser och ConnectionHandler, all kontakt med databasen).",
       "Tre nivåer av separation: (1) SQL i controllern — underkänt; (2) en DAO finns men controllern får SQLException; (3) DAO:n fångar SQLException och kastar DaoException, controllern fångar bara DaoException och innehåller ingen SQL. Kursen siktar på nivå 2–3.",
       "Kopplingen till modelleringen: modellklassen Employee saknar EmployeeID, för surrogatnyckeln hör till fysisk design och användaren ser eller skriver den aldrig. UNIQUE-constrainten på EmpNo syns i appen som felkod 2627.",
-      "Tentan HT26: föreläsaren har aviserat en Java-fråga; form och poäng är okända. Med utskrivna slides tillåtna prövas rimligen kodläsning och förståelse — hitta felen i en DAO-metod, skriv klart en findBy-metod, sant/falskt om lager och felhantering."
+      "Tentan HT26: skriv en hel DAO-metod för hand, signatur och kropp, utifrån en given CREATE TABLE, givna klasser och en given signatur med throws SQLException. Kraven: ingen SQL-injektion, alla resurser stängda även vid Exception (try-with-resources), bara metoden och korrekt indentering. Poängen är okänd, liksom om tentan har andra slags Java-frågor. Öva under fliken Java."
     ],
     pitfalls: [
       "setString(0, …) — platshållarna numreras från 1.",
@@ -328,7 +328,8 @@ export const topics = [
       "getString() utan next() först: markören står före första raden.",
       "if (rs.next()) där frågan kan ge flera rader läser bara den första; while behövs.",
       "SQL eller catch (SQLException) i controllern. På nivå 3 fångar controllern bara DaoException.",
-      "catch (Exception e) före catch (SQLException e): det breda blocket ska stå sist, annars kompilerar koden inte. SQLException och NumberFormatException får stå i valfri ordning."
+      "catch (Exception e) före catch (SQLException e): det breda blocket ska stå sist, annars kompilerar koden inte. SQLException och NumberFormatException får stå i valfri ordning.",
+      "<= där uppgiften säger \"lägre än\" — en rad som är lika med gränsen ska stå kvar."
     ]
   }
 ];

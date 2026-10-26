@@ -12,6 +12,7 @@ import SqlWorkshop from "./views/SqlWorkshop.jsx";
 import Modeling from "./views/Modeling.jsx";
 import DbExam from "./views/DbExam.jsx";
 import ProcessRun from "./views/ProcessRun.jsx";
+import JavaWorkshop from "./views/JavaWorkshop.jsx";
 import { modelExercises } from "./data/databaser/modelExercises.js";
 import { normalizeExercises } from "./data/databaser/normalizeExercises.js";
 import { statementExercises } from "./data/databaser/statementExercises.js";
@@ -275,6 +276,7 @@ export default function App() {
             onReset={resetSqlExercise}
           />
         )}
+        {view === "java" && <JavaWorkshop />}
         {view === "modell" && (
           <Modeling modelProgress={modelProgress} onSolve={solveModelExercise} onReset={resetModelExercise} />
         )}

@@ -9,6 +9,7 @@ export const VIEW_LABELS = {
   prov: "Prov",
   essa: "Essä",
   sql: "SQL",
+  java: "Java",
   modell: "Modellera",
   tenta: "Tenta",
   bpmn: "BPMN-övningar",

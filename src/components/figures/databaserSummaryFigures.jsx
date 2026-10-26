@@ -78,7 +78,7 @@ const STAGES = [
   { title: "Normalisering", text: "Del av logisk design: relationer i 3NF", ch: "Kapitel 8", task: "Uppgift 3 · 20 p" },
   { title: "Fysisk design", text: "CREATE TABLE med constraints", ch: "Kapitel 9", task: "Uppgift 2 · 25 p" },
   { title: "SQL", text: "En fråga mot databasen", ch: "Kapitel 10", task: "Uppgift 4 · 30 p" },
-  { title: "Applikation", text: "Java via JDBC", ch: "Kapitel 11", task: "Java-frågan · formen okänd", quiet: true },
+  { title: "Applikation", text: "Java via JDBC", ch: "Kapitel 11", task: "Java-frågan · en DAO-metod, poäng okänd", quiet: true },
 ];
 
 function kurskartan(W, narrow) {

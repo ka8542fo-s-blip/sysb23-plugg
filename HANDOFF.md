@@ -62,7 +62,9 @@ kapitel: allt UI läser `chapter.number`.
   tentans instruktioner för uppgift 2), kap9=10 (SQL: att resonera fram en
   fråga, byggt baklänges från uppgift 4), kap10=11 (applikationsutveckling:
   Java och JDBC, 2026-10-08, ur Fö8–9 efter Björns besked att HT26-tentan
-  har en Java-fråga; ämnet `applikation` med `examWeight: "låg"`). 13 ämnen
+  har en Java-fråga; ämnet `applikation` med `examWeight: "låg"`; sedan
+  2026-10-26 bygger "Så kan det komma på tentan" och "Mallen för en
+  DAO-metod" på Björns exempeltenta). 13 ämnen
   i `topics.js`, 125 ordlistetermer, 14 SVG-figurer (`components/knowledge/diagrams/`,
   `[[diagram:namn]]` som ensamt stycke; namnen i `ids.js` är ett API mot
   reading.js, låst av `scripts/diagram-ids.test.mjs`).
@@ -229,6 +231,42 @@ kapitel: allt UI läser `chapter.number`.
   alla tre: `sysb23:modell:<id>` = "solved", nollställs bara via knapp.
   Tester: `model-check`, `model-figures`, `normalize`, `fd`, `fd-drawing`,
   `fd-grade`, `decomp-feedback`, `fd-generator`, `statements`.
+- **Java** (2026-10-26, vy `java` direkt efter SQL, `views/JavaWorkshop.jsx`):
+  tentans Java/JDBC-uppgift. `data/databaser/javaTasks.js` har Björns två
+  exempeluppgifter ordagrant (java-ex-1 DELETE med två villkor, java-ex-2
+  SELECT till ArrayList<Product>) och åtta egna i samma form (java-ov-1…8:
+  DELETE på naturlig nyckel, UPDATE `Salary = Salary + ?` med antal rader,
+  INSERT av ett Product-objekt utan surrogatnyckel, COUNT(*) → int, exists
+  → boolean på en ny Book-tabell, findBy → objekt eller null, SELECT som
+  mappar en del av kolumnerna, två villkor + ORDER BY DESC till lista).
+  UPDATE fick ett fast belopp i stället för procent: en form som går att
+  rätta entydigt och som kursens eget exempel använder. Uppgiftstexten är
+  `blocks` (stycken och kodblock i tentans ordning); `check` beskriver
+  rättningen som data (schemat står i filens huvud). Rättaren
+  `lib/javaCheck.js` tolkar Java-delmängden och SQL-strängen och rättar
+  tio regler för sig (signatur, SQL, injektion, PreparedStatement,
+  set-anrop, exekvering, resurser, ResultSet, returvärde, undantag) med
+  ok/fail/note/na och ett varför; poäng visas inte. Toleranser: fria
+  variabelnamn, SQL i flera literaler, semikolon eller inte, villkor i
+  valfri ordning, setters i stället för konstruktor, alias eller getInt(1).
+  Mildare än uppdraget: SELECT * och extra kolumner, while där högst en
+  rad kan komma, catch som kastar vidare, andra parameternamn, en
+  hjälpmetod, close() i finally och COUNT(1) ger kommentar, inte fel
+  (utom java-ov-7 med `selectOnly`); extra ORDER BY-kolumner efter de
+  krävda godtas. Kompileringsfel (saknat semikolon, felstavat namn) listas
+  i `errors` men sänker inte regelstatus; uppgiften blir då inte klar.
+  Lösningsförslaget visas under svaret, inte bredvid: sidans maxbredd gav
+  bara cirka 45 av tentans 76 tecken per rad i två kolumner. Kodrutan är
+  SchemaEditor med `smartIndent` (fyra blanksteg, indrag efter { och (,
+  utdrag av } och ), try-huvudets andra rad) och Java-färgning som lager
+  under textarean (`components/java/highlight.jsx`, testad i Chrome).
+  Tester: `scripts/java-check.test.mjs` (alla tio lösningar rätt, minst ett
+  fel svar per regel). Riktig körning utanför npm test: `scripts/java/`
+  (`H2_JAR=… node scripts/java/verify-solutions.mjs`, JDK och h2-jar
+  krävs, se README där): alla tio kompileras och körs mot H2 i
+  MSSQLServer-läge, 100 kontroller (villkor, gränsvärden, tomma resultat,
+  injektion, ordning, stängda resurser även vid SQLException). Ny uppgift
+  = ett objekt i javaTasks.js plus testfall i `scripts/java/cases.mjs`.
 - **Tenta** (2026-10-09): de tre HT25-tentorna med exakt deras uppgifter
   (`data/databaser/oldExams.js`, vy `views/DbExam.jsx`, poäng
   `lib/examGrade.js`, test `scripts/old-exams.test.mjs`). Startsidan visar
@@ -346,8 +384,14 @@ SQL-fråga, 30 p: Student/Course/HasStudied, join + aggregat + GROUP BY/
 HAVING, "X men inte Y", skalär underfråga, och ordinarie tentans jämförelse
 mot ett aggregat ur en underfråga ("högre än snittbetyget på kurs C1").
 Inte förekommit: application development (listas i kursintroduktionen) —
-men Björn har aviserat en Java-fråga för HT26, form och poäng okända,
-uppskattat ~10 p (kapitel 1 och 11 säger det). Inte heller: logisk modell som eget svar, relationsalgebra, Crow's Foot som produktion.
+men HT26 har en Java-fråga. Björns exempeltenta (2026-jdbc-example-handout.pdf
+i ~/Downloads, två uppgifter med lösningsförslag) visar formen: skriv en
+hel DAO-instansmetod för hand, signatur och kropp, utan SQL-injektion
+(PreparedStatement med ?), med alla resurser stängda även vid Exception
+(try-with-resources för Connection och PreparedStatement, ett inre för
+ResultSet), `throws SQLException`, korrekt indenterat. Poängen och om det
+finns andra Java-frågeformer är okända; kapitel 1, 11 och sammanfattningen
+säger det. Inte heller: logisk modell som eget svar, relationsalgebra, Crow's Foot som produktion.
 Kap 1 har "Så ser tentan ut" med gränserna: 3a–e svara alltid; uppgift 1
 markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
 
@@ -376,8 +420,11 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
   förenklade: anslutningssträngen har en dokumentations-IP (192.0.2.10) och
   `password=...` i stället för deckets uppgifter, och `save()` använder
   `getEmployeeNumber()` genomgående (decket blandar `getEmpNo()` och
-  `getEmployeeNumber()`). Kapitel 1:s "cirka tio poäng" är en uppskattning,
-  inget besked.
+  `getEmployeeNumber()`). Tentaavsnitten om Java (kap 1, kap 11,
+  sammanfattningen och topics.js) skrevs om 2026-10-26 mot exempeltentan
+  och är inte granskade av användaren.
+- **Java-fliken:** de åtta egna övningarna (java-ov-1…8) är verifierade
+  i H2 och av rättaren men inte granskade av användaren.
 - **SQL-verkstaden:** sql-54…62 (tentaspåret), facit verifierade i motorn
   men uppgiftstexterna ogranskade. sql-62 är den nya med aggregat som
   jämförelsevärde (resultat B1 med 3 läsare, B2 med 2).
@@ -720,7 +767,9 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
 `"<kurs>:tenta"` —, `practiceOrder`, `practiceTopics`, `practiceScope`,
 `practiceExams`, `practiceExamOrder`), `lasSegment`, `delkurs`, `schemaVy`,
 `upplasningstakt`, `sqlSlump`, `read:<kurs>:<kapitel>`,
-`sql:<övningsId>` (= "solved" | "solved-with-help"), `modell:<uppgiftsId>`
+`sql:<övningsId>` (= "solved" | "solved-with-help"), `java:<uppgiftsId>`
+(`{ draft, status }`, status "solved"), `javaUppgift` (senast öppna
+Java-uppgiften), `modell:<uppgiftsId>`
 (= "solved"; mod-, norm- och stmt-id), `examreg:<examId>`, `tenta:<tentaId>`
 (svar, rättade uppgifter och senaste poäng i fliken Tenta). "Nollställ min
 data" i Statistik rensar allt. Progress är per webbläsare och domän.

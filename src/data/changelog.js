@@ -7,6 +7,8 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 24, date: "2026-10-26", text: "Kapitel 11 beskriver tentans Java-uppgift och mallen för en DAO-metod" },
+  { id: 23, date: "2026-10-26", text: "Ny flik Java i Databaser: skriv DAO-metoden och få den rättad" },
   { id: 22, date: "2026-10-22", text: "BPMN-övningarna visar deluppgiften, till exempel ord 3(c)" },
   { id: 21, date: "2026-10-22", text: "Tentafokus i Öva är borttaget; BPM har i stället läget Tentafrågor" },
   { id: 20, date: "2026-10-22", text: "Tentafrågor i Öva: BPM-tentornas frågor, tenta för tenta" },

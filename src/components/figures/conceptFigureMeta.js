@@ -114,7 +114,7 @@ export const CONCEPT_FIGURES = {
     caption: "Kurskartan: designkedjan från krav till applikation, vilka kapitel som hör till varje steg och vilken tentauppgift som prövar det. Grunden är relationsmodellen och nycklarna.",
     source: "Egen illustration efter kapitel 1",
     title: "Kurskartan",
-    desc: "Sju steg uppifrån och ned: krav i text (kapitel 1), konceptuell design med ER-diagram (kapitel 4–6, uppgift 1, 25 p), logisk design (kapitel 7, tankemodellen för uppgift 2), normalisering som del av den logiska designen (kapitel 8, uppgift 3, 20 p), fysisk design med CREATE TABLE (kapitel 9, uppgift 2, 25 p), SQL (kapitel 10, uppgift 4, 30 p) och applikation i Java (kapitel 11, Java-frågan med okänd form). Längst ned grunden: relationsmodellen och nycklarna, kapitel 2–3.",
+    desc: "Sju steg uppifrån och ned: krav i text (kapitel 1), konceptuell design med ER-diagram (kapitel 4–6, uppgift 1, 25 p), logisk design (kapitel 7, tankemodellen för uppgift 2), normalisering som del av den logiska designen (kapitel 8, uppgift 3, 20 p), fysisk design med CREATE TABLE (kapitel 9, uppgift 2, 25 p), SQL (kapitel 10, uppgift 4, 30 p) och applikation i Java (kapitel 11, Java-frågan: en hel DAO-metod skriven för hand, poängen okänd). Längst ned grunden: relationsmodellen och nycklarna, kapitel 2–3.",
   },
   "db-tre-regler": {
     course: "databaser", chapter: "sammanfattning", number: "S.2",

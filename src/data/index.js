@@ -70,7 +70,8 @@ export const courses = [
     status: "aktiv",
     // Öva visar tomläge tills en frågebank finns. Prov är medvetet borta:
     // tentan är konstruktionsbaserad, och ett tomläge är sämre än ingen flik.
-    views: ["las", "sql", "modell", "tenta", "ova", "statistik"],
+    // Java (2026-10-26): tentans Java/JDBC-uppgift, direkt efter SQL.
+    views: ["las", "sql", "java", "modell", "tenta", "ova", "statistik"],
     // Öva speglar Läs: kvizzarna grupperas per kapitel, inte per ämne.
     practiceBy: "chapter",
     // Uppläsningen spelar förgenererat ljud (public/audio, Google Chirp 3

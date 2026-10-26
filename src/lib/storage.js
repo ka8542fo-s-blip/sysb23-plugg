@@ -17,7 +17,38 @@ export const KEYS = {
   bpmnMenu: "bpmnMeny", // "full" | "smal" — BPMN-övningarnas meny, ihopfälld till siffror
   examAnswers: "tentafragor", // { [frågeId]: samma form som answers } — läget Tentafrågor i Öva, räknas för sig
   theme: "tema", // "auto" | "ljust" | "mork" — läses också av skriptet i index.html
+  javaTask: "javaUppgift", // senast öppna uppgiften i fliken Java (uppgifts-id)
 };
+
+// Fliken Java: sysb23:java:<uppgiftsId> = { draft, status } — svaret som det
+// står i kodrutan och "solved" när rättaren har sagt Rätt (behålls även om
+// svaret ändras efteråt, som i Modellera; status är annars null). Nyckeln
+// tas bort när uppgiften nollställs eller svaret töms innan det är löst.
+export const javaKey = (taskId) => `java:${taskId}`;
+export function loadJavaState(taskIds) {
+  const state = {};
+  for (const id of taskIds) {
+    const value = load(javaKey(id), null);
+    if (value && typeof value === "object") {
+      state[id] = {
+        draft: typeof value.draft === "string" ? value.draft : "",
+        status: value.status === "solved" ? "solved" : null,
+      };
+    }
+  }
+  return state;
+}
+export function saveJavaState(taskId, { draft, status }) {
+  if (!draft && status !== "solved") clearJavaState(taskId);
+  else save(javaKey(taskId), { draft: draft || "", status: status === "solved" ? "solved" : null });
+}
+export function clearJavaState(taskId) {
+  try {
+    localStorage.removeItem(PREFIX + javaKey(taskId));
+  } catch {
+    /* privat läge */
+  }
+}
 
 // Lösta SQL-övningar: sysb23:sql:<övningsId> = "solved" | "solved-with-help"
 export function sqlKey(exerciseId) {

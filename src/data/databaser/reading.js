@@ -17,7 +17,7 @@ const reading = {
     title: "Databaser, servrar och designprocessen",
     readingMinutes: 11,
     lead: "Vad en databas faktiskt är, var den bor, de tre stegen från verksamhetskrav till körbar SQL — och hur tentan ser ut.",
-    sources: ["Föreläsning 1", "Extentorna HT25 (omtentan 24 okt 2025, uppsamlingen 25 maj 2026)"],
+    sources: ["Föreläsning 1", "Extentorna HT25 (omtentan 24 okt 2025, uppsamlingen 25 maj 2026)", "Exempeltentan i Java och JDBC (HT26)"],
     body: `
 En **databas** är en strukturerad samling data som lagras och nås elektroniskt, utformad för att effektivt lagra, hämta och hantera information.
 
@@ -78,7 +78,7 @@ De två HT25-tentorna (omtentan 24 oktober 2025 och uppsamlingen 25 maj 2026) ha
 
 **Det som inte har förekommit:** den logiska modellen som eget svar, relationsalgebra och Crow's Foot som produktionsnotation — Chen är det man ritar och läser.
 
-**Nytt för HT26: en fråga om Java.** Föreläsaren har aviserat att tentan har en fråga som har med Java att göra — applikationsutveckling, som kursintroduktionen listar som ett av tentans områden men som inte har funnits på någon av HT25-tentorna. **Formen och poängen är inte kända.** En rimlig uppskattning är en mindre del av tentan, kring tio av 100 poäng, och kodläsning snarare än syntax utantill, eftersom slides är tillåtna. Kapitel 11 går igenom området och slutar med de troliga formerna.
+**Nytt för HT26: en fråga om Java.** Föreläsaren har aviserat att tentan har en fråga som har med Java att göra — applikationsutveckling, som kursintroduktionen listar som ett av tentans områden men som inte har funnits på någon av HT25-tentorna. Hans exempeltenta i Java och JDBC visar hur uppgiften kan vara utformad: du skriver **en hel DAO-metod för hand**, signatur och kropp. Uppgiften ger tabellen som \`CREATE TABLE\`, de klasser som behövs och metodens signatur, och kräver att koden inte är sårbar för SQL-injektion, att alla resurser som öppnas stängs även om ett Exception uppstår, att bara metoden skrivs och att koden är korrekt och konsekvent indenterad. **Poängen är inte känd**, och inte heller om tentan har andra slags Java-frågor än den här. Kapitel 11 går igenom området och slutar med mallen för en DAO-metod; exempeltentan och egna övningar i samma form rättas under fliken Java.
 `
   },
 
@@ -1586,9 +1586,9 @@ Verkstaden under SQL kör en riktig databas i webbläsaren, men motorn är SQLit
     id: "kap10",
     number: 11,
     title: "Applikationsutveckling: Java och JDBC",
-    readingMinutes: 16,
-    lead: "Hur en Java-applikation pratar med SQL Server: JDBC-kedjan från anslutning till ResultSet, platshållare, felkoder och de fyra lagren — med föreläsningens Employee-app rad för rad, och vad som kan komma på tentan.",
-    sources: ["Föreläsning 8–9 (Database Client Application Development, HT26)", "Föreläsningsanteckningar HT26 (aviserad Java-fråga, surrogatnycklar på fysisk nivå)"],
+    readingMinutes: 20,
+    lead: "Hur en Java-applikation pratar med SQL Server: JDBC-kedjan från anslutning till ResultSet, platshållare, felkoder och de fyra lagren — med föreläsningens Employee-app rad för rad, och mallen för tentans uppgift: en hel DAO-metod skriven för hand.",
+    sources: ["Föreläsning 8–9 (Database Client Application Development, HT26)", "Föreläsningsanteckningar HT26 (aviserad Java-fråga, surrogatnycklar på fysisk nivå)", "Exempeltentan i Java och JDBC (HT26)"],
     body: `
 Hittills har databasen nåtts direkt, med SQL i ett frågefönster. I verkligheten klickar användaren i en applikation, och applikationen skickar SQL. Det här kapitlet handlar om den länken — hur ett Java-program ansluter till SQL Server, skickar frågor, läser svaren och hanterar fel — och om hur koden delas upp så att databaslogiken inte sprids över hela programmet.
 
@@ -1760,7 +1760,7 @@ ConnectionHandler läser anslutningsuppgifterna ur konfigurationsfilen, bygger a
         return employee;
     }
 
-\`findByEmpNo\` sätter platshållaren till det sökta numret, kör frågan och läser högst en rad — EmpNo är UNIQUE, så \`if\` räcker. Finns ingen anställd med numret returneras \`null\`.
+\`findByEmpNo\` sätter platshållaren till det sökta numret, kör frågan och läser högst en rad — EmpNo är UNIQUE, så \`if\` räcker. Finns ingen anställd med numret returneras \`null\`. Föreläsningens kod öppnar ResultSet utan eget try, så det stängs först när PreparedStatement stängs. Exempeltentans lösningsförslag ger det ett eget, inre try-with-resources, och rättningen under fliken Java kräver det också; se Mallen för en DAO-metod längre ned.
 
 ## Tre nivåer av separation
 
@@ -1816,11 +1816,90 @@ Kedjan går hela vägen bakåt. Identifieraren i ER-diagrammet (kapitel 4) blev 
 
 ## Så kan det komma på tentan
 
-Föreläsaren har aviserat att HT26-tentan har en fråga som har med Java att göra. **Formen och poängen är inte kända** — området har inte funnits på någon tidigare tenta. Tentan tillåter utskrivna slides, så det som prövas är rimligen förståelse och kodläsning, inte syntax utantill. Tre troliga former:
+Föreläsaren har aviserat att HT26-tentan har en fråga som har med Java att göra, och hans exempeltenta i Java och JDBC visar hur den kan vara utformad: du skriver **en hel DAO-metod för hand**, signatur och kropp. Uppgiften ger tabellen som \`CREATE TABLE\`, DAO-klassen med instansvariabeln \`connectionHandler\`, modellklassen när metoden ska skapa objekt, och metodens signatur, som i båda exempeluppgifterna slutar med \`throws SQLException\`. Sedan säger den i löpande text vad metoden ska göra och returnera. Att \`connectionHandler.getConnection()\` ger en giltig Connection får du anta.
 
-- **Hitta felen i en DAO-metod.** Leta efter \`setString(0, …)\`, \`executeQuery\` på en INSERT eller \`executeUpdate\` på en SELECT, en \`getString\` utan \`next()\` före, \`if\` där frågan kan ge flera rader, resurser som aldrig stängs, och SQL eller SQLException i en controller.
-- **Skriv klart en findBy-metod.** Frågan med \`?\`, \`setString(1, …)\`, \`executeQuery\`, \`if (resultSet.next())\` eller \`while\` beroende på hur många rader frågan kan ge, och try-with-resources runt.
-- **Sant eller falskt om lager och felhantering.** Vilket lager som ansvarar för vad, vilken felkod en dubblett ger, att \`Exception\` måste stå sist bland catch-blocken och vad som skiljer nivå 2 från nivå 3.
+Exempeltentans två uppgifter:
+
+- **Ta bort rader på två villkor.** \`deleteLowPaidEmployees(String department, double salaryLimit)\` tar bort de anställda på avdelningen vars lön är **lägre än** gränsen och returnerar antalet borttagna rader, 0 om ingen rad uppfyller båda villkoren. "Lägre än" är \`<\`: en lön som är lika med gränsen ska stå kvar.
+- **Hämta rader till en lista.** \`findProductsByCategory(String category)\` returnerar en \`ArrayList<Product>\` med ett Product-objekt per rad i kategorin, där samtliga instansvariabler får värden ur motsvarande kolumner i raden (id ur ProductID). Lösningsförslaget använder konstruktorn; ett tomt objekt som fylls med set-metoder går lika bra. Matchar ingen rad är svaret en tom lista, inte \`null\`.
+
+Kraven står i varje uppgift och är desamma i båda:
+
+- Koden får inte vara sårbar för **SQL-injektion**: värdena sätts på \`?\` i ett PreparedStatement och skrivs aldrig in i SQL-texten.
+- **Alla resurser som öppnas ska stängas** när de inte längre behövs, även om ett Exception uppstår.
+- **Skriv bara metoden**, signatur och kropp: inga import- eller package-satser, ingen konstruktor, ingen ConnectionHandler och ingen modellklass.
+- Koden ska vara **korrekt och konsekvent indenterad**, så att struktur och logik tydligt framgår.
+
+**Det som inte är känt:** hur många poäng uppgiften ger, och om tentan har andra slags Java-frågor än den här. Exempeltentan säger inget om något av det.
+
+## Mallen för en DAO-metod
+
+Exempeltentans lösningsförslag har samma skelett: SQL-texten som en sträng med ett \`?\` per värde, Connection och PreparedStatement i samma try-with-resources, ett set-anrop per frågetecken och sist \`executeUpdate()\` eller \`executeQuery()\`. Det ger två grundformer, här skrivna mot kapitlets egen Employee-tabell.
+
+**Ändra data och returnera antalet rader**, för INSERT, UPDATE och DELETE. \`executeUpdate()\` returnerar antalet påverkade rader, och metoden returnerar det direkt:
+
+    public int updateSalary(
+            String empNo,
+            double newSalary
+    ) throws SQLException {
+        String sql = "UPDATE Employee "
+                + "SET EmpSalary = ? "
+                + "WHERE EmpNo = ?;";
+
+        try (Connection connection = connectionHandler.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setDouble(1, newSalary);
+            statement.setString(2, empNo);
+            return statement.executeUpdate();
+        }
+    }
+
+Numren följer frågetecknens ordning i SQL-texten, inte parametrarnas ordning i signaturen: lönen står först i satsen och får nummer 1.
+
+**Hämta rader till en lista**, för SELECT. Listan skapas före try-blocket, så att metoden returnerar en tom lista när ingen rad matchar. ResultSet får ett eget, inre try-with-resources, eftersom set-anropen måste göras innan \`executeQuery()\` körs, och \`while (resultSet.next())\` gör om varje rad till ett objekt som läggs i listan:
+
+    public ArrayList<Employee> findEmployeesWithSalaryAbove(
+            double salaryLimit
+    ) throws SQLException {
+        String sql = "SELECT EmpNo, EmpName, EmpSalary "
+                + "FROM Employee "
+                + "WHERE EmpSalary > ?;";
+        ArrayList<Employee> employees = new ArrayList<>();
+
+        try (Connection connection = connectionHandler.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setDouble(1, salaryLimit);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Employee employee = new Employee(
+                            resultSet.getString("EmpNo"),
+                            resultSet.getString("EmpName"),
+                            resultSet.getDouble("EmpSalary")
+                    );
+                    employees.add(employee);
+                }
+            }
+        }
+
+        return employees;
+    }
+
+Kan frågan ge högst en rad, som i \`findByEmpNo\` ovan, blir \`while\` ett \`if\` och listan ett enda objekt som är \`null\` tills raden har lästs. Ge ResultSet ett eget try också då: \`findByEmpNo\` gör det inte, men på tentan ska alla resurser som öppnas stängas.
+
+Gå igenom svaret mot kraven innan du lämnar in:
+
+1. **Signaturen** exakt som i uppgiften: namn, returtyp, parametrar och \`throws SQLException\`.
+2. **SQL-texten:** rätt sats och tabell, alla villkor ur uppgiften och rätt jämförelse — "lägre än" är \`<\`, inte \`<=\`. Ett \`?\` per värde och inget värde inklistrat med \`+\`; det är den SQL-injektion uppgiften förbjuder.
+3. **PreparedStatement** skapat med \`connection.prepareStatement(sql)\`, i samma try-with-resources som Connection.
+4. **set-anropen** numrerade från 1 i frågetecknens ordning, med metod efter typ: \`setString\`, \`setInt\` eller \`setDouble\`.
+5. **Rätt exekvering:** \`executeUpdate()\` för INSERT, UPDATE och DELETE, \`executeQuery()\` för SELECT.
+6. **ResultSet** i ett eget try-with-resources, \`while\` när flera rader kan komma och \`if\` när högst en kan det, en get-metod med rätt typ och kolumnnamn för varje fält, och varje objekt lagt i listan.
+7. **Returvärdet:** antalet från \`executeUpdate()\`, eller listan, skapad före try-blocket och aldrig \`null\`.
+8. **Inget catch som tystar SQLException.** Signaturen säger \`throws SQLException\`, så felet ska gå vidare till den som anropar metoden, som på nivå 2 ovan.
+9. **Bara metoden**, korrekt och konsekvent indenterad.
+
+Under fliken Java finns exempeltentans två uppgifter och egna övningar i samma form. Skriv metoden i kodrutan och rätta den: varje krav rättas för sig, med ett varför, och lösningsförslaget visas under ditt svar. Java körs inte i webbläsaren, så rättningen läser koden efter kraven ovan i stället för att köra den.
 `
   }
 

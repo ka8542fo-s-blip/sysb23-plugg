@@ -163,13 +163,13 @@ En Java-applikation pratar med SQL Server genom **JDBC** (Java Database Connecti
 - **Fyra lager:** view, controller, model och data access. All SQL hör hemma i data access-lagrets DAO-klasser (Data Access Object).
 - **Tre nivåer av separation:** på nivå 1 ligger SQL i controllern, och det ger underkänt på projektet. Nivå 2 har en DAO som kastar \`SQLException\`, nivå 3 en DAO som kastar ett eget \`DaoException\`. Kursen siktar på nivå 2 eller 3.
 
-Formen på tentans Java-fråga är inte känd, och området har inte funnits på någon tidigare tenta. Kapitel 11 slutar med tre troliga former.
+Föreläsarens exempeltenta visar hur tentans Java-fråga kan se ut: du skriver **en hel DAO-metod för hand**, signatur och kropp, utifrån en given tabell, givna klasser och en given signatur med \`throws SQLException\`. Den har en uppgift av vardera grundformen: ändra data och returnera antalet rader från \`executeUpdate()\`, och hämta rader till en \`ArrayList\` som är tom, aldrig \`null\`, när ingen rad matchar. Kraven är desamma i båda: ingen SQL-injektion, alla resurser stängda även vid fel (try-with-resources, med ett eget inre try för ResultSet), bara metoden och korrekt indentering. Poängen är inte känd, och inte heller om tentan har andra slags Java-frågor. Exempeltentan och egna övningar i samma form rättas under fliken Java.
 
 Mer: kapitel 11.
 
 ## Så ser tentan ut
 
-Formen nedan bygger på HT25-tentorna, som hade samma fyra uppgifter: fem timmar, 100 poäng, och utskrivna slides och kursboken som hjälpmedel. För HT26 har föreläsaren dessutom aviserat en fråga om Java, men dess form och poäng är inte kända; läs också rutan om tentan överst i Läs.
+Formen nedan bygger på HT25-tentorna, som hade samma fyra uppgifter: fem timmar, 100 poäng, och utskrivna slides och kursboken som hjälpmedel. För HT26 har föreläsaren dessutom aviserat en fråga om Java. Hans exempeltenta visar hur den kan se ut, en hel DAO-metod skriven för hand, men poängen är inte känd; läs också rutan om tentan överst i Läs.
 
 | Uppgift | Poäng | Poängregel | Kapitel |
 |---|---|---|---|
@@ -177,7 +177,7 @@ Formen nedan bygger på HT25-tentorna, som hade samma fyra uppgifter: fem timmar
 | **2. DDL direkt från ER-diagrammet** | 25 | — | 7 och 9 |
 | **3. Normalformer:** fem sant/falskt-påståenden à 2 p, sedan högsta normalform med motivering | 20 | Fel ger −1 och blankt 0 i sant/falskt-delen | 8 |
 | **4. En SQL-fråga** | 30 | — | 10 |
-| **Java** (nytt för HT26) | Okänd | Okänd | 11 |
+| **Java** (nytt för HT26): skriv en hel DAO-metod | Okänd | Okänd | 11 |
 
 - **Uppgift 1:** härled varje påstående ur notationen. Markera det du inte kan härleda bara om du är mer än ungefär 40 procent säker på att det är sant.
 - **Uppgift 3a–3e:** svara alltid. Med två alternativ och +2/−1 är även en gissning värd mer än ett blankt svar.
@@ -198,6 +198,8 @@ Kända fällor, ur kapitel 5–11:
 | En kolumn i \`SELECT\` som varken står i \`GROUP BY\` eller i ett aggregat | Frågan kör inte |
 | Ett uppslaget värde i stället för underfråga | En fråga, ett resultat: hämta värdet med en skalär underfråga |
 | \`setString(0, …)\` eller \`executeQuery\` på en \`INSERT\` | Platshållarna börjar på 1, och \`INSERT\` körs med \`executeUpdate\` |
+| \`<=\` där uppgiften säger "lägre än" | \`<\`: en rad som är lika med gränsen ska stå kvar |
+| \`null\` när ingen rad matchar | En tom lista, skapad före try-blocket |
 
 Mer: kapitel 1 och 5–11.
 
