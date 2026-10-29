@@ -11,6 +11,9 @@ import LessonText from "../components/sql/LessonText.jsx";
 import { loadEngine, newDatabase, runSelect, runScript } from "../lib/sqlEngine.js";
 import { checkExercise, splitStatements, interpretError } from "../lib/sqlCheck.js";
 import { checkTsqlRules, toSqlite } from "../lib/tsql.js";
+import { clearDraft, loadDraft, saveDraft } from "../lib/storage.js";
+
+const FREE_DRAFT = "sql-fritt";
 
 const MODES = [
   { id: "ovningar", label: "Övningar" },
@@ -43,7 +46,9 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
   // Fritt läge behåller sin databas mellan körningar, så att en DELETE
   // syns tills man trycker Återställ.
   const freeDb = useRef(null);
-  const [freeCode, setFreeCode] = useState("SELECT * FROM Employee;");
+  // Fritt läge: frågan sparas (svar:sql-fritt) och finns kvar efter omladdning.
+  const [freeCode, setFreeCodeState] = useState(() => loadDraft(FREE_DRAFT) ?? "SELECT * FROM Employee;");
+  const setFreeCode = (text) => { setFreeCodeState(text); saveDraft(FREE_DRAFT, text); };
   const [freeResult, setFreeResult] = useState(null);
   const [freeError, setFreeError] = useState(null);
 
@@ -69,10 +74,11 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
     };
   }, []);
 
-  // Byte av övning: förifyll starter, nollställ resultat och ledtråd.
+  // Byte av övning: ditt sparade svar (svar:<id>), annars starter; nollställ
+  // resultat och ledtråd.
   useEffect(() => {
     if (!exercise) return;
-    setCode(exercise.starter || "");
+    setCode(loadDraft(exercise.id) ?? (exercise.starter || ""));
     setResult(null);
     setHintOpen(false);
     setConfirmSolution(false);
@@ -123,8 +129,14 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
     }
   }
 
+  // Varje ändring i rutan sparas per övning, så att svaret finns kvar.
+  function updateCode(text) {
+    setCode(text);
+    if (exercise) saveDraft(exercise.id, text);
+  }
+
   function revealSolution() {
-    setCode(exercise.solution);
+    updateCode(exercise.solution);
     onSolve(exercise.id, "solved-with-help");
     setConfirmSolution(false);
     setResult(null);
@@ -268,7 +280,12 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
                     <button
                       type="button"
                       className="btn-quiet text-sm"
-                      onClick={() => onReset(exercise.id)}
+                      onClick={() => {
+                        onReset(exercise.id);
+                        clearDraft(exercise.id);
+                        setCode(exercise.starter || "");
+                        setResult(null);
+                      }}
                     >
                       Nollställ
                     </button>
@@ -302,7 +319,7 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
                 <SqlEditor
                   ref={editorRef}
                   value={code}
-                  onChange={setCode}
+                  onChange={updateCode}
                   onRun={runExercise}
                   disabled={running}
                 />
@@ -315,7 +332,7 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
                   type="button"
                   className="btn-secondary"
                   onClick={() => {
-                    setCode("");
+                    updateCode("");
                     setResult(null);
                     setBannerHidden(false);
                     editorRef.current?.focus();
@@ -379,7 +396,7 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
                 <div className="mt-4 border-t border-line pt-4">
                   <SchemaPanel
                     onPickTable={(sql) => {
-                      setCode(sql);
+                      updateCode(sql);
                       editorRef.current?.focus();
                     }}
                   />

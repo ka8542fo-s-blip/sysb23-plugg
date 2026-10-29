@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useDrafts } from "../lib/useDrafts.js";
 import { ddlExercises } from "../data/databaser/ddlExercises.js";
 import { checkDdl, toDdl, fold } from "../lib/ddlCheck.js";
 import SchemaEditor from "../components/model/SchemaEditor.jsx";
@@ -19,12 +20,12 @@ const TEMPLATE = `CREATE TABLE A (
 export default function DdlModeling({ modelProgress, onSolve, onReset }) {
   const exercises = ddlExercises;
   const [currentId, setCurrentId] = useState(() => exercises.find((e) => !modelProgress[e.id])?.id || exercises[0].id);
-  const [drafts, setDrafts] = useState({});
+  const drafts = useDrafts();
   const [result, setResult] = useState(null);
   const [confirmReset, setConfirmReset] = useState(false);
 
   const exercise = exercises.find((e) => e.id === currentId) || exercises[0];
-  const code = drafts[exercise.id] ?? "";
+  const code = drafts.get(exercise.id, "");
   const facitDdl = useMemo(() => toDdl(exercise.facit), [exercise]);
 
   useEffect(() => { setResult(null); setConfirmReset(false); }, [currentId]);
@@ -48,12 +49,12 @@ export default function DdlModeling({ modelProgress, onSolve, onReset }) {
               Uppgift {exercise.number} · {exercise.source}
               {modelProgress[exercise.id] && <span className="ml-2 text-correct">✓ Klar</span>}
             </p>
-            {modelProgress[exercise.id] && !confirmReset && (
+            {(modelProgress[exercise.id] || code) && !confirmReset && (
               <button type="button" className="btn-quiet text-sm" onClick={() => setConfirmReset(true)}>Nollställ uppgiften</button>
             )}
             {confirmReset && (
               <span className="flex gap-2 text-sm">
-                <button type="button" className="btn-secondary" onClick={() => { onReset(exercise.id); setConfirmReset(false); }}>Ja, nollställ</button>
+                <button type="button" className="btn-secondary" onClick={() => { onReset(exercise.id); drafts.clear(exercise.id); setResult(null); setConfirmReset(false); }}>Ja, nollställ</button>
                 <button type="button" className="btn-quiet" onClick={() => setConfirmReset(false)}>Avbryt</button>
               </span>
             )}
@@ -80,7 +81,7 @@ export default function DdlModeling({ modelProgress, onSolve, onReset }) {
                 id="ddl-input"
                 label="Din DDL"
                 value={code}
-                onChange={(text) => setDrafts((prev) => ({ ...prev, [exercise.id]: text }))}
+                onChange={(text) => drafts.set(exercise.id, text)}
                 placeholder={TEMPLATE}
                 rows={22}
                 subscripts={false}

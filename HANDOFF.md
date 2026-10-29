@@ -775,10 +775,14 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
 `"<kurs>:tenta"` —, `practiceOrder`, `practiceTopics`, `practiceScope`,
 `practiceExams`, `practiceExamOrder`), `lasSegment`, `delkurs`, `schemaVy`,
 `upplasningstakt`, `sqlSlump`, `read:<kurs>:<kapitel>`,
-`sql:<övningsId>` (= "solved" | "solved-with-help"), `java:<uppgiftsId>`
+`sql:<övningsId>` (= "solved" | "solved-with-help"), `svar:<uppgiftsId>` (eget svar i
+Modellera, SQL-verkstaden och BPMN-övningar, `lib/useDrafts.js`; `svar:sql-fritt`
+för SQL:s fria läge; tas bort av "Nollställ uppgiften"), `java:<uppgiftsId>`
 (`{ draft, status }`, status "solved"), `javaUppgift` (senast öppna
 Java-uppgiften), `modell:<uppgiftsId>`
-(= "solved"; mod-, norm- och stmt-id), `examreg:<examId>`, `tenta:<tentaId>`
+(= "solved"; mod-, norm-, stmt-, ddl- och kp-id; listorna står i
+`data/progressLists.js`, som App läser in och `progress-lists.test.mjs`
+vaktar), `examreg:<examId>`, `tenta:<tentaId>`
 (svar, rättade uppgifter och senaste poäng i fliken Tenta). "Nollställ min
 data" i Statistik rensar allt. Progress är per webbläsare och domän.
 

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useDrafts } from "../lib/useDrafts.js";
 import { modelExercises } from "../data/databaser/modelExercises.js";
 import { parseSchema, checkModel, norm, toBlockNotation } from "../lib/modelCheck.js";
 import SchemaView from "../components/model/SchemaView.jsx";
@@ -30,7 +31,7 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
   const [currentId, setCurrentId] = useState(
     () => exercises.find((e) => !modelProgress[e.id])?.id || exercises[0].id,
   );
-  const [drafts, setDrafts] = useState({});
+  const drafts = useDrafts();
   const [result, setResult] = useState(null);
   const [confirmReset, setConfirmReset] = useState(false);
   // Fyra steg som tentans uppgifter: läsa diagram (1), ER-diagram → schema
@@ -43,7 +44,7 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
   const setMode = (next) => { setModeState(next); save(KEYS.modelMode, next); };
 
   const exercise = exercises.find((e) => e.id === currentId) || exercises[0];
-  const code = drafts[exercise.id] ?? "";
+  const code = drafts.get(exercise.id, "");
   const parsed = useMemo(() => parseSchema(code), [code]);
   const facitParsed = useMemo(() => parseSchema(exercise.facit[result?.variant ?? 0]), [exercise, result]);
   const solvedCount = exercises.filter((e) => modelProgress[e.id]).length;
@@ -133,12 +134,12 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
                 Uppgift {exercise.number} · {exercise.source}
                 {modelProgress[exercise.id] && <span className="ml-2 text-correct">✓ Klar</span>}
               </p>
-              {modelProgress[exercise.id] && !confirmReset && (
+              {(modelProgress[exercise.id] || code) && !confirmReset && (
                 <button type="button" className="btn-quiet text-sm" onClick={() => setConfirmReset(true)}>Nollställ uppgiften</button>
               )}
               {confirmReset && (
                 <span className="flex gap-2 text-sm">
-                  <button type="button" className="btn-secondary" onClick={() => { onReset(exercise.id); setConfirmReset(false); }}>Ja, nollställ</button>
+                  <button type="button" className="btn-secondary" onClick={() => { onReset(exercise.id); drafts.clear(exercise.id); setResult(null); setConfirmReset(false); }}>Ja, nollställ</button>
                   <button type="button" className="btn-quiet" onClick={() => setConfirmReset(false)}>Avbryt</button>
                 </span>
               )}
@@ -154,7 +155,7 @@ export default function Modeling({ modelProgress, onSolve, onReset }) {
                   id="model-input"
                   label="Ditt schema, i föreläsningens notation"
                   value={code}
-                  onChange={(text) => setDrafts((prev) => ({ ...prev, [exercise.id]: text }))}
+                  onChange={(text) => drafts.set(exercise.id, text)}
                   placeholder={TEMPLATE}
                   rows={16}
                 />

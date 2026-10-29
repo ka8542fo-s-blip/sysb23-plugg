@@ -61,6 +61,8 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
   // Ritytans aktuella ritning, för miniatyren bredvid nedbrytningsrutan.
   const [liveDiagram, setLiveDiagram] = useState(null);
   const [confirmReset, setConfirmReset] = useState(false);
+  // Räknas upp vid nollställning, så att FD-ritningen laddas om tom.
+  const [resetCount, setResetCount] = useState(0);
   // Ihopfällt läge för rättnings- och facitrutan: gäller alla uppgifter och
   // sparas tills man ändrar det. Rätta igen byter innehållet, inte läget.
   const [resultCollapsed, setResultCollapsed] = useState(() => load(COLLAPSE_RESULT, false) === true);
@@ -165,12 +167,23 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
               {itemLabel(item)} · {NORMALIZE_GROUPS.find((g) => g.exercise === item.exercise)?.source || "Slumpad relation"}
               {modelProgress[item.id] && <span className="ml-2 text-correct">✓ Klar</span>}
             </p>
-            {modelProgress[item.id] && !confirmReset && (
+            {(modelProgress[item.id] || load(`fdsvar:${item.id}`, null) || load(`fdritning:${item.id}`, null)) && !confirmReset && (
               <button type="button" className="btn-quiet text-sm" onClick={() => setConfirmReset(true)}>Nollställ uppgiften</button>
             )}
             {confirmReset && (
               <span className="flex gap-2 text-sm">
-                <button type="button" className="btn-secondary" onClick={() => { onReset(item.id); setConfirmReset(false); }}>Ja, nollställ</button>
+                <button type="button" className="btn-secondary" onClick={() => {
+                  // Nollställ tar bort bock, svar och FD-ritning.
+                  onReset(item.id);
+                  try {
+                    localStorage.removeItem(`sysb23:fdsvar:${item.id}`);
+                    localStorage.removeItem(`sysb23:fdritning:${item.id}`);
+                  } catch { /* privat läge */ }
+                  setDrafts((prev) => { const next = { ...prev }; delete next[item.id]; return next; });
+                  setResult(null);
+                  setResetCount((n) => n + 1);
+                  setConfirmReset(false);
+                }}>Ja, nollställ</button>
                 <button type="button" className="btn-quiet" onClick={() => setConfirmReset(false)}>Avbryt</button>
               </span>
             )}
@@ -184,7 +197,7 @@ export default function Normalizing({ modelProgress, onSolve, onReset }) {
 
           <pre className="mt-4 overflow-x-auto rounded-lg border border-line bg-paper p-3 font-mono text-[14.5px] leading-relaxed text-ink">{contextOf(item)}</pre>
 
-          <FdCanvas key={item.id} item={item} graded={Boolean(result)} onDiagramChange={setLiveDiagram} />
+          <FdCanvas key={`${item.id}:${resetCount}`} item={item} graded={Boolean(result)} onDiagramChange={setLiveDiagram} />
 
           <FdAnswer key={"a" + item.id} item={item} draft={draft} setDraft={setDraft} highlight={highlight} parsed={parsed} result={result} diagram={liveDiagram} />
 

@@ -13,10 +13,7 @@ import Modeling from "./views/Modeling.jsx";
 import DbExam from "./views/DbExam.jsx";
 import ProcessRun from "./views/ProcessRun.jsx";
 import JavaWorkshop from "./views/JavaWorkshop.jsx";
-import { modelExercises } from "./data/databaser/modelExercises.js";
-import { normalizeExercises } from "./data/databaser/normalizeExercises.js";
-import { statementExercises } from "./data/databaser/statementExercises.js";
-import { tasks as bpmnTasks } from "./data/process/bpmnTasks.js";
+import { modelProgressIds } from "./data/progressLists.js";
 import { courses, getCourse } from "./data/index.js";
 import {
   KEYS,
@@ -91,7 +88,7 @@ export default function App() {
   );
   // Modellverkstaden: en nyckel per uppgift i localStorage.
   const [modelProgress, setModelProgress] = useState(() =>
-    loadModelProgress([...modelExercises, ...normalizeExercises, ...statementExercises, ...bpmnTasks].map((item) => item.id)),
+    loadModelProgress(modelProgressIds()),
   );
   function solveModelExercise(id, status) {
     saveModelResult(id, status);

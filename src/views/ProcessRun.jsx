@@ -3,7 +3,7 @@ import { tasks, correctIndex } from "../data/process/bpmnTasks.js";
 import { diagramById } from "../data/process/bpmnDiagrams.js";
 import { simulate } from "../lib/bpmnSim.js";
 import { BpmnDiagram, ElementGallery, HIGHLIGHT } from "../components/bpmn/BpmnDiagram.jsx";
-import { KEYS, load, save } from "../lib/storage.js";
+import { KEYS, clearDraft, load, loadDraft, save, saveDraft } from "../lib/storage.js";
 import BpmnLegend from "../components/bpmn/BpmnLegend.jsx";
 
 // BPMN-övningar: tentans BPMN-körfrågor. Diagrammet ritas och körs ur samma
@@ -34,7 +34,10 @@ export default function ProcessRun({ params, modelProgress, onSolve, onReset }) 
       ? params.taskId
       : tasks.find((t) => !modelProgress[t.id])?.id || tasks[0].id,
   );
-  const [choice, setChoice] = useState(null);
+  // Valt alternativ sparas per uppgift (svar:<id>) och finns kvar efter
+  // omladdning; Svara trycker man på igen.
+  const [choice, setChoiceState] = useState(null);
+  const setChoice = (i) => { setChoiceState(i); saveDraft(currentId, i); };
   const [submitted, setSubmitted] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
   // Menyn kan fällas ihop till en list med siffror, så att diagrammet får
@@ -59,7 +62,7 @@ export default function ProcessRun({ params, modelProgress, onSolve, onReset }) 
   const result = useMemo(() => (diagram && task.kind !== "stil" ? simulate(diagram, task.scenario) : null), [diagram, task]);
 
   useEffect(() => {
-    setChoice(null);
+    setChoiceState(Number.isInteger(loadDraft(currentId)) ? loadDraft(currentId) : null);
     setSubmitted(false);
     setConfirmReset(false);
     // Efter "Nästa uppgift" står man längst ned i den förra; visa början av
@@ -118,12 +121,12 @@ export default function ProcessRun({ params, modelProgress, onSolve, onReset }) 
               {modelProgress[task.id] && <span className="ml-2 text-correct">✓ Klar</span>}
             </p>
             <div className="flex flex-wrap items-center gap-2">
-              {modelProgress[task.id] && !confirmReset && (
+              {(modelProgress[task.id] || choice !== null) && !confirmReset && (
                 <button type="button" className="btn-quiet text-sm" onClick={() => setConfirmReset(true)}>Nollställ uppgiften</button>
               )}
               {confirmReset && (
                 <span className="flex gap-2 text-sm">
-                  <button type="button" className="btn-secondary" onClick={() => { onReset(task.id); setConfirmReset(false); }}>Ja, nollställ</button>
+                  <button type="button" className="btn-secondary" onClick={() => { onReset(task.id); clearDraft(task.id); setChoiceState(null); setSubmitted(false); setConfirmReset(false); }}>Ja, nollställ</button>
                   <button type="button" className="btn-quiet" onClick={() => setConfirmReset(false)}>Avbryt</button>
                 </span>
               )}

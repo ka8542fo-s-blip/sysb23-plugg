@@ -20,6 +20,26 @@ export const KEYS = {
   javaTask: "javaUppgift", // senast öppna uppgiften i fliken Java (uppgifts-id)
 };
 
+// Eget svar per uppgift i övningsytorna (Modellera, SQL-verkstaden,
+// BPMN-övningar): sysb23:svar:<uppgiftsId> = svaret som det står i rutan
+// (text, markeringar eller valt alternativ). Skrivs vid varje ändring och
+// tas bort bara av "Nollställ uppgiften" eller när svaret töms.
+export const draftKey = (exerciseId) => `svar:${exerciseId}`;
+export function loadDraft(exerciseId) {
+  return load(draftKey(exerciseId), null);
+}
+export function saveDraft(exerciseId, value) {
+  if (value === null || value === undefined || value === "" || (Array.isArray(value) && value.length === 0)) clearDraft(exerciseId);
+  else save(draftKey(exerciseId), value);
+}
+export function clearDraft(exerciseId) {
+  try {
+    localStorage.removeItem(PREFIX + draftKey(exerciseId));
+  } catch {
+    /* privat läge */
+  }
+}
+
 // Fliken Java: sysb23:java:<uppgiftsId> = { draft, status } — svaret som det
 // står i kodrutan och "solved" när rättaren har sagt Rätt (behålls även om
 // svaret ändras efteråt, som i Modellera; status är annars null). Nyckeln

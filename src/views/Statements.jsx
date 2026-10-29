@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useDrafts } from "../lib/useDrafts.js";
 import { statementExercises } from "../data/databaser/statementExercises.js";
 import { ExerciseFigure } from "../components/model/modelFigures.jsx";
 import { scoreStatements, MAX_POINTS } from "../lib/statementScore.js";
@@ -9,29 +10,27 @@ import { scoreStatements, MAX_POINTS } from "../lib/statementScore.js";
 export default function Statements({ modelProgress, onSolve, onReset }) {
   const items = statementExercises;
   const [currentId, setCurrentId] = useState(() => items.find((e) => !modelProgress[e.id])?.id || items[0].id);
-  const [marks, setMarks] = useState({});
+  // Markeringarna sparas per uppgift (svar:<id>) och finns kvar efter omladdning.
+  const drafts = useDrafts();
   const [result, setResult] = useState(null);
   const [confirmReset, setConfirmReset] = useState(false);
 
   const item = items.find((e) => e.id === currentId) || items[0];
-  const marked = marks[item.id] ?? [];
+  const marked = drafts.get(item.id, []);
   const solvedCount = items.filter((e) => modelProgress[e.id]).length;
 
   useEffect(() => { setResult(null); setConfirmReset(false); }, [currentId]);
 
   function toggle(i) {
     if (result) return;
-    setMarks((prev) => {
-      const cur = prev[item.id] ?? [];
-      return { ...prev, [item.id]: cur.includes(i) ? cur.filter((x) => x !== i) : [...cur, i] };
-    });
+    drafts.set(item.id, marked.includes(i) ? marked.filter((x) => x !== i) : [...marked, i]);
   }
   function grade() {
     const outcome = scoreStatements(item.statements, marked);
     setResult(outcome);
     if (outcome.status === "correct") onSolve(item.id, "solved");
   }
-  function again() { setResult(null); setMarks((prev) => ({ ...prev, [item.id]: [] })); }
+  function again() { setResult(null); drafts.clear(item.id); }
 
   const OUTCOME = {
     hit: ["Sant, markerat: +5", "text-correct"],
@@ -49,12 +48,12 @@ export default function Statements({ modelProgress, onSolve, onReset }) {
               Uppgift {item.number} · {item.source}
               {modelProgress[item.id] && <span className="ml-2 text-correct">✓ Klar</span>}
             </p>
-            {modelProgress[item.id] && !confirmReset && (
+            {(modelProgress[item.id] || marked.length > 0) && !confirmReset && (
               <button type="button" className="btn-quiet text-sm" onClick={() => setConfirmReset(true)}>Nollställ uppgiften</button>
             )}
             {confirmReset && (
               <span className="flex gap-2 text-sm">
-                <button type="button" className="btn-secondary" onClick={() => { onReset(item.id); setConfirmReset(false); }}>Ja, nollställ</button>
+                <button type="button" className="btn-secondary" onClick={() => { onReset(item.id); drafts.clear(item.id); setResult(null); setConfirmReset(false); }}>Ja, nollställ</button>
                 <button type="button" className="btn-quiet" onClick={() => setConfirmReset(false)}>Avbryt</button>
               </span>
             )}
