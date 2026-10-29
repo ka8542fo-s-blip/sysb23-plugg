@@ -332,3 +332,24 @@ test("syntaxfel: komman, avslutande ); och stavfel i reserverade ord", () => {
     assert.equal(checkDdl(text, E18).status, "parse-error", String(re));
   }
 });
+
+test("två tabeller som pekar på varandra ger ett enda tips, i båda ordningarna", () => {
+  const D = `CREATE TABLE D (
+  DID INTEGER IDENTITY(1,1),
+  CID INTEGER,
+  PRIMARY KEY (DID),
+  FOREIGN KEY (CID) REFERENCES C(CID)
+);`;
+  const C = `CREATE TABLE C (
+  CID INTEGER IDENTITY(1,1),
+  DID INTEGER NOT NULL,
+  PRIMARY KEY (CID),
+  FOREIGN KEY (DID) REFERENCES D(DID)
+);`;
+  const tip = (first, second) => `Tips: ${first} och ${second} pekar på varandra, så det finns ingen ordning där båda kan skapas med bara CREATE TABLE. På tentan bedöms inte ordningen.`;
+  for (const [text, want] of [[`${D}\n${C}`, tip("D", "C")], [`${C}\n${D}`, tip("C", "D")]]) {
+    const parsed = parseDdl(text);
+    assert.deepEqual(parsed.errors, []);
+    assert.deepEqual(parsed.tips, [want]);
+  }
+});

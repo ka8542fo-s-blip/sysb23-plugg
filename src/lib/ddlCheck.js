@@ -310,7 +310,12 @@ function validate(tables) {
     for (const fk of t.fks) {
       const j = indexOf(fk.target);
       const target = tables[j];
-      if (j > i) tips.push(`Tips: om du kör koden i SQL Server måste ${target.name} skapas före ${t.name}, eftersom ${t.name} pekar på ${target.name}. På tentan bedöms inte ordningen.`);
+      // Två tabeller som pekar på varandra (C och D i uppsamlingens uppgift 2)
+      // går inte att skapa i någon ordning; ett tips om att flytta den ena
+      // vore fel, så paret får ett eget tips.
+      const mutual = target && target !== t && target.fks.some((x) => fold(x.target) === fold(t.name));
+      if (mutual && j > i) tips.push(`Tips: ${t.name} och ${target.name} pekar på varandra, så det finns ingen ordning där båda kan skapas med bara CREATE TABLE. På tentan bedöms inte ordningen.`);
+      else if (j > i) tips.push(`Tips: om du kör koden i SQL Server måste ${target.name} skapas före ${t.name}, eftersom ${t.name} pekar på ${target.name}. På tentan bedöms inte ordningen.`);
       if (target && fk.refCols) {
         for (const c of fk.refCols) {
           if (!target.columns.some((col) => fold(col.name) === fold(c))) {
