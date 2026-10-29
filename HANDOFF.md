@@ -115,13 +115,14 @@ kapitel: allt UI läser `chapter.number`.
   felraderna skulle peka på omskriven kod). Jämför struktur: tabeller via
   namn/alias (skiftläge, _, å/ä/ö fälls) eller kolumnöverlapp, FK-kolumner
   via måltabell (unära par som multimängd), PK och UNIQUE som mängder.
-  Körordning (2026-10-29): en FOREIGN KEY måste peka på en tabell som
-  skapats ovanför (självreferens alltid ok; en FK-cykel som C ↔ D i
-  uppsamlingens uppgift 2 flaggas inte, eftersom ingen ordning fungerar
-  med bara CREATE TABLE), och REFERENCES-kolumnerna måste finnas i
-  måltabellen. Felen har `kind: "referens"`: svaret blir aldrig Rätt och
-  Tenta drar 2 p per fel, men tabellerna rättas ändå. Stavfel i
-  reserverade ord (CREAT, CONSTRANT) ger "X är felstavat — skriv Y".
+  Tabellordningen bedöms inte (2026-10-29, användarbeslut): häftets egna
+  facit 18–20 står i en ordning som inte går att köra. En FK mot en tabell
+  längre ner ger bara ett tips (`tips` i parseDdl/checkDdl, visas också vid
+  Rätt). REFERENCES mot en kolumn som inte finns i måltabellen är däremot
+  ett fel (`kind: "referens"`, rättningen fortsätter, Tenta drar 2 p).
+  Stavfel i reserverade ord (CREAT, CONSTRANT) ger "X är felstavat — skriv
+  Y". Facit i appen är strukturdata, och toDdl() sorterar alltid refererade
+  tabeller först, så appens facit kan inte visa häftets ordning.
   Facit är strukturdata (kind entity/weak/junction/multivalued, surrogate,
   columns, fks med notNull/rel/tag, unique, oneToOneUnique), `folded` =
   relationer som blir FK-kolumner (förklarar en överflödig tabell),

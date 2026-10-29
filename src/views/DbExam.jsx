@@ -301,7 +301,7 @@ function Task2({ task, code, setCode, result, onGrade, onEdit }) {
       <div className={`grid gap-4 ${result ? "xl:grid-cols-2" : ""}`}>
         <div>
           <SchemaEditor id="tenta-ddl" label="Ditt svar" value={code} onChange={(text) => { if (!result) setCode(text); }} rows={24} subscripts={false} />
-          <p className="mt-1 text-xs text-ink/65">Rättas som struktur: kolumnordning, namn på surrogat- och FK-kolumner, INT eller INTEGER och var en constraint står spelar ingen roll. Tabellerna får stå i valfri ordning så länge varje FOREIGN KEY pekar på en tabell som skapats ovanför.</p>
+          <p className="mt-1 text-xs text-ink/65">Rättas som struktur: ordning, namn på surrogat- och FK-kolumner, INT eller INTEGER och var en constraint står spelar ingen roll. Kör du koden i SQL Server måste en tabell dock skapas före de tabeller som pekar på den.</p>
         </div>
         {result && (
           <div>
@@ -353,6 +353,7 @@ function Task2({ task, code, setCode, result, onGrade, onEdit }) {
               ))}
             </ul>
           )}
+          {result.check.tips?.length > 0 && <ul className="mt-3 space-y-1 text-sm text-ink/70">{result.check.tips.map((tip) => <li key={tip}>{tip}</li>)}</ul>}
           {result.check.remarks?.length > 0 && <ul className="mt-3 space-y-1 text-sm text-ink/65">{result.check.remarks.map((n) => <li key={n}>Anmärkning: {n}</li>)}</ul>}
         </ScoreBox>
       )}

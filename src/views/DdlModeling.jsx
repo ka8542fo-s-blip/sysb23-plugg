@@ -86,7 +86,7 @@ export default function DdlModeling({ modelProgress, onSolve, onReset }) {
                 subscripts={false}
               />
               <p className="mt-1 text-xs text-ink/65">
-                Rättas som struktur: kolumnernas ordning spelar ingen roll, och tabellerna får stå i valfri ordning så länge varje FOREIGN KEY pekar på en tabell som skapats ovanför. Inte heller spelar det roll vad
+                Rättas som struktur: tabellernas och kolumnernas ordning spelar ingen roll (kör du koden i SQL Server måste en tabell skapas före de tabeller som pekar på den), inte heller vad
                 surrogat- och FK-kolumnerna heter, INT eller INTEGER, eller om en constraint står på kolumnen
                 eller sist i tabellen.
               </p>
@@ -117,7 +117,7 @@ export default function DdlModeling({ modelProgress, onSolve, onReset }) {
                   <p className="font-display text-lg">{verdict}</p>
                   {result.errors.length > 0 && (
                     <div className="mt-2">
-                      <p className="text-[15px] font-medium text-wrong">Koden går inte att köra i den här ordningen:</p>
+                      <p className="text-[15px] font-medium text-wrong">Koden går inte att köra:</p>
                       <ul className="mt-1 space-y-1 text-[15px]">{result.errors.map((err) => <li key={err.message}>{err.message}</li>)}</ul>
                     </div>
                   )}
@@ -152,6 +152,9 @@ export default function DdlModeling({ modelProgress, onSolve, onReset }) {
                       </li>
                     ))}
                   </ul>
+                  {result.tips.length > 0 && (
+                    <ul className="mt-3 space-y-1 text-sm text-ink/70">{result.tips.map((tip) => <li key={tip}>{tip}</li>)}</ul>
+                  )}
                   {result.remarks.length > 0 && (
                     <ul className="mt-3 space-y-1 text-sm text-ink/65">{result.remarks.map((n) => <li key={n}>Anmärkning: {n}</li>)}</ul>
                   )}

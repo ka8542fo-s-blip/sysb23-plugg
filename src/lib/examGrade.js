@@ -30,7 +30,7 @@ export const DDL_DEDUCTIONS = {
   surrogat: 2,    // surrogatnyckel saknas, eller finns där den inte ska
   overflodig: 3,  // överflödig tabell
   kolumn: 1,      // saknad eller överflödig vanlig kolumn
-  referens: 2,    // FK mot en tabell som skapas längre ner, eller mot en kolumn som inte finns
+  referens: 2,    // REFERENCES mot en kolumn som inte finns i måltabellen
 };
 
 export const DDL_LABELS = {
@@ -42,7 +42,7 @@ export const DDL_LABELS = {
   surrogat: "surrogatnyckel",
   overflodig: "överflödig tabell",
   kolumn: "kolumn",
-  referens: "körordning och REFERENCES",
+  referens: "REFERENCES",
 };
 
 // result = checkDdl(...). Syntaxfel som hindrar tolkning ger 0.

@@ -4,6 +4,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { parseDdl, checkDdl, toDdl } from "../src/lib/ddlCheck.js";
+import { estimateDdl } from "../src/lib/examGrade.js";
 import { ddlExercises } from "../src/data/databaser/ddlExercises.js";
 
 const ex = (id) => ddlExercises.find((e) => e.id === id);
@@ -69,11 +70,16 @@ test("rätt svar i tentans form", () => {
   assert.equal(r.extra.length, 0);
 });
 
-test("namnfrihet: omdöpta surrogat- och FK-kolumner, INT, constraintnamn, inline-constraints, annan tabellordning", () => {
-  // Tabellerna i en annan ordning än facit, men varje FK pekar på en tabell ovanför.
+test("namnfrihet: omdöpta surrogat- och FK-kolumner, INT, constraintnamn, inline-constraints, omvänd ordning", () => {
   const text = `
-CREATE TABLE D (D_ID INT IDENTITY(1,1), D1 INT NOT NULL, D2 INT, PRIMARY KEY (D_ID), UNIQUE (D1));
-CREATE TABLE B (B_ID INT IDENTITY(1,1), B1 INT NOT NULL, B2 INT NOT NULL, B3 INT, PRIMARY KEY (B_ID), UNIQUE (B2, B1));
+CREATE TABLE R2 (
+  b_id INT,
+  IdC INT,
+  R2attr INT,
+  CONSTRAINT PK_R2 PRIMARY KEY (IdC, b_id),
+  CONSTRAINT FK_R2_B FOREIGN KEY (b_id) REFERENCES B(B_ID),
+  CONSTRAINT FK_R2_C FOREIGN KEY (IdC) REFERENCES C(IdC)
+);
 CREATE TABLE C (
   IdC INT IDENTITY(1,1) PRIMARY KEY,
   c1 INT NOT NULL UNIQUE,
@@ -86,14 +92,8 @@ CREATE TABLE a (
   A2 INTEGER, A3 INTEGER,
   B_ID INTEGER NOT NULL FOREIGN KEY REFERENCES B(B_ID)
 );
-CREATE TABLE R2 (
-  b_id INT,
-  IdC INT,
-  R2attr INT,
-  CONSTRAINT PK_R2 PRIMARY KEY (IdC, b_id),
-  CONSTRAINT FK_R2_B FOREIGN KEY (b_id) REFERENCES B(B_ID),
-  CONSTRAINT FK_R2_C FOREIGN KEY (IdC) REFERENCES C(IdC)
-);`;
+CREATE TABLE D (D_ID INT IDENTITY(1,1), D1 INT NOT NULL, D2 INT, PRIMARY KEY (D_ID), UNIQUE (D1));
+CREATE TABLE B (B_ID INT IDENTITY(1,1), B1 INT NOT NULL, B2 INT NOT NULL, B3 INT, PRIMARY KEY (B_ID), UNIQUE (B2, B1));`;
   const r = checkDdl(text, E18);
   assert.equal(r.status, "correct", JSON.stringify(r.tables.filter((t) => t.status !== "ok")));
 });
@@ -251,9 +251,9 @@ CREATE TABLE Z (ZID INT IDENTITY(1,1), XID INT REFERENCES dbo.X(XID) ON DELETE C
 });
 
 // ---------- Körordning och REFERENCES ----------
-// SQL Server kör satserna uppifrån och ned: en FOREIGN KEY kan bara peka på
-// en tabell som redan finns. SQLite stoppar inte det vid CREATE TABLE, så
-// rättaren kontrollerar ordningen själv.
+// Tabellordningen bedöms inte (häftets egna facit 18–20 står i en ordning
+// som inte går att köra), men en FK mot en tabell längre ner ger ett tips
+// om hur koden måste stå för att köras i SQL Server.
 const C20 = `CREATE TABLE C (
   CID INTEGER IDENTITY(1,1),
   C1 INTEGER NOT NULL,
@@ -273,13 +273,16 @@ const D20 = `CREATE TABLE D (
 );`;
 const messages = (text) => parseDdl(text).errors.map((e) => e.message);
 
-test("fel tabellordning: D pekar på C som skapas längre ner (användarens försök på övning 20)", () => {
-  const errs = messages(`${D20}\n${C20}`);
-  assert.deepEqual(errs, ["Rad 8: D pekar på C, men C skapas först längre ner. Flytta C ovanför D."]);
+test("fel tabellordning ger ett tips men inget fel (användarens försök på övning 20)", () => {
+  const parsed = parseDdl(`${D20}\n${C20}`);
+  assert.deepEqual(parsed.errors, []);
+  assert.deepEqual(parsed.tips, ["Tips: om du kör koden i SQL Server måste C skapas före D, eftersom D pekar på C. På tentan bedöms inte ordningen."]);
 });
 
-test("rätt tabellordning godkänns", () => {
-  assert.deepEqual(messages(`${C20}\n${D20}`), []);
+test("rätt tabellordning ger varken fel eller tips", () => {
+  const parsed = parseDdl(`${C20}\n${D20}`);
+  assert.deepEqual(parsed.errors, []);
+  assert.deepEqual(parsed.tips, []);
 });
 
 test("självreferens (unär relation) godkänns alltid", () => {
@@ -289,17 +292,18 @@ test("självreferens (unär relation) godkänns alltid", () => {
   PRIMARY KEY (AID),
   FOREIGN KEY (AID2) REFERENCES A(AID)
 );`;
-  assert.deepEqual(messages(text), []);
+  const parsed = parseDdl(text);
+  assert.deepEqual(parsed.errors, []);
+  assert.deepEqual(parsed.tips, []);
 });
 
-test("fel ordning räknas som fel men tabellerna rättas ändå", () => {
-  const order = [D, B, A, C, R2]; // C pekar på D (ok), A pekar på B (ok) …
-  assert.equal(checkDdl(order.join("\n\n"), E18).status, "correct");
-  const wrong = checkDdl([R2, B, D, A, C].join("\n\n"), E18); // R2 pekar på B och C, som står längre ner
-  assert.equal(wrong.status, "partial");
-  assert.ok(wrong.errors.some((e) => /R2 pekar på B, men B skapas först längre ner\. Flytta B ovanför R2\./.test(e.message)));
-  assert.ok(wrong.errors.some((e) => /R2 pekar på C/.test(e.message)));
-  assert.ok(wrong.tables.every((t) => t.status === "ok"), "strukturen är rätt, bara ordningen är fel");
+test("fel ordning är fortfarande Rätt, med tips, också i Tenta-poängen", () => {
+  const wrong = checkDdl([R2, A, C, B, D].join("\n\n"), E18); // häftets ordning: A före B, C före D
+  assert.equal(wrong.status, "correct");
+  assert.deepEqual(wrong.errors, []);
+  assert.ok(wrong.tips.some((t) => /B skapas före A, eftersom A pekar på B/.test(t)));
+  assert.ok(wrong.tips.some((t) => /D skapas före C, eftersom C pekar på D/.test(t)));
+  assert.equal(estimateDdl(wrong).points, 25);
 });
 
 test("REFERENCES till en kolumn som inte finns i måltabellen", () => {
@@ -327,28 +331,4 @@ test("syntaxfel: komman, avslutande ); och stavfel i reserverade ord", () => {
     assert.match(errs[0], re);
     assert.equal(checkDdl(text, E18).status, "parse-error", String(re));
   }
-});
-
-test("en cykel av främmande nycklar (D → C och C → D) flaggas inte, eftersom ingen ordning fungerar", () => {
-  const text = `CREATE TABLE D (
-  DID INTEGER IDENTITY(1,1),
-  CID INTEGER,
-  PRIMARY KEY (DID),
-  FOREIGN KEY (CID) REFERENCES C(CID)
-);
-CREATE TABLE C (
-  CID INTEGER IDENTITY(1,1),
-  DID INTEGER NOT NULL,
-  PRIMARY KEY (CID),
-  FOREIGN KEY (DID) REFERENCES D(DID)
-);
-CREATE TABLE E (
-  EID INTEGER IDENTITY(1,1),
-  FID INTEGER,
-  PRIMARY KEY (EID),
-  FOREIGN KEY (FID) REFERENCES F(FID)
-);
-CREATE TABLE F (FID INTEGER IDENTITY(1,1), PRIMARY KEY (FID));`;
-  // D och C bildar en cykel; E → F har ingen och ska fortfarande flyttas.
-  assert.deepEqual(messages(text), ["Rad 17: E pekar på F, men F skapas först längre ner. Flytta F ovanför E."]);
 });

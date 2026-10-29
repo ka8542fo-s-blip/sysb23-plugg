@@ -17,9 +17,8 @@
 // IdA). En FK-kolumn identifieras av vilken tabell den pekar på, som i
 // modelCheck; två FK mot samma tabell (unära relationer) matchas som par.
 // Tabellnamn matchas på entitets- och relationsnamnen, utan hänsyn till
-// skiftläge, understreck eller å/ä/ö. Kolumnordningen är fri, och tabellerna
-// får stå i valfri ordning så länge varje FOREIGN KEY pekar på en tabell
-// som redan skapats (fel = `referens`, se validate).
+// skiftläge, understreck eller å/ä/ö. Tabell- och kolumnordning är fri; en
+// FK mot en tabell längre ner ger bara ett tips om körordningen (validate).
 
 // Fäll skiftläge, blanksteg, understreck och diakritiska tecken: Förening = forening.
 export const fold = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[\s_]+/g, "");
@@ -296,29 +295,22 @@ function parser(tokens) {
 }
 
 // Kontroller som SQL Server gör när satsen körs: kolumner i constraints
-// måste finnas, en FK har lika många kolumner på båda sidor, högst en
-// IDENTITY per tabell, och en FOREIGN KEY kan bara peka på en tabell som
-// redan finns — satserna körs uppifrån och ned. Självreferens (unär
-// relation) går alltid. Rättaren kör aldrig koden (SQLite stoppar inte fel
-// ordning vid CREATE TABLE), så ordningen kontrolleras här.
+// måste finnas, REFERENCES pekar på kolumner som finns i måltabellen, en
+// FK har lika många kolumner på båda sidor, högst en IDENTITY per tabell.
+//
+// Tabellordningen bedöms inte: övningshäftets egna facit (18–20) står i en
+// ordning som inte går att köra, och tentan rättar inte ordningen. En FK mot
+// en tabell längre ner blir ett tips (`tips`), aldrig ett fel. Rättaren kör
+// aldrig koden, så ordningen läses här (SQLite stoppar den inte heller).
 function validate(tables) {
   const errors = [];
+  const tips = [];
   const indexOf = (name) => tables.findIndex((t) => fold(t.name) === fold(name));
-  // Pekar tabell j (via FK-kedjor) tillbaka på tabell i finns ingen ordning
-  // som fungerar med bara CREATE TABLE — som C och D i uppsamlingens
-  // uppgift 2, där tentans eget facit har båda FK:erna i tabellerna. Då är
-  // ordningen inte svarets fel, och den flaggas inte.
-  const reaches = (from, to, seen = new Set()) => {
-    if (from === to) return true;
-    if (from < 0 || seen.has(from)) return false;
-    seen.add(from);
-    return tables[from].fks.some((fk) => reaches(indexOf(fk.target), to, seen));
-  };
   tables.forEach((t, i) => {
     for (const fk of t.fks) {
       const j = indexOf(fk.target);
-      if (j > i && !reaches(j, i)) errors.push({ kind: "referens", line: fk.line, message: `Rad ${fk.line}: ${t.name} pekar på ${tables[j].name}, men ${tables[j].name} skapas först längre ner. Flytta ${tables[j].name} ovanför ${t.name}.` });
       const target = tables[j];
+      if (j > i) tips.push(`Tips: om du kör koden i SQL Server måste ${target.name} skapas före ${t.name}, eftersom ${t.name} pekar på ${target.name}. På tentan bedöms inte ordningen.`);
       if (target && fk.refCols) {
         for (const c of fk.refCols) {
           if (!target.columns.some((col) => fold(col.name) === fold(c))) {
@@ -342,16 +334,16 @@ function validate(tables) {
     const ids = t.columns.filter((c) => c.identity);
     if (ids.length > 1) errors.push({ line: ids[1].line, message: `Rad ${ids[1].line}: ${t.name} har två IDENTITY-kolumner — SQL Server tillåter bara en per tabell.` });
   }
-  return errors;
+  return { errors, tips: [...new Set(tips)] };
 }
 
 export function parseDdl(text) {
   const tokens = lex(text);
   try {
     const tables = parser(tokens);
-    return { tables, errors: validate(tables) };
+    return { tables, ...validate(tables) };
   } catch (err) {
-    if (err instanceof SyntaxError_) return { tables: [], errors: [{ line: err.line, message: err.message }] };
+    if (err instanceof SyntaxError_) return { tables: [], errors: [{ line: err.line, message: err.message }], tips: [] };
     throw err;
   }
 }
@@ -637,12 +629,12 @@ function compareTable(f, a, ctx) {
 // Rätta en DDL-text mot en uppgift: { facit, rules, folded }.
 export function checkDdl(text, exercise) {
   const parsed = typeof text === "string" ? parseDdl(text) : text;
-  // Syntaxfel stoppar rättningen. Referensfel (fel tabellordning, REFERENCES
+  // Syntaxfel stoppar rättningen. Referensfel (REFERENCES
   // till en kolumn som inte finns) gör också att koden inte går att köra,
-  // men tabellerna rättas ändan, så att t.ex. en saknad surrogatnyckel inte
+  // men tabellerna rättas ändå, så att t.ex. en saknad surrogatnyckel inte
   // döljs bakom felen den orsakar i andra tabeller.
   const blocking = parsed.errors.filter((e) => e.kind !== "referens");
-  if (blocking.length) return { status: "parse-error", errors: parsed.errors, tables: [], extra: [], remarks: [] };
+  if (blocking.length) return { status: "parse-error", errors: parsed.errors, tables: [], extra: [], remarks: [], tips: [] };
   const refErrors = parsed.errors.filter((e) => e.kind === "referens");
   const facit = exercise.facit;
   const { pairs, used, label } = matchTables(parsed.tables, facit);
@@ -684,5 +676,5 @@ export function checkDdl(text, exercise) {
   if (okCount === tables.length && extra.length === 0) status = refErrors.length ? "partial" : "correct";
   else if (okCount === 0) status = "wrong";
   else status = "partial";
-  return { status, tables, extra, remarks, errors: refErrors };
+  return { status, tables, extra, remarks, errors: refErrors, tips: parsed.tips ?? [] };
 }
