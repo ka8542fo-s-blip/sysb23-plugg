@@ -86,7 +86,7 @@ export default function DdlModeling({ modelProgress, onSolve, onReset }) {
                 subscripts={false}
               />
               <p className="mt-1 text-xs text-ink/65">
-                Rättas som struktur: tabellernas och kolumnernas ordning spelar ingen roll, inte heller vad
+                Rättas som struktur: kolumnernas ordning spelar ingen roll, och tabellerna får stå i valfri ordning så länge varje FOREIGN KEY pekar på en tabell som skapats ovanför. Inte heller spelar det roll vad
                 surrogat- och FK-kolumnerna heter, INT eller INTEGER, eller om en constraint står på kolumnen
                 eller sist i tabellen.
               </p>
@@ -115,6 +115,12 @@ export default function DdlModeling({ modelProgress, onSolve, onReset }) {
               ) : (
                 <>
                   <p className="font-display text-lg">{verdict}</p>
+                  {result.errors.length > 0 && (
+                    <div className="mt-2">
+                      <p className="text-[15px] font-medium text-wrong">Koden går inte att köra i den här ordningen:</p>
+                      <ul className="mt-1 space-y-1 text-[15px]">{result.errors.map((err) => <li key={err.message}>{err.message}</li>)}</ul>
+                    </div>
+                  )}
                   <ul className="mt-2 space-y-3 text-[15px]">
                     {result.tables.map((t) => (
                       <li key={t.name}>

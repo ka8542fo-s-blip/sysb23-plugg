@@ -17,7 +17,9 @@
 // IdA). En FK-kolumn identifieras av vilken tabell den pekar på, som i
 // modelCheck; två FK mot samma tabell (unära relationer) matchas som par.
 // Tabellnamn matchas på entitets- och relationsnamnen, utan hänsyn till
-// skiftläge, understreck eller å/ä/ö. Tabell- och kolumnordning är fri.
+// skiftläge, understreck eller å/ä/ö. Kolumnordningen är fri, och tabellerna
+// får stå i valfri ordning så länge varje FOREIGN KEY pekar på en tabell
+// som redan skapats (fel = `referens`, se validate).
 
 // Fäll skiftläge, blanksteg, understreck och diakritiska tecken: Förening = forening.
 export const fold = (s) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[\s_]+/g, "");
@@ -77,6 +79,29 @@ const OP = (tok, v) => tok?.t === "op" && tok.v === v;
 const ABBREV = { PK: "PRIMARY KEY", FK: "FOREIGN KEY", UQ: "UNIQUE", REF: "REFERENCES" };
 const describe = (tok) => (tok ? (tok.t === "op" ? `"${tok.v}"` : tok.v) : "slutet av texten");
 
+// Stavfel i reserverade ord (CREAT, CONSTRANT, REFERENCS): högst två
+// bokstäver fel, så att svaret säger vilket ord som avsågs i stället för
+// ett missvisande "kommatecken saknas".
+function editDistance(a, b) {
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    }
+  }
+  return d[a.length][b.length];
+}
+function misspelled(tok, words, minLength = 1) {
+  if (tok?.t !== "id" || tok.quoted) return null;
+  const v = tok.v.toUpperCase();
+  if (v.length < minLength || words.includes(v)) return null;
+  return words.find((w) => editDistance(v, w) <= (w.length <= 4 ? 1 : 2)) ?? null;
+}
+const typoMessage = (tok, word) => `Rad ${tok.line}: ${tok.v} är felstavat — skriv ${word}.`;
+const CONSTRAINT_WORDS = ["CONSTRAINT", "PRIMARY", "FOREIGN", "UNIQUE"];
+const COLUMN_WORDS = ["NOT", "NULL", "IDENTITY", "PRIMARY", "UNIQUE", "FOREIGN", "REFERENCES", "DEFAULT", "CONSTRAINT"];
+
 function parser(tokens) {
   let p = 0;
   const peek = (k = 0) => tokens[p + k];
@@ -87,6 +112,7 @@ function parser(tokens) {
     const tok = next();
     if (!KW(tok, word)) {
       if (tok && ABBREV[tok.v?.toUpperCase()]) fail(tok, `Rad ${tok.line}: skriv ${ABBREV[tok.v.toUpperCase()]} utskrivet, inte ${tok.v} — reserverade ord förkortas inte.`);
+      if (misspelled(tok, [word])) fail(tok, typoMessage(tok, word));
       fail(tok, `Rad ${tok?.line ?? lastLine()}: väntade ${word}${context ? ` ${context}` : ""}, fick ${describe(tok)}.`);
     }
     return tok;
@@ -166,11 +192,15 @@ function parser(tokens) {
     }
     if (KW(tok, "CHECK")) { next(); skipParens(); return; }
     if (tok && ABBREV[tok.v?.toUpperCase()]) fail(tok, `Rad ${tok.line}: skriv ${ABBREV[tok.v.toUpperCase()]} utskrivet, inte ${tok.v} — reserverade ord förkortas inte.`);
+    const meant = misspelled(tok, ["PRIMARY", "UNIQUE", "FOREIGN", "CHECK"]);
+    if (meant) fail(tok, typoMessage(tok, meant));
     fail(tok, `Rad ${tok?.line ?? lastLine()}: väntade PRIMARY KEY, UNIQUE, FOREIGN KEY eller CHECK efter CONSTRAINT-namnet, fick ${describe(tok)}.`);
   }
 
   function columnDef(table) {
     const nameTok = peek();
+    const meant = misspelled(nameTok, CONSTRAINT_WORDS, 5);
+    if (meant) fail(nameTok, typoMessage(nameTok, meant));
     if (nameTok?.t === "id" && ABBREV[nameTok.v.toUpperCase()] && OP(peek(1), "(")) {
       fail(nameTok, `Rad ${nameTok.line}: skriv ${ABBREV[nameTok.v.toUpperCase()]} utskrivet, inte ${nameTok.v} — reserverade ord förkortas inte.`);
     }
@@ -226,6 +256,9 @@ function parser(tokens) {
       }
       if (KW(tok, "CHECK")) { next(); skipParens(); continue; }
       if (tok.t === "id" && ABBREV[tok.v.toUpperCase()]) fail(tok, `Rad ${tok.line}: skriv ${ABBREV[tok.v.toUpperCase()]} utskrivet, inte ${tok.v} — reserverade ord förkortas inte.`);
+      const word = misspelled(tok, COLUMN_WORDS, 3);
+      if (word) fail(tok, typoMessage(tok, word));
+      if (tok.line > line) fail(tok, `Rad ${line}: kommatecken saknas efter kolumnen ${name} — varje rad i tabellen utom den sista slutar med ",".`);
       fail(tok, `Rad ${tok.line}: kommatecken saknas, eller okänt ord ${describe(tok)} efter kolumnen ${name}.`);
     }
     if (table.columns.some((c) => fold(c.name) === fold(name))) fail(nameTok, `Rad ${line}: kolumnen ${name} står två gånger i ${table.name}.`);
@@ -236,6 +269,7 @@ function parser(tokens) {
     if (OP(peek(), ";")) { next(); continue; }
     if (KW(peek(), "GO")) { next(); continue; }
     const start = peek();
+    if (misspelled(start, ["CREATE"])) fail(start, typoMessage(start, "CREATE"));
     if (!KW(start, "CREATE")) fail(start, `Rad ${start.line}: väntade CREATE TABLE, fick ${describe(start)}. Svaret ska bara innehålla CREATE TABLE-satser.`);
     next();
     expectKw("TABLE", "efter CREATE");
@@ -245,11 +279,14 @@ function parser(tokens) {
     expectOp("(", `efter CREATE TABLE ${name}`);
     for (;;) {
       const tok = peek();
-      if (!tok) fail(tok, `Rad ${lastLine()}: parentesen efter CREATE TABLE ${name} stängs aldrig.`);
+      if (!tok) fail(tok, `Rad ${lastLine()}: ${name} avslutas aldrig — lägg till ");" efter tabellens sista rad.`);
+      if (KW(tok, "CREATE")) fail(tok, `Rad ${tok.line}: ${name} avslutas aldrig — lägg till ");" efter tabellens sista rad, före nästa CREATE TABLE.`);
       if (KW(tok, "CONSTRAINT", "PRIMARY", "UNIQUE", "FOREIGN", "CHECK")) tableConstraint(table);
       else columnDef(table);
       if (OP(peek(), ",")) { next(); if (OP(peek(), ")")) fail(peek(), `Rad ${peek().line}: kommatecken före ")" — den sista raden i tabellen ska inte ha komma efter sig.`); continue; }
       if (OP(peek(), ")")) { next(); break; }
+      if (!peek()) fail(peek(), `Rad ${lastLine()}: ${name} avslutas aldrig — lägg till ");" efter tabellens sista rad.`);
+      if (KW(peek(), "CREATE")) fail(peek(), `Rad ${peek().line}: ${name} avslutas aldrig — lägg till ");" efter tabellens sista rad, före nästa CREATE TABLE.`);
       fail(peek(), `Rad ${peek()?.line ?? lastLine()}: väntade "," eller ")" i ${name}, fick ${describe(peek())}.`);
     }
     if (OP(peek(), ";")) next();
@@ -260,9 +297,37 @@ function parser(tokens) {
 
 // Kontroller som SQL Server gör när satsen körs: kolumner i constraints
 // måste finnas, en FK har lika många kolumner på båda sidor, högst en
-// IDENTITY per tabell.
+// IDENTITY per tabell, och en FOREIGN KEY kan bara peka på en tabell som
+// redan finns — satserna körs uppifrån och ned. Självreferens (unär
+// relation) går alltid. Rättaren kör aldrig koden (SQLite stoppar inte fel
+// ordning vid CREATE TABLE), så ordningen kontrolleras här.
 function validate(tables) {
   const errors = [];
+  const indexOf = (name) => tables.findIndex((t) => fold(t.name) === fold(name));
+  // Pekar tabell j (via FK-kedjor) tillbaka på tabell i finns ingen ordning
+  // som fungerar med bara CREATE TABLE — som C och D i uppsamlingens
+  // uppgift 2, där tentans eget facit har båda FK:erna i tabellerna. Då är
+  // ordningen inte svarets fel, och den flaggas inte.
+  const reaches = (from, to, seen = new Set()) => {
+    if (from === to) return true;
+    if (from < 0 || seen.has(from)) return false;
+    seen.add(from);
+    return tables[from].fks.some((fk) => reaches(indexOf(fk.target), to, seen));
+  };
+  tables.forEach((t, i) => {
+    for (const fk of t.fks) {
+      const j = indexOf(fk.target);
+      if (j > i && !reaches(j, i)) errors.push({ kind: "referens", line: fk.line, message: `Rad ${fk.line}: ${t.name} pekar på ${tables[j].name}, men ${tables[j].name} skapas först längre ner. Flytta ${tables[j].name} ovanför ${t.name}.` });
+      const target = tables[j];
+      if (target && fk.refCols) {
+        for (const c of fk.refCols) {
+          if (!target.columns.some((col) => fold(col.name) === fold(c))) {
+            errors.push({ kind: "referens", line: fk.line, message: `Rad ${fk.line}: REFERENCES ${target.name}(${c}) pekar på en kolumn som inte finns — ${target.name} har ${target.columns.map((col) => col.name).join(", ")}.` });
+          }
+        }
+      }
+    }
+  });
   for (const t of tables) {
     const has = (c) => t.columns.some((col) => fold(col.name) === fold(c));
     const check = (cols, line, what) => {
@@ -572,7 +637,13 @@ function compareTable(f, a, ctx) {
 // Rätta en DDL-text mot en uppgift: { facit, rules, folded }.
 export function checkDdl(text, exercise) {
   const parsed = typeof text === "string" ? parseDdl(text) : text;
-  if (parsed.errors.length) return { status: "parse-error", errors: parsed.errors, tables: [], extra: [], remarks: [] };
+  // Syntaxfel stoppar rättningen. Referensfel (fel tabellordning, REFERENCES
+  // till en kolumn som inte finns) gör också att koden inte går att köra,
+  // men tabellerna rättas ändan, så att t.ex. en saknad surrogatnyckel inte
+  // döljs bakom felen den orsakar i andra tabeller.
+  const blocking = parsed.errors.filter((e) => e.kind !== "referens");
+  if (blocking.length) return { status: "parse-error", errors: parsed.errors, tables: [], extra: [], remarks: [] };
+  const refErrors = parsed.errors.filter((e) => e.kind === "referens");
   const facit = exercise.facit;
   const { pairs, used, label } = matchTables(parsed.tables, facit);
   const index = facitIndex(facit);
@@ -610,8 +681,8 @@ export function checkDdl(text, exercise) {
   if (types.size) remarks.push(`Uppgiften säger att alla kolumner är INTEGER; du har också ${[...types].join(", ")}. Datatypen rättas inte här.`);
   const okCount = tables.filter((t) => t.status === "ok").length;
   let status;
-  if (okCount === tables.length && extra.length === 0) status = "correct";
+  if (okCount === tables.length && extra.length === 0) status = refErrors.length ? "partial" : "correct";
   else if (okCount === 0) status = "wrong";
   else status = "partial";
-  return { status, tables, extra, remarks, errors: [] };
+  return { status, tables, extra, remarks, errors: refErrors };
 }

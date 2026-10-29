@@ -30,6 +30,7 @@ export const DDL_DEDUCTIONS = {
   surrogat: 2,    // surrogatnyckel saknas, eller finns där den inte ska
   overflodig: 3,  // överflödig tabell
   kolumn: 1,      // saknad eller överflödig vanlig kolumn
+  referens: 2,    // FK mot en tabell som skapas längre ner, eller mot en kolumn som inte finns
 };
 
 export const DDL_LABELS = {
@@ -41,6 +42,7 @@ export const DDL_LABELS = {
   surrogat: "surrogatnyckel",
   overflodig: "överflödig tabell",
   kolumn: "kolumn",
+  referens: "körordning och REFERENCES",
 };
 
 // result = checkDdl(...). Syntaxfel som hindrar tolkning ger 0.
@@ -54,6 +56,7 @@ export function estimateDdl(result, max = 25, table = DDL_DEDUCTIONS) {
       deductions.push({ table: t.name, kind, points: table[kind] ?? 0, text: p.text });
     }
   }
+  for (const e of result.errors ?? []) deductions.push({ table: null, kind: "referens", points: table.referens ?? 0, text: e.message });
   for (const x of result.extra) deductions.push({ table: x.name, kind: "overflodig", points: table.overflodig, text: `${x.name}: överflödig tabell. ${x.why}` });
   const total = deductions.reduce((sum, d) => sum + d.points, 0);
   return { points: Math.max(0, max - total), max, deductions, parseError: false };

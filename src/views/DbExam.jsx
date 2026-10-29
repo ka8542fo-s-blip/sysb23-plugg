@@ -301,7 +301,7 @@ function Task2({ task, code, setCode, result, onGrade, onEdit }) {
       <div className={`grid gap-4 ${result ? "xl:grid-cols-2" : ""}`}>
         <div>
           <SchemaEditor id="tenta-ddl" label="Ditt svar" value={code} onChange={(text) => { if (!result) setCode(text); }} rows={24} subscripts={false} />
-          <p className="mt-1 text-xs text-ink/65">Rättas som struktur: ordning, namn på surrogat- och FK-kolumner, INT eller INTEGER och var en constraint står spelar ingen roll.</p>
+          <p className="mt-1 text-xs text-ink/65">Rättas som struktur: kolumnordning, namn på surrogat- och FK-kolumner, INT eller INTEGER och var en constraint står spelar ingen roll. Tabellerna får stå i valfri ordning så länge varje FOREIGN KEY pekar på en tabell som skapats ovanför.</p>
         </div>
         {result && (
           <div>
@@ -322,6 +322,12 @@ function Task2({ task, code, setCode, result, onGrade, onEdit }) {
             <p className="mt-1 text-[15px]">Alla tabeller stämmer med facit.</p>
           ) : (
             <ul className="mt-2 space-y-3 text-[15px]">
+              {result.check.errors.map((err) => (
+                <li key={err.message} className="flex gap-2">
+                  <span className="tabular mt-0.5 h-fit shrink-0 rounded border border-wrong/40 px-1.5 text-[11px] font-medium text-wrong">−{est.deductions.find((d) => d.text === err.message)?.points ?? 0} {DDL_LABELS.referens}</span>
+                  <span>{err.message}</span>
+                </li>
+              ))}
               {result.check.tables.filter((t) => t.status !== "ok").map((t) => (
                 <li key={t.name}>
                   <span className="font-medium text-wrong">{t.name}{t.answerName && fold(t.answerName) !== fold(t.name) ? ` (${t.answerName})` : ""}: {t.status === "missing" ? "saknas" : "fel"}</span>

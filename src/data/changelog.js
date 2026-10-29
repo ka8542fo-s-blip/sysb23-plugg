@@ -7,6 +7,7 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 27, date: "2026-10-29", text: "DDL-rättningen underkänner tabeller i fel ordning och felstavade ord" },
   { id: 26, date: "2026-10-26", text: "DDL-rutan i Modellera och Tenta är full bredd tills facit visas" },
   { id: 25, date: "2026-10-26", text: "Flikarna Kompendium, Begrepp och Ordlista i Läs ryms nu på mobilen" },
   { id: 24, date: "2026-10-26", text: "Kapitel 11 beskriver tentans Java-uppgift och mallen för en DAO-metod" },

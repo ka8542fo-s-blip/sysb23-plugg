@@ -69,16 +69,11 @@ test("rätt svar i tentans form", () => {
   assert.equal(r.extra.length, 0);
 });
 
-test("namnfrihet: omdöpta surrogat- och FK-kolumner, INT, constraintnamn, inline-constraints, omvänd ordning", () => {
+test("namnfrihet: omdöpta surrogat- och FK-kolumner, INT, constraintnamn, inline-constraints, annan tabellordning", () => {
+  // Tabellerna i en annan ordning än facit, men varje FK pekar på en tabell ovanför.
   const text = `
-CREATE TABLE R2 (
-  b_id INT,
-  IdC INT,
-  R2attr INT,
-  CONSTRAINT PK_R2 PRIMARY KEY (IdC, b_id),
-  CONSTRAINT FK_R2_B FOREIGN KEY (b_id) REFERENCES B(B_ID),
-  CONSTRAINT FK_R2_C FOREIGN KEY (IdC) REFERENCES C(IdC)
-);
+CREATE TABLE D (D_ID INT IDENTITY(1,1), D1 INT NOT NULL, D2 INT, PRIMARY KEY (D_ID), UNIQUE (D1));
+CREATE TABLE B (B_ID INT IDENTITY(1,1), B1 INT NOT NULL, B2 INT NOT NULL, B3 INT, PRIMARY KEY (B_ID), UNIQUE (B2, B1));
 CREATE TABLE C (
   IdC INT IDENTITY(1,1) PRIMARY KEY,
   c1 INT NOT NULL UNIQUE,
@@ -91,8 +86,14 @@ CREATE TABLE a (
   A2 INTEGER, A3 INTEGER,
   B_ID INTEGER NOT NULL FOREIGN KEY REFERENCES B(B_ID)
 );
-CREATE TABLE D (D_ID INT IDENTITY(1,1), D1 INT NOT NULL, D2 INT, PRIMARY KEY (D_ID), UNIQUE (D1));
-CREATE TABLE B (B_ID INT IDENTITY(1,1), B1 INT NOT NULL, B2 INT NOT NULL, B3 INT, PRIMARY KEY (B_ID), UNIQUE (B2, B1));`;
+CREATE TABLE R2 (
+  b_id INT,
+  IdC INT,
+  R2attr INT,
+  CONSTRAINT PK_R2 PRIMARY KEY (IdC, b_id),
+  CONSTRAINT FK_R2_B FOREIGN KEY (b_id) REFERENCES B(B_ID),
+  CONSTRAINT FK_R2_C FOREIGN KEY (IdC) REFERENCES C(IdC)
+);`;
   const r = checkDdl(text, E18);
   assert.equal(r.status, "correct", JSON.stringify(r.tables.filter((t) => t.status !== "ok")));
 });
@@ -247,4 +248,107 @@ CREATE TABLE Z (ZID INT IDENTITY(1,1), XID INT REFERENCES dbo.X(XID) ON DELETE C
   assert.equal(r.tables.length, 2);
   assert.equal(r.tables[0].name, "X");
   assert.equal(r.tables[1].fks[0].target, "X");
+});
+
+// ---------- Körordning och REFERENCES ----------
+// SQL Server kör satserna uppifrån och ned: en FOREIGN KEY kan bara peka på
+// en tabell som redan finns. SQLite stoppar inte det vid CREATE TABLE, så
+// rättaren kontrollerar ordningen själv.
+const C20 = `CREATE TABLE C (
+  CID INTEGER IDENTITY(1,1),
+  C1 INTEGER NOT NULL,
+  C2 INTEGER NOT NULL,
+  CONSTRAINT PK_C_CID PRIMARY KEY(CID),
+  CONSTRAINT UQ_C_C1 UNIQUE(C1),
+  CONSTRAINT UQ_C_C2 UNIQUE(C2)
+);`;
+const D20 = `CREATE TABLE D (
+  DID INTEGER IDENTITY(1,1),
+  D1 INTEGER NOT NULL,
+  D2 INTEGER,
+  CID INTEGER NOT NULL,
+  CONSTRAINT PK_D_DID PRIMARY KEY(DID),
+  CONSTRAINT UQ_D_D1 UNIQUE(D1),
+  CONSTRAINT FK_D_C_CID FOREIGN KEY(CID) REFERENCES C(CID)
+);`;
+const messages = (text) => parseDdl(text).errors.map((e) => e.message);
+
+test("fel tabellordning: D pekar på C som skapas längre ner (användarens försök på övning 20)", () => {
+  const errs = messages(`${D20}\n${C20}`);
+  assert.deepEqual(errs, ["Rad 8: D pekar på C, men C skapas först längre ner. Flytta C ovanför D."]);
+});
+
+test("rätt tabellordning godkänns", () => {
+  assert.deepEqual(messages(`${C20}\n${D20}`), []);
+});
+
+test("självreferens (unär relation) godkänns alltid", () => {
+  const text = `CREATE TABLE A (
+  AID INTEGER IDENTITY(1,1),
+  AID2 INTEGER,
+  PRIMARY KEY (AID),
+  FOREIGN KEY (AID2) REFERENCES A(AID)
+);`;
+  assert.deepEqual(messages(text), []);
+});
+
+test("fel ordning räknas som fel men tabellerna rättas ändå", () => {
+  const order = [D, B, A, C, R2]; // C pekar på D (ok), A pekar på B (ok) …
+  assert.equal(checkDdl(order.join("\n\n"), E18).status, "correct");
+  const wrong = checkDdl([R2, B, D, A, C].join("\n\n"), E18); // R2 pekar på B och C, som står längre ner
+  assert.equal(wrong.status, "partial");
+  assert.ok(wrong.errors.some((e) => /R2 pekar på B, men B skapas först längre ner\. Flytta B ovanför R2\./.test(e.message)));
+  assert.ok(wrong.errors.some((e) => /R2 pekar på C/.test(e.message)));
+  assert.ok(wrong.tables.every((t) => t.status === "ok"), "strukturen är rätt, bara ordningen är fel");
+});
+
+test("REFERENCES till en kolumn som inte finns i måltabellen", () => {
+  const errs = messages(`${C20}\n${D20.replace("REFERENCES C(CID)", "REFERENCES C(CID2)")}`);
+  assert.deepEqual(errs, ["Rad 16: REFERENCES C(CID2) pekar på en kolumn som inte finns — C har CID, C1, C2."]);
+});
+
+test("syntaxfel: komman, avslutande ); och stavfel i reserverade ord", () => {
+  const cases = [
+    [C20.replace("C1 INTEGER NOT NULL,", "C1 INTEGER NOT NULL"), /kommatecken saknas efter kolumnen C1/],
+    [C20.replace("UNIQUE(C2)", "UNIQUE(C2),"), /kommatecken före "\)"/],
+    [C20.replace(/\n\);$/, "") + "\n" + D20, /C avslutas aldrig — lägg till "\);" efter tabellens sista rad, före nästa CREATE TABLE/],
+    [C20 + "\n" + D20.replace(/\n\);$/, ""), /D avslutas aldrig — lägg till "\);"/],
+    [C20.replace("CREATE", "CREAT"), /CREAT är felstavat — skriv CREATE/],
+    [C20.replace("TABLE", "TABEL"), /TABEL är felstavat — skriv TABLE/],
+    [C20.replace("CONSTRAINT PK_C_CID", "CONSTRANT PK_C_CID"), /CONSTRANT är felstavat — skriv CONSTRAINT/],
+    [C20.replace("PRIMARY KEY(CID)", "PRIMARY KY(CID)"), /KY är felstavat — skriv KEY/],
+    [C20.replace("C1 INTEGER NOT NULL", "C1 INTEGER NOT NUL"), /NUL är felstavat — skriv NULL/],
+    [C20 + "\n" + D20.replace("REFERENCES", "REFERENCS"), /REFERENCS är felstavat — skriv REFERENCES/],
+    [C20.replace("CONSTRAINT UQ_C_C1 UNIQUE(C1)", "CONSTRAINT UQ_C_C1 UNIQE(C1)"), /UNIQE är felstavat — skriv UNIQUE/],
+  ];
+  for (const [text, re] of cases) {
+    const errs = messages(text);
+    assert.equal(errs.length, 1, `${re}: ${errs.join(" / ")}`);
+    assert.match(errs[0], re);
+    assert.equal(checkDdl(text, E18).status, "parse-error", String(re));
+  }
+});
+
+test("en cykel av främmande nycklar (D → C och C → D) flaggas inte, eftersom ingen ordning fungerar", () => {
+  const text = `CREATE TABLE D (
+  DID INTEGER IDENTITY(1,1),
+  CID INTEGER,
+  PRIMARY KEY (DID),
+  FOREIGN KEY (CID) REFERENCES C(CID)
+);
+CREATE TABLE C (
+  CID INTEGER IDENTITY(1,1),
+  DID INTEGER NOT NULL,
+  PRIMARY KEY (CID),
+  FOREIGN KEY (DID) REFERENCES D(DID)
+);
+CREATE TABLE E (
+  EID INTEGER IDENTITY(1,1),
+  FID INTEGER,
+  PRIMARY KEY (EID),
+  FOREIGN KEY (FID) REFERENCES F(FID)
+);
+CREATE TABLE F (FID INTEGER IDENTITY(1,1), PRIMARY KEY (FID));`;
+  // D och C bildar en cykel; E → F har ingen och ska fortfarande flyttas.
+  assert.deepEqual(messages(text), ["Rad 17: E pekar på F, men F skapas först längre ner. Flytta F ovanför E."]);
 });
