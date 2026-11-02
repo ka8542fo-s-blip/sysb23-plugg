@@ -78,6 +78,11 @@ kapitel: allt UI läser `chapter.number`.
   utom `LENGTH_FLAGGED` (db4-12, 14, 26 med skäl), positioner, kvot
   0,9–1,1, unikt längst ≤ 25 %, giltiga diagram-id, under hälften "Ja" per
   diagram. Öva utan pass: se "Vyer och särdrag".
+- **SQL, läget Tenta** (2026-11-02, `components/sql/ExamQuestions.jsx`): de
+  tre tentornas uppgift 4 ordagrant ur `oldExams.js`, rättade med
+  `gradeTask4`, utan poäng. Fristående från fliken Tenta: svar och klar
+  ligger i `svar:sql-tenta:<tentaId>`. Läget och senaste fråga sparas
+  (`sqlLage`, `sqlTenta`).
 - **SQL-verkstad:** 62 övningar i 10 nivåer (`sqlExercises.js`); nivå 9
   `tenta` "Tentaform: en fråga, ett resultat" (sql-54…62) på schemat
   Reader/Book/HasRead(Rating) i `hospitalSeed.js`; nivå 10 (id n9) ligger

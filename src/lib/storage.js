@@ -18,6 +18,8 @@ export const KEYS = {
   examAnswers: "tentafragor", // { [frågeId]: samma form som answers } — läget Tentafrågor i Öva, räknas för sig
   theme: "tema", // "auto" | "ljust" | "mork" — läses också av skriptet i index.html
   javaTask: "javaUppgift", // senast öppna uppgiften i fliken Java (uppgifts-id)
+  sqlMode: "sqlLage", // SQL-flikens läge: "ovningar" | "slump" | "tenta" | "fritt"
+  sqlExam: "sqlTenta", // senast öppna tentafrågan i SQL-fliken (tent-id)
 };
 
 // Eget svar per uppgift i övningsytorna (Modellera, SQL-verkstaden,

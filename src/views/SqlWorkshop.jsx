@@ -7,17 +7,19 @@ import ResultTable from "../components/sql/ResultTable.jsx";
 import SchemaPanel from "../components/sql/SchemaPanel.jsx";
 import ExerciseList from "../components/sql/ExerciseList.jsx";
 import PracticeMode from "../components/sql/PracticeMode.jsx";
+import ExamQuestions from "../components/sql/ExamQuestions.jsx";
 import LessonText from "../components/sql/LessonText.jsx";
 import { loadEngine, newDatabase, runSelect, runScript } from "../lib/sqlEngine.js";
 import { checkExercise, splitStatements, interpretError } from "../lib/sqlCheck.js";
 import { checkTsqlRules, toSqlite } from "../lib/tsql.js";
-import { clearDraft, loadDraft, saveDraft } from "../lib/storage.js";
+import { KEYS, clearDraft, load, loadDraft, save, saveDraft } from "../lib/storage.js";
 
 const FREE_DRAFT = "sql-fritt";
 
 const MODES = [
   { id: "ovningar", label: "Övningar" },
   { id: "slump", label: "Slumpövningar" },
+  { id: "tenta", label: "Tenta" },
   { id: "fritt", label: "Fritt läge" },
 ];
 
@@ -27,7 +29,11 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
   const levels = course.sqlLevels || [];
   const exercises = course.sqlExercises || [];
 
-  const [mode, setMode] = useState("ovningar");
+  const [mode, setModeState] = useState(() => {
+    const saved = load(KEYS.sqlMode, "ovningar");
+    return MODES.some((item) => item.id === saved) ? saved : "ovningar";
+  });
+  const setMode = (next) => { setModeState(next); save(KEYS.sqlMode, next); };
   const [engineState, setEngineState] = useState("loading");
   const [currentId, setCurrentId] = useState(
     () => exercises.find((exercise) => !sqlProgress[exercise.id])?.id || exercises[0]?.id,
@@ -427,6 +433,8 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
       {engineState === "ready" && mode === "slump" && (
         <PracticeMode engine={engine} courseExercises={exercises} />
       )}
+
+      {engineState === "ready" && mode === "tenta" && <ExamQuestions />}
 
       {engineState === "ready" && mode === "fritt" && (
         <div className="space-y-4">
