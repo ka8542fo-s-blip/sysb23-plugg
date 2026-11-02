@@ -95,3 +95,80 @@ test("GROUP BY-regeln stoppas med SQL Servers felmeddelande", () => {
   assert.equal(checkTsqlRules("SELECT u.UnitName, COUNT(p.PatientID) FROM Unit u LEFT JOIN Patient p ON u.UnitID = p.UnitID GROUP BY u.UnitName"), null);
   assert.equal(checkTsqlRules("SELECT EmpAddress AS Ort FROM Employee UNION ALL SELECT PatientAddress FROM Patient"), null);
 });
+
+test("alias på ett aggregat stoppas i WHERE och HAVING, som i SQL Server", () => {
+  const having = checkTsqlRules("SELECT Brand, COUNT(*) AS Antal FROM Car GROUP BY Brand HAVING Antal > 2;");
+  assert.match(having.raw, /Invalid column name 'Antal'/);
+  assert.match(having.message, /finns inte i HAVING/);
+  const where = checkTsqlRules("SELECT Brand, COUNT(*) AS Antal FROM Car WHERE Antal > 2 GROUP BY Brand;");
+  assert.match(where.message, /finns inte i WHERE/);
+  // Aliaset får användas i ORDER BY, och samma ord i en sträng stör inte.
+  assert.equal(checkTsqlRules("SELECT Brand, COUNT(*) AS Antal FROM Car GROUP BY Brand ORDER BY Antal;"), null);
+  assert.equal(checkTsqlRules("SELECT Brand, COUNT(*) AS Antal FROM Car GROUP BY Brand HAVING COUNT(*) > 2;"), null);
+  assert.equal(checkTsqlRules("SELECT Brand, COUNT(*) AS Antal FROM Car WHERE Brand <> 'Antal' GROUP BY Brand;"), null);
+});
+
+test("alias-regeln läser inte in i en underfråga, den har egna namn", () => {
+  assert.equal(checkTsqlRules("SELECT Brand, COUNT(*) AS Antal FROM Car GROUP BY Brand HAVING COUNT(*) = (SELECT MAX(Antal) FROM (SELECT COUNT(*) AS Antal FROM Car GROUP BY Brand) AS t);"), null);
+});
+
+test("TOP i en underfråga blir LIMIT i underfrågan", () => {
+  assert.equal(
+    toSqlite("SELECT EmpName FROM Employee WHERE EmpSalary = (SELECT TOP 1 EmpSalary FROM Employee ORDER BY EmpSalary DESC);"),
+    "SELECT EmpName FROM Employee WHERE EmpSalary = (SELECT EmpSalary FROM Employee ORDER BY EmpSalary DESC LIMIT 1);",
+  );
+  assert.equal(toSqlite("SELECT a FROM t WHERE b IN (SELECT TOP (2) b FROM t)"), "SELECT a FROM t WHERE b IN (SELECT b FROM t LIMIT 2)");
+  assert.equal(
+    toSqlite("SELECT TOP 2 a FROM t WHERE b = (SELECT TOP 1 b FROM t)"),
+    "SELECT a FROM t WHERE b = (SELECT b FROM t LIMIT 1) LIMIT 2",
+  );
+  const db = fresh();
+  assert.equal(rows(db, "SELECT EmpName FROM Employee WHERE EmpSalary = (SELECT TOP 1 EmpSalary FROM Employee ORDER BY EmpSalary DESC);").values.length, 1);
+  db.close();
+});
+
+test("giltig T-SQL som SQLite saknar skrivs om", () => {
+  const db = fresh();
+  const count = (sql) => rows(db, sql).values.length;
+  // CONVERT, N'text' och dbo.
+  assert.equal(toSqlite("SELECT CONVERT(DECIMAL(5, 2), EmpSalary) FROM dbo.Employee WHERE EmpName = N'Anna'"), "SELECT CAST( EmpSalary AS DECIMAL(5, 2)) FROM Employee WHERE EmpName = 'Anna'");
+  assert.equal(count("SELECT CONVERT(VARCHAR(10), EmpSalary) FROM dbo.Employee WHERE EmpName = N'Anna'"), 2);
+  // ALL och ANY, i alla riktningar.
+  const salaries = rows(db, "SELECT EmpSalary FROM Employee").values.map(([value]) => value);
+  const top = Math.max(...salaries);
+  const bottom = Math.min(...salaries);
+  const all = salaries.length;
+  assert.equal(count("SELECT EmpName FROM Employee WHERE EmpSalary >= ALL (SELECT EmpSalary FROM Employee)"), salaries.filter((x) => x === top).length);
+  assert.equal(count("SELECT EmpName FROM Employee WHERE EmpSalary <= ALL (SELECT EmpSalary FROM Employee)"), salaries.filter((x) => x === bottom).length);
+  assert.equal(count("SELECT EmpName FROM Employee WHERE EmpSalary > ANY (SELECT EmpSalary FROM Employee)"), salaries.filter((x) => x > bottom).length);
+  assert.equal(count("SELECT EmpName FROM Employee WHERE EmpSalary < SOME (SELECT EmpSalary FROM Employee)"), salaries.filter((x) => x < top).length);
+  assert.equal(count("SELECT EmpName FROM Employee WHERE EmpSalary = ANY (SELECT EmpSalary FROM Employee)"), all);
+  assert.equal(count("SELECT EmpName FROM Employee WHERE EmpSalary <> ALL (SELECT EmpSalary FROM Employee)"), 0);
+  // Parenteserna bestämmer ordningen: A−B ∪ B−A, inte ((A−B) ∪ B) − A.
+  const sides = "(SELECT EmpAddress FROM Employee EXCEPT SELECT PatientAddress FROM Patient) UNION (SELECT PatientAddress FROM Patient EXCEPT SELECT EmpAddress FROM Employee)";
+  const emp = new Set(rows(db, "SELECT EmpAddress FROM Employee").values.flat());
+  const pat = new Set(rows(db, "SELECT PatientAddress FROM Patient").values.flat());
+  const expected = [...emp].filter((x) => !pat.has(x)).concat([...pat].filter((x) => !emp.has(x)));
+  assert.deepEqual(rows(db, sides).values.flat().sort(), expected.sort());
+  db.close();
+});
+
+test("en fönsterfunktion grupperar inte, och en underfråga aggregerar för sig", () => {
+  assert.equal(checkTsqlRules("SELECT EmpName, COUNT(*) OVER (PARTITION BY UnitID) FROM Employee;"), null);
+  assert.equal(checkTsqlRules("SELECT u.UnitName, (SELECT COUNT(*) FROM Employee AS e WHERE e.UnitID = u.UnitID) FROM Unit AS u;"), null);
+  assert.notEqual(checkTsqlRules("SELECT EmpName, COUNT(*) FROM Employee;"), null);
+});
+
+test("alias som krockar med en funktion eller kolumn stoppas inte", () => {
+  assert.equal(checkTsqlRules("SELECT Brand, COUNT(*) AS Count FROM Car GROUP BY Brand HAVING COUNT(*) > 2;"), null);
+  assert.equal(checkTsqlRules("SELECT UnitID, AVG(EmpSalary) AS EmpSalary FROM Employee WHERE EmpSalary > 100 GROUP BY UnitID;"), null);
+  assert.equal(checkTsqlRules("SELECT UnitID, AVG(CAST(EmpSalary AS DECIMAL(9, 2))) FROM Employee GROUP BY UnitID HAVING AVG(CAST(EmpSalary AS DECIMAL(9, 2))) > 1;"), null);
+});
+
+test("WITH TIES, APPLY och alias med = får ett eget besked", () => {
+  assert.match(checkTsqlRules("SELECT TOP 1 WITH TIES EmpName FROM Employee ORDER BY EmpSalary DESC;").message, /WITH TIES/);
+  assert.match(checkTsqlRules("SELECT e.EmpName FROM Employee AS e CROSS APPLY (SELECT 1 AS a) AS t;").message, /APPLY/);
+  assert.match(checkTsqlRules("SELECT Antal = COUNT(*) FROM Employee;").message, /AS Antal/);
+  // Samma ord i en sträng stör inte.
+  assert.equal(checkTsqlRules("SELECT EmpName FROM Employee WHERE EmpName = 'WITH TIES';"), null);
+});

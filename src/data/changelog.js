@@ -7,6 +7,8 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 34, date: "2026-11-02", text: "SQL: läget Tentanivå med 50 frågor, de flesta på tentans egna tabeller" },
+  { id: 33, date: "2026-11-02", text: "SQL: ny struktur med översikt, Nästa-knapp och tabeller bredvid frågan" },
   { id: 32, date: "2026-11-02", text: "SQL: indraget följer med när du skriver, och knappen Formatera" },
   { id: 31, date: "2026-11-02", text: "Läget Tenta i SQL-fliken: tentornas SQL-frågor med rättning" },
   { id: 30, date: "2026-10-29", text: "Dina svar i Modellera, SQL och BPMN-övningarna sparas mellan besök" },

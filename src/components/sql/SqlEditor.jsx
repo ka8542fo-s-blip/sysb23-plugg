@@ -92,7 +92,7 @@ const SqlEditor = forwardRef(function SqlEditor(
       />
       <p className="mt-1 text-sm text-ink/65">
         {auto
-          ? "Indraget följer med när du skriver: JOIN, AND och ) hamnar rätt själva. Tab och Shift+Tab flyttar ett steg, Ctrl/Cmd + Enter kör frågan, Esc lämnar fältet."
+          ? "Indraget följer med när du skriver. Tab och Shift+Tab flyttar ett steg, Ctrl/Cmd + Enter kör."
           : "Ctrl/Cmd + Enter kör frågan. Tab gör indrag, Esc lämnar fältet."}
       </p>
     </div>

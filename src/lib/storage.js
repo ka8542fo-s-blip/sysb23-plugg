@@ -18,8 +18,10 @@ export const KEYS = {
   examAnswers: "tentafragor", // { [frågeId]: samma form som answers } — läget Tentafrågor i Öva, räknas för sig
   theme: "tema", // "auto" | "ljust" | "mork" — läses också av skriptet i index.html
   javaTask: "javaUppgift", // senast öppna uppgiften i fliken Java (uppgifts-id)
-  sqlMode: "sqlLage", // SQL-flikens läge: "ovningar" | "slump" | "tenta" | "fritt"
-  sqlExam: "sqlTenta", // senast öppna tentafrågan i SQL-fliken (tent-id)
+  sqlMode: "sqlLage", // SQL-flikens läge: "ovningar" | "tenta" | "slump" | "fritt"
+  sqlOpen: "sqlOppen", // { ovningar: { id, open }, tenta: { id, open } } — senaste uppgiften per spår, och om den står öppen
+  sqlHelp: "sqlHjalp", // { [sektionsId]: "tabeller" | "genomgang" } — vald flik i hjälpytan
+  sqlRandomTask: "sqlSlumpUppgift", // { difficulty, exercise, code, helped } — pågående slumpövning
 };
 
 // Eget svar per uppgift i övningsytorna (Modellera, SQL-verkstaden,
@@ -77,9 +79,19 @@ export function sqlKey(exerciseId) {
   return `sql:${exerciseId}`;
 }
 
+// Det gamla läget Tenta sparade { code, solved } i svar:<id>. Nu är svaret text
+// som i övriga övningar och bocken ligger i sql:<id>.
+function migrateExamAnswer(id) {
+  const old = loadDraft(id);
+  if (!old || typeof old !== "object") return;
+  saveDraft(id, old.code);
+  if (old.solved) saveSqlResult(id, "solved");
+}
+
 export function loadSqlProgress(exerciseIds) {
   const state = {};
   for (const id of exerciseIds) {
+    migrateExamAnswer(id);
     const value = load(sqlKey(id), null);
     if (value === "solved" || value === "solved-with-help") state[id] = value;
   }

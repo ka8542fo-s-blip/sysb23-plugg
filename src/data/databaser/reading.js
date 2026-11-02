@@ -1578,7 +1578,7 @@ Läs igenom: tre kolumner, en rad per låntagare, åldersvillkoret filtrerar rad
 
 ## Verkstaden mot tentan
 
-Verkstaden under SQL kör en riktig databas i webbläsaren, men motorn är SQLite och det du skriver översätts från kursens T-SQL. Tre skillnader som märks just i tentans slags frågor: AVG över heltal ger decimaler i SQLite men heltal i SQL Server; \`TOP n\` blir \`LIMIT n\`; och textsammanslagning med \`+\` blir \`||\`. Allt annat i kapitlet — join, GROUP BY, HAVING, NOT IN, NOT EXISTS, EXCEPT och skalära underfrågor — beter sig likadant. Nivå 4 till 7 i verkstaden tränar byggstenarna en i taget; tentaformens sammansatta frågor får en egen nivå.
+Verkstaden under SQL kör en riktig databas i webbläsaren, men motorn är SQLite och det du skriver översätts från kursens T-SQL. Tre skillnader som märks just i tentans slags frågor: AVG över heltal ger decimaler i SQLite men heltal i SQL Server; \`TOP n\` blir \`LIMIT n\`; och textsammanslagning med \`+\` blir \`||\`. Allt annat i kapitlet — join, GROUP BY, HAVING, NOT IN, NOT EXISTS, EXCEPT och skalära underfrågor — beter sig likadant. På tentans egna tabeller räknar rättningen AVG i heltal, precis som SQL Server. Nivå 4 till 7 i verkstaden tränar byggstenarna en i taget, och läget Tentanivå tränar tentans form steg för steg på tentans tabeller.
 `
   },
 

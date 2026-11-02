@@ -6,7 +6,9 @@
 //      slapp (GROUP BY-regeln), med SQL Servers eget felmeddelande.
 //   2. toSqlite — skriver om de syntaxskillnader kursen berör (TOP, ISNULL,
 //      SUBSTRING, LEN, GETDATE, + för text, IDENTITY, [hakparenteser],
-//      TRUNCATE, GO, SET ROWCOUNT) precis innan frågan når motorn.
+//      TRUNCATE, GO, SET ROWCOUNT) och annat giltigt T-SQL (ALL/ANY, CONVERT,
+//      N'text', dbo.Tabell, parenteser kring mängdoperatorer) precis innan
+//      frågan når motorn.
 //
 // Seeden skrivs i T-SQL-form och översätts vid start; textkolumner får då
 // COLLATE NOCASE så att = och ORDER BY är skiftlägesokänsliga som i SQL
@@ -26,8 +28,14 @@ const TEXT_FUNCTIONS = new Set([
   "lower", "upper", "substring", "substr", "concat", "ltrim", "rtrim", "trim",
   "replace", "left", "right", "str", "format", "reverse",
 ]);
-const RENAMES = { isnull: "IFNULL", substring: "SUBSTR", len: "LENGTH" };
-const AGGREGATES = new Set(["count", "sum", "avg", "min", "max", "total", "group_concat", "string_agg"]);
+const RENAMES = { isnull: "IFNULL", substring: "SUBSTR", len: "LENGTH", count_big: "COUNT" };
+const AGGREGATES = new Set(["count", "count_big", "sum", "avg", "min", "max", "total", "group_concat", "string_agg"]);
+// Tabellernas kolumnnamn. Ett alias med samma namn som en kolumn pekar i WHERE
+// och HAVING på kolumnen, inte på aliaset. Tentans tabeller står inte i seeden.
+const COLUMN_NAMES = new Set([
+  ...hospitalSchema.flatMap((table) => table.columns.map((column) => column.name.toLowerCase())),
+  "studentno", "name", "age", "address", "code", "credits", "grade",
+]);
 const KEYWORDS = new Set([
   "case", "when", "then", "else", "end", "as", "and", "or", "not", "null", "is", "in",
   "like", "between", "distinct", "top", "asc", "desc", "exists", "all", "any", "some",
@@ -80,9 +88,9 @@ export function tokenize(sql) {
       if (j === -1) j = sql.length - 1;
       tokens.push({ type: "ident", text: sql.slice(i, j + 1) });
       i = j + 1;
-    } else if (/[A-Za-z_@#]/.test(ch)) {
+    } else if (/[\p{L}_@#]/u.test(ch)) {
       let j = i;
-      while (j < sql.length && /[A-Za-z0-9_@#$.]/.test(sql[j])) j++;
+      while (j < sql.length && /[\p{L}\p{N}_@#$.]/u.test(sql[j])) j++;
       tokens.push({ type: "ident", text: sql.slice(i, j) });
       i = j;
     } else if (/[0-9]/.test(ch)) {
@@ -202,6 +210,67 @@ function operandIsText(tokens, index, side) {
   return false;
 }
 
+// ── Giltig T-SQL som SQLite inte kan ────────────────────────────────────
+const raw = (text) => ({ type: "raw", text });
+
+// CONVERT(typ, värde) → CAST(värde AS typ).
+function rewriteConvert(out) {
+  for (let i = out.length - 1; i >= 0; i--) {
+    if (upper(out[i]) !== "CONVERT") continue;
+    const open = nextSig(out, i);
+    const close = isOp(out[open], "(") ? matchingClose(out, open) : -1;
+    if (close === -1) continue;
+    const [type, value] = splitDepthZero(out.slice(open + 1, close), ",");
+    if (value) out.splice(i, close - i + 1, raw("CAST("), ...value, raw(" AS "), ...type, raw(")"));
+  }
+}
+
+// x > ALL (fråga) är x > största värdet, x < ANY (fråga) x < största, osv.;
+// = ANY är IN och <> ALL är NOT IN. Underfrågan får ett eget namn på sin kolumn
+// i en WITH, eftersom kolumnen kan vara ett uttryck. En tom underfråga ger här
+// inget värde, medan ALL då är sant i SQL Server.
+function rewriteQuantified(out) {
+  for (let i = out.length - 1; i >= 0; i--) {
+    const word = upper(out[i]);
+    if (word !== "ALL" && word !== "ANY" && word !== "SOME") continue;
+    const before = out[prevSig(out, i)];
+    const open = nextSig(out, i);
+    if (before?.type !== "op" || !isOp(out[open], "(") || upper(out[nextSig(out, open)]) !== "SELECT") continue;
+    const close = matchingClose(out, open);
+    if (close === -1) continue;
+    const all = word === "ALL";
+    const op = before.text;
+    if (op === (all ? "<>" : "=") || (all && op === "!=")) {
+      before.text = all ? "NOT IN" : "IN";
+    } else if ([">", ">=", "<", "<="].includes(op)) {
+      const largest = op.startsWith(">") === all;
+      out[close] = raw(`) SELECT ${largest ? "MAX" : "MIN"}(kvantor) FROM kvantorer)`);
+      out[open] = raw("(WITH kvantorer(kvantor) AS (");
+    } else continue;
+    out.splice(i, 1);
+  }
+}
+
+// (fråga) EXCEPT (fråga): SQLite tar inga parenteser runt delarna, men de kan
+// inte bara tas bort, eftersom de bestämmer ordningen vid flera operatorer.
+function rewriteBracketedSets(out) {
+  let depth = 0;
+  for (let i = 0; i < out.length; i++) {
+    if (isOp(out[i], "(")) {
+      const before = upper(out[prevSig(out, i)]);
+      const startsPart = prevSig(out, i) === -1 || ["UNION", "ALL", "EXCEPT", "INTERSECT"].includes(before);
+      const close = depth === 0 && startsPart && upper(out[nextSig(out, i)]) === "SELECT" ? matchingClose(out, i) : -1;
+      if (close !== -1) {
+        out[i] = raw("SELECT * FROM (");
+        out[close] = raw(")");
+        continue;
+      }
+      depth++;
+    }
+    if (isOp(out[i], ")")) depth--;
+  }
+}
+
 // ── Satsvisa omskrivningar ───────────────────────────────────────────────
 function rewriteStatement(tokens, state) {
   const sig = tokens.filter(isSig);
@@ -218,7 +287,13 @@ function rewriteStatement(tokens, state) {
     return [{ type: "raw", text: toSqliteDdl(tokens.map((t) => t.text).join("")) }];
   }
 
-  const out = [...tokens];
+  const out = tokens.map((token) => ({ ...token }));
+  for (let i = out.length - 2; i >= 0; i--) {
+    if (/^n$/i.test(out[i].text) && out[i].type === "ident" && out[i + 1].type === "string") out.splice(i, 1);
+  }
+  rewriteConvert(out);
+  rewriteQuantified(out);
+  rewriteBracketedSets(out);
   let limit = null;
 
   for (let i = 0; i < out.length; i++) {
@@ -227,6 +302,7 @@ function rewriteStatement(tokens, state) {
       const name = token.text.toLowerCase();
       const after = nextSig(out, i);
       const isCall = isOp(out[after], "(");
+      if (name.startsWith("dbo.")) token.text = token.text.slice(4);
       if (isCall && RENAMES[name]) token.text = RENAMES[name];
       else if (isCall && (name === "getdate" || name === "sysdatetime")) {
         const close = nextSig(out, after);
@@ -246,6 +322,29 @@ function rewriteStatement(tokens, state) {
         token.text = "||";
       }
     }
+  }
+
+  // TOP n i en underfråga → LIMIT n före parentesen som stänger den.
+  for (let i = out.length - 1; i >= 0; i--) {
+    if (upper(out[i]) !== "TOP" || !["SELECT", "DISTINCT"].includes(upper(out[prevSig(out, i)]))) continue;
+    let open = 0;
+    let close = -1;
+    for (let j = i + 1; j < out.length && close === -1; j++) {
+      if (isOp(out[j], "(")) open++;
+      else if (isOp(out[j], ")")) {
+        if (open === 0) close = j;
+        else open--;
+      }
+    }
+    if (close === -1) continue;
+    const a = nextSig(out, i);
+    const bracketed = isOp(out[a], "(");
+    const count = bracketed ? out[nextSig(out, a)] : out[a];
+    if (count?.type !== "number") continue;
+    out.splice(close, 0, { type: "ws", text: " " }, { type: "ident", text: "LIMIT" }, { type: "ws", text: " " }, { type: "number", text: count.text });
+    let removeTo = bracketed ? nextSig(out, nextSig(out, a)) : a;
+    if (out[removeTo + 1]?.type === "ws") removeTo++;
+    out.splice(i, removeTo - i + 1);
   }
 
   // TOP n på djup 0 → LIMIT n sist i satsen.
@@ -277,7 +376,7 @@ function rewriteStatement(tokens, state) {
   if (limit === null && state.rowcount && first === "SELECT") {
     limit = String(state.rowcount);
   }
-  const hasLimit = out.some((t, i) => upper(t) === "LIMIT" && isSig(t));
+  const hasLimit = depthZeroIndex(out, (t) => upper(t) === "LIMIT") !== -1;
   if (limit !== null && !hasLimit) {
     const semicolon = out.length && isOp(out[out.length - 1], ";") ? out.pop() : null;
     while (out.length && !isSig(out[out.length - 1])) out.pop();
@@ -388,12 +487,88 @@ function columnRefs(tokens) {
   return refs;
 }
 
+// Aggregat i den här frågan: en underfråga aggregerar för sig, och
+// COUNT(*) OVER (...) är en fönsterfunktion, som inte grupperar.
 function hasAggregate(tokens) {
-  const sig = tokens.filter(isSig);
-  return sig.some((t, i) => t.type === "ident" && AGGREGATES.has(t.text.toLowerCase()) && isOp(sig[i + 1], "("));
+  const sig = withoutSubqueries(tokens).filter(isSig);
+  return sig.some((t, i) => {
+    if (t.type !== "ident" || !AGGREGATES.has(t.text.toLowerCase()) || !isOp(sig[i + 1], "(")) return false;
+    return upper(sig[matchingClose(sig, i + 1) + 1]) !== "OVER";
+  });
+}
+
+function withoutSubqueries(tokens) {
+  const kept = [];
+  for (let i = 0; i < tokens.length; i++) {
+    const close = isOp(tokens[i], "(") && upper(tokens[nextSig(tokens, i)]) === "SELECT" ? matchingClose(tokens, i) : -1;
+    if (close === -1) kept.push(tokens[i]);
+    else i = close;
+  }
+  return kept;
+}
+
+// Giltig T-SQL som övningsmotorn inte kan köra: säg det, i stället för ett
+// syntaxfel som låter som ett stavfel.
+const UNSUPPORTED = [
+  [/\bWITH TIES\b/, "TOP ... WITH TIES är giltig T-SQL, men övningsmotorn kan inte köra det. Skriv i stället frågan med en underfråga, till exempel WHERE Grade = (SELECT MAX(Grade) ...) eller HAVING COUNT(*) = (...)."],
+  [/\b(CROSS|OUTER) APPLY\b/, "APPLY är giltig T-SQL, men övningsmotorn kan inte köra det, och det ingår inte i kursen. Skriv i stället frågan med JOIN eller en underfråga."],
+];
+
+function unsupportedSyntax(tokens) {
+  const words = tokens.filter((token) => token.type === "ident").map((token) => token.text.toUpperCase()).join(" ");
+  const hit = UNSUPPORTED.find(([pattern]) => pattern.test(words));
+  return hit ? { raw: null, message: hit[1] } : null;
+}
+
+// Ett alias på ett aggregat finns inte i WHERE och HAVING: SQL Server räknar ut
+// SELECT efter dem. SQLite släpper igenom det. Bara det yttersta i villkoret
+// prövas: en funktion och en underfråga har egna namn.
+function aggregateAliasError(segment, selectAt, fromAt) {
+  const aliases = new Set();
+  for (const item of splitDepthZero(segment.slice(selectAt + 1, fromAt), ",")) {
+    const sig = item.filter(isSig);
+    const as = depthZeroIndex(sig, (token) => upper(token) === "AS");
+    if (as < 1 || sig.length !== as + 2 || sig[as + 1].type !== "ident") continue;
+    const name = sig[as + 1].text.toLowerCase();
+    if (hasAggregate(sig.slice(0, as)) && !COLUMN_NAMES.has(name)) aliases.add(name);
+  }
+  if (aliases.size === 0) return null;
+  for (const word of ["WHERE", "HAVING"]) {
+    const at = depthZeroIndex(segment, (token) => upper(token) === word, fromAt);
+    if (at === -1) continue;
+    const end = depthZeroIndex(segment, (token) => ["GROUP", "HAVING", "ORDER"].includes(upper(token)), at + 1);
+    const clause = segment.slice(at + 1, end === -1 ? segment.length : end);
+    const hitAt = depthZeroIndex(clause, (token, i) => (
+      token.type === "ident" && aliases.has(token.text.toLowerCase()) && !isOp(clause[nextSig(clause, i)], "(")
+    ));
+    if (hitAt !== -1) {
+      const name = clause[hitAt].text;
+      return {
+        raw: `Invalid column name '${name}'.`,
+        message: `Aliaset ${name} finns inte i ${word}, eftersom SQL Server räknar ut SELECT efter ${word}. Upprepa uttrycket i stället, till exempel HAVING COUNT(*) >= 2.`,
+      };
+    }
+  }
+  return null;
+}
+
+// SELECT Antal = COUNT(*): giltig T-SQL, men kursens alias skrivs med AS.
+function equalsAliasError(items) {
+  for (const item of items) {
+    const sig = item.filter(isSig);
+    if (sig[0]?.type === "ident" && isOp(sig[1], "=")) {
+      return {
+        raw: null,
+        message: `Alias med = är giltig T-SQL, men övningsmotorn kan inte köra det och kursens form är AS. Skriv uttrycket först och sedan AS ${sig[0].text}.`,
+      };
+    }
+  }
+  return null;
 }
 
 export function checkTsqlRules(sql) {
+  const unsupported = unsupportedSyntax(tokenize(sql));
+  if (unsupported) return unsupported;
   for (const statement of splitTokens(tokenize(sql))) {
     for (const segment of selectSegments(statement)) {
       const sig = segment.filter(isSig);
@@ -401,6 +576,8 @@ export function checkTsqlRules(sql) {
       const selectAt = segment.findIndex((t) => upper(t) === "SELECT");
       const fromAt = depthZeroIndex(segment, (t) => upper(t) === "FROM", selectAt + 1);
       if (fromAt === -1) continue;
+      const alias = aggregateAliasError(segment, selectAt, fromAt);
+      if (alias) return alias;
       let listStart = selectAt + 1;
       // Hoppa över DISTINCT / TOP n.
       let guard = nextSig(segment, selectAt);
@@ -428,6 +605,8 @@ export function checkTsqlRules(sql) {
         }
       }
       const items = splitDepthZero(list, ",");
+      const equalsAlias = equalsAliasError(items);
+      if (equalsAlias) return equalsAlias;
       const anyAggregate = items.some(hasAggregate);
       if (!groupSet && !anyAggregate) continue;
       for (const item of items) {
@@ -447,6 +626,56 @@ export function checkTsqlRules(sql) {
           };
         }
       }
+    }
+  }
+  return null;
+}
+
+// ── AVG i heltal ────────────────────────────────────────────────────────
+// SQL Server räknar AVG över en INT-kolumn i heltal: snittet av 7 och 8 är 7.
+// SQLite ger 7,5. Tentans kolumner är alla INT, så rättningen av tentans
+// frågor räknar som SQL Server. Bara AVG(kolumn): AVG(Grade * 1.0) och
+// AVG(CAST(Grade AS DECIMAL(5, 2))) ger decimaler också i SQL Server.
+export const AVG_COLUMN = /^\(SUM\((.+)\) \/ COUNT\(\1\)\)$/;
+export function integerAvg(sql) {
+  const tokens = tokenize(sql);
+  for (let i = 0; i < tokens.length; i++) {
+    if (upper(tokens[i]) !== "AVG") continue;
+    const open = nextSig(tokens, i);
+    if (!isOp(tokens[open], "(")) continue;
+    const column = nextSig(tokens, open);
+    const close = nextSig(tokens, column);
+    if (tokens[column]?.type !== "ident" || !isOp(tokens[close], ")")) continue;
+    if (upper(tokens[nextSig(tokens, close)]) === "OVER") continue;
+    const name = tokens[column].text;
+    tokens.splice(i, close - i + 1, { type: "raw", text: `(SUM(${name}) / COUNT(${name}))` });
+  }
+  return tokens.map((token) => token.text).join("");
+}
+
+// ── SQL Server-stränghet: en underfråga efter en jämförelse ─────────────
+// SQLite tar första raden, SQL Server vägrar. Bara underfrågor som går att
+// köra för sig prövas; en korrelerad underfråga ger fel och hoppas över.
+const COMPARISONS = new Set(["=", "<>", "!=", "<", ">", "<=", ">="]);
+export function checkScalarSubqueries(sql, run) {
+  const tokens = tokenize(sql);
+  for (let i = 0; i < tokens.length; i++) {
+    if (!isOp(tokens[i], "(") || upper(tokens[nextSig(tokens, i)]) !== "SELECT") continue;
+    const before = tokens[prevSig(tokens, i)];
+    if (before?.type !== "op" || !COMPARISONS.has(before.text)) continue;
+    const close = matchingClose(tokens, i);
+    if (close === -1) continue;
+    let rows = 0;
+    try {
+      rows = run(tokens.slice(i + 1, close).map((token) => token.text).join("")).values.length;
+    } catch {
+      continue;
+    }
+    if (rows > 1) {
+      return {
+        raw: "Subquery returned more than 1 value. This is not permitted when the subquery follows =, !=, <, <= , >, >= or when the subquery is used as an expression.",
+        message: `Underfrågan efter ${before.text} ger ${rows} rader, och då vägrar SQL Server köra frågan. Lägg till villkor så att den ger ett enda värde, eller använd IN om du menar flera.`,
+      };
     }
   }
   return null;

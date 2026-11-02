@@ -293,7 +293,7 @@ GROUP BY
     c.Name;`,
       // SQL Server: AVG över INT trunkerar, (8 + 5) / 2 = 6. SQLite ger 6,5.
       expected: { columns: ["Code", "Name", "Snittresultat"], values: [["C2", "Java", 6]] },
-      avgNote: "Snittet på C2 är (8 + 5) / 2. SQL Server räknar AVG över INTEGER som heltal och ger 6; övningsmotorn här är SQLite och ger 6,5. Båda godtas. Vill du ha decimaler även i SQL Server skriver du AVG(CAST(h.Grade AS DECIMAL(4, 2))).",
+      avgNote: "Snittet på C2 är (8 + 5) / 2. SQL Server räknar AVG över INTEGER som heltal och ger 6, och rättningen här räknar likadant. Vill du ha decimaler skriver du AVG(CAST(h.Grade AS DECIMAL(4, 2))), som också godtas.",
       explanation: "S1 läser C1 och C2, S2 läser C1 och C3: kvar blir C2. Snittet räknas över alla som läser C2 (S1 med 8, S3 med 5), inte bara S1 — därför står S1-villkoret i en underfråga och inte i den yttre WHERE.",
       checklist: [
         "Join mellan Course och HasStudied på Code",

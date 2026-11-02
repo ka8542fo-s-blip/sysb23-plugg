@@ -1,35 +1,35 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import SqlEditor from "./SqlEditor.jsx";
-import FormatButton from "./FormatButton.jsx";
-import ResultBanner from "./ResultBanner.jsx";
-import ResultPanel from "./ResultPanel.jsx";
-import SchemaPanel from "./SchemaPanel.jsx";
 import { checkExercise } from "../../lib/sqlCheck.js";
+import { formatSql } from "../../lib/sqlIndent.js";
 import { collectFacts, generateExercise, normalizeSql } from "../../lib/sqlPractice.js";
 import { DIFFICULTIES } from "../../lib/sqlGenerator.js";
 import { load, save, KEYS } from "../../lib/storage.js";
+import { useWide } from "../../lib/useWide.js";
+import HelpRail from "./HelpRail.jsx";
+import SchemaList from "./SchemaList.jsx";
+import TaskCard, { TaskPrompt } from "./TaskCard.jsx";
+import { tableReader } from "./TaskView.jsx";
 
 const DIFFICULTY_LABEL = { 1: "Grund", 2: "Standard", 3: "Klurig" };
 
 // Slumpläget: uppgifterna byggs ur schemat vid varje klick, så samma fråga
-// kommer sällan tillbaka och kursövningarnas progress lämnas orörd.
+// kommer sällan tillbaka och kursövningarnas progress lämnas orörd. Pågående
+// uppgift och svar sparas (sqlSlumpUppgift) och finns kvar efter omladdning.
 export default function PracticeMode({ engine, courseExercises }) {
-  const [difficulty, setDifficulty] = useState(0);
-  const [exercise, setExercise] = useState(null);
-  const [code, setCode] = useState("");
+  const [session] = useState(() => load(KEYS.sqlRandomTask, null));
+  const [difficulty, setDifficulty] = useState(session?.difficulty ?? 0);
+  const [exercise, setExercise] = useState(session?.exercise ?? null);
+  const [code, setCode] = useState(session?.code ?? "");
+  const [helped, setHelped] = useState(session?.helped ?? false);
+  const [round, setRound] = useState(0);
   const [result, setResult] = useState(null);
   const [running, setRunning] = useState(false);
-  const [hintOpen, setHintOpen] = useState(false);
-  const [schemaOpen, setSchemaOpen] = useState(false);
-  const [bannerHidden, setBannerHidden] = useState(false);
-  const [helped, setHelped] = useState(false);
   const [solvedTotal, setSolvedTotal] = useState(() => Number(load(KEYS.sqlRandom, 0)) || 0);
   const [failed, setFailed] = useState(false);
+  const wide = useWide();
 
   const dbRef = useRef(null);
   const factsRef = useRef(null);
-  const editorRef = useRef(null);
-  const bannerRef = useRef(null);
 
   const taken = useMemo(
     () => new Set((courseExercises || []).map((item) => normalizeSql(item.solution))),
@@ -47,7 +47,7 @@ export default function PracticeMode({ engine, courseExercises }) {
       }
       dbRef.current = db;
       factsRef.current = collectFacts(db, engine.runSelect);
-      setExercise(makeExercise(0));
+      if (!session?.exercise) setExercise(makeExercise(difficulty));
     });
     return () => {
       alive = false;
@@ -56,6 +56,10 @@ export default function PracticeMode({ engine, courseExercises }) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (exercise) save(KEYS.sqlRandomTask, { difficulty, exercise, code, helped });
+  }, [difficulty, exercise, code, helped]);
 
   function makeExercise(level) {
     if (!dbRef.current || !factsRef.current) return null;
@@ -75,10 +79,8 @@ export default function PracticeMode({ engine, courseExercises }) {
     setExercise(next);
     setCode("");
     setResult(null);
-    setHintOpen(false);
     setHelped(false);
-    setBannerHidden(false);
-    editorRef.current?.focus();
+    setRound(round + 1);
   }
 
   function changeDifficulty(level) {
@@ -86,18 +88,8 @@ export default function PracticeMode({ engine, courseExercises }) {
     newExercise(level);
   }
 
-  useEffect(() => {
-    if (!result || bannerHidden) return;
-    const box = bannerRef.current?.getBoundingClientRect();
-    if (!box) return;
-    if (box.top < 0 || box.bottom > window.innerHeight) {
-      bannerRef.current.scrollIntoView({ block: "center", behavior: "smooth" });
-    }
-  }, [result, bannerHidden]);
-
   async function run() {
     if (!exercise || running) return;
-    setBannerHidden(false);
     setRunning(true);
     try {
       const outcome = await checkExercise({ exercise, userSql: code, engine });
@@ -122,148 +114,64 @@ export default function PracticeMode({ engine, courseExercises }) {
     );
   }
 
+  const rail = (
+    <HelpRail
+      tabs={[{ id: "tabeller", label: "Tabeller", content: <SchemaList read={tableReader(engine)} /> }]}
+      value="tabeller"
+      onChange={() => {}}
+      wide={wide}
+    />
+  );
+
   return (
-    <section className="card p-5">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <h2 className="font-display text-xl">Slumpövning</h2>
-        <span className="tabular text-sm text-ink/65">
+    <div className="space-y-4">
+      <section className="card flex flex-wrap items-center gap-x-4 gap-y-2 p-4">
+        <div className="flex flex-wrap gap-2">
+          {DIFFICULTIES.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              aria-pressed={difficulty === item.id}
+              className={`chip ${difficulty === item.id ? "chip-on" : ""}`}
+              onClick={() => changeDifficulty(item.id)}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+        <span className="tabular ml-auto text-sm text-ink/65">
           {solvedTotal} {solvedTotal === 1 ? "löst slumpövning" : "lösta slumpövningar"}
         </span>
-      </div>
-      <p className="mt-1 max-w-reading text-[15px] text-ink/70">
-        Frågorna byggs ur databasens tabeller och värden vid varje klick — inte ur
-        kurslistan. Samma schema, nya frågor.
-      </p>
-
-      <div className="mt-3 flex flex-wrap gap-2">
-        {DIFFICULTIES.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            aria-pressed={difficulty === item.id}
-            className={`chip ${difficulty === item.id ? "chip-on" : ""}`}
-            onClick={() => changeDifficulty(item.id)}
-          >
-            {item.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="mt-4 border-t border-line pt-4">
-        <p className="flex flex-wrap items-center gap-2 text-[11px] font-medium uppercase tracking-[0.14em] text-brass">
-          {DIFFICULTY_LABEL[exercise.difficulty]}
-          <span className="font-sans text-sm font-normal normal-case tracking-normal text-ink/65">
-            {exercise.tables.join(" · ")}
-          </span>
+        <p className="w-full max-w-reading text-sm text-ink/65">
+          Frågorna byggs ur databasens tabeller och värden vid varje klick, inte ur listorna. Samma schema, nya frågor.
         </p>
-        <h3 className="mt-1 font-display text-xl">{exercise.task}</h3>
+      </section>
 
-        {exercise.hint && (
-          <div className="mt-3">
-            <button
-              type="button"
-              className="btn-quiet text-sm"
-              aria-expanded={hintOpen}
-              onClick={() => setHintOpen(!hintOpen)}
-            >
-              {hintOpen ? "Dölj ledtråd" : "Ledtråd"}
-            </button>
-            {hintOpen && (
-              <p className="mt-1 rounded-lg border-l-2 border-brass bg-paper p-3 text-[15px]">
-                {exercise.hint}
-              </p>
-            )}
-          </div>
-        )}
-
-        <div className="mt-4">
-          <SqlEditor
-            ref={editorRef}
-            value={code}
-            onChange={setCode}
-            onRun={run}
-            disabled={running}
-          />
-        </div>
-
-        <div className="mt-3 flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            className="btn-secondary"
-            onClick={() => {
-              setCode("");
-              setResult(null);
-              setBannerHidden(false);
-              editorRef.current?.focus();
-            }}
-          >
-            Rensa
-          </button>
-          <button
-            type="button"
-            className="btn-secondary"
-            onClick={() => setSchemaOpen(!schemaOpen)}
-            aria-expanded={schemaOpen}
-          >
-            {schemaOpen ? "Dölj tabeller" : "Visa tabeller"}
-          </button>
-          <button
-            type="button"
-            className="btn-secondary"
-            onClick={() => {
-              setCode(exercise.solution);
-              setHelped(true);
-              setResult(null);
-              editorRef.current?.focus();
-            }}
-          >
-            Visa lösning
-          </button>
-          <button type="button" className="btn-secondary" onClick={() => newExercise()}>
-            Ny övning ⟳
-          </button>
-          <FormatButton editorRef={editorRef} disabled={running || !code.trim()} className="ml-auto" />
-          <button
-            type="button"
-            className="btn-emphasis"
-            onClick={run}
-            disabled={running}
-          >
-            {running ? "Kör…" : "Kör ▸"}
-          </button>
-        </div>
-
-        {result && !bannerHidden && (
-          <div className="mt-4" ref={bannerRef}>
-            <ResultBanner result={result} onDismiss={() => setBannerHidden(true)} />
-          </div>
-        )}
-
-        {result?.status === "correct" && (
-          <div className="mt-3">
-            <button type="button" className="btn-primary" onClick={() => newExercise()}>
-              Nästa slumpövning →
-            </button>
-          </div>
-        )}
-
-        {schemaOpen && (
-          <div className="mt-4 border-t border-line pt-4">
-            <SchemaPanel
-              onPickTable={(sql) => {
-                setCode(sql);
-                editorRef.current?.focus();
-              }}
-            />
-          </div>
-        )}
-
-        {result && (
-          <div className="mt-4">
-            <ResultPanel result={result} />
-          </div>
-        )}
+      <div className={wide ? "grid grid-cols-[minmax(0,1fr)_24rem] items-start gap-6" : ""}>
+        <TaskCard
+          key={round}
+          kicker={`${DIFFICULTY_LABEL[exercise.difficulty]} · ${exercise.tables.join(" · ")}`}
+          prompt={<TaskPrompt text={exercise.task} />}
+          hint={exercise.hint}
+          help={wide ? null : rail}
+          code={code}
+          onCodeChange={setCode}
+          onRun={run}
+          running={running}
+          editorRows={8}
+          result={result}
+          solution={formatSql(exercise.solution)}
+          onSolutionShown={() => setHelped(true)}
+          next={{ label: "Nästa slumpövning →", onClick: () => newExercise() }}
+          autoFocus={wide && round > 0}
+          footer={
+            <div className="flex justify-end">
+              <button type="button" className="btn-secondary" onClick={() => newExercise()}>Ny övning ⟳</button>
+            </div>
+          }
+        />
+        {wide && rail}
       </div>
-    </section>
+    </div>
   );
 }

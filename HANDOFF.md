@@ -78,11 +78,38 @@ kapitel: allt UI läser `chapter.number`.
   utom `LENGTH_FLAGGED` (db4-12, 14, 26 med skäl), positioner, kvot
   0,9–1,1, unikt längst ≤ 25 %, giltiga diagram-id, under hälften "Ja" per
   diagram. Öva utan pass: se "Vyer och särdrag".
-- **SQL, läget Tenta** (2026-11-02, `components/sql/ExamQuestions.jsx`): de
-  tre tentornas uppgift 4 ordagrant ur `oldExams.js`, rättade med
-  `gradeTask4`, utan poäng. Fristående från fliken Tenta: svar och klar
-  ligger i `svar:sql-tenta:<tentaId>`. Läget och senaste fråga sparas
-  (`sqlLage`, `sqlTenta`).
+- **SQL-sidan (omgjord 2026-11-02):** fyra lägen i `views/SqlWorkshop.jsx`:
+  Ämnen, Tentanivå, Slump och Fritt läge. Ämnen och Tentanivå är samma form,
+  sektioner med uppgifter (`lib/sqlTracks.js`), och visas som en översikt
+  (`TrackOverview`) eller en öppen uppgift (`TaskView`). Ingen lång lista:
+  uppgifterna är numrerade rutor (`TaskTile`, samma form som Tentafrågor i
+  Öva), Nästa går över sektionsgränserna, och uppgiften hamnar överst vid
+  byte. `TaskCard` är samma kort i Ämnen, Tentanivå och Slump. Inget skriver
+  över svaret: Visa lösning visar facit under svaret, bara Nollställ tömmer
+  rutan (Rensa finns kvar i Fritt läge). `HelpRail` är spalten med Tabeller och
+  Genomgång, på smal skärm utfällbara knappar. Senaste uppgift, öppen eller
+  översikt (`sqlOppen`), vald hjälpflik (`sqlHjalp`) och pågående slumpövning
+  (`sqlSlumpUppgift`) sparas.
+- **Tentanivå (2026-11-02, `sqlExamBank.js`):** 50 frågor i tentans form.
+  Sektionerna går från join och gruppering till sammansatta frågor, sedan
+  tentornas egna uppgift 4 (id `sql-tenta:<tentaId>`, gamla `{ code, solved }`
+  migreras av `loadSqlProgress`), Reader/Book/HasRead (sql-54…62) och
+  överkurs. tn-01…38 körs på tentans tabeller med fler rader (`BANK_TABLES`)
+  och på dolda ändrade värden (`BANK_CONTROL`), så att inskrivna värden inte
+  går igenom. `sql-exam-bank.test.mjs` kör facit, `also` (andra rätta svar)
+  och `traps` (fel som inte får gå igenom). Rättas av `gradeTask4`, som nu
+  räknar AVG(kolumn) i heltal som SQL Server (`integerAvg`) och godtar
+  decimalsnitt med CAST. Alla frågor ligger i `course.sqlExercises`, så
+  bockar, Hem och Statistik fungerar som vanligt.
+- **SQL Server-regler utöver GROUP BY (2026-11-02, `lib/tsql.js`):** en
+  underfråga efter en jämförelse som ger flera rader stoppas
+  (`checkScalarSubqueries`, bara de som går att köra för sig), och alias på
+  ett aggregat i WHERE eller HAVING stoppas. SQLite godtar båda. Giltig T-SQL
+  som SQLite saknar skrivs om i `toSqlite`: TOP i en underfråga, ALL/ANY,
+  CONVERT, N'text', dbo.Tabell, COUNT_BIG, (fråga) EXCEPT (fråga) och avslutande
+  GO. `WITH TIES`, `APPLY` och `Antal = COUNT(*)` går inte att köra och ger ett
+  eget besked. Tentans frågor godtar kolumner i annan ordning, och avrundade
+  decimaler (±0,05) godtas överallt.
 - **SQL-editorns indrag (2026-11-02):** `lib/sqlIndent.js` (ren logik,
   `scripts/sql-indent.test.mjs`), `SqlEditor.jsx` och `FormatButton.jsx`.
   Fyra blanksteg per steg; JOIN och AND/OR ett steg in, satsord och ")"
@@ -95,11 +122,11 @@ kapitel: allt UI läser `chapter.number`.
   facit och häftet har ingen SQL. Föreläsning 2-3 har JOIN i vänsterkanten
   och tre blanksteg; vill man följa den ändras JOIN-regeln på två ställen
   i `sqlIndent.js` (`targetIndent` och `formatStatement`).
-- **SQL-verkstad:** 62 övningar i 10 nivåer (`sqlExercises.js`); nivå 9
-  `tenta` "Tentaform: en fråga, ett resultat" (sql-54…62) på schemat
-  Reader/Book/HasRead(Rating) i `hospitalSeed.js`; nivå 10 (id n9) ligger
-  över tentans nivå. Slumpövningar och fritt läge. T-SQL först, översatt
-  till SQLite (`lib/tsql.js`).
+- **SQL-verkstad:** 53 övningar i 9 ämnen (`sqlExercises.js`), i
+  genomgångens ordning (`order` per nivå). Nivå 9 (id n9) ligger över tentans
+  nivå. Nivån `tenta` (sql-54…62, Reader/Book/HasRead(Rating) i
+  `hospitalSeed.js`) visas i Tentanivå. T-SQL först, översatt till SQLite
+  (`lib/tsql.js`).
 - **Modellera:** fyra flikar som tentans modelleringsuppgifter.
   *Läsa diagram* (uppgift 1): `statementExercises.js`, fyra uppgifter, en
   per diagram i kapitel 6 (föreningen, biblioteket, rederiet), tio
@@ -453,6 +480,9 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
 - **SQL-verkstaden:** sql-54…62 (tentaspåret), facit verifierade i motorn
   men uppgiftstexterna ogranskade. sql-62 är den nya med aggregat som
   jämförelsevärde (resultat B1 med 3 läsare, B2 med 2).
+- **Tentanivå (2026-11-02):** tn-01…38 i `sqlExamBank.js`, facit och fällor
+  provkörda men `reviewed: false` tills Kasper läst dem. Stilen på SQL-indrag
+  följer tentafacit, inte föreläsningen (se SQL-editorns indrag).
 - **Modellera / Läsa diagram:** alla fyra påståendeuppgifterna
   (`reviewed: false` i datat) — de tre egna skrivna mot sajtens diagram;
   häftets uppgift 3 har sant/falskt ur häftets facit men egna skäl, och
@@ -791,7 +821,8 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
 `exams`, `essays`, `settings` (bl.a. `practiceRecent` — per delkurs och
 `"<kurs>:tenta"` —, `practiceOrder`, `practiceTopics`, `practiceScope`,
 `practiceExams`, `practiceExamOrder`), `lasSegment`, `delkurs`, `schemaVy`,
-`upplasningstakt`, `sqlSlump`, `read:<kurs>:<kapitel>`,
+`upplasningstakt`, `sqlSlump`, `sqlLage`, `sqlOppen`, `sqlHjalp`,
+`sqlSlumpUppgift`, `read:<kurs>:<kapitel>`,
 `sql:<övningsId>` (= "solved" | "solved-with-help"), `svar:<uppgiftsId>` (eget svar i
 Modellera, SQL-verkstaden och BPMN-övningar, `lib/useDrafts.js`; `svar:sql-fritt`
 för SQL:s fria läge; tas bort av "Nollställ uppgiften"), `java:<uppgiftsId>`

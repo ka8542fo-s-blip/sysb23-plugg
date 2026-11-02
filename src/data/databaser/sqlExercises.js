@@ -1,7 +1,11 @@
+// `order` är ordningen i ämnet, samma som genomgången. Utan den gäller listans.
 export const levels = [
   {
     id: "n1",
+    summary: "Hämta, filtrera och sortera rader ur en tabell.",
+    order: ["sql-01", "sql-02", "sql-33", "sql-03", "sql-35", "sql-04", "sql-05", "sql-34"],
     number: 1,
+    part: "Grunderna",
     name: "SELECT, FROM, WHERE",
     lesson: `
 En SQL-fråga börjar alltid med vad du vill se och varifrån:
@@ -33,7 +37,10 @@ Avsluta satser med semikolon. Nyckelord är inte skiftlägeskänsliga, men var k
   },
   {
     id: "n2",
+    summary: "Villkor i WHERE: kombinera, matcha mönster och hitta saknade värden.",
+    order: ["sql-06", "sql-36", "sql-37", "sql-07", "sql-08", "sql-09", "sql-41", "sql-38", "sql-39", "sql-40"],
     number: 2,
+    part: "Grunderna",
     name: "Predikat: BETWEEN, LIKE, IN, NULL",
     lesson: `
 Logiska operatorer kombinerar villkor i WHERE.
@@ -64,7 +71,9 @@ Utan parenteserna binder AND hårdare än OR, och frågan betyder något annat �
   },
   {
     id: "n3",
+    summary: "Räkna ihop många rader till ett värde.",
     number: 3,
+    part: "Grunderna",
     name: "Aggregatfunktioner",
     lesson: `
 Aggregatfunktioner räknar ihop många rader till ett värde:
@@ -82,7 +91,9 @@ Du kan ge resultatet ett läsbart namn med alias: \`SELECT AVG(EmpSalary) AS Med
   },
   {
     id: "n4",
+    summary: "Aggregat per grupp, och villkor på grupperna.",
     number: 4,
+    part: "Grunderna",
     name: "GROUP BY och HAVING",
     lesson: `
 **GROUP BY** delar raderna i grupper och kör aggregatet per grupp:
@@ -100,7 +111,10 @@ Skillnaden mot WHERE: WHERE filtrerar **rader före** grupperingen, HAVING filtr
   },
   {
     id: "n5",
+    summary: "Koppla ihop tabeller: inner, outer, flera joins och self join.",
+    order: ["sql-42", "sql-16", "sql-17", "sql-18", "sql-43", "sql-44", "sql-21", "sql-19", "sql-20", "sql-22", "sql-23"],
     number: 5,
+    part: "Flera tabeller och underfrågor",
     name: "Joins",
     lesson: `
 Joins kopplar samman tabeller på en gemensam kolumn — nästan alltid en främmande nyckel mot en primärnyckel.
@@ -136,7 +150,9 @@ En **rekursiv self join** kopplar en rad till en annan rad i samma tabell via en
   },
   {
     id: "n6",
+    summary: "En fråga inuti en fråga, också i UPDATE och DELETE.",
     number: 6,
+    part: "Flera tabeller och underfrågor",
     name: "Underfrågor",
     lesson: `
 En underfråga (subquery) är en fråga inuti en fråga. Vanligast i WHERE:
@@ -166,7 +182,10 @@ Tre former:
   },
   {
     id: "n7",
+    summary: "Finns det någon? Samma fråga på tre sätt, och mängdoperatorerna.",
+    order: ["sql-26", "sql-27", "sql-48", "sql-49", "sql-50", "sql-28", "sql-51"],
     number: 7,
+    part: "Flera tabeller och underfrågor",
     name: "EXISTS och mängdoperatorer",
     lesson: `
 **EXISTS** testar om en underfråga returnerar minst en rad. Föreläsarens formulering: "Finns det någon?"
@@ -196,7 +215,9 @@ Skillnaderna: IN och EXISTS visar bara kolumner från den yttre tabellen; JOIN k
   },
   {
     id: "n8",
+    summary: "Ändra data och skapa vyer. Har inte förekommit i tentornas uppgift 4.",
     number: 8,
+    part: "Ändra data och överkurs",
     name: "INSERT, UPDATE, DELETE och vyer",
     lesson: `
 Hittills har du läst. Nu ändrar du.
@@ -229,22 +250,23 @@ Vyn lagrar ingen data — den kör sin fråga varje gång. Tre regler: en vy exp
 `
   },
   {
+    // Ligger i läget Tentanivå, inte bland ämnena (sqlExamBank.js).
     id: "tenta",
-    number: 9,
+    examTrack: true,
     name: "Tentaform: en fråga, ett resultat",
     lesson: `
-Tentans uppgift 4 är en enda SQL-fråga, 30 poäng: tre tabeller — två entitetstabeller och en kopplingstabell med ett mätvärde — och en mening på svenska som ska bli en fråga med ett resultat, indenterad. Den här nivån har ett eget schema av samma struktur: **Reader**, **Book** och **HasRead** med betyget Rating. Uppgifterna är av tentans slag: aggregat per grupp med villkor, "de som har X men inte Y", jämförelse mot ett värde hämtat med underfråga, högsta eller lägsta per grupp, antal per grupp med HAVING — och de tre sista är sammansatta precis som tentafrågorna, den allra sista med ett aggregat som jämförelsevärde.
+Tentans uppgift 4 är en enda SQL-fråga, 30 poäng: tre tabeller — två entitetstabeller och en kopplingstabell med ett mätvärde — och en mening på svenska som ska bli en fråga med ett resultat, indenterad. De här uppgifterna har ett eget schema av samma struktur: **Reader**, **Book** och **HasRead** med betyget Rating. Uppgifterna är av tentans slag: aggregat per grupp med villkor, "de som har X men inte Y", jämförelse mot ett värde hämtat med underfråga, högsta eller lägsta per grupp, antal per grupp med HAVING — och de tre sista är sammansatta precis som tentafrågorna, den allra sista med ett aggregat som jämförelsevärde.
 
 Kapitel 10 i Läs är arbetsgången: stryk under **vilka kolumner** som ska ut, **per vad** (gruppen), **vilka villkor** och om de gäller rad eller grupp, och **vilka värden** som måste hämtas ur andra rader. Sedan SELECT, FROM med joinarna, WHERE, GROUP BY, HAVING. Läs igenom mot uppgiftstexten innan du kör.
 
-Två skillnader mot tentan. Verkstadens tabeller har surrogatnycklar, så joinen går på ReaderID och BookID och uppgifterna pekar ut läsare och böcker med ReaderNo och BookNo; tentans tabeller saknar surrogatnycklar, så där joinar du direkt på StudentNo och Code. Och motorn här är SQLite: **AVG över INT ger decimaler här men ett heltal i SQL Server** — 7,33 här är 7 på tentan. Uppgifterna som berörs säger det i sin not.
-
-Nivå 10 ligger över tentans nivå. Den här nivån är tentans.
+Två skillnader mot tentan. Verkstadens tabeller har surrogatnycklar, så joinen går på ReaderID och BookID och uppgifterna pekar ut läsare och böcker med ReaderNo och BookNo; tentans tabeller saknar surrogatnycklar, så där joinar du direkt på StudentNo och Code. Och motorn här är SQLite: **AVG över INT ger decimaler här men ett heltal i SQL Server** — 7,33 här är 7 på tentan. Uppgifterna som berörs säger det i sin not. På tentans egna tabeller räknar rättningen i heltal, precis som SQL Server.
 `
   },
   {
     id: "n9",
-    number: 10,
+    summary: "Vem har läst alla kurser? Den svåraste standardfrågan.",
+    number: 9,
+    part: "Ändra data och överkurs",
     name: "Korrelerade frågor och EXISTS hard mode — över tentans nivå",
     lesson: `
   Det här är nivån föreläsaren kallar "hard mode", och den kretsar kring en enda fråga: **Vem har läst alla kurser?**
@@ -519,7 +541,7 @@ export const sqlExercises = [
     hint: "UNION ALL behåller dubbletter — resultatet ska ha 12 rader. UNION skulle ge 6.",
     reviewed: true },
 
-  // ---- Nivå 10 (över tentans nivå) ----
+  // ---- Nivå 9 (över tentans nivå) ----
   { id: "sql-52", level: "n9", task: "Visa namn och lön för de anställda som tjänar mer än medellönen PÅ SIN EGEN ENHET.",
     solution: "SELECT e.EmpName, e.EmpSalary FROM Employee e WHERE e.EmpSalary > (SELECT AVG(e2.EmpSalary) FROM Employee e2 WHERE e2.UnitID = e.UnitID);",
     hint: "Snittet är olika per enhet, så underfrågan måste referera till den yttre radens UnitID.",
@@ -530,7 +552,8 @@ export const sqlExercises = [
     hint: "Dubbel NOT EXISTS: anställda där det inte finns någon Trauma-patient som de inte undersöker. Alternativet är COUNT(DISTINCT p.PatientID) i HAVING jämfört med antalet Trauma-patienter — båda ger samma svar.",
     reviewed: true },
 
-  // Nivå 9, Tentaform (2026-09-07): åtta uppgifter av tentans slag på Reader/Book/HasRead.
+  // Tentaform (2026-09-07): uppgifter av tentans slag på Reader/Book/HasRead.
+  // Visas i läget Tentanivå, sektionen "Samma form, andra tabeller".
   { id: "sql-54", level: "tenta", task: "Visa läsarnummer, namn och ålder för läsare som är äldre än läsare R5.",
     solution: "SELECT r.ReaderNo, r.ReaderName, r.ReaderAge FROM Reader AS r WHERE r.ReaderAge > (SELECT ReaderAge FROM Reader WHERE ReaderNo = 'R5');",
     hint: "R5:s ålder hör till en annan rad än den som prövas. Hämta den med en skalär underfråga — skriv inte in talet.", reviewed: false },

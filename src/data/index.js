@@ -6,6 +6,7 @@ import {
   glossary as strategiGlossary,
 } from "./strategi/reading.js";
 import { levels as sqlLevels, sqlExercises } from "./databaser/sqlExercises.js";
+import { examSections as sqlExamSections, sqlExamTasks } from "./databaser/sqlExamBank.js";
 import { topics as databaserTopics } from "./databaser/topics.js";
 import { questions as databaserQuestions } from "./databaser/questions.js";
 import {
@@ -38,6 +39,7 @@ const noContent = {
   glossary: [],
   sqlLevels: [],
   sqlExercises: [],
+  sqlExamSections: [],
   // Gamla tentors flervalsfrågor för läget Tentafrågor i Öva (data/<kurs>/pastExams.js).
   // Inte samma sak som Databasers oldExams: de är konstruktionsuppgifter i fliken Tenta.
   pastExams: [],
@@ -87,7 +89,8 @@ export const courses = [
     readingIntro: databaserIntro,
     examNote: databaserExamNote,
     sqlLevels,
-    sqlExercises,
+    sqlExercises: [...sqlExercises, ...sqlExamTasks],
+    sqlExamSections,
   },
   {
     ...noContent,

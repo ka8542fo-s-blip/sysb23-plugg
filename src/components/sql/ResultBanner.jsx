@@ -1,6 +1,6 @@
 // Domslutet efter en körning: rätt, fel eller kraschad fråga. Ligger
 // direkt under knappraden så att svaret syns utan att man skrollar förbi
-// tabeller och schemapanel — detaljerna kommer längre ned i ResultPanel.
+// resultattabellerna — detaljerna kommer längre ned i ResultPanel.
 export default function ResultBanner({ result, onDismiss }) {
   if (!result) return null;
 

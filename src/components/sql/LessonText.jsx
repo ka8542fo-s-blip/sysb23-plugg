@@ -17,7 +17,7 @@ const components = {
     </code>
   ),
   pre: ({ children }) => (
-    <pre className="mt-3 overflow-x-auto rounded-lg border border-line bg-paper p-3 font-mono text-[13px] leading-relaxed">
+    <pre className="mt-3 overflow-x-auto rounded-lg border border-line bg-paper p-3 font-mono text-[13px] leading-relaxed [&>code]:bg-transparent [&>code]:p-0">
       {children}
     </pre>
   ),

@@ -27,9 +27,15 @@ export default function ResultPanel({ result }) {
   }
 
   return (
-    <div className="grid gap-4 lg:grid-cols-2">
+    <div className="grid gap-4 md:grid-cols-2">
       <ResultTable result={result.userResult} caption="Ditt resultat" />
       <ResultTable result={result.expectedResult} caption="Förväntat resultat" />
+      {result.control && (
+        <>
+          <ResultTable result={result.control.user} caption={`Ditt resultat på kontrolldatan (${result.control.label})`} />
+          <ResultTable result={result.control.expected} caption="Förväntat på kontrolldatan" />
+        </>
+      )}
     </div>
   );
 }

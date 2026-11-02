@@ -9,7 +9,7 @@ import {
   attrsOf, braceText, setText, allCandidateKeys, projectFds, toFds, relationNF, isLossless, losslessSteps,
   dependencyReport, has, sameSet, fdText, NF_NAME,
 } from "./fd.js";
-import { checkTsqlRules, toSqlite, sqliteSeed } from "./tsql.js";
+import { AVG_COLUMN, checkScalarSubqueries, checkTsqlRules, integerAvg, toSqlite, sqliteSeed } from "./tsql.js";
 import { compareResults, splitStatements, interpretError } from "./sqlCheck.js";
 
 // ---------- Uppgift 1 ----------
@@ -253,9 +253,35 @@ function runOn(SQL, seed, sql) {
   }
 }
 
+function orderings(indexes) {
+  if (indexes.length < 2) return [indexes];
+  return indexes.flatMap((first) => orderings(indexes.filter((i) => i !== first)).map((rest) => [first, ...rest]));
+}
+
+// Tentan ber om kolumner, inte om en kolumnordning: Namn före studentnummer är
+// samma svar.
+function sameAnswer(got, want) {
+  const direct = compareResults(got, want, false);
+  if (direct.ok || got.columns.length !== want.columns.length) return direct;
+  const reordered = orderings(got.columns.map((_, index) => index)).some((order) => (
+    compareResults({ columns: want.columns, values: got.values.map((row) => order.map((i) => row[i])) }, want, false).ok
+  ));
+  return reordered ? { ok: true } : direct;
+}
+
+// Frågan som SQL Server räknar den: AVG i heltal, och utan alias heter ett
+// uttryck ingenting.
+function runAsServer(SQL, seed, sql) {
+  const result = runOn(SQL, seed, toSqlite(integerAvg(sql)));
+  return { ...result, columns: result.columns.map((name) => (AVG_COLUMN.test(name) ? "(No column name)" : name)) };
+}
+
 // Rätt resultat ger 30, fel resultat 0 (checklistan för självbedömning
-// visas i vyn). Godtas: SQL Servers resultat (task.expected) eller det
-// facitfrågan ger i SQLite — de skiljer sig bara vid AVG över INTEGER.
+// visas i vyn). Svaret körs som SQL Server räknar (AVG i heltal) och godtas
+// mot task.expected, som facitfrågan räknar sig fram till om det saknas, eller
+// mot det facitfrågan ger i SQLite: AVG(CAST(...)) ger decimaler också i
+// SQL Server. Kontrolldatan är task.control.tables, eller task.control.changes
+// ovanpå tentans rader.
 export function gradeTask4(SQL, task, userSql) {
   const trimmed = (userSql || "").trim();
   if (!trimmed) return { status: "empty", points: 0, message: "Skriv en fråga innan du rättar." };
@@ -263,37 +289,40 @@ export function gradeTask4(SQL, task, userSql) {
   const rule = checkTsqlRules(trimmed);
   if (rule) return { status: "error", points: 0, message: rule.message };
   const seed = examSeed(task.tables);
+  const scalar = checkScalarSubqueries(trimmed, (sql) => runOn(SQL, seed, toSqlite(sql)));
+  if (scalar) return { status: "error", points: 0, raw: scalar.raw, message: scalar.message };
   let user;
   try {
-    user = runOn(SQL, seed, toSqlite(trimmed));
+    user = runAsServer(SQL, seed, trimmed);
   } catch (error) {
-    return { status: "error", points: 0, message: interpretError(error.message, trimmed) || error.message };
+    return { status: "error", points: 0, raw: error.message, message: interpretError(error.message, trimmed) || error.message };
   }
   const sqlite = runOn(SQL, seed, toSqlite(task.solution));
-  const matches = (got, want) => compareResults(got, want, false);
-  const vsServer = matches(user, task.expected);
-  const vsSqlite = matches(user, sqlite);
+  const expected = task.expected ?? runAsServer(SQL, seed, task.solution);
+  const vsServer = sameAnswer(user, expected);
+  const vsSqlite = sameAnswer(user, sqlite);
   const ok = vsServer.ok || vsSqlite.ok;
   let control = null;
   if (ok && task.control) {
-    const controlSeed = examSeed(task.tables, task.control.changes);
-    const got = runOn(SQL, controlSeed, toSqlite(trimmed));
+    const controlSeed = task.control.tables ? examSeed(task.control.tables) : examSeed(task.tables, task.control.changes);
+    const got = runAsServer(SQL, controlSeed, trimmed);
     const want = runOn(SQL, controlSeed, toSqlite(task.solution));
-    const cmp = matches(got, task.control.expected).ok || matches(got, want).ok;
-    control = { ok: cmp, label: task.control.label, user: got, expected: task.control.expected };
+    const controlExpected = task.control.expected ?? runAsServer(SQL, controlSeed, task.solution);
+    const cmp = sameAnswer(got, controlExpected).ok || sameAnswer(got, want).ok;
+    control = { ok: cmp, label: task.control.label, user: got, expected: controlExpected };
   }
   const correct = ok && (!control || control.ok);
   return {
     status: correct ? "correct" : "wrong",
     points: correct ? 30 : 0,
     user,
-    expected: task.expected,
+    expected,
     sqlite,
     control,
     message: correct
       ? "Resultatet stämmer med facit."
       : ok && control && !control.ok
-        ? `Resultatet stämmer på tentans data, men inte på kontrolldatan (${control.label}). Frågan svarar alltså inte på uppgiften i allmänhet.`
+        ? `Resultatet stämmer på tabellerna, men inte på kontrolldatan (${control.label}). Frågan svarar alltså inte på uppgiften i allmänhet. Har du skrivit in ett värde i stället för att hämta det med en underfråga?`
         : vsServer.message,
   };
 }
