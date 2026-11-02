@@ -3,6 +3,7 @@ import { interpretError, splitStatements } from "../../lib/sqlCheck.js";
 import { loadEngine, newDatabase, runSelect } from "../../lib/sqlEngine.js";
 import { loadDraft, saveDraft } from "../../lib/storage.js";
 import { checkTsqlRules, toSqlite } from "../../lib/tsql.js";
+import { checkConversions } from "../../lib/tsqlTypes.js";
 import { useWide } from "../../lib/useWide.js";
 import FormatButton from "./FormatButton.jsx";
 import HelpRail from "./HelpRail.jsx";
@@ -18,6 +19,7 @@ export default function FreeMode() {
   const [code, setCodeState] = useState(() => loadDraft(DRAFT) ?? "SELECT * FROM Employee;");
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const [warning, setWarning] = useState(null);
   const [schemaKey, setSchemaKey] = useState(0);
   const editorRef = useRef(null);
   const db = useRef(null);
@@ -43,6 +45,7 @@ export default function FreeMode() {
 
   async function run() {
     setError(null);
+    setWarning(null);
     const sql = code.trim();
     if (!sql) return;
     const rule = checkTsqlRules(sql);
@@ -54,6 +57,7 @@ export default function FreeMode() {
     const prepared = toSqlite(sql);
     try {
       const current = await database();
+      const conversion = checkConversions(code, (query) => runSelect(current, query));
       const statements = splitStatements(sql);
       let shown = null;
       if (statements.length === 1 && /^\s*(select|with)\b/i.test(sql)) {
@@ -64,6 +68,7 @@ export default function FreeMode() {
         if (last) shown = { columns: last.columns, values: last.values };
       }
       setResult({ table: shown, changed: shown ? null : current.getRowsModified() });
+      setWarning(conversion);
       setSchemaKey((key) => key + 1);
     } catch (failure) {
       setResult(null);
@@ -76,6 +81,7 @@ export default function FreeMode() {
     db.current = await newDatabase();
     setResult(null);
     setError(null);
+    setWarning(null);
     setSchemaKey((key) => key + 1);
   }
 
@@ -121,6 +127,16 @@ export default function FreeMode() {
               <h3 className="font-display text-lg text-wrong">Frågan kunde inte köras</h3>
               <pre className="mt-2 overflow-x-auto whitespace-pre-wrap font-mono text-[13px] text-ink/80">{error.raw}</pre>
               {error.message && <p className="mt-2 text-[15px] leading-relaxed">{error.message}</p>}
+            </div>
+          )}
+
+          {/* Det här läget rättas inte, så frågan körs ändå: varna för det SQL
+              Server skulle ha stoppat, och visa vad SQLite gav. */}
+          {warning && (
+            <div className="mt-4 rounded-card border border-brass/50 bg-brass/[0.07] p-4">
+              <h3 className="font-display text-lg text-brass-text">Skulle inte gå att köra i SQL Server</h3>
+              <p className="mt-1 text-[15px] leading-relaxed">{warning.message}</p>
+              <pre className="mt-2 overflow-x-auto whitespace-pre-wrap font-mono text-[13px] text-ink/80">{warning.raw}</pre>
             </div>
           )}
 

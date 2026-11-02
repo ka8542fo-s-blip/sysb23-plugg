@@ -48,6 +48,7 @@ export function tokenize(sql) {
   while (i < sql.length) {
     const ch = sql[i];
     const next = sql[i + 1];
+    const start = i;
     if (/\s/.test(ch)) {
       let j = i;
       while (j < sql.length && /\s/.test(sql[j])) j++;
@@ -108,6 +109,8 @@ export function tokenize(sql) {
         i += 1;
       }
     }
+    // Var token står i texten, för den som ska peka ut en plats i frågan.
+    Object.assign(tokens[tokens.length - 1], { start, end: i });
   }
   return tokens;
 }

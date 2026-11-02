@@ -11,6 +11,7 @@ import {
 } from "./fd.js";
 import { AVG_COLUMN, checkScalarSubqueries, checkTsqlRules, integerAvg, toSqlite, sqliteSeed } from "./tsql.js";
 import { compareResults, splitStatements, interpretError } from "./sqlCheck.js";
+import { checkConversions } from "./tsqlTypes.js";
 
 // ---------- Uppgift 1 ----------
 
@@ -235,23 +236,29 @@ export function examSeed(tables, changes = []) {
   }).join("\n\n");
 }
 
+function select(db, sql) {
+  const stmt = db.prepare(sql);
+  try {
+    const values = [];
+    while (stmt.step()) values.push(stmt.get());
+    return { columns: stmt.getColumnNames(), values };
+  } finally {
+    stmt.free();
+  }
+}
+
 // engine = { SQL } där SQL är sql.js-modulen (initSqlJs()).
-function runOn(SQL, seed, sql) {
+function withSeed(SQL, seed, use) {
   const db = new SQL.Database();
   try {
     db.run(sqliteSeed(seed));
-    const stmt = db.prepare(sql);
-    try {
-      const values = [];
-      while (stmt.step()) values.push(stmt.get());
-      return { columns: stmt.getColumnNames(), values };
-    } finally {
-      stmt.free();
-    }
+    return use(db);
   } finally {
     db.close();
   }
 }
+
+const runOn = (SQL, seed, sql) => withSeed(SQL, seed, (db) => select(db, sql));
 
 function orderings(indexes) {
   if (indexes.length < 2) return [indexes];
@@ -297,6 +304,8 @@ export function gradeTask4(SQL, task, userSql) {
   } catch (error) {
     return { status: "error", points: 0, raw: error.message, message: interpretError(error.message, trimmed) || error.message };
   }
+  const conversion = withSeed(SQL, seed, (db) => checkConversions(userSql, (sql) => select(db, sql)));
+  if (conversion) return { status: "error", points: 0, raw: conversion.raw, message: conversion.message };
   const sqlite = runOn(SQL, seed, toSqlite(task.solution));
   const expected = task.expected ?? runAsServer(SQL, seed, task.solution);
   const vsServer = sameAnswer(user, expected);

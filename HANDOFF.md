@@ -101,6 +101,18 @@ kapitel: allt UI läser `chapter.number`.
   räknar AVG(kolumn) i heltal som SQL Server (`integerAvg`) och godtar
   decimalsnitt med CAST. Alla frågor ligger i `course.sqlExercises`, så
   bockar, Hem och Statistik fungerar som vanligt.
+- **Typkontrollen (2026-11-02, `lib/tsqlTypes.js`):** SQLite säger inget när
+  text möter tal (text är alltid större), så `WHERE Code >= 2` släppte igenom
+  alla rader och kunde bli rättat som rätt. `checkConversions` läser frågan till
+  uttryck, tar typerna ur tabelldefinitionerna (`PRAGMA table_info`) och går
+  igenom de faktiska värdena: går något värde inte att göra om stoppas frågan
+  med plats och SQL Servers felmeddelande. Körs i `checkExercise` och
+  `gradeTask4`, efter att frågan har gått att köra, och i Fritt läge som
+  varning. Bara det säkra flaggas: okänd tabell eller funktion ger inget besked.
+  Täcker inte värden som räknas fram (SUBSTRING, LEFT, sammanslagning), CASE-grenar
+  med blandade typer, UNION mellan text och tal, SUM på text eller tilldelning i
+  SET och VALUES. `sql-conversions.test.mjs` kör alla referenslösningar och
+  kontrollerar att de har lästs till slutet.
 - **SQL Server-regler utöver GROUP BY (2026-11-02, `lib/tsql.js`):** en
   underfråga efter en jämförelse som ger flera rader stoppas
   (`checkScalarSubqueries`, bara de som går att köra för sig), och alias på
