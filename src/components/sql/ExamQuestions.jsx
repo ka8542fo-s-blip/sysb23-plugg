@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { oldExams } from "../../data/databaser/oldExams.js";
 import { gradeTask4 } from "../../lib/examGrade.js";
 import { loadEngine } from "../../lib/sqlEngine.js";
 import { KEYS, load, save } from "../../lib/storage.js";
 import { useDrafts } from "../../lib/useDrafts.js";
+import FormatButton from "./FormatButton.jsx";
 import ResultTable from "./ResultTable.jsx";
 import SqlEditor from "./SqlEditor.jsx";
 
@@ -57,6 +58,7 @@ function Question({ exam, state, drafts }) {
   const [running, setRunning] = useState(false);
   const [facitOpen, setFacitOpen] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
+  const editorRef = useRef(null);
   const { code, solved } = state;
 
   function store(next) {
@@ -112,10 +114,11 @@ function Question({ exam, state, drafts }) {
       {task.tail.map((p) => <p key={p} className="mt-2 text-[15px]">{p}</p>)}
 
       <div className="mt-4">
-        <SqlEditor value={code} onChange={(text) => store({ code: text, solved })} onRun={grade} label="Ditt svar" rows={14} />
+        <SqlEditor ref={editorRef} value={code} onChange={(text) => store({ code: text, solved })} onRun={grade} label="Ditt svar" rows={14} />
       </div>
       <div className="mt-3 flex flex-wrap items-center gap-3">
         <button type="button" className="btn-primary" onClick={grade} disabled={running || !code.trim()}>Rätta</button>
+        <FormatButton editorRef={editorRef} disabled={!code.trim()} />
         <span className="text-sm text-ink/65">Körs mot tentans data i SQLite, med kursens T-SQL översatt.</span>
       </div>
 

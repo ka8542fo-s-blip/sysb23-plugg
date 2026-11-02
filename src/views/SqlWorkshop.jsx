@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import SegmentedControl from "../components/SegmentedControl.jsx";
 import SqlEditor from "../components/sql/SqlEditor.jsx";
+import FormatButton from "../components/sql/FormatButton.jsx";
 import ResultPanel from "../components/sql/ResultPanel.jsx";
 import ResultBanner from "../components/sql/ResultBanner.jsx";
 import ResultTable from "../components/sql/ResultTable.jsx";
@@ -47,6 +48,7 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
   const [confirmSolution, setConfirmSolution] = useState(false);
   const [bannerHidden, setBannerHidden] = useState(false);
   const editorRef = useRef(null);
+  const freeEditorRef = useRef(null);
   const bannerRef = useRef(null);
 
   // Fritt läge behåller sin databas mellan körningar, så att en DELETE
@@ -382,9 +384,10 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
                   </span>
                 )}
 
+                <FormatButton editorRef={editorRef} disabled={running || !code.trim()} className="ml-auto" />
                 <button
                   type="button"
-                  className="btn-emphasis ml-auto"
+                  className="btn-emphasis"
                   onClick={runExercise}
                   disabled={running}
                 >
@@ -447,6 +450,7 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
 
             <div className="mt-4">
               <SqlEditor
+                ref={freeEditorRef}
                 value={freeCode}
                 onChange={setFreeCode}
                 onRun={runFree}
@@ -470,7 +474,8 @@ export default function SqlWorkshop({ course, sqlProgress, onSolve, onReset }) {
               >
                 Återställ databasen
               </button>
-              <button type="button" className="btn-emphasis ml-auto" onClick={runFree}>
+              <FormatButton editorRef={freeEditorRef} disabled={!freeCode.trim()} className="ml-auto" />
+              <button type="button" className="btn-emphasis" onClick={runFree}>
                 Kör ▸
               </button>
             </div>

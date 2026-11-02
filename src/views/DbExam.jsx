@@ -477,7 +477,7 @@ function Task4({ task, code, setCode, graded, result, self, setSelf, onGrade, on
       <p className="mt-2 rounded-lg border-l-2 border-brass bg-brass/[0.07] px-4 py-2 text-[15px] leading-relaxed">{task.ask}</p>
       {task.tail.map((p) => <p key={p} className="mt-2 text-[15px]">{p}</p>)}
       <div className="mt-4">
-        <SqlEditor value={code} onChange={(v) => { if (!graded) setCode(v); }} onRun={() => { if (!graded && code.trim()) onGrade(); }} label="Ditt svar" rows={14} disabled={graded} />
+        <SqlEditor auto={false} value={code} onChange={(v) => { if (!graded) setCode(v); }} onRun={() => { if (!graded && code.trim()) onGrade(); }} label="Ditt svar" rows={14} disabled={graded} />
       </div>
       <GradeBar graded={graded} onGrade={onGrade} onEdit={onEdit} disabled={!code.trim()} note="Körs mot tentans data i SQLite, med kursens T-SQL översatt." />
       {graded && !result && <p className="mt-4 text-sm text-ink/65">Kör frågan …</p>}

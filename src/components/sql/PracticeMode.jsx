@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import SqlEditor from "./SqlEditor.jsx";
+import FormatButton from "./FormatButton.jsx";
 import ResultBanner from "./ResultBanner.jsx";
 import ResultPanel from "./ResultPanel.jsx";
 import SchemaPanel from "./SchemaPanel.jsx";
@@ -221,9 +222,10 @@ export default function PracticeMode({ engine, courseExercises }) {
           <button type="button" className="btn-secondary" onClick={() => newExercise()}>
             Ny övning ⟳
           </button>
+          <FormatButton editorRef={editorRef} disabled={running || !code.trim()} className="ml-auto" />
           <button
             type="button"
-            className="btn-emphasis ml-auto"
+            className="btn-emphasis"
             onClick={run}
             disabled={running}
           >

@@ -83,6 +83,18 @@ kapitel: allt UI läser `chapter.number`.
   `gradeTask4`, utan poäng. Fristående från fliken Tenta: svar och klar
   ligger i `svar:sql-tenta:<tentaId>`. Läget och senaste fråga sparas
   (`sqlLage`, `sqlTenta`).
+- **SQL-editorns indrag (2026-11-02):** `lib/sqlIndent.js` (ren logik,
+  `scripts/sql-indent.test.mjs`), `SqlEditor.jsx` och `FormatButton.jsx`.
+  Fyra blanksteg per steg; JOIN och AND/OR ett steg in, satsord och ")"
+  hoppar till sin nivå när ordet är färdigskrivet (blanksteg, "(" eller
+  Enter) och rör bara den egna raden. Ändringar går via `execCommand`, så
+  att Ctrl/Cmd + Z fungerar. Formatera ändrar bara blanktecken, behåller
+  radbrytningar inuti en sats och lämnar annat än SELECT/WITH orört. Fliken
+  Tenta har `auto={false}`: bara Tab/Shift+Tab, som på Inspera. Stilen är
+  tentafacits: kodstandarden säger inget om indrag i frågor, tentorna saknar
+  facit och häftet har ingen SQL. Föreläsning 2-3 har JOIN i vänsterkanten
+  och tre blanksteg; vill man följa den ändras JOIN-regeln på två ställen
+  i `sqlIndent.js` (`targetIndent` och `formatStatement`).
 - **SQL-verkstad:** 62 övningar i 10 nivåer (`sqlExercises.js`); nivå 9
   `tenta` "Tentaform: en fråga, ett resultat" (sql-54…62) på schemat
   Reader/Book/HasRead(Rating) i `hospitalSeed.js`; nivå 10 (id n9) ligger
