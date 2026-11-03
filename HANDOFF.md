@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 286 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-10-12.
+- **Test:** `npm test` = 503 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-03.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -112,16 +112,46 @@ kapitel: allt UI läser `chapter.number`.
   Täcker inte värden som räknas fram (SUBSTRING, LEFT, sammanslagning), CASE-grenar
   med blandade typer, UNION mellan text och tal, SUM på text eller tilldelning i
   SET och VALUES. `sql-conversions.test.mjs` kör alla referenslösningar och
-  kontrollerar att de har lästs till slutet.
-- **SQL Server-regler utöver GROUP BY (2026-11-02, `lib/tsql.js`):** en
-  underfråga efter en jämförelse som ger flera rader stoppas
-  (`checkScalarSubqueries`, bara de som går att köra för sig), och alias på
-  ett aggregat i WHERE eller HAVING stoppas. SQLite godtar båda. Giltig T-SQL
-  som SQLite saknar skrivs om i `toSqlite`: TOP i en underfråga, ALL/ANY,
-  CONVERT, N'text', dbo.Tabell, COUNT_BIG, (fråga) EXCEPT (fråga) och avslutande
-  GO. `WITH TIES`, `APPLY` och `Antal = COUNT(*)` går inte att köra och ger ett
+  kontrollerar att de har lästs till slutet. Samma tolkning stoppar text i
+  dubbla citattecken (2026-11-03): `WHERE StudentNo = "S1"` är ett namn i SQL
+  Server (Invalid column name, i VALUES Msg 128), medan SQLite gör om ett namn
+  som inte finns till text. Ett namn som finns i frågans tabeller, eller ett
+  alias i ORDER BY, flaggas inte.
+- **SQL Server-regler (2026-11-02, utökade 2026-11-03, `lib/tsql.js`):** det
+  SQL Server stoppar men SQLite kör ger `{ raw, line, message }`: SQL Servers
+  felmeddelande och "SQL Server skulle stoppa frågan på rad N (…): …".
+  `checkTsqlRules` (utan tabellerna): kolumn utanför GROUP BY i SELECT, HAVING
+  (Msg 8121) och ORDER BY (8127); alias från SELECT i WHERE, GROUP BY och
+  HAVING (207; inte ett alias som också är kolumnnamn eller definieras av en
+  delfråga, WITH eller CREATE TABLE i samma fråga); JOIN utan ON; delfråga i
+  FROM utan alias; ORDER BY utan TOP i underfråga, delfråga, WITH och vy
+  (1033); LIMIT; SQLite-funktioner som IFNULL, SUBSTR, LENGTH, GROUP_CONCAT,
+  INSTR och MAX(a, b) (195/174); `==`; värde där ett villkor krävs, som
+  `HAVING COUNT(*)` och `WHERE Grade` (4145); SELECT DISTINCT sorterad på
+  något utanför SELECT (145). Syntaxfelen går först, och av dem det första i
+  texten. Med tabellerna: `checkScalarSubqueries` (512, också korrelerade
+  underfrågor och underfrågor i SELECT), `checkDivisionByZero` (8134) och
+  `checkIdentityInsert` (544, och 213 utan kolumnlista; bara DML-övningar).
+  Det som beror på raderna avgörs med en kontrollfråga på de rader där SQL
+  Server säkert räknar ut uttrycket: frågan på översta nivån (inte en vy, inte
+  EXCEPT/INTERSECT, inte med TOP), där de andra villkoren i WHERE är sanna, och
+  aldrig inuti CASE, IIF, COALESCE, ISNULL, NULLIF, IN-lista, BETWEEN eller
+  OR. En form som en regel inte känner igen släpps igenom. Fritt läge
+  (`checkFreeQuery` i `sqlCheck.js`) kör frågan och visar det som varning,
+  också GROUP BY-regeln, som förut stoppade där; bara det motorn inte kan köra
+  (`raw: null`) stoppas. Giltig T-SQL som SQLite saknar skrivs om i
+  `toSqlite`: TOP i en underfråga, ALL/ANY, CONVERT, N'text', dbo.Tabell,
+  COUNT_BIG, (fråga) EXCEPT (fråga) och avslutande GO. + slår ihop text bara
+  när ingen sida är ett tal: `'5' + 1` är 6 som i SQL Server, och tentans
+  textkolumner (StudentNo, Name, Address, Code) räknas som text.
+  `WITH TIES`, `APPLY` och `Antal = COUNT(*)` går inte att köra och ger ett
   eget besked. Tentans frågor godtar kolumner i annan ordning, och avrundade
-  decimaler (±0,05) godtas överallt.
+  decimaler (±0,05) godtas överallt. `sql-server-rules.test.mjs` har varje
+  regel med flaggat fall och närmaste giltiga form, och kör alla
+  referenslösningar (övningar, Tentanivå med `also`, slumpgeneratorn) genom
+  alla regler. Giltig T-SQL som SQLite fortfarande inte kör: LEFT, YEAR,
+  DATEDIFF, `[dbo].[Tabell]`, `AS t (kolumn)` och INSERT utan kolumnlista
+  i en tabell med IDENTITY.
 - **SQL-editorns indrag (2026-11-02):** `lib/sqlIndent.js` (ren logik,
   `scripts/sql-indent.test.mjs`), `SqlEditor.jsx` och `FormatButton.jsx`.
   Fyra blanksteg per steg; JOIN och AND/OR ett steg in, satsord och ")"

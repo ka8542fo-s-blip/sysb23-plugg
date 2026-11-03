@@ -9,7 +9,7 @@ import {
   attrsOf, braceText, setText, allCandidateKeys, projectFds, toFds, relationNF, isLossless, losslessSteps,
   dependencyReport, has, sameSet, fdText, NF_NAME,
 } from "./fd.js";
-import { AVG_COLUMN, checkScalarSubqueries, checkTsqlRules, integerAvg, toSqlite, sqliteSeed } from "./tsql.js";
+import { AVG_COLUMN, checkDivisionByZero, checkScalarSubqueries, checkTsqlRules, integerAvg, toSqlite, sqliteSeed } from "./tsql.js";
 import { compareResults, splitStatements, interpretError } from "./sqlCheck.js";
 import { checkConversions } from "./tsqlTypes.js";
 
@@ -293,11 +293,13 @@ export function gradeTask4(SQL, task, userSql) {
   const trimmed = (userSql || "").trim();
   if (!trimmed) return { status: "empty", points: 0, message: "Skriv en fråga innan du rättar." };
   if (splitStatements(trimmed).length > 1) return { status: "error", points: 0, message: "Svaret innehåller flera satser. Uppgiften kräver en (1) fråga med ett resultat." };
-  const rule = checkTsqlRules(trimmed);
-  if (rule) return { status: "error", points: 0, message: rule.message };
+  // Hela texten, så att radnumren i beskedet stämmer med rutan.
+  const rule = checkTsqlRules(userSql);
+  if (rule) return { status: "error", points: 0, raw: rule.raw, message: rule.message };
   const seed = examSeed(task.tables);
-  const scalar = checkScalarSubqueries(trimmed, (sql) => runOn(SQL, seed, toSqlite(sql)));
-  if (scalar) return { status: "error", points: 0, raw: scalar.raw, message: scalar.message };
+  const tsql = (sql) => runOn(SQL, seed, toSqlite(sql));
+  const runtime = checkScalarSubqueries(userSql, tsql) ?? checkDivisionByZero(userSql, tsql);
+  if (runtime) return { status: "error", points: 0, raw: runtime.raw, message: runtime.message };
   let user;
   try {
     user = runAsServer(SQL, seed, trimmed);

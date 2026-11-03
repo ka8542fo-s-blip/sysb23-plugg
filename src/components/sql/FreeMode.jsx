@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { interpretError, splitStatements } from "../../lib/sqlCheck.js";
+import { checkFreeQuery, interpretError, splitStatements } from "../../lib/sqlCheck.js";
 import { loadEngine, newDatabase, runSelect } from "../../lib/sqlEngine.js";
 import { loadDraft, saveDraft } from "../../lib/storage.js";
-import { checkTsqlRules, toSqlite } from "../../lib/tsql.js";
-import { checkConversions } from "../../lib/tsqlTypes.js";
+import { toSqlite } from "../../lib/tsql.js";
 import { useWide } from "../../lib/useWide.js";
 import FormatButton from "./FormatButton.jsx";
 import HelpRail from "./HelpRail.jsx";
@@ -48,16 +47,17 @@ export default function FreeMode() {
     setWarning(null);
     const sql = code.trim();
     if (!sql) return;
-    const rule = checkTsqlRules(sql);
-    if (rule) {
-      setResult(null);
-      setError({ raw: rule.raw, message: rule.message });
-      return;
-    }
     const prepared = toSqlite(sql);
     try {
       const current = await database();
-      const conversion = checkConversions(code, (query) => runSelect(current, query));
+      // Mot databasen som den är före frågan. Det SQL Server skulle stoppa blir
+      // en varning; bara det övningsmotorn inte kan köra stoppas.
+      const check = checkFreeQuery(code, (query) => runSelect(current, query));
+      if (check.error) {
+        setResult(null);
+        setError({ raw: check.error.raw, message: check.error.message });
+        return;
+      }
       const statements = splitStatements(sql);
       let shown = null;
       if (statements.length === 1 && /^\s*(select|with)\b/i.test(sql)) {
@@ -68,7 +68,7 @@ export default function FreeMode() {
         if (last) shown = { columns: last.columns, values: last.values };
       }
       setResult({ table: shown, changed: shown ? null : current.getRowsModified() });
-      setWarning(conversion);
+      setWarning(check.warning);
       setSchemaKey((key) => key + 1);
     } catch (failure) {
       setResult(null);

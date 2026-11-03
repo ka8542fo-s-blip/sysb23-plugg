@@ -7,7 +7,8 @@
 // checkConversions läser frågan till uttryck, tar kolumnernas typer ur
 // tabelldefinitionerna (PRAGMA table_info) och går igenom de faktiska värdena
 // när text möter tal. Bara det säkra flaggas: en okänd tabell, funktion eller
-// ett skrivsätt ger okänd typ, och då säger kontrollen ingenting.
+// ett skrivsätt ger okänd typ, och då säger kontrollen ingenting. Samma
+// tolkning stoppar text inom dubbla citattecken, som är ett namn i SQL Server.
 import { toSqlite, tokenize } from "./tsql.js";
 
 const SAFE_NAME = /^[\p{L}\p{N}_#$]+$/u;
@@ -178,6 +179,31 @@ export function analyzeConversions(sql, catalog, onGiveUp = () => {}) {
       if (sources.some((source) => source.unknown) || (qualifier && sources.length > 0)) return null;
     }
     return null;
+  }
+
+  // Finns namnet säkert inte, i någon tabell eller något alias som frågan når?
+  function missing(name, scope) {
+    const key = name.toLowerCase();
+    for (let current = scope; current; current = current.parent) {
+      if (current.aliases?.has(key)) return false;
+      if (current.sources.some((source) => source.unknown || source.column(key))) return false;
+    }
+    return true;
+  }
+
+  // "S1" med dubbla citattecken är ett namn i SQL Server, inte text. SQLite gör
+  // om ett namn som inte finns till text, så WHERE StudentNo = "S1" gick igenom.
+  function quotedText(token, inValues = false) {
+    const name = token.text.slice(1, -1);
+    problems.push({
+      position: token.start,
+      from: token.start,
+      to: token.end,
+      raw: inValues
+        ? `The name "${name}" is not permitted in this context. Valid expressions are constants, constant expressions, and (in some contexts) variables. Column names are not permitted.`
+        : `Invalid column name '${name}'.`,
+      why: `"${name}" med dubbla citattecken är ett namn i SQL Server, inte en text, och ${inValues ? "i VALUES får det bara stå värden" : `det finns ingen kolumn som heter ${name}`}. Text skrivs med enkla citattecken: '${name}'.`,
+    });
   }
 
   // ── FROM ──────────────────────────────────────────────────────────────
@@ -366,8 +392,11 @@ export function analyzeConversions(sql, catalog, onGiveUp = () => {}) {
     }
     if (word() === "ORDER" && word(1) === "BY") {
       at += 2;
+      // ORDER BY når också aliasen i SELECT.
+      const names = first.items.map((item) => item?.name?.toLowerCase()).filter(Boolean);
+      const scope = { ...first.scope, aliases: new Set(names) };
       do {
-        expression(first.scope);
+        expression(scope);
         if (!accept("ASC")) accept("DESC");
       } while (acceptMark(","));
     }
@@ -551,7 +580,9 @@ export function analyzeConversions(sql, catalog, onGiveUp = () => {}) {
       return spanned(from, call(scope));
     }
     if (token?.type !== "ident" || RESERVED.has(word())) throw BAIL;
-    const found = resolve(identifier(), scope);
+    const parts = identifier();
+    if (sql[token.start] === '"' && parts.length === 1 && missing(parts[0], scope)) quotedText(token);
+    const found = resolve(parts, scope);
     return spanned(from, found ?? UNKNOWN);
   }
 
@@ -693,9 +724,29 @@ export function analyzeConversions(sql, catalog, onGiveUp = () => {}) {
         else if (word() === "SELECT") {
           query(null);
           return;
+        } else if (accept("VALUES")) {
+          values();
+          return;
         } else at++;
       }
       at = from;
+    }
+  }
+
+  // I VALUES får det bara stå värden: "U4" är ett namn och stoppas, oavsett
+  // om en kolumn heter så. En underfråga har egna namn.
+  function values() {
+    let depth = 0;
+    for (; at < tokens.length; at++) {
+      if (isMark("(") && word(1) === "SELECT") {
+        skipParens();
+        at--;
+      } else if (isMark("(")) depth++;
+      else if (isMark(")")) depth--;
+      else if (depth === 0 && (isMark(";") || word() === "GO")) return;
+      else if (peek().type === "ident" && sql[peek().start] === '"') {
+        quotedText(peek(), true);
+      }
     }
   }
 
