@@ -2,8 +2,8 @@ export const schedule = {
   term: "HT 2026",
   termStart: "2026-08-31",
   termEnd: "2027-01-17",
-  verifiedOn: "2026-10-12",
-  lastChecked: "2026-10-25",
+  verifiedOn: "2026-11-03",
+  lastChecked: "2026-11-03",
   source: "TimeEdit, sökning \"Informationssystems- och verksamhetsutveckling, SYSB23\", intervall 2026-08-31 – 2027-02-28.",
   note: "Samtliga tentor är digitala och kräver egen laptop samt anmälan i Ladok senast en vecka innan. MA-skrivsalarna ligger i Matteannexet, Sölvegatan 20. Sparta ligger på Tunavägen 39.",
 
@@ -34,7 +34,7 @@ export const schedule = {
     { from: "2026-08-31", to: "2026-09-21", subcourses: ["strategi", "databaser"], label: "Strategi och ekonomistyrning + Databaser." },
     { from: "2026-09-22", to: "2026-11-08", subcourses: ["databaser", "process", "sakerhet"], label: "Databaser + Processorienterad verksamhetsutveckling. Processorienterad startar dagen efter Strategi-tentan — sömlöst byte. Säkerhet har sin introduktionsföreläsning fredag 6 nov, eftermiddagen efter Strategis omtenta." },
     { from: "2026-11-09", to: "2026-11-17", subcourses: ["databaser", "process", "sakerhet"], label: "Redovisningar 9–12 nov, processtentan 13 nov och databastentan 17 nov — samtidigt som Säkerhet har kommit igång (start 6 nov), med föreläsning även på tentadagen 13 nov.", warning: true },
-    { from: "2026-11-18", to: "2026-12-03", subcourses: ["arkitektur", "sakerhet", "ansvarsfull"], label: "Verksamhetsarkitektur, Säkerhet i informationssystem och Ansvarsfull verksamhetsutveckling överlappar, med tre gästföreläsningar i Säkerhet. Onsdag 25 november har tre olika delkurser samma dag.", warning: true },
+    { from: "2026-11-18", to: "2026-12-03", subcourses: ["arkitektur", "sakerhet", "ansvarsfull"], label: "Verksamhetsarkitektur, Säkerhet i informationssystem och Ansvarsfull verksamhetsutveckling överlappar, med tre gästföreläsningar i Säkerhet.", warning: true },
     { from: "2026-12-08", to: "2027-01-17", subcourses: ["isprojekt"], label: "Bara informationssystemsprojektet, med handledning i block och lång ledig sträcka över jul och nyår." }
   ],
 
@@ -60,7 +60,8 @@ export const schedule = {
     { week: 52, from: "2026-12-21", to: "2026-12-27", sessions: 0, load: "tom" },
     { week: 53, from: "2026-12-28", to: "2027-01-03", sessions: 0, load: "tom" },
     { week: 1, from: "2027-01-04", to: "2027-01-10", sessions: 0, load: "tom" },
-    { week: 2, from: "2027-01-11", to: "2027-01-17", sessions: 1, load: "låg" }
+    { week: 2, from: "2027-01-11", to: "2027-01-17", sessions: 1, load: "låg" },
+    { week: 3, from: "2027-01-18", to: "2027-01-24", sessions: 0, load: "tom" }
   ],
 
   sessions: [
@@ -116,8 +117,8 @@ export const schedule = {
     { date: "2026-11-19", time: "10:00–12:00", subcourse: "sakerhet", title: "Föreläsning 3: Gästföreläsning", place: "EC1:Crafoordsalen", kind: "föreläsning" },
     { date: "2026-11-19", time: "14:00–16:00", subcourse: "sakerhet", title: "Föreläsning 4", place: "EC1:Crafoordsalen", kind: "föreläsning" },
     { date: "2026-11-20", time: "10:00–12:00", subcourse: "arkitektur", title: "Föreläsning 2", place: "MA 3", kind: "föreläsning" },
+    { date: "2026-11-23", time: "14:00–16:00", subcourse: "arkitektur", title: "Föreläsning 3", place: "EC1:Crafoordsalen", kind: "föreläsning" },
     { date: "2026-11-25", time: "08:00–10:00", subcourse: "ansvarsfull", title: "Föreläsning 1 — Introduktion", place: "MA 5", kind: "föreläsning" },
-    { date: "2026-11-25", time: "12:00–14:00", subcourse: "arkitektur", title: "Föreläsning 3", place: "EC1:Crafoordsalen", kind: "föreläsning" },
     { date: "2026-11-25", time: "15:00–17:00", subcourse: "sakerhet", title: "Föreläsning 5: Gästföreläsning", place: "MA 5", kind: "föreläsning" },
     { date: "2026-11-26", time: "12:00–14:00", subcourse: "sakerhet", title: "Föreläsning 6: Gästföreläsning", place: "EC1:Crafoordsalen", kind: "föreläsning" },
     { date: "2026-11-27", time: "14:00–19:00", subcourse: "arkitektur", title: "Tentamen — skriftlig salstentamen", place: "Skrivsal MA 10", kind: "tenta" },
@@ -129,6 +130,7 @@ export const schedule = {
     { date: "2027-01-07", time: "08:00–13:00", subcourse: "process", title: "Omtentamen", place: "Skrivsal MA 9", kind: "tenta" },
     { date: "2027-01-11", dateEnd: "2027-01-12", time: "09:00 / 13:00", subcourse: "isprojekt", title: "Handledning 2 — bokad tid", place: "EC2:241 Verona", kind: "handledning" },
     { date: "2027-01-13", time: "14:00–19:00", subcourse: "arkitektur", title: "Omtentamen", place: "Skrivsal MA 10", kind: "tenta" },
-    { date: "2027-01-14", time: "08:00–13:00", subcourse: "sakerhet", title: "Omtentamen", place: "Skrivsal Sparta", kind: "tenta" }
+    { date: "2027-01-14", time: "08:00–13:00", subcourse: "sakerhet", title: "Omtentamen", place: "Skrivsal Sparta", kind: "tenta" },
+    { date: "2027-01-18", time: "10:00 / 13:00", subcourse: "databaser", title: "Om-redovisning och omexaminationsuppgift (retake) — tid bokad i Canvas", place: "EC2:PC059", kind: "redovisning" }
   ]
 };
