@@ -730,7 +730,9 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
 - **Handskrivna delar** (veckoöversikt, tentalista, delkursernas datum)
   låses av `scripts/schedule-consistency.test.mjs`; deploy kör `npm test`,
   så ett schema som inte hänger ihop publiceras inte. Veckoöversikten
-  räknar pass som startar i veckan, utan omtentor.
+  räknar pass som startar i veckan, utan omexaminationer (titel med
+  omtent, omexamination eller om-redovisning, som om-redovisningen
+  18 jan 2027). De räknas inte heller in i delkursens slutdatum.
 - Bevakningen körde 2026-09-14–28 aldrig jämförelsen (teststeget körde alla
   tester utan `npm ci` och föll på sql.js); lagat 2026-09-29, då fem
   ändringar fördes in.

@@ -7,7 +7,9 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
-  { id: 36, date: "2026-11-03", text: "SQL: LIMIT, IFNULL, JOIN utan ON och mer stoppas nu som i SQL Server" },
+  { id: 38, date: "2026-11-03", text: "SQL: LIMIT, IFNULL, JOIN utan ON och mer stoppas nu som i SQL Server" },
+  { id: 37, date: "2026-11-03", text: "Schema: föreläsning 3 i Verksamhetsarkitektur flyttad till mån 23 nov" },
+  { id: 36, date: "2026-11-03", text: "Schema: om-redovisning av databasprojektet 18 jan, tid bokas i Canvas" },
   { id: 35, date: "2026-11-02", text: "SQL: text jämförd med tal stoppas nu, precis som i SQL Server" },
   { id: 34, date: "2026-11-02", text: "SQL: läget Tentanivå med 50 frågor, de flesta på tentans egna tabeller" },
   { id: 33, date: "2026-11-02", text: "SQL: ny struktur med översikt, Nästa-knapp och tabeller bredvid frågan" },
