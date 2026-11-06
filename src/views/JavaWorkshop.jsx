@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { exampleIntro, javaTasks } from "../data/databaser/javaTasks.js";
 import { checkJava } from "../lib/javaCheck.js";
-import SchemaEditor, { SUBMIT_KEYS } from "../components/model/SchemaEditor.jsx";
+import { formatJava } from "../lib/codeIndent.js";
+import { FORMAT_KEYS, SUBMIT_KEYS } from "../lib/keys.js";
+import SchemaEditor from "../components/model/SchemaEditor.jsx";
 import CodeBlock from "../components/java/CodeBlock.jsx";
 import InlineText from "../components/java/InlineText.jsx";
 import JavaResult from "../components/java/JavaResult.jsx";
@@ -205,12 +207,13 @@ export default function JavaWorkshop() {
                   smartIndent
                   highlight={highlightJava}
                   onSubmit={check}
+                  format={formatJava}
                   hint={
                     <>
                       Tab drar in fyra blanksteg och Shift+Tab drar ut, också på flera markerade rader. Enter
                       behåller indraget och drar in efter "{"{"}" och åtta blanksteg efter "(", som i
-                      lösningsförslagen; "{"}"}" och ")" på en tom rad drar ut igen. {SUBMIT_KEYS} rättar, Esc
-                      lämnar rutan.
+                      lösningsförslagen; "{"}"}" och ")" på en tom rad drar ut igen. {FORMAT_KEYS} formaterar
+                      indraget i hela svaret, {SUBMIT_KEYS} rättar, Esc lämnar rutan.
                     </>
                   }
                 />

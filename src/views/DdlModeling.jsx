@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useDrafts } from "../lib/useDrafts.js";
 import { ddlExercises } from "../data/databaser/ddlExercises.js";
 import { checkDdl, toDdl, fold } from "../lib/ddlCheck.js";
+import { formatDdl } from "../lib/codeIndent.js";
 import SchemaEditor from "../components/model/SchemaEditor.jsx";
 import { ExerciseFigure } from "../components/model/modelFigures.jsx";
 
@@ -85,6 +86,7 @@ export default function DdlModeling({ modelProgress, onSolve, onReset }) {
                 placeholder={TEMPLATE}
                 rows={22}
                 subscripts={false}
+                format={formatDdl}
               />
               <p className="mt-1 text-xs text-ink/65">
                 Rättas som struktur: tabellernas och kolumnernas ordning spelar ingen roll (kör du koden i SQL Server måste en tabell skapas före de tabeller som pekar på den), inte heller vad

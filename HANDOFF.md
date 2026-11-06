@@ -164,6 +164,26 @@ kapitel: allt UI läser `chapter.number`.
   facit och häftet har ingen SQL. Föreläsning 2-3 har JOIN i vänsterkanten
   och tre blanksteg; vill man följa den ändras JOIN-regeln på två ställen
   i `sqlIndent.js` (`targetIndent` och `formatStatement`).
+- **Kodrutornas kortkommandon (2026-11-06, användarkrav):** som i VS Code,
+  ⌘ på Mac och Ctrl annars (`lib/keys.js`; Ctrl på Mac lämnas åt textfältets
+  egna Ctrl+A och Ctrl+K). **⌘A** markerar bara rutans text: textfältet gör
+  det självt, och ett klick i SchemaEditors ram (rubrikraden, radnumren) ger
+  textfältet fokus, ett radnummer markerar sin rad. I Java-flikens
+  skrivskyddade kodblock (`CodeBlock.jsx`) markerar ⌘A bara koden. De ljusa
+  facit-`<pre>` i SQL, DDL och Tenta har det inte. **⌘K ⌘F** (F med eller
+  utan ⌘, inom två sekunder; annan tangent avbryter) formaterar hela rutan
+  i ett ångringsbart steg, och markören följer med (`lib/textEdit.js`,
+  `formatField`). Det finns i SQL (`formatSql`, samma som Formatera, som
+  nu också behåller markören), Java (`formatJava`) och DDL i Modellera
+  (`formatDdl`). Det finns inte i fliken Tentas rutor, som är som på
+  Inspera, och inte i notationsrutorna i Modellera. `lib/codeIndent.js`
+  ändrar bara blanktecken i radernas början och slut: lösningsförslagens
+  stil (fyra per {, åtta efter "(" sist på raden, åtta för fortsatt sats,
+  fyra för if/else utan klamrar, try-huvudets andra resurs under den
+  första), strängar, textblock och kommentarstext orörda. DDL behåller det
+  steg man skriver med (två som mallen, fyra som facit). Tester:
+  `scripts/code-indent.test.mjs` (alla Java-lösningar och allt DDL-facit
+  återskapas ur platt och slumpat indrag).
 - **SQL-verkstad:** 53 övningar i 9 ämnen (`sqlExercises.js`), i
   genomgångens ordning (`order` per nivå). Nivå 9 (id n9) ligger över tentans
   nivå. Nivån `tenta` (sql-54…62, Reader/Book/HasRead(Rating) i
@@ -352,8 +372,9 @@ kapitel: allt UI läser `chapter.number`.
   Lösningsförslaget visas under svaret, inte bredvid: sidans maxbredd gav
   bara cirka 45 av tentans 76 tecken per rad i två kolumner. Kodrutan är
   SchemaEditor med `smartIndent` (fyra blanksteg, indrag efter { och (,
-  utdrag av } och ), try-huvudets andra rad) och Java-färgning som lager
-  under textarean (`components/java/highlight.jsx`, testad i Chrome).
+  utdrag av } och ), try-huvudets andra rad), ⌘K ⌘F (`formatJava`, se
+  Kodrutornas kortkommandon) och Java-färgning som lager under textarean
+  (`components/java/highlight.jsx`, testad i Chrome).
   Tester: `scripts/java-check.test.mjs` (alla tio lösningar rätt, minst ett
   fel svar per regel). Riktig körning utanför npm test: `scripts/java/`
   (`H2_JAR=… node scripts/java/verify-solutions.mjs`, JDK och h2-jar

@@ -1,12 +1,11 @@
 import { useLayoutEffect, useRef } from "react";
+import { chordStep, FORMAT_KEYS, IS_MAC, isSelectAll } from "../../lib/keys.js";
+import { formatField } from "../../lib/textEdit.js";
 
 const SUBS = ["₁", "₂", "₃", "₄"];
 // På Mac heter Alt-tangenten Option (⌥); händelsen är densamma. Ctrl + siffra
 // fungerar också, för den som hellre trycker det.
-const IS_MAC = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent || "");
 const MOD_LABEL = IS_MAC ? "⌥ Option" : "Alt";
-// Kortkommandot för onSubmit (Rätta), som det skrivs i tipsraderna.
-export const SUBMIT_KEYS = IS_MAC ? "⌘ + Enter" : "Ctrl + Enter";
 
 const DEFAULT_INDENT_AFTER = { "(": 1 };
 const CLOSER = { "(": ")", "{": "}", "[": "]" };
@@ -31,7 +30,13 @@ const CLOSER = { "(": ")", "{": "}", "[": "]" };
 //                genomskinligt textfält (samma typsnitt, utfyllnad och
 //                radhöjd, ingen radbrytning, rullningen synkad)
 //   onSubmit     Ctrl/⌘ + Enter anropar den (Rätta)
+//   format       (text) => text: ⌘K ⌘F (Ctrl+K Ctrl+F) formaterar hela rutan
+//                i ett steg som går att ångra (lib/codeIndent.js)
 //   hint         egen tipsrad under rutan
+//
+// Ett klick i rutans ram (rubrikraden, radnumren) ger textfältet fokus, så
+// att ⌘A markerar rutans text och inte hela sidan. Ett radnummer markerar
+// sin rad, som i VS Code.
 export default function SchemaEditor({
   id,
   value,
@@ -45,10 +50,12 @@ export default function SchemaEditor({
   smartIndent = false,
   highlight = null,
   onSubmit = null,
+  format = null,
   hint = null,
 }) {
   const ref = useRef(null);
   const layerRef = useRef(null);
+  const chord = useRef(null); // när ⌘K trycktes, i väntan på F
   const INDENT = " ".repeat(indentWidth);
   const hintId = id ? `${id}-tips` : undefined;
 
@@ -142,6 +149,21 @@ export default function SchemaEditor({
   }
 
   function onKeyDown(event) {
+    if (format) {
+      const step = chordStep(chord.current, event);
+      if (step === "start") {
+        event.preventDefault();
+        chord.current = Date.now();
+        return;
+      }
+      if (step === "keep") return;
+      chord.current = null;
+      if (step === "format") {
+        event.preventDefault();
+        formatField(event.target, format);
+        return;
+      }
+    }
     if (event.key === "Tab") {
       event.preventDefault();
       if (smartIndent) {
@@ -209,6 +231,29 @@ export default function SchemaEditor({
   }
   useLayoutEffect(syncLayer, [value]);
 
+  function onFrameMouseDown(event) {
+    const field = ref.current;
+    if (!field || event.button !== 0 || event.target === field || event.target.closest("button")) return;
+    event.preventDefault();
+    field.focus();
+    const gutter = event.target.closest("[data-gutter]");
+    if (!gutter) return;
+    const style = getComputedStyle(gutter);
+    const row = Math.floor((event.clientY - gutter.getBoundingClientRect().top - parseFloat(style.paddingTop)) / parseFloat(style.lineHeight));
+    const lines = value.split("\n");
+    if (!(row >= 0 && row < lines.length)) return;
+    const start = lines.slice(0, row).reduce((sum, line) => sum + line.length + 1, 0);
+    field.setSelectionRange(start, start + lines[row].length);
+  }
+
+  // ⌘A när fokus står på en knapp i rubrikraden (små siffror) gäller också rutan.
+  function onFrameKeyDown(event) {
+    if (event.target === ref.current || !isSelectAll(event)) return;
+    event.preventDefault();
+    ref.current?.focus();
+    ref.current?.select();
+  }
+
   // Med färgning finns alltid en tom rad till, så att en vågrät rullist
   // aldrig tvingar fram lodrät rullning i fältet.
   const lineCount = Math.max(rows, value.split("\n").length + (highlight ? 1 : 0));
@@ -266,7 +311,11 @@ export default function SchemaEditor({
 
   return (
     <div>
-      <div className={highlight ? "rounded-lg focus-within:ring-2 focus-within:ring-pine focus-within:ring-offset-2 focus-within:ring-offset-surface" : undefined}>
+      <div
+        className={highlight ? "rounded-lg focus-within:ring-2 focus-within:ring-pine focus-within:ring-offset-2 focus-within:ring-offset-surface" : undefined}
+        onMouseDown={onFrameMouseDown}
+        onKeyDown={onFrameKeyDown}
+      >
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-t-lg border border-b-0 border-code/60 bg-code px-3 py-1.5">
           <span className="font-mono text-xs text-code-ink/60">{label}</span>
           {subscripts && <div className="flex items-center gap-1" role="group" aria-label="Små siffror">
@@ -285,7 +334,7 @@ export default function SchemaEditor({
           </div>}
         </div>
         <div className="flex rounded-b-lg border border-code/60 bg-code font-mono text-[14px] leading-6">
-          <pre aria-hidden="true" className="select-none border-r border-code-ink/15 px-2 py-3 text-right text-code-ink/40">
+          <pre data-gutter aria-hidden="true" className="select-none border-r border-code-ink/15 px-2 py-3 text-right text-code-ink/40">
             {Array.from({ length: lineCount }, (_, i) => i + 1).join("\n")}
           </pre>
           {textarea}
@@ -296,7 +345,7 @@ export default function SchemaEditor({
           ? hint
           : subscripts
             ? <>Tab gör indrag, Enter behåller det, {MOD_LABEL} + siffra (eller Ctrl + siffra) ger liten siffra, Esc lämnar rutan.</>
-            : <>Tab gör indrag (Shift+Tab tar bort), Enter behåller det och drar in efter "(", Esc lämnar rutan.</>}
+            : <>Tab gör indrag (Shift+Tab tar bort), Enter behåller det och drar in efter "(",{format ? ` ${FORMAT_KEYS} formaterar,` : ""} Esc lämnar rutan.</>}
       </p>
     </div>
   );

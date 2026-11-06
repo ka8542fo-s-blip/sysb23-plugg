@@ -1,38 +1,38 @@
-import { forwardRef } from "react";
-import { afterTyped, backspace, enter, shift } from "../../lib/sqlIndent.js";
-
-// Lägger en ändring i textfältet som om den skrivits, så att fältets egen
-// ångra-historik (Ctrl/Cmd + Z) räknar med den: att sätta värdet via React
-// tömmer historiken. onChange kommer från fältets input-händelse.
-function applyEdit(field, change) {
-  field.focus();
-  field.setSelectionRange(change.from, change.to);
-  const ok = change.insert
-    ? document.execCommand("insertText", false, change.insert)
-    : document.execCommand("delete");
-  if (!ok) field.setRangeText(change.insert, change.from, change.to, "end");
-  field.setSelectionRange(change.selStart, change.selEnd);
-  if (!ok) field.dispatchEvent(new Event("input", { bubbles: true }));
-}
-
-// Hela texten byts, ett steg i ångra-historiken. För knappen Formatera.
-export function replaceAll(field, text) {
-  if (text === field.value) return;
-  applyEdit(field, { from: 0, to: field.value.length, insert: text, selStart: text.length, selEnd: text.length });
-}
+import { forwardRef, useRef } from "react";
+import { FORMAT_KEYS, SUBMIT_KEYS, chordStep } from "../../lib/keys.js";
+import { afterTyped, backspace, enter, formatSql, shift } from "../../lib/sqlIndent.js";
+import { applyEdit, formatField } from "../../lib/textEdit.js";
 
 // Vanlig textarea med monospace — ingen kodredigerare behövs för detta.
 // Tab skriver indrag i stället för att flytta fokus; Esc lämnar fältet så
 // att tangentbordsnavigering fortfarande går att ta sig vidare med.
-// Indragsreglerna ligger i lib/sqlIndent.js. `auto={false}` (tentasimuleringen,
-// som på Inspera) stänger av allt utom Tab och Shift+Tab.
+// Indragsreglerna ligger i lib/sqlIndent.js, och ⌘K ⌘F (Ctrl+K Ctrl+F)
+// formaterar som knappen Formatera. `auto={false}` (tentasimuleringen, som
+// på Inspera) stänger av allt utom Tab och Shift+Tab.
 const SqlEditor = forwardRef(function SqlEditor(
   { value, onChange, onRun, label = "Din fråga", disabled, rows = 6, auto = true },
   ref,
 ) {
+  const chord = useRef(null); // när ⌘K trycktes, i väntan på F
+
   function onKeyDown(event) {
     const field = event.target;
     const { selectionStart: start, selectionEnd: end } = field;
+    if (auto) {
+      const step = chordStep(chord.current, event);
+      if (step === "start") {
+        event.preventDefault();
+        chord.current = Date.now();
+        return;
+      }
+      if (step === "keep") return;
+      chord.current = null;
+      if (step === "format") {
+        event.preventDefault();
+        formatField(field, formatSql);
+        return;
+      }
+    }
     if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
       event.preventDefault();
       onRun();
@@ -92,8 +92,8 @@ const SqlEditor = forwardRef(function SqlEditor(
       />
       <p className="mt-1 text-sm text-ink/65">
         {auto
-          ? "Indraget följer med när du skriver. Tab och Shift+Tab flyttar ett steg, Ctrl/Cmd + Enter kör."
-          : "Ctrl/Cmd + Enter kör frågan. Tab gör indrag, Esc lämnar fältet."}
+          ? `Indraget följer med när du skriver. Tab och Shift+Tab flyttar ett steg, ${FORMAT_KEYS} formaterar och ${SUBMIT_KEYS} kör.`
+          : `${SUBMIT_KEYS} kör frågan. Tab gör indrag, Esc lämnar fältet.`}
       </p>
     </div>
   );
