@@ -94,12 +94,23 @@ export default function Practice({
   const [filterOpen, setFilterOpen] = useState(
     () => typeof window === "undefined" || window.innerWidth >= 640,
   );
-  const [currentId, setCurrentId] = useState(null);
+  // Den öppna frågan sparas per delkurs, med alternativens ordning, valet
+  // och om den är rättad, så att den finns kvar när man går till Läs (via
+  // menyn eller länken) och tillbaka, och efter omladdning.
+  const restored = useRef(null);
+  if (restored.current === null) {
+    const saved = load(KEYS.practiceCurrent, {})[course.id];
+    const list = saved?.tenta ? examItems : course.questions;
+    const question = saved && saved.tenta === examMode ? list.find((item) => item.id === saved.id) : null;
+    const valid = question && Array.isArray(saved.order) && saved.order.length === question.options.length;
+    restored.current = valid ? saved : false;
+  }
+  const [currentId, setCurrentId] = useState(() => restored.current?.id ?? null);
   // Räknas upp vid varje servering, så att samma fråga igen (sista kvar i
   // kön) också får ny blandning, scroll och fokus.
   const [served, setServed] = useState(0);
-  const [chosen, setChosen] = useState(null);
-  const [revealed, setRevealed] = useState(false);
+  const [chosen, setChosen] = useState(() => restored.current?.chosen ?? null);
+  const [revealed, setRevealed] = useState(() => Boolean(restored.current?.revealed));
   const [includeDone, setIncludeDone] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
   const cardRef = useRef(null);
@@ -111,7 +122,25 @@ export default function Practice({
     return list.find((question) => question.id === currentId) || null;
   }, [course, examItems, examMode, currentId]);
   // Ny blandning av alternativen varje gång en fråga serveras.
-  const view = useMemo(() => (current ? shuffleQuestion(current) : null), [current, served]);
+  // En sparad fråga får tillbaka sin ordning tills nästa fråga serveras.
+  const view = useMemo(() => {
+    if (!current) return null;
+    const saved = restored.current;
+    if (saved && served === 0 && saved.id === current.id) {
+      const options = saved.order.map((index) => ({ ...current.options[index], originalIndex: index }));
+      return { options, correct: saved.order.indexOf(current.correct) };
+    }
+    return shuffleQuestion(current);
+  }, [current, served]);
+  useEffect(() => {
+    const all = load(KEYS.practiceCurrent, {});
+    if (current && view) {
+      all[course.id] = { id: current.id, tenta: examMode, order: view.options.map((option) => option.originalIndex), chosen, revealed };
+    } else {
+      delete all[course.id];
+    }
+    save(KEYS.practiceCurrent, all);
+  }, [course.id, current, view, examMode, chosen, revealed]);
 
   // Visa en fråga. Visningen bokförs (bara i Alla frågor) och frågan läggs
   // sist i lägets karens, så att den inte återkommer förrän COOLDOWN andra
@@ -192,9 +221,6 @@ export default function Practice({
 
   // Tillbaka från kapitlet, Essä eller BPMN-övningar: samma läge, och samma
   // fråga igen obesvarad om en sådan anges, utan att urvalet ändras.
-  // Översiktseffekten nedan körs också vid monteringen och ska då inte
-  // nollställa frågan.
-  const resumedRef = useRef(false);
   useEffect(() => {
     const scope = params?.scope;
     if (scope !== "tenta" && scope !== "alla" && !params?.questionId) return;
@@ -208,8 +234,9 @@ export default function Practice({
     const id = params?.questionId;
     const list = tenta ? examItems : course.questions;
     if (!id || !list.some((question) => question.id === id)) return;
-    resumedRef.current = true;
     setCurrentId(id);
+    // Samma fråga som den sparade: valet och rättningen står kvar.
+    if (restored.current?.id === id) return;
     setChosen(null);
     setRevealed(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -217,17 +244,20 @@ export default function Practice({
 
   // Byte av delkurs eller urval: tillbaka till översikten. Byte av läge
   // och tentaurval gör det i sina egna handlers. Urvalet jämförs på
-  // innehåll: förvalet från Läs skriver alltid en ny lista.
+  // innehåll: förvalet från Läs skriver alltid en ny lista. Vid monteringen
+  // (även StrictModes andra körning) har inget bytts, och den sparade eller
+  // återupptagna frågan står kvar.
   const topicsKey = activeTopics.join(",");
+  const scopeKeyRef = useRef(null);
   useEffect(() => {
+    const key = `${course.id}|${topicsKey}`;
+    const changed = scopeKeyRef.current !== null && scopeKeyRef.current !== key;
+    scopeKeyRef.current = key;
     if (presetTopicsRef.current !== null) {
       if (presetTopicsRef.current === topicsKey) presetTopicsRef.current = null;
       return;
     }
-    if (resumedRef.current) {
-      resumedRef.current = false;
-      return;
-    }
+    if (!changed) return;
     setCurrentId(null);
     setConfirmReset(false);
   }, [course.id, topicsKey]);

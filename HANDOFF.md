@@ -887,7 +887,9 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
 `"<kurs>:tenta"` —, `practiceOrder`, `practiceTopics`, `practiceScope`,
 `practiceExams`, `practiceExamOrder`), `lasSegment`, `delkurs`, `schemaVy`,
 `upplasningstakt`, `sqlSlump`, `sqlLage`, `sqlOppen`, `sqlHjalp`,
-`sqlSlumpUppgift`, `read:<kurs>:<kapitel>`,
+`sqlSlumpUppgift`, `ovaFraga` (öppen fråga i Öva per delkurs: id, läge,
+alternativens ordning, val, rättad; släpps av "Klar för nu" och byte av
+urval), `read:<kurs>:<kapitel>`,
 `sql:<övningsId>` (= "solved" | "solved-with-help"), `svar:<uppgiftsId>` (eget svar i
 Modellera, SQL-verkstaden och BPMN-övningar, `lib/useDrafts.js`; `svar:sql-fritt`
 för SQL:s fria läge; tas bort av "Nollställ uppgiften"), `java:<uppgiftsId>`

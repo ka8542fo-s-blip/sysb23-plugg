@@ -16,6 +16,7 @@ export const KEYS = {
   sqlRandom: "sqlSlump", // antal lösta slumpövningar
   bpmnMenu: "bpmnMeny", // "full" | "smal" — BPMN-övningarnas meny, ihopfälld till siffror
   examAnswers: "tentafragor", // { [frågeId]: samma form som answers } — läget Tentafrågor i Öva, räknas för sig
+  practiceCurrent: "ovaFraga", // { [delkursId]: { id, tenta, order, chosen, revealed } } — öppen fråga i Öva, kvar när man går till Läs och tillbaka
   theme: "tema", // "auto" | "ljust" | "mork" — läses också av skriptet i index.html
   javaTask: "javaUppgift", // senast öppna uppgiften i fliken Java (uppgifts-id)
   sqlMode: "sqlLage", // SQL-flikens läge: "ovningar" | "tenta" | "slump" | "fritt"
