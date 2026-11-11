@@ -85,7 +85,7 @@ export default function Home({
               <StatTile
                 label="Klara frågor"
                 value={`${overall.done}/${overall.total}`}
-                tip="fragorSedda"
+                tip="klaraFragor"
               />
               <StatTile
                 label="Senaste prov"

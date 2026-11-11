@@ -186,6 +186,7 @@ export default function App() {
     setExamSession(null);
     setReadChapters({});
     setSqlProgress({});
+    setModelProgress({});
     setCourseId("strategi");
   }
 

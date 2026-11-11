@@ -79,7 +79,7 @@ export default function Stats({
               <StatTile
                 label="Klara frågor"
                 value={`${overall.done}/${overall.total}`}
-                tip="fragorSedda"
+                tip="klaraFragor"
               />
             </>
           )}
@@ -233,9 +233,10 @@ export default function Stats({
       <section className="card border-wrong/30 p-5">
         <h2 className="font-display text-lg">Nollställ min data</h2>
         <p className="mt-2 text-[15px] text-ink/70">
-          Raderar svarshistorik, provresultat, essäutkast, läsprogress, lösta
-          SQL-övningar, tentaanmälningar, valt läge i Läs och övriga
-          inställningar från den här webbläsaren. Går inte att ångra.
+          Raderar svarshistorik, provresultat, essäutkast, läsprogress, bockar
+          och svar i SQL, Java, Modellera och BPMN-övningar, tentaanmälningar,
+          valt läge i Läs och övriga inställningar från den här webbläsaren.
+          Går inte att ångra.
         </p>
         {confirming ? (
           <div className="mt-4 flex flex-wrap gap-3">
