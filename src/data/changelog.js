@@ -7,6 +7,7 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 41, date: "2026-11-11", text: "Öva: läget Genomgång, där ett rätt räcker, och statusrad över frågan" },
   { id: 40, date: "2026-11-11", text: "Öva: frågan står kvar när du går till Läs och tillbaka" },
   { id: 39, date: "2026-11-06", text: "Kodrutor: ⌘A markerar bara rutan och ⌘K ⌘F formaterar koden" },
   { id: 38, date: "2026-11-03", text: "SQL: LIMIT, IFNULL, JOIN utan ON och mer stoppas nu som i SQL Server" },

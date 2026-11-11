@@ -93,3 +93,33 @@ export function nextQuestion({ recent = [], ...rest }) {
   const servedAt = (question) => recent.lastIndexOf(question.id);
   return ordered.reduce((oldest, question) => (servedAt(question) < servedAt(oldest) ? question : oldest));
 }
+
+// Genomgång: ett eget varv genom frågorna där ett rätt räcker. Fel kommer
+// tillbaka tills det blivit rätt. Varvet sparas för sig ({ cleared, wrong }),
+// så att inlärningens status (två rätt i rad) aldrig skrivs över, och kan
+// nollställas för sig. Varvet uttrycks som svar i samma form som answers,
+// så att kön, karensen och räknarna ovan fungerar oförändrade.
+export const EMPTY_PASS = { cleared: [], wrong: {} };
+
+export function passAnswers(questions, pass = EMPTY_PASS) {
+  const cleared = new Set(pass.cleared);
+  const answers = {};
+  for (const question of questions) {
+    if (cleared.has(question.id)) {
+      answers[question.id] = { seen: 1, correct: 1, wrong: 0, last: "correct", lastAt: "", recent: [true, true] };
+    } else if (pass.wrong[question.id]) {
+      answers[question.id] = { seen: 1, correct: 0, wrong: 1, last: "wrong", lastAt: pass.wrong[question.id], recent: [false] };
+    }
+  }
+  return answers;
+}
+
+export function recordPass(pass = EMPTY_PASS, id, correct, at = new Date().toISOString()) {
+  const wrong = { ...pass.wrong };
+  if (correct) {
+    delete wrong[id];
+    return { cleared: pass.cleared.includes(id) ? pass.cleared : [...pass.cleared, id], wrong };
+  }
+  wrong[id] = at;
+  return { cleared: pass.cleared.filter((item) => item !== id), wrong };
+}

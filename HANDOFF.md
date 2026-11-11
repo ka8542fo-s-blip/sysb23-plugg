@@ -671,7 +671,14 @@ kräver surrogatnycklar och inte namn — kapitel 9 följer tentan.
   senaste svar först, sedan obesvarade, sedan de med ett rätt; karens
   COOLDOWN = 8 serverade frågor (`settings.practiceRecent`), viker när kön
   är kortare. Översikt först ("klara per kapitel/totalt"), nollställning
-  per delkurs. Gruppering via `lib/practiceAxis.js` (`practiceBy:
+  per delkurs. **Krav** (2026-11-11, användarkrav, `settings.practiceRequire`
+  per delkurs): Inlärning (ovan) eller Genomgång, ett eget varv där ett rätt
+  räcker och fel kommer tillbaka tills det blivit rätt (`passAnswers`,
+  `recordPass`, sparat i `sysb23:ovaGenomgang`, egen karens
+  `practiceRecent["<kurs>:pass"]`). Svaren i Genomgång bokförs också i
+  `answers`, men varvet nollställs för sig och rör aldrig inlärningens
+  status. Statusraden över frågan (klara, kvar, att göra om) visas i båda.
+  Tester: `scripts/practice-pass.test.mjs`. Gruppering via `lib/practiceAxis.js` (`practiceBy:
   "chapter"` = Öva speglar Läs). QuestionCard renderar `diagram` och
   `context`; chipen "Ogranskad" är borttagen. Tentafokus (kärnämnen först)
   togs bort 2026-10-22: det gjorde inget i BPM, där alla ämnen är kärna,
@@ -887,7 +894,9 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
 `"<kurs>:tenta"` —, `practiceOrder`, `practiceTopics`, `practiceScope`,
 `practiceExams`, `practiceExamOrder`), `lasSegment`, `delkurs`, `schemaVy`,
 `upplasningstakt`, `sqlSlump`, `sqlLage`, `sqlOppen`, `sqlHjalp`,
-`sqlSlumpUppgift`, `ovaFraga` (öppen fråga i Öva per delkurs: id, läge,
+`sqlSlumpUppgift`, `ovaGenomgang` (Genomgång i Öva per delkurs: avbetade
+frågor och fel att göra om; nollställs bara med "Börja om genomgången"),
+`ovaFraga` (öppen fråga i Öva per delkurs: id, läge,
 alternativens ordning, val, rättad; släpps av "Klar för nu" och byte av
 urval), `read:<kurs>:<kapitel>`,
 `sql:<övningsId>` (= "solved" | "solved-with-help"), `svar:<uppgiftsId>` (eget svar i

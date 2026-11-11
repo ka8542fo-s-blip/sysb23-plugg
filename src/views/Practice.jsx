@@ -4,7 +4,7 @@ import TopicFilter from "../components/TopicFilter.jsx";
 import PastExamOverview from "../components/practice/PastExamOverview.jsx";
 import { shuffleQuestion } from "../lib/shuffle.js";
 import { chapterForQuestion, groupKeyFor, practiceGroups, practiceMode } from "../lib/practiceAxis.js";
-import { COOLDOWN, isDone, nextQuestion, progressFor } from "../lib/practiceQueue.js";
+import { COOLDOWN, EMPTY_PASS, isDone, nextQuestion, passAnswers, progressFor, recordPass } from "../lib/practiceQueue.js";
 import { examLabel, pastExamItems, pastExamsOf, tally } from "../lib/pastExams.js";
 import { KEYS, clearAnswersFor, load, recordAnswer, save } from "../lib/storage.js";
 
@@ -47,8 +47,19 @@ export default function Practice({
     [course, keyOf],
   );
   const filtered = useMemo(() => questionsFor(activeTopics), [questionsFor, activeTopics]);
-  const progress = useMemo(() => progressFor(filtered, answers), [filtered, answers]);
-  const courseProgress = useMemo(() => progressFor(course.questions, answers), [course, answers]);
+
+  // Alla frågor har två krav: Inlärning (två rätt i rad, svaren i answers)
+  // och Genomgång (ett rätt räcker, ett eget varv som sparas för sig).
+  // Räknare, översikt och kö läser "activeAnswers", så båda fungerar likadant.
+  const passMode = settings.practiceRequire?.[course.id] === "ett" && settings.practiceScope?.[course.id] !== "tenta";
+  const [passes, setPasses] = useState(() => load(KEYS.practicePass, {}));
+  useEffect(() => save(KEYS.practicePass, passes), [passes]);
+  const pass = passes[course.id] ?? EMPTY_PASS;
+  const passStats = useMemo(() => passAnswers(course.questions, pass), [course, pass]);
+  const activeAnswers = passMode ? passStats : answers;
+  const progress = useMemo(() => progressFor(filtered, activeAnswers), [filtered, activeAnswers]);
+  const courseProgress = useMemo(() => progressFor(course.questions, activeAnswers), [course, activeAnswers]);
+  const redo = passMode ? filtered.filter((question) => passStats[question.id]?.last === "wrong").length : 0;
   const perGroup = useMemo(() => {
     const counts = {};
     for (const group of groups) counts[group.id] = { done: 0, total: 0 };
@@ -56,10 +67,10 @@ export default function Practice({
       const entry = counts[keyOf(question)];
       if (!entry) continue;
       entry.total++;
-      if (isDone(answers[question.id])) entry.done++;
+      if (isDone(activeAnswers[question.id])) entry.done++;
     }
     return counts;
-  }, [groups, course, keyOf, answers]);
+  }, [groups, course, keyOf, activeAnswers]);
 
   // Tentafrågor. Posterna byggs en gång per delkurs, så att alternativens
   // blandning (view nedan) ligger still medan man svarar.
@@ -153,7 +164,7 @@ export default function Practice({
       setRevealed(false);
       scrollToCard.current = true;
       if (!tenta) onSeen(id);
-      const key = tenta ? `${course.id}:tenta` : course.id;
+      const key = tenta ? `${course.id}:tenta` : passMode ? `${course.id}:pass` : course.id;
       setSettings((prev) => {
         const list = prev.practiceRecent?.[key] || [];
         return {
@@ -165,7 +176,7 @@ export default function Practice({
         };
       });
     },
-    [onSeen, setSettings, course.id],
+    [onSeen, setSettings, course.id, passMode],
   );
 
   // Servera nästa fråga ur `questions` med lägets svar, ordning och karens.
@@ -173,8 +184,8 @@ export default function Practice({
     (questions, withDone, tenta = examMode) => {
       const next = nextQuestion({
         questions,
-        answers: tenta ? examAnswers : answers,
-        recent: settings.practiceRecent?.[tenta ? `${course.id}:tenta` : course.id] || [],
+        answers: tenta ? examAnswers : activeAnswers,
+        recent: settings.practiceRecent?.[tenta ? `${course.id}:tenta` : passMode ? `${course.id}:pass` : course.id] || [],
         order: tenta ? examOrder : order,
         includeDone: withDone,
       });
@@ -185,7 +196,7 @@ export default function Practice({
       setIncludeDone(withDone);
       show(next.id, tenta);
     },
-    [examMode, examAnswers, answers, settings.practiceRecent, course.id, examOrder, order, show],
+    [examMode, examAnswers, activeAnswers, passMode, settings.practiceRecent, course.id, examOrder, order, show],
   );
 
   const setScope = useCallback(
@@ -316,9 +327,40 @@ export default function Practice({
     if (revealed || chosen === null || !view || !current) return;
     setRevealed(true);
     const wasCorrect = chosen === view.correct;
-    if (examMode) setExamAnswers((prev) => recordAnswer(prev, current.id, wasCorrect));
-    else onAnswer(current.id, wasCorrect);
-  }, [revealed, chosen, view, current, examMode, onAnswer]);
+    if (examMode) {
+      setExamAnswers((prev) => recordAnswer(prev, current.id, wasCorrect));
+      return;
+    }
+    // Svaret räknas alltid i Statistik och inlärningen; i Genomgång också i varvet.
+    onAnswer(current.id, wasCorrect);
+    if (passMode) setPasses((prev) => ({ ...prev, [course.id]: recordPass(prev[course.id], current.id, wasCorrect) }));
+  }, [revealed, chosen, view, current, examMode, passMode, onAnswer, course.id]);
+
+  const setRequire = useCallback(
+    (require) => {
+      setSettings((prev) => ({
+        ...prev,
+        practiceRequire: { ...(prev.practiceRequire || {}), [course.id]: require },
+      }));
+      setCurrentId(null);
+      setConfirmReset(false);
+    },
+    [setSettings, course.id],
+  );
+  // Börja om genomgången: bara varvet, aldrig inlärningens status.
+  const restartPass = useCallback(() => {
+    setPasses((prev) => {
+      const nextPasses = { ...prev };
+      delete nextPasses[course.id];
+      return nextPasses;
+    });
+    setSettings((prev) => ({
+      ...prev,
+      practiceRecent: { ...(prev.practiceRecent || {}), [`${course.id}:pass`]: [] },
+    }));
+    setCurrentId(null);
+    setConfirmReset(false);
+  }, [setSettings, course.id]);
 
   const pool = examMode ? examPool : filtered;
   const next = useCallback(() => serve(pool, includeDone), [serve, pool, includeDone]);
@@ -452,8 +494,35 @@ export default function Practice({
         <p className={`${hasExamMode ? "mt-3" : "mt-1"} text-[15px] text-ink/70`}>
           {examMode
             ? "Bara frågor som kommit på gamla tentor, med tentans nummer och poäng. Svaren här räknas för sig och påverkar inte resten av Öva eller Statistik."
-            : "En fråga är klar när du svarat rätt två gånger i rad. Fel kommer först, sedan obesvarade, sedan de som väntar på sitt andra rätt. Sluta när du vill — du fortsätter där du var."}
+            : passMode
+              ? "Genomgång: ett rätt svar räcker för att en fråga ska vara avbetad. Svarar du fel kommer frågan tillbaka senare, tills du svarat rätt. Varvet räknas för sig och rör inte inlärningens status."
+              : "En fråga är klar när du svarat rätt två gånger i rad. Fel kommer först, sedan obesvarade, sedan de som väntar på sitt andra rätt. Sluta när du vill — du fortsätter där du var."}
         </p>
+
+        {!examMode && (
+          <div className="mt-4">
+            <h3 className="mb-2 font-display text-lg">Krav</h3>
+            <div className="flex flex-wrap gap-2" role="group" aria-label="Krav för att en fråga ska vara klar">
+              {[
+                { id: "tva", label: "Inlärning: två rätt i rad" },
+                { id: "ett", label: "Genomgång: ett rätt" },
+              ].map((item) => {
+                const on = (item.id === "ett") === passMode;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    aria-pressed={on}
+                    onClick={() => !on && setRequire(item.id)}
+                    className={`chip ${on ? "chip-on" : "hover:border-pine"}`}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         <button
           type="button"
@@ -548,7 +617,27 @@ export default function Practice({
 
         {/* Enda vägen att nollställa: tydlig knapp med bekräftelse, per delkurs och läge. */}
         <div className={filterOpen ? "mt-6 border-t border-line pt-4" : "mt-6 hidden"}>
-          {confirmReset ? (
+          {!examMode && passMode ? (
+            confirmReset ? (
+              <div>
+                <p className="text-sm text-ink/70">
+                  Genomgången för {course.name} börjar om från noll. Inlärningens status, Statistik och Tentafrågor rörs inte.
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <button type="button" className="btn-secondary" onClick={restartPass}>
+                    Ja, börja om
+                  </button>
+                  <button type="button" className="btn-quiet" onClick={() => setConfirmReset(false)}>
+                    Avbryt
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button type="button" className="btn-quiet px-0 text-sm" onClick={() => setConfirmReset(true)}>
+                Börja om genomgången
+              </button>
+            )
+          ) : confirmReset ? (
             <div>
               <p className="text-sm text-ink/70">
                 {examMode
@@ -592,8 +681,13 @@ export default function Practice({
                 : activeTopics.map((id) => groups.find((group) => group.id === id)?.name).join(", ")}
             </p>
             <h2 className="tabular mt-1 font-display text-3xl">
-              {progress.done} av {progress.total} klara
+              {progress.done} av {progress.total} {passMode ? "avbetade" : "klara"}
             </h2>
+            {passMode && (
+              <p className="tabular mt-1 text-[15px] text-ink/70">
+                Genomgång · {progress.total - progress.done} kvar{redo ? `, varav ${redo} att göra om efter fel` : ""}
+              </p>
+            )}
             <div className="mt-3 h-2 overflow-hidden rounded-full bg-line" aria-hidden="true">
               <div
                 className="h-full rounded-full bg-pine"
@@ -628,6 +722,15 @@ export default function Practice({
             <div className="mt-6 flex flex-wrap items-center gap-3">
               {filtered.length === 0 ? (
                 <p className="text-[15px] text-ink/70">Inga frågor i urvalet. Välj fler kapitel.</p>
+              ) : allDone && passMode ? (
+                <>
+                  <span className="text-[15px] text-ink/80">
+                    Genomgången är klar: du har svarat rätt på alla {progress.total}.
+                  </span>
+                  <button type="button" className="btn-secondary" onClick={restartPass}>
+                    Börja om genomgången
+                  </button>
+                </>
               ) : allDone ? (
                 <>
                   <button type="button" className="btn-primary" onClick={() => serve(filtered, true)}>
@@ -653,11 +756,21 @@ export default function Practice({
                 </>
               ) : (
                 <button type="button" className="btn-primary" onClick={() => serve(filtered, false)}>
-                  Fortsätt öva
+                  {passMode ? (progress.done || redo ? "Fortsätt genomgången" : "Starta genomgången") : "Fortsätt öva"}
                 </button>
               )}
             </div>
           </section>
+        )}
+
+        {current && view && !examMode && (
+          <ProgressBar
+            label={passMode ? "Genomgång" : "Inlärning"}
+            done={progress.done}
+            total={progress.total}
+            redo={redo}
+            pass={passMode}
+          />
         )}
 
         {current && view && (
@@ -703,6 +816,27 @@ export default function Practice({
             </QuestionCard>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+// Statusraden ovanför frågan: hur många i urvalet som är klara, hur många
+// som är kvar och, i Genomgång, hur många av dem som ska göras om efter fel.
+function ProgressBar({ label, done, total, redo, pass }) {
+  const left = total - done;
+  return (
+    <div className="card mx-auto w-full max-w-reading px-5 py-3" role="status">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-sm">
+        <span className="font-medium">{label}</span>
+        <span className="tabular text-ink/70">
+          {done} av {total} {pass ? "avbetade" : "klara"} · {left} kvar
+          {redo > 0 ? ` · ${redo} att göra om` : ""}
+        </span>
+      </div>
+      <div className="mt-2 flex h-2 overflow-hidden rounded-full bg-line" aria-hidden="true">
+        <div className="h-full bg-pine" style={{ width: `${total ? (done / total) * 100 : 0}%` }} />
+        {redo > 0 && <div className="h-full bg-wrong/60" style={{ width: `${(redo / total) * 100}%` }} />}
       </div>
     </div>
   );
