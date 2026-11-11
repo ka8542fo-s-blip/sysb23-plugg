@@ -329,10 +329,10 @@ export const tasks = [
     source: "Övningshäftet 1.1 (egen körfråga)",
     premises: ["Buketten lämnas över", "Notification of failure to deliver kommer 3 timmar efter överlämningen", "Confirmation of delivery kommer 5 timmar efter överlämningen"],
     scenario: { messages: [{ name: "Notification of failure to deliver", after: "h", minutes: 180 }, { name: "Confirmation of delivery", after: "h", minutes: 300 }] },
-    question: "I vilket sluttillstånd slutar subprocessen, och vad betyder det i föräldradiagrammet?",
+    question: "I vilket sluttillstånd slutar subprocessen?",
     options: [
-      "Delivery succeeded — XOR:en efter subprocessen går vidare till fakturering",
-      "Delivery failed — XOR:en efter subprocessen går till Arrange alternate delivery time",
+      "Delivery succeeded",
+      "Delivery failed",
       "Båda — subprocessen slutar i båda sluttillstånden",
       "Inget — subprocessen väntar på båda meddelandena",
     ],
