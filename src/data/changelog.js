@@ -7,6 +7,7 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 46, date: "2026-11-11", text: "SQL: LEFT, RIGHT, YEAR, DATEDIFF och [dbo].[Tabell] fungerar nu" },
   { id: 45, date: "2026-11-11", text: "Essä: checklistan scrollar för sig, bredvid ditt svar" },
   { id: 44, date: "2026-11-11", text: "Statistik: rättade förklaringar, Nollställ tar bort alla bockar direkt" },
   { id: 43, date: "2026-11-11", text: "BPMN-frågan om Bouquet delivery frågar bara efter sluttillståndet" },

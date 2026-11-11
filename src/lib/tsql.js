@@ -44,6 +44,9 @@ const NUMBER_FUNCTIONS = new Set([
   "charindex", "datediff", "year", "month", "day", "row_number", "rank", "dense_rank",
 ]);
 const RENAMES = { isnull: "IFNULL", substring: "SUBSTR", len: "LENGTH", count_big: "COUNT" };
+// Datumdelarna som DATEDIFF och DATEPART kan räkna med, med SQL Servers förkortningar.
+const DATE_PARTS = { year: "year", yy: "year", yyyy: "year", month: "month", mm: "month", m: "month", day: "day", dd: "day", d: "day" };
+const STRFTIME_CODES = { year: "%Y", month: "%m", day: "%d" };
 const AGGREGATES = new Set(["count", "count_big", "sum", "avg", "min", "max", "total", "group_concat", "string_agg"]);
 // Tabellernas kolumnnamn. Ett alias med samma namn som en kolumn pekar i WHERE
 // och HAVING på kolumnen, inte på aliaset.
@@ -184,20 +187,23 @@ function splitTokens(tokens) {
 }
 
 // ── Är operanden text? Avgör om + betyder sammanslagning ─────────────────
+// Typen i CAST(x AS typ): det AS som står på anropets egen nivå, inte ett i x.
+function castType(tokens, nameIndex) {
+  const open = nextSig(tokens, nameIndex);
+  const close = matchingClose(tokens, open);
+  let depth = 0;
+  for (let j = open; j < close; j++) {
+    if (isOp(tokens[j], "(")) depth++;
+    else if (isOp(tokens[j], ")")) depth--;
+    else if (depth === 1 && upper(tokens[j]) === "AS") return tokens[nextSig(tokens, j)]?.text ?? "";
+  }
+  return null;
+}
+
 function callIsText(tokens, nameIndex) {
   const name = tokens[nameIndex].text.toLowerCase();
   if (TEXT_FUNCTIONS.has(name)) return true;
-  if (name === "cast") {
-    const open = nextSig(tokens, nameIndex);
-    const close = matchingClose(tokens, open);
-    for (let j = open; j < close; j++) {
-      if (upper(tokens[j]) === "AS") {
-        const type = tokens[nextSig(tokens, j)];
-        return type ? TEXT_TYPE.test(type.text) : false;
-      }
-    }
-  }
-  return false;
+  return name === "cast" && TEXT_TYPE.test(castType(tokens, nameIndex) ?? "");
 }
 
 function operandIsText(tokens, index, side) {
@@ -229,14 +235,7 @@ function operandIsText(tokens, index, side) {
 function callIsNumber(tokens, nameIndex) {
   const name = tokens[nameIndex].text.toLowerCase();
   if (NUMBER_FUNCTIONS.has(name)) return true;
-  if (name === "cast") {
-    const open = nextSig(tokens, nameIndex);
-    const close = matchingClose(tokens, open);
-    for (let j = open; j < close; j++) {
-      if (upper(tokens[j]) === "AS") return NUMBER_TYPE.test(tokens[nextSig(tokens, j)]?.text ?? "");
-    }
-  }
-  return false;
+  return name === "cast" && NUMBER_TYPE.test(castType(tokens, nameIndex) ?? "");
 }
 
 function operandIsNumber(tokens, index, side) {
@@ -320,6 +319,129 @@ function rewriteBracketedSets(out) {
   }
 }
 
+// Bitar av text som riktiga tokens, så att + intill en omskriven funktion
+// fortfarande känns igen som text eller tal.
+const lex = (text) => tokenize(text);
+const copyOf = (tokens) => tokens.map((token) => ({ ...token }));
+
+const partOf = (arg) => {
+  const sig = arg.filter(isSig);
+  const key = sig.length === 1 && sig[0].type === "ident" ? sig[0].text.toLowerCase() : "";
+  return Object.hasOwn(DATE_PARTS, key) ? DATE_PARTS[key] : null;
+};
+
+// YEAR(d) är heltalet i strftime('%Y', d), som SQL Server ger int.
+const datePart = (part, value) => [...lex(`CAST(STRFTIME('${STRFTIME_CODES[part]}', `), ...copyOf(value), ...lex(") AS INTEGER)")];
+
+// DATEDIFF räknar skiften mellan datumen, inte tiden: 23:00 och 01:00 dagen efter är
+// ett dygn, och 31 januari till 1 mars är två månader.
+function dateDiff(part, from, to) {
+  if (part === "day") {
+    return [...lex("CAST(JULIANDAY(DATE("), ...copyOf(to), ...lex(")) - JULIANDAY(DATE("), ...copyOf(from), ...lex(")) AS INTEGER)")];
+  }
+  const years = [...lex("("), ...datePart("year", to), ...lex(" - "), ...datePart("year", from), ...lex(")")];
+  if (part === "year") return years;
+  return [...lex("("), ...years, ...lex(" * 12 + "), ...datePart("month", to), ...lex(" - "), ...datePart("month", from), ...lex(")")];
+}
+
+// SQLite saknar LEFT, RIGHT, YEAR, MONTH, DAY, DATEPART och DATEDIFF. Anropet byts mot
+// det som räknar likadant, inifrån och ut så att ett anrop inuti ett annat redan är
+// omskrivet när det yttre läses.
+//   LEFT(x, n)  → SUBSTR(x, 1, n)
+//   RIGHT(x, n) → SUBSTR(x, -(n), n): tomt för 0 och hela texten för ett för stort n
+function rewriteFunctions(out) {
+  for (let i = out.length - 1; i >= 0; i--) {
+    if (out[i].type !== "ident") continue;
+    // INSERT INTO Month (a): en tabell som heter som en funktion är ingen funktion.
+    if (["INTO", "UPDATE", "TABLE", "FROM", "JOIN"].includes(upper(out[prevSig(out, i)]))) continue;
+    const name = out[i].text.toLowerCase();
+    const open = nextSig(out, i);
+    const close = isOp(out[open], "(") ? matchingClose(out, open) : -1;
+    if (close === -1) continue;
+    const args = splitDepthZero(out.slice(open + 1, close), ",");
+    let replacement = null;
+    if ((name === "left" || name === "right") && args.length === 2) {
+      const [text, count] = args;
+      replacement = name === "left"
+        ? [...lex("SUBSTR("), ...copyOf(text), ...lex(", 1,"), ...copyOf(count), ...lex(")")]
+        : [...lex("SUBSTR("), ...copyOf(text), ...lex(", -("), ...copyOf(count), ...lex("),"), ...copyOf(count), ...lex(")")];
+    } else if ((name === "year" || name === "month" || name === "day") && args.length === 1) {
+      replacement = datePart(name, args[0]);
+    } else if (name === "datepart" && args.length === 2 && partOf(args[0])) {
+      replacement = datePart(partOf(args[0]), args[1]);
+    } else if (name === "datediff" && args.length === 3 && partOf(args[0])) {
+      replacement = dateDiff(partOf(args[0]), args[1], args[2]);
+    }
+    if (replacement) out.splice(i, close - i + 1, ...replacement);
+  }
+}
+
+// (SELECT …) AS t (a, b): namnen efter aliaset. Null om delfrågan inte har en kolumnlista.
+function derivedColumns(tokens, close) {
+  let at = nextSig(tokens, close);
+  if (upper(tokens[at]) === "AS") at = nextSig(tokens, at);
+  const alias = tokens[at];
+  if (alias?.type !== "ident" || RESERVED_WORDS.has(upper(alias)) || alias.text.endsWith(".")) return null;
+  const open = nextSig(tokens, at);
+  const end = isOp(tokens[open], "(") ? matchingClose(tokens, open) : -1;
+  if (end === -1) return null;
+  const parts = splitDepthZero(tokens.slice(open + 1, end), ",").map((part) => part.filter(isSig));
+  if (parts.some((part) => part.length !== 1 || part[0].type !== "ident")) return null;
+  return { names: parts.map(([name]) => name.text), open, end };
+}
+
+// SQLite har ingen kolumnlista efter aliaset. Delfrågan läggs under en tom rad med
+// namnen, för SQLite tar kolumnernas namn från den första raden. COLLATE NOCASE gör
+// att namnen jämför text som seedens kolumner gör, som SQL Servers standardcollation;
+// utan den blev jämförelsen skiftlägeskänslig.
+function rewriteDerivedColumns(out) {
+  for (let i = out.length - 1; i >= 0; i--) {
+    if (!isOp(out[i], "(") || upper(out[nextSig(out, i)]) !== "SELECT") continue;
+    const close = matchingClose(out, i);
+    const columns = close === -1 ? null : derivedColumns(out, close);
+    if (!columns) continue;
+    const names = columns.names.map((name) => `NULL COLLATE NOCASE AS ${name}`).join(", ");
+    out.splice(columns.open, columns.end - columns.open + 1);
+    out.splice(close + 1, 0, ...lex(")"));
+    out.splice(i + 1, 0, ...lex(`SELECT ${names} WHERE 0 UNION ALL SELECT * FROM (`));
+  }
+}
+
+// Tabellens namn, med schema ([dbo].[T], dbo.[T] eller dbo.T): index på sista delen.
+function nameEnd(tokens, at) {
+  if (tokens[at]?.type !== "ident") return -1;
+  for (;;) {
+    let next = nextSig(tokens, at);
+    if (isOp(tokens[next], ".")) next = nextSig(tokens, next);
+    else if (!tokens[at].text.endsWith(".")) return at;
+    if (tokens[next]?.type !== "ident") return at;
+    at = next;
+  }
+}
+
+// CREATE TABLE i den här körningen: en INSERT längre ner kan sakna kolumnlista.
+function rememberTable(state, sig) {
+  const end = nameEnd(sig, 2);
+  const table = end === -1 ? null : createdTable(sig);
+  if (table) state.tables.set(bareName(sig[end]).toLowerCase(), table);
+}
+
+// INSERT INTO T VALUES (…) och INSERT INTO T SELECT … utan kolumnlista: SQL Server
+// fyller alla kolumner utom IDENTITY-kolumnen, som den sätter själv. SQLite vill ha
+// alla, så kolumnlistan skrivs ut. Tabellen är en som körningen skapar eller en som
+// finns i databasen (state.tableInfo).
+function listColumnsWithoutIdentity(out, state) {
+  let at = nextSig(out, out.findIndex(isSig));
+  if (upper(out[at]) === "INTO") at = nextSig(out, at);
+  const end = nameEnd(out, at);
+  if (end === -1 || !["VALUES", "SELECT"].includes(upper(out[nextSig(out, end)]))) return;
+  const name = bareName(out[end]);
+  const table = state.tables.get(name.toLowerCase()) ?? state.tableInfo?.(name);
+  if (!table?.identity) return;
+  const columns = table.columns.filter((column) => column.toLowerCase() !== table.identity.toLowerCase());
+  out.splice(end + 1, 0, raw(` (${columns.map((column) => `"${column}"`).join(", ")})`));
+}
+
 // ── Satsvisa omskrivningar ───────────────────────────────────────────────
 function rewriteStatement(tokens, state) {
   const sig = tokens.filter(isSig);
@@ -333,6 +455,7 @@ function rewriteStatement(tokens, state) {
 
   // DDL översätts på textnivå — enklare och robust nog för CREATE TABLE.
   if (first === "CREATE" && upper(sig[1]) === "TABLE") {
+    rememberTable(state, sig);
     return [{ type: "raw", text: toSqliteDdl(tokens.map((t) => t.text).join("")) }];
   }
 
@@ -341,13 +464,23 @@ function rewriteStatement(tokens, state) {
     if (/^n$/i.test(out[i].text) && out[i].type === "ident" && out[i + 1].type === "string") out.splice(i, 1);
   }
   rewriteConvert(out);
+  rewriteFunctions(out);
+  rewriteDerivedColumns(out);
   rewriteQuantified(out);
   rewriteBracketedSets(out);
+  if (first === "INSERT") listColumnsWithoutIdentity(out, state);
   let limit = null;
 
   for (let i = 0; i < out.length; i++) {
     const token = out[i];
     if (token.type === "ident") {
+      // [dbo].[Tabell] och "dbo"."Tabell": schemat finns inte i SQLite.
+      const dot = nextSig(out, i);
+      if (token.text.replace(/"/g, "").toLowerCase() === "dbo" && isOp(out[dot], ".") && out[nextSig(out, dot)]?.type === "ident") {
+        out.splice(i, dot - i + 1);
+        i--;
+        continue;
+      }
       const name = token.text.toLowerCase();
       const after = nextSig(out, i);
       const isCall = isOp(out[after], "(");
@@ -459,8 +592,10 @@ export function toSqliteDdl(ddl) {
   return out;
 }
 
-export function toSqlite(sql) {
-  const state = { rowcount: null };
+// `tableInfo(namn)` ger { columns, identity } för en tabell som redan finns i
+// databasen (tableInfoFrom), så att en INSERT utan kolumnlista kan skrivas om.
+export function toSqlite(sql, tableInfo = null) {
+  const state = { rowcount: null, tables: new Map(), tableInfo };
   const statements = splitTokens(tokenize(sql));
   const pieces = statements.map((tokens) => rewriteStatement(tokens, state).map((t) => t.text).join(""));
   return pieces.join("");
@@ -759,6 +894,7 @@ function withoutSubqueries(tokens) {
 const UNSUPPORTED = [
   [/\bWITH TIES\b/, "TOP ... WITH TIES är giltig T-SQL, men övningsmotorn kan inte köra det. Skriv i stället frågan med en underfråga, till exempel WHERE Grade = (SELECT MAX(Grade) ...) eller HAVING COUNT(*) = (...)."],
   [/\b(CROSS|OUTER) APPLY\b/, "APPLY är giltig T-SQL, men övningsmotorn kan inte köra det, och det ingår inte i kursen. Skriv i stället frågan med JOIN eller en underfråga."],
+  [new RegExp(`\\b(DATEDIFF|DATEPART) (?!(${Object.keys(DATE_PARTS).join("|").toUpperCase()})\\b)[A-Z]+`), "DATEDIFF och DATEPART är giltig T-SQL, men övningsmotorn räknar bara med year, month och day."],
 ];
 
 function unsupportedSyntax(tokens) {
@@ -883,6 +1019,9 @@ function afterTable(tokens, join) {
   if (isOp(tokens[i], "(")) i = matchingClose(tokens, i);
   else while (isOp(tokens[nextSig(tokens, i)], ".")) i = nextSig(tokens, nextSig(tokens, i));
   if (i === -1) return -1;
+  // (SELECT …) AS t (a, b): kolumnlistan hör till tabellen, inte till ON.
+  const columns = isOp(tokens[i], ")") ? derivedColumns(tokens, i) : null;
+  if (columns) return nextSig(tokens, columns.end);
   let next = nextSig(tokens, i);
   const word = upper(tokens[next]);
   if (word === "AS") next = nextSig(tokens, nextSig(tokens, next));
@@ -1115,6 +1254,12 @@ function namesDefinedElsewhere(tokens, selects, select) {
   for (const other of selects) {
     if (other === select) continue;
     for (const item of selectItems(tokens, other.list)) if (item.alias) names.add(item.alias.toLowerCase());
+  }
+  // (SELECT …) AS t (a, b) döper kolumnerna om.
+  for (let i = 0; i < tokens.length; i++) {
+    if (!isSubquery(tokens, i)) continue;
+    const close = matchingClose(tokens, i);
+    for (const name of (close === -1 ? null : derivedColumns(tokens, close))?.names ?? []) names.add(name.replace(/"/g, "").toLowerCase());
   }
   for (let i = 0; i < tokens.length; i++) {
     if (!isOp(tokens[i], "(") || isSubquery(tokens, i)) continue;
@@ -1678,6 +1823,9 @@ function createdTable(tokens) {
 }
 
 // Samma sak för en tabell som redan finns: IDENTITY blev AUTOINCREMENT i SQLite.
+// `run(sql)` är SQLite mot databasen, utan omskrivning.
+export const tableInfoFrom = (run) => (name) => existingTable(name, run);
+
 function existingTable(name, run) {
   try {
     const ddl = run(`SELECT sql FROM sqlite_master WHERE type = 'table' AND LOWER(name) = '${name.toLowerCase().replace(/'/g, "''")}'`).values[0]?.[0];

@@ -256,13 +256,25 @@ export function analyzeConversions(sql, catalog, onGiveUp = () => {}) {
     }
   }
 
+  // (SELECT …) AS t (a, b): namnen efter aliaset ersätter delfrågans egna.
+  function columnList() {
+    if (!isMark("(") || peek(1)?.type !== "ident") return null;
+    at++;
+    const names = [];
+    do names.push(identifier().at(-1));
+    while (acceptMark(","));
+    expectMark(")");
+    return names;
+  }
+
   function tableFactor(scope, conditions) {
     if (isMark("(")) {
       at++;
       if (word() === "SELECT") {
         const result = query(scope.parent);
         expectMark(")");
-        scope.sources.push(derivedSource((aliasName() ?? "").toLowerCase(), result));
+        const alias = aliasName();
+        scope.sources.push(derivedSource((alias ?? "").toLowerCase(), result, alias ? columnList() : null));
       } else {
         joinChain(scope, conditions);
         expectMark(")");

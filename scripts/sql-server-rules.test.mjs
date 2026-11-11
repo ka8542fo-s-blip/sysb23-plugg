@@ -11,7 +11,7 @@ import { sqlExercises } from "../src/data/databaser/sqlExercises.js";
 import { examSeed, gradeTask4 } from "../src/lib/examGrade.js";
 import { checkExercise, checkFreeQuery } from "../src/lib/sqlCheck.js";
 import { collectFacts, generateExercise, normalizeSql } from "../src/lib/sqlPractice.js";
-import { checkDivisionByZero, checkIdentityInsert, checkScalarSubqueries, checkTsqlRules, sqliteSeed, toSqlite } from "../src/lib/tsql.js";
+import { checkDivisionByZero, checkIdentityInsert, checkScalarSubqueries, checkTsqlRules, sqliteSeed, tableInfoFrom, toSqlite } from "../src/lib/tsql.js";
 import { checkConversions } from "../src/lib/tsqlTypes.js";
 
 const SQL = await initSqlJs();
@@ -317,12 +317,17 @@ test("Fritt läge varnar för det SQL Server stoppar och kör ändå", () => {
   assert.deepEqual(checkFreeQuery("SELECT EmpName FROM Employee WHERE EmpNo = 'E1';", run), { error: null, warning: null });
 });
 
+// Alla reglerna som rättningen kör dem, mot en databas.
+function flaggedBy(sql, db) {
+  const tsql = (query) => select(db, toSqlite(query));
+  return checkTsqlRules(sql) ?? checkScalarSubqueries(sql, tsql) ?? checkDivisionByZero(sql, tsql)
+    ?? checkIdentityInsert(sql, tsql) ?? checkConversions(sql, (query) => select(db, query));
+}
+
 test("ingen referenslösning flaggas av någon regel", () => {
   const flagged = [];
   const check = (id, sql, db) => {
-    const tsql = (query) => select(db, toSqlite(query));
-    const found = checkTsqlRules(sql) ?? checkScalarSubqueries(sql, tsql) ?? checkDivisionByZero(sql, tsql)
-      ?? checkIdentityInsert(sql, tsql) ?? checkConversions(sql, (query) => select(db, query));
+    const found = flaggedBy(sql, db);
     if (found) flagged.push(`${id}: ${found.message}\n  ${sql}`);
   };
   for (const exercise of sqlExercises) {
@@ -365,4 +370,170 @@ test("reglerna klarar halvfärdiga frågor utan att krascha", () => {
     checkDivisionByZero(junk, onExam);
     checkIdentityInsert(junk, onHospital);
   }
+});
+
+// ── DATEDIFF, kolumnlistor, schemat dbo och INSERT utan kolumnlista ──────────
+test("DATEDIFF och DATEPART med en datumdel som motorn inte räknar ger ett eget besked", () => {
+  for (const part of ["week", "quarter", "hour", "minute", "dw", "dayofyear"]) {
+    const result = checkTsqlRules(`SELECT DATEDIFF(${part}, StartDate, GETDATE()) FROM Suffers;`);
+    assert.equal(result.raw, null, part);
+    assert.match(result.message, /DATEDIFF och DATEPART är giltig T-SQL, men övningsmotorn räknar bara med year, month och day/);
+  }
+  assert.match(checkTsqlRules("SELECT DATEPART(quarter, StartDate) FROM Suffers;").message, /DATEPART/);
+  // Dag, månad och år, med förkortningarna, går bra, och ett ord i en sträng stör inte.
+  for (const part of ["day", "dd", "d", "month", "mm", "m", "year", "yy", "yyyy", "DAY"]) {
+    assert.equal(checkTsqlRules(`SELECT DATEDIFF(${part}, StartDate, GETDATE()), DATEPART(${part}, StartDate) FROM Suffers;`), null, part);
+  }
+  assert.equal(checkTsqlRules("SELECT 'DATEDIFF week' FROM Suffers;"), null);
+});
+
+test("en JOIN mot en delfråga med kolumnlista har sin ON, och saknas den pekas den ut", () => {
+  const ok = "SELECT e.EmpName FROM Employee AS e INNER JOIN (SELECT UnitID FROM Employee) AS t (Enhet) ON t.Enhet = e.UnitID;";
+  assert.equal(checkTsqlRules(ok), null);
+  assert.equal(checkTsqlRules(ok.replace("AS t (Enhet)", "t (Enhet)")), null, "utan AS");
+  const missing = checkTsqlRules("SELECT e.EmpName FROM Employee AS e INNER JOIN (SELECT UnitID FROM Employee) AS t (Enhet) WHERE t.Enhet = e.UnitID;");
+  assert.match(missing.message, /INNER JOIN \(SELECT UnitID FROM Employee\) AS t \(Enhet\) saknar ON/);
+  // Kolumnnamnen i listan är namn i frågan, så ett alias med samma namn pekar på dem.
+  assert.equal(checkTsqlRules("SELECT t.m AS m FROM (SELECT COUNT(*) FROM Student) AS t (m) WHERE m > 1;"), null);
+  assert.equal(checkTsqlRules("SELECT t.m AS m FROM (SELECT COUNT(*) FROM Student) t (m) WHERE m > 1;"), null, "utan AS");
+  assert.match(checkTsqlRules("SELECT t.n AS m FROM (SELECT COUNT(*) FROM Student) AS t (n) WHERE m > 1;").message, /aliaset m finns inte i WHERE/);
+});
+
+test("typkontrollen följer kolumnlistan efter ett delfrågealias", () => {
+  const conv = (sql) => checkConversions(sql, (query) => select(examDb, query));
+  assert.match(conv("SELECT * FROM (SELECT Code FROM HasStudied) AS t (Kod) WHERE t.Kod > 2;").message, /textkolumnen Code|text/);
+  assert.equal(conv("SELECT * FROM (SELECT Code, Grade FROM HasStudied) AS t (Kod, Betyg) WHERE t.Betyg > 2;"), null);
+  // Namnen sätts efter plats: Betyg är här Code, som är text.
+  assert.ok(conv("SELECT * FROM (SELECT Grade, Code FROM HasStudied) t (Kod, Betyg) WHERE t.Betyg > 2;"));
+  assert.equal(conv("SELECT * FROM (SELECT Grade, Code FROM HasStudied) t (Betyg, Kod) WHERE t.Betyg > 2;"), null);
+});
+
+test("de nya formerna rättas som rätt och stoppas inte av någon regel", async () => {
+  correct(exam("tn-11", "SELECT StudentNo, Name, Age FROM [dbo].[Student] WHERE Age > (SELECT Age FROM Student WHERE StudentNo = 'S1') AND LEFT(Name, 1) <> '#' AND RIGHT(Name, 1) <> '#';"));
+  correct(exam("tn-34", "SELECT t.s, t.c, t.g FROM (SELECT StudentNo, Code, Grade FROM HasStudied) AS t (s, c, g) WHERE t.g > (SELECT AVG(h2.Grade) FROM HasStudied AS h2 WHERE h2.Code = t.c);"));
+  correct(await practice("sql-02", "SELECT EmpName FROM [dbo].[Employee];"));
+  correct(await practice("sql-29", "INSERT INTO Unit VALUES ('U4', 'Radiology', 'Care road');"));
+  correct(await practice("sql-29", "INSERT INTO [dbo].[Unit] VALUES ('U4', 'Radiology', 'Care road');"));
+  // Med ett värde för varje kolumn står identitetskolumnen med, och SQL Server stoppar det.
+  stopped(await practice("sql-29", "INSERT INTO Unit VALUES (4, 'U4', 'Radiology', 'Care road');"), "Column name or number of supplied values does not match table definition.");
+  const free = (sql) => checkFreeQuery(sql, (query) => select(hospitalDb, query));
+  assert.deepEqual(free("SELECT YEAR(StartDate), DATEDIFF(day, StartDate, GETDATE()), LEFT(PatientName, 1) FROM Suffers, Patient WHERE Suffers.PatientID = Patient.PatientID;"), { error: null, warning: null });
+  assert.match(free("SELECT DATEDIFF(week, StartDate, GETDATE()) FROM Suffers;").error.message, /DATEDIFF/);
+});
+
+test("giltiga former flaggas inte av någon regel och går att köra", () => {
+  const exam = [
+    "SELECT s.StudentNo, s.Name, COUNT(h.Code) AS AntalKurser FROM Student s JOIN HasStudied h ON s.StudentNo = h.StudentNo GROUP BY s.StudentNo, s.Name HAVING COUNT(h.Code) >= 2 ORDER BY AntalKurser DESC, s.Name ASC;",
+    "WITH Snitt AS (SELECT AVG(Grade) AS S FROM HasStudied WHERE Code = 'C1') SELECT s.StudentNo, s.Name FROM Student s WHERE s.StudentNo IN (SELECT StudentNo FROM HasStudied, Snitt WHERE Code = 'C1' AND Grade > Snitt.S);",
+    "SELECT [s].[StudentNo], [s].[Name] FROM [dbo].[Student] AS [s] WHERE [s].[Age] > 20;",
+    "SELECT DISTINCT s.StudentNo, s.Name FROM Student s INNER JOIN HasStudied h ON h.StudentNo = s.StudentNo WHERE h.Grade >= 8 ORDER BY s.Name;",
+    "SELECT s.Name, CASE WHEN s.Age >= 30 THEN 'Äldre' ELSE 'Yngre' END AS Grupp FROM Student s ORDER BY Grupp;",
+    "SELECT s.Name, CASE WHEN s.Age >= 30 THEN 'Äldre' ELSE 'Yngre' END Grupp FROM Student s ORDER BY Grupp;",
+    "SELECT Code, COUNT(*) AS Antal FROM HasStudied GROUP BY Code HAVING COUNT(*) > (SELECT COUNT(*) FROM HasStudied WHERE Code = 'C3');",
+    "SELECT s.StudentNo, s.Name, AVG(CAST(h.Grade AS DECIMAL(4,2))) AS Snitt FROM Student s, HasStudied h WHERE s.StudentNo = h.StudentNo GROUP BY s.StudentNo, s.Name;",
+    "SELECT s.Name, t.Antal FROM Student AS s INNER JOIN (SELECT StudentNo, COUNT(*) AS Antal FROM HasStudied GROUP BY StudentNo) AS t ON t.StudentNo = s.StudentNo WHERE t.Antal >= 2;",
+    "SELECT StudentNo FROM HasStudied WHERE Code = 'C1' INTERSECT SELECT StudentNo FROM HasStudied WHERE Code = 'C2';",
+    "SELECT s.StudentNo, s.Name FROM Student s WHERE NOT EXISTS (SELECT * FROM HasStudied h WHERE h.StudentNo = s.StudentNo);",
+    "SELECT s.StudentNo, s.Name, MAX(h.Grade) AS [Högsta betyg] FROM Student s JOIN HasStudied h ON h.StudentNo = s.StudentNo GROUP BY s.StudentNo, s.Name ORDER BY [Högsta betyg] DESC;",
+    "SELECT c.Code, c.Name FROM Course c WHERE c.Code IN (SELECT h.Code FROM HasStudied h WHERE h.StudentNo = 'S1') AND c.Code NOT IN (SELECT h.Code FROM HasStudied h WHERE h.StudentNo = 'S2') ORDER BY c.Code;",
+    "SELECT Name, Credits * 1.5 AS Poang, Credits / 5 AS Delar FROM Course WHERE Credits % 5 = 0;",
+    "SELECT c.Code, (SELECT MAX(h.Grade) FROM HasStudied h WHERE h.Code = c.Code) AS Hogst FROM Course c;",
+    "SELECT s.StudentNo, s.Name FROM Student s WHERE s.Age > ALL (SELECT Age FROM Student WHERE Address = 'Main street');",
+    "SELECT s.Name FROM Student s WHERE s.Age = (SELECT MAX(Age) FROM Student);",
+    "SELECT StudentNo, Grade, RANK() OVER (PARTITION BY Code ORDER BY Grade DESC) AS Plats FROM HasStudied;",
+    "SELECT COUNT(*) AS Antal FROM Student WHERE Address LIKE '%street';",
+    "SELECT s.Name + ' bor på ' + s.Address AS Text FROM Student s;",
+    "-- Uppgift 4\nSELECT s.StudentNo,\n       s.Name /* namnet */\nFROM Student AS s\nWHERE s.Age > 20;",
+    "SELECT h.StudentNo, SUM(c.Credits) AS Poang FROM HasStudied h JOIN Course c ON c.Code = h.Code GROUP BY h.StudentNo HAVING SUM(c.Credits) >= 20 ORDER BY SUM(c.Credits) DESC;",
+    "SELECT s.StudentNo, s.Name FROM Student AS s WHERE s.StudentNo NOT IN (SELECT h.StudentNo FROM HasStudied AS h WHERE h.Grade < 6) AND s.StudentNo IN (SELECT StudentNo FROM HasStudied);",
+    "SELECT Address, COUNT(*) AS Antal, AVG(Age) AS Snittalder FROM Student GROUP BY Address HAVING AVG(Age) > 25 ORDER BY Address;",
+    "SELECT s.StudentNo, s.Name, COUNT(*) FROM Student s INNER JOIN HasStudied h ON s.StudentNo = h.StudentNo AND h.Grade >= 6 GROUP BY s.StudentNo, s.Name;",
+    "SELECT * FROM Student WHERE Age BETWEEN 20 AND 30 AND Address <> 'Main street';",
+    "SELECT s.StudentNo, s.Name, COUNT(*) AS AntalKurser FROM Student AS s INNER JOIN HasStudied AS h ON h.StudentNo = s.StudentNo WHERE s.Age > (SELECT Age FROM Student WHERE StudentNo = 'S5') GROUP BY s.StudentNo, s.Name HAVING COUNT(*) >= 2 ORDER BY COUNT(*) DESC;",
+    "SELECT s.StudentNo, s.Name FROM Student s WHERE (SELECT COUNT(*) FROM HasStudied h WHERE h.StudentNo = s.StudentNo) >= 2;",
+    "SELECT s.StudentNo, s.Name FROM Student s WHERE s.StudentNo = ANY (SELECT StudentNo FROM HasStudied WHERE Grade = 9);",
+    "SELECT TOP 1 s.Name FROM Student s ORDER BY s.Age DESC;",
+    "SELECT s.Name, h.Grade FROM Student s INNER JOIN HasStudied h ON h.StudentNo = s.StudentNo WHERE h.Grade = (SELECT MAX(h2.Grade) FROM HasStudied h2 WHERE h2.StudentNo = s.StudentNo);",
+    "SELECT Code, COUNT(*) AS Antal FROM HasStudied GROUP BY Code HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM HasStudied GROUP BY Code);",
+    "select s.studentno, s.name from student s where s.age > 20 order by s.name;",
+    "SELECT Name, Age FROM Student WHERE Age != 27;",
+    "SELECT c.Name, AVG(h.Grade * 1.0) AS Snitt FROM Course c JOIN HasStudied h ON h.Code = c.Code GROUP BY c.Name ORDER BY Snitt DESC;",
+    "(SELECT Name FROM Student) EXCEPT (SELECT Name FROM Course);",
+    "SELECT Name FROM Student UNION SELECT Name FROM Course ORDER BY Name;",
+    "SELECT t.Nr FROM (SELECT StudentNo AS Nr FROM Student) AS t WHERE t.Nr <> 'S1' ORDER BY t.Nr;",
+    "SELECT StudentNo, Code, Grade FROM HasStudied h WHERE Grade >= (SELECT AVG(Grade) FROM HasStudied WHERE Code = h.Code) ORDER BY Code, Grade DESC;",
+    "SELECT 'a == b LIMIT 1 IFNULL(x)' AS Text FROM Student;",
+    "SELECT Name -- LIMIT 1\nFROM Student;",
+    "SELECT Name, IIF(Age > 30, 'Äldre', 'Yngre') AS Grupp, LEN(Name) AS Langd, UPPER(Name), SUBSTRING(Name, 1, 3), ISNULL(Address, '-') FROM Student;",
+    "SELECT Name, CONVERT(VARCHAR(5), Age) + ' år' FROM Student;",
+    "SELECT Code, STRING_AGG(StudentNo, ', ') AS Studenter FROM HasStudied GROUP BY Code;",
+    // Nytt: LEFT och RIGHT, dbo, kolumnlistor.
+    "SELECT LEFT(s.Name, 1) AS Bokstav, COUNT(*) AS Antal FROM Student s GROUP BY LEFT(s.Name, 1) HAVING COUNT(*) > 1 ORDER BY LEFT(s.Name, 1);",
+    "SELECT s.StudentNo, RIGHT(s.StudentNo, 1) AS Nr FROM [dbo].[Student] AS s WHERE LEFT(s.Name, 1) <> '#';",
+    "SELECT LEFT(Name, 1) + RIGHT(Name, 1) AS Ytterkanter FROM Student;",
+    "SELECT t.Antal FROM (SELECT COUNT(*) FROM HasStudied) AS t (Antal) WHERE t.Antal > 1;",
+    "SELECT s.Name, x.Antal FROM Student AS s INNER JOIN (SELECT StudentNo, COUNT(*) FROM HasStudied GROUP BY StudentNo) AS x (Nr, Antal) ON x.Nr = s.StudentNo WHERE x.Antal >= 2;",
+    "SELECT t.Kod FROM (SELECT Code FROM HasStudied) t (Kod) WHERE t.Kod = 'C1';",
+  ];
+  const hospital = [
+    "SELECT e.EmpName, u.UnitName FROM Employee e LEFT JOIN Unit u ON e.UnitID = u.UnitID ORDER BY u.UnitName, e.EmpName;",
+    "SELECT e1.EmpName, e2.EmpName FROM Employee e1 JOIN Employee e2 ON e1.UnitID = e2.UnitID AND e1.EmployeeID < e2.EmployeeID;",
+    "SELECT UnitID, COUNT(*) AS Antal FROM Employee GROUP BY UnitID ORDER BY Antal DESC;",
+    "SELECT p.PatientName, COUNT(s.IllnessID) AS Sjukdomar FROM Patient p LEFT JOIN Suffers s ON p.PatientID = s.PatientID GROUP BY p.PatientID, p.PatientName ORDER BY Sjukdomar DESC, p.PatientName;",
+    "SELECT TOP 3 EmpName, EmpSalary FROM Employee ORDER BY EmpSalary DESC;",
+    "SELECT EmpName, EmpSalary FROM Employee e WHERE EmpSalary = (SELECT MAX(e2.EmpSalary) FROM Employee e2 WHERE e2.UnitID = e.UnitID);",
+    "SELECT EmpName, ISNULL(EmpPhoneNumber, 'saknas') AS Telefon FROM Employee;",
+    "SELECT u.UnitName, (SELECT COUNT(*) FROM Employee e WHERE e.UnitID = u.UnitID) AS Antal FROM Unit u ORDER BY Antal DESC;",
+    "SELECT Brand, MAX(Price) - MIN(Price) AS Spann FROM Car GROUP BY Brand HAVING MAX(Price) - MIN(Price) > 0;",
+    "SELECT EmpName AS \"Namn\" FROM Employee ORDER BY \"Namn\";",
+    "SELECT EmpName Namn FROM Employee ORDER BY Namn;",
+    "SELECT EmpName, EmpSalary * 100 / (SELECT SUM(EmpSalary) FROM Employee) AS Andel FROM Employee;",
+    "SELECT EmpNo + '-' + EmpName AS Etikett FROM Employee;",
+    "SELECT LicenseNo, Price / 1000 AS Tusen FROM Car WHERE Price % 2 = 0;",
+    // Nytt: datum, LEFT och RIGHT, dbo och kolumnlistor.
+    "SELECT YEAR(StartDate) AS Ar, COUNT(*) FROM Suffers GROUP BY YEAR(StartDate) ORDER BY Ar;",
+    "SELECT DATEDIFF(day, StartDate, GETDATE()) AS Dagar FROM Suffers WHERE DATEDIFF(day, StartDate, GETDATE()) > 100;",
+    "SELECT MONTH(StartDate), DAY(StartDate), DATEPART(year, StartDate), DATEDIFF(month, StartDate, GETDATE()), DATEDIFF(yy, StartDate, GETDATE()) FROM Suffers;",
+    "SELECT CAST(YEAR(StartDate) AS VARCHAR(4)) + '-' + CAST(MONTH(StartDate) AS VARCHAR(2)) FROM Suffers;",
+    "SELECT [e].[EmpName] FROM [dbo].[Employee] AS [e] WHERE [e].[EmpNo] = 'E1';",
+    "SELECT t.n FROM (SELECT COUNT(*) FROM Patient) AS t (n);",
+    "SELECT LEFT(EmpName, 1) + '.' AS Initial, RIGHT(EmpNo, 1) FROM Employee WHERE LEFT(EmpAddress, 2) = 'Lu';",
+  ];
+  const changing = [
+    "UPDATE Employee SET EmpSalary = EmpSalary * 1.1 WHERE UnitID = 1;",
+    "DELETE FROM Car WHERE EmployeeID IS NULL;",
+    "INSERT INTO Unit (UnitNo, UnitName, UnitAddress) VALUES ('U4', 'Radiology', 'Care road'), ('U5', 'X', 'Y');",
+    "INSERT INTO Employee (EmpNo, EmpName, UnitID) VALUES ('E7', 'Kim', (SELECT UnitID FROM Unit WHERE UnitNo = 'U1'));",
+    "CREATE TABLE T (ID INT IDENTITY(1,1), Namn VARCHAR(20), CONSTRAINT PK_T PRIMARY KEY (ID)); INSERT INTO T (Namn) VALUES ('a'); SELECT * FROM T;",
+    "CREATE VIEW Hog AS SELECT EmpName, EmpSalary FROM Employee WHERE EmpSalary > 30000;",
+    "UPDATE Employee SET EmpSalary = EmpSalary + 1000 WHERE EmployeeID IN (SELECT EmployeeID FROM Examines);",
+    "DELETE FROM Illness WHERE NOT EXISTS (SELECT 1 FROM Suffers s WHERE s.IllnessID = Illness.IllnessID);",
+    // Nytt: INSERT utan kolumnlista i en tabell med IDENTITY, och med dbo.
+    "INSERT INTO Unit VALUES ('U4', 'Radiology', 'Care road');",
+    "INSERT INTO [dbo].[Unit] VALUES ('U5', 'X', 'Y'), ('U6', 'Z', 'W');",
+    "INSERT INTO Employee VALUES ('E7', 'Kim', 'Lund', '777', 30000, 1);",
+    "CREATE TABLE Kopia (Namn VARCHAR(20), KopiaID INTEGER IDENTITY(1,1), CONSTRAINT PK_Kopia PRIMARY KEY (KopiaID)); INSERT INTO Kopia SELECT PatientName FROM Patient;",
+    "UPDATE [dbo].[Employee] SET EmpSalary = 1 WHERE EmpNo = 'E1';",
+    "DELETE FROM dbo.[Car] WHERE EmployeeID IS NULL;",
+  ];
+  const problems = [];
+  const seen = (list, db, runs) => {
+    for (const sql of list) {
+      const flagged = flaggedBy(sql, db);
+      if (flagged) problems.push(`flaggad: ${sql}\n   ${flagged.message}`);
+      try {
+        runs(sql);
+      } catch (error) {
+        problems.push(`kör inte: ${sql}\n   ${error.message}`);
+      }
+    }
+  };
+  seen(exam, examDb, (sql) => select(examDb, toSqlite(sql)));
+  seen(hospital, hospitalDb, (sql) => select(hospitalDb, toSqlite(sql)));
+  for (const sql of changing) {
+    const db = open(hospitalSeed);
+    seen([sql], db, (statement) => db.exec(toSqlite(statement, tableInfoFrom((query) => select(db, query)))));
+    db.close();
+  }
+  assert.deepEqual(problems, []);
 });

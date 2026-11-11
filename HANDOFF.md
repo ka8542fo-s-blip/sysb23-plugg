@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 503 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-03.
+- **Test:** `npm test` = 534 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-11.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -141,17 +141,37 @@ kapitel: allt UI läser `chapter.number`.
   också GROUP BY-regeln, som förut stoppade där; bara det motorn inte kan köra
   (`raw: null`) stoppas. Giltig T-SQL som SQLite saknar skrivs om i
   `toSqlite`: TOP i en underfråga, ALL/ANY, CONVERT, N'text', dbo.Tabell,
-  COUNT_BIG, (fråga) EXCEPT (fråga) och avslutande GO. + slår ihop text bara
+  COUNT_BIG, (fråga) EXCEPT (fråga) och avslutande GO, och sedan 2026-11-11
+  LEFT/RIGHT (`SUBSTR(x, 1, n)` och `SUBSTR(x, -(n), n)`), YEAR/MONTH/DAY och
+  DATEPART (`CAST(STRFTIME(…) AS INTEGER)`), DATEDIFF för day, month och year
+  (skiften mellan datumen som SQL Server räknar, inte tid), schemat i
+  `[dbo].[Tabell]`, kolumnlistan i `(SELECT …) AS t (a, b)` och INSERT utan
+  kolumnlista i en tabell med IDENTITY. Omskrivningarna ligger i
+  `rewriteFunctions`, `rewriteDerivedColumns` och `listColumnsWithoutIdentity`
+  och bygger sina tokens med `tokenize`, så att `+` intill dem fortfarande
+  känns igen som text eller tal. Kolumnlistan läggs under en tom rad med
+  namnen (SQLite tar namnen från första raden) med `COLLATE NOCASE`, annars
+  blev text i den jämförd skiftlägeskänsligt. INSERT-omskrivningen behöver
+  tabellens kolumner: `toSqlite(sql, tableInfoFrom(run))`, där `run` är SQLite
+  mot databasen (checkExercise och Fritt läge skickar den), och tabeller som
+  samma körning skapar kommer ur CREATE TABLE. + slår ihop text bara
   när ingen sida är ett tal: `'5' + 1` är 6 som i SQL Server, och tentans
   textkolumner (StudentNo, Name, Address, Code) räknas som text.
-  `WITH TIES`, `APPLY` och `Antal = COUNT(*)` går inte att köra och ger ett
-  eget besked. Tentans frågor godtar kolumner i annan ordning, och avrundade
+  `WITH TIES`, `APPLY`, `Antal = COUNT(*)` och DATEDIFF/DATEPART med en annan
+  datumdel än year, month och day går inte att köra och ger ett eget besked. Tentans frågor godtar kolumner i annan ordning, och avrundade
   decimaler (±0,05) godtas överallt. `sql-server-rules.test.mjs` har varje
   regel med flaggat fall och närmaste giltiga form, och kör alla
   referenslösningar (övningar, Tentanivå med `also`, slumpgeneratorn) genom
-  alla regler. Giltig T-SQL som SQLite fortfarande inte kör: LEFT, YEAR,
-  DATEDIFF, `[dbo].[Tabell]`, `AS t (kolumn)` och INSERT utan kolumnlista
-  i en tabell med IDENTITY.
+  alla regler, och ett svep av giltiga elevformer som varken får flaggas
+  eller ge fel i SQLite. Jämförelse mellan text och ett funktionsresultat
+  (`LEFT(Name, 1) = 'a'`, SUBSTRING, LOWER) är skiftlägeskänslig, eftersom
+  SQLite bara låter kolumnerna vara NOCASE; SQL Server är okänsligt. Giltig
+  T-SQL som motorn fortfarande inte kör (provat 2026-11-11, "no such function"
+  eller syntaxfel): DATEADD, DATENAME, EOMONTH, CEILING, STR, STUFF, SPACE,
+  PATINDEX, ISNUMERIC, ISDATE, TRY_CAST, TRY_CONVERT, CHOOSE, DATALENGTH,
+  TRANSLATE, NEWID, TOP n PERCENT, OFFSET … FETCH, SELECT … INTO, DECLARE,
+  WITH (NOLOCK), tabellkonstruktorn `(VALUES …) AS v (a, b)` och
+  `PRIMARY KEY IDENTITY` på samma kolumn (IDENTITY först går).
 - **SQL-editorns indrag (2026-11-02):** `lib/sqlIndent.js` (ren logik,
   `scripts/sql-indent.test.mjs`), `SqlEditor.jsx` och `FormatButton.jsx`.
   Fyra blanksteg per steg; JOIN och AND/OR ett steg in, satsord och ")"
