@@ -115,7 +115,10 @@ export default function Essays({ course, params, essayState, setEssayState }) {
         </div>
 
         {showChecklist && (
-          <div className="mt-6 border-t border-line pt-5 lg:mt-0 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+          // Bred skärm: checklistan är exakt lika hög som svarskolumnen och
+          // scrollar för sig, så att man inte behöver scrolla bort svaret.
+          <div className="mt-6 border-t border-line pt-5 lg:relative lg:mt-0 lg:border-l lg:border-t-0 lg:pt-0">
+          <div className="lg:absolute lg:inset-0 lg:overflow-y-auto lg:overscroll-contain lg:pl-8 lg:pr-3">
             <div className="flex items-baseline justify-between gap-3">
               <h3 className="font-display text-lg">Vad ett toppsvar innehåller</h3>
               <span className="tabular text-sm text-ink/65">
@@ -160,6 +163,7 @@ export default function Essays({ course, params, essayState, setEssayState }) {
             <p className="mt-2 text-[15px] leading-relaxed text-ink/80">
               {essay.outline}
             </p>
+          </div>
           </div>
         )}
         </div>
