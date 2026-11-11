@@ -285,10 +285,33 @@ export const diagrams = [
   {
     id: "hafte-1-1-leverans",
     title: "Övning 1.1: Bouquet delivery",
-    source: "Övningshäftet 1.1, subprocessen Bouquet delivery (omritad)",
-    views: [{ container: null, width: 1000, height: 390 }],
-    pools: [{ id: "dc", label: "Delivery company", x: 10, y: 10, w: 980, h: 110, view: null }],
+    source: "Övningshäftet 1.1, Order process och subprocessen Bouquet delivery (omritade)",
+    // Föräldradiagrammet ritas överst men körs inte: dess noder ligger i
+    // behållaren "order", som ingen nod startar. Simulatorn kör bara
+    // subprocessen (huvudvyn), som frågan gäller.
+    views: [
+      { container: "order", parent: true, title: "Order process", width: 1170, height: 610 },
+      { container: null, title: "Deliver bouquet (subprocessen Bouquet delivery)", width: 1000, height: 390 },
+    ],
+    pools: [
+      { id: "dc", label: "Delivery company", x: 10, y: 10, w: 980, h: 110, view: null },
+      { id: "oCust", label: "Customer", x: 10, y: 10, w: 1150, h: 70, view: "order" },
+      { id: "oSup", label: "Supplier", x: 10, y: 490, w: 420, h: 110, view: "order" },
+      { id: "oDc", label: "Delivery company", x: 440, y: 490, w: 720, h: 110, view: "order" },
+    ],
     nodes: [
+      // Föräldradiagrammet (ritas, körs inte)
+      { id: "os", type: "start", event: "message", message: "Order", label: "Receive order", in: "order", cx: 50, cy: 220 },
+      task("olog", "Log order details", "user", 150, 220, { in: "order" }),
+      { id: "oprep", type: "subprocess", label: "Prepare bouquet", in: "order", cx: 280, cy: 220 },
+      { id: "og1", type: "gateway", gw: "xor", in: "order", cx: 440, cy: 220 },
+      task("ohand", "Hand bouquet to customer", "user", 620, 140, { in: "order" }),
+      { id: "odel", type: "subprocess", label: "Deliver bouquet", in: "order", cx: 620, cy: 300 },
+      { id: "og2", type: "gateway", gw: "xor", in: "order", cx: 900, cy: 300 },
+      task("oarr", "Arrange alternate delivery time", "user", 900, 400, { in: "order" }),
+      { id: "oinv", type: "subprocess", label: "Invoice customer", in: "order", cx: 1020, cy: 220 },
+      { id: "oend", type: "end", event: "none", label: "Order completed", in: "order", cx: 1125, cy: 220 },
+      // Subprocessen Bouquet delivery (körs)
       { id: "s", type: "start", event: "none", cx: 40, cy: 240 },
       task("i", "Input order details", "user", 140, 240),
       task("p", "Determine appropriate delivery partner", "user", 270, 240),
@@ -305,6 +328,19 @@ export const diagrams = [
       seq("g", "mc", { route: "vh" }), seq("g", "mf", { route: "vh" }),
       seq("mc", "ok"), seq("mf", "r"), seq("r", "fail"),
       msg("dc", "mc", "Confirmation"), msg("dc", "mf", "Notification of failure"),
+      // Föräldradiagrammet
+      seq("os", "olog"), seq("olog", "oprep"), seq("oprep", "og1"),
+      seq("og1", "ohand", { cond: "Customer present", route: "vh" }),
+      seq("og1", "odel", { cond: "Customer not present", route: "vh" }),
+      seq("ohand", "oinv"), seq("odel", "og2"),
+      seq("og2", "oinv", { cond: "Delivery successful" }),
+      seq("og2", "oarr", { cond: "Delivery failed" }),
+      seq("oarr", "odel"), seq("oinv", "oend"),
+      msg("oCust", "os", "Order"), msg("oinv", "oCust", "Invoice", { dx: 30 }),
+      msg("oprep", "oSup", "Order", { dx: -20, labelLeft: true }),
+      msg("oSup", "oprep", "Notification of delivery", { dx: 20 }),
+      msg("oDc", "odel", "Confirmation of delivery", { dx: -20, labelLeft: true }),
+      msg("oDc", "odel", "Notification of failure of delivery", { dx: 20, labelDy: 22 }),
     ],
   },
   {

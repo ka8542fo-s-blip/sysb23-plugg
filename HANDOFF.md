@@ -1085,6 +1085,13 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   opt-in i `BpmnDiagram` (`zoomable`, `maxScale`) — kompendiet och Öva ritar
   som förut, högst 100 %. Mätt vid 1 280 px: minsta skala 0,63 → 0,83 med
   ihopfälld meny, median 1,02 → 1,33.
+- **Föräldravy (2026-11-11):** en vy med `parent: true` och en egen
+  behållare (t.ex. `container: "order"`) ritas överst som "Föräldradiagram"
+  men körs aldrig: ingen nod har behållarens id, så simulatorn startar den
+  inte. Används i `hafte-1-1-leverans`, där frågan gäller vad subprocessens
+  sluttillstånd betyder i föräldern. Meddelandeflöden kan gå till pooler
+  under noden och har `dx`, `labelLeft` och `labelDy` när två går till
+  samma nod.
 - **BPMN-symboler (2026-10-22):** knappen ◇ BPMN-symboler i
   BPMN-övningarnas rubrikrad öppnar `components/bpmn/BpmnLegend.jsx`, en
   ruta med alla former (36 st: händelser, boundary events, aktiviteter,

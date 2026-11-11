@@ -126,8 +126,11 @@ test("varje diagram har giltiga flöden och unika id:n", () => {
         assert.ok(ids.has(end) || (fl.kind === "msg" && pools.has(end)), `${d.id}: flöde till okänd ${end}`);
       }
     }
+    // En föräldravy (parent: true) ritas men körs inte; dess noder ligger i
+    // vyns behållare, som inte är någon nod.
+    const parentViews = new Set(d.views.filter((v) => v.parent).map((v) => v.container));
     for (const n of d.nodes) {
-      if (n.in) assert.ok(ids.has(n.in), `${d.id}: ${n.id} ligger i okänd ${n.in}`);
+      if (n.in) assert.ok(ids.has(n.in) || parentViews.has(n.in), `${d.id}: ${n.id} ligger i okänd ${n.in}`);
       if (n.attachedTo) assert.ok(ids.has(n.attachedTo), `${d.id}: ${n.id} sitter på okänd ${n.attachedTo}`);
     }
   }

@@ -7,7 +7,7 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
-  { id: 43, date: "2026-11-11", text: "BPMN-frågan om Bouquet delivery beskriver nu föräldradiagrammet" },
+  { id: 43, date: "2026-11-11", text: "BPMN-frågan om Bouquet delivery visar nu också föräldradiagrammet" },
   { id: 42, date: "2026-11-11", text: "BPMN-övningar: slumpa uppgifter, nollställ alla, menyn grupperad" },
   { id: 41, date: "2026-11-11", text: "Öva: läget Genomgång, där ett rätt räcker, och statusrad över frågan" },
   { id: 40, date: "2026-11-11", text: "Öva: frågan står kvar när du går till Läs och tillbaka" },

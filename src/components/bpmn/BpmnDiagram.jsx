@@ -330,20 +330,22 @@ function SeqFlow({ from, to, flow, markerId }) {
   );
 }
 
-function MsgFlow({ fromNode, toNode, fromPool, toPool, label, markerId }) {
-  // Pool ↔ nod: lodrät linje vid nodens x.
+function MsgFlow({ fromNode, toNode, fromPool, toPool, label, markerId, dx = 0, labelLeft = false, labelDy = 0 }) {
+  // Pool ↔ nod: lodrät linje vid nodens x (flyttad dx, när två meddelanden
+  // går till samma nod). Poolen kan ligga ovanför eller under noden.
   const node = fromNode || toNode;
   const pool = fromPool || toPool;
   const { hh } = sizeOf(node);
-  const poolY = pool.y + pool.h;
-  const nodeY = node.cy - hh;
-  const x = node.cx;
+  const below = pool.y > node.cy;
+  const poolY = below ? pool.y : pool.y + pool.h;
+  const nodeY = below ? node.cy + hh : node.cy - hh;
+  const x = node.cx + dx;
   const [y1, y2] = fromPool ? [poolY, nodeY] : [nodeY, poolY];
   return (
     <g>
       <line x1={x} y1={y1} x2={x} y2={y2} stroke={INK} strokeWidth={1.1} strokeDasharray="6 4" markerEnd={`url(#${markerId}-msg)`} />
       <circle cx={x} cy={y1} r={3} fill="var(--surface)" stroke={INK} strokeWidth={1.1} />
-      <text x={x + 7} y={Math.min(y1, y2) + 18} fontSize={FONT - 2} fill={INK}>{label}</text>
+      <text x={labelLeft ? x - 7 : x + 7} y={Math.min(y1, y2) + 18 + labelDy} textAnchor={labelLeft ? "end" : "start"} fontSize={FONT - 2} fill={INK}>{label}</text>
     </g>
   );
 }
@@ -396,7 +398,7 @@ function View({ diagram, view, highlight, markerId, zoom = "fit", maxScale = 1 }
         const fromNode = byId[f.from] && inView(byId[f.from]) ? byId[f.from] : null;
         const toNode = byId[f.to] && inView(byId[f.to]) ? byId[f.to] : null;
         if (!((fromPool && toNode) || (fromNode && toPool))) return null;
-        return <MsgFlow key={`m${i}`} fromNode={fromNode} toNode={toNode} fromPool={fromPool} toPool={toPool} label={f.label} markerId={markerId} />;
+        return <MsgFlow key={`m${i}`} fromNode={fromNode} toNode={toNode} fromPool={fromPool} toPool={toPool} label={f.label} markerId={markerId} dx={f.dx} labelLeft={f.labelLeft} labelDy={f.labelDy} />;
       })}
       {nodes.map((n) => (
         <Fragment key={n.id}>
@@ -489,8 +491,10 @@ export function BpmnDiagram({ diagram, highlight, compact = false, zoomable = fa
       )}
       {diagram.views.map((view, index) => (
         <div key={view.container ?? "main"}>
-          {view.container && (
-            <p className="mb-1 text-sm font-medium text-ink/70">Barndiagram: {view.title}</p>
+          {(view.container || view.title) && (
+            <p className="mb-1 text-sm font-medium text-ink/70">
+              {view.parent ? "Föräldradiagram" : "Barndiagram"}: {view.title}
+            </p>
           )}
           <PanFrame
             frameRef={index === 0 ? firstFrame : undefined}

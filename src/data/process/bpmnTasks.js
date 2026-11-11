@@ -327,7 +327,7 @@ export const tasks = [
   {
     id: "kp-hafte-1-1", diagram: "hafte-1-1-leverans", kind: "slut", points: 5,
     source: "Övningshäftet 1.1 (egen körfråga)",
-    premises: ["Diagrammet visar subprocessen Bouquet delivery. I föräldradiagrammet följs den av en XOR: Delivery succeeded går till fakturering, Delivery failed till Arrange alternate delivery time", "Buketten lämnas över", "Notification of failure to deliver kommer 3 timmar efter överlämningen", "Confirmation of delivery kommer 5 timmar efter överlämningen"],
+    premises: ["Buketten lämnas över", "Notification of failure to deliver kommer 3 timmar efter överlämningen", "Confirmation of delivery kommer 5 timmar efter överlämningen"],
     scenario: { messages: [{ name: "Notification of failure to deliver", after: "h", minutes: 180 }, { name: "Confirmation of delivery", after: "h", minutes: 300 }] },
     question: "I vilket sluttillstånd slutar subprocessen, och vad betyder det i föräldradiagrammet?",
     options: [
