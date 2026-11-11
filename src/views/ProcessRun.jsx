@@ -23,17 +23,40 @@ const shortSource = (task) => task.source.replace(/\s+\(.*\)$/, "");
 const titleOf = (task) => (task.kind === "element" ? "Känna igen ett element" : diagramById[task.diagram].title);
 const sourceTag = (task) => shortSource(task).replace(/^Tenta /, "").replace(/^Variant av tenta /, "variant ");
 
+// Menyn grupperad efter frågetyp; numren är uppgifternas plats i datat.
+const GROUPS = [
+  { kind: "aktiviteter", title: "Vilka aktiviteter körs" },
+  { kind: "tid", title: "När avslutas processen" },
+  { kind: "slut", title: "Hur slutar processen" },
+  { kind: "element", title: "Känna igen ett element" },
+  { kind: "stil", title: "Stil i diagrammet" },
+];
+const grouped = GROUPS.map((group) => ({
+  ...group,
+  items: tasks.map((task, index) => ({ task, number: index + 1 })).filter(({ task }) => task.kind === group.kind),
+})).filter((group) => group.items.length > 0);
+
 // I läget Anpassa får diagrammen växa till 150 % när det finns plats.
 const MAX_FIT_SCALE = 1.5;
 
 // params.taskId: från Tentafrågor i Öva ("Kör diagrammet"), som öppnar
-// just den uppgiften; annars första olösta.
+// just den uppgiften; annars den senast öppna, och första gången första olösta.
 export default function ProcessRun({ params, modelProgress, onSolve, onReset }) {
-  const [currentId, setCurrentId] = useState(() =>
-    tasks.some((t) => t.id === params?.taskId)
-      ? params.taskId
-      : tasks.find((t) => !modelProgress[t.id])?.id || tasks[0].id,
-  );
+  const [currentId, setCurrentId] = useState(() => {
+    if (tasks.some((t) => t.id === params?.taskId)) return params.taskId;
+    const saved = load(KEYS.bpmnTask, null);
+    if (tasks.some((t) => t.id === saved)) return saved;
+    return tasks.find((t) => !modelProgress[t.id])?.id || tasks[0].id;
+  });
+  useEffect(() => save(KEYS.bpmnTask, currentId), [currentId]);
+  // Nästa uppgift i tur och ordning, eller en slumpad olöst. Valet sparas.
+  const [order, setOrderState] = useState(() => (load(KEYS.bpmnOrder, "ordning") === "slump" ? "slump" : "ordning"));
+  const random = order === "slump";
+  function setOrder(next) {
+    setOrderState(next);
+    save(KEYS.bpmnOrder, next);
+  }
+  const [confirmResetAll, setConfirmResetAll] = useState(false);
   // Valt alternativ sparas per uppgift (svar:<id>) och finns kvar efter
   // omladdning; Svara trycker man på igen.
   const [choice, setChoiceState] = useState(null);
@@ -52,12 +75,33 @@ export default function ProcessRun({ params, modelProgress, onSolve, onReset }) 
 
   const task = tasks.find((t) => t.id === currentId) || tasks[0];
   const taskIndex = tasks.indexOf(task);
-  const nextTask = tasks[taskIndex + 1] || null;
+  // Slumpat: en olöst uppgift som inte är den här; är alla lösta, vilken som helst.
+  const [randomPick, setRandomPick] = useState(null);
+  const pickRandom = useCallback(() => {
+    const others = tasks.filter((t) => t.id !== currentId);
+    const open = others.filter((t) => !modelProgress[t.id]);
+    const pool = open.length ? open : others;
+    return pool[Math.floor(Math.random() * pool.length)] || null;
+  }, [currentId, modelProgress]);
+  useEffect(() => setRandomPick(random ? pickRandom() : null), [random, currentId]); // eslint-disable-line react-hooks/exhaustive-deps
+  const nextTask = random ? randomPick : tasks[taskIndex + 1] || null;
+  const nextLabel = random ? "Slumpa nästa →" : "Nästa uppgift →";
+  const nextTitle = nextTask && (random ? "En slumpad olöst uppgift" : `Uppgift ${taskIndex + 2}: ${titleOf(nextTask)}`);
   const cardRef = useRef(null);
   const scrollToCard = useRef(false);
   const diagram = task.diagram ? diagramById[task.diagram] : null;
   const correct = correctIndex(task);
   const solvedCount = tasks.filter((t) => modelProgress[t.id]).length;
+  // Alla uppgifter på en gång: status och sparade val, efter bekräftelse.
+  function resetAll() {
+    for (const t of tasks) {
+      onReset(t.id);
+      clearDraft(t.id);
+    }
+    setChoiceState(null);
+    setSubmitted(false);
+    setConfirmResetAll(false);
+  }
   // Stiluppgifterna visar ett diagram men kör det inte.
   const result = useMemo(() => (diagram && task.kind !== "stil" ? simulate(diagram, task.scenario) : null), [diagram, task]);
 
@@ -193,9 +237,9 @@ export default function ProcessRun({ params, modelProgress, onSolve, onReset }) 
                 type="button"
                 className={submitted ? "btn-secondary" : "btn-quiet"}
                 onClick={goNext}
-                title={`Uppgift ${taskIndex + 2}: ${titleOf(nextTask)}`}
+                title={nextTitle}
               >
-                Nästa uppgift →
+                {nextLabel}
               </button>
             )}
             <span className="text-sm text-ink/65">
@@ -234,8 +278,8 @@ export default function ProcessRun({ params, modelProgress, onSolve, onReset }) 
               {task.note && <p className="mt-3 text-sm text-ink/75">{task.note}</p>}
               {result && <p className="mt-3 text-xs text-ink/60">Markerat i diagrammet: det som kördes (grönt) och det som avbröts (rött).</p>}
               {nextTask && (
-                <button type="button" className="btn-primary mt-4" onClick={goNext} title={`Uppgift ${taskIndex + 2}: ${titleOf(nextTask)}`}>
-                  Nästa uppgift →
+                <button type="button" className="btn-primary mt-4" onClick={goNext} title={nextTitle}>
+                  {nextLabel}
                 </button>
               )}
             </div>
@@ -302,29 +346,94 @@ export default function ProcessRun({ params, modelProgress, onSolve, onReset }) 
               <span aria-hidden="true">«</span>
             </button>
           </div>
-          <p className="mt-1 text-sm text-ink/65">
-            Tentans BPMN-frågor: följ en token genom diagrammet. {solvedCount} av {tasks.length} klara.
+          <p className="mt-1 text-sm text-ink/65">Tentans BPMN-frågor: följ en token genom diagrammet.</p>
+          <p className="tabular mt-3 text-sm">
+            {solvedCount} av {tasks.length} klara · {tasks.length - solvedCount} kvar
           </p>
-          <ul className="mt-2 space-y-1">
-            {tasks.map((t, i) => {
-              const active = t.id === currentId;
-              return (
-                <li key={t.id}>
-                  <button
-                    type="button"
-                    onClick={() => setCurrentId(t.id)}
-                    aria-current={active ? "true" : undefined}
-                    title={`${titleOf(t)} · ${sourceTag(t)}`}
-                    className={`flex w-full items-baseline gap-2 rounded-lg border px-3 py-2 text-left text-sm transition-colors duration-150 ${active ? "border-pine bg-pine/[0.08] text-pine" : "border-transparent hover:border-pine hover:bg-pine/[0.06]"}`}
-                  >
-                    <span className="tabular w-6 shrink-0 text-ink/65">{i + 1}</span>
-                    <span className="min-w-0 flex-1 truncate">{titleOf(t)} · {sourceTag(t)}</span>
-                    {modelProgress[t.id] && <span className="shrink-0 text-correct" title="Klar">✓<span className="sr-only"> Klar</span></span>}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+          <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-line" aria-hidden="true">
+            <div className="h-full rounded-full bg-pine" style={{ width: `${(solvedCount / tasks.length) * 100}%` }} />
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Nästa uppgift">
+            {[
+              { id: "ordning", label: "I ordning" },
+              { id: "slump", label: "Slumpa" },
+            ].map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                aria-pressed={order === item.id}
+                onClick={() => setOrder(item.id)}
+                className={`chip ${order === item.id ? "chip-on" : "hover:border-pine"}`}
+              >
+                {item.label}
+              </button>
+            ))}
+            <button
+              type="button"
+              className="btn-secondary px-3 py-1.5 text-sm"
+              onClick={() => {
+                const pick = pickRandom();
+                if (pick) {
+                  scrollToCard.current = true;
+                  setCurrentId(pick.id);
+                }
+              }}
+            >
+              Slumpa en uppgift
+            </button>
+          </div>
+          <p className="mt-1.5 text-xs text-ink/65">
+            {random ? "Nästa uppgift blir en slumpad olöst; när alla är lösta, vilken som helst." : "Nästa uppgift kommer i listans ordning."}
+          </p>
+
+          {grouped.map((group) => {
+            const done = group.items.filter(({ task: t }) => modelProgress[t.id]).length;
+            return (
+              <section key={group.kind} className="mt-4" aria-label={group.title}>
+                <h4 className="flex items-baseline justify-between gap-2 text-sm font-medium">
+                  <span>{group.title}</span>
+                  <span className="tabular font-normal text-ink/65">{done}/{group.items.length}</span>
+                </h4>
+                <ul className="mt-1 space-y-1">
+                  {group.items.map(({ task: t, number }) => {
+                    const active = t.id === currentId;
+                    return (
+                      <li key={t.id}>
+                        <button
+                          type="button"
+                          onClick={() => setCurrentId(t.id)}
+                          aria-current={active ? "true" : undefined}
+                          title={`${titleOf(t)} · ${sourceTag(t)}`}
+                          className={`flex w-full items-baseline gap-2 rounded-lg border px-3 py-2 text-left text-sm transition-colors duration-150 ${active ? "border-pine bg-pine/[0.08] text-pine" : "border-transparent hover:border-pine hover:bg-pine/[0.06]"}`}
+                        >
+                          <span className="tabular w-6 shrink-0 text-ink/65">{number}</span>
+                          <span className="min-w-0 flex-1 truncate">{titleOf(t)} · {sourceTag(t)}</span>
+                          {modelProgress[t.id] && <span className="shrink-0 text-correct" title="Klar">✓<span className="sr-only"> Klar</span></span>}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            );
+          })}
+
+          <div className="mt-5 border-t border-line pt-3">
+            {confirmResetAll ? (
+              <div>
+                <p className="text-sm text-ink/70">Alla {tasks.length} uppgifternas ✓ Klar och valda svar tas bort.</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <button type="button" className="btn-secondary" onClick={resetAll}>Ja, nollställ alla</button>
+                  <button type="button" className="btn-quiet" onClick={() => setConfirmResetAll(false)}>Avbryt</button>
+                </div>
+              </div>
+            ) : (
+              <button type="button" className="btn-quiet px-0 text-sm" onClick={() => setConfirmResetAll(true)}>
+                Nollställ alla uppgifter
+              </button>
+            )}
+          </div>
         </nav>
       </div>
       {legendOpen && <BpmnLegend onClose={closeLegend} />}

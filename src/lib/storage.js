@@ -15,6 +15,8 @@ export const KEYS = {
   ttsRate: "upplasningstakt", // uppläsningens hastighet (t.ex. 1.15)
   sqlRandom: "sqlSlump", // antal lösta slumpövningar
   bpmnMenu: "bpmnMeny", // "full" | "smal" — BPMN-övningarnas meny, ihopfälld till siffror
+  bpmnTask: "bpmnUppgift", // senast öppna uppgiften i BPMN-övningar (uppgifts-id)
+  bpmnOrder: "bpmnOrdning", // "ordning" | "slump" — Nästa uppgift i tur och ordning eller slumpad
   examAnswers: "tentafragor", // { [frågeId]: samma form som answers } — läget Tentafrågor i Öva, räknas för sig
   practicePass: "ovaGenomgang", // { [delkursId]: { cleared: [frågeId], wrong: { [frågeId]: iso } } } — Genomgång i Öva, ett rätt räcker; rör inte answers
   practiceCurrent: "ovaFraga", // { [delkursId]: { id, tenta, order, chosen, revealed } } — öppen fråga i Öva, kvar när man går till Läs och tillbaka

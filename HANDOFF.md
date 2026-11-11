@@ -894,7 +894,8 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
 `"<kurs>:tenta"` —, `practiceOrder`, `practiceTopics`, `practiceScope`,
 `practiceExams`, `practiceExamOrder`), `lasSegment`, `delkurs`, `schemaVy`,
 `upplasningstakt`, `sqlSlump`, `sqlLage`, `sqlOppen`, `sqlHjalp`,
-`sqlSlumpUppgift`, `ovaGenomgang` (Genomgång i Öva per delkurs: avbetade
+`sqlSlumpUppgift`, `bpmnUppgift` (senast öppna BPMN-uppgiften), `bpmnOrdning`
+("ordning" | "slump"), `ovaGenomgang` (Genomgång i Öva per delkurs: avbetade
 frågor och fel att göra om; nollställs bara med "Börja om genomgången"),
 `ovaFraga` (öppen fråga i Öva per delkurs: id, läge,
 alternativens ordning, val, rättad; släpps av "Klar för nu" och byte av
@@ -1109,6 +1110,12 @@ Signavio-bloggen som tentan kallar "Kampik et al. (2025)"),
   merge; tid i minuter på väggklocka). **`bpmn-sim.test.mjs` kräver att
   simulatorn ger det handskrivna facit för varje uppgift** — alla stämmer
   — plus konstruktionstester och ett överlappstest för ritningarna.
+  Menyn (2026-11-11, användarkrav): status "N av 28 klara · M kvar" med
+  stapel, uppgifterna grupperade efter frågetyp (`GROUPS`, numren är
+  platsen i datat), I ordning/Slumpa för Nästa uppgift (slumpat = en olöst
+  som inte är den öppna, när alla är lösta vilken som helst), knappen
+  Slumpa en uppgift och Nollställ alla uppgifter (✓ och valda svar, efter
+  bekräftelse). Öppen uppgift och ordning sparas.
   Framsteg i `sysb23:modell:<kp-id>` = "solved". Sidhänvisningar i
   `source` visas inte i vyn.
 - **Prov:** `course.exam` i manifestet anger sektioner (`lib/examPlan.js`);
