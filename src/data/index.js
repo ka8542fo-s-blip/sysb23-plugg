@@ -29,6 +29,14 @@ import {
   examNote as processExamNote,
   summary as processSummary,
 } from "./process/reading.js";
+import { topics as arkitekturTopics } from "./arkitektur/topics.js";
+import {
+  chapters as arkitekturChapters,
+  glossary as arkitekturGlossary,
+  intro as arkitekturIntro,
+  examNote as arkitekturExamNote,
+  summary as arkitekturSummary,
+} from "./arkitektur/reading.js";
 import { examBank as sakerhetExamBank } from "./sakerhet/examBank.js";
 import {
   pastExams as sakerhetPastExams,
@@ -149,8 +157,21 @@ export const courses = [
     ...noContent,
     id: "arkitektur",
     name: "Verksamhetsarkitektur",
-    status: "kommande",
-    views: [],
+    status: "aktiv",
+    // Byggs i faser (2026-11-13, cc-prompt-arkitektur-delkurs.md): Läs först,
+    // sedan Öva och Essä, Zachman-vyn och Tenta. Flikarna läggs till när
+    // deras innehåll finns. Ingen Prov: HT26-tentans poäng är okända.
+    views: ["las", "statistik"],
+    practiceBy: "chapter",
+    topics: arkitekturTopics,
+    chapters: arkitekturChapters,
+    // Sammanfattningen bygger på modul 12, som UF säger att man ska börja med.
+    summary: arkitekturSummary,
+    glossary: arkitekturGlossary,
+    readingIntro: arkitekturIntro,
+    examNote: arkitekturExamNote,
+    homeIntro:
+      "Läs UF:s tolv moduler som kompendium, börja med sammanfattningen och de tio begreppen, och lär dig Zachmans ramverk ordentligt — det gav halva poängen på alla tre HT25-tentorna.",
   },
   {
     ...noContent,

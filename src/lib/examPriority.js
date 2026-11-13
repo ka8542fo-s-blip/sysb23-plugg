@@ -57,5 +57,7 @@ export function evidenceSentence(evidence) {
     );
   }
   if (evidence.essay) parts.push("Prövat som essä HT24");
+  // Fri bevisrad för delkurser vars underlag inte är HT24 (Verksamhetsarkitektur).
+  if (evidence.note) parts.push(evidence.note);
   return parts.length ? parts.join(" · ") : null;
 }

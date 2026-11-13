@@ -19,3 +19,13 @@ tts/
 
 # Skärmbilder från figurkontrollen
 figure-check/
+
+# Säkerhetsdelkursens prompt återger tentafrågor
+cc-prompt-sakerhet-delkurs.md
+
+# Verksamhetsarkitekturens prompt återger tentor och lärarens material
+cc-prompt-arkitektur-delkurs.md
+kursmaterial-sakerhet/
+
+# Verksamhetsarkitekturens kursmaterial och tentor — lärarens material, hålls utanför
+kursmaterial-arkitektur/

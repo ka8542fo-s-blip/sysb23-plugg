@@ -174,6 +174,7 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
                 onBack={() => setChapterId(null)}
                 onPrev={() => step(-1)}
                 onNext={() => step(1)}
+                onOpenView={navigate}
               />
             ) : (
               <ChapterList

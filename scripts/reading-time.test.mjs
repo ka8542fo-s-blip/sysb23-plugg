@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import { formatReadingTime, totalReadingMinutes, withReadingTime } from "../src/lib/readingTime.js";
 import { chapters as strategi, intro as strategiIntro } from "../src/data/strategi/reading.js";
 import { chapters as databaser, intro as databaserIntro } from "../src/data/databaser/reading.js";
+import { chapters as arkitektur, intro as arkitekturIntro } from "../src/data/arkitektur/reading.js";
 
 test("formuleringar", () => {
   assert.equal(formatReadingTime(50), "50 minuter");
@@ -20,8 +21,8 @@ test("summan avrundas till närmaste tio minuter", () => {
   assert.equal(totalReadingMinutes(strategi), 110);
 });
 
-test("båda kompendiernas intro får sin tid ur datat", () => {
-  for (const [intro, chapters] of [[strategiIntro, strategi], [databaserIntro, databaser]]) {
+test("kompendiernas intro får sin tid ur datat", () => {
+  for (const [intro, chapters] of [[strategiIntro, strategi], [databaserIntro, databaser], [arkitekturIntro, arkitektur]]) {
     assert.match(intro, /\{lästid\}/);
     const text = withReadingTime(intro, chapters);
     assert.doesNotMatch(text, /\{lästid\}/);

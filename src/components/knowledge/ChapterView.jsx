@@ -64,14 +64,7 @@ const markdownComponents = {
       {children}
     </h3>
   ),
-  // Ett stycke som bara innehåller [[diagram:namn]] byts mot figuren —
-  // det är så kapiteltexterna bäddar in SVG-diagrammen.
-  p: ({ children }) => {
-    const only = Array.isArray(children) && children.length === 1 ? children[0] : children;
-    const match = typeof only === "string" ? DIAGRAM_RE.exec(only.trim()) : null;
-    if (match) return <Diagram id={match[1]} />;
-    return <p className="mt-4">{children}</p>;
-  },
+
   strong: ({ children }) => (
     <strong className="font-semibold text-pine">{children}</strong>
   ),
@@ -112,6 +105,33 @@ const markdownComponents = {
   ),
 };
 
+// [[vy:nyckel|Knapptext]] som ensamt stycke blir en knapp till en annan vy
+// i delkursen (kapitel 4 → Zachman). Saknar delkursen vyn ritas inget.
+const VIEW_LINK_RE = /^\[\[vy:([a-z]+)(?:\|([^\]]+))?\]\]$/;
+
+// Ett stycke som bara innehåller [[diagram:namn]] byts mot figuren —
+// det är så kapiteltexterna bäddar in SVG-diagrammen.
+function paragraphRenderer(onOpenView, views = []) {
+  return function Paragraph({ children }) {
+    const only = Array.isArray(children) && children.length === 1 ? children[0] : children;
+    const text = typeof only === "string" ? only.trim() : null;
+    const match = text ? DIAGRAM_RE.exec(text) : null;
+    if (match) return <Diagram id={match[1]} />;
+    const view = text ? VIEW_LINK_RE.exec(text) : null;
+    if (view) {
+      if (!onOpenView || !views.includes(view[1])) return null;
+      return (
+        <p className="mt-6" data-tts-skip>
+          <button type="button" className="btn-secondary" onClick={() => onOpenView(view[1])}>
+            {view[2] || "Öppna övningen"} →
+          </button>
+        </p>
+      );
+    }
+    return <p className="mt-4">{children}</p>;
+  };
+}
+
 export default function ChapterView({
   chapter,
   number,
@@ -127,8 +147,22 @@ export default function ChapterView({
   onBack,
   onPrev,
   onNext,
+  onOpenView = null,
 }) {
   const lookup = topicLookup(course.topics);
+  // navigate är en ny funktion vid varje rendering. Via en ref behåller
+  // styckekomponenten sin identitet, så att styckena inte monteras om (det
+  // skulle tappa uppläsningens markering).
+  const openViewRef = useRef(onOpenView);
+  openViewRef.current = onOpenView;
+  const hasOpenView = Boolean(onOpenView);
+  const components = useMemo(
+    () => ({
+      ...markdownComponents,
+      p: paragraphRenderer(hasOpenView ? (view) => openViewRef.current?.(view) : null, course.views),
+    }),
+    [hasOpenView, course.views],
+  );
   const [progress, setProgress] = useState(0);
   const [tocOpen, setTocOpen] = useState(false);
   const headings = useMemo(() => headingsIn(chapter.body), [chapter.body]);
@@ -362,7 +396,7 @@ export default function ChapterView({
             id="kapiteltext"
             className="mt-8 max-w-[68ch] text-[17px] leading-[1.7] sm:text-[18px]"
           >
-            <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
               {chapter.body}
             </ReactMarkdown>
           </article>

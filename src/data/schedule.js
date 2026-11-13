@@ -11,7 +11,7 @@ export const schedule = {
     { id: "strategi", name: "Strategi och ekonomistyrning", short: "Strategi", hp: 2.0, teacher: "Benjamin Weaver", color: "--c-strategi", start: "2026-08-31", end: "2026-09-21", contentId: "strategi" },
     { id: "databaser", name: "Databaser", short: "Databaser", hp: 3.0, teacher: "Björn Svensson (laborationer: Nils Törnqvist)", start: "2026-09-01", end: "2026-11-17", color: "--c-databaser", contentId: "databaser" },
     { id: "process", name: "Processorienterad verksamhetsutveckling", short: "Processorienterad", hp: 3.0, teacher: "Benjamin Weaver", start: "2026-09-22", end: "2026-11-13", color: "--c-process", contentId: "process" },
-    { id: "arkitektur", name: "Verksamhetsarkitektur", short: "Verksamhetsarkitektur", hp: 2.0, teacher: "Umberto Fiaccadori", start: "2026-11-18", end: "2026-11-27", color: "--c-arkitektur", contentId: null },
+    { id: "arkitektur", name: "Verksamhetsarkitektur", short: "Verksamhetsarkitektur", hp: 2.0, teacher: "Umberto Fiaccadori", start: "2026-11-18", end: "2026-11-27", color: "--c-arkitektur", contentId: "arkitektur" },
     { id: "sakerhet", name: "Säkerhet i informationssystem", short: "Säkerhet", hp: 2.0, teacher: "Miranda Kajtazi", start: "2026-11-06", end: "2026-12-03", color: "--c-sakerhet", contentId: "sakerhet" },
     { id: "ansvarsfull", name: "Ansvarsfull verksamhetsutveckling", short: "Ansvarsfull", hp: 1.0, teacher: "Miranda Kajtazi", start: "2026-11-25", end: "2026-12-02", color: "--c-ansvarsfull", contentId: null },
     { id: "isprojekt", name: "Informationssystemsprojekt", short: "IS-projekt", hp: 7.0, teacher: "Weaver, Kajtazi och Fiaccadori", start: "2026-12-08", end: "2027-01-17", color: "--c-isprojekt", contentId: null }

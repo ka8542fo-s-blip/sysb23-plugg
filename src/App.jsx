@@ -35,6 +35,12 @@ import {
   clearModelResult,
 } from "./lib/storage.js";
 
+// Det som kan markeras som läst i Läs: kapitlen och sammanfattningen.
+function readableIds(course) {
+  const ids = (course.chapters || []).map((chapter) => chapter.id);
+  return course.summary ? [...ids, course.summary.id] : ids;
+}
+
 export default function App() {
   // Ljust eller mörkt tema; kroken håller data-theme på <html> i takt.
   const theme = useTheme();
@@ -76,12 +82,10 @@ export default function App() {
 
   const course = useMemo(() => getCourse(courseId), [courseId]);
 
-  // Lästa kapitel: en nyckel per kapitel i localStorage.
+  // Lästa kapitel: en nyckel per kapitel i localStorage. Sammanfattningen
+  // (kortet "Läs först") har också en läst-markering och laddas med.
   const [readChapters, setReadChapters] = useState(() =>
-    loadReadChapters(
-      courseId,
-      (getCourse(courseId).chapters || []).map((chapter) => chapter.id),
-    ),
+    loadReadChapters(courseId, readableIds(getCourse(courseId))),
   );
 
   // Lösta SQL-övningar: en nyckel per övning i localStorage.
@@ -111,12 +115,7 @@ export default function App() {
     setSqlProgress(
       loadSqlProgress((course.sqlExercises || []).map((item) => item.id)),
     );
-    setReadChapters(
-      loadReadChapters(
-        course.id,
-        (course.chapters || []).map((chapter) => chapter.id),
-      ),
-    );
+    setReadChapters(loadReadChapters(course.id, readableIds(course)));
     // Byter man till en delkurs som saknar den öppna vyn hamnar man på Hem.
     setView((current) =>
       ["hem", "schema", ...(course.views || [])].includes(current) ? current : "hem",

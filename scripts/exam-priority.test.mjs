@@ -8,6 +8,8 @@ import { chapters } from "../src/data/strategi/reading.js";
 import { topics as dbTopics } from "../src/data/databaser/topics.js";
 import { topics as processTopics } from "../src/data/process/topics.js";
 import { chapters as processChapters } from "../src/data/process/reading.js";
+import { topics as arkitekturTopics } from "../src/data/arkitektur/topics.js";
+import { chapters as arkitekturChapters } from "../src/data/arkitektur/reading.js";
 import {
   chapterPriority,
   evidenceSentence,
@@ -89,4 +91,23 @@ test("BPM-delkursens klassning: allt kärna, essä där HT25 frågade eller Weav
   for (const chapter of processChapters) {
     assert.ok(isFastTrack(chapterPriority(chapter, processTopics)), chapter.id);
   }
+});
+
+// Verksamhetsarkitektur (prompten B4.2): allt kärna utom bankfallet, som
+// också är kärna men främst essä; essä på Zachman (uppgift 1, 30 p),
+// bankfallet (modul 11) och integrationen (modul 12). Zachman har en
+// bevisrad: halva poängen på alla tre HT25-tentorna.
+test("Verksamhetsarkitekturens klassning: kärna överallt, essä på Zachman och fallen", () => {
+  const essa = ["zachman", "praktik", "integration"];
+  for (const topic of arkitekturTopics) {
+    const levels = priorityOf(topic);
+    assert.ok(levels.includes("karna"), `${topic.id} ska vara kärna`);
+    assert.equal(levels.includes("essa"), essa.includes(topic.id), topic.id);
+    assert.ok(!levels.includes("bakgrund"), topic.id);
+  }
+  for (const chapter of arkitekturChapters) {
+    assert.ok(isFastTrack(chapterPriority(chapter, arkitekturTopics)), chapter.id);
+  }
+  const zachman = arkitekturTopics.find((topic) => topic.id === "zachman");
+  assert.match(evidenceSentence(zachman.examEvidence), /50 p/);
 });

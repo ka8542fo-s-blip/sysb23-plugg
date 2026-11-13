@@ -49,12 +49,13 @@ test("kapitel för kapitel ger Läs-ordning och bankens ordning inom kapitlet", 
   assert.equal(ordered.length, databaser.questions.length);
 });
 
-// Sammanfattningarna (BPM och Databaser) är inga kapitel: de står som ett
+// Sammanfattningarna (BPM, Databaser och Verksamhetsarkitektur) är inga kapitel: de står som ett
 // eget kort ovanför kapitlen i Läs och har inga frågor. Kapitlen och Öva ska
 // inte märka av dem.
 for (const [id, numbers] of [
   ["process", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]],
   ["databaser", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]],
+  ["arkitektur", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]],
 ]) {
   test(`sammanfattningen i ${id}: inget kapitel, ingen grupp i Öva`, () => {
     const course = getCourse(id);
