@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 534 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-11.
+- **Test:** `npm test` = 549 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-13.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -50,7 +50,8 @@ kapitel: allt UI läser `chapter.number`.
 | strategi | komplett | 11 kapitel (kap `digital` = nr 9 ur Weavers föreläsning 1; kap9/kap10 är nr 10/11), 14 ämnen, 124 termer, 71 frågor (designregler i filens kommentar, mätskript `scripts/check-fragebank.mjs`), 4 essäer, `practiceBy: "chapter"`. Tillägg 2026-09-09 ur Weavers föreläsning 2: kapitel 2 value creation/value capture, kapitel 6 stuck in the middle + omskrivet RBV-avsnitt med VRIO och de tre imitationshindren + nya avsnitt "Dynamiska förmågor" (Teece: sensing/seizing/transforming) och "Sex sätt att nå uthållig konkurrensfördel" + omskrivet Mintzberg-avsnitt med Waters fem termer och Honda/Netflix, kapitel 8 hållbarhetens tidslinje (CSRD) och "Tre termer att hålla isär: CSR, TBL och ESG" (internt/externt är det som prövas). Sju frågor str-q67…73, sju ordlistetermer, essächecklistan för lärande organisation har de tre godtagbara perspektiven |
 | databaser | komplett mot tentan | se nedan |
 | process | aktiv (2026-09-29) | se "Processorienterad verksamhetsutveckling (BPM)" nedan |
-| arkitektur, sakerhet | kommande | platshållare i manifestet |
+| sakerhet | aktiv (2026-11-13) | Öva (bara Tentafrågor), Tenta, Uppgifter — se "Säkerhet i informationssystem" nedan |
+| arkitektur | kommande | platshållare i manifestet |
 
 **Databaser** (`views: las, sql, modell, tenta, ova, statistik`; Prov medvetet borta):
 
@@ -730,6 +731,18 @@ kräver surrogatnycklar och inte namn — kapitel 9 följer tentan.
   objekt i `pastExams.js`; testet `past-exams.test.mjs` håller numren i
   takt med bpm-t-frågornas källor. 13 av de 25 bpm-t-frågorna är
   `reviewed: false`; översikten säger att tentorna saknar facit.
+  **Utökat 2026-11-13 (för Säkerhet, gäller alla):** Tentafrågor har Krav
+  (Inlärning/Genomgång) och statusraden som Alla frågor, med egna fack
+  under `"<kurs>:tenta"` (se Lagringsnycklar); ett svar i Genomgång räknas
+  också i `tentafragor`, som i Alla frågor. En del kan peka på
+  `course.examBank` (tentafrågor utan kapitel) när frågan inte finns i
+  `questions`; en delkurs utan `questions` får bara Tentafrågor, utan växel.
+  En fråga som står på flera tentor delar status (posterna har frågans id);
+  kön och toppsiffran räknar unika (`uniqueItems`), rutnätet visar alla, och
+  etiketten listar alla ställen ("Ordinarie 4 · Omtenta 4 · Uppsamling 1").
+  `correct` får vara en lista (flera rätta; `shuffleQuestion` ger
+  `accepted`). Poängraden visar avdraget när delen har `penalty`
+  (`pointsLabel`). BPM:s etiketter, siffror och svar är oförändrade.
 - **Prov** (Strategi) — HT25-format sedan 2026-09-17: 11 frågor à 5 p, −1/0, betyget räknas på 55 flervalspoäng (essäerna 3 à 15 p, max 300 ord, ligger utanför), balanserad dragning, deadline-timer,
   lever i App-state (försvinner vid omladdning, avsiktligt).
 - **SQL** — sql.js/WASM, färsk databas per körning. T-SQL först:
@@ -919,7 +932,11 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
 frågor och fel att göra om; nollställs bara med "Börja om genomgången"),
 `ovaFraga` (öppen fråga i Öva per delkurs: id, läge,
 alternativens ordning, val, rättad; släpps av "Klar för nu" och byte av
-urval), `read:<kurs>:<kapitel>`,
+urval), `read:<kurs>:<kapitel>`. Kraven per läge (2026-11-13):
+`settings.practiceRequire` och `ovaGenomgang` har nycklarna `"<kurs>"` (Alla
+frågor) och `"<kurs>:tenta"` (Tentafrågor), karensen `"<kurs>"`,
+`"<kurs>:pass"`, `"<kurs>:tenta"` och `"<kurs>:tenta:pass"`. `tentaOppen`
+(öppen tenta i Säkerhets Tenta-flik, per delkurs),
 `sql:<övningsId>` (= "solved" | "solved-with-help"), `svar:<uppgiftsId>` (eget svar i
 Modellera, SQL-verkstaden och BPMN-övningar, `lib/useDrafts.js`; `svar:sql-fritt`
 för SQL:s fria läge; tas bort av "Nollställ uppgiften"), `java:<uppgiftsId>`
@@ -928,7 +945,9 @@ Java-uppgiften), `modell:<uppgiftsId>`
 (= "solved"; mod-, norm-, stmt-, ddl- och kp-id; listorna står i
 `data/progressLists.js`, som App läser in och `progress-lists.test.mjs`
 vaktar), `examreg:<examId>`, `tenta:<tentaId>`
-(svar, rättade uppgifter och senaste poäng i fliken Tenta). "Nollställ min
+(fliken Tenta: Databaser `tenta-250916` … = svar, rättade uppgifter och
+senaste poäng; Säkerhet `sak-ht25-ord` … = `{ choices, current,
+submittedAt }`, tas bort av "Börja om"). "Nollställ min
 data" i Statistik rensar allt. Progress är per webbläsare och domän.
 
 ## Kända egenheter (inte buggar)
@@ -1251,6 +1270,82 @@ BPMN assignment" gäller gruppuppgiften och är inte inbyggt.
   (process architecture). **Sustainability** i 7FE betyder konkurrensfördel,
   inte hållbarhet (Weaver uttryckligen).
 
+## Säkerhet i informationssystem, byggd 2026-11-13
+
+Underlag: `cc-prompt-sakerhet-delkurs.md` (gitignorerad, återger tentorna)
+och planen Kasper godkände. Tentorna ligger i
+`~/Downloads/course_files_export.zip` (`07_Assessments/Previous exams/`,
+tre PDF:er) och lästes direkt ur zippen; de committas aldrig. Lärare
+Miranda Kajtazi; kurslitteratur Stallings & Brown, *Computer Security*
+(5:e uppl.; Kasper har 2:a, kapitel 1–12 och 14–24 har samma nummer).
+Föreläsningsbilder, läsanvisning och schema för delkursen fanns inte.
+
+`views: ova, tenta, uppgifter` (Läs kommer i fas 3, se Nästa steg).
+**Kaspers beslut:** samma upplägg som BPM — Öva med Tentafrågor och en
+separat Tenta-flik, ingen växel inne i en flik.
+
+- **Tentaformatet (alla tre HT25-tentorna):** digital, 20 flervalsfrågor,
+  4 alternativ (sak-03 och sak-26 har 3), 100 p, inga hjälpmedel. Fel svar
+  ger avdrag som står i frågan ("Correct answer gives X points, incorrect
+  answer gives -Y point"), obesvarad 0. Betyg A 85, B 75, C 65, D 55, E 50
+  (`lib/gradeScale.js`, samma skala som Databaser). Inspera blandar
+  alternativen: ordningen skiljer sig mellan tentorna. 26 unika frågor,
+  **14** på alla tre (prompten sa 17; sak-01, 02, 03 och 05 saknas i
+  uppsamlingen). Ordinarie 25 nov 2025, omtenta 14 jan 2026, uppsamling 18
+  maj 2026. Kommande: 3 dec 2026 08–13 MA 10, omtenta 14 jan 2027 Sparta.
+- **Data:** `data/sakerhet/examBank.js` (sak-01…26 i Övas frågeform,
+  ordagrant ur PDF:erna, radbrytningar ihopslagna, kontrollerat med skript
+  2026-11-13; förklaringar ur promptens B3, `reviewed` saknas — ogranskat
+  av Kasper), `pastExams.js` (tentorna i BPM:s form; varje del byggs ur
+  banken med `points`, `penalty` och tentans alternativordning `order`;
+  plus `ANSWER_RULE`/`ANSWER_TABLE`), `assignments.js`. Banken ligger i
+  `course.examBank`, inte i `questions` (Öva-frågor kräver ett kapitel).
+- **De fyra specialfallen:** sak-16 (publik nyckel) ger 6 p — frågetexten
+  säger 5 men Totalpoäng är 6, och bara så blir summan 100 (`note` visas
+  efter svar). sak-23 (blind SQL injection, "bling" på tentan) har två
+  identiska rätta alternativ, det ena med punkt — båda rätt
+  (`correct: [2, 3]`). sak-24 och sak-26 har ingen avdragsrad: 0 vid fel.
+  sak-03 och sak-26 har tre alternativ.
+- **Motsägelse i tentorna:** inledningen säger att fråga 1–3 inte har
+  avdrag. Det stämmer på ordinarien och omtentan (sak-01–03), men
+  uppsamlingens fråga 1 (sak-04, −1) och 3 (sak-20, −4) anger avdrag i
+  frågan. Sajten följer frågans egen rad (poäng och avdrag följer frågan,
+  inte platsen). Promptens B3 listar alternativen i en ordning som inte är
+  någon enskild tentas (RTO-frågan står i uppsamlingens ordning).
+- **Öva:** bara Tentafrågor (se Vyer och särdrag): 3 × 20 rutor, toppen
+  räknar 26. Alternativen blandas. Kapitelfrågor läggs i `questions` när
+  föreläsningarna finns, och då dyker växeln upp; Tentafrågor ligger kvar
+  som drill. Ingen Öva-fråga utan kapitel — banken är tentans egna frågor.
+- **Tenta** (`views/ChoiceExam.jsx`, `lib/choiceExam.js`; App väljer den när
+  `course.choiceExams` finns, annars DbExam): översikten har "När lönar det
+  sig att svara?" och ett kort per tenta (Inte påbörjad / Pågår / X av 100 ·
+  betyg). I en tenta: sidopanel med rutnät, Lämna in (bekräftelse med antal
+  obesvarade) och Börja om; en fråga i taget i QuestionCard med tentans
+  alternativordning, fritt att byta och rensa svar, 1–4 och ← →. Facit,
+  poäng per fråga och förklaringar först efter inlämning. Summan golvas
+  inte (allt fel på ordinarien = −44). Sparas i `tenta:<id>` och rör aldrig
+  `tentafragor`.
+- **Uppgifter** (`views/Assignments.jsx`): Hugging Face Ethical Reflection
+  (deadline 16 dec 2026 23:59) och Field-Based Information Security Strategy
+  (deadline "Se Canvas"). Deadlinen ligger inte i schemat (bevakningen
+  jämför `sessions` med TimeEdit).
+- **Hem/Schema:** introt ur `homeIntro`, statusrutorna döljs utan
+  Öva-frågor (inga poäng utanför Tenta), genvägar till Öva, Tenta och
+  Uppgifter. `contentId: "sakerhet"` ger "Plugga till denna tenta" (öppnar
+  Öva) och readiness "klarat X av 26 tentafrågor, lämnat in N av 3".
+- **Tester:** `scripts/sakerhet-tenta.test.mjs` (tentorna 20 frågor/100 p,
+  ordningen B4, ett rätt utom sak-23, permutationerna, specialfallen och
+  1–3-regeln, tabellen mot banken, 26 unika, poängräkningen och betygen,
+  uppgifterna).
+- **Saknas:** föreläsningsbilder och schema (behövs för Läs-kapitel och
+  kapitelfrågor), läsanvisning (vilka Stallings-kapitel), länkarna till
+  Hugging Face-uppgiftens rapport och videor, fältuppgiftens deadline, och
+  om Ansvarsfull verksamhetsutveckling (etik, GDPR, AI-förordningen) tentas
+  tillsammans med säkerhet i år — HT25-tentorna har inga sådana frågor.
+  Ordlistan (fas 3) är inte byggd; fyra av promptens begrepp
+  (accountability, authenticity, XSS, broken access control) har inget
+  eget stöd i förklaringarna och blir tunna tills föreläsningarna finns.
+
 ## Nästa steg
 
 - Användarens granskning av det ogranskade (listan ovan), i första hand
@@ -1258,5 +1353,14 @@ BPMN assignment" gäller gruppuppgiften och är inte inbyggt.
 - **BPM:** F5-transkriptet är avstämt och Canvas-quizzarna invävda. Öppet:
   artikel 86:s datum (se "F5 inlagd"). Kasper granskar själv,
   BPMN-övningar och kapitel 11 först.
-- Fler delkurser (arkitektur, säkerhet) enligt samma mall: data +
-  manifestrad, ingen ny kod.
+- **Säkerhet, fas 3 efter 17 nov:** Läs med bara Ordlista (segmenten ur
+  innehållet i KnowledgeHub, Glossary utan kapitel = A–Ö, framhävd term
+  scrollas fram), `data/sakerhet/glossary.js` ur promptens B5 med
+  förklaringar ur B3, och "Slå upp i ordlistan" från frågorna (`terms`) i
+  Öva och Tenta med tillbakalänk. Läs läggs efter Tenta tills kompendiet
+  finns. Uppdatera HANDOFF då.
+- **Säkerhet när föreläsningarna kommer:** kapitel i Läs, kapitelfrågor i
+  `questions` (växeln Alla frågor/Tentafrågor dyker upp), läsanvisningen.
+  Kasper granskar facit och förklaringarna i examBank.
+- Verksamhetsarkitektur byggs i en egen session (worktree
+  `.claude/worktrees/arkitektur`).
