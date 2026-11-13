@@ -36,6 +36,7 @@ import {
 } from "./arkitektur/questions.js";
 import { essays as arkitekturEssays } from "./arkitektur/essays.js";
 import { examArchive as arkitekturExamArchive } from "./arkitektur/examArchive.js";
+import { zachmanTasks as arkitekturZachmanTasks } from "./arkitektur/zachman.js";
 import {
   chapters as arkitekturChapters,
   glossary as arkitekturGlossary,
@@ -170,7 +171,10 @@ export const courses = [
     // Essä), Troligt = Zachman utöver modul 4:s frågor (Zachman-fliken,
     // Zachman-essän), Fördjupning = allt annat (docx-frågorna, HT25-arkivet).
     // Ingen Prov: HT26-tentans poäng är okända.
-    views: ["las", "ova", "zachman", "essa", "fordjupning", "statistik"],
+    views: ["tentan", "las", "ova", "zachman", "essa", "fordjupning", "statistik"],
+    // Nivåerna i fliken Tentan och Statistik: Troligt räknar Zachman-flikens
+    // uppgifter (memoreringen inräknad) och Zachman-essän.
+    levels: { troligtTaskIds: arkitekturZachmanTasks.map((task) => task.id) },
     // HT25-tentorna som arkiv i Fördjupning, artikelfrågorna utan facit.
     examArchive: arkitekturExamArchive,
     practiceBy: "chapter",
