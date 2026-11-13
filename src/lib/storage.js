@@ -31,7 +31,8 @@ export const KEYS = {
   zachmanMode: "zachmanLage", // "ramverk" | "minne" | "placera" — Zachman-vyns läge
   zachmanTask: "zachmanUppgift", // öppen uppgift i Placera (uppgifts-id)
   zachmanLabels: "zachmanRubriker", // true = rad- och kolumnnamn i rutnätet under Placera
-  examArchiveOpen: "tentaArkiv", // { [delkursId]: tentaId } — vald tenta i fliken Tenta (översikt, Verksamhetsarkitektur)
+  examArchiveOpen: "tentaArkiv", // { [delkursId]: tentaId } — vald tenta i HT25-arkivet (Verksamhetsarkitektur, i Fördjupning)
+  fordjupningPart: "fordjupningLage", // "docx" | "arkiv" — vald del i fliken Fördjupning
 };
 
 // Fliken Tenta för flervalstentor (Säkerhet): sysb23:tenta:<tentaId> =

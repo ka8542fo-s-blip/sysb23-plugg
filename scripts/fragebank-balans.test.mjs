@@ -58,7 +58,8 @@ const BANKS = [
   {
     // Verksamhetsarkitektur: UF:s modulfrågor i sin helhet och nära
     // ordagrant (UF: tentan "till många delar överensstämmer med modulernas
-    // frågor"), plus besvarade frågor ur hans docx-råmaterial. Undantag från
+    // frågor"). Docx-frågorna ligger sedan 2026-11-13 i extraQuestions
+    // (Fördjupning) och testas nedan. Undantag från
     // cirka sex frågor per kapitel, därav eget spann. Alla är UF:s egna och
     // flaggade, så balansmåtten mäter inget och hoppas över; förklaring per
     // alternativ krävs inte (en per fråga, eller ingen hellre än påhittad).
@@ -67,7 +68,7 @@ const BANKS = [
     flagged: eaQ.LENGTH_FLAGGED,
     topics: eaTopics,
     chapters: eaChapters,
-    perChapter: [8, 36],
+    perChapter: [4, 34],
     requireExplain: false,
     checkBalance: false,
   },
@@ -240,14 +241,12 @@ test("process: kompendiet har inte HT24 som källa, varken i sources eller i lö
   }
 });
 
-test("arkitektur: UF:s format — fem alternativ eller sant/falskt, docx-frågorna märkta och sist i kön", () => {
-  const flagged = new Map(eaQ.LENGTH_FLAGGED.map((entry) => [entry.id, entry.reason]));
-  const qs = eaQ.questions;
-  assert.equal(qs.length, 217);
-  assert.equal(qs.filter((q) => q.secondary).length, 82, "82 frågor ur docx");
+// UF:s format, gemensamt för Kärna (modulfrågorna) och Fördjupning (docx).
+function checkUfFormat(qs, flaggedList, docx) {
+  const flagged = new Map(flaggedList.map((entry) => [entry.id, entry.reason]));
   for (const q of qs) {
     assert.equal(q.reviewed, false, `${q.id}: reviewed: false tills Kasper granskat`);
-    const docx = q.id.startsWith("ea-d");
+    assert.equal(q.id.startsWith("ea-d"), docx, `${q.id}: rätt bank`);
     assert.equal(Boolean(q.secondary), docx, `${q.id}: secondary bara på docx-frågor`);
     if (docx) assert.match(q.source, /^UF:s kursmaterial \(docx\)/, q.id);
     else assert.match(q.source, /^Modul \d+, fråga \d+/, q.id);
@@ -262,8 +261,24 @@ test("arkitektur: UF:s format — fem alternativ eller sant/falskt, docx-frågor
       const refersToOthers = texts.some((t) => /^(All|None) of the above/i.test(t));
       assert.equal(Boolean(q.fixedOrder), refersToOthers, `${q.id}: fast ordning bara när ett alternativ hänvisar till de andra`);
     }
+    assert.ok(q.correct >= 0 && q.correct < texts.length, `${q.id}: correct`);
     if (q.explanation !== undefined) assert.ok(typeof q.explanation === "string" && q.explanation.length > 20, `${q.id}: förklaring`);
   }
+}
+
+test("arkitektur, Kärna: Öva har bara UF:s 135 modulfrågor", () => {
+  assert.equal(eaQ.questions.length, 135);
+  checkUfFormat(eaQ.questions, eaQ.LENGTH_FLAGGED, false);
+});
+
+test("arkitektur, Fördjupning: de 82 docx-frågorna ligger för sig, med ämne och samma id:n", () => {
+  const extra = eaQ.extraQuestions;
+  assert.equal(extra.length, 82);
+  checkUfFormat(extra, eaQ.EXTRA_LENGTH_FLAGGED, true);
+  const topicIds = new Set(eaTopics.map((t) => t.id));
+  for (const q of extra) assert.ok(topicIds.has(q.topic), `${q.id}: ämnet ${q.topic}`);
+  const ids = new Set(eaQ.questions.map((q) => q.id));
+  for (const q of extra) assert.ok(!ids.has(q.id), `${q.id} står i båda bankerna`);
 });
 
 test("arkitektur: modul 7:s fråga 20–22 hör till kapitel 8, med modul 7 som källa", () => {

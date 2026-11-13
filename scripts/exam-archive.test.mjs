@@ -1,5 +1,5 @@
-// Fliken Tenta för Verksamhetsarkitektur: de tre HT25-tentorna som
-// översikt. Varje tenta är 100 p, Zachman 50 och artiklar 50; Zachman-delarna
+// HT25-arkivet för Verksamhetsarkitektur (i fliken Fördjupning): de tre
+// HT25-tentorna som översikt. Varje tenta är 100 p, Zachman 50 och artiklar 50; Zachman-delarna
 // pekar på befintliga essäer och Zachman-uppgifter; artikelfrågorna har inget
 // facit (artiklarna ingår inte i HT26-materialet, och facit gissas aldrig).
 import { test } from "node:test";
@@ -48,9 +48,10 @@ test("artikelfrågorna står utan facit och med texten ordagrant", () => {
   }
 });
 
-test("manifestet: arkitektur har fliken Tenta som översikt och inga Tentafrågor i Öva", () => {
+test("manifestet: arkivet ligger i Fördjupning, inte i fliken Tenta, och inga Tentafrågor i Öva", () => {
   const course = getCourse("arkitektur");
-  assert.ok(course.views.includes("tenta"));
+  assert.ok(course.views.includes("fordjupning"));
+  assert.ok(!course.views.includes("tenta"));
   assert.equal(course.examArchive, examArchive);
   assert.equal(course.choiceExams.length, 0);
   assert.equal(course.pastExams.length, 0);

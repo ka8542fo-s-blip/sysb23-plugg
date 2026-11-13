@@ -15,8 +15,10 @@
 //   Flerval har UF:s fem alternativ och blandas i Öva — i modulerna är rätt
 //   svar B eller C i 84 % av frågorna och aldrig E — utom när ett alternativ
 //   hänvisar till de andra ("All of the above").
-// - secondary: true på docx-frågorna. Kön serverar modulfrågorna först
-//   inom varje grupp (lib/practiceQueue.js).
+// - secondary: true på docx-frågorna. Sedan 2026-11-13 ligger de inte i Öva
+//   (Kärna) utan i Fördjupning: `questions` är de 135 modulfrågorna och
+//   `extraQuestions` de 82 docx-frågorna. Id:na och svaren i
+//   sysb23:answers är desamma, så tidigare svar finns kvar.
 // - Modul 7:s fråga 20–22 har ämnet styrning (kapitel 8): UF:s not i
 //   modul 8 säger att modul 8:s frågor ligger insprängda i modul 7.
 // - Lagade alternativ (inklistrad text mitt i alternativet) är noterade i
@@ -25,7 +27,7 @@
 // - reviewed: false på allt; Kasper vänder flaggan själv.
 //
 // Genererad ur källorna 2026-11-13 (parser i scratchpad, inte i repot).
-export const questions = [
+const allQuestions = [
   {
     id: "ea-m1-1",
     topic: "enterprise",
@@ -3602,8 +3604,13 @@ export const questions = [
   },
 ];
 
+// Kärna (Öva): UF:s 135 modulfrågor. Fördjupning: de 82 ur docx:en.
+export const questions = allQuestions.filter((q) => !q.secondary);
+export const extraQuestions = allQuestions.filter((q) => q.secondary);
+
 // Alla frågor är UF:s egna och ska se ut som hos honom, så ingen längd-
 // eller positionsbalans räknas (fragebank-balans.test.mjs).
 const VERBATIM = "UF:s modulfråga ordagrant";
 const DOCX = "UF:s kursmaterial (docx) ordagrant";
-export const LENGTH_FLAGGED = questions.map((q) => ({ id: q.id, reason: q.secondary ? DOCX : VERBATIM }));
+export const LENGTH_FLAGGED = questions.map((q) => ({ id: q.id, reason: VERBATIM }));
+export const EXTRA_LENGTH_FLAGGED = extraQuestions.map((q) => ({ id: q.id, reason: DOCX }));

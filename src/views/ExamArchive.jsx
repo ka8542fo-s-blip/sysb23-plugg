@@ -27,11 +27,12 @@ export default function ExamArchive({ course, navigate, modelProgress }) {
   return (
     <div className="space-y-6">
       <section>
-        <h1 className="font-display text-2xl">Gamla tentor (HT25)</h1>
+        <h2 className="font-display text-xl">Gamla tentor (HT25)</h2>
         <p className="mt-2 max-w-reading rounded-lg border border-brass p-3 text-[15px] text-ink/85">
-          <span className="font-medium text-brass-text">Annat format än årets. </span>
-          Årets tenta ser ut som modulerna (sant/falskt, flerval och någon essäfråga), så öva
-          modulfrågorna i Öva först. De här tentorna är extra träning på Zachman.
+          <span className="font-medium text-brass-text">Äldre kursversion, annat format. </span>
+          Årets tenta ser ut som modulerna (sant/falskt, flerval och någon essäfråga). HT25-tentorna
+          hade en Zachman-essä, placering i Zachmans rutnät och sant/falskt om artiklar som inte
+          ingår i år, och är ingen prognos för årets tenta.
         </p>
         <p className="mt-3 max-w-reading text-[15px] text-ink/80">
           De tre HT25-tentorna, 100 p var. Zachman gav 50 p på varje: en essä om ramverket och

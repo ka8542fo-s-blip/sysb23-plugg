@@ -91,7 +91,7 @@ export default function Essays({ course, params, essayState, setEssayState }) {
   // det och slår om till rött över gränsen.
   const wordCount = (state.draft || "").trim().split(/\s+/).filter(Boolean).length;
   const overLimit = wordLimit !== null && wordCount > wordLimit;
-  const hasContent = Boolean((state.draft || "").trim()) || (state.checked || []).some(Boolean);
+  const hasContent = Boolean((state.draft || "").trim()) || (state.checked || []).some(Boolean) || Boolean(state.done);
   const grouped = essays.some((item) => item.chapter);
   const index = essays.indexOf(essay);
 
@@ -134,6 +134,16 @@ export default function Essays({ course, params, essayState, setEssayState }) {
         <div className="min-w-0">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <p className="text-sm text-ink/65">
+            {essay.levelNote && (
+              <span className="mb-1 block w-fit rounded-full border border-brass px-2 py-0.5 text-[12px] font-medium text-brass-text">
+                {essay.levelNote}
+              </span>
+            )}
+            {essay.group && (
+              <span className="mr-2 inline-block rounded-full border border-line px-2 py-0.5 text-[12px] font-medium text-ink/80">
+                {essay.group}
+              </span>
+            )}
             {essay.priority === "hogst" && (
               <span className="mr-2 inline-block rounded-full border border-brass px-2 py-0.5 text-[12px] font-medium text-brass-text">
                 Högst prioriterad
@@ -184,6 +194,18 @@ export default function Essays({ course, params, essayState, setEssayState }) {
           >
             {showChecklist ? "Dölj checklista" : "Visa checklista"}
           </button>
+          {grouped && (
+            // Genomgången: Kaspers egen markering, som räknas i modulstatusen
+            // (fliken Tentan). Sparas i essäns läge; Nollställ essän tar bort den.
+            <button
+              type="button"
+              className={state.done ? "btn-secondary border-correct text-correct" : "btn-secondary"}
+              onClick={() => update({ done: !state.done })}
+              aria-pressed={Boolean(state.done)}
+            >
+              {state.done ? "✓ Genomgången" : "Markera som genomgången"}
+            </button>
+          )}
           {grouped && index < essays.length - 1 && (
             <button type="button" className="btn-secondary" onClick={() => select(essays[index + 1].id)}>
               Nästa fråga →
@@ -273,12 +295,20 @@ export default function Essays({ course, params, essayState, setEssayState }) {
 function EssayIndex({ course, essays, activeId, essayState, onSelect }) {
   const chapters = course.chapters || [];
   const pinned = essays.filter((item) => item.pinned);
-  const sections = chapters
-    .map((chapter) => ({
-      title: `Kapitel ${chapter.number} · ${chapter.title}`,
-      items: essays.filter((item) => !item.pinned && item.chapter === chapter.id),
-    }))
-    .filter((section) => section.items.length > 0);
+  // Kapitlen i kursens ordning (arkitektur: 12, 1–11). Frågor med `group`
+  // (modul 12:s fördjupade fallfrågor) står sist i kapitlet under egen rubrik.
+  const sections = chapters.flatMap((chapter) => {
+    const inChapter = essays.filter((item) => !item.pinned && item.chapter === chapter.id);
+    const plain = inChapter.filter((item) => !item.group);
+    const groupNames = [...new Set(inChapter.filter((item) => item.group).map((item) => item.group))];
+    return [
+      { title: `Kapitel ${chapter.number} · ${chapter.title}`, items: plain },
+      ...groupNames.map((name) => ({
+        title: `Kapitel ${chapter.number} · ${name}`,
+        items: inChapter.filter((item) => item.group === name),
+      })),
+    ].filter((section) => section.items.length > 0);
+  });
   if (pinned.length) sections.unshift({ title: "Från tentan", items: pinned });
   const started = (id) => {
     const s = essayState[id];
@@ -299,7 +329,11 @@ function EssayIndex({ course, essays, activeId, essayState, onSelect }) {
                 title={item.question}
                 className={`chip ${item.id === activeId ? "chip-on" : "hover:border-pine"}`}
               >
-                {started(item.id) && <span aria-hidden="true">✎ </span>}
+                {essayState[item.id]?.done ? (
+                  <span aria-label="genomgången">✓ </span>
+                ) : (
+                  started(item.id) && <span aria-hidden="true">✎ </span>
+                )}
                 {item.label}
               </button>
             ))}

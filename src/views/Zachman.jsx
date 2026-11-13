@@ -6,6 +6,7 @@ import {
 import { gradeChoice, gradeMemory, gradePlacement, MEMORY_FIELDS } from "../lib/zachman.js";
 import { KEYS, load, save } from "../lib/storage.js";
 import { useDrafts } from "../lib/useDrafts.js";
+import { TROLIGT_NOTE } from "../data/arkitektur/cards.js";
 
 // Zachman-vyn (Verksamhetsarkitektur): ramverket att utforska, memorering
 // av rad- och kolumnnamn och placeringsuppgifterna från HT25-tentorna.
@@ -35,11 +36,14 @@ export default function Zachman({ course, params, navigate, modelProgress, onSol
   return (
     <div className="space-y-6">
       <section>
-        <h1 className="font-display text-2xl">Zachman</h1>
+        <p className="inline-block rounded-full border border-brass px-3 py-0.5 text-[13px] font-medium text-brass-text">
+          Troligt · {TROLIGT_NOTE}
+        </p>
+        <h1 className="mt-2 font-display text-2xl">Zachman (modul 4)</h1>
         <p className="mt-1 max-w-reading text-[15px] text-ink/70">
-          Extra träning på modul 4: ramverket, rad- och kolumnnamnen och placering av modeller.
-          Placeringsuppgifterna kommer från HT25-tentorna, som hade ett annat format än årets;
-          modul 4:s egna frågor finns i Öva. Rutnätet numreras R1–R6 × K1–K6.
+          Ramverket, rad- och kolumnnamnen och placering av modeller, utöver modul 4:s egna frågor
+          (de finns i Öva). Placeringsuppgifterna kommer från UF:s tidigare tentor. Rutnätet
+          numreras R1–R6 × K1–K6.
         </p>
       </section>
       <div className="max-w-xl">

@@ -30,7 +30,10 @@ import {
   summary as processSummary,
 } from "./process/reading.js";
 import { topics as arkitekturTopics } from "./arkitektur/topics.js";
-import { questions as arkitekturQuestions } from "./arkitektur/questions.js";
+import {
+  questions as arkitekturQuestions,
+  extraQuestions as arkitekturExtraQuestions,
+} from "./arkitektur/questions.js";
 import { essays as arkitekturEssays } from "./arkitektur/essays.js";
 import { examArchive as arkitekturExamArchive } from "./arkitektur/examArchive.js";
 import {
@@ -69,6 +72,9 @@ const noContent = {
   choiceExams: [],
   // Inlämningsuppgifter för fliken Uppgifter (data/<kurs>/assignments.js).
   assignments: [],
+  // Övningsfrågor utanför Öva, i fliken Fördjupning (Verksamhetsarkitektur:
+  // UF:s docx-råmaterial). Samma svar och klar-logik som Öva.
+  extraQuestions: [],
 };
 
 // Manifest över delkurser. `views` styr vilka flikar delkursen har —
@@ -160,26 +166,26 @@ export const courses = [
     id: "arkitektur",
     name: "Verksamhetsarkitektur",
     status: "aktiv",
-    // Byggs i faser (2026-11-13, cc-prompt-arkitektur-delkurs.md): Läs först,
-    // sedan Öva och Essä, Zachman-vyn och Tenta. Flikarna läggs till när
-    // deras innehåll finns. Ingen Prov: HT26-tentans poäng är okända.
-    views: ["las", "ova", "zachman", "essa", "tenta", "statistik"],
-    // Fliken Tenta som översikt: HT25-tentorna med länkar till Essä och
-    // Zachman, artikelfrågorna ordagrant utan facit (artiklarna ingår inte i år).
+    // Tre nivåer (Kaspers beslut 2026-11-13): Kärna = modulerna (Läs, Öva,
+    // Essä), Troligt = Zachman utöver modul 4:s frågor (Zachman-fliken,
+    // Zachman-essän), Fördjupning = allt annat (docx-frågorna, HT25-arkivet).
+    // Ingen Prov: HT26-tentans poäng är okända.
+    views: ["las", "ova", "zachman", "essa", "fordjupning", "statistik"],
+    // HT25-tentorna som arkiv i Fördjupning, artikelfrågorna utan facit.
     examArchive: arkitekturExamArchive,
     practiceBy: "chapter",
     topics: arkitekturTopics,
-    // Alla UF:s modulfrågor (135) och de besvarade ur docx-råmaterialet (82),
-    // som serveras efter modulfrågorna i Öva (secondary).
+    // Kärna: UF:s 135 modulfrågor. Fördjupning: de 82 ur docx-råmaterialet.
     questions: arkitekturQuestions,
-    // UF:s 53 frågor med modellsvar i modulordning; Zachman-essän från HT25
-    // står under kapitel 4. Tentan anger inget ordtak, och checklistorna
-    // följer modellsvaren, inte fyrstegsformen.
+    extraQuestions: arkitekturExtraQuestions,
+    // UF:s 53 frågor med modellsvar i modulordning (12, 1–11); Zachman-essän
+    // (Troligt) står under modul 4. Tentan anger inget ordtak, och
+    // checklistorna följer modellsvaren, inte fyrstegsformen.
     essays: arkitekturEssays,
     essayWordLimit: null,
     essayIntro: [
       "UF:s modellsvar är facit: checklistan bryter ner det i dess påståenden, och modellsvaret står ordagrant under checklistan. Tentan anger inget ordtak.",
-      "Årets tenta har någon essäfråga av modulernas slag, så frågorna står i modulordning. Zachman-essän från HT25-tentorna ligger under kapitel 4 som extra träning.",
+      "Frågorna står i modulordning, modul 12 först. Markera en essä som genomgången när du har skrivit och prickat av den.",
     ],
     // Tolv modulkort i ordningen 12, 1–11 (UF: börja med modul 12). Inget eget
     // sammanfattningskort: modul 12-kortet har de tio begreppen och
@@ -189,7 +195,7 @@ export const courses = [
     readingIntro: arkitekturIntro,
     examNote: arkitekturExamNote,
     homeIntro:
-      "Tentan ser ut som modulerna. Börja med sammanfattningen och de tio begreppen, öva UF:s modulfrågor och skriv essäer mot hans modellsvar. Zachman-fliken är extra träning på modul 4.",
+      "Tentan ser ut som modulerna. Börja med modul 12 och de tio begreppen, öva UF:s modulfrågor och skriv essäer mot hans modellsvar. Zachman-fliken är extra träning på modul 4.",
   },
   {
     ...noContent,

@@ -1,7 +1,8 @@
 // Essä för Verksamhetsarkitektur: UF:s kortsvars-, essä- och fallfrågor med
-// "Model answer" i modulordning, som i PDF:erna — årets tenta ser ut som
-// modulerna (kursinformationen och UF). Zachman-essän från HT25-tentorna
-// (uppgift 1, 30 p) står efter modul 4:s frågor som extra träning.
+// "Model answer" i modulordning 12, 1–11, som Läs (Kärna). Modul 12:s
+// scenarier och Final challenge har `group: "UF:s fördjupade fallfrågor"`.
+// Zachman-essän från UF:s tidigare tentor (uppgift 1, 30 p) står efter modul
+// 4:s frågor med `level: "troligt"` (Troligt-märkningen i Essä-vyn).
 //
 // Formen skiljer sig från Strategi och BPM: där kommer fyrstegsformen (Vad /
 // Varför / Konkret / Koppling) från Strategilärarens besked. Här är UF:s
@@ -14,7 +15,479 @@
 // (UF:s not i modul 8). Tentan anger inget ordtak (essayWordLimit: null).
 //
 // Genererad ur källorna 2026-11-13 (parser i scratchpad, inte i repot).
+import { TROLIGT_NOTE } from "./cards.js";
+
 export const essays = [
+  {
+    id: "ea-e12-29",
+    chapter: "kap12",
+    label: "12: 29",
+    question: "Why should an Enterprise Architect understand business strategy?",
+    context: "Modul 12, fråga 29 · kortsvarsfråga",
+    source: "Modul 12, fråga 29",
+    checklist: [
+      {
+        heading: "Därför behövs strategin",
+        points: [
+          "Arkitektur finns till för att stödja verksamhetens mål (enterprise objectives).",
+          "Utan förståelse för strategin kan arkitekten inte avgöra vilka capabilities som behöver utvecklas, ändras eller skyddas.",
+          "Utan strategin går det inte heller att bedöma arkitekturbeslut mot affärsprioriteringarna.",
+        ],
+      },
+    ],
+    modelAnswer: "Architecture exists to support enterprise objectives. Without understanding strategy, the architect cannot determine which capabilities need to be developed, changed or protected, nor can architectural decisions be evaluated against business priorities.",
+  },
+  {
+    id: "ea-e12-30",
+    chapter: "kap12",
+    label: "12: 30",
+    question: "Why is a capability often a useful starting point for transformation analysis?",
+    context: "Modul 12, fråga 30 · kortsvarsfråga",
+    source: "Modul 12, fråga 30",
+    checklist: [
+      {
+        heading: "Därför börja med capability",
+        points: [
+          "En capability beskriver vad organisationen behöver kunna göra.",
+          "Den kan därför koppla strategiska mål till processer, människor, information, applikationer och teknik.",
+          "Den är inte alltför hårt bunden till nuvarande organisationsstruktur eller implementation.",
+        ],
+      },
+    ],
+    modelAnswer: "A capability describes what the organization needs to be able to do. It can therefore connect strategic objectives to processes, people, information, applications and technology without being tied too closely to the current organizational structure or implementation.",
+  },
+  {
+    id: "ea-e12-31",
+    chapter: "kap12",
+    label: "12: 31",
+    question: "What is the difference between a viewpoint and a view?",
+    context: "Modul 12, fråga 31 · kortsvarsfråga. Samma fråga som modul 6 fråga 11.",
+    source: "Modul 12, fråga 31",
+    checklist: [
+      {
+        heading: "Viewpoint och view",
+        points: [
+          "En viewpoint definierar hur en viss intressents concern ska hanteras och representeras.",
+          "En view är den resulterande representation som skapas med hjälp av den viewpointen.",
+        ],
+      },
+    ],
+    modelAnswer: "A viewpoint defines how a particular stakeholder concern should be addressed and represented. A view is the resulting representation created using that viewpoint.",
+  },
+  {
+    id: "ea-e12-32",
+    chapter: "kap12",
+    label: "12: 32",
+    question: "Why should architects be concerned with trade-offs?",
+    context: "Modul 12, fråga 32 · kortsvarsfråga",
+    source: "Modul 12, fråga 32",
+    checklist: [
+      {
+        heading: "Därför trade-offs",
+        points: [
+          "Arkitekturbeslut har sällan bara fördelar.",
+          "Mer standardisering, säkerhet, flexibilitet, hastighet eller kontroll kan ge kostnader eller begränsningar på andra håll.",
+          "Arkitekter behöver därför göra trade-offs explicita och anpassa dem efter affärsmålen.",
+        ],
+      },
+    ],
+    modelAnswer: "Architectural decisions rarely have only benefits. Increasing standardization, security, flexibility, speed or control can introduce costs or limitations elsewhere. Architects therefore need to make trade-offs explicit and align them with business objectives.",
+  },
+  {
+    id: "ea-e12-33",
+    chapter: "kap12",
+    label: "12: 33",
+    question: "Why is architecture important in an Agile organization?",
+    context: "Modul 12, fråga 33 · kortsvarsfråga",
+    source: "Modul 12, fråga 33",
+    checklist: [
+      {
+        heading: "Därför behövs arkitektur",
+        points: [
+          "Agila organisationer behöver fortfarande koherens, principer, riktning och hantering av stora beroenden och risker.",
+          "Arkitekturen ger detta samtidigt som implementationsbeslut fattas på lämplig nivå.",
+          "Arkitekturen kan själv utvecklas kontinuerligt (evolve continuously).",
+        ],
+      },
+    ],
+    modelAnswer: "Agile organizations still need coherence, principles, direction and management of significant dependencies and risks. Architecture provides these while allowing implementation decisions to be made at the appropriate level and enabling the architecture itself to evolve continuously.",
+  },
+  {
+    id: "ea-e12-scenario-1",
+    group: "UF:s fördjupade fallfrågor",
+    chapter: "kap12",
+    label: "Scenario 1",
+    question: "The CEO tells the Enterprise Architect: \"Every competitor is using AI. We need an\nAI strategy immediately.\"\nWhat should the architect do?",
+    context: "Modul 12, Scenario 1 — \"We need AI\" · scenario",
+    source: "Modul 12, Scenario 1 — \"We need AI\"",
+    checklist: [
+      {
+        heading: "Utgångspunkt",
+        points: [
+          "Arkitekten bör först förstå vilka affärsmål och problem AI förväntas lösa.",
+          "Först när affärsbehovet är fastställt bör specifika AI-tekniker utvärderas.",
+        ],
+      },
+      {
+        heading: "Frågor att ställa",
+        points: [
+          "Vilket business outcome försöker vi förbättra?",
+          "Vilka capabilities skulle kunna gynnas?",
+          "Vilka kund- eller affärsproblem finns?",
+          "Vilken information/data krävs?",
+          "Vilka risker och regulatoriska begränsningar (regulatory constraints) finns?",
+          "Vilka förändringar i processer och operating model skulle behövas?",
+          "Var skulle AI kunna ge meningsfullt värde?",
+        ],
+      },
+      {
+        heading: "Key lesson",
+        points: [
+          "Börja inte med tekniken, utan med syfte och utfall (purpose and outcomes).",
+        ],
+      },
+    ],
+    modelAnswer: "The architect should first understand the business objectives and problems that AI is expected to address. Relevant questions include:\na. What business outcome are we trying to improve?\nb. Which capabilities could benefit?\nc. Which customer or business problems exist?\nd. What information/data is required?\ne. What risks and regulatory constraints exist?\nf. What changes to processes and operating models would be necessary?\ng. Where could AI provide meaningful value?\nOnly after establishing the business need should specific AI technologies be evaluated.\nKey lesson\nDo not begin with technology. Begin with purpose and outcomes.",
+  },
+  {
+    id: "ea-e12-scenario-2",
+    group: "UF:s fördjupade fallfrågor",
+    chapter: "kap12",
+    label: "Scenario 2",
+    question: "A company has 600 applications.\nThe CIO declares: \"We have too many applications. We need to reduce the number to 300.\"\nIs this necessarily a good architectural objective?",
+    context: "Modul 12, Scenario 2 — The application problem · scenario",
+    source: "Modul 12, Scenario 2 — The application problem",
+    checklist: [
+      {
+        heading: "Bedömning",
+        points: [
+          "Att minska till 300 applikationer är inte nödvändigtvis ett bra arkitekturmål.",
+          "Antalet applikationer är inte i sig ett arkitekturproblem.",
+        ],
+      },
+      {
+        heading: "Vad arkitekten undersöker",
+        points: [
+          "Vilka capabilities stödjer applikationerna?",
+          "Duplicerar applikationerna funktionalitet, och är dubbleringen i så fall avsiktlig?",
+          "Vad kostar applikationerna och hur affärskritiska (business criticality) är de?",
+          "Hur stor är den tekniska risken och vilka säkerhetsfrågor (security concerns) finns?",
+          "Hur komplex är integrationen och hur mycket data dupliceras?",
+          "Hur strategiskt relevanta är applikationerna?",
+        ],
+      },
+      {
+        heading: "Slutsats och key lesson",
+        points: [
+          "Målet bör bygga på business outcomes och arkitektoniska concerns, inte på ett godtyckligt antal applikationer.",
+          "Key lesson: arkitektur ska adressera problem och utfall (outcomes), inte godtyckliga siffror.",
+        ],
+      },
+    ],
+    modelAnswer: "Not necessarily.\nThe number of applications is not, by itself, an architectural problem.\nThe architect should investigate:\nWhich capabilities they support.\nWhether applications duplicate functionality.\nWhether duplication is intentional.\nApplication costs.\nBusiness criticality.\nTechnical risk.\nIntegration complexity.\nData duplication.\nSecurity concerns.\nStrategic relevance.\nThe objective should be based on business outcomes and architectural concerns rather than an arbitrary application count.\nKey lesson\nArchitecture should address problems and outcomes, not arbitrary numbers.",
+  },
+  {
+    id: "ea-e12-scenario-3",
+    group: "UF:s fördjupade fallfrågor",
+    chapter: "kap12",
+    label: "Scenario 3",
+    question: "A product team says: \"We are Agile. Architecture approval is slowing us down.\nWe don't want architects involved.\"\nHow should the Enterprise Architect respond?",
+    context: "Modul 12, Scenario 3 — The Agile conflict · scenario",
+    source: "Modul 12, Scenario 3 — The Agile conflict",
+    checklist: [
+      {
+        heading: "Utgångspunkt",
+        points: [
+          "Arkitekten avgör vilka beslut som verkligen kräver samordning på enterprise-nivå och vilka som kan delegeras.",
+          "Målet är decentraliserad leverans inom lämpliga arkitekturgränser, inte centralt godkännande av varje beslut.",
+        ],
+      },
+      {
+        heading: "Vad arkitekturen kan ge",
+        points: [
+          "Arkitekturen kan ge principer (principles) och standarder.",
+          "Arkitekturen kan ge guardrails och tydliga decision rights.",
+          "Arkitekturen kan erbjuda återanvändbara capabilities och reference architectures.",
+          "Arkitekturen kan ge vägledning om stora beroenden och risker.",
+        ],
+      },
+      {
+        heading: "Key lesson",
+        points: [
+          "God architecture governance ska möjliggöra agilitet, inte begränsa den i onödan.",
+        ],
+      },
+    ],
+    modelAnswer: "The architect should determine which decisions genuinely require enterprise-level coordination and which can be delegated.\nArchitecture can provide:\nPrinciples\nStandards\nGuardrails\nReusable capabilities\nReference architectures\nDecision rights\nGuidance on significant dependencies and risks\nThe objective should be to enable decentralized delivery within appropriate architectural boundaries, rather than requiring centralized approval for every decision.\nKey lesson\nGood architecture governance should enable agility, not unnecessarily restrict it.",
+  },
+  {
+    id: "ea-e12-scenario-4",
+    group: "UF:s fördjupade fallfrågor",
+    chapter: "kap12",
+    label: "Scenario 4",
+    question: "A bank has a 30-year-old core banking system.\nManagement says: \"It's old, so it must be replaced.\"\nIs age alone a sufficient architectural reason for replacement?",
+    context: "Modul 12, Scenario 4 — The legacy system · scenario",
+    source: "Modul 12, Scenario 4 — The legacy system",
+    checklist: [
+      {
+        heading: "Bedömning",
+        points: [
+          "Nej, ålder ensam är inte ett tillräckligt arkitektoniskt skäl för att ersätta systemet.",
+          "Ett tekniskt gammalt system kan fortfarande vara värdefullt och stabilt.",
+          "Omvänt kan ett nyare system skapa betydande arkitektonisk risk.",
+        ],
+      },
+      {
+        heading: "Vad arkitekten bedömer",
+        points: [
+          "Arkitekten bedömer systemets affärsvärde (business value) och affärskritikalitet (business criticality).",
+          "Arkitekten bedömer teknisk hälsa, säkerhet och underhållbarhet (maintainability).",
+          "Arkitekten bedömer kostnad, förändringsbegränsningar (change constraints) och integrationsbegränsningar.",
+          "Arkitekten bedömer vilka alternativ som finns och den strategiska riktningen (strategic direction).",
+        ],
+      },
+      {
+        heading: "Möjliga svar och key lesson",
+        points: [
+          "Beroende på omständigheterna kan svaret bli ersättning, inkapsling (encapsulation), modernisering eller re-platforming.",
+          "Svaret kan också bli avveckling (retirement) eller fortsatt användning.",
+          "Key lesson: arkitekturbeslut ska vara evidensbaserade och inte styras av etiketter som \"legacy\".",
+        ],
+      },
+    ],
+    modelAnswer: "No.\nThe architect should assess:\nBusiness value\nBusiness criticality\nTechnical health\nSecurity\nMaintainability\nCost\nChange constraints\nIntegration limitations\nAvailability of alternatives\nStrategic direction\nA technically old system may still be valuable and stable. Conversely, a newer system may create significant architectural risk.\nThe appropriate response might involve:\nReplacement\nEncapsulation\nModernization\nRe-platforming\nRetirement\nContinued use depending on the circumstances.\nKey lesson\nArchitectural decisions should be evidence-based rather than driven by labels such as \"legacy.\"",
+  },
+  {
+    id: "ea-e12-scenario-5",
+    group: "UF:s fördjupade fallfrågor",
+    chapter: "kap12",
+    label: "Scenario 5",
+    question: "A retailer has launched a mobile app and declares: \"We have completed our digital transformation.\"\nWhat should the architect investigate?",
+    context: "Modul 12, Scenario 5 — Digital transformation · scenario",
+    source: "Modul 12, Scenario 5 — Digital transformation",
+    checklist: [
+      {
+        heading: "Kärnfrågan",
+        points: [
+          "Arkitekten frågar om mobilappen har förändrat hur verksamheten skapar och levererar värde.",
+          "Att bara lägga till en digital kanal kan vara digitalization snarare än bredare digital transformation.",
+        ],
+      },
+      {
+        heading: "Frågor att ställa",
+        points: [
+          "Har kundupplevelsen (customer experience) förändrats?",
+          "Har nya produkter eller tjänster skapats?",
+          "Har operating model förändrats?",
+          "Är processerna fundamentalt annorlunda?",
+          "Fattas besluten mer datadrivet (data-driven)?",
+          "Har affärsmodellen (business model) förändrats?",
+          "Skapas nya digitala ekosystem (digital ecosystems)?",
+          "Har organisationens capabilities förändrats?",
+        ],
+      },
+    ],
+    modelAnswer: "The architect should ask whether the mobile application has changed how the enterprise creates and delivers value.\nQuestions could include:\nHas the customer experience changed?\nHave new products or services been created?\nHas the operating model changed?\nAre processes fundamentally different?\nAre decisions more data-driven?\nHas the business model changed?\nAre new digital ecosystems being created?\nHas organizational capability changed?\nSimply adding a digital channel may be digitalization rather than broader digital transformation.",
+  },
+  {
+    id: "ea-e12-35",
+    chapter: "kap12",
+    label: "12: 35",
+    question: "A company describes:\n\"Customer onboarding\"\n\"The organization is able to onboard customers.\"\n\"Verify customer identity.\"\n\"Digital onboarding.\"\nWhich are most likely to be processes and which are capabilities?",
+    context: "Modul 12, fråga 35 (Capability or process?) · kortsvarsfråga",
+    source: "Modul 12, fråga 35 (Capability or process?)",
+    checklist: [
+      {
+        heading: "Process eller capability",
+        points: [
+          "\"Verify customer identity\" är en process/aktivitet, medan \"The organization is able to onboard customers\" är en capability.",
+          "\"Customer onboarding\" kan vara antingen en capability eller en process beroende på modelleringskontexten.",
+          "\"Digital onboarding\" kan vara en capability, ett value stream stage eller en solution context beroende på modellen.",
+          "Important lesson: namnet avgör inte ensamt vilket arkitekturbegrepp det är, kontexten avgör.",
+        ],
+      },
+    ],
+    modelAnswer: "The precise classification depends on the modeling context, but generally:\na. \"Verify customer identity\" → process/activity\nb. \"The organization is able to onboard customers\" → capability\nc. \"Customer onboarding\" → could represent either a capability or process depending on the modeling context\nd. \"Digital onboarding\" → could represent a capability, value stream stage or solution context depending on the model\nImportant lesson\nNames alone don't determine the architectural concept. Context matters.",
+  },
+  {
+    id: "ea-e12-essay-1",
+    chapter: "kap12",
+    label: "Essay 1",
+    question: "Explain why Enterprise Architecture should be considered a discipline for enabling change rather than merely documenting the current enterprise.",
+    context: "Modul 12, Essay 1 · essäfråga",
+    source: "Modul 12, Essay 1",
+    checklist: [
+      {
+        heading: "Från förståelse till beslut",
+        points: [
+          "Enterprise Architecture ger ett strukturerat sätt att förstå verksamheten och avgöra hur den ska utvecklas för att nå strategiska mål.",
+          "Dokumentation av nuläget (current state) är användbar eftersom den ger förståelse för befintliga capabilities, processer, information, applikationer och teknik.",
+          "Arkitekturen blir strategiskt värdefull först när förståelsen används för beslut om framtida tillstånd (future states) och övergångar (transitions).",
+        ],
+      },
+      {
+        heading: "Arkitektur som förändring",
+        points: [
+          "Enterprise Architecture kopplar nuvarande förhållanden till önskade utfall (desired outcomes).",
+          "Den identifierar gap, beroenden, risker och möjligheter.",
+          "Den stödjer beslut om hur verksamheten ska förändras.",
+          "Vid digital transformation och ständig förändring måste arkitekturen själv utvecklas i stället för att bli en statisk dokumentationsövning.",
+        ],
+      },
+    ],
+    modelAnswer: "Enterprise Architecture provides a structured way of understanding the enterprise and determining how it should evolve to achieve strategic objectives. Currentstate documentation is useful because it provides an understanding of existing capabilities, processes, information, applications and technology. However, architecture becomes strategically valuable when that understanding is used to make decisions about future states and transitions.\nEnterprise Architecture therefore connects current conditions with desired outcomes. It identifies gaps, dependencies, risks and opportunities and supports decisions about how the enterprise should change. In an environment characterized by digital transformation and continuous change, architecture must itself evolve rather than becoming a static documentation exercise.",
+  },
+  {
+    id: "ea-e12-essay-2",
+    chapter: "kap12",
+    label: "Essay 2",
+    question: "Compare the roles of Zachman and TOGAF in Enterprise Architecture.",
+    context: "Modul 12, Essay 2 · essäfråga. Samma fråga som modul 4 fråga 10 och modul 5 fråga 12.",
+    source: "Modul 12, Essay 2",
+    checklist: [
+      {
+        heading: "Vad de är",
+        points: [
+          "Zachman och TOGAF hanterar olika aspekter av Enterprise Architecture.",
+          "Zachman är en ontology och ett klassificeringsschema som ordnar beskrivningar efter perspektiv och interrogatives som What, How, Where, Who, When och Why.",
+          "TOGAF är en bredare samling vägledning för Enterprise Architecture och innehåller Architecture Development Method (ADM).",
+          "ADM ger ett strukturerat sätt att utveckla och vidareutveckla (evolve) arkitektur.",
+        ],
+      },
+      {
+        heading: "Jämförelse och slutsats",
+        points: [
+          "Zachman hjälper arkitekter att tänka på vad som behöver beskrivas och från vilka perspektiv.",
+          "TOGAF ger vägledning om hur arkitektur kan utvecklas och styras (governed).",
+          "De kompletterar därför varandra snarare än att vara konkurrerande angreppssätt.",
+        ],
+      },
+    ],
+    modelAnswer: "Zachman and TOGAF address different aspects of Enterprise Architecture.\nZachman provides an ontology and classification schema for organizing descriptions of an enterprise according to perspectives and interrogatives such as What, How, Where, Who, When and Why.\nTOGAF provides a broader body of guidance for Enterprise Architecture and includes the Architecture Development Method, which provides a structured approach to developing and evolving architecture.\nZachman therefore helps architects think about what needs to be described and from which perspectives, while TOGAF provides guidance concerning how architecture can be developed and governed.\nThey can therefore be complementary rather than competing approaches.",
+  },
+  {
+    id: "ea-e12-essay-3",
+    chapter: "kap12",
+    label: "Essay 3",
+    question: "Explain how business capabilities can connect strategy, Enterprise Architecture and digital transformation.",
+    context: "Modul 12, Essay 3 · essäfråga",
+    source: "Modul 12, Essay 3",
+    checklist: [
+      {
+        heading: "Strategi, capabilities och arkitektur",
+        points: [
+          "Strategin fastställer verksamhetens riktning och mål (objectives).",
+          "Capabilities översätter målen till de förmågor som verksamheten behöver ha.",
+          "Arkitekter kan sedan avgöra vilka processer, människor, information, applikationer och teknik som krävs för att stödja eller transformera dessa capabilities.",
+        ],
+      },
+      {
+        heading: "Digital transformation",
+        points: [
+          "Digital transformation innebär ofta att capabilities förändras eller att nya skapas.",
+          "Capability-based analysis blir därmed en brygga mellan strategisk avsikt (strategic intent) och arkitektonisk implementation.",
+          "Den hjälper också organisationer att prioritera investeringar efter affärsvärde snarare än att bara välja teknik.",
+        ],
+      },
+    ],
+    modelAnswer: "Strategy establishes the direction and objectives of the enterprise.\nCapabilities translate those objectives into the abilities the enterprise needs to possess. Architects creating new ones. Capability-based analysis therefore provides a bridge between strategic intent and architectural implementation. It also helps organizations prioritize investments can then determine what processes, people, information, applications and technology are required to support or transform those capabilities.\nDigital transformation frequently involves changing capabilities or creating new ones. Capability-based analysis therefore provides a bridge between strategic intent and architectural implementation. It also helps organizations prioritize investments according to business value rather than simply selecting technologies.",
+  },
+  {
+    id: "ea-e12-essay-4",
+    chapter: "kap12",
+    label: "Essay 4",
+    question: "Explain why architecture governance should be designed to support rather than prevent agility.",
+    context: "Modul 12, Essay 4 · essäfråga",
+    source: "Modul 12, Essay 4",
+    checklist: [
+      {
+        heading: "Varför governance behövs",
+        points: [
+          "Organisationer behöver governance för att bevara koherens och hantera risk.",
+          "Governance säkerställer att viktiga arkitekturbeslut stödjer de strategiska målen.",
+          "Överdrivet centraliserat godkännande kan dock bromsa leveransen och hindra teamen från att snabbt anpassa sig till ändrade förutsättningar.",
+        ],
+      },
+      {
+        heading: "Governance som stödjer agilitet",
+        points: [
+          "Effektiv architecture governance fastställer principer, decision rights, guardrails och eskaleringsmekanismer (escalation mechanisms).",
+          "Rutinbeslut kan delegeras, medan beslut med stora konsekvenser för hela verksamheten får lämplig arkitekturtillsyn (architectural oversight).",
+          "På så sätt kan governance ge både konsekvens (consistency) och autonomi.",
+        ],
+      },
+    ],
+    modelAnswer: "Organizations need governance to maintain coherence, manage risk and ensure that important architectural decisions support strategic objectives.\nHowever, excessive centralized approval can slow delivery and prevent teams from responding quickly to changing circumstances.\nEffective architecture governance therefore establishes principles, decision rights, guardrails and escalation mechanisms. Routine decisions can be delegated while decisions with significant enterprise-wide consequences can receive appropriate architectural oversight. In this way, governance can provide both consistency and autonomy.",
+  },
+  {
+    id: "ea-e12-essay-5",
+    chapter: "kap12",
+    label: "Essay 5",
+    question: "\"Enterprise Architecture is about relationships and trade-offs.\" Discuss.",
+    context: "Modul 12, Essay 5 · essäfråga",
+    source: "Modul 12, Essay 5",
+    checklist: [
+      {
+        heading: "Relationer",
+        points: [
+          "Enterprise Architecture handlar inte bara om enskilda komponenter utan om relationerna mellan dem.",
+          "Relationerna gäller affärsmål, capabilities, processer, information, applikationer, teknik, människor och organisationsstrukturer.",
+          "En förändring i ett element kan påverka många andra.",
+          "Att ändra en business capability kan till exempel kräva ändringar i processer, information, applikationer och teknik.",
+        ],
+      },
+      {
+        heading: "Trade-offs",
+        points: [
+          "Arkitekturbeslut innebär också trade-offs.",
+          "Mer standardisering kan förbättra effektiviteten men minska flexibiliteten.",
+          "Mer säkerhet kan skapa extra friktion (friction).",
+          "Centralisering kan förbättra kontrollen men minska den lokala autonomin.",
+        ],
+      },
+      {
+        heading: "Arkitektens roll",
+        points: [
+          "Enterprise Architect hjälper intressenterna att förstå dessa relationer.",
+          "Arkitekten hjälper dem att göra explicita trade-offs som stödjer verksamhetens mål.",
+        ],
+      },
+    ],
+    modelAnswer: "Enterprise Architecture is concerned not only with individual components but with the relationships between business objectives, capabilities, processes, information, applications, technology, people and organizational structures.\nChanges to one element can affect many others. For example, changing a business capability may require changes to processes, information, applications and technology.\nArchitectural decisions also involve trade-offs. Greater standardization may improve efficiency but reduce flexibility. Greater security may introduce additional friction. Centralization may improve control but reduce local autonomy.\nThe Enterprise Architect therefore helps stakeholders understand these relationships and make explicit trade-offs that support enterprise objectives.",
+  },
+  {
+    id: "ea-e12-slututmaning",
+    group: "UF:s fördjupade fallfrågor",
+    chapter: "kap12",
+    label: "Final challenge",
+    question: "Given the following statement: - \"Our company needs a new CRM because our competitors have better CRM-systems.\"\n\"You have been appointed Enterprise Architect. - What do you do?\"\nA strong student should not immediately answer:\n\"Let's evaluate CRM products.\"",
+    context: "Modul 12, Final challenge · fallfråga",
+    source: "Modul 12, Final challenge",
+    checklist: [
+      {
+        heading: "Problem och nuläge",
+        points: [
+          "I stället för att direkt utvärdera CRM-produkter börjar arkitekten med att ställa frågor.",
+          "Vilket affärsproblem försöker vi lösa, och vilket strategiskt mål driver detta?",
+          "Vilka capabilities berörs, och var finns capability gaps?",
+          "Hur ser den nuvarande kundresan (customer journey) ut?",
+          "Vilken information berörs och vilka processer behöver förändras?",
+          "Vilka applikationer stödjer i dag dessa capabilities?",
+        ],
+      },
+      {
+        heading: "Vägen framåt",
+        points: [
+          "Vilka architectural principles gäller?",
+          "Vilka alternativ finns, och vilka trade-offs innebär de?",
+          "Hur ser target architecture ut?",
+          "Vilken övergång (transition) är realistisk?",
+          "Hur ska förändringen styras (governed)?",
+        ],
+      },
+    ],
+    modelAnswer: "Instead, they should start asking:\nWhat business problem are we trying to solve?\nWhich strategic objective is driving this?\nWhich capabilities are affected?\nWhat is the current customer journey?\nWhere are the capability gaps?\nWhat information is involved?\nWhat processes need to change?\nWhat applications currently support those capabilities?\nWhat architectural principles apply?\nWhat options exist?\nWhat are the trade-offs?\nWhat is the target architecture?\nWhat transition is realistic?\nHow should the change be governed?",
+  },
   {
     id: "ea-e1-9",
     chapter: "kap1",
@@ -222,6 +695,8 @@ export const essays = [
   },
   {
     id: "ea-e-zachman",
+    level: "troligt",
+    levelNote: `Troligt · ${TROLIGT_NOTE}`,
     chapter: "kap4",
     label: "Zachman-essän (HT25)",
     question: "Beskriv och förklara raderna och kolumnerna i Zachmans ramverk. Beskrivs i Finkelstein kap 1 samt i flertalet av artiklarna (inklusive föreläsningsmaterial). Förutom vad raderna och kolumnerna heter och vad de har/kan ha för innehåll, skall för höga poäng även perspektiven förklaras - T.ex. vad är Planner? - Och exempel på cellinnehåll ges - listor på rad 1, konceptuella modeller på rad 2 o.s.v.",
@@ -804,469 +1279,5 @@ export const essays = [
       },
     ],
     modelAnswer: "The transformation could be organized around incremental products and capabilities, with architecture evolving alongside delivery. This would allow the bank to learn, deliver value earlier and adjust architectural decisions as information becomes available.",
-  },
-  {
-    id: "ea-e12-29",
-    chapter: "kap12",
-    label: "12: 29",
-    question: "Why should an Enterprise Architect understand business strategy?",
-    context: "Modul 12, fråga 29 · kortsvarsfråga",
-    source: "Modul 12, fråga 29",
-    checklist: [
-      {
-        heading: "Därför behövs strategin",
-        points: [
-          "Arkitektur finns till för att stödja verksamhetens mål (enterprise objectives).",
-          "Utan förståelse för strategin kan arkitekten inte avgöra vilka capabilities som behöver utvecklas, ändras eller skyddas.",
-          "Utan strategin går det inte heller att bedöma arkitekturbeslut mot affärsprioriteringarna.",
-        ],
-      },
-    ],
-    modelAnswer: "Architecture exists to support enterprise objectives. Without understanding strategy, the architect cannot determine which capabilities need to be developed, changed or protected, nor can architectural decisions be evaluated against business priorities.",
-  },
-  {
-    id: "ea-e12-30",
-    chapter: "kap12",
-    label: "12: 30",
-    question: "Why is a capability often a useful starting point for transformation analysis?",
-    context: "Modul 12, fråga 30 · kortsvarsfråga",
-    source: "Modul 12, fråga 30",
-    checklist: [
-      {
-        heading: "Därför börja med capability",
-        points: [
-          "En capability beskriver vad organisationen behöver kunna göra.",
-          "Den kan därför koppla strategiska mål till processer, människor, information, applikationer och teknik.",
-          "Den är inte alltför hårt bunden till nuvarande organisationsstruktur eller implementation.",
-        ],
-      },
-    ],
-    modelAnswer: "A capability describes what the organization needs to be able to do. It can therefore connect strategic objectives to processes, people, information, applications and technology without being tied too closely to the current organizational structure or implementation.",
-  },
-  {
-    id: "ea-e12-31",
-    chapter: "kap12",
-    label: "12: 31",
-    question: "What is the difference between a viewpoint and a view?",
-    context: "Modul 12, fråga 31 · kortsvarsfråga. Samma fråga som modul 6 fråga 11.",
-    source: "Modul 12, fråga 31",
-    checklist: [
-      {
-        heading: "Viewpoint och view",
-        points: [
-          "En viewpoint definierar hur en viss intressents concern ska hanteras och representeras.",
-          "En view är den resulterande representation som skapas med hjälp av den viewpointen.",
-        ],
-      },
-    ],
-    modelAnswer: "A viewpoint defines how a particular stakeholder concern should be addressed and represented. A view is the resulting representation created using that viewpoint.",
-  },
-  {
-    id: "ea-e12-32",
-    chapter: "kap12",
-    label: "12: 32",
-    question: "Why should architects be concerned with trade-offs?",
-    context: "Modul 12, fråga 32 · kortsvarsfråga",
-    source: "Modul 12, fråga 32",
-    checklist: [
-      {
-        heading: "Därför trade-offs",
-        points: [
-          "Arkitekturbeslut har sällan bara fördelar.",
-          "Mer standardisering, säkerhet, flexibilitet, hastighet eller kontroll kan ge kostnader eller begränsningar på andra håll.",
-          "Arkitekter behöver därför göra trade-offs explicita och anpassa dem efter affärsmålen.",
-        ],
-      },
-    ],
-    modelAnswer: "Architectural decisions rarely have only benefits. Increasing standardization, security, flexibility, speed or control can introduce costs or limitations elsewhere. Architects therefore need to make trade-offs explicit and align them with business objectives.",
-  },
-  {
-    id: "ea-e12-33",
-    chapter: "kap12",
-    label: "12: 33",
-    question: "Why is architecture important in an Agile organization?",
-    context: "Modul 12, fråga 33 · kortsvarsfråga",
-    source: "Modul 12, fråga 33",
-    checklist: [
-      {
-        heading: "Därför behövs arkitektur",
-        points: [
-          "Agila organisationer behöver fortfarande koherens, principer, riktning och hantering av stora beroenden och risker.",
-          "Arkitekturen ger detta samtidigt som implementationsbeslut fattas på lämplig nivå.",
-          "Arkitekturen kan själv utvecklas kontinuerligt (evolve continuously).",
-        ],
-      },
-    ],
-    modelAnswer: "Agile organizations still need coherence, principles, direction and management of significant dependencies and risks. Architecture provides these while allowing implementation decisions to be made at the appropriate level and enabling the architecture itself to evolve continuously.",
-  },
-  {
-    id: "ea-e12-scenario-1",
-    chapter: "kap12",
-    label: "Scenario 1",
-    question: "The CEO tells the Enterprise Architect: \"Every competitor is using AI. We need an\nAI strategy immediately.\"\nWhat should the architect do?",
-    context: "Modul 12, Scenario 1 — \"We need AI\" · scenario",
-    source: "Modul 12, Scenario 1 — \"We need AI\"",
-    checklist: [
-      {
-        heading: "Utgångspunkt",
-        points: [
-          "Arkitekten bör först förstå vilka affärsmål och problem AI förväntas lösa.",
-          "Först när affärsbehovet är fastställt bör specifika AI-tekniker utvärderas.",
-        ],
-      },
-      {
-        heading: "Frågor att ställa",
-        points: [
-          "Vilket business outcome försöker vi förbättra?",
-          "Vilka capabilities skulle kunna gynnas?",
-          "Vilka kund- eller affärsproblem finns?",
-          "Vilken information/data krävs?",
-          "Vilka risker och regulatoriska begränsningar (regulatory constraints) finns?",
-          "Vilka förändringar i processer och operating model skulle behövas?",
-          "Var skulle AI kunna ge meningsfullt värde?",
-        ],
-      },
-      {
-        heading: "Key lesson",
-        points: [
-          "Börja inte med tekniken, utan med syfte och utfall (purpose and outcomes).",
-        ],
-      },
-    ],
-    modelAnswer: "The architect should first understand the business objectives and problems that AI is expected to address. Relevant questions include:\na. What business outcome are we trying to improve?\nb. Which capabilities could benefit?\nc. Which customer or business problems exist?\nd. What information/data is required?\ne. What risks and regulatory constraints exist?\nf. What changes to processes and operating models would be necessary?\ng. Where could AI provide meaningful value?\nOnly after establishing the business need should specific AI technologies be evaluated.\nKey lesson\nDo not begin with technology. Begin with purpose and outcomes.",
-  },
-  {
-    id: "ea-e12-scenario-2",
-    chapter: "kap12",
-    label: "Scenario 2",
-    question: "A company has 600 applications.\nThe CIO declares: \"We have too many applications. We need to reduce the number to 300.\"\nIs this necessarily a good architectural objective?",
-    context: "Modul 12, Scenario 2 — The application problem · scenario",
-    source: "Modul 12, Scenario 2 — The application problem",
-    checklist: [
-      {
-        heading: "Bedömning",
-        points: [
-          "Att minska till 300 applikationer är inte nödvändigtvis ett bra arkitekturmål.",
-          "Antalet applikationer är inte i sig ett arkitekturproblem.",
-        ],
-      },
-      {
-        heading: "Vad arkitekten undersöker",
-        points: [
-          "Vilka capabilities stödjer applikationerna?",
-          "Duplicerar applikationerna funktionalitet, och är dubbleringen i så fall avsiktlig?",
-          "Vad kostar applikationerna och hur affärskritiska (business criticality) är de?",
-          "Hur stor är den tekniska risken och vilka säkerhetsfrågor (security concerns) finns?",
-          "Hur komplex är integrationen och hur mycket data dupliceras?",
-          "Hur strategiskt relevanta är applikationerna?",
-        ],
-      },
-      {
-        heading: "Slutsats och key lesson",
-        points: [
-          "Målet bör bygga på business outcomes och arkitektoniska concerns, inte på ett godtyckligt antal applikationer.",
-          "Key lesson: arkitektur ska adressera problem och utfall (outcomes), inte godtyckliga siffror.",
-        ],
-      },
-    ],
-    modelAnswer: "Not necessarily.\nThe number of applications is not, by itself, an architectural problem.\nThe architect should investigate:\nWhich capabilities they support.\nWhether applications duplicate functionality.\nWhether duplication is intentional.\nApplication costs.\nBusiness criticality.\nTechnical risk.\nIntegration complexity.\nData duplication.\nSecurity concerns.\nStrategic relevance.\nThe objective should be based on business outcomes and architectural concerns rather than an arbitrary application count.\nKey lesson\nArchitecture should address problems and outcomes, not arbitrary numbers.",
-  },
-  {
-    id: "ea-e12-scenario-3",
-    chapter: "kap12",
-    label: "Scenario 3",
-    question: "A product team says: \"We are Agile. Architecture approval is slowing us down.\nWe don't want architects involved.\"\nHow should the Enterprise Architect respond?",
-    context: "Modul 12, Scenario 3 — The Agile conflict · scenario",
-    source: "Modul 12, Scenario 3 — The Agile conflict",
-    checklist: [
-      {
-        heading: "Utgångspunkt",
-        points: [
-          "Arkitekten avgör vilka beslut som verkligen kräver samordning på enterprise-nivå och vilka som kan delegeras.",
-          "Målet är decentraliserad leverans inom lämpliga arkitekturgränser, inte centralt godkännande av varje beslut.",
-        ],
-      },
-      {
-        heading: "Vad arkitekturen kan ge",
-        points: [
-          "Arkitekturen kan ge principer (principles) och standarder.",
-          "Arkitekturen kan ge guardrails och tydliga decision rights.",
-          "Arkitekturen kan erbjuda återanvändbara capabilities och reference architectures.",
-          "Arkitekturen kan ge vägledning om stora beroenden och risker.",
-        ],
-      },
-      {
-        heading: "Key lesson",
-        points: [
-          "God architecture governance ska möjliggöra agilitet, inte begränsa den i onödan.",
-        ],
-      },
-    ],
-    modelAnswer: "The architect should determine which decisions genuinely require enterprise-level coordination and which can be delegated.\nArchitecture can provide:\nPrinciples\nStandards\nGuardrails\nReusable capabilities\nReference architectures\nDecision rights\nGuidance on significant dependencies and risks\nThe objective should be to enable decentralized delivery within appropriate architectural boundaries, rather than requiring centralized approval for every decision.\nKey lesson\nGood architecture governance should enable agility, not unnecessarily restrict it.",
-  },
-  {
-    id: "ea-e12-scenario-4",
-    chapter: "kap12",
-    label: "Scenario 4",
-    question: "A bank has a 30-year-old core banking system.\nManagement says: \"It's old, so it must be replaced.\"\nIs age alone a sufficient architectural reason for replacement?",
-    context: "Modul 12, Scenario 4 — The legacy system · scenario",
-    source: "Modul 12, Scenario 4 — The legacy system",
-    checklist: [
-      {
-        heading: "Bedömning",
-        points: [
-          "Nej, ålder ensam är inte ett tillräckligt arkitektoniskt skäl för att ersätta systemet.",
-          "Ett tekniskt gammalt system kan fortfarande vara värdefullt och stabilt.",
-          "Omvänt kan ett nyare system skapa betydande arkitektonisk risk.",
-        ],
-      },
-      {
-        heading: "Vad arkitekten bedömer",
-        points: [
-          "Arkitekten bedömer systemets affärsvärde (business value) och affärskritikalitet (business criticality).",
-          "Arkitekten bedömer teknisk hälsa, säkerhet och underhållbarhet (maintainability).",
-          "Arkitekten bedömer kostnad, förändringsbegränsningar (change constraints) och integrationsbegränsningar.",
-          "Arkitekten bedömer vilka alternativ som finns och den strategiska riktningen (strategic direction).",
-        ],
-      },
-      {
-        heading: "Möjliga svar och key lesson",
-        points: [
-          "Beroende på omständigheterna kan svaret bli ersättning, inkapsling (encapsulation), modernisering eller re-platforming.",
-          "Svaret kan också bli avveckling (retirement) eller fortsatt användning.",
-          "Key lesson: arkitekturbeslut ska vara evidensbaserade och inte styras av etiketter som \"legacy\".",
-        ],
-      },
-    ],
-    modelAnswer: "No.\nThe architect should assess:\nBusiness value\nBusiness criticality\nTechnical health\nSecurity\nMaintainability\nCost\nChange constraints\nIntegration limitations\nAvailability of alternatives\nStrategic direction\nA technically old system may still be valuable and stable. Conversely, a newer system may create significant architectural risk.\nThe appropriate response might involve:\nReplacement\nEncapsulation\nModernization\nRe-platforming\nRetirement\nContinued use depending on the circumstances.\nKey lesson\nArchitectural decisions should be evidence-based rather than driven by labels such as \"legacy.\"",
-  },
-  {
-    id: "ea-e12-scenario-5",
-    chapter: "kap12",
-    label: "Scenario 5",
-    question: "A retailer has launched a mobile app and declares: \"We have completed our digital transformation.\"\nWhat should the architect investigate?",
-    context: "Modul 12, Scenario 5 — Digital transformation · scenario",
-    source: "Modul 12, Scenario 5 — Digital transformation",
-    checklist: [
-      {
-        heading: "Kärnfrågan",
-        points: [
-          "Arkitekten frågar om mobilappen har förändrat hur verksamheten skapar och levererar värde.",
-          "Att bara lägga till en digital kanal kan vara digitalization snarare än bredare digital transformation.",
-        ],
-      },
-      {
-        heading: "Frågor att ställa",
-        points: [
-          "Har kundupplevelsen (customer experience) förändrats?",
-          "Har nya produkter eller tjänster skapats?",
-          "Har operating model förändrats?",
-          "Är processerna fundamentalt annorlunda?",
-          "Fattas besluten mer datadrivet (data-driven)?",
-          "Har affärsmodellen (business model) förändrats?",
-          "Skapas nya digitala ekosystem (digital ecosystems)?",
-          "Har organisationens capabilities förändrats?",
-        ],
-      },
-    ],
-    modelAnswer: "The architect should ask whether the mobile application has changed how the enterprise creates and delivers value.\nQuestions could include:\nHas the customer experience changed?\nHave new products or services been created?\nHas the operating model changed?\nAre processes fundamentally different?\nAre decisions more data-driven?\nHas the business model changed?\nAre new digital ecosystems being created?\nHas organizational capability changed?\nSimply adding a digital channel may be digitalization rather than broader digital transformation.",
-  },
-  {
-    id: "ea-e12-35",
-    chapter: "kap12",
-    label: "12: 35",
-    question: "A company describes:\n\"Customer onboarding\"\n\"The organization is able to onboard customers.\"\n\"Verify customer identity.\"\n\"Digital onboarding.\"\nWhich are most likely to be processes and which are capabilities?",
-    context: "Modul 12, fråga 35 (Capability or process?) · kortsvarsfråga",
-    source: "Modul 12, fråga 35 (Capability or process?)",
-    checklist: [
-      {
-        heading: "Process eller capability",
-        points: [
-          "\"Verify customer identity\" är en process/aktivitet, medan \"The organization is able to onboard customers\" är en capability.",
-          "\"Customer onboarding\" kan vara antingen en capability eller en process beroende på modelleringskontexten.",
-          "\"Digital onboarding\" kan vara en capability, ett value stream stage eller en solution context beroende på modellen.",
-          "Important lesson: namnet avgör inte ensamt vilket arkitekturbegrepp det är, kontexten avgör.",
-        ],
-      },
-    ],
-    modelAnswer: "The precise classification depends on the modeling context, but generally:\na. \"Verify customer identity\" → process/activity\nb. \"The organization is able to onboard customers\" → capability\nc. \"Customer onboarding\" → could represent either a capability or process depending on the modeling context\nd. \"Digital onboarding\" → could represent a capability, value stream stage or solution context depending on the model\nImportant lesson\nNames alone don't determine the architectural concept. Context matters.",
-  },
-  {
-    id: "ea-e12-essay-1",
-    chapter: "kap12",
-    label: "Essay 1",
-    question: "Explain why Enterprise Architecture should be considered a discipline for enabling change rather than merely documenting the current enterprise.",
-    context: "Modul 12, Essay 1 · essäfråga",
-    source: "Modul 12, Essay 1",
-    checklist: [
-      {
-        heading: "Från förståelse till beslut",
-        points: [
-          "Enterprise Architecture ger ett strukturerat sätt att förstå verksamheten och avgöra hur den ska utvecklas för att nå strategiska mål.",
-          "Dokumentation av nuläget (current state) är användbar eftersom den ger förståelse för befintliga capabilities, processer, information, applikationer och teknik.",
-          "Arkitekturen blir strategiskt värdefull först när förståelsen används för beslut om framtida tillstånd (future states) och övergångar (transitions).",
-        ],
-      },
-      {
-        heading: "Arkitektur som förändring",
-        points: [
-          "Enterprise Architecture kopplar nuvarande förhållanden till önskade utfall (desired outcomes).",
-          "Den identifierar gap, beroenden, risker och möjligheter.",
-          "Den stödjer beslut om hur verksamheten ska förändras.",
-          "Vid digital transformation och ständig förändring måste arkitekturen själv utvecklas i stället för att bli en statisk dokumentationsövning.",
-        ],
-      },
-    ],
-    modelAnswer: "Enterprise Architecture provides a structured way of understanding the enterprise and determining how it should evolve to achieve strategic objectives. Currentstate documentation is useful because it provides an understanding of existing capabilities, processes, information, applications and technology. However, architecture becomes strategically valuable when that understanding is used to make decisions about future states and transitions.\nEnterprise Architecture therefore connects current conditions with desired outcomes. It identifies gaps, dependencies, risks and opportunities and supports decisions about how the enterprise should change. In an environment characterized by digital transformation and continuous change, architecture must itself evolve rather than becoming a static documentation exercise.",
-  },
-  {
-    id: "ea-e12-essay-2",
-    chapter: "kap12",
-    label: "Essay 2",
-    question: "Compare the roles of Zachman and TOGAF in Enterprise Architecture.",
-    context: "Modul 12, Essay 2 · essäfråga. Samma fråga som modul 4 fråga 10 och modul 5 fråga 12.",
-    source: "Modul 12, Essay 2",
-    checklist: [
-      {
-        heading: "Vad de är",
-        points: [
-          "Zachman och TOGAF hanterar olika aspekter av Enterprise Architecture.",
-          "Zachman är en ontology och ett klassificeringsschema som ordnar beskrivningar efter perspektiv och interrogatives som What, How, Where, Who, When och Why.",
-          "TOGAF är en bredare samling vägledning för Enterprise Architecture och innehåller Architecture Development Method (ADM).",
-          "ADM ger ett strukturerat sätt att utveckla och vidareutveckla (evolve) arkitektur.",
-        ],
-      },
-      {
-        heading: "Jämförelse och slutsats",
-        points: [
-          "Zachman hjälper arkitekter att tänka på vad som behöver beskrivas och från vilka perspektiv.",
-          "TOGAF ger vägledning om hur arkitektur kan utvecklas och styras (governed).",
-          "De kompletterar därför varandra snarare än att vara konkurrerande angreppssätt.",
-        ],
-      },
-    ],
-    modelAnswer: "Zachman and TOGAF address different aspects of Enterprise Architecture.\nZachman provides an ontology and classification schema for organizing descriptions of an enterprise according to perspectives and interrogatives such as What, How, Where, Who, When and Why.\nTOGAF provides a broader body of guidance for Enterprise Architecture and includes the Architecture Development Method, which provides a structured approach to developing and evolving architecture.\nZachman therefore helps architects think about what needs to be described and from which perspectives, while TOGAF provides guidance concerning how architecture can be developed and governed.\nThey can therefore be complementary rather than competing approaches.",
-  },
-  {
-    id: "ea-e12-essay-3",
-    chapter: "kap12",
-    label: "Essay 3",
-    question: "Explain how business capabilities can connect strategy, Enterprise Architecture and digital transformation.",
-    context: "Modul 12, Essay 3 · essäfråga",
-    source: "Modul 12, Essay 3",
-    checklist: [
-      {
-        heading: "Strategi, capabilities och arkitektur",
-        points: [
-          "Strategin fastställer verksamhetens riktning och mål (objectives).",
-          "Capabilities översätter målen till de förmågor som verksamheten behöver ha.",
-          "Arkitekter kan sedan avgöra vilka processer, människor, information, applikationer och teknik som krävs för att stödja eller transformera dessa capabilities.",
-        ],
-      },
-      {
-        heading: "Digital transformation",
-        points: [
-          "Digital transformation innebär ofta att capabilities förändras eller att nya skapas.",
-          "Capability-based analysis blir därmed en brygga mellan strategisk avsikt (strategic intent) och arkitektonisk implementation.",
-          "Den hjälper också organisationer att prioritera investeringar efter affärsvärde snarare än att bara välja teknik.",
-        ],
-      },
-    ],
-    modelAnswer: "Strategy establishes the direction and objectives of the enterprise.\nCapabilities translate those objectives into the abilities the enterprise needs to possess. Architects creating new ones. Capability-based analysis therefore provides a bridge between strategic intent and architectural implementation. It also helps organizations prioritize investments can then determine what processes, people, information, applications and technology are required to support or transform those capabilities.\nDigital transformation frequently involves changing capabilities or creating new ones. Capability-based analysis therefore provides a bridge between strategic intent and architectural implementation. It also helps organizations prioritize investments according to business value rather than simply selecting technologies.",
-  },
-  {
-    id: "ea-e12-essay-4",
-    chapter: "kap12",
-    label: "Essay 4",
-    question: "Explain why architecture governance should be designed to support rather than prevent agility.",
-    context: "Modul 12, Essay 4 · essäfråga",
-    source: "Modul 12, Essay 4",
-    checklist: [
-      {
-        heading: "Varför governance behövs",
-        points: [
-          "Organisationer behöver governance för att bevara koherens och hantera risk.",
-          "Governance säkerställer att viktiga arkitekturbeslut stödjer de strategiska målen.",
-          "Överdrivet centraliserat godkännande kan dock bromsa leveransen och hindra teamen från att snabbt anpassa sig till ändrade förutsättningar.",
-        ],
-      },
-      {
-        heading: "Governance som stödjer agilitet",
-        points: [
-          "Effektiv architecture governance fastställer principer, decision rights, guardrails och eskaleringsmekanismer (escalation mechanisms).",
-          "Rutinbeslut kan delegeras, medan beslut med stora konsekvenser för hela verksamheten får lämplig arkitekturtillsyn (architectural oversight).",
-          "På så sätt kan governance ge både konsekvens (consistency) och autonomi.",
-        ],
-      },
-    ],
-    modelAnswer: "Organizations need governance to maintain coherence, manage risk and ensure that important architectural decisions support strategic objectives.\nHowever, excessive centralized approval can slow delivery and prevent teams from responding quickly to changing circumstances.\nEffective architecture governance therefore establishes principles, decision rights, guardrails and escalation mechanisms. Routine decisions can be delegated while decisions with significant enterprise-wide consequences can receive appropriate architectural oversight. In this way, governance can provide both consistency and autonomy.",
-  },
-  {
-    id: "ea-e12-essay-5",
-    chapter: "kap12",
-    label: "Essay 5",
-    question: "\"Enterprise Architecture is about relationships and trade-offs.\" Discuss.",
-    context: "Modul 12, Essay 5 · essäfråga",
-    source: "Modul 12, Essay 5",
-    checklist: [
-      {
-        heading: "Relationer",
-        points: [
-          "Enterprise Architecture handlar inte bara om enskilda komponenter utan om relationerna mellan dem.",
-          "Relationerna gäller affärsmål, capabilities, processer, information, applikationer, teknik, människor och organisationsstrukturer.",
-          "En förändring i ett element kan påverka många andra.",
-          "Att ändra en business capability kan till exempel kräva ändringar i processer, information, applikationer och teknik.",
-        ],
-      },
-      {
-        heading: "Trade-offs",
-        points: [
-          "Arkitekturbeslut innebär också trade-offs.",
-          "Mer standardisering kan förbättra effektiviteten men minska flexibiliteten.",
-          "Mer säkerhet kan skapa extra friktion (friction).",
-          "Centralisering kan förbättra kontrollen men minska den lokala autonomin.",
-        ],
-      },
-      {
-        heading: "Arkitektens roll",
-        points: [
-          "Enterprise Architect hjälper intressenterna att förstå dessa relationer.",
-          "Arkitekten hjälper dem att göra explicita trade-offs som stödjer verksamhetens mål.",
-        ],
-      },
-    ],
-    modelAnswer: "Enterprise Architecture is concerned not only with individual components but with the relationships between business objectives, capabilities, processes, information, applications, technology, people and organizational structures.\nChanges to one element can affect many others. For example, changing a business capability may require changes to processes, information, applications and technology.\nArchitectural decisions also involve trade-offs. Greater standardization may improve efficiency but reduce flexibility. Greater security may introduce additional friction. Centralization may improve control but reduce local autonomy.\nThe Enterprise Architect therefore helps stakeholders understand these relationships and make explicit trade-offs that support enterprise objectives.",
-  },
-  {
-    id: "ea-e12-slututmaning",
-    chapter: "kap12",
-    label: "Final challenge",
-    question: "Given the following statement: - \"Our company needs a new CRM because our competitors have better CRM-systems.\"\n\"You have been appointed Enterprise Architect. - What do you do?\"\nA strong student should not immediately answer:\n\"Let's evaluate CRM products.\"",
-    context: "Modul 12, Final challenge · fallfråga",
-    source: "Modul 12, Final challenge",
-    checklist: [
-      {
-        heading: "Problem och nuläge",
-        points: [
-          "I stället för att direkt utvärdera CRM-produkter börjar arkitekten med att ställa frågor.",
-          "Vilket affärsproblem försöker vi lösa, och vilket strategiskt mål driver detta?",
-          "Vilka capabilities berörs, och var finns capability gaps?",
-          "Hur ser den nuvarande kundresan (customer journey) ut?",
-          "Vilken information berörs och vilka processer behöver förändras?",
-          "Vilka applikationer stödjer i dag dessa capabilities?",
-        ],
-      },
-      {
-        heading: "Vägen framåt",
-        points: [
-          "Vilka architectural principles gäller?",
-          "Vilka alternativ finns, och vilka trade-offs innebär de?",
-          "Hur ser target architecture ut?",
-          "Vilken övergång (transition) är realistisk?",
-          "Hur ska förändringen styras (governed)?",
-        ],
-      },
-    ],
-    modelAnswer: "Instead, they should start asking:\nWhat business problem are we trying to solve?\nWhich strategic objective is driving this?\nWhich capabilities are affected?\nWhat is the current customer journey?\nWhere are the capability gaps?\nWhat information is involved?\nWhat processes need to change?\nWhat applications currently support those capabilities?\nWhat architectural principles apply?\nWhat options exist?\nWhat are the trade-offs?\nWhat is the target architecture?\nWhat transition is realistic?\nHow should the change be governed?",
   },
 ];
