@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 549 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-13.
+- **Test:** `npm test` = 574 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-13.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -51,7 +51,7 @@ kapitel: allt UI läser `chapter.number`.
 | databaser | komplett mot tentan | se nedan |
 | process | aktiv (2026-09-29) | se "Processorienterad verksamhetsutveckling (BPM)" nedan |
 | sakerhet | aktiv (2026-11-13) | Öva (bara Tentafrågor), Tenta, Uppgifter — se "Säkerhet i informationssystem" nedan |
-| arkitektur | kommande | platshållare i manifestet |
+| arkitektur | aktiv (2026-11-13) | Läs, Öva (217 frågor), Zachman, Essä (54), Tenta — se "Verksamhetsarkitektur" nedan |
 
 **Databaser** (`views: las, sql, modell, tenta, ova, statistik`; Prov medvetet borta):
 
@@ -533,6 +533,10 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
 
 ## Ogranskat (mot kursmaterialet)
 
+- **Verksamhetsarkitektur (2026-11-13):** allt är ogranskat av Kasper —
+  kapitlen och sammanfattningen, de 217 Öva-frågornas förklaringar
+  (`reviewed: false`), essächecklistorna och placeringsfacit (se
+  "Verksamhetsarkitektur").
 - **Fliken Tenta (2026-10-09):** Kasper har granskat facit för uppgift 1,
   3a–g och 4 mot tentorna (`reviewed: true` per uppgift). DDL-facit i
   uppgift 2 är ogranskat (`reviewed: false`) tills han gjort uppgiften själv;
@@ -932,7 +936,11 @@ hämtar `TIMEEDIT_URL` (repovariabel), kör parserns test, normaliserar via
 frågor och fel att göra om; nollställs bara med "Börja om genomgången"),
 `ovaFraga` (öppen fråga i Öva per delkurs: id, läge,
 alternativens ordning, val, rättad; släpps av "Klar för nu" och byte av
-urval), `read:<kurs>:<kapitel>`. Kraven per läge (2026-11-13):
+urval), `read:<kurs>:<kapitel>` (också `read:<kurs>:sammanfattning`, som
+laddas om sedan 2026-11-13), `essaVald` (vald essä per delkurs),
+`zachmanLage`, `zachmanUppgift`, `zachmanRubriker` (Zachman-vyn; svaren i
+`svar:<id>`, klar i `modell:<id>`), `tentaArkiv` (vald tenta i
+arkitekturens Tenta). Kraven per läge (2026-11-13):
 `settings.practiceRequire` och `ovaGenomgang` har nycklarna `"<kurs>"` (Alla
 frågor) och `"<kurs>:tenta"` (Tentafrågor), karensen `"<kurs>"`,
 `"<kurs>:pass"`, `"<kurs>:tenta"` och `"<kurs>:tenta:pass"`. `tentaOppen`
@@ -1346,6 +1354,136 @@ separat Tenta-flik, ingen växel inne i en flik.
   (accountability, authenticity, XSS, broken access control) har inget
   eget stöd i förklaringarna och blir tunna tills föreläsningarna finns.
 
+## Verksamhetsarkitektur, byggd 2026-11-13
+
+Underlag: `cc-prompt-arkitektur-delkurs.md` (gitignorerad, återger tentorna
+och lärarens material) och planen Kasper godkände. Källorna ligger i
+`kursmaterial-arkitektur/` i huvudmappen (gitignorerad, committas aldrig):
+tre modul-PDF:er (modul 1–4, 5–8, 9–12), föreläsningsbilderna
+(`forelasningar.pptx`, 104 bilder; Zachman-affischerna är `ppt/media/image7.png`
+2003 och `image8.png` version 3.0 — upphovsrättsskyddade, aldrig i repot),
+UF:s docx-råmaterial, kursinformationen, kursens upplägg och de tre
+HT25-tentorna. Lärare Umberto Fiaccadori (UF). Byggt i en egen worktree
+parallellt med Säkerhet-sessionen; rebasat mot main före varje push.
+
+`views: las, ova, zachman, essa, tenta, statistik`. Ingen Prov: HT26-tentans
+poäng och minuspoäng är okända, och ett Prov med påhittad poäng är sämre än
+inget.
+
+- **Tentaformatet.** HT26 (kursinformationen): sant/falskt, flerval och
+  "någondera essäfråga", ser ut som modulerna; modulfrågor kan komma liksom
+  andra av liknande art kopplade till litteraturen. HT25 (tre tentor à 100 p,
+  inga hjälpmedel, A 85/B 75/C 65/D 55/E 50): uppgift 1 Zachman-essä 30 p
+  (okt och dec: minst 15 p för godkänt), placering 20 p (okt: 10 objekt;
+  dec: 10 à 2 p, två celler ok om motiverat; maj: uppgift 2–8 flerval med
+  cellkoder, 6 × 3 + 2 p) och artiklar 50 p sant/falskt (25 × 2, 16 × 3 + 2,
+  11 × 4 + 2 × 3), fel = 0 p. examNote säger vad vi vet och inte mer.
+- **Läs:** 12 kapitel, kapitel N = modul N med UF:s engelska titlar
+  (`data/arkitektur/reading.js`), sammanfattningen bygger på modul 12 (de tio
+  begreppen ordagrant), 12 ämnen (`topics.js`, alla `karna`, `essa` på
+  zachman, praktik och integration; Zachman har `examEvidence.note`), 78
+  ordlistetermer på engelska. Arkitektens fem roller står i kapitel 3.
+  Kapitel 4 (Zachman) är längst: principerna, kolumner med UF:s
+  universitetsexempel, raderna i båda affischversionerna, 2003-affischens
+  36 celler och hur man placerar en modell; `[[vy:zachman|…]]` blir en knapp
+  till vyn (generell mekanik i ChapterView, ritas bara om vyn finns).
+  Fastabellen (Phase A–H) i kapitel 5 kommer ur docx:en, eftersom modulen
+  räknar upp faserna utan bokstäver och Öva har docx-frågor om dem.
+  Bakgrund enligt prompten: arkitektursprintar och backlog (kap 9) och
+  teknikadoption/radar (kap 10) är märkta "(bakgrund)".
+- **Öva — undantag från cirka sex frågor per kapitel:** UF säger att tentan
+  "till många delar överensstämmer med modulernas frågor", så alla hans
+  modulfrågor finns med, nära ordagrant: 80 flerval, 49 sant/falskt och
+  fråga 34:s tabell som sex parfrågor (135), plus 82 frågor ur
+  docx-råmaterialet med svar i filen och som inte är dubbletter (217;
+  `data/arkitektur/questions.js`, genererad av parsers i scratchpad). Per
+  kapitel 13/9/9/12/24/16/22/19/23/17/18/35. Docx-frågorna har
+  `secondary: true` och serveras efter modulfrågorna inom varje grupp i
+  kön (`lib/practiceQueue.js`, Kaspers krav). Sant/falskt och parfrågor har
+  `fixedOrder` (True före False), liksom "All of the above"; övriga flerval
+  blandas, eftersom rätt svar i modulerna är B eller C i 84 % och aldrig E.
+  Alla i `LENGTH_FLAGGED` ("UF:s modulfråga ordagrant" respektive docx);
+  balanstestet har eget spann (8–36) och mäter ingen längdbalans. Alla har
+  en svensk förklaring: UF:s "Explanation" översatt där den finns, annars
+  med stöd bara i modultexten (skrivna av tre agenter mot källorna, inga
+  invändningar mot facit). `reviewed: false` på allt.
+- **Lagade frågor (noterat i `source`):** modul 5 fråga 1 variant alt. B och
+  fråga 5 alt. E, modul 11 fråga 2 alt. D och fråga 4 alt. B hade inklistrad
+  text; modul 4 fråga 5 alt. E var avbrutet ("project-management") och är
+  kompletterat ur docx:en ("…framework."); modul 12 fråga 3 är avbruten
+  efter alternativ C i PDF:en och har fått alternativ och svar D ur docx:ens
+  "The Zachman Question". Modul 7 fråga 20–22 (sant/falskt) och essäerna 24
+  och 27 hör till kapitel 8 (Kaspers beslut, UF:s not i modul 8), med modul 7
+  som källa. Modul 11 saknar fråga 5 och har två nummer 8.
+- **Essä:** 54 poster (`essays.js`): Zachman-essän först (`pinned`,
+  `priority: "hogst"`, okt/dec-lydelsen, majs i kontexten, checklista ur
+  kapitel 4), sedan UF:s 53 kortsvars-, essä- och fallfrågor med modellsvar
+  i PDF-ordning, scenarierna och slututmaningen i modul 12 inräknade.
+  Modellsvaret är facit: checklistan bryter ner det (inte Strategis
+  fyrstegsform), och modellsvaret står ordagrant under en utfällning.
+  Felinklistrade modellsvar (8:8, 9:9, 10:9, 12 Essay 3) visas ordagrant;
+  checklistorna bygger på de begripliga delarna. Essä-vyn fick generellt
+  `essayWordLimit` (null = inget ordtak) och `essayIntro` i manifestet,
+  förteckning per kapitel när essäerna har `chapter`, sparad vald essä och
+  "Nollställ essän" (tar bort utkast och bockar). Strategi och BPM oförändrade.
+- **Zachman-vyn** (`views/Zachman.jsx`, data `data/arkitektur/zachman.js`,
+  rättning `lib/zachman.js`): Ramverket (eget 6×6-rutnät, rad/kolumn/cell
+  visar perspektiv i båda versionerna, frågeord med UF:s exempel, celltyp med
+  begreppspar och 3.0-namn), Memorera (12 fält, tolerant rättning: svenska
+  eller engelska, 2003- eller 3.0-namn), Placera (14 placeringsobjekt från
+  okt/dec — de sex gemensamma är samma uppgift —, majtentans 7 flerval med
+  kryssrutor där rätt är exakt facitalternativet, 36 omvända frågor). Upp
+  till två celler och en motivering; rätt/delvis/fel; facit, godtagbara
+  alternativ och motivering, och vid T "Inget officiellt facit – tolkning
+  utifrån ramverket." 57 uppgifter + memoreringen i `zachmanTasks`
+  (progressLists).
+- **Placeringsfacit (inget officiellt facit finns).** S (säkra mot
+  affischen): Java R5K2, gränssnittets arkitektur R3K4, arbetsflödesmodell
+  R2K4, verksamhetsregler R3K6, processmodell R2K2, logistiknätverk R2K3,
+  lista över affärshändelser R1K5 (affischen säger List of Cycles; "händelser"
+  ur UF:s När-genomgång), alla 36 omvända. T (tolkning): organisationsdiagram
+  R2K4/R1K4, befintligt nätverk R4K3/R5K3, relationsscheman R3K1/R4K1,
+  uppdateringsbeslut R2K5/R4K5, mjukvarusystem R3K3/R4K3, ansvarsroller
+  R3K4/R2K4, ekonomisystem R3K3/R2K3 och alla sju majfrågor. **Avvikelser
+  från promptens B5 (planen, godkänd):** uppdateringsbeslut R2K5 före R4K5
+  (R4K5 är Control Structure, exekveringsstyrning), ansvarsroller R2K4 i
+  stället för R4K4 (Presentation Architecture), mjukvarusystem godtar även
+  R4K3; majs uppgift 5 har kvar facit men R2K6 motiveras som MEANS (regler
+  står först på rad 3). B4.3:s "arbetsflöden" i K2: UF nämner arbetsflöden
+  under både Hur och Vem; affischen har Work Flow Model i K4.
+- **Tenta** (`views/ExamArchive.jsx`, data `examArchive.js`; App väljer den
+  när `course.examArchive` finns, efter Säkerhets `choiceExams`): de tre
+  tentorna i tentans ordning, fördelningen Zachman 50 / artiklar 50, uppgift
+  1 → Essä, uppgift 2 och maj 2–8 → Zachman. **Artikelfrågorna står
+  ordagrant utan facit** ("Artikeln ingår inte i HT26-materialet – facit
+  saknas."), inga svarsknappar, räknas inte. Tentornas egenheter står kvar
+  (okt: uppgift 5 = 10, position 25 heter "Uppgift 27"; dec: uppgift 3 har
+  två påståenden; maj 4 säger "tillhör ordern" om planen). Plan sa
+  vynyckeln `tentor`; Säkerhet hann göra `tenta` delkursstyrd, så samma
+  nyckel används med ett eget fält.
+- **Generellt i samma arbete:** sammanfattningens Läst-markering laddas nu
+  om (gällde även BPM och Databaser); förklaringspanelen ritar inget tomt
+  stycke; `examEvidence.note`.
+- **Tester:** `zachman.test.mjs` (giltiga celler, majfrågornas alternativ och
+  20 p, 36 omvända, grupperna, rättningen, memoreringen, framstegen),
+  `exam-archive.test.mjs` (100 p, 50/50, länkarna, inget facit),
+  `shuffle.test.mjs` (`fixedOrder`), arkitekturblock i `fragebank-balans`,
+  `essa-struktur`, `practice-queue` (`secondary`), `exam-priority`,
+  `practice-axis` och `reading-time`.
+- **Noterat i källorna:** en föreläsningsbild säger att en process beskriver
+  "what the organization does"; modulerna säger "how" (kapitel 7 nämner
+  det). Bild 11 namnger en bok ("The TOGAF Standard, 10th Edition –
+  Enterprise Agility & Digital Transformation"), men prompten säger att
+  kursboken inte är namngiven; den används inte som källa. Modulerna saknar
+  avsnittet "Key concepts" som mallen nämner; ordlistan bygger på de tio
+  begreppen, lärandemålen och kärnförklaringarna.
+- **Saknas (B6):** kursboken (bilderna visar TOGAF 10 Foundation Study Guide
+  och ArchiMate 3.0 Pocket Guide; HT25:s litteraturlista har bara Finkelstein
+  2015 som referenslitteratur), HT26-tentans poäng och minuspoäng,
+  artiklarna i HT25-tentorna (ingår inte i år) och officiellt facit till
+  placeringsuppgifterna. F3:s tid och sal stämmer med TimeEdit
+  (schemabevakningen 2026-11-13: 23 nov 14–16, EC1:Crafoordsalen).
+
 ## Nästa steg
 
 - Användarens granskning av det ogranskade (listan ovan), i första hand
@@ -1362,5 +1500,8 @@ separat Tenta-flik, ingen växel inne i en flik.
 - **Säkerhet när föreläsningarna kommer:** kapitel i Läs, kapitelfrågor i
   `questions` (växeln Alla frågor/Tentafrågor dyker upp), läsanvisningen.
   Kasper granskar facit och förklaringarna i examBank.
-- Verksamhetsarkitektur byggs i en egen session (worktree
-  `.claude/worktrees/arkitektur`).
+- **Verksamhetsarkitektur:** Kasper granskar Öva (`reviewed: false` på
+  alla 217), placeringsfacit (T-uppgifterna) och essächecklistorna. Efter
+  F1–F3 (18, 20, 23 nov): stäm av kapitlen mot det UF säger om tentan och
+  litteraturen, och lägg in HT26-tentans poäng i examNote när de är kända.
+  Är poängen kända kan Prov byggas.
