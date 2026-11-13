@@ -28,7 +28,8 @@ test("varje del pekar på exakt en post som finns, och numren är unika", () => 
       for (const part of examParts(exam)) {
         const keys = ["question", "task", "essay"].filter((key) => part[key]);
         assert.equal(keys.length, 1, `${exam.id} ${part.no}: en post per del`);
-        const pool = { question: course.questions, task: course.bpmnTasks, essay: course.essays }[keys[0]];
+        // En tentafråga ligger i Övas bank eller, utan kapitel, i examBank (Säkerhet).
+        const pool = { question: [...course.questions, ...(course.examBank || [])], task: course.bpmnTasks, essay: course.essays }[keys[0]];
         assert.ok(pool?.some((item) => item.id === part[keys[0]]), `${exam.id} ${part.no}: ${part[keys[0]]} finns`);
         if (part.run) assert.ok(course.bpmnTasks.some((task) => task.id === part.run), `${part.run} finns`);
         assert.ok(part.points > 0, `${exam.id} ${part.no}: poäng`);

@@ -20,11 +20,14 @@ export default function QuestionCard({
   counter,
   tag,
   zoomable = false,
+  skippedLabel,
   children,
 }) {
+  // Flera rätta (view.accepted): det valda rätta blir "correct", övriga rätta "missed".
+  const accepted = view.accepted ?? [view.correct];
   function stateFor(index) {
     if (!revealed) return chosen === index ? "selected" : "idle";
-    if (index === view.correct) return chosen === index ? "correct" : "missed";
+    if (accepted.includes(index)) return chosen === index ? "correct" : "missed";
     return chosen === index ? "wrong" : "idle";
   }
 
@@ -88,8 +91,11 @@ export default function QuestionCard({
           options={view.options}
           chosen={chosen}
           correct={view.correct}
+          accepted={accepted}
           source={question.source}
           explanation={question.explanation}
+          note={question.note}
+          skippedLabel={skippedLabel}
         />
       )}
 

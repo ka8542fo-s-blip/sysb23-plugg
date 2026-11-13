@@ -9,6 +9,9 @@ function describeContent(course) {
     course.questions?.length && `${course.questions.length} frågor`,
     course.sqlExercises?.length && `${course.sqlExercises.length} SQL-övningar`,
     course.essays?.length && `${course.essays.length} essäfrågor`,
+    // Tentafrågor utan kapitel (Säkerhet) och hela tentor att skriva.
+    course.examBank?.length && `${course.examBank.length} tentafrågor`,
+    course.choiceExams?.length && `${course.choiceExams.length} gamla tentor`,
   ].filter(Boolean);
   return parts.length ? parts.join(" · ") : "Material på väg";
 }

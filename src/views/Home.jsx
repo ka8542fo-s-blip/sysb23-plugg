@@ -27,6 +27,9 @@ export default function Home({
   const perTopic = useMemo(() => topicStats(course, answers), [course, answers]);
   const focus = useMemo(() => focusTopic(perTopic), [perTopic]);
   const latestExam = exams.find((exam) => exam.courseId === course.id);
+  const hasStatus = sqlExercises.length > 0 || course.questions.length > 0;
+  // Öva utan egna frågor är läget Tentafrågor (Säkerhet tills kapitlen finns).
+  const examOnlyPractice = course.questions.length === 0 && course.examBank.length > 0;
 
   return (
     <div className="space-y-8">
@@ -38,9 +41,9 @@ export default function Home({
         </p>
         <h1 className="mt-1 font-display text-3xl sm:text-4xl">{course.name}</h1>
         <p className="mt-3 max-w-reading text-[17px] leading-relaxed text-ink/80">
-          {views.includes("sql")
+          {course.homeIntro ?? (views.includes("sql")
             ? "Läs kompendiet om designprocessen, relationsmodellen och normalisering, öva förståelsefrågor på föreläsningarna, och skriv riktig SQL mot kursens sjukhusdatabas med automatisk rättning."
-            : "Öva flervalsfrågor med förklaringar till varje alternativ, simulera tentans poängsystem med minuspoäng, och träna essäsvar mot en checklista. Allt innehåll kommer ur kurslitteraturen och gamla tentor."}
+            : "Öva flervalsfrågor med förklaringar till varje alternativ, simulera tentans poängsystem med minuspoäng, och träna essäsvar mot en checklista. Allt innehåll kommer ur kurslitteraturen och gamla tentor.")}
         </p>
         <p className="tabular mt-2 text-[15px] text-ink/65">
           {[
@@ -49,6 +52,8 @@ export default function Home({
             course.topics.length > 0 && `${course.topics.length} ämnen`,
             course.essays.length > 0 && `${course.essays.length} essäfrågor`,
             sqlExercises.length > 0 && `${sqlExercises.length} SQL-övningar`,
+            course.examBank.length > 0 && `${course.examBank.length} tentafrågor`,
+            course.choiceExams.length > 0 && `${course.choiceExams.length} gamla tentor`,
           ]
             .filter(Boolean)
             .join(" · ")}
@@ -56,7 +61,11 @@ export default function Home({
       </section>
 
       <section className="card p-5 sm:p-6">
-        <h2 className="font-display text-xl">Var står du?</h2>
+        {/* Statusrutorna läser Öva-frågorna (eller SQL). En delkurs utan
+            sådana (Säkerhet: bara tentafrågor) visar bara genvägarna — inga
+            poäng utanför fliken Tenta. */}
+        <h2 className="font-display text-xl">{hasStatus ? "Var står du?" : "Plugga"}</h2>
+        {hasStatus && (
         <dl className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {sqlExercises.length > 0 ? (
             <>
@@ -95,6 +104,7 @@ export default function Home({
             </>
           )}
         </dl>
+        )}
         {course.questions.length > 0 && (
         <p className="mt-4 text-[15px] text-ink/70">
           {focus ? (
@@ -126,8 +136,12 @@ export default function Home({
           )}
           {views.includes("ova") && (
             <Shortcut
-              title="Öva frågor"
-              hint="En fråga i taget med facit"
+              title={examOnlyPractice ? "Öva tentafrågorna" : "Öva frågor"}
+              hint={
+                examOnlyPractice
+                  ? `${course.examBank.length} frågor från gamla tentor, med facit`
+                  : "En fråga i taget med facit"
+              }
               onClick={() => navigate("ova")}
             />
           )}

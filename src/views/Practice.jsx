@@ -2,10 +2,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import QuestionCard from "../components/QuestionCard.jsx";
 import TopicFilter from "../components/TopicFilter.jsx";
 import PastExamOverview from "../components/practice/PastExamOverview.jsx";
-import { shuffleQuestion } from "../lib/shuffle.js";
+import ProgressBar from "../components/practice/ProgressBar.jsx";
+import { isAccepted, shuffleQuestion, viewFor } from "../lib/shuffle.js";
 import { chapterForQuestion, groupKeyFor, practiceGroups, practiceMode } from "../lib/practiceAxis.js";
 import { COOLDOWN, EMPTY_PASS, isDone, nextQuestion, passAnswers, progressFor, recordPass } from "../lib/practiceQueue.js";
-import { examLabel, pastExamItems, pastExamsOf, tally } from "../lib/pastExams.js";
+import { examLabel, occurrences, pastExamItems, pastExamsOf, pointsLabel, tally, uniqueItems } from "../lib/pastExams.js";
 import { KEYS, clearAnswersFor, load, recordAnswer, save } from "../lib/storage.js";
 
 // Öva utan pass: "Fortsätt öva" serverar nästa ofärdiga fråga (fel först,
@@ -17,6 +18,12 @@ import { KEYS, clearAnswersFor, load, recordAnswer, save } from "../lib/storage.
 // flervalsdelar, märkta med tenta, nummer och poäng. Svaren räknas för sig
 // (sysb23:tentafragor) och rör varken Alla frågor, Statistik eller
 // BPMN-övningar — läget börjar från noll (användarbeslut 2026-10-22).
+// En delkurs utan egna Öva-frågor men med gamla tentor (Säkerhet, tills
+// kapitlen finns) har bara Tentafrågor: växeln visas inte.
+//
+// Kraven Inlärning och Genomgång gäller i båda lägena, var för sig: Alla
+// frågor under delkursens id, Tentafrågor under "<kurs>:tenta" (krav,
+// Genomgångens varv och karens).
 export default function Practice({
   course,
   answers,
@@ -48,18 +55,34 @@ export default function Practice({
   );
   const filtered = useMemo(() => questionsFor(activeTopics), [questionsFor, activeTopics]);
 
-  // Alla frågor har två krav: Inlärning (två rätt i rad, svaren i answers)
-  // och Genomgång (ett rätt räcker, ett eget varv som sparas för sig).
-  // Räknare, översikt och kö läser "activeAnswers", så båda fungerar likadant.
-  const passMode = settings.practiceRequire?.[course.id] === "ett" && settings.practiceScope?.[course.id] !== "tenta";
+  // Tentafrågor. Posterna byggs en gång per delkurs, så att alternativens
+  // blandning (view nedan) ligger still medan man svarar.
+  const exams = useMemo(() => pastExamsOf(course), [course]);
+  const examItems = useMemo(() => pastExamItems(course), [course]);
+  const hasExamMode = examItems.length > 0;
+  // Utan egna Öva-frågor finns bara Tentafrågor (Säkerhet tills kapitlen finns).
+  const hasAll = course.questions.length > 0;
+  const examMode = hasExamMode && (!hasAll || settings.practiceScope?.[course.id] === "tenta");
+
+  // Två krav i båda lägena: Inlärning (två rätt i rad, svaren i answers
+  // respektive tentafragor) och Genomgång (ett rätt räcker, ett eget varv
+  // som sparas för sig). Räknare, översikt och kö läser "activeAnswers"
+  // och "examActive", så båda kraven fungerar likadant.
+  const passKey = examMode ? `${course.id}:tenta` : course.id;
+  const passMode = settings.practiceRequire?.[passKey] === "ett";
   const [passes, setPasses] = useState(() => load(KEYS.practicePass, {}));
   useEffect(() => save(KEYS.practicePass, passes), [passes]);
-  const pass = passes[course.id] ?? EMPTY_PASS;
-  const passStats = useMemo(() => passAnswers(course.questions, pass), [course, pass]);
-  const activeAnswers = passMode ? passStats : answers;
+  const pass = passes[passKey] ?? EMPTY_PASS;
+  // En post per fråga: samma fråga kan stå på flera tentor.
+  const examUnique = useMemo(() => uniqueItems(examItems), [examItems]);
+  const passStats = useMemo(
+    () => passAnswers(examMode ? examUnique : course.questions, pass),
+    [examMode, examUnique, course, pass],
+  );
+  const activeAnswers = passMode && !examMode ? passStats : answers;
   const progress = useMemo(() => progressFor(filtered, activeAnswers), [filtered, activeAnswers]);
   const courseProgress = useMemo(() => progressFor(course.questions, activeAnswers), [course, activeAnswers]);
-  const redo = passMode ? filtered.filter((question) => passStats[question.id]?.last === "wrong").length : 0;
+  const redo = passMode && !examMode ? filtered.filter((question) => passStats[question.id]?.last === "wrong").length : 0;
   const perGroup = useMemo(() => {
     const counts = {};
     for (const group of groups) counts[group.id] = { done: 0, total: 0 };
@@ -72,12 +95,6 @@ export default function Practice({
     return counts;
   }, [groups, course, keyOf, activeAnswers]);
 
-  // Tentafrågor. Posterna byggs en gång per delkurs, så att alternativens
-  // blandning (view nedan) ligger still medan man svarar.
-  const exams = useMemo(() => pastExamsOf(course), [course]);
-  const examItems = useMemo(() => pastExamItems(course), [course]);
-  const hasExamMode = examItems.length > 0;
-  const examMode = hasExamMode && settings.practiceScope?.[course.id] === "tenta";
   const examIdsKey = (settings.practiceExams?.[course.id] || [])
     .filter((id) => exams.some((exam) => exam.id === id))
     .join(",");
@@ -91,16 +108,21 @@ export default function Practice({
     () => examItems.filter((item) => activeExams.length === 0 || activeExams.includes(item.exam)),
     [examItems, activeExams],
   );
+  // Kön och totalerna räknar en post per fråga; rutnätet visar alla.
+  const examPoolUnique = useMemo(() => uniqueItems(examPool), [examPool]);
   const [examAnswers, setExamAnswers] = useState(() => load(KEYS.examAnswers, {}));
   useEffect(() => save(KEYS.examAnswers, examAnswers), [examAnswers]);
+  const examActive = passMode && examMode ? passStats : examAnswers;
   const perExam = useMemo(() => {
     const counts = {};
     for (const exam of exams) {
-      const { done, total } = tally(examItems.filter((item) => item.exam === exam.id), examAnswers);
+      const { done, total } = tally(examItems.filter((item) => item.exam === exam.id), examActive);
       counts[exam.id] = { done, total };
     }
     return counts;
-  }, [exams, examItems, examAnswers]);
+  }, [exams, examItems, examActive]);
+  const examProgress = useMemo(() => tally(examPoolUnique, examActive), [examPoolUnique, examActive]);
+  const examRedo = passMode && examMode ? examPoolUnique.filter((item) => passStats[item.id]?.last === "wrong").length : 0;
 
   const [filterOpen, setFilterOpen] = useState(
     () => typeof window === "undefined" || window.innerWidth >= 640,
@@ -139,7 +161,7 @@ export default function Practice({
     const saved = restored.current;
     if (saved && served === 0 && saved.id === current.id) {
       const options = saved.order.map((index) => ({ ...current.options[index], originalIndex: index }));
-      return { options, correct: saved.order.indexOf(current.correct) };
+      return viewFor(current, options);
     }
     return shuffleQuestion(current);
   }, [current, served]);
@@ -153,6 +175,13 @@ export default function Practice({
     save(KEYS.practiceCurrent, all);
   }, [course.id, current, view, examMode, chosen, revealed]);
 
+  // Karensen per läge och krav: "<kurs>", "<kurs>:pass", "<kurs>:tenta"
+  // och "<kurs>:tenta:pass".
+  const recentKey = useCallback(
+    (tenta) => `${tenta ? `${course.id}:tenta` : course.id}${passMode ? ":pass" : ""}`,
+    [course.id, passMode],
+  );
+
   // Visa en fråga. Visningen bokförs (bara i Alla frågor) och frågan läggs
   // sist i lägets karens, så att den inte återkommer förrän COOLDOWN andra
   // frågor serverats. Tentafrågor har en egen karens.
@@ -164,7 +193,7 @@ export default function Practice({
       setRevealed(false);
       scrollToCard.current = true;
       if (!tenta) onSeen(id);
-      const key = tenta ? `${course.id}:tenta` : passMode ? `${course.id}:pass` : course.id;
+      const key = recentKey(tenta);
       setSettings((prev) => {
         const list = prev.practiceRecent?.[key] || [];
         return {
@@ -176,7 +205,7 @@ export default function Practice({
         };
       });
     },
-    [onSeen, setSettings, course.id, passMode],
+    [onSeen, setSettings, recentKey],
   );
 
   // Servera nästa fråga ur `questions` med lägets svar, ordning och karens.
@@ -184,8 +213,8 @@ export default function Practice({
     (questions, withDone, tenta = examMode) => {
       const next = nextQuestion({
         questions,
-        answers: tenta ? examAnswers : activeAnswers,
-        recent: settings.practiceRecent?.[tenta ? `${course.id}:tenta` : passMode ? `${course.id}:pass` : course.id] || [],
+        answers: tenta ? examActive : activeAnswers,
+        recent: settings.practiceRecent?.[recentKey(tenta)] || [],
         order: tenta ? examOrder : order,
         includeDone: withDone,
       });
@@ -196,7 +225,7 @@ export default function Practice({
       setIncludeDone(withDone);
       show(next.id, tenta);
     },
-    [examMode, examAnswers, activeAnswers, passMode, settings.practiceRecent, course.id, examOrder, order, show],
+    [examMode, examActive, activeAnswers, settings.practiceRecent, recentKey, examOrder, order, show],
   );
 
   const setScope = useCallback(
@@ -326,52 +355,50 @@ export default function Practice({
   const confirm = useCallback(() => {
     if (revealed || chosen === null || !view || !current) return;
     setRevealed(true);
-    const wasCorrect = chosen === view.correct;
-    if (examMode) {
-      setExamAnswers((prev) => recordAnswer(prev, current.id, wasCorrect));
-      return;
-    }
-    // Svaret räknas alltid i Statistik och inlärningen; i Genomgång också i varvet.
-    onAnswer(current.id, wasCorrect);
-    if (passMode) setPasses((prev) => ({ ...prev, [course.id]: recordPass(prev[course.id], current.id, wasCorrect) }));
-  }, [revealed, chosen, view, current, examMode, passMode, onAnswer, course.id]);
+    const wasCorrect = isAccepted(view, chosen);
+    // Svaret räknas alltid i lägets inlärning (answers med Statistik, eller
+    // tentafragor); i Genomgång också i lägets varv.
+    if (examMode) setExamAnswers((prev) => recordAnswer(prev, current.id, wasCorrect));
+    else onAnswer(current.id, wasCorrect);
+    if (passMode) setPasses((prev) => ({ ...prev, [passKey]: recordPass(prev[passKey], current.id, wasCorrect) }));
+  }, [revealed, chosen, view, current, examMode, passMode, passKey, onAnswer]);
 
   const setRequire = useCallback(
     (require) => {
       setSettings((prev) => ({
         ...prev,
-        practiceRequire: { ...(prev.practiceRequire || {}), [course.id]: require },
+        practiceRequire: { ...(prev.practiceRequire || {}), [passKey]: require },
       }));
       setCurrentId(null);
       setConfirmReset(false);
     },
-    [setSettings, course.id],
+    [setSettings, passKey],
   );
-  // Börja om genomgången: bara varvet, aldrig inlärningens status.
+  // Börja om genomgången: bara lägets varv, aldrig inlärningens status.
   const restartPass = useCallback(() => {
     setPasses((prev) => {
       const nextPasses = { ...prev };
-      delete nextPasses[course.id];
+      delete nextPasses[passKey];
       return nextPasses;
     });
     setSettings((prev) => ({
       ...prev,
-      practiceRecent: { ...(prev.practiceRecent || {}), [`${course.id}:pass`]: [] },
+      practiceRecent: { ...(prev.practiceRecent || {}), [`${passKey}:pass`]: [] },
     }));
     setCurrentId(null);
     setConfirmReset(false);
-  }, [setSettings, course.id]);
+  }, [setSettings, passKey]);
 
-  const pool = examMode ? examPool : filtered;
+  const pool = examMode ? examPoolUnique : filtered;
   const next = useCallback(() => serve(pool, includeDone), [serve, pool, includeDone]);
   const stop = useCallback(() => setCurrentId(null), []);
   // Ett val i rutnätet: just den frågan, även om den är klar.
   const pick = useCallback(
     (id) => {
-      setIncludeDone(tally(examPool, examAnswers).done === examPool.length);
+      setIncludeDone(examProgress.done === examProgress.total);
       show(id, true);
     },
-    [examPool, examAnswers, show],
+    [examProgress, show],
   );
 
   useEffect(() => {
@@ -405,7 +432,7 @@ export default function Practice({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [current, view, revealed, confirm, next]);
 
-  if (course.questions.length === 0) {
+  if (!hasAll && !hasExamMode) {
     return (
       <div className="card max-w-3xl p-5 sm:p-6">
         <h1 className="font-display text-2xl">Öva</h1>
@@ -421,22 +448,35 @@ export default function Practice({
   const singleChapter = byChapter && activeTopics.length === 1;
 
   // Kortets huvud: i Tentafrågor tentan, numret och poängen; annars kapitlet.
+  // Står frågan på flera tentor visas alla ställen ("Ordinarie 4 · Omtenta 4
+  // · Uppsamling 1"); på en tenta som förut ("Ordinarie tenta 21 nov 2025 ·
+  // fråga 2(a)").
   const currentExam = examMode && current ? exams.find((exam) => exam.id === current.exam) : null;
   let counter;
   let tag;
   let groupName;
   if (currentExam) {
     const inExam = perExam[currentExam.id];
-    const inPool = tally(examPool, examAnswers);
-    counter = `Klara: ${inExam.done} av ${inExam.total} i tentan${
-      selectedExams.length > 1 ? ` · ${inPool.done} av ${inPool.total} totalt` : ""
-    }`;
+    const where = occurrences(examItems, current.id);
+    const examOf = (id) => exams.find((exam) => exam.id === id);
+    // En fråga på flera tentor räknas en gång: totalen över tentorna, inte per tenta.
+    counter =
+      where.length > 1
+        ? `Klara: ${examProgress.done} av ${examProgress.total}`
+        : `Klara: ${inExam.done} av ${inExam.total} i tentan${
+            selectedExams.length > 1 ? ` · ${examProgress.done} av ${examProgress.total} totalt` : ""
+          }`;
     tag = (
       <>
-        <span className="rounded-full border border-brass/50 px-2.5 py-0.5 text-xs font-medium text-brass-text">
-          {examLabel(currentExam)} · fråga {current.no}
+        <span
+          className="rounded-full border border-brass/50 px-2.5 py-0.5 text-xs font-medium text-brass-text"
+          title={where.length > 1 ? where.map((w) => `Fråga ${w.no} på ${examLabel(examOf(w.exam))}`).join(", ") : undefined}
+        >
+          {where.length > 1
+            ? where.map((w) => `${examOf(w.exam).short.split(" ")[0]} ${w.no}`).join(" · ")
+            : `${examLabel(currentExam)} · fråga ${current.no}`}
         </span>
-        <span className="tabular text-ink/70">{current.points} p</span>
+        <span className="tabular text-ink/70">{pointsLabel(current)}</span>
       </>
     );
   } else if (current) {
@@ -467,7 +507,11 @@ export default function Practice({
       <section className="card p-5 lg:sticky lg:top-36 lg:max-h-[calc(100vh-11rem)] lg:w-80 lg:shrink-0 lg:overflow-y-auto">
         <h1 className="font-display text-2xl">Öva</h1>
 
-        {hasExamMode && (
+        {hasExamMode && !hasAll && (
+          <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.14em] text-brass-text">Tentafrågor</p>
+        )}
+
+        {hasExamMode && hasAll && (
           <div className="mt-3 flex rounded-[10px] border border-line bg-surface p-1" role="group" aria-label="Vilka frågor">
             {[
               { id: "alla", label: "Alla frågor" },
@@ -491,16 +535,20 @@ export default function Practice({
           </div>
         )}
 
-        <p className={`${hasExamMode ? "mt-3" : "mt-1"} text-[15px] text-ink/70`}>
+        <p className={`${hasExamMode && hasAll ? "mt-3" : "mt-1"} text-[15px] text-ink/70`}>
           {examMode
-            ? "Bara frågor som kommit på gamla tentor, med tentans nummer och poäng. Svaren här räknas för sig och påverkar inte resten av Öva eller Statistik."
+            ? `${
+                hasAll
+                  ? "Bara frågor som kommit på gamla tentor, med tentans nummer och poäng. Svaren här räknas för sig och påverkar inte resten av Öva eller Statistik."
+                  : "Frågorna från de gamla tentorna, med tentans nummer, poäng och avdrag. En fråga som står på flera tentor räknas en gång. Kapitelfrågor tillkommer när kompendiet finns."
+              }${passMode ? " Genomgång: ett rätt svar räcker, och fel kommer tillbaka tills det blivit rätt." : ""}`
             : passMode
               ? "Genomgång: ett rätt svar räcker för att en fråga ska vara avbetad. Svarar du fel kommer frågan tillbaka senare, tills du svarat rätt. Varvet räknas för sig och rör inte inlärningens status."
               : "En fråga är klar när du svarat rätt två gånger i rad. Fel kommer först, sedan obesvarade, sedan de som väntar på sitt andra rätt. Sluta när du vill — du fortsätter där du var."}
         </p>
 
-        {!examMode && (
-          <div className="mt-4">
+        {/* Kravet gäller per läge: Alla frågor och Tentafrågor har var sitt. */}
+        <div className="mt-4">
             <h3 className="mb-2 font-display text-lg">Krav</h3>
             <div className="flex flex-wrap gap-2" role="group" aria-label="Krav för att en fråga ska vara klar">
               {[
@@ -522,7 +570,6 @@ export default function Practice({
               })}
             </div>
           </div>
-        )}
 
         <button
           type="button"
@@ -617,11 +664,13 @@ export default function Practice({
 
         {/* Enda vägen att nollställa: tydlig knapp med bekräftelse, per delkurs och läge. */}
         <div className={filterOpen ? "mt-6 border-t border-line pt-4" : "mt-6 hidden"}>
-          {!examMode && passMode ? (
+          {passMode ? (
             confirmReset ? (
               <div>
                 <p className="text-sm text-ink/70">
-                  Genomgången för {course.name} börjar om från noll. Inlärningens status, Statistik och Tentafrågor rörs inte.
+                  {examMode
+                    ? `Genomgången av tentafrågorna för ${course.name} börjar om från noll. Inlärningens status${course.choiceExams?.length ? " och fliken Tenta" : ""} rörs inte.`
+                    : `Genomgången för ${course.name} börjar om från noll. Inlärningens status, Statistik och Tentafrågor rörs inte.`}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   <button type="button" className="btn-secondary" onClick={restartPass}>
@@ -641,7 +690,7 @@ export default function Practice({
             <div>
               <p className="text-sm text-ink/70">
                 {examMode
-                  ? `Alla svar i Tentafrågor för ${course.name} raderas. Resten av Öva och Statistik rörs inte.`
+                  ? `Alla svar i Tentafrågor för ${course.name} raderas.${hasAll ? " Resten av Öva och Statistik rörs inte." : ""}${course.choiceExams?.length ? " Tentorna i fliken Tenta rörs inte." : ""}`
                   : `Alla svar och all klar-status för ${course.name} raderas. Läsning och SQL-övningar rörs inte${hasExamMode ? ", och inte heller Tentafrågor" : ""}.`}
               </p>
               <div className="mt-2 flex flex-wrap gap-2">
@@ -666,9 +715,11 @@ export default function Practice({
           <PastExamOverview
             exams={selectedExams}
             items={examPool}
-            answers={examAnswers}
+            answers={examActive}
+            pass={passMode}
+            note={course.pastExamNote}
             onPick={pick}
-            onStart={(withDone) => serve(examPool, withDone, true)}
+            onStart={(withDone) => serve(examPoolUnique, withDone, true)}
             onEssay={navigate && course.views?.includes("essa") ? toEssay : null}
           />
         )}
@@ -763,12 +814,12 @@ export default function Practice({
           </section>
         )}
 
-        {current && view && !examMode && (
+        {current && view && (
           <ProgressBar
-            label={passMode ? "Genomgång" : "Inlärning"}
-            done={progress.done}
-            total={progress.total}
-            redo={redo}
+            label={`${examMode ? "Tentafrågor · " : ""}${passMode ? "Genomgång" : "Inlärning"}`}
+            done={examMode ? examProgress.done : progress.done}
+            total={examMode ? examProgress.total : progress.total}
+            redo={examMode ? examRedo : redo}
             pass={passMode}
           />
         )}
@@ -816,27 +867,6 @@ export default function Practice({
             </QuestionCard>
           </div>
         )}
-      </div>
-    </div>
-  );
-}
-
-// Statusraden ovanför frågan: hur många i urvalet som är klara, hur många
-// som är kvar och, i Genomgång, hur många av dem som ska göras om efter fel.
-function ProgressBar({ label, done, total, redo, pass }) {
-  const left = total - done;
-  return (
-    <div className="card mx-auto w-full max-w-reading px-5 py-3" role="status">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-sm">
-        <span className="font-medium">{label}</span>
-        <span className="tabular text-ink/70">
-          {done} av {total} {pass ? "avbetade" : "klara"} · {left} kvar
-          {redo > 0 ? ` · ${redo} att göra om` : ""}
-        </span>
-      </div>
-      <div className="mt-2 flex h-2 overflow-hidden rounded-full bg-line" aria-hidden="true">
-        <div className="h-full bg-pine" style={{ width: `${total ? (done / total) * 100 : 0}%` }} />
-        {redo > 0 && <div className="h-full bg-wrong/60" style={{ width: `${(redo / total) * 100}%` }} />}
       </div>
     </div>
   );

@@ -29,6 +29,8 @@ import {
   examNote as processExamNote,
   summary as processSummary,
 } from "./process/reading.js";
+import { examBank as sakerhetExamBank } from "./sakerhet/examBank.js";
+import { pastExams as sakerhetPastExams } from "./sakerhet/pastExams.js";
 
 // Tomma listor för delkurser som ännu inte har den sortens material.
 const noContent = {
@@ -43,6 +45,13 @@ const noContent = {
   // Gamla tentors flervalsfrågor för läget Tentafrågor i Öva (data/<kurs>/pastExams.js).
   // Inte samma sak som Databasers oldExams: de är konstruktionsuppgifter i fliken Tenta.
   pastExams: [],
+  // Tentafrågor som inte (ännu) har ett kapitel bakom sig och därför inte
+  // är Öva-frågor i `questions`. pastExams pekar hit när frågan inte finns
+  // i `questions` (Säkerhet tills föreläsningarna finns).
+  examBank: [],
+  // Hela gamla flervalstentor att skriva i fliken Tenta, med poäng, avdrag
+  // och betyg (samma form som pastExams). Tom = fliken Tenta är Databasers.
+  choiceExams: [],
 };
 
 // Manifest över delkurser. `views` styr vilka flikar delkursen har —
@@ -136,7 +145,24 @@ export const courses = [
     status: "kommande",
     views: [],
   },
-  { ...noContent, id: "sakerhet", name: "Säkerhet i informationssystem", status: "kommande", views: [] },
+  {
+    ...noContent,
+    id: "sakerhet",
+    name: "Säkerhet i informationssystem",
+    status: "aktiv",
+    // Byggs i faser (2026-11-13) på det som finns: tre HT25-tentor och två
+    // uppgiftsbeskrivningar. Föreläsningsbilder och läsanvisning saknas, så
+    // inget kompendium och inga kapitelfrågor än. Öva har bara Tentafrågor
+    // (examBank via pastExams); kapitelfrågorna läggs i `questions` när
+    // föreläsningarna finns, och då dyker växeln Alla frågor/Tentafrågor upp.
+    views: ["ova"],
+    examBank: sakerhetExamBank,
+    pastExams: sakerhetPastExams,
+    pastExamNote:
+      "Tentorna publicerades utan facit. Rätt svar och förklaringar är sajtens egna, skrivna utifrån Stallings & Brown.",
+    homeIntro:
+      "Öva in de 26 frågorna från HT25:s tre tentor — de återkommer nästan ordagrant — med tentans poäng och avdrag på varje fråga. Kompendium och kapitelfrågor kommer när föreläsningsbilderna finns.",
+  },
 ];
 
 export const activeCourses = courses.filter((course) => course.status === "aktiv");

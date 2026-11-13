@@ -1,4 +1,4 @@
-import { examLabel, partState, pointsSummary, tally } from "../../lib/pastExams.js";
+import { examLabel, partState, pointsSummary, tally, uniqueItems } from "../../lib/pastExams.js";
 
 // Översikten i läget Tentafrågor: ett block per tenta med datum, hur många
 // som är klara och ett rutnät med tentans egna nummer. Status bärs av både
@@ -31,6 +31,15 @@ const LEGEND = [
   ["fel", "Senast fel"],
   ["obesvarad", "Obesvarad"],
 ];
+// Genomgång: ett rätt räcker, så "ett rätt" finns inte som eget läge.
+const PASS_LEGEND = [
+  ["klar", "Avbetad, ett rätt"],
+  ["fel", "Senast fel"],
+  ["obesvarad", "Obesvarad"],
+];
+
+const DEFAULT_NOTE =
+  "Tentorna publicerades utan facit. Rätt svar och förklaringar är sajtens egna, och diagrammen är omritade efter tentan.";
 
 function Tile({ item, state, onPick }) {
   const s = STATE[state];
@@ -141,8 +150,13 @@ function ExamBlock({ exam, items, answers, onPick, onEssay }) {
   );
 }
 
-export default function PastExamOverview({ exams, items, answers, onPick, onStart, onEssay }) {
-  const all = tally(items, answers);
+// `pass`: Genomgång (ett rätt räcker) i stället för Inlärning. `note`:
+// fotraden, när standardtexten om omritade diagram inte stämmer.
+export default function PastExamOverview({ exams, items, answers, pass = false, note, onPick, onStart, onEssay }) {
+  // En fråga som står på flera tentor räknas en gång i toppsiffran;
+  // blocken nedan räknar varje tenta för sig.
+  const all = tally(uniqueItems(items), answers);
+  const doneWord = pass ? "avbetade" : "klara";
   const left = all.total - all.done;
   const allDone = all.total > 0 && left === 0;
   const terms = [...new Set(exams.map((exam) => exam.term))];
@@ -168,7 +182,7 @@ export default function PastExamOverview({ exams, items, answers, onPick, onStar
         Tentafrågor · {scope}
       </p>
       <h2 className="tabular mt-1 font-display text-3xl">
-        {allDone ? `Alla ${all.total} klara` : `${all.done} av ${all.total} klara`}
+        {allDone ? `Alla ${all.total} ${doneWord}` : `${all.done} av ${all.total} ${doneWord}`}
       </h2>
       <div className="mt-3 h-2 overflow-hidden rounded-full bg-line" aria-hidden="true">
         <div
@@ -178,7 +192,9 @@ export default function PastExamOverview({ exams, items, answers, onPick, onStar
       </div>
       <p className="mt-2 text-sm text-ink/65">
         {allDone
-          ? "Två rätt i rad på varje fråga. Svarar du fel på en klar fråga blir den ofärdig igen."
+          ? pass
+            ? "Ett rätt på varje fråga. Börja om genomgången i panelen för ett nytt varv."
+            : "Två rätt i rad på varje fråga. Svarar du fel på en klar fråga blir den ofärdig igen."
           : `${left} kvar: ${breakdown.join(", ")}.`}
       </p>
 
@@ -196,7 +212,7 @@ export default function PastExamOverview({ exams, items, answers, onPick, onStar
       </ul>
 
       <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-ink/65" aria-label="Förklaring">
-        {LEGEND.map(([state, text]) => (
+        {(pass ? PASS_LEGEND : LEGEND).map(([state, text]) => (
           <li key={state} className="flex items-center gap-3">
             <span
               aria-hidden="true"
@@ -222,10 +238,7 @@ export default function PastExamOverview({ exams, items, answers, onPick, onStar
         <span className="text-sm text-ink/65">eller välj en fråga i rutnätet</span>
       </div>
 
-      <p className="mt-6 border-t border-line pt-4 text-sm text-ink/65">
-        Tentorna publicerades utan facit. Rätt svar och förklaringar är sajtens
-        egna, och diagrammen är omritade efter tentan.
-      </p>
+      <p className="mt-6 border-t border-line pt-4 text-sm text-ink/65">{note ?? DEFAULT_NOTE}</p>
     </section>
   );
 }

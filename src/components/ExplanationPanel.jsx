@@ -4,9 +4,13 @@ import { useState } from "react";
 // av övriga alternativ när banken har en förklaring per alternativ
 // (Strategi). Banker med en förklaring per fråga (Databaser) visar den en
 // gång, utan genomgång.
-export default function ExplanationPanel({ options, chosen, correct, source, explanation }) {
+// `accepted` (valfri) är alla rätta index när flera alternativ är rätta;
+// `note` är en anmärkning om själva frågan (t.ex. ett fel på tentan);
+// `skippedLabel` ersätter "Överhoppad" (fliken Tenta: "Obesvarad, 0 p").
+export default function ExplanationPanel({ options, chosen, correct, accepted, source, explanation, note, skippedLabel }) {
   const [open, setOpen] = useState(false);
-  const wasCorrect = chosen === correct;
+  const right = accepted ?? [correct];
+  const wasCorrect = right.includes(chosen);
   const skipped = chosen === null || chosen === undefined;
   const shown = skipped ? correct : chosen;
   const perOption = options.some((option) => option.explain);
@@ -21,7 +25,7 @@ export default function ExplanationPanel({ options, chosen, correct, source, exp
         role="status"
       >
         {chosen === null || chosen === undefined
-          ? "Överhoppad — så här ligger det till:"
+          ? `${skippedLabel ?? "Överhoppad"} — så här ligger det till:`
           : wasCorrect
             ? "Rätt."
             : "Fel — så här ligger det till:"}
@@ -70,6 +74,13 @@ export default function ExplanationPanel({ options, chosen, correct, source, exp
             </li>
           ))}
         </ul>
+      )}
+
+      {note && (
+        <p className="mt-3 text-sm leading-relaxed text-ink/70">
+          <span className="font-medium text-ink/80">Om frågan: </span>
+          {note}
+        </p>
       )}
 
       {source && (

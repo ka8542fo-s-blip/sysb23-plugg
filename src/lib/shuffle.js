@@ -9,9 +9,14 @@ export function shuffle(items) {
 }
 
 // Blandar en frågas alternativ och mappar om vilket index som är rätt.
-// Returnerar { options, correct } där options[i].originalIndex pekar tillbaka
-// på ordningen i datafilen. Alternativ med `last: true` ("Inget av övriga
-// alternativ") blandas inte utan står kvar sist, som på tentan.
+// Returnerar { options, correct, accepted } där options[i].originalIndex
+// pekar tillbaka på ordningen i datafilen. Alternativ med `last: true`
+// ("Inget av övriga alternativ") blandas inte utan står kvar sist, som på
+// tentan.
+//
+// `correct` i datat är ett index, eller en lista när flera alternativ är
+// rätta (Säkerhets sak-23 har två identiska). `correct` i vyn är då det
+// första av dem, och `accepted` är alla, i visad ordning.
 export function shuffleQuestion(question) {
   const withIndex = question.options.map((option, originalIndex) => ({
     ...option,
@@ -21,8 +26,18 @@ export function shuffleQuestion(question) {
     ...shuffle(withIndex.filter((option) => !option.last)),
     ...withIndex.filter((option) => option.last),
   ];
-  const correct = options.findIndex(
-    (option) => option.originalIndex === question.correct,
-  );
-  return { options, correct };
+  return viewFor(question, options);
 }
+
+// Vyn för en given ordning (alternativ med originalIndex), utan blandning.
+export function viewFor(question, options) {
+  const right = Array.isArray(question.correct) ? question.correct : [question.correct];
+  const accepted = options
+    .map((option, index) => (right.includes(option.originalIndex) ? index : -1))
+    .filter((index) => index !== -1);
+  return { options, correct: accepted[0] ?? -1, accepted };
+}
+
+// Är valt index (i visad ordning) ett av de rätta?
+export const isAccepted = (view, chosen) =>
+  chosen !== null && chosen !== undefined && (view.accepted ?? [view.correct]).includes(chosen);

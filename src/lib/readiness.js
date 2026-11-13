@@ -2,7 +2,8 @@
 // en delkurs, formulerat som en mening i stället för en poäng.
 
 import { overallStats } from "./progress.js";
-import { loadReadChapters } from "./storage.js";
+import { KEYS, load, loadReadChapters } from "./storage.js";
+import { isAnswered, isDone } from "./practiceQueue.js";
 import { daysUntil } from "./dates.js";
 
 const GRADE_ORDER = ["U", "E", "D", "C", "B", "A"];
@@ -69,7 +70,16 @@ export function readinessFor({ course, answers, exams, readChapters }) {
     parts.push(`bästa prov ${grade}`);
   }
 
-  const started = chaptersRead > 0 || stats.answered > 0 || courseExams.length > 0;
+  // Tentafrågor utan kapitel (Säkerhet): klara = två rätt i rad i Öva.
+  const examBank = course.examBank || [];
+  const examAnswers = examBank.length > 0 ? load(KEYS.examAnswers, {}) : {};
+  const examStarted = examBank.some((question) => isAnswered(examAnswers[question.id]));
+  if (examStarted) {
+    const examDone = examBank.filter((question) => isDone(examAnswers[question.id])).length;
+    parts.push(`klarat ${examDone} av ${examBank.length} tentafrågor`);
+  }
+
+  const started = chaptersRead > 0 || stats.answered > 0 || courseExams.length > 0 || examStarted;
 
   return {
     hasContent: true,

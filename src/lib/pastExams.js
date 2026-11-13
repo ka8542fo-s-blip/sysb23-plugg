@@ -29,8 +29,17 @@ function taskItem(course, id) {
   };
 }
 
+// En del pekar på en fråga i Övas bank (course.questions) eller, för
+// delkurser vars tentafrågor inte har något kapitel än (Säkerhet), i
+// tentabanken (course.examBank).
 function resolve(course, part) {
-  if (part.question) return course.questions.find((question) => question.id === part.question) || null;
+  if (part.question) {
+    return (
+      course.questions.find((question) => question.id === part.question) ||
+      (course.examBank || []).find((question) => question.id === part.question) ||
+      null
+    );
+  }
   if (part.task) return taskItem(course, part.task);
   return null; // essä
 }
@@ -53,6 +62,9 @@ export function pastExamItems(course) {
           exam: exam.id,
           no: part.no,
           points: part.points,
+          // Avdrag vid fel när tentan anger det per fråga (Säkerhet); BPM:s
+          // delar har inget fält, och etiketten visar då bara poängen.
+          penalty: part.penalty,
           section: section.title,
           run: part.run ?? part.task ?? null,
         });
@@ -60,6 +72,20 @@ export function pastExamItems(course) {
     }
   }
   return items;
+}
+
+// Samma fråga kan stå på flera tentor (Säkerhet: 14 av 26 finns på alla
+// tre). Posterna delar då svar, eftersom de har frågans id. Kön och
+// totalerna räknar en post per fråga, den första i tentornas ordning;
+// rutnätet visar alla. BPM har inga dubbletter, så där är listan oförändrad.
+export function uniqueItems(items) {
+  const seen = new Set();
+  return items.filter((item) => (seen.has(item.id) ? false : seen.add(item.id)));
+}
+
+// Var en fråga står: [{ exam, no }] i tentornas ordning.
+export function occurrences(items, id) {
+  return items.filter((item) => item.id === id).map((item) => ({ exam: item.exam, no: item.no }));
 }
 
 // "klar" (två rätt i rad), "fel" (senaste svaret fel), "ett-ratt" (rätt
@@ -93,3 +119,10 @@ export function pointsSummary(parts) {
 }
 
 export const examLabel = (exam) => `${exam.title} ${exam.dateLabel}`;
+
+// "5 p · fel −1 p" när tentan anger avdraget per fråga, "5 p · inget
+// avdrag" när den inte gör det, bara "5 p" när fältet saknas (BPM).
+export function pointsLabel({ points, penalty }) {
+  if (penalty === undefined || penalty === null) return `${points} p`;
+  return penalty > 0 ? `${points} p · fel −${penalty} p` : `${points} p · inget avdrag`;
+}
