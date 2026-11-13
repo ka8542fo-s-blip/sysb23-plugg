@@ -202,3 +202,18 @@ test("Tenta: betygsgränserna 85, 75, 65, 55 och 50, samma skala som Databaser",
   }
   assert.equal(breakEven(3, 4).toFixed(3), (4 / 7).toFixed(3));
 });
+
+// ---------- Fliken Uppgifter ----------
+
+import { assignments } from "../src/data/sakerhet/assignments.js";
+
+test("Uppgifter: två inlämningar, Hugging Face med deadline, fältuppgiften utan", () => {
+  assert.ok(sakerhet.views.includes("uppgifter"));
+  assert.deepEqual(assignments.map((a) => a.id), ["hugging-face", "field"]);
+  assert.equal(assignments[0].deadline, "16 dec 2026 kl. 23:59");
+  assert.equal(assignments[1].deadline, null, "fältuppgiften: se Canvas");
+  for (const a of assignments) {
+    assert.ok(a.sections.length > 0 && a.sections.every((s) => s.heading && s.points.length > 0), a.id);
+  }
+  assert.deepEqual(assignments[1].grading.points.map((p) => p.match(/(\d+) %/)[1]), ["40", "30", "30"]);
+});

@@ -12,6 +12,7 @@ import SqlWorkshop from "./views/SqlWorkshop.jsx";
 import Modeling from "./views/Modeling.jsx";
 import DbExam from "./views/DbExam.jsx";
 import ChoiceExam from "./views/ChoiceExam.jsx";
+import Assignments from "./views/Assignments.jsx";
 import ProcessRun from "./views/ProcessRun.jsx";
 import JavaWorkshop from "./views/JavaWorkshop.jsx";
 import { modelProgressIds } from "./data/progressLists.js";
@@ -282,6 +283,7 @@ export default function App() {
         {/* Tenta: hela flervalstentor (course.choiceExams, Säkerhet) eller
             Databasers konstruktionsuppgifter. */}
         {view === "tenta" && (course.choiceExams.length > 0 ? <ChoiceExam course={course} /> : <DbExam />)}
+        {view === "uppgifter" && <Assignments course={course} />}
         {view === "bpmn" && (
           <ProcessRun
             params={viewParams}

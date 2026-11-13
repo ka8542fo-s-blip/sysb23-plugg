@@ -35,6 +35,7 @@ import {
   ANSWER_RULE as sakerhetAnswerRule,
   ANSWER_TABLE as sakerhetAnswerTable,
 } from "./sakerhet/pastExams.js";
+import { assignments as sakerhetAssignments } from "./sakerhet/assignments.js";
 
 // Tomma listor för delkurser som ännu inte har den sortens material.
 const noContent = {
@@ -56,6 +57,8 @@ const noContent = {
   // Hela gamla flervalstentor att skriva i fliken Tenta, med poäng, avdrag
   // och betyg (samma form som pastExams). Tom = fliken Tenta är Databasers.
   choiceExams: [],
+  // Inlämningsuppgifter för fliken Uppgifter (data/<kurs>/assignments.js).
+  assignments: [],
 };
 
 // Manifest över delkurser. `views` styr vilka flikar delkursen har —
@@ -160,8 +163,9 @@ export const courses = [
     // (examBank via pastExams); kapitelfrågorna läggs i `questions` när
     // föreläsningarna finns, och då dyker växeln Alla frågor/Tentafrågor upp.
     // Tenta: skriv en hel gammal tenta med poäng, avdrag och betyg; svaren
-    // räknas för sig och rör aldrig Öva.
-    views: ["ova", "tenta"],
+    // räknas för sig och rör aldrig Öva. Uppgifter: de två inlämningarna.
+    views: ["ova", "tenta", "uppgifter"],
+    assignments: sakerhetAssignments,
     examBank: sakerhetExamBank,
     pastExams: sakerhetPastExams,
     choiceExams: sakerhetPastExams,

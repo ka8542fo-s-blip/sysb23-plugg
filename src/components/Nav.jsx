@@ -13,6 +13,7 @@ export const VIEW_LABELS = {
   modell: "Modellera",
   tenta: "Tenta",
   bpmn: "BPMN-övningar",
+  uppgifter: "Uppgifter",
   statistik: "Statistik",
   schema: "Schema",
 };

@@ -152,6 +152,13 @@ export default function Home({
               onClick={() => navigate("tenta")}
             />
           )}
+          {views.includes("uppgifter") && course.assignments.length > 0 && (
+            <Shortcut
+              title="Inlämningsuppgifter"
+              hint={`${course.assignments.length} uppgifter med krav och deadline`}
+              onClick={() => navigate("uppgifter")}
+            />
+          )}
           {views.includes("prov") && (
             <Shortcut
               title="Gör ett prov"
