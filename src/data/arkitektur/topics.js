@@ -10,7 +10,30 @@
 // essäfrågor. Bakgrund (teknikradar, adoptionscykel, arkitekturbacklog och
 // sprintar) är märkt "(bakgrund)" i kapiteltexten, inte på ämnesnivå.
 
+// Ordningen följer Läs: modul 12 först, sedan 1–11.
 export const topics = [
+  {
+    id: "integration",
+    name: "Integration och tentaförberedelse",
+    chapter: "kap12",
+    examWeight: "hög",
+    examPriority: ["karna", "essa"],
+    summary: "Modul 12 knyter ihop kursen: de tio begreppen, arkitektens fem frågor, tentafällorna med absoluta ord, fem scenarier och skillnaden mellan Zachman och TOGAF. Målet är att tänka som en enterprisearkitekt, inte att memorera ramverk.",
+    keyPoints: [
+      "Arkitektens test: Why? What? Who? How? What are the consequences?",
+      "Tentafällorna: always, never, only, must, automatically, completely och exclusively gör ofta påståendet för absolut.",
+      "Zachman eller TOGAF: klassificering, frågeord och perspektiv mot utvecklingsmetod, ADM och styrningsvägledning.",
+      "Kedjan: strategy → capabilities → architectural change → implementation → outcomes.",
+      "Scenariernas lärdom: börja med syfte och utfall, inte med teknik eller godtyckliga siffror.",
+      "Legacy: beslut ska bygga på belägg, inte på etiketten \"gammalt\".",
+      "Kontext: architecture is highly contextual.",
+    ],
+    pitfalls: [
+      "Ett antal applikationer är inte i sig ett arkitekturproblem.",
+      "En samling arkitekturdiagram är inte automatiskt en Enterprise Architecture.",
+      "Svara inte \"låt oss utvärdera produkter\" innan problemet är förstått.",
+    ],
+  },
   {
     id: "enterprise",
     name: "Enterprise och scope",
@@ -83,7 +106,7 @@ export const topics = [
     chapter: "kap4",
     examWeight: "hög",
     examPriority: ["karna", "essa"],
-    examEvidence: { note: "HT25 (annat format än årets): essä 30 p och placering 20 p på alla tre tentorna" },
+    examEvidence: { note: "Troligt, utöver modul 4:s frågor: Inte i modulerna, men på alla UF:s tidigare tentor och i årets bilder" },
     summary: "Zachmans ramverk är en ontologi och ett klassificeringsschema för beskrivningar av en enterprise: sex frågeord (kolumner) gånger sex perspektiv (rader). Det föreskriver ingen ordning och är ingen metod; det kompletterar TOGAF.",
     keyPoints: [
       "Zachman: an ontology and classification schema for enterprise descriptions.",
@@ -262,28 +285,6 @@ export const topics = [
       "Målarkitekturen betyder inte att allt ska ändras direkt.",
       "Ålder ensamt är inget skäl att byta ett system.",
       "Börja inte med att jämföra molnleverantörer.",
-    ],
-  },
-  {
-    id: "integration",
-    name: "Integration och tentaförberedelse",
-    chapter: "kap12",
-    examWeight: "hög",
-    examPriority: ["karna", "essa"],
-    summary: "Modul 12 knyter ihop kursen: de tio begreppen, arkitektens fem frågor, tentafällorna med absoluta ord, fem scenarier och skillnaden mellan Zachman och TOGAF. Målet är att tänka som en enterprisearkitekt, inte att memorera ramverk.",
-    keyPoints: [
-      "Arkitektens test: Why? What? Who? How? What are the consequences?",
-      "Tentafällorna: always, never, only, must, automatically, completely och exclusively gör ofta påståendet för absolut.",
-      "Zachman eller TOGAF: klassificering, frågeord och perspektiv mot utvecklingsmetod, ADM och styrningsvägledning.",
-      "Kedjan: strategy → capabilities → architectural change → implementation → outcomes.",
-      "Scenariernas lärdom: börja med syfte och utfall, inte med teknik eller godtyckliga siffror.",
-      "Legacy: beslut ska bygga på belägg, inte på etiketten \"gammalt\".",
-      "Kontext: architecture is highly contextual.",
-    ],
-    pitfalls: [
-      "Ett antal applikationer är inte i sig ett arkitekturproblem.",
-      "En samling arkitekturdiagram är inte automatiskt en Enterprise Architecture.",
-      "Svara inte \"låt oss utvärdera produkter\" innan problemet är förstått.",
     ],
   },
 ];

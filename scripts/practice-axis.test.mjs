@@ -49,13 +49,12 @@ test("kapitel för kapitel ger Läs-ordning och bankens ordning inom kapitlet", 
   assert.equal(ordered.length, databaser.questions.length);
 });
 
-// Sammanfattningarna (BPM, Databaser och Verksamhetsarkitektur) är inga kapitel: de står som ett
+// Sammanfattningarna (BPM och Databaser) är inga kapitel: de står som ett
 // eget kort ovanför kapitlen i Läs och har inga frågor. Kapitlen och Öva ska
 // inte märka av dem.
 for (const [id, numbers] of [
   ["process", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]],
   ["databaser", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]],
-  ["arkitektur", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]],
 ]) {
   test(`sammanfattningen i ${id}: inget kapitel, ingen grupp i Öva`, () => {
     const course = getCourse(id);
@@ -68,6 +67,17 @@ for (const [id, numbers] of [
     assert.deepEqual(chapterPracticeGroups(course, course.summary), []);
   });
 }
+
+// Verksamhetsarkitektur: tolv modulkort i ordningen 12, 1–11 (UF: börja med
+// modul 12). Inget eget sammanfattningskort; Öva följer samma ordning.
+test("Verksamhetsarkitektur: modulerna i ordningen 12, 1–11 i Läs och Öva, ingen sammanfattning", () => {
+  const course = getCourse("arkitektur");
+  const order = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  assert.equal(course.summary, undefined);
+  assert.deepEqual(course.chapters.map((c) => c.number), order);
+  assert.deepEqual(practiceGroups(course).map((g) => g.id), order.map((n) => `kap${n}`));
+  assert.deepEqual(course.topics.map((t) => t.chapter), order.map((n) => `kap${n}`));
+});
 
 test("Strategi har ingen sammanfattning", () => {
   assert.equal(strategi.summary, undefined);

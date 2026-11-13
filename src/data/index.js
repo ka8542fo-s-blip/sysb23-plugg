@@ -38,7 +38,6 @@ import {
   glossary as arkitekturGlossary,
   intro as arkitekturIntro,
   examNote as arkitekturExamNote,
-  summary as arkitekturSummary,
 } from "./arkitektur/reading.js";
 import { examBank as sakerhetExamBank } from "./sakerhet/examBank.js";
 import {
@@ -182,9 +181,10 @@ export const courses = [
       "UF:s modellsvar är facit: checklistan bryter ner det i dess påståenden, och modellsvaret står ordagrant under checklistan. Tentan anger inget ordtak.",
       "Årets tenta har någon essäfråga av modulernas slag, så frågorna står i modulordning. Zachman-essän från HT25-tentorna ligger under kapitel 4 som extra träning.",
     ],
+    // Tolv modulkort i ordningen 12, 1–11 (UF: börja med modul 12). Inget eget
+    // sammanfattningskort: modul 12-kortet har de tio begreppen och
+    // sammanfattningens övriga text ligger under dess "Läs mer".
     chapters: arkitekturChapters,
-    // Sammanfattningen bygger på modul 12, som UF säger att man ska börja med.
-    summary: arkitekturSummary,
     glossary: arkitekturGlossary,
     readingIntro: arkitekturIntro,
     examNote: arkitekturExamNote,

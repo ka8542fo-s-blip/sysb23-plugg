@@ -132,6 +132,48 @@ function paragraphRenderer(onOpenView, views = []) {
   };
 }
 
+// Längre text bakom en utfällning, stängd från början. Stängd text läses
+// inte upp (data-tts-skip) och syns inte i innehållsförteckningen.
+function MoreText({ label, markdown, components }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <details
+      className="mt-8 border-t border-line pt-4"
+      open={open}
+      onToggle={(event) => setOpen(event.currentTarget.open)}
+      data-tts-skip={open ? undefined : ""}
+    >
+      <summary className="cursor-pointer font-display text-xl hover:text-pine">{label}</summary>
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+        {markdown}
+      </ReactMarkdown>
+    </details>
+  );
+}
+
+// Troligt-rutan: det som inte står i modulerna men troligen prövas, avskilt
+// från kortet med sin exakta märkning och knappar till rätt flik.
+function LikelyBox({ likely, components, views, onOpenView }) {
+  const links = (likely.links || []).filter((link) => views.includes(link.view));
+  return (
+    <aside className="mt-8 rounded-card border-2 border-brass p-5" aria-label={likely.label}>
+      <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-brass-text">{likely.label}</p>
+      <p className="mt-1 text-[15px] font-medium text-ink">{likely.note}</p>
+      <p className="mt-2 text-[16px] leading-relaxed">{likely.text}</p>
+      {links.length > 0 && onOpenView && (
+        <p className="mt-3 flex flex-wrap gap-2" data-tts-skip>
+          {links.map((link) => (
+            <button key={link.label} type="button" className="btn-secondary" onClick={() => onOpenView(link.view, link.params)}>
+              {link.label} →
+            </button>
+          ))}
+        </p>
+      )}
+      {likely.more && <MoreText label="Läs mer" markdown={likely.more} components={components} />}
+    </aside>
+  );
+}
+
 export default function ChapterView({
   chapter,
   number,
@@ -165,7 +207,9 @@ export default function ChapterView({
   );
   const [progress, setProgress] = useState(0);
   const [tocOpen, setTocOpen] = useState(false);
-  const headings = useMemo(() => headingsIn(chapter.body), [chapter.body]);
+  // Med modulkort visar innehållsförteckningen kortets rubriker; "Läs mer"
+  // är stängt från början.
+  const headings = useMemo(() => headingsIn(chapter.card ?? chapter.body), [chapter.card, chapter.body]);
 
   const readColumnRef = useRef(null);
   const tts = useReadAloud(readColumnRef, { audio: Boolean(course.ttsAudio) });
@@ -396,9 +440,24 @@ export default function ChapterView({
             id="kapiteltext"
             className="mt-8 max-w-[68ch] text-[17px] leading-[1.7] sm:text-[18px]"
           >
-            <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
-              {chapter.body}
-            </ReactMarkdown>
+            {chapter.card ? (
+              // Modulkort (Verksamhetsarkitektur): kortet först, en eventuell
+              // Troligt-ruta, och den längre texten under "Läs mer", stängd
+              // från början. Stängd text läses inte upp.
+              <>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+                  {chapter.card}
+                </ReactMarkdown>
+                {chapter.likely && (
+                  <LikelyBox likely={chapter.likely} components={components} views={course.views || []} onOpenView={onOpenView} />
+                )}
+                <MoreText key={chapter.id} label="Läs mer" components={components} markdown={chapter.body} />
+              </>
+            ) : (
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+                {chapter.body}
+              </ReactMarkdown>
+            )}
           </article>
 
           {keyPointGroups.length > 0 && (

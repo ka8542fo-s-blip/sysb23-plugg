@@ -18,11 +18,20 @@
 // bara i `sources`, aldrig i löptexten.
 //
 // Kapitelschema: { id, number, title, lead, readingMinutes, sources, body }
+// plus `card` (modulkortet ur cards.js, visas först) och för kapitel 4
+// `likely` (Troligt-rutan). `body` är den längre texten under "Läs mer".
 //
-// Sammanfattningen (summary.js) är inget kapitel och står inte här.
-export { summary } from "./summary.js";
+// Ordningen är 12, 1, 2 … 11 (UF: börja med modul 12); numren ändras inte.
+// Sammanfattningen (summary.js) står kvar som fil men är sedan 2026-11-13
+// inget eget kort: modul 12-kortet har de tio begreppen, och
+// sammanfattningens övriga avsnitt ligger under modul 12:s "Läs mer".
+import { summary } from "./summary.js";
+import { CARDS, LIKELY } from "./cards.js";
+
+export { summary };
 
 export const CHAPTER_TOPICS = {
+  kap12: { topics: ["integration"], primaryTopics: ["integration"] },
   kap1: { topics: ["enterprise"], primaryTopics: ["enterprise"] },
   kap2: { topics: ["arkitektur"], primaryTopics: ["arkitektur"] },
   kap3: { topics: ["ea"], primaryTopics: ["ea"] },
@@ -34,15 +43,14 @@ export const CHAPTER_TOPICS = {
   kap9: { topics: ["agilt"], primaryTopics: ["agilt"] },
   kap10: { topics: ["digital"], primaryTopics: ["digital"] },
   kap11: { topics: ["praktik"], primaryTopics: ["praktik"] },
-  kap12: { topics: ["integration"], primaryTopics: ["integration"] },
 };
 
 export const CHAPTER_ORDER = Object.keys(CHAPTER_TOPICS);
 
-export const intro = "Den här delkursen är UF:s tolv moduler i tre delar: grunderna (vad en enterprise, en arkitektur och Enterprise Architecture är, och Zachmans ramverk), arkitekturarbetet (TOGAF och ADM, domäner och vyer, förmågor, principer och styrning) och förändringen (agilt, digital transformation, bankfallet och slutrepetitionen). Kapitel N är modul N, med UF:s titlar. UF säger att man ska börja med modul 12, så läs sammanfattningen först. Räkna med ungefär {lästid} för hela texten. Termerna står på engelska, som i modulerna och på tentan.";
+export const intro = "Den här delkursen är UF:s tolv moduler i tre delar: grunderna (vad en enterprise, en arkitektur och Enterprise Architecture är, och Zachmans ramverk), arkitekturarbetet (TOGAF och ADM, domäner och vyer, förmågor, principer och styrning) och förändringen (agilt, digital transformation, bankfallet och slutrepetitionen). Kapitel N är modul N, med UF:s titlar. UF säger att man ska börja med modul 12, så den står först. Varje modul är ett kort med lärandemålen, kärnan och det du ska hålla isär; den längre texten ligger under ”Läs mer”. Räkna med ungefär {lästid} för hela texten. Termerna står på engelska, som i modulerna och på tentan.";
 
 export const examNote = {
-  text: "Årets tenta ser ut som modulerna, enligt kursinformationen och UF själv: sant/falskt, flervalsfrågor och någon essäfråga. Modulernas egna frågor kan komma, liksom andra av liknande art kopplade till litteraturen. Utgå därför från modulernas frågor i Öva och modellsvaren i Essä. Poäng och eventuella minuspoäng är inte kända. HT25-tentorna hade ett annat format (en Zachman-essä, placering i Zachmans rutnät och sant/falskt om artiklar som inte ingår i år) och är ingen prognos för årets tenta.",
+  text: "Årets tenta ser ut som modulerna, enligt kursinformationen och UF själv: sant/falskt, flervalsfrågor och någon essäfråga. Modulernas egna frågor kan komma, liksom andra av liknande art kopplade till litteraturen. Utgå därför från modulernas frågor i Öva och modellsvaren i Essä. Poäng och eventuella minuspoäng är inte kända.",
   source: "Kursinformationen och UF",
 };
 
@@ -251,7 +259,6 @@ UF räknar upp vad som händer om ingen har rollen:
       "Modul 4",
       "Föreläsningsbilder 33–43 (Zachman-delen på svenska)",
       "Zachman-affischerna: 2003 (Intervista Institute) och version 3.0 (Zachman International)",
-      "HT25-tentorna (uppgift 1 och 2)",
     ],
     body: `
 ## Kärnan
@@ -316,7 +323,7 @@ Raderna är olika perspektiv eller abstraktionsnivåer. De är inte projektfaser
 | R5 | Detailed Representations — Subcontractor | Technician Perspective (Business Component Implementers) · Tool Components | Detaljerade specifikationer av komponenter |
 | R6 | Functioning Enterprise | Enterprise Perspective (Users) · Operations Instances | Den fungerande verksamheten själv |
 
-Tentan frågar till exempel "vad är Planner?". Planner är perspektivet på rad 1: den som avgör verksamhetens omfång och sammanhang, och vars beskrivningar är listor. Owner (rad 2) äger verksamheten och beskriver den i konceptuella modeller. Designer (rad 3) gör den logiska systemmodellen, Builder (rad 4) den tekniska modellen och Subcontractor (rad 5) de detaljerade delarna. Rad 6 är den fungerande verksamheten.
+Vad är Planner? Planner är perspektivet på rad 1: den som avgör verksamhetens omfång och sammanhang, och vars beskrivningar är listor. Owner (rad 2) äger verksamheten och beskriver den i konceptuella modeller. Designer (rad 3) gör den logiska systemmodellen, Builder (rad 4) den tekniska modellen och Subcontractor (rad 5) de detaljerade delarna. Rad 6 är den fungerande verksamheten.
 
 ## Cellerna på 2003-affischen
 
@@ -342,7 +349,7 @@ Alla 36 celler med begreppspar och namn i version 3.0 finns i Zachman-vyn.
 
 ## Så placerar man en modell
 
-Tentan ber dig placera modeller eller beskrivningar i rätt cell och motivera valet. Det är två frågor:
+Att placera en modell eller beskrivning i rätt cell, och motivera valet, är två frågor:
 
 1. **Vilken fråga besvarar beskrivningen?** Det ger kolumnen: saker och begrepp (Vad), processer och funktioner (Hur), platser och nätverk (Var), människor, roller och ansvar (Vem), tid, händelser och scheman (När), mål, strategier och regler (Varför).
 2. **Vems perspektiv och vilken abstraktionsnivå?** Det ger raden: en lista hör till rad 1, en konceptuell modell av verksamheten till rad 2, en logisk systemmodell till rad 3, en teknisk eller fysisk modell till rad 4 och en detaljerad specifikation eller ett program till rad 5.
@@ -354,16 +361,7 @@ Några placeringar som går att läsa direkt av affischen:
 - En modell över verksamhetsregler hör till **R3K6** (Business Rule Model).
 - En metod implementerad i Java hör till **R5K2** (Program).
 
-Ibland passar två celler, och då är motiveringen det som räknas. På omtentan i december 2025 fick man svara med två celler om man motiverade det. Det finns inget officiellt facit till placeringsuppgifterna.
-
-## Hur Zachman prövades HT25
-
-Årets tenta följer modulernas format (sant/falskt, flerval och någon essäfråga), och modul 4:s frågor finns i Öva. HT25-tentorna prövade Zachman på ett annat sätt, så se det här som extra träning, inte som en prognos:
-
-- **Uppgift 1 (30 p):** "Beskriv och förklara raderna och kolumnerna i Zachmans ramverk." För höga poäng ska perspektiven förklaras ("vad är Planner?") och exempel på cellinnehåll ges: listor på rad 1, konceptuella modeller på rad 2 och så vidare. På två av tentorna krävdes minst 15 p för godkänt.
-- **Uppgift 2 (20 p):** tio modeller att placera, eller sju flervalsfrågor med cellkoder (maj 2026).
-
-[[vy:zachman|Öva Zachman: rutnätet, memorering och placering]]
+Ibland passar två celler, och då är motiveringen det som räknas.
 
 ## Håll isär
 
@@ -1256,10 +1254,26 @@ UF:s sista budskap: kursen ska inte lära dig att memorera ett ramverk. Den ska 
   },
 ];
 
-export const chapters = rawChapters.map((chapter) => ({
-  ...chapter,
-  ...(CHAPTER_TOPICS[chapter.id] || { topics: [], primaryTopics: [] }),
-}));
+// Sammanfattningens avsnitt som inte redan står i modul 12-kortet eller i
+// kapitel 12:s egen text läggs sist under modul 12:s "Läs mer".
+function summarySections(titles) {
+  const parts = summary.body.split(/\n(?=## )/);
+  return parts.filter((part) => titles.some((title) => part.startsWith(`## ${title}`))).join("\n");
+}
+const KAP12_EXTRA = summarySections(["Det tentan skiljer på", "Zachman i korthet"]);
+
+const byId = Object.fromEntries(rawChapters.map((chapter) => [chapter.id, chapter]));
+
+export const chapters = CHAPTER_ORDER.map((id) => {
+  const chapter = byId[id];
+  return {
+    ...chapter,
+    body: id === "kap12" ? `${chapter.body}\n${KAP12_EXTRA}\n` : chapter.body,
+    card: CARDS[id],
+    ...(LIKELY[id] ? { likely: LIKELY[id] } : {}),
+    ...CHAPTER_TOPICS[id],
+  };
+});
 
 // Ordlistan: termerna på engelska, som i modulerna och på tentan.
 export const glossary = [
