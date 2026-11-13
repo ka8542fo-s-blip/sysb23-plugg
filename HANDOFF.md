@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 574 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-13.
+- **Test:** `npm test` = 583 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-13.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -51,7 +51,7 @@ kapitel: allt UI läser `chapter.number`.
 | databaser | komplett mot tentan | se nedan |
 | process | aktiv (2026-09-29) | se "Processorienterad verksamhetsutveckling (BPM)" nedan |
 | sakerhet | aktiv (2026-11-13) | Öva (bara Tentafrågor), Tenta, Uppgifter — se "Säkerhet i informationssystem" nedan |
-| arkitektur | aktiv (2026-11-13) | Läs, Öva (217 frågor), Zachman, Essä (54), Tenta — se "Verksamhetsarkitektur" nedan |
+| arkitektur | aktiv (2026-11-13) | Tentan, Läs (12 modulkort), Öva (135), Zachman (modul 4), Essä (54), Fördjupning (82 docx + HT25-arkivet) — se "Verksamhetsarkitektur" nedan |
 
 **Databaser** (`views: las, sql, modell, tenta, ova, statistik`; Prov medvetet borta):
 
@@ -939,7 +939,7 @@ alternativens ordning, val, rättad; släpps av "Klar för nu" och byte av
 urval), `read:<kurs>:<kapitel>` (också `read:<kurs>:sammanfattning`, som
 laddas om sedan 2026-11-13), `essaVald` (vald essä per delkurs),
 `zachmanLage`, `zachmanUppgift`, `zachmanRubriker` (Zachman-vyn; svaren i
-`svar:<id>`, klar i `modell:<id>`), `tentaArkiv` (vald tenta i
+`svar:<id>`, klar i `modell:<id>`), `fordjupningLage` ("docx" | "arkiv"), `tentaArkiv` (vald tenta i
 arkitekturens Tenta). Kraven per läge (2026-11-13):
 `settings.practiceRequire` och `ovaGenomgang` har nycklarna `"<kurs>"` (Alla
 frågor) och `"<kurs>:tenta"` (Tentafrågor), karensen `"<kurs>"`,
@@ -1366,16 +1366,46 @@ UF:s docx-råmaterial, kursinformationen, kursens upplägg och de tre
 HT25-tentorna. Lärare Umberto Fiaccadori (UF). Byggt i en egen worktree
 parallellt med Säkerhet-sessionen; rebasat mot main före varje push.
 
-`views: las, ova, zachman, essa, tenta, statistik`. Ingen Prov: HT26-tentans
-poäng och minuspoäng är okända, och ett Prov med påhittad poäng är sämre än
-inget.
+`views: tentan, las, ova, zachman, essa, fordjupning, statistik`. Ingen
+Prov: HT26-tentans poäng och minuspoäng är okända, och ett Prov med påhittad
+poäng är sämre än inget.
 
-**Kaspers beslut (13 nov, efter bygget):** UF har sagt att tentan ser ut som
-modulerna, så sajten utgår från dem. HT25 är nedtonat: examNote, Hem,
-sammanfattningen, kapitel 4, Zachman- och Essä-introt säger att HT26 följer
-modulerna och att HT25 (Zachman 50 p + artiklar) hade ett annat format och
-ingen prognos. Zachman-fliken och Tenta ("Gamla tentor (HT25)") är extra
-träning på modul 4. Inget innehåll är borttaget.
+**Tre nivåer (Kaspers beställning 13 nov kväll, plan godkänd).** UF har
+sagt att tentan bygger på modulerna. Allt är kvar men indelat:
+
+| Nivå | Vad | Var | Märkning |
+|---|---|---|---|
+| Kärna | modulerna, ordningen 12, 1–11 (UF i modul 1: börja med 12) | Läs (12 modulkort), Öva (135 modulfrågor), Essä (53) | — |
+| Troligt | Zachman utöver modul 4:s frågor | Troligt-rutan i modul 4-kortet, fliken "Zachman (modul 4)", Zachman-essän | "Inte i modulerna, men på alla UF:s tidigare tentor och i årets bilder" (`TROLIGT_NOTE` i `cards.js`) |
+| Fördjupning | allt annat | fliken Fördjupning: 82 docx-frågor och HT25-arkivet ("Äldre kursversion, annat format") | "Utanför UF:s tips" (`FORDJUPNING_NOTE`) |
+
+- **Kaspers svar:** tolv modulkort (beställningen sa 13; sammanfattningen
+  är sammanslagen med modul 12), essä genomgången = knappen "Markera som
+  genomgången" (`done` i essäns läge), "UF:s fördjupade fallfrågor" =
+  modul 12:s scenarier 1–5 + Final challenge.
+- **Läs:** modulkorten ligger i `data/arkitektur/cards.js` (UF:s lärandemål
+  ordagrant, modul 11: "Student task"; kärnan; Håll isär; högst ~300 ord,
+  test `module-cards.test.mjs`). ChapterView visar generellt `card`, en
+  `likely`-ruta och kapiteltexten under "Läs mer" (stängd, inte uppläst
+  förrän den öppnas). `summary.js` står kvar men arkitektur har inget
+  sammanfattningskort; dess avsnitt "Det tentan skiljer på" och "Zachman i
+  korthet" ligger sist under modul 12:s "Läs mer". HT25-texten ur kapitel 4
+  ligger i Troligt-rutans "Läs mer". Kärna-texterna nämner inte de gamla
+  tentorna (test).
+- **Öva:** `questions` = 135 modulfrågor, `extraQuestions` = 82 docx (nytt
+  fält i noContent). Fördjupning kör `Practice` med delkurs-id
+  `arkitektur:fordjupning`, så kö, öppen fråga, urval och genomgång är
+  åtskilda; svaren ligger i samma `answers` med samma id:n.
+- **Tentan** (`views/ExamDashboard.jsx`, beräkningar i `lib/levels.js`):
+  nedräkning ur `schedule.js`, UF:s ord ur kursinformationen, staplar för
+  Kärna/Troligt/Fördjupning (`levelStats`; Troligt-id:na i manifestets
+  `levels.troligtTaskIds`), modultabell (`moduleStatus`; Läst/Öva/Essä med
+  länkar), svaga punkter (`weakPoints`, senaste svar fel). Inget sparas,
+  ingen nästa-steg-knapp. Statistik har kortet "Nivåer" med samma siffror.
+  Hem är oförändrat.
+
+**Tidigare samma dag:** HT25 nedtonat i texterna (examNote, Hem,
+kapitel 4, Zachman- och Essä-introt).
 
 - **Tentaformatet.** HT26 (kursinformationen): sant/falskt, flerval och
   "någondera essäfråga", ser ut som modulerna; modulfrågor kan komma liksom
@@ -1386,14 +1416,17 @@ träning på modul 4. Inget innehåll är borttaget.
   cellkoder, 6 × 3 + 2 p) och artiklar 50 p sant/falskt (25 × 2, 16 × 3 + 2,
   11 × 4 + 2 × 3), fel = 0 p. examNote säger vad vi vet och inte mer.
 - **Läs:** 12 kapitel, kapitel N = modul N med UF:s engelska titlar
-  (`data/arkitektur/reading.js`), sammanfattningen bygger på modul 12 (de tio
-  begreppen ordagrant), 12 ämnen (`topics.js`, alla `karna`, `essa` på
+  (`data/arkitektur/reading.js`), visade i ordningen 12, 1–11 som kort med
+  ”Läs mer” (se Tre nivåer ovan); sammanfattningen bygger på modul 12 (de tio
+  begreppen ordagrant) och ligger sedan nivåindelningen under modul 12:s
+  ”Läs mer”, 12 ämnen (`topics.js`, alla `karna`, `essa` på
   zachman, praktik och integration; Zachman har `examEvidence.note`), 78
   ordlistetermer på engelska. Arkitektens fem roller står i kapitel 3.
   Kapitel 4 (Zachman) är längst: principerna, kolumner med UF:s
   universitetsexempel, raderna i båda affischversionerna, 2003-affischens
-  36 celler och hur man placerar en modell; `[[vy:zachman|…]]` blir en knapp
-  till vyn (generell mekanik i ChapterView, ritas bara om vyn finns).
+  36 celler och hur man placerar en modell. `[[vy:zachman|…]]` i ett stycke
+  blir en knapp till vyn (generell mekanik i ChapterView, ritas bara om vyn
+  finns); kapitel 4 länkar sedan nivåindelningen via Troligt-rutan i stället.
   Fastabellen (Phase A–H) i kapitel 5 kommer ur docx:en, eftersom modulen
   räknar upp faserna utan bokstäver och Öva har docx-frågor om dem.
   Bakgrund enligt prompten: arkitektursprintar och backlog (kap 9) och
@@ -1405,12 +1438,14 @@ träning på modul 4. Inget innehåll är borttaget.
   docx-råmaterialet med svar i filen och som inte är dubbletter (217;
   `data/arkitektur/questions.js`, genererad av parsers i scratchpad). Per
   kapitel 13/9/9/12/24/16/22/19/23/17/18/35. Docx-frågorna har
-  `secondary: true` och serveras efter modulfrågorna inom varje grupp i
-  kön (`lib/practiceQueue.js`, Kaspers krav). Sant/falskt och parfrågor har
+  `secondary: true` och serverades först efter modulfrågorna i kön
+  (`lib/practiceQueue.js`, finns kvar); sedan nivåindelningen ligger de i
+  `extraQuestions` och övas i Fördjupning, så Öva har 135 frågor (per
+  kapitel i Läs-ordning 34/8/9/9/8/10/10/17/10/8/8/4). Sant/falskt och parfrågor har
   `fixedOrder` (True före False), liksom "All of the above"; övriga flerval
   blandas, eftersom rätt svar i modulerna är B eller C i 84 % och aldrig E.
   Alla i `LENGTH_FLAGGED` ("UF:s modulfråga ordagrant" respektive docx);
-  balanstestet har eget spann (8–36) och mäter ingen längdbalans. Alla har
+  balanstestet har eget spann (4–34 för de 135) och mäter ingen längdbalans. Alla har
   en svensk förklaring: UF:s "Explanation" översatt där den finns, annars
   med stöd bara i modultexten (skrivna av tre agenter mot källorna, inga
   invändningar mot facit). `reviewed: false` på allt.
@@ -1423,8 +1458,12 @@ träning på modul 4. Inget innehåll är borttaget.
   och 27 hör till kapitel 8 (Kaspers beslut, UF:s not i modul 8), med modul 7
   som källa. Modul 11 saknar fråga 5 och har två nummer 8.
 - **Essä:** 54 poster (`essays.js`): UF:s 53 kortsvars-, essä- och
-  fallfrågor med modellsvar i PDF-ordning, scenarierna och slututmaningen i
-  modul 12 inräknade, och Zachman-essän från HT25 efter modul 4:s frågor
+  fallfrågor med modellsvar, sedan nivåindelningen i ordningen 12, 1–11
+  (inom en modul PDF-ordning); scenarierna 1–5 och slututmaningen i modul 12
+  har `group: "UF:s fördjupade fallfrågor"` och visas under egen rubrik.
+  Knappen ”Markera som genomgången” sparar `done` i essäns läge (bock i
+  förteckningen, räknas i Tentan och Statistik, ”Nollställ essän” tar bort
+  den). Zachman-essän (`level: "troligt"`, Troligt-märkt) står efter modul 4:s frågor
   (okt/dec-lydelsen, majs i kontexten, checklista ur kapitel 4; ingen
   särskild prioritet sedan Kaspers beslut ovan — `pinned`/`priority` finns
   kvar i Essays.jsx för andra delkurser).
@@ -1435,7 +1474,7 @@ träning på modul 4. Inget innehåll är borttaget.
   `essayWordLimit` (null = inget ordtak) och `essayIntro` i manifestet,
   förteckning per kapitel när essäerna har `chapter`, sparad vald essä och
   "Nollställ essän" (tar bort utkast och bockar). Strategi och BPM oförändrade.
-- **Zachman-vyn** (`views/Zachman.jsx`, data `data/arkitektur/zachman.js`,
+- **Zachman-vyn** (fliken ”Zachman (modul 4)”, Troligt-märkt överst; `views/Zachman.jsx`, data `data/arkitektur/zachman.js`,
   rättning `lib/zachman.js`): Ramverket (eget 6×6-rutnät, rad/kolumn/cell
   visar perspektiv i båda versionerna, frågeord med UF:s exempel, celltyp med
   begreppspar och 3.0-namn), Memorera (12 fält, tolerant rättning: svenska
@@ -1460,7 +1499,7 @@ träning på modul 4. Inget innehåll är borttaget.
   R4K3; majs uppgift 5 har kvar facit men R2K6 motiveras som MEANS (regler
   står först på rad 3). B4.3:s "arbetsflöden" i K2: UF nämner arbetsflöden
   under både Hur och Vem; affischen har Work Flow Model i K4.
-- **Tenta** (`views/ExamArchive.jsx`, data `examArchive.js`; App väljer den
+- **HT25-arkivet** (sedan nivåindelningen i fliken Fördjupning; tidigare fliken Tenta) (`views/ExamArchive.jsx`, data `examArchive.js`; App valde den
   när `course.examArchive` finns, efter Säkerhets `choiceExams`): de tre
   tentorna i tentans ordning, fördelningen Zachman 50 / artiklar 50, uppgift
   1 → Essä, uppgift 2 och maj 2–8 → Zachman. **Artikelfrågorna står
@@ -1478,7 +1517,9 @@ träning på modul 4. Inget innehåll är borttaget.
   `exam-archive.test.mjs` (100 p, 50/50, länkarna, inget facit),
   `shuffle.test.mjs` (`fixedOrder`), arkitekturblock i `fragebank-balans`,
   `essa-struktur`, `practice-queue` (`secondary`), `exam-priority`,
-  `practice-axis` och `reading-time`.
+  `practice-axis` och `reading-time`. Nivåindelningen: `module-cards.test.mjs`
+  (lärandemål, högst cirka 300 ord, inget HT25 i Kärna-texterna, Troligt-rutan)
+  och `levels.test.mjs` (staplarna, modulstatus, svaga punkter).
 - **Noterat i källorna:** en föreläsningsbild säger att en process beskriver
   "what the organization does"; modulerna säger "how" (kapitel 7 nämner
   det). Bild 11 namnger en bok ("The TOGAF Standard, 10th Edition –
