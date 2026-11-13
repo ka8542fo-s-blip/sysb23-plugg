@@ -14,6 +14,7 @@ import DbExam from "./views/DbExam.jsx";
 import ChoiceExam from "./views/ChoiceExam.jsx";
 import Assignments from "./views/Assignments.jsx";
 import ProcessRun from "./views/ProcessRun.jsx";
+import Zachman from "./views/Zachman.jsx";
 import JavaWorkshop from "./views/JavaWorkshop.jsx";
 import { modelProgressIds } from "./data/progressLists.js";
 import { courses, getCourse } from "./data/index.js";
@@ -283,6 +284,16 @@ export default function App() {
             Databasers konstruktionsuppgifter. */}
         {view === "tenta" && (course.choiceExams.length > 0 ? <ChoiceExam course={course} /> : <DbExam />)}
         {view === "uppgifter" && <Assignments course={course} />}
+        {view === "zachman" && (
+          <Zachman
+            course={course}
+            params={viewParams}
+            navigate={navigate}
+            modelProgress={modelProgress}
+            onSolve={solveModelExercise}
+            onReset={resetModelExercise}
+          />
+        )}
         {view === "bpmn" && (
           <ProcessRun
             params={viewParams}

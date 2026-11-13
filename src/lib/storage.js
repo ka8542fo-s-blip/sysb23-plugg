@@ -28,6 +28,9 @@ export const KEYS = {
   sqlRandomTask: "sqlSlumpUppgift", // { difficulty, exercise, code, helped } — pågående slumpövning
   choiceExamOpen: "tentaOppen", // { [delkursId]: tentaId | null } — öppen tenta i fliken Tenta (flervalstentor)
   essayOpen: "essaVald", // { [delkursId]: essäId } — vald essä i Essä
+  zachmanMode: "zachmanLage", // "ramverk" | "minne" | "placera" — Zachman-vyns läge
+  zachmanTask: "zachmanUppgift", // öppen uppgift i Placera (uppgifts-id)
+  zachmanLabels: "zachmanRubriker", // true = rad- och kolumnnamn i rutnätet under Placera
 };
 
 // Fliken Tenta för flervalstentor (Säkerhet): sysb23:tenta:<tentaId> =

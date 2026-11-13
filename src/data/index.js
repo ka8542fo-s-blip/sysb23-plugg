@@ -163,7 +163,7 @@ export const courses = [
     // Byggs i faser (2026-11-13, cc-prompt-arkitektur-delkurs.md): Läs först,
     // sedan Öva och Essä, Zachman-vyn och Tenta. Flikarna läggs till när
     // deras innehåll finns. Ingen Prov: HT26-tentans poäng är okända.
-    views: ["las", "ova", "essa", "statistik"],
+    views: ["las", "ova", "zachman", "essa", "statistik"],
     practiceBy: "chapter",
     topics: arkitekturTopics,
     // Alla UF:s modulfrågor (135) och de besvarade ur docx-råmaterialet (82),

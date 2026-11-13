@@ -301,7 +301,7 @@ Några av UF:s poänger per kolumn:
 - **Var:** hur olika arbetsuppgifter är kopplade, och hur fysiskt åtskilda uppgifter utförs.
 - **När:** ordningen måste schemaläggas noggrant.
 
-**Om arbetsflöden:** UF:s bilder nämner arbetsflöden både under Hur ("processmodeller och arbetsflöden") och under Vem ("arbetsflödemodeller"). På affischen står *Work Flow Model* i Vem-kolumnen (rad 2), med begreppsparet organisationsenhet och arbetsprodukt. Tumregeln blir: processmodellen (vad som görs, i vilken ordning) hör till Hur, och arbetsflödesmodellen (vem som gör vilket arbete) till Vem.
+**Om arbetsflöden:** UF nämner arbetsflöden både under Hur ("processmodeller och arbetsflöden") och under Vem ("arbetsflödemodeller"). På affischen står *Work Flow Model* i Vem-kolumnen (rad 2), med begreppsparet organisationsenhet och arbetsprodukt. Tumregeln blir: processmodellen (vad som görs, i vilken ordning) hör till Hur, och arbetsflödesmodellen (vem som gör vilket arbete) till Vem.
 
 ## Raderna: sex perspektiv
 
