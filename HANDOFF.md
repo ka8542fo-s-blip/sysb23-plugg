@@ -1370,6 +1370,13 @@ parallellt med Säkerhet-sessionen; rebasat mot main före varje push.
 poäng och minuspoäng är okända, och ett Prov med påhittad poäng är sämre än
 inget.
 
+**Kaspers beslut (13 nov, efter bygget):** UF har sagt att tentan ser ut som
+modulerna, så sajten utgår från dem. HT25 är nedtonat: examNote, Hem,
+sammanfattningen, kapitel 4, Zachman- och Essä-introt säger att HT26 följer
+modulerna och att HT25 (Zachman 50 p + artiklar) hade ett annat format och
+ingen prognos. Zachman-fliken och Tenta ("Gamla tentor (HT25)") är extra
+träning på modul 4. Inget innehåll är borttaget.
+
 - **Tentaformatet.** HT26 (kursinformationen): sant/falskt, flerval och
   "någondera essäfråga", ser ut som modulerna; modulfrågor kan komma liksom
   andra av liknande art kopplade till litteraturen. HT25 (tre tentor à 100 p,
@@ -1415,10 +1422,12 @@ inget.
   "The Zachman Question". Modul 7 fråga 20–22 (sant/falskt) och essäerna 24
   och 27 hör till kapitel 8 (Kaspers beslut, UF:s not i modul 8), med modul 7
   som källa. Modul 11 saknar fråga 5 och har två nummer 8.
-- **Essä:** 54 poster (`essays.js`): Zachman-essän först (`pinned`,
-  `priority: "hogst"`, okt/dec-lydelsen, majs i kontexten, checklista ur
-  kapitel 4), sedan UF:s 53 kortsvars-, essä- och fallfrågor med modellsvar
-  i PDF-ordning, scenarierna och slututmaningen i modul 12 inräknade.
+- **Essä:** 54 poster (`essays.js`): UF:s 53 kortsvars-, essä- och
+  fallfrågor med modellsvar i PDF-ordning, scenarierna och slututmaningen i
+  modul 12 inräknade, och Zachman-essän från HT25 efter modul 4:s frågor
+  (okt/dec-lydelsen, majs i kontexten, checklista ur kapitel 4; ingen
+  särskild prioritet sedan Kaspers beslut ovan — `pinned`/`priority` finns
+  kvar i Essays.jsx för andra delkurser).
   Modellsvaret är facit: checklistan bryter ner det (inte Strategis
   fyrstegsform), och modellsvaret står ordagrant under en utfällning.
   Felinklistrade modellsvar (8:8, 9:9, 10:9, 12 Essay 3) visas ordagrant;

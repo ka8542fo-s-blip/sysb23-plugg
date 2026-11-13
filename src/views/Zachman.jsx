@@ -37,8 +37,9 @@ export default function Zachman({ course, params, navigate, modelProgress, onSol
       <section>
         <h1 className="font-display text-2xl">Zachman</h1>
         <p className="mt-1 max-w-reading text-[15px] text-ink/70">
-          Halva poängen på alla tre HT25-tentorna: en essä om raderna och kolumnerna (30 p) och
-          placering av modeller i rutnätet (20 p). Rutnätet numreras som på tentan, R1–R6 × K1–K6.
+          Extra träning på modul 4: ramverket, rad- och kolumnnamnen och placering av modeller.
+          Placeringsuppgifterna kommer från HT25-tentorna, som hade ett annat format än årets;
+          modul 4:s egna frågor finns i Öva. Rutnätet numreras R1–R6 × K1–K6.
         </p>
       </section>
       <div className="max-w-xl">

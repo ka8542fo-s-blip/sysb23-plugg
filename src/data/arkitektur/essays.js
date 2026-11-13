@@ -1,6 +1,7 @@
-// Essä för Verksamhetsarkitektur: Zachman-essän först (tentans uppgift 1,
-// 30 p på alla tre HT25-tentorna, högst prioriterad), sedan UF:s kortsvars-,
-// essä- och fallfrågor med "Model answer" i modulordning, som i PDF:erna.
+// Essä för Verksamhetsarkitektur: UF:s kortsvars-, essä- och fallfrågor med
+// "Model answer" i modulordning, som i PDF:erna — årets tenta ser ut som
+// modulerna (kursinformationen och UF). Zachman-essän från HT25-tentorna
+// (uppgift 1, 30 p) står efter modul 4:s frågor som extra träning.
 //
 // Formen skiljer sig från Strategi och BPM: där kommer fyrstegsformen (Vad /
 // Varför / Konkret / Koppling) från Strategilärarens besked. Här är UF:s
@@ -14,59 +15,6 @@
 //
 // Genererad ur källorna 2026-11-13 (parser i scratchpad, inte i repot).
 export const essays = [
-  {
-    id: "ea-e-zachman",
-    chapter: "kap4",
-    pinned: true,
-    priority: "hogst",
-    label: "Zachman-essän",
-    question: "Beskriv och förklara raderna och kolumnerna i Zachmans ramverk. Beskrivs i Finkelstein kap 1 samt i flertalet av artiklarna (inklusive föreläsningsmaterial). Förutom vad raderna och kolumnerna heter och vad de har/kan ha för innehåll, skall för höga poäng även perspektiven förklaras - T.ex. vad är Planner? - Och exempel på cellinnehåll ges - listor på rad 1, konceptuella modeller på rad 2 o.s.v.",
-    context: "Uppgift 1 på alla tre HT25-tentorna, 30 p (okt och dec 2025: minst 15 p för godkänt). Majtentan 2026 frågade: \"Beskriv och redogör tydligt för Zachmans ramverk i sin helhet. (30p)\". Finkelstein och artiklarna ingår inte i årets material — svara utifrån kapitel 4. Kalibrering från Strategi: A-svaren var enkla men korrekta och täckte det som efterfrågades.",
-    source: "HT25-tentorna, uppgift 1 (okt 2025, dec 2025, maj 2026); checklistan bygger på kapitel 4 (modul 4, föreläsningsbilderna och 2003-affischen)",
-    examPriority: ["karna", "essa"],
-    checklist: [
-      {
-        heading: "Vad ramverket är",
-        points: [
-          "Zachman är en ontologi och ett klassificeringsschema för beskrivningar av en enterprise, inte en metod: det föreskriver ingen ordning för arbetet.",
-          "Ramverket visar kontexten för olika modeller, och det kan visa vilka beskrivningar som saknas.",
-          "Det kompletterar TOGAF: Zachman klassificerar beskrivningarna, TOGAF ger metoden (ADM).",
-        ],
-      },
-      {
-        heading: "Kolumnerna",
-        points: [
-          "Sex kolumner, en per frågeord: Vad (What/Data), Hur (How/Function), Var (Where/Network), Vem (Who/People), När (When/Time) och Varför (Why/Motivation).",
-          "Varje kolumn är en central aspekt av verksamheten: begrepp och data, processer, platser och logistik, organisation och ansvar, händelser och cykler, mål och strategier.",
-          "Ett exempel per kolumn, som UF:s universitet: student och kurs, antagning och registrering, Lund och EC2, antagningsavdelningen och kursansvarig, ansökan före antagning, högskolelagen och lärandemål.",
-        ],
-      },
-      {
-        heading: "Raderna och perspektiven",
-        points: [
-          "Sex rader, var och en en abstraktionsnivå sedd ur ett perspektiv: Scope (Planner), Business Model (Owner), System Model (Designer), Technology Model (Builder), Detailed Representations (Subcontractor) och Functioning Enterprise.",
-          "Planner avgör verksamhetens omfång och sammanhang; Owner beskriver verksamheten konceptuellt; Designer gör den logiska systemmodellen; Builder den tekniska; Subcontractor de detaljerade delarna.",
-          "Raderna är perspektiv, inte projektfaser; version 3.0 kallar dem Executive, Business Management, Architect, Engineer, Technician och Enterprise Perspective.",
-        ],
-      },
-      {
-        heading: "Cellinnehåll",
-        points: [
-          "Rad 1 innehåller listor: List of Things, Processes, Locations, Organizations, Cycles och Goals.",
-          "Rad 2 innehåller konceptuella modeller: Semantic Model, Business Process Model, Logistics Network, Work Flow Model, Master Schedule och Business Plan.",
-          "Rad 3–5 med exempel: Logical Data Model och Business Rule Model (rad 3), Data Design och Technology Architecture (rad 4), Program och Data Definition (rad 5).",
-          "Varje cell är bara ett exempel på vilken sorts modell som kan användas.",
-        ],
-      },
-      {
-        heading: "Hur cellerna hänger ihop",
-        points: [
-          "Celler i samma kolumn hänger ihop genom en transformation mellan abstraktionsnivåerna.",
-          "Transformationen mellan raderna är inte helt automatisk, men det håller på att ändras med modelldriven utveckling och arkitektur.",
-        ],
-      },
-    ],
-  },
   {
     id: "ea-e1-9",
     chapter: "kap1",
@@ -271,6 +219,57 @@ export const essays = [
       },
     ],
     modelAnswer: "A methodology prescribes activities or procedures for achieving an objective. Zachman primarily provides a structure for classifying and organizing descriptions of an enterprise according to different perspectives and\ninterrogatives. It does not prescribe a sequence of activities for developing architecture.",
+  },
+  {
+    id: "ea-e-zachman",
+    chapter: "kap4",
+    label: "Zachman-essän (HT25)",
+    question: "Beskriv och förklara raderna och kolumnerna i Zachmans ramverk. Beskrivs i Finkelstein kap 1 samt i flertalet av artiklarna (inklusive föreläsningsmaterial). Förutom vad raderna och kolumnerna heter och vad de har/kan ha för innehåll, skall för höga poäng även perspektiven förklaras - T.ex. vad är Planner? - Och exempel på cellinnehåll ges - listor på rad 1, konceptuella modeller på rad 2 o.s.v.",
+    context: "Från HT25-tentorna, som hade ett annat format än årets (extra träning på modul 4). Uppgift 1 på alla tre, 30 p (okt och dec 2025: minst 15 p för godkänt). Majtentan 2026 frågade: \"Beskriv och redogör tydligt för Zachmans ramverk i sin helhet. (30p)\". Finkelstein och artiklarna ingår inte i årets material — svara utifrån kapitel 4. Kalibrering från Strategi: A-svaren var enkla men korrekta och täckte det som efterfrågades.",
+    source: "HT25-tentorna, uppgift 1 (okt 2025, dec 2025, maj 2026); checklistan bygger på kapitel 4 (modul 4, föreläsningsbilderna och 2003-affischen)",
+    examPriority: ["karna", "essa"],
+    checklist: [
+      {
+        heading: "Vad ramverket är",
+        points: [
+          "Zachman är en ontologi och ett klassificeringsschema för beskrivningar av en enterprise, inte en metod: det föreskriver ingen ordning för arbetet.",
+          "Ramverket visar kontexten för olika modeller, och det kan visa vilka beskrivningar som saknas.",
+          "Det kompletterar TOGAF: Zachman klassificerar beskrivningarna, TOGAF ger metoden (ADM).",
+        ],
+      },
+      {
+        heading: "Kolumnerna",
+        points: [
+          "Sex kolumner, en per frågeord: Vad (What/Data), Hur (How/Function), Var (Where/Network), Vem (Who/People), När (When/Time) och Varför (Why/Motivation).",
+          "Varje kolumn är en central aspekt av verksamheten: begrepp och data, processer, platser och logistik, organisation och ansvar, händelser och cykler, mål och strategier.",
+          "Ett exempel per kolumn, som UF:s universitet: student och kurs, antagning och registrering, Lund och EC2, antagningsavdelningen och kursansvarig, ansökan före antagning, högskolelagen och lärandemål.",
+        ],
+      },
+      {
+        heading: "Raderna och perspektiven",
+        points: [
+          "Sex rader, var och en en abstraktionsnivå sedd ur ett perspektiv: Scope (Planner), Business Model (Owner), System Model (Designer), Technology Model (Builder), Detailed Representations (Subcontractor) och Functioning Enterprise.",
+          "Planner avgör verksamhetens omfång och sammanhang; Owner beskriver verksamheten konceptuellt; Designer gör den logiska systemmodellen; Builder den tekniska; Subcontractor de detaljerade delarna.",
+          "Raderna är perspektiv, inte projektfaser; version 3.0 kallar dem Executive, Business Management, Architect, Engineer, Technician och Enterprise Perspective.",
+        ],
+      },
+      {
+        heading: "Cellinnehåll",
+        points: [
+          "Rad 1 innehåller listor: List of Things, Processes, Locations, Organizations, Cycles och Goals.",
+          "Rad 2 innehåller konceptuella modeller: Semantic Model, Business Process Model, Logistics Network, Work Flow Model, Master Schedule och Business Plan.",
+          "Rad 3–5 med exempel: Logical Data Model och Business Rule Model (rad 3), Data Design och Technology Architecture (rad 4), Program och Data Definition (rad 5).",
+          "Varje cell är bara ett exempel på vilken sorts modell som kan användas.",
+        ],
+      },
+      {
+        heading: "Hur cellerna hänger ihop",
+        points: [
+          "Celler i samma kolumn hänger ihop genom en transformation mellan abstraktionsnivåerna.",
+          "Transformationen mellan raderna är inte helt automatisk, men det håller på att ändras med modelldriven utveckling och arkitektur.",
+        ],
+      },
+    ],
   },
   {
     id: "ea-e5-10",

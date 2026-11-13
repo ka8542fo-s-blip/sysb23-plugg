@@ -4,8 +4,8 @@
 // punkterna (keyPoints, pitfalls), reading.js äger löptexten och ordlistan.
 // Kärnpunkternas form: ett begrepp per punkt, "Begrepp: förklaring".
 //
-// examPriority (prompten B4.2): kärna = Zachman (högst; halva poängen på
-// alla tre HT25-tentorna), modul 12:s tio begrepp och de distinktioner UF
+// examPriority (prompten B4.2): kärna = Zachman, modul 12:s tio begrepp och
+// de distinktioner UF
 // upprepar. Essä = Zachman-essän, fallen i modul 11–12 och UF:s egna
 // essäfrågor. Bakgrund (teknikradar, adoptionscykel, arkitekturbacklog och
 // sprintar) är märkt "(bakgrund)" i kapiteltexten, inte på ämnesnivå.
@@ -83,7 +83,7 @@ export const topics = [
     chapter: "kap4",
     examWeight: "hög",
     examPriority: ["karna", "essa"],
-    examEvidence: { note: "Halva poängen (50 p) på alla tre HT25-tentorna: essä 30 p och placering 20 p" },
+    examEvidence: { note: "HT25 (annat format än årets): essä 30 p och placering 20 p på alla tre tentorna" },
     summary: "Zachmans ramverk är en ontologi och ett klassificeringsschema för beskrivningar av en enterprise: sex frågeord (kolumner) gånger sex perspektiv (rader). Det föreskriver ingen ordning och är ingen metod; det kompletterar TOGAF.",
     keyPoints: [
       "Zachman: an ontology and classification schema for enterprise descriptions.",

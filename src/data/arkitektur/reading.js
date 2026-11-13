@@ -42,8 +42,8 @@ export const CHAPTER_ORDER = Object.keys(CHAPTER_TOPICS);
 export const intro = "Den här delkursen är UF:s tolv moduler i tre delar: grunderna (vad en enterprise, en arkitektur och Enterprise Architecture är, och Zachmans ramverk), arkitekturarbetet (TOGAF och ADM, domäner och vyer, förmågor, principer och styrning) och förändringen (agilt, digital transformation, bankfallet och slutrepetitionen). Kapitel N är modul N, med UF:s titlar. UF säger att man ska börja med modul 12, så läs sammanfattningen först. Räkna med ungefär {lästid} för hela texten. Termerna står på engelska, som i modulerna och på tentan.";
 
 export const examNote = {
-  text: "HT26 (kursinformationen): tentan ser ut som modulerna — sant/falskt, flervalsfrågor och någon essäfråga. Modulernas egna frågor kan komma, liksom andra av liknande art kopplade till litteraturen. Poäng och eventuella minuspoäng är inte kända. HT25 (tre tentor, 100 p var, inga hjälpmedel, A 85 / B 75 / C 65 / D 55 / E 50 %): Zachman gav 50 p på varje tenta (en essä om ramverket på 30 p och placering av modeller i rutnätet för 20 p), och sant/falskt om artiklar gav 50 p. Fel svar på sant/falskt gav 0 p, så det lönade sig alltid att svara. Artiklarna ingår inte i årets material; TOGAF, förmågor, styrning, agilt och digital transformation är nya.",
-  source: "Kursinformationen och HT25-tentorna (okt 2025, dec 2025, maj 2026)",
+  text: "Årets tenta ser ut som modulerna, enligt kursinformationen och UF själv: sant/falskt, flervalsfrågor och någon essäfråga. Modulernas egna frågor kan komma, liksom andra av liknande art kopplade till litteraturen. Utgå därför från modulernas frågor i Öva och modellsvaren i Essä. Poäng och eventuella minuspoäng är inte kända. HT25-tentorna hade ett annat format (en Zachman-essä, placering i Zachmans rutnät och sant/falskt om artiklar som inte ingår i år) och är ingen prognos för årets tenta.",
+  source: "Kursinformationen och UF",
 };
 
 const rawChapters = [
@@ -246,7 +246,7 @@ UF räknar upp vad som händer om ingen har rollen:
     number: 4,
     title: "Zachman Framework",
     readingMinutes: 10,
-    lead: "Zachmans ramverk är en ontologi och ett klassificeringsschema för beskrivningar av en enterprise, inte en metod. Kapitlet går igenom kolumnerna, raderna och cellerna och hur man placerar en modell. Hälften av poängen på alla tre HT25-tentorna gällde Zachman.",
+    lead: "Zachmans ramverk är en ontologi och ett klassificeringsschema för beskrivningar av en enterprise, inte en metod. Kapitlet går igenom kolumnerna, raderna och cellerna och hur man placerar en modell.",
     sources: [
       "Modul 4",
       "Föreläsningsbilder 33–43 (Zachman-delen på svenska)",
@@ -357,6 +357,8 @@ Några placeringar som går att läsa direkt av affischen:
 Ibland passar två celler, och då är motiveringen det som räknas. På omtentan i december 2025 fick man svara med två celler om man motiverade det. Det finns inget officiellt facit till placeringsuppgifterna.
 
 ## Hur Zachman prövades HT25
+
+Årets tenta följer modulernas format (sant/falskt, flerval och någon essäfråga), och modul 4:s frågor finns i Öva. HT25-tentorna prövade Zachman på ett annat sätt, så se det här som extra träning, inte som en prognos:
 
 - **Uppgift 1 (30 p):** "Beskriv och förklara raderna och kolumnerna i Zachmans ramverk." För höga poäng ska perspektiven förklaras ("vad är Planner?") och exempel på cellinnehåll ges: listor på rad 1, konceptuella modeller på rad 2 och så vidare. På två av tentorna krävdes minst 15 p för godkänt.
 - **Uppgift 2 (20 p):** tio modeller att placera, eller sju flervalsfrågor med cellkoder (maj 2026).

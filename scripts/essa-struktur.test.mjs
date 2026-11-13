@@ -68,13 +68,18 @@ test("kopplingssteget namnger ett område ur kursen", () => {
 // Verksamhetsarkitektur har en annan form: UF:s modellsvar är facit, och
 // checklistan bryter ner just det modellsvaret (essays.js förklarar). Därför
 // gäller inte fyrstegsrubrikerna ovan, men varje post ska ha UF:s fråga,
-// modellsvar, källa och en checklista, och Zachman-essän står först.
-test("Verksamhetsarkitektur: Zachman-essän först, sedan UF:s 53 frågor med modellsvar", () => {
-  const [zachman, ...rest] = arkitekturEssays;
-  assert.equal(zachman.id, "ea-e-zachman");
-  assert.equal(zachman.priority, "hogst");
-  assert.equal(zachman.pinned, true);
+// modellsvar, källa och en checklista. Årets tenta ser ut som modulerna, så
+// modulernas frågor står i modulordning; Zachman-essän från HT25 står efter
+// modul 4:s frågor, utan särskild prioritet.
+test("Verksamhetsarkitektur: UF:s 53 frågor i modulordning, Zachman-essän under kapitel 4", () => {
+  const zachman = arkitekturEssays.find((essay) => essay.id === "ea-e-zachman");
+  const rest = arkitekturEssays.filter((essay) => essay !== zachman);
+  assert.equal(arkitekturEssays[0].id, "ea-e1-9", "modulernas frågor först");
+  assert.equal(zachman.chapter, "kap4");
+  assert.ok(!zachman.pinned && !zachman.priority, "Zachman-essän är inte särskilt prioriterad");
+  assert.equal(arkitekturEssays.indexOf(zachman), arkitekturEssays.findIndex((e) => e.id === "ea-e4-11") + 1);
   assert.match(zachman.question, /raderna och kolumnerna i Zachmans ramverk/);
+  assert.match(zachman.context, /HT25/);
   assert.equal(rest.length, 53);
   const chapters = new Set(getCourse("arkitektur").chapters.map((c) => c.id));
   const ids = new Set();

@@ -18,6 +18,10 @@ export const summary = {
   topics: [],
   primaryTopics: [],
   body: `
+## Så ser tentan ut
+
+Enligt kursinformationen och UF ser tentan ut som modulerna: sant/falskt, flerval och någon essäfråga, och modulernas egna frågor kan komma. Öva har alla modulfrågor, och Essä har modulernas essäfrågor med UF:s modellsvar.
+
 ## Den stora bilden
 
 En arkitektur ger ett sätt att förstå:
@@ -71,9 +75,9 @@ De flesta frågorna prövar om du kan hålla isär två närliggande saker:
 | Governance och management | Rätt beslut inom rätt gränser, mot att genomföra planen | Kapitel 8 |
 | Digitization, digitalization och transformation | Omvandla till digitalt, förbättra befintligt, förändra hur värde skapas | Kapitel 10 |
 
-## Zachman väger tyngst
+## Zachman i korthet
 
-På alla tre HT25-tentorna gav Zachman halva poängen: en essä om raderna och kolumnerna och placering av modeller i rutnätet. Ramverket har sex kolumner (What, How, Where, Who, When, Why) och sex rader, från Planner (listor) via Owner (konceptuella verksamhetsmodeller), Designer (logiska systemmodeller), Builder (tekniska modeller) och Subcontractor (detaljerade specifikationer) till den fungerande verksamheten. Det är en ontologi, inte en metod.
+Zachman är modul 4. Ramverket har sex kolumner (What, How, Where, Who, When, Why) och sex rader, från Planner (listor) via Owner (konceptuella verksamhetsmodeller), Designer (logiska systemmodeller), Builder (tekniska modeller) och Subcontractor (detaljerade specifikationer) till den fungerande verksamheten. Det är en ontologi, inte en metod.
 
 Mer: kapitel 4 och Zachman-vyn.
 

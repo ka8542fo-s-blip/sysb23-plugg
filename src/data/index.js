@@ -173,13 +173,14 @@ export const courses = [
     // Alla UF:s modulfrågor (135) och de besvarade ur docx-råmaterialet (82),
     // som serveras efter modulfrågorna i Öva (secondary).
     questions: arkitekturQuestions,
-    // Zachman-essän först, sedan UF:s 53 frågor med modellsvar. Tentan anger
-    // inget ordtak, och checklistorna följer modellsvaren, inte fyrstegsformen.
+    // UF:s 53 frågor med modellsvar i modulordning; Zachman-essän från HT25
+    // står under kapitel 4. Tentan anger inget ordtak, och checklistorna
+    // följer modellsvaren, inte fyrstegsformen.
     essays: arkitekturEssays,
     essayWordLimit: null,
     essayIntro: [
       "UF:s modellsvar är facit: checklistan bryter ner det i dess påståenden, och modellsvaret står ordagrant under checklistan. Tentan anger inget ordtak.",
-      "Börja med Zachman-essän. Den gav 30 p på alla tre HT25-tentorna.",
+      "Årets tenta har någon essäfråga av modulernas slag, så frågorna står i modulordning. Zachman-essän från HT25-tentorna ligger under kapitel 4 som extra träning.",
     ],
     chapters: arkitekturChapters,
     // Sammanfattningen bygger på modul 12, som UF säger att man ska börja med.
@@ -188,7 +189,7 @@ export const courses = [
     readingIntro: arkitekturIntro,
     examNote: arkitekturExamNote,
     homeIntro:
-      "Läs UF:s tolv moduler som kompendium och börja med sammanfattningen och de tio begreppen. Öva alla hans modulfrågor och skriv essäer mot hans modellsvar. Lär dig Zachmans ramverk ordentligt — det gav halva poängen på alla tre HT25-tentorna.",
+      "Tentan ser ut som modulerna. Börja med sammanfattningen och de tio begreppen, öva UF:s modulfrågor och skriv essäer mot hans modellsvar. Zachman-fliken är extra träning på modul 4.",
   },
   {
     ...noContent,

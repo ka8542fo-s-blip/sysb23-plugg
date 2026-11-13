@@ -96,7 +96,7 @@ test("BPM-delkursens klassning: allt kärna, essä där HT25 frågade eller Weav
 // Verksamhetsarkitektur (prompten B4.2): allt kärna utom bankfallet, som
 // också är kärna men främst essä; essä på Zachman (uppgift 1, 30 p),
 // bankfallet (modul 11) och integrationen (modul 12). Zachman har en
-// bevisrad: halva poängen på alla tre HT25-tentorna.
+// bevisrad om HT25, märkt som annat format än årets (tentan följer modulerna).
 test("Verksamhetsarkitekturens klassning: kärna överallt, essä på Zachman och fallen", () => {
   const essa = ["zachman", "praktik", "integration"];
   for (const topic of arkitekturTopics) {
@@ -109,5 +109,5 @@ test("Verksamhetsarkitekturens klassning: kärna överallt, essä på Zachman oc
     assert.ok(isFastTrack(chapterPriority(chapter, arkitekturTopics)), chapter.id);
   }
   const zachman = arkitekturTopics.find((topic) => topic.id === "zachman");
-  assert.match(evidenceSentence(zachman.examEvidence), /50 p/);
+  assert.match(evidenceSentence(zachman.examEvidence), /HT25 \(annat format än årets\)/);
 });
