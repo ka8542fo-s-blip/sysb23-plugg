@@ -32,6 +32,7 @@ import {
 import { topics as arkitekturTopics } from "./arkitektur/topics.js";
 import { questions as arkitekturQuestions } from "./arkitektur/questions.js";
 import { essays as arkitekturEssays } from "./arkitektur/essays.js";
+import { examArchive as arkitekturExamArchive } from "./arkitektur/examArchive.js";
 import {
   chapters as arkitekturChapters,
   glossary as arkitekturGlossary,
@@ -163,7 +164,10 @@ export const courses = [
     // Byggs i faser (2026-11-13, cc-prompt-arkitektur-delkurs.md): Läs först,
     // sedan Öva och Essä, Zachman-vyn och Tenta. Flikarna läggs till när
     // deras innehåll finns. Ingen Prov: HT26-tentans poäng är okända.
-    views: ["las", "ova", "zachman", "essa", "statistik"],
+    views: ["las", "ova", "zachman", "essa", "tenta", "statistik"],
+    // Fliken Tenta som översikt: HT25-tentorna med länkar till Essä och
+    // Zachman, artikelfrågorna ordagrant utan facit (artiklarna ingår inte i år).
+    examArchive: arkitekturExamArchive,
     practiceBy: "chapter",
     topics: arkitekturTopics,
     // Alla UF:s modulfrågor (135) och de besvarade ur docx-råmaterialet (82),

@@ -12,6 +12,7 @@ import SqlWorkshop from "./views/SqlWorkshop.jsx";
 import Modeling from "./views/Modeling.jsx";
 import DbExam from "./views/DbExam.jsx";
 import ChoiceExam from "./views/ChoiceExam.jsx";
+import ExamArchive from "./views/ExamArchive.jsx";
 import Assignments from "./views/Assignments.jsx";
 import ProcessRun from "./views/ProcessRun.jsx";
 import Zachman from "./views/Zachman.jsx";
@@ -282,7 +283,15 @@ export default function App() {
         )}
         {/* Tenta: hela flervalstentor (course.choiceExams, Säkerhet) eller
             Databasers konstruktionsuppgifter. */}
-        {view === "tenta" && (course.choiceExams.length > 0 ? <ChoiceExam course={course} /> : <DbExam />)}
+        {view === "tenta" &&
+          (course.choiceExams.length > 0 ? (
+            <ChoiceExam course={course} />
+          ) : course.examArchive?.length > 0 ? (
+            // Översikt utan facit på artikeldelen (Verksamhetsarkitektur).
+            <ExamArchive course={course} navigate={navigate} modelProgress={modelProgress} />
+          ) : (
+            <DbExam />
+          ))}
         {view === "uppgifter" && <Assignments course={course} />}
         {view === "zachman" && (
           <Zachman
