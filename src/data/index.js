@@ -30,7 +30,11 @@ import {
   summary as processSummary,
 } from "./process/reading.js";
 import { examBank as sakerhetExamBank } from "./sakerhet/examBank.js";
-import { pastExams as sakerhetPastExams } from "./sakerhet/pastExams.js";
+import {
+  pastExams as sakerhetPastExams,
+  ANSWER_RULE as sakerhetAnswerRule,
+  ANSWER_TABLE as sakerhetAnswerTable,
+} from "./sakerhet/pastExams.js";
 
 // Tomma listor för delkurser som ännu inte har den sortens material.
 const noContent = {
@@ -155,9 +159,15 @@ export const courses = [
     // inget kompendium och inga kapitelfrågor än. Öva har bara Tentafrågor
     // (examBank via pastExams); kapitelfrågorna läggs i `questions` när
     // föreläsningarna finns, och då dyker växeln Alla frågor/Tentafrågor upp.
-    views: ["ova"],
+    // Tenta: skriv en hel gammal tenta med poäng, avdrag och betyg; svaren
+    // räknas för sig och rör aldrig Öva.
+    views: ["ova", "tenta"],
     examBank: sakerhetExamBank,
     pastExams: sakerhetPastExams,
+    choiceExams: sakerhetPastExams,
+    // "När lönar det sig att svara?" på Tentas översikt.
+    answerRule: sakerhetAnswerRule,
+    answerTable: sakerhetAnswerTable,
     pastExamNote:
       "Tentorna publicerades utan facit. Rätt svar och förklaringar är sajtens egna, skrivna utifrån Stallings & Brown.",
     homeIntro:

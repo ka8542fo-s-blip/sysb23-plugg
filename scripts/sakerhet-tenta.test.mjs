@@ -146,3 +146,59 @@ test("flera rätta: blandningen följer med, och båda sak-23-alternativen godta
   assert.deepEqual([single.correct, single.accepted], [2, [2]]);
   assert.equal(isAccepted(single, null), false);
 });
+
+// ---------- Fliken Tenta: skriv en hel tenta ----------
+
+import { examResult, scorePart, writtenParts, breakEven } from "../src/lib/choiceExam.js";
+import { gradeFor } from "../src/lib/gradeScale.js";
+import { gradeFor as dbGradeFor } from "../src/data/databaser/oldExams.js";
+
+const partsOf = (examId) => writtenParts(sakerhet, examById[examId]);
+const allWith = (examId, pick) => Object.fromEntries(partsOf(examId).map((part) => [part.no, pick(part)]));
+const right = (part) => correctIndexes(part.item)[0];
+const wrong = (part) => part.item.options.findIndex((_, index) => !correctIndexes(part.item).includes(index));
+
+test("Tenta: fliken har tentorna, 20 delar var med frågan och tentans ordning", () => {
+  assert.deepEqual(sakerhet.choiceExams.map((exam) => exam.id), pastExams.map((exam) => exam.id));
+  assert.ok(sakerhet.views.includes("tenta"));
+  for (const exam of pastExams) {
+    const parts = partsOf(exam.id);
+    assert.equal(parts.length, 20, exam.id);
+    for (const part of parts) assert.equal(part.item.id, part.question);
+  }
+});
+
+test("Tenta: allt rätt ger 100 och A, allt blankt 0 och U, allt fel på ordinarien −44", () => {
+  for (const exam of pastExams) {
+    const full = examResult(partsOf(exam.id), allWith(exam.id, right));
+    assert.deepEqual([full.points, full.max, full.grade, full.right], [100, 100, "A", 20], exam.id);
+    const blank = examResult(partsOf(exam.id), {});
+    assert.deepEqual([blank.points, blank.grade, blank.blank, blank.answered], [0, "U", 20, 0], exam.id);
+  }
+  const wrongAll = examResult(partsOf("sak-ht25-ord"), allWith("sak-ht25-ord", wrong));
+  assert.deepEqual([wrongAll.points, wrongAll.wrong, wrongAll.grade], [-44, 20, "U"]);
+});
+
+test("Tenta: poäng per fråga följer tentans regel, och båda sak-23-alternativen ger +5", () => {
+  const upps = partsOf("sak-ht25-upps");
+  const q1 = upps.find((part) => part.no === "1"); // sak-04, 5/−1
+  assert.deepEqual(scorePart(q1, right(q1)), { status: "ratt", points: 5 });
+  assert.deepEqual(scorePart(q1, wrong(q1)), { status: "fel", points: -1 });
+  assert.deepEqual(scorePart(q1, null), { status: "blank", points: 0 });
+  assert.deepEqual(scorePart(q1, undefined), { status: "blank", points: 0 });
+  const q2 = upps.find((part) => part.no === "2"); // sak-23
+  assert.deepEqual(scorePart(q2, 2), { status: "ratt", points: 5 });
+  assert.deepEqual(scorePart(q2, 3), { status: "ratt", points: 5 });
+  assert.deepEqual(scorePart(q2, 0), { status: "fel", points: 0 });
+  const q6 = upps.find((part) => part.no === "6"); // sak-16, 6/−2
+  assert.deepEqual([scorePart(q6, right(q6)).points, scorePart(q6, wrong(q6)).points], [6, -2]);
+});
+
+test("Tenta: betygsgränserna 85, 75, 65, 55 och 50, samma skala som Databaser", () => {
+  const cases = [[100, "A"], [85, "A"], [84, "B"], [75, "B"], [74, "C"], [65, "C"], [64, "D"], [55, "D"], [54, "E"], [50, "E"], [49, "U"], [0, "U"], [-10, "U"]];
+  for (const [percent, grade] of cases) {
+    assert.equal(gradeFor(percent), grade, String(percent));
+    assert.equal(dbGradeFor(percent), grade, `Databaser ${percent}`);
+  }
+  assert.equal(breakEven(3, 4).toFixed(3), (4 / 7).toFixed(3));
+});

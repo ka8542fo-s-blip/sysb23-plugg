@@ -2,7 +2,7 @@
 // en delkurs, formulerat som en mening i stället för en poäng.
 
 import { overallStats } from "./progress.js";
-import { KEYS, load, loadReadChapters } from "./storage.js";
+import { KEYS, choiceExamKey, load, loadReadChapters } from "./storage.js";
 import { isAnswered, isDone } from "./practiceQueue.js";
 import { daysUntil } from "./dates.js";
 
@@ -79,7 +79,13 @@ export function readinessFor({ course, answers, exams, readChapters }) {
     parts.push(`klarat ${examDone} av ${examBank.length} tentafrågor`);
   }
 
-  const started = chaptersRead > 0 || stats.answered > 0 || courseExams.length > 0 || examStarted;
+  // Hela gamla tentor i fliken Tenta: bara hur många som är inlämnade,
+  // inga poäng utanför fliken.
+  const choiceExams = course.choiceExams || [];
+  const submitted = choiceExams.filter((exam) => load(choiceExamKey(exam.id), null)?.submittedAt).length;
+  if (submitted > 0) parts.push(`lämnat in ${submitted} av ${choiceExams.length} gamla tentor`);
+
+  const started = chaptersRead > 0 || stats.answered > 0 || courseExams.length > 0 || examStarted || submitted > 0;
 
   return {
     hasContent: true,

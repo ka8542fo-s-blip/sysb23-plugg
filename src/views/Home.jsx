@@ -145,6 +145,13 @@ export default function Home({
               onClick={() => navigate("ova")}
             />
           )}
+          {views.includes("tenta") && course.choiceExams.length > 0 && (
+            <Shortcut
+              title="Skriv en gammal tenta"
+              hint={`${course.choiceExams.length} tentor med tentans poäng och avdrag`}
+              onClick={() => navigate("tenta")}
+            />
+          )}
           {views.includes("prov") && (
             <Shortcut
               title="Gör ett prov"

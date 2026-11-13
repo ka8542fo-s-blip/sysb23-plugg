@@ -419,7 +419,7 @@ HAVING
 
 export const TASK_POINTS = { 1: 25, 2: 25, 3: 20, 4: 30 };
 
-// Betygsskalan från tentornas instruktionssida, i procent av 100 poäng.
-export const GRADE_LIMITS = [["A", 85], ["B", 75], ["C", 65], ["D", 55], ["E", 50]];
-export const gradeFor = (points) => GRADE_LIMITS.find(([, min]) => points >= min)?.[0] ?? "U";
+// Betygsskalan från tentornas instruktionssida, i procent av 100 poäng
+// (samma skala som Säkerhets tentor; den bor i lib/gradeScale.js).
+export { GRADE_LIMITS, gradeFor } from "../../lib/gradeScale.js";
 export { TASK3_RULE, TASK3_INTRO, TASK3FG_TEXT };

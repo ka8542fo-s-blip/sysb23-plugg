@@ -7,6 +7,7 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 49, date: "2026-11-13", text: "Säkerhet: skriv en hel gammal tenta med poäng, avdrag och betyg" },
   { id: 48, date: "2026-11-13", text: "Ny delkurs Säkerhet: öva de 26 frågorna från HT25:s tre tentor" },
   { id: 47, date: "2026-11-13", text: "Öva: Genomgång och statusrad finns nu också i Tentafrågor" },
   { id: 46, date: "2026-11-11", text: "SQL: LEFT, RIGHT, YEAR, DATEDIFF och [dbo].[Tabell] fungerar nu" },

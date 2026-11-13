@@ -26,7 +26,22 @@ export const KEYS = {
   sqlOpen: "sqlOppen", // { ovningar: { id, open }, tenta: { id, open } } — senaste uppgiften per spår, och om den står öppen
   sqlHelp: "sqlHjalp", // { [sektionsId]: "tabeller" | "genomgang" } — vald flik i hjälpytan
   sqlRandomTask: "sqlSlumpUppgift", // { difficulty, exercise, code, helped } — pågående slumpövning
+  choiceExamOpen: "tentaOppen", // { [delkursId]: tentaId | null } — öppen tenta i fliken Tenta (flervalstentor)
 };
+
+// Fliken Tenta för flervalstentor (Säkerhet): sysb23:tenta:<tentaId> =
+// { choices: { [nummer]: alternativindex i frågans options }, current:
+// nummer, submittedAt: iso | null }. Skrivs vid varje val och frågebyte;
+// tas bort av "Börja om". Samma prefix som Databasers tentor
+// (tenta-250916 …), andra id:n (sak-ht25-ord …).
+export const choiceExamKey = (examId) => `tenta:${examId}`;
+export function clearChoiceExam(examId) {
+  try {
+    localStorage.removeItem(PREFIX + choiceExamKey(examId));
+  } catch {
+    /* privat läge */
+  }
+}
 
 // Eget svar per uppgift i övningsytorna (Modellera, SQL-verkstaden,
 // BPMN-övningar): sysb23:svar:<uppgiftsId> = svaret som det står i rutan
