@@ -31,6 +31,7 @@ import {
 } from "./process/reading.js";
 import { topics as arkitekturTopics } from "./arkitektur/topics.js";
 import { questions as arkitekturQuestions } from "./arkitektur/questions.js";
+import { essays as arkitekturEssays } from "./arkitektur/essays.js";
 import {
   chapters as arkitekturChapters,
   glossary as arkitekturGlossary,
@@ -162,12 +163,20 @@ export const courses = [
     // Byggs i faser (2026-11-13, cc-prompt-arkitektur-delkurs.md): Läs först,
     // sedan Öva och Essä, Zachman-vyn och Tenta. Flikarna läggs till när
     // deras innehåll finns. Ingen Prov: HT26-tentans poäng är okända.
-    views: ["las", "ova", "statistik"],
+    views: ["las", "ova", "essa", "statistik"],
     practiceBy: "chapter",
     topics: arkitekturTopics,
     // Alla UF:s modulfrågor (135) och de besvarade ur docx-råmaterialet (82),
     // som serveras efter modulfrågorna i Öva (secondary).
     questions: arkitekturQuestions,
+    // Zachman-essän först, sedan UF:s 53 frågor med modellsvar. Tentan anger
+    // inget ordtak, och checklistorna följer modellsvaren, inte fyrstegsformen.
+    essays: arkitekturEssays,
+    essayWordLimit: null,
+    essayIntro: [
+      "UF:s modellsvar är facit: checklistan bryter ner det i dess påståenden, och modellsvaret står ordagrant under checklistan. Tentan anger inget ordtak.",
+      "Börja med Zachman-essän. Den gav 30 p på alla tre HT25-tentorna.",
+    ],
     chapters: arkitekturChapters,
     // Sammanfattningen bygger på modul 12, som UF säger att man ska börja med.
     summary: arkitekturSummary,
@@ -175,7 +184,7 @@ export const courses = [
     readingIntro: arkitekturIntro,
     examNote: arkitekturExamNote,
     homeIntro:
-      "Läs UF:s tolv moduler som kompendium, börja med sammanfattningen och de tio begreppen, och lär dig Zachmans ramverk ordentligt — det gav halva poängen på alla tre HT25-tentorna.",
+      "Läs UF:s tolv moduler som kompendium och börja med sammanfattningen och de tio begreppen. Öva alla hans modulfrågor och skriv essäer mot hans modellsvar. Lär dig Zachmans ramverk ordentligt — det gav halva poängen på alla tre HT25-tentorna.",
   },
   {
     ...noContent,

@@ -27,6 +27,7 @@ export const KEYS = {
   sqlHelp: "sqlHjalp", // { [sektionsId]: "tabeller" | "genomgang" } — vald flik i hjälpytan
   sqlRandomTask: "sqlSlumpUppgift", // { difficulty, exercise, code, helped } — pågående slumpövning
   choiceExamOpen: "tentaOppen", // { [delkursId]: tentaId | null } — öppen tenta i fliken Tenta (flervalstentor)
+  essayOpen: "essaVald", // { [delkursId]: essäId } — vald essä i Essä
 };
 
 // Fliken Tenta för flervalstentor (Säkerhet): sysb23:tenta:<tentaId> =
