@@ -17,11 +17,16 @@ export function shuffle(items) {
 // `correct` i datat är ett index, eller en lista när flera alternativ är
 // rätta (Säkerhets sak-23 har två identiska). `correct` i vyn är då det
 // första av dem, och `accepted` är alla, i visad ordning.
+//
+// `fixedOrder: true` på frågan behåller datafilens ordning: sant/falskt
+// (True före False), parfrågor och flerval där ett alternativ hänvisar till
+// de andra ("All of the above").
 export function shuffleQuestion(question) {
   const withIndex = question.options.map((option, originalIndex) => ({
     ...option,
     originalIndex,
   }));
+  if (question.fixedOrder) return viewFor(question, withIndex);
   const options = [
     ...shuffle(withIndex.filter((option) => !option.last)),
     ...withIndex.filter((option) => option.last),

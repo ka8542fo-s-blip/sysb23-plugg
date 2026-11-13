@@ -79,7 +79,16 @@ export function orderCandidates({
   done.sort(byTime);
   const groups = [wrong, order === "grupp" ? unseen : shuffle(unseen, random), pending];
   if (includeDone) groups.push(done);
-  return groups.flat();
+  return groups.map(primaryFirst).flat();
+}
+
+// Frågor med `secondary: true` (Verksamhetsarkitekturens frågor ur UF:s
+// docx-råmaterial) serveras efter de övriga inom varje grupp, så att
+// modulfrågorna kommer först. Ordningen inom delarna står kvar. Banker
+// utan fältet får exakt samma ordning som förut.
+function primaryFirst(group) {
+  if (!group.some((question) => question.secondary)) return group;
+  return [...group.filter((question) => !question.secondary), ...group.filter((question) => question.secondary)];
 }
 
 export function nextQuestion({ recent = [], ...rest }) {

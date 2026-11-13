@@ -26,6 +26,9 @@ import { pendingQuestions as bpmPending } from "../src/data/process/questions-pe
 import { topics as bpmTopics } from "../src/data/process/topics.js";
 import { chapters as bpmChapters } from "../src/data/process/reading.js";
 import { DIAGRAM_IDS } from "../src/components/knowledge/diagrams/ids.js";
+import * as eaQ from "../src/data/arkitektur/questions.js";
+import { topics as eaTopics } from "../src/data/arkitektur/topics.js";
+import { chapters as eaChapters } from "../src/data/arkitektur/reading.js";
 
 const BANKS = [
   {
@@ -52,6 +55,22 @@ const BANKS = [
     maxUniqueLongest: 0.35,
     flaggedInTotals: false,
   },
+  {
+    // Verksamhetsarkitektur: UF:s modulfrågor i sin helhet och nära
+    // ordagrant (UF: tentan "till många delar överensstämmer med modulernas
+    // frågor"), plus besvarade frågor ur hans docx-råmaterial. Undantag från
+    // cirka sex frågor per kapitel, därav eget spann. Alla är UF:s egna och
+    // flaggade, så balansmåtten mäter inget och hoppas över; förklaring per
+    // alternativ krävs inte (en per fråga, eller ingen hellre än påhittad).
+    name: "arkitektur",
+    questions: eaQ.questions,
+    flagged: eaQ.LENGTH_FLAGGED,
+    topics: eaTopics,
+    chapters: eaChapters,
+    perChapter: [8, 36],
+    requireExplain: false,
+    checkBalance: false,
+  },
 ];
 
 for (const bank of BANKS) {
@@ -68,7 +87,8 @@ for (const bank of BANKS) {
       assert.ok(n >= 2 && n <= 6, `${q.id}: ${n} alternativ (2–6)`);
       if (n !== 4) assert.ok(flagged.has(q.id), `${q.id}: ${n} alternativ men inte i LENGTH_FLAGGED`);
       for (const option of q.options) {
-        assert.ok(option.text && option.explain, `${q.id}: text och explain per alternativ`);
+        assert.ok(option.text, `${q.id}: text per alternativ`);
+        if (bank.requireExplain !== false) assert.ok(option.explain, `${q.id}: explain per alternativ`);
         if (/^Inget av övriga alternativ/.test(option.text)) assert.equal(option.last, true, `${q.id}: "${option.text}" ska ha last: true`);
       }
       // Alternativ som står kvar sist får bara följas av fler sådana.
@@ -110,7 +130,7 @@ for (const bank of BANKS) {
     }
   });
 
-  test(`${name}: balansmåtten håller mallens regler`, () => {
+  if (bank.checkBalance !== false) test(`${name}: balansmåtten håller mallens regler`, () => {
     const flagged = new Set(flaggedList.map((entry) => entry.id));
     const positions = [0, 0, 0, 0];
     let fourOption = 0;
@@ -217,5 +237,39 @@ test("process: kompendiet har inte HT24 som källa, varken i sources eller i lö
   for (const c of bpmChapters) {
     for (const s of c.sources ?? []) assert.doesNotMatch(s, /HT24/, `${c.id}: HT24 i sources`);
     assert.doesNotMatch(c.body, /HT24/, `${c.id}: HT24 i texten`);
+  }
+});
+
+test("arkitektur: UF:s format — fem alternativ eller sant/falskt, docx-frågorna märkta och sist i kön", () => {
+  const flagged = new Map(eaQ.LENGTH_FLAGGED.map((entry) => [entry.id, entry.reason]));
+  const qs = eaQ.questions;
+  assert.equal(qs.length, 217);
+  assert.equal(qs.filter((q) => q.secondary).length, 82, "82 frågor ur docx");
+  for (const q of qs) {
+    assert.equal(q.reviewed, false, `${q.id}: reviewed: false tills Kasper granskat`);
+    const docx = q.id.startsWith("ea-d");
+    assert.equal(Boolean(q.secondary), docx, `${q.id}: secondary bara på docx-frågor`);
+    if (docx) assert.match(q.source, /^UF:s kursmaterial \(docx\)/, q.id);
+    else assert.match(q.source, /^Modul \d+, fråga \d+/, q.id);
+    assert.match(flagged.get(q.id) ?? "", /ordagrant/, `${q.id}: LENGTH_FLAGGED med skäl`);
+    const texts = q.options.map((o) => o.text);
+    if (texts.join("|") === "True|False") {
+      assert.equal(q.fixedOrder, true, `${q.id}: sant/falskt i fast ordning`);
+    } else if (texts.join("|") === "Zachman|TOGAF") {
+      assert.equal(q.fixedOrder, true, `${q.id}: parfrågan i fast ordning`);
+    } else {
+      assert.equal(texts.length, 5, `${q.id}: UF:s flerval har fem alternativ`);
+      const refersToOthers = texts.some((t) => /^(All|None) of the above/i.test(t));
+      assert.equal(Boolean(q.fixedOrder), refersToOthers, `${q.id}: fast ordning bara när ett alternativ hänvisar till de andra`);
+    }
+    if (q.explanation !== undefined) assert.ok(typeof q.explanation === "string" && q.explanation.length > 20, `${q.id}: förklaring`);
+  }
+});
+
+test("arkitektur: modul 7:s fråga 20–22 hör till kapitel 8, med modul 7 som källa", () => {
+  for (const id of ["ea-m7-20", "ea-m7-21", "ea-m7-22"]) {
+    const q = eaQ.questions.find((x) => x.id === id);
+    assert.equal(q.topic, "styrning", id);
+    assert.match(q.source, /^Modul 7, fråga 2[0-2]/, id);
   }
 });

@@ -30,6 +30,7 @@ import {
   summary as processSummary,
 } from "./process/reading.js";
 import { topics as arkitekturTopics } from "./arkitektur/topics.js";
+import { questions as arkitekturQuestions } from "./arkitektur/questions.js";
 import {
   chapters as arkitekturChapters,
   glossary as arkitekturGlossary,
@@ -161,9 +162,12 @@ export const courses = [
     // Byggs i faser (2026-11-13, cc-prompt-arkitektur-delkurs.md): Läs först,
     // sedan Öva och Essä, Zachman-vyn och Tenta. Flikarna läggs till när
     // deras innehåll finns. Ingen Prov: HT26-tentans poäng är okända.
-    views: ["las", "statistik"],
+    views: ["las", "ova", "statistik"],
     practiceBy: "chapter",
     topics: arkitekturTopics,
+    // Alla UF:s modulfrågor (135) och de besvarade ur docx-råmaterialet (82),
+    // som serveras efter modulfrågorna i Öva (secondary).
+    questions: arkitekturQuestions,
     chapters: arkitekturChapters,
     // Sammanfattningen bygger på modul 12, som UF säger att man ska börja med.
     summary: arkitekturSummary,

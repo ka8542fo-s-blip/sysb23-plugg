@@ -31,9 +31,13 @@ export default function ExplanationPanel({ options, chosen, correct, accepted, s
             : "Fel — så här ligger det till:"}
       </p>
 
-      <p className="mt-2 text-[15px] leading-relaxed">
-        {perOption ? options[shown].explain : explanation}
-      </p>
+      {/* Utan förklaring (Verksamhetsarkitektur: hellre ingen än påhittad)
+          ritas inget tomt stycke. */}
+      {(perOption ? options[shown].explain : explanation) && (
+        <p className="mt-2 text-[15px] leading-relaxed">
+          {perOption ? options[shown].explain : explanation}
+        </p>
+      )}
 
       {!wasCorrect && !skipped && (
         <p className="mt-3 rounded-lg bg-correct-bg p-3 text-[15px] leading-relaxed">

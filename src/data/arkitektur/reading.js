@@ -547,6 +547,8 @@ Då kan man fråga "varför kör vi den här tekniken?" och följa svaret hela v
 
 UF kallar förmågan "ett av de begrepp jag skulle anse absolut nödvändigt". En förmåga föreskriver inte hur den genomförs. Processen kan ändras medan den underliggande förmågan finns kvar.
 
+På föreläsningen formuleras processen en gång som "what the organization does". Modulerna, modul 12 och frågorna säger genomgående **how** work is performed, och det är den formuleringen som gäller.
+
 **UF:s exempel:** processen "Approve a mortgage application" och förmågan "Mortgage underwriting".
 
 ## Ett exempel i hela kedjan

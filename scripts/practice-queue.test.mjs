@@ -79,3 +79,33 @@ test("nollställning tar bara delkursens frågor", () => {
   const answers = { q1: { correct: 1, wrong: 0 }, x1: { correct: 1, wrong: 0 } };
   assert.deepEqual(Object.keys(clearAnswersFor(answers, ["q1"])), ["x1"]);
 });
+
+// Verksamhetsarkitektur: frågor ur UF:s docx-råmaterial (`secondary`)
+// kommer efter modulfrågorna inom varje grupp; banker utan fältet orörda.
+test("secondary-frågor kommer sist inom varje grupp, och fel kommer fortfarande först", () => {
+  const mixed = qs.map((q, i) => ({ ...q, secondary: i % 3 === 0 }));
+  const answers = {
+    q1: { correct: 0, wrong: 1, last: "wrong", lastAt: at(1), recent: [false] },
+    q2: { correct: 0, wrong: 1, last: "wrong", lastAt: at(2), recent: [false] },
+    q4: { correct: 1, wrong: 0, last: "correct", lastAt: at(1), recent: [true] },
+    q5: { correct: 1, wrong: 0, last: "correct", lastAt: at(2), recent: [true] },
+  };
+  const ordered = orderCandidates({ questions: mixed, answers, order: "grupp" }).map((q) => q.id);
+  // Fel: q2 (modulfråga) före q1 (docx), trots att q1 besvarades först.
+  assert.deepEqual(ordered.slice(0, 2), ["q2", "q1"]);
+  // Obesvarade: modulfrågorna i kapitelordning, sedan q7 och q10 (docx).
+  assert.deepEqual(ordered.slice(2, 10), ["q3", "q6", "q8", "q9", "q11", "q12", "q7", "q10"]);
+  // Ett rätt: q5 (modulfråga) före q4 (docx).
+  assert.deepEqual(ordered.slice(10), ["q5", "q4"]);
+  // Blandat läge: alla obesvarade modulfrågor före docx-frågorna.
+  const shuffled = orderCandidates({ questions: mixed, answers, order: "blandat" }).map((q) => q.id);
+  assert.deepEqual(new Set(shuffled.slice(8, 10)), new Set(["q7", "q10"]));
+});
+
+test("utan secondary är ordningen densamma som förut", () => {
+  const answers = { q3: { correct: 0, wrong: 1, last: "wrong", lastAt: at(1), recent: [false] } };
+  const plain = orderCandidates({ questions: qs, answers, order: "grupp" }).map((q) => q.id);
+  const marked = orderCandidates({ questions: qs.map((q) => ({ ...q, secondary: false })), answers, order: "grupp" }).map((q) => q.id);
+  assert.deepEqual(marked, plain);
+  assert.equal(plain[0], "q3");
+});
