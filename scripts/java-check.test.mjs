@@ -1035,6 +1035,33 @@ const OV14_SOLUTION = `public int saveAll(
 const OV_SOLUTIONS = { 1: OV1_SOLUTION, 2: OV2_SOLUTION, 3: OV3_SOLUTION, 4: OV4_SOLUTION, 5: OV5_SOLUTION, 6: OV6_SOLUTION, 7: OV7_SOLUTION, 8: OV8_SOLUTION, 9: OV9_SOLUTION, 10: OV10_SOLUTION, 11: OV11_SOLUTION, 12: OV12_SOLUTION, 13: OV13_SOLUTION, 14: OV14_SOLUTION };
 const ov = (n, ...pairs) => edit(OV_SOLUTIONS[n], ...pairs);
 
+// Facit i övning 4 och 5 är den korta formen (return direkt i den inre try).
+// Kopiorna ovan är den längre formen med hjälpvariabel och if; båda ska få
+// samma regler uppfyllda.
+const SHORT_FORMS = {
+  4: edit(OV4_SOLUTION, "    int numberOfProducts = 0;\n", "", `            if (resultSet.next()) {
+                numberOfProducts = resultSet.getInt("NumberOfProducts");
+            }`, `            resultSet.next();
+            return resultSet.getInt("NumberOfProducts");`, "\n\n    return numberOfProducts;\n}", "\n}"),
+  5: edit(OV5_SOLUTION, "    boolean exists = false;\n", "", `            if (resultSet.next()) {
+                exists = true;
+            }`, "            return resultSet.next();", "\n\n    return exists;\n}", "\n}"),
+};
+
+for (const n of [4, 5]) {
+  test(`övning ${n}: facit är den korta formen, och den långa får samma regler uppfyllda`, () => {
+    assert.equal(OV[n].solution, SHORT_FORMS[n]);
+    const statuses = (code) => {
+      const r = correct(code, OV[n]);
+      assert.deepEqual(r.errors, []);
+      return r.rules.map((x) => [x.id, x.status]);
+    };
+    const short = statuses(SHORT_FORMS[n]);
+    assert.ok(short.every(([, s]) => s === "ok" || s === "na"));
+    assert.deepEqual(statuses(OV_SOLUTIONS[n]), short);
+  });
+}
+
 test("övningarna: fjorton uppgifter, och kopiorna av lösningsförslagen får full pott", () => {
   assert.deepEqual(Object.keys(OV).map(Number), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
   for (const [n, code] of Object.entries(OV_SOLUTIONS)) {
@@ -1056,7 +1083,11 @@ test("regel 1, 4, 7 och 10 underkänns av rätt anledning i varje uppgift", () =
     failsOn(mutate(s, /PreparedStatement(\s+\w+\s*=\s*\w+\.prepareStatement\()/, "Statement$1", `${t.id}: PreparedStatement`), t, 4, /deklarerad som Statement/);
     failsOn(mutate(s, /try \(Connection (\w+) = connectionHandler\.getConnection\(\);\s*PreparedStatement (\w+) = \1\.prepareStatement\((\w+)\)\)/,
       "try (PreparedStatement $2 = connectionHandler.getConnection().prepareStatement($3))", `${t.id}: try-parentesen`), t, 7, /Anslutningen från connectionHandler\.getConnection\(\) sparas inte/);
-    failsOn(mutate(s, /(\n {4}try \(Connection[\s\S]*?\n {4}\})/, "$1 catch (SQLException e) {\n        e.printStackTrace();\n    }", `${t.id}: catch`), t, 10, /fångar felet utan att kasta det vidare — det skrivs bara ut/);
+    // Ett facit som returnerar ett läst värde inne i try (övning 4 och 5) når
+    // slutet utan return när catch sväljer felet, så regel 9 underkänns också.
+    const returnsInsideTry = ["scalar", "exists"].includes(t.check.result.kind) && !/\n {4}return /.test(s);
+    failsOn(mutate(s, /(\n {4}try \(Connection[\s\S]*?\n {4}\})/, "$1 catch (SQLException e) {\n        e.printStackTrace();\n    }", `${t.id}: catch`), t, 10, /fångar felet utan att kasta det vidare — det skrivs bara ut/,
+      returnsInsideTry ? [9] : []);
   }
 });
 

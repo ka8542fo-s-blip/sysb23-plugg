@@ -384,6 +384,12 @@ kapitel: allt UI läser `chapter.number`.
   returneras efter loopen och getConnection/prepareStatement före loopen.
   `scripts/java/verify-solutions.mjs` tar nu också en ArrayList-parameter
   (en array av objekt i cases.mjs).
+  Facit är den kortaste korrekta formen i Björns stil (2026-11-14): return
+  direkt när värdet kommer ur ett anrop (`return resultSet.next();` i
+  java-ov-5, `resultSet.next();` + `return resultSet.getInt(…)` för COUNT(*)
+  i java-ov-4). Hjälpvariabel före try bara för lista, objekt-eller-null och
+  räknaren i en loop. Rättaren godkänner båda formerna; testet "facit är
+  den korta formen" i java-check.test.mjs kör den långa mot samma regler.
   java-ov-10 använder `result.kind: "updated"` (2026-11-14): svaret prövas
   för 0 och 1 ändrade rader, så `> 0`, `>= 1`, `!= 0`, en variabel och
   if/return true/return false godkänns. En tredje övning, save(Product),

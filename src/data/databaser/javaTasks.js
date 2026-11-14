@@ -596,20 +596,16 @@ public class ProductDao {
     String sql = "SELECT COUNT(*) AS NumberOfProducts "
             + "FROM Product "
             + "WHERE Category = ?;";
-    int numberOfProducts = 0;
 
     try (Connection connection = connectionHandler.getConnection();
          PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, category);
 
         try (ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet.next()) {
-                numberOfProducts = resultSet.getInt("NumberOfProducts");
-            }
+            resultSet.next();
+            return resultSet.getInt("NumberOfProducts");
         }
     }
-
-    return numberOfProducts;
 }`,
     check: {
       method: { name: "countProductsInCategory", returns: "int", params: [["String", "category"]] },
@@ -651,20 +647,15 @@ public class ProductDao {
     String sql = "SELECT Isbn "
             + "FROM Book "
             + "WHERE Isbn = ?;";
-    boolean exists = false;
 
     try (Connection connection = connectionHandler.getConnection();
          PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, isbn);
 
         try (ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet.next()) {
-                exists = true;
-            }
+            return resultSet.next();
         }
     }
-
-    return exists;
 }`,
     check: {
       method: { name: "isbnExists", returns: "boolean", params: [["String", "isbn"]] },
