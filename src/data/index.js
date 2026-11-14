@@ -218,6 +218,12 @@ export const courses = [
     glossary: arkitekturGlossary,
     readingIntro: arkitekturIntro,
     examNote: arkitekturExamNote,
+    // Hem: tre steg i stället för introt (homeIntro finns kvar men visas inte).
+    homeSteps: [
+      "Läs modulkortet i Läs. Börja med modul 12, Start här, och ta sedan modul 1–11.",
+      "Öva modulen i Öva: modulens frågor och förklarakort, tills alla är klara.",
+      "Gör provtentorna i Tenta när alla moduler är klara.",
+    ],
     homeIntro:
       "Läraren har sagt att tentan ser ut som modulerna. Läs modulerna i Läs (börja med modul 12), öva modulernas frågor i Öva och skriv essäfrågorna i Essä. Zachman (modul 4) kommer troligen på tentan och har en egen flik. Fördjupning är extra för den som har tid.",
   },

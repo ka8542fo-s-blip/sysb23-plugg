@@ -54,3 +54,22 @@ export function levelStats(course, { answers = {}, essayState = {}, modelProgres
     },
   };
 }
+
+// Hur långt man har kommit per modul (Hem och Statistik, Verksamhetsarkitektur
+// sedan 2026-11-14): Öva-frågor klara/totalt och förklarakort klara/totalt, i
+// kursens ordning (12, 1–11). Klar = två rätt i rad, som i Öva.
+export function moduleProgress(course, answers = {}) {
+  const chapterOf = Object.fromEntries((course.topics || []).map((topic) => [topic.id, topic.chapter]));
+  const inChapter = (items, id) => items.filter((item) => (item.chapter ?? chapterOf[item.topic]) === id);
+  return (course.chapters || []).map((chapter) => {
+    const questions = inChapter(course.questions || [], chapter.id);
+    const cards = inChapter(course.explainCards || [], chapter.id);
+    return {
+      chapterId: chapter.id,
+      number: chapter.number,
+      title: chapter.title,
+      ova: { done: count(questions, (q) => isDone(answers[q.id])), total: questions.length },
+      cards: { done: count(cards, (c) => isDone(answers[c.id])), total: cards.length },
+    };
+  });
+}

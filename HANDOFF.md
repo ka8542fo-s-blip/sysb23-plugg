@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 584 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-14.
+- **Test:** `npm test` = 609 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-14.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -51,7 +51,7 @@ kapitel: allt UI läser `chapter.number`.
 | databaser | komplett mot tentan | se nedan |
 | process | aktiv (2026-09-29) | se "Processorienterad verksamhetsutveckling (BPM)" nedan |
 | sakerhet | aktiv (2026-11-13) | Öva (bara Tentafrågor), Tenta, Uppgifter — se "Säkerhet i informationssystem" nedan |
-| arkitektur | aktiv (2026-11-13) | Läs (12 modulkort), Öva (135), Zachman (modul 4), Essä (54), Fördjupning (82 extrafrågor + förra årets tentor) — se "Verksamhetsarkitektur" nedan |
+| arkitektur | aktiv (2026-11-13) | Läs (Start här + 11 modulkort med kärnsvar), Öva (135 frågor + 47 förklarakort, Memorera i modul 4), Tenta (3 provtentor), Statistik — se "Verksamhetsarkitektur" nedan |
 
 **Databaser** (`views: las, sql, modell, tenta, ova, statistik`; Prov medvetet borta):
 
@@ -1382,9 +1382,93 @@ UF:s docx-råmaterial, kursinformationen, kursens upplägg och de tre
 HT25-tentorna. Lärare Umberto Fiaccadori (UF). Byggt i en egen worktree
 parallellt med Säkerhet-sessionen; rebasat mot main före varje push.
 
-`views: las, ova, zachman, essa, fordjupning, statistik`. Ingen
+`views: las, ova, tenta, statistik` (sedan 14 nov, se nedan). Ingen
 Prov: HT26-tentans poäng och minuspoäng är okända, och ett Prov med påhittad
 poäng är sämre än inget.
+
+**Enkel och tentafokuserad (Kaspers omgörning 14 nov, plan godkänd).**
+Fyra flikar: Läs, Öva, Tenta och Statistik. Essä, Zachman och Fördjupning
+är dolda men finns kvar i repot (vyer, data, test) och i lagringen; det man
+sparat där rörs inte. Inget är raderat. Avsnitten längre ned (Tre nivåer,
+Klartext med flera) beskriver tidigare lägen; datat de nämner används
+fortfarande.
+
+- **Läs** visar bara Kompendium (`readingSegments: ["kompendium"]` i
+  manifestet, läses i `KnowledgeHub.jsx`; växeln döljs, sökningen gäller
+  bara kapitlen och det sparade segmentet för andra delkurser rörs inte).
+  - **Modul 12 = Start här** (`cards.js` `START_HERE`): tentaformatet
+    ordagrant ur kursinformationen (`FORMAT_QUOTES`), 0 p för fel på
+    sant/falskt på alla tre tentorna förra året ("svara alltid"), att
+    salstentorna är fem timmar oavsett innehåll (dra inga slutsatser av
+    tiden någonstans), de tio begreppen, arkitektens test och fällorna.
+    Fällornas siffror (`TRAPS`: 49 påståenden utan de sex "Zachman or
+    TOGAF"-raderna, 29 falska, alla 18 med absoluta ord falska, 11 andra
+    falska; `ABSOLUTE_WORDS`) räknas ur frågebanken i `fallor.test.mjs`.
+  - **Modul 1–11** börjar med Kärnsvaret (`KARNSVAR`: 80–120 ord, svenska
+    med engelska termer, ett av lärarens exempel; `source` = de modellsvar
+    det bygger på, visas som "Bygger på lärarens modellsvar till …").
+    Bara modellsvaren och modultexten används. Modul 5 har inget exempel i
+    modultexten (`noExample`), så kärnsvaret citerar lärarens TOGAF-mening.
+    Sedan "Håll isär" och "Lärarens exempel" (`CARDS`); ett exempel står
+    aldrig två gånger på ett kort, så avsnittet saknas där modulen bara har
+    exemplet i kärnsvaret (modul 1, 3, 4, 5, 6, 9). De elva kärnsvaren
+    klistrades in för Kaspers granskning efter commit 1.
+  - **Läs mer** börjar med det som stod på korten förut (`LEARNING`:
+    lärandemålen ordagrant, "Kärnan", modul 11:s uppgift), sedan modultexten.
+  - **Modul 4** har Zachmans rutnät som visning (`chapter.widget =
+    "zachman-grid"`, `components/zachman/ZachmanFramework.jsx`, utflyttat ur
+    `Zachman.jsx`) och under det `CARD_AFTER.kap4`: regeln (kolumnen = frågan
+    modellen svarar på, raden = perspektiv och detaljnivå) och tre lösta
+    placeringar (Java R5K2, arbetsflödesmodell R2K4, verksamhetsregler R3K6;
+    samma facit som placeringsuppgifterna). Zachman-rutan länkar till Öva
+    modul 4.
+- **Öva**: modulens frågor (135) och **förklarakorten** (47) i samma kö.
+  - `explainMap.js`: Kaspers mappning av de 54 fritextfrågorna till modul
+    1–11, sju dubbletter ihopslagna; e12-32 (trade-offs) flyttad till modul 8
+    (planen). Kort-id `ea-f-<första essä-id utan ea->`, får aldrig ändras.
+  - `explainCards.js` bygger korten (`kind: "forklara"`, `options` Kunde /
+    Kunde inte, `correct: 0`, `fixedOrder`) och de ligger i manifestets
+    `explainCards`, inte i `questions`; App ger Practice `questions +
+    explainCards`. Provtentorna och frågeräkningen bygger på de 135.
+  - `components/ExplainCard.jsx`: frågan (sammanslagna kort visar alla
+    lydelser och källor), textfält, "Visa svar" med kärnsvaret och
+    modellsvaren ordagrant (Zachman-essän har inget modellsvar: checklistan),
+    sedan Kunde/Kunde inte (`grade` i Practice, samma `answers`, varv och
+    krav). Siffertangenterna gör inget på korten.
+  - Texten sparas i `svar:<kortId>` som `{ text, seeded }`. Första gången
+    fylls den från Essä-utkasten (`sysb23:essays`), aldrig igen.
+    **Undantag från regeln i CLAUDE.md (Kaspers beslut):** Nollställ i Öva
+    tar bort status men behåller förklarakortens text.
+  - Memorera under modul 4 (`practiceBlocks: { kap4: "zachman-minne" }`,
+    Practice-propen `extraBlocks`, `ZachmanMemoryBlock`); samma lagring som
+    i Zachman-fliken.
+  - Zachman-essän: Finkelstein och artiklarna strukna, märkt "från
+    tidigare tentor" (`levelNote`).
+- **Tenta**: tre provtentor (`data/arkitektur/mockExams.js`, logik
+  `lib/mockExam.js`, vy `views/MockExam.jsx`). Egen vy i stället för
+  ChoiceExam, som bygger på Säkerhets poäng och betyg (avvikelse från
+  planen, samma upplägg).
+  - Uppgift 1 fritext: (Zachman-essän, Scenario 1), (Essay 3, Scenario 2),
+    (Essay 4, Final challenge). Uppgift 2 flerval inklusive Zachman or
+    TOGAF, uppgift 3 sant/falskt.
+  - De 135 delas per modul och typ med fast frö, tur och ordning med
+    roterande start: 46/49/46 frågor, högst en frågas skillnad per modul och
+    typ. Alternativen blandas med fröet `<provtenta>:<fråga>` (låst).
+  - Svar, text, bockar, öppen fråga och inlämning sparas i
+    `tenta:<ea-prov-N>` (samma nyckelform som Säkerhet), öppen provtenta i
+    `tentaOppen`. Rör aldrig Öva. Efter Lämna in: rätt/fel med förklaring,
+    "x av y rätt" per uppgift, fel och obesvarade per modul med länk till
+    Öva, fritexten bredvid checklistan (bockar sparas) och modellsvaret.
+    Inga poäng, inget betyg. Nollställ med bekräftelse.
+- **Hem**: `homeSteps` (tre steg) i stället för `homeIntro` (finns kvar),
+  och `components/ModuleProgressTable.jsx` (`moduleProgress` i
+  `lib/levels.js`) i stället för "Var står du?".
+- **Statistik**: egen gren när `mockExams` finns: modultabellen,
+  provtentornas resultat och Nollställ min data. Nivåkortet visas inte
+  (`levelStats` och dess test finns kvar).
+- **Tester:** `fallor`, `explain-map`, `mock-exams`, `module-cards`
+  (Start här, kärnsvaren, Läs mer, modul 4), `levels` (modultabellen, Hem),
+  `exam-archive` (arkivet kvar men dolt), `klartext`.
 
 **Tre nivåer (Kaspers beställning 13 nov kväll, plan godkänd).** UF har
 sagt att tentan bygger på modulerna. Allt är kvar men indelat:

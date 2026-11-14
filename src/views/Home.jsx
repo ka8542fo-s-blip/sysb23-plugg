@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { overallStats, topicStats, focusTopic } from "../lib/progress.js";
 import WeekAtAGlance from "../components/schedule/WeekAtAGlance.jsx";
 import StatTile from "../components/StatTile.jsx";
+import ModuleProgressTable from "../components/ModuleProgressTable.jsx";
 
 export default function Home({
   course,
@@ -30,6 +31,10 @@ export default function Home({
   const hasStatus = sqlExercises.length > 0 || course.questions.length > 0;
   // Öva utan egna frågor är läget Tentafrågor (Säkerhet tills kapitlen finns).
   const examOnlyPractice = course.questions.length === 0 && course.examBank.length > 0;
+  // Verksamhetsarkitektur: modultabellen (Öva-frågor och förklarakort per
+  // modul) i stället för de allmänna siffrorna.
+  const byModule = (course.explainCards || []).length > 0;
+  const showsTopics = !course.readingSegments || course.readingSegments.includes("begrepp");
 
   return (
     <div className="space-y-8">
@@ -40,17 +45,28 @@ export default function Home({
           SYSB23 · Delkurs
         </p>
         <h1 className="mt-1 font-display text-3xl sm:text-4xl">{course.name}</h1>
+        {course.homeSteps ? (
+          // Tre steg i stället för introt (Verksamhetsarkitektur).
+          <ol className="mt-3 max-w-reading list-decimal space-y-1.5 pl-6 text-[17px] leading-relaxed text-ink/80">
+            {course.homeSteps.map((step) => (
+              <li key={step}>{step}</li>
+            ))}
+          </ol>
+        ) : (
         <p className="mt-3 max-w-reading text-[17px] leading-relaxed text-ink/80">
           {course.homeIntro ?? (views.includes("sql")
             ? "Läs kompendiet om designprocessen, relationsmodellen och normalisering, öva förståelsefrågor på föreläsningarna, och skriv riktig SQL mot kursens sjukhusdatabas med automatisk rättning."
             : "Öva flervalsfrågor med förklaringar till varje alternativ, simulera tentans poängsystem med minuspoäng, och träna essäsvar mot en checklista. Allt innehåll kommer ur kurslitteraturen och gamla tentor.")}
         </p>
+        )}
         <p className="tabular mt-2 text-[15px] text-ink/65">
           {[
             course.chapters.length > 0 && `${course.chapters.length} kapitel`,
             course.questions.length > 0 && `${course.questions.length} frågor`,
-            course.topics.length > 0 && `${course.topics.length} ämnen`,
-            course.essays.length > 0 && `${course.essays.length} essäfrågor`,
+            (course.explainCards || []).length > 0 && `${course.explainCards.length} förklarakort`,
+            showsTopics && course.topics.length > 0 && `${course.topics.length} ämnen`,
+            views.includes("essa") && course.essays.length > 0 && `${course.essays.length} essäfrågor`,
+            (course.mockExams || []).length > 0 && `${course.mockExams.length} provtentor`,
             sqlExercises.length > 0 && `${sqlExercises.length} SQL-övningar`,
             course.examBank.length > 0 && `${course.examBank.length} tentafrågor`,
             course.choiceExams.length > 0 && `${course.choiceExams.length} gamla tentor`,
@@ -64,8 +80,15 @@ export default function Home({
         {/* Statusrutorna läser Öva-frågorna (eller SQL). En delkurs utan
             sådana (Säkerhet: bara tentafrågor) visar bara genvägarna — inga
             poäng utanför fliken Tenta. */}
-        <h2 className="font-display text-xl">{hasStatus ? "Var står du?" : "Plugga"}</h2>
-        {hasStatus && (
+        <h2 className="font-display text-xl">
+          {byModule ? "Hur långt du har kommit" : hasStatus ? "Var står du?" : "Plugga"}
+        </h2>
+        {byModule && (
+          <div className="mt-3">
+            <ModuleProgressTable course={course} answers={answers} navigate={navigate} />
+          </div>
+        )}
+        {hasStatus && !byModule && (
         <dl className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {sqlExercises.length > 0 ? (
             <>
@@ -105,7 +128,7 @@ export default function Home({
           )}
         </dl>
         )}
-        {course.questions.length > 0 && (
+        {course.questions.length > 0 && !byModule && (
         <p className="mt-4 text-[15px] text-ink/70">
           {focus ? (
             <>
@@ -143,6 +166,13 @@ export default function Home({
                   : "En fråga i taget med facit"
               }
               onClick={() => navigate("ova")}
+            />
+          )}
+          {views.includes("tenta") && (course.mockExams || []).length > 0 && (
+            <Shortcut
+              title="Gör provtentorna"
+              hint={`${course.mockExams.length} provtentor, när alla moduler är klara`}
+              onClick={() => navigate("tenta")}
             />
           )}
           {views.includes("tenta") && course.choiceExams.length > 0 && (

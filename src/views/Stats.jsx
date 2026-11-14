@@ -12,6 +12,9 @@ import { accuracy } from "../lib/scoring.js";
 import { useToday } from "../lib/useToday.js";
 import { practiceMode } from "../lib/practiceAxis.js";
 import { levelStats } from "../lib/levels.js";
+import ModuleProgressTable from "../components/ModuleProgressTable.jsx";
+import { emptyMockState, examParts, mockExamResult } from "../lib/mockExam.js";
+import { choiceExamKey, load } from "../lib/storage.js";
 
 export default function Stats({
   course,
@@ -71,6 +74,65 @@ export default function Stats({
     clearAll();
     onReset();
     setConfirming(false);
+  }
+
+  const resetCard = (
+        <section className="card border-wrong/30 p-5">
+          <h2 className="font-display text-lg">Nollställ min data</h2>
+          <p className="mt-2 text-[15px] text-ink/70">
+            Raderar svarshistorik, provresultat, essäutkast, läsprogress, bockar
+            och svar i SQL, Java, Modellera och BPMN-övningar, tentaanmälningar,
+            valt läge i Läs och övriga inställningar från den här webbläsaren.
+            Går inte att ångra.
+          </p>
+          {confirming ? (
+            <div className="mt-4 flex flex-wrap gap-3">
+              <button type="button" className="btn-danger" onClick={reset}>
+                Ja, radera allt
+              </button>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => setConfirming(false)}
+              >
+                Avbryt
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className="btn-secondary mt-4"
+              onClick={() => setConfirming(true)}
+            >
+              Nollställ min data
+            </button>
+          )}
+        </section>
+  );
+
+  // Verksamhetsarkitektur (Kaspers omgörning 2026-11-14): bara resultat per
+  // modul (Öva-frågor och förklarakort) och provtentornas resultat, plus
+  // Nollställ min data. Kortet med nivåerna visas inte längre.
+  if ((course.mockExams || []).length > 0) {
+    return (
+      <div className="space-y-8">
+        <section>
+          <h1 className="font-display text-2xl">Statistik</h1>
+          <p className="mt-1 max-w-reading text-[15px] text-ink/70">
+            Öva-frågor och förklarakort per modul, och provtentornas resultat. En fråga eller ett
+            förklarakort är klart när du har svarat rätt två gånger i rad.
+          </p>
+        </section>
+        <section className="card p-5 sm:p-6" aria-label="Per modul">
+          <h2 className="font-display text-xl">Per modul</h2>
+          <div className="mt-3">
+            <ModuleProgressTable course={course} answers={answers} navigate={navigate} />
+          </div>
+        </section>
+        <MockExamResults course={course} navigate={navigate} />
+        {resetCard}
+      </div>
+    );
   }
 
   return (
@@ -270,37 +332,42 @@ export default function Stats({
       </section>
       )}
 
-      <section className="card border-wrong/30 p-5">
-        <h2 className="font-display text-lg">Nollställ min data</h2>
-        <p className="mt-2 text-[15px] text-ink/70">
-          Raderar svarshistorik, provresultat, essäutkast, läsprogress, bockar
-          och svar i SQL, Java, Modellera och BPMN-övningar, tentaanmälningar,
-          valt läge i Läs och övriga inställningar från den här webbläsaren.
-          Går inte att ångra.
-        </p>
-        {confirming ? (
-          <div className="mt-4 flex flex-wrap gap-3">
-            <button type="button" className="btn-danger" onClick={reset}>
-              Ja, radera allt
-            </button>
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={() => setConfirming(false)}
-            >
-              Avbryt
-            </button>
-          </div>
-        ) : (
-          <button
-            type="button"
-            className="btn-secondary mt-4"
-            onClick={() => setConfirming(true)}
-          >
-            Nollställ min data
-          </button>
-        )}
-      </section>
+      {resetCard}
     </div>
+  );
+}
+
+// Provtentornas resultat (Verksamhetsarkitektur), ur samma lagring som
+// fliken Tenta (sysb23:tenta:<id>).
+function MockExamResults({ course, navigate }) {
+  const order = (course.chapters || []).map((chapter) => chapter.id);
+  return (
+    <section className="card p-5 sm:p-6" aria-label="Provtentorna">
+      <h2 className="font-display text-xl">Provtentorna</h2>
+      <ul className="mt-3 space-y-3">
+        {course.mockExams.map((exam) => {
+          const saved = load(choiceExamKey(exam.id), null);
+          const state = saved && typeof saved === "object" ? { ...emptyMockState(), ...saved } : emptyMockState();
+          const result = mockExamResult(exam, state, order);
+          return (
+            <li key={exam.id} className="flex flex-wrap items-baseline justify-between gap-2 border-b border-line pb-3 last:border-0">
+              <span className="font-medium">{exam.title}</span>
+              <span className="tabular text-[15px] text-ink/80">
+                {result.submitted
+                  ? `Uppgift 2: ${result.tasks[2].right} av ${result.tasks[2].total} rätt · Uppgift 3: ${result.tasks[3].right} av ${result.tasks[3].total} rätt · Fritext: ${result.tasks[1].checked} av ${result.tasks[1].total} punkter`
+                  : result.answered > 0
+                    ? `Pågår · ${result.answered} av ${examParts(exam).length} besvarade`
+                    : "Inte påbörjad"}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+      {navigate && (
+        <button type="button" className="btn-secondary mt-4" onClick={() => navigate("tenta")}>
+          Till provtentorna
+        </button>
+      )}
+    </section>
   );
 }
