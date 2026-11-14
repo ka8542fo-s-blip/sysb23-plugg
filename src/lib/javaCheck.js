@@ -87,6 +87,7 @@ const WHY = {
   executeArg: "Frågan gavs redan till prepareStatement. executeUpdate(sql) och executeQuery(sql) med en sträng hör till det vanliga Statement; på ett PreparedStatement kastar de SQLException.",
   executeOrder: "Värdena måste vara satta när frågan körs. Ett set-anrop efter executeQuery eller executeUpdate kommer för sent.",
   affected: "Uppgiften ber om antalet rader satsen påverkade, och det är precis vad executeUpdate() returnerar.",
+  updated: "executeUpdate() returnerar antalet ändrade rader. Är talet större än 0 ändrades en rad, och det är svaret: return statement.executeUpdate() > 0;",
   twice: "Varje anrop kör satsen på nytt i databasen.",
   twiceDelete: "Varje anrop kör satsen på nytt. Andra gången finns inget kvar att ta bort, och executeUpdate() returnerar 0.",
   resources: "Connection, PreparedStatement och ResultSet binder resurser i programmet och på servern. Try-with-resources stänger dem automatiskt när blocket tar slut, också när ett Exception kastas.",
@@ -2096,16 +2097,59 @@ function ruleExecute(C) {
       ? `${ex.node.name}() står i try-parentesen och körs därför innan ${late.src} i blocket har satt värdet. Öppna ResultSet i ett inre try-with-resources efter set-anropen.`
       : `${ex.node.name}() anropas före ${late.src}, så frågan körs innan värdet är satt.`, WHY.executeOrder);
   }
-  if (check.result?.kind === "affected") {
-    const fromExec = (e, pos, depth = 0) => {
-      if (!e || depth > 8) return false;
-      if (e.k === "call" && e.name === "executeUpdate") return true;
-      if (e.k === "cast") return fromExec(e.expr, pos, depth + 1);
-      if (e.k === "cond") return fromExec(e.a, pos, depth + 1) || fromExec(e.b, pos, depth + 1);
-      // En variabel som deklareras i ett block som redan har stängts finns inte vid return.
-      if (e.k === "name" && !R.isParam(e.name, pos)) return isDeclared(C, e.name, pos) && R.allValues(e.name).some((v) => fromExec(v.expr, v.pos, depth + 1));
-      return false;
+  const fromExec = (e, pos, depth = 0) => {
+    if (!e || depth > 8) return false;
+    if (e.k === "call" && e.name === "executeUpdate") return true;
+    if (e.k === "cast") return fromExec(e.expr, pos, depth + 1);
+    if (e.k === "cond") return fromExec(e.a, pos, depth + 1) || fromExec(e.b, pos, depth + 1);
+    // En variabel som deklareras i ett block som redan har stängts finns inte vid return.
+    if (e.k === "name" && !R.isParam(e.name, pos)) return isDeclared(C, e.name, pos) && R.allValues(e.name).some((v) => fromExec(v.expr, v.pos, depth + 1));
+    return false;
+  };
+  if (check.result?.kind === "updated") {
+    // Svaret prövas för 0 och 1 ändrade rader: [svar vid 0, svar vid 1].
+    // Rätt är false vid 0 och true vid 1 (n > 0, n >= 1, n != 0, 0 < n …).
+    const OPS = { ">": (a, b) => a > b, "<": (a, b) => a < b, ">=": (a, b) => a >= b, "<=": (a, b) => a <= b, "==": (a, b) => a === b, "!=": (a, b) => a !== b };
+    const FLIP = { ">": "<", "<": ">", ">=": "<=", "<=": ">=", "==": "==", "!=": "!=" };
+    const at = (e, pos, depth = 0) => {
+      if (!e || depth > 8) return null;
+      if (e.k === "lit" && e.type === "boolean") return [e.value, e.value];
+      if (e.k === "unary" && e.op === "!") { const v = at(e.expr, pos, depth + 1); return v && v.map((x) => !x); }
+      if (e.k === "cond") {
+        const t = at(e.test, pos, depth + 1), a = at(e.a, pos, depth + 1), b = at(e.b, pos, depth + 1);
+        return t && a && b ? [t[0] ? a[0] : b[0], t[1] ? a[1] : b[1]] : null;
+      }
+      if (e.k === "bin" && OPS[e.op]) {
+        const [op, k] = fromExec(e.left, pos) ? [e.op, e.right] : fromExec(e.right, pos) ? [FLIP[e.op], e.left] : [];
+        if (!op || k?.k !== "lit" || k.type !== "int") return null;
+        return [OPS[op](0, k.value), OPS[op](1, k.value)];
+      }
+      if (e.k === "name" && !R.isParam(e.name, pos)) {
+        const vals = R.allValues(e.name).map((v) => at(v.expr, v.pos, depth + 1));
+        return vals.length && vals.every((v) => v && v[0] === vals[0][0] && v[1] === vals[0][1]) ? vals[0] : null;
+      }
+      return null;
     };
+    const good = (v) => v && v[0] === false && v[1] === true;
+    // if (statement.executeUpdate() > 0) { return true; } … return false;
+    const ifTrue = F.returns.some((ret) => {
+      const v = at(ret.expr, ret.pos);
+      const fr = [...(ret.ctx ?? [])].reverse().find((x) => x.kind === "if");
+      const c = fr && at(fr.node.cond, ret.pos);
+      if (!v || v[0] !== v[1] || !c || c[0] === c[1]) return false;
+      return fr.part === "then" ? (c[1] ? v[1] : !v[1]) : (c[1] ? !v[1] : v[1]);
+    });
+    const direct = F.returns.some((ret) => good(at(ret.expr, ret.pos)));
+    const falseElsewhere = F.returns.some((ret) => {
+      const v = at(ret.expr, ret.pos);
+      return v && v[0] === false && v[1] === false;
+    });
+    if (!direct && !(ifTrue && falseElsewhere)) {
+      const ret = F.returns.find((x) => x.expr);
+      r.fail(`Metoden returnerar ${ret ? jsrc(ret.expr, 40) : "inget"}, men svaret ska vara true när en rad ändrades och annars false: return statement.executeUpdate() > 0;`, WHY.updated);
+    }
+  }
+  if (check.result?.kind === "affected") {
     if (!F.returns.some((ret) => fromExec(ret.expr, ret.pos))) {
       const ret = F.returns.find((x) => x.expr);
       if (ret?.expr.k === "name" && !R.isParam(ret.expr.name, ret.pos) && !isDeclared(C, ret.expr.name, ret.pos)) r.fail(...undeclaredAt(C, ret.expr.name, ret));
@@ -2113,7 +2157,7 @@ function ruleExecute(C) {
     }
   }
   if (r.empty) {
-    r.ok(`${wantExec}() kör satsen efter set-anropen${check.result?.kind === "affected" ? ", och värdet returneras" : ""}.`);
+    r.ok(`${wantExec}() kör satsen efter set-anropen${check.result?.kind === "affected" ? ", och värdet returneras" : check.result?.kind === "updated" ? ", och svaret bygger på antalet ändrade rader" : ""}.`);
   }
   return r.build();
 }
@@ -2439,6 +2483,7 @@ function ruleReturn(C) {
   const res = check.result ?? {};
   const r = ruleBuilder(JAVA_RULES[8], WHY.list);
   if (res.kind === "affected") { r.na("Returvärdet är antalet rader från executeUpdate() (se regel 6)."); return r.build(); }
+  if (res.kind === "updated") { r.na("Svaret bygger på antalet rader från executeUpdate() (se regel 6)."); return r.build(); }
   if (res.kind === "void" || !res.kind) {
     const valued = F.returns.find((x) => x.expr);
     if (valued && normType(m.returnType) === "void") r.fail(`Metoden är void, men rad ${valued.line} returnerar ${jsrc(valued.expr, 40)}; det kompilerar inte.`, WHY.voidReturn);

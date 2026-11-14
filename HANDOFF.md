@@ -369,11 +369,16 @@ kapitel: allt UI läser `chapter.number`.
 - **Java** (2026-10-26, vy `java` direkt efter SQL, `views/JavaWorkshop.jsx`):
   tentans Java/JDBC-uppgift. `data/databaser/javaTasks.js` har Björns två
   exempeluppgifter ordagrant (java-ex-1 DELETE med två villkor, java-ex-2
-  SELECT till ArrayList<Product>) och åtta egna i samma form (java-ov-1…8:
+  SELECT till ArrayList<Product>) och tio egna i samma form (java-ov-1…10:
   DELETE på naturlig nyckel, UPDATE `Salary = Salary + ?` med antal rader,
   INSERT av ett Product-objekt utan surrogatnyckel, COUNT(*) → int, exists
   → boolean på en ny Book-tabell, findBy → objekt eller null, SELECT som
-  mappar en del av kolumnerna, två villkor + ORDER BY DESC till lista).
+  mappar en del av kolumnerna, två villkor + ORDER BY DESC till lista,
+  INSERT från fyra parametrar, UPDATE `Price = ?` som svarar boolean).
+  java-ov-10 använder `result.kind: "updated"` (2026-11-14): svaret prövas
+  för 0 och 1 ändrade rader, så `> 0`, `>= 1`, `!= 0`, en variabel och
+  if/return true/return false godkänns. En tredje övning, save(Product),
+  lades inte till: den finns redan som java-ov-3 (saveProduct).
   UPDATE fick ett fast belopp i stället för procent: en form som går att
   rätta entydigt och som kursens eget exempel använder. Uppgiftstexten är
   `blocks` (stycken och kodblock i tentans ordning); `check` beskriver
@@ -564,7 +569,9 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
   sammanfattningen och topics.js) skrevs om 2026-10-26 mot exempeltentan
   och är inte granskade av användaren.
 - **Java-fliken:** de åtta egna övningarna (java-ov-1…8) är verifierade
-  i H2 och av rättaren men inte granskade av användaren.
+  i H2 och av rättaren men inte granskade av användaren. java-ov-9 och 10
+  (2026-11-14) är kompilerade med javac och rättade, och har testfall i
+  `scripts/java/cases.mjs`, men är inte körda i H2 (ingen h2-jar fanns).
 - **SQL-verkstaden:** sql-54…62 (tentaspåret), facit verifierade i motorn
   men uppgiftstexterna ogranskade. sql-62 är den nya med aggregat som
   jämförelsevärde (resultat B1 med 3 läsare, B2 med 2).

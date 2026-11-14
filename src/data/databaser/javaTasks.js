@@ -37,6 +37,7 @@
 //             ordning i svarets egen SQL.
 //     result  { kind, rows, model, fields, column, getter }
 //               kind: "affected" — returnera executeUpdate()
+//                     "updated"  — boolean: executeUpdate() > 0
 //                     "void"     — inget returvärde
 //                     "list"     — lista som skapas före loopen och returneras
 //                     "single"   — ett objekt eller null (if (rs.next()))
@@ -908,6 +909,123 @@ public class ProductDao {
           { column: "Pages", getter: "getInt" },
         ],
       },
+    },
+  },
+  {
+    id: "java-ov-9",
+    set: "ovning",
+    number: 9,
+    title: "Lägg till en produkt från parametrar",
+    source: OWN,
+    blocks: [
+      { p: "Givet är en databas i Microsoft SQL Server som innehåller följande tabell:" },
+      { code: PRODUCT_DDL, lang: "sql" },
+      { p: "Följande klass `ProductDao` är också given:" },
+      { code: daoClass("ProductDao", SQL_IMPORTS), lang: "java" },
+      { p: "Implementera följande instansmetod i klassen `ProductDao`:" },
+      {
+        lang: "java",
+        code: `public void addProduct(
+        String productNo,
+        String name,
+        String category,
+        double price
+) throws SQLException`,
+      },
+      { p: "Metoden ska lägga till en ny rad i tabellen `Product`. Kolumnerna `ProductNo`, `Name`, `Category` och `Price` ska tilldelas värdena av parametrarna `productNo`, `name`, `category` och `price`." },
+      { p: "Kolumnen `ProductID` ska inte anges i satsen. Dess värde genereras av databasen." },
+      { p: "Metoden ska inte returnera något värde." },
+      ...examTail(
+        "ProductDao",
+        "Du får anta att parametrarna `productNo`, `name` och `category` inte är `null` och att det inte redan finns någon rad i tabellen `Product` vars värde i kolumnen `ProductNo` är lika med värdet av parametern `productNo`.",
+      ),
+    ],
+    solution: `public void addProduct(
+        String productNo,
+        String name,
+        String category,
+        double price
+) throws SQLException {
+    String sql = "INSERT INTO Product (ProductNo, Name, Category, Price) "
+            + "VALUES (?, ?, ?, ?);";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, productNo);
+        statement.setString(2, name);
+        statement.setString(3, category);
+        statement.setDouble(4, price);
+        statement.executeUpdate();
+    }
+}`,
+    check: {
+      method: {
+        name: "addProduct",
+        returns: "void",
+        params: [["String", "productNo"], ["String", "name"], ["String", "category"], ["double", "price"]],
+      },
+      sql: {
+        kind: "INSERT",
+        table: "Product",
+        values: [
+          { column: "ProductNo", param: "productNo" },
+          { column: "Name", param: "name" },
+          { column: "Category", param: "category" },
+          { column: "Price", param: "price" },
+        ],
+      },
+      binds: { productNo: "setString", name: "setString", category: "setString", price: "setDouble" },
+      result: { kind: "void" },
+    },
+  },
+  {
+    id: "java-ov-10",
+    set: "ovning",
+    number: 10,
+    title: "Ändra priset på en produkt och svara om den fanns",
+    source: OWN,
+    blocks: [
+      { p: "Givet är en databas i Microsoft SQL Server som innehåller följande tabell:" },
+      { code: PRODUCT_DDL, lang: "sql" },
+      { p: "Följande klass `ProductDao` är också given:" },
+      { code: daoClass("ProductDao", SQL_IMPORTS), lang: "java" },
+      { p: "Implementera följande instansmetod i klassen `ProductDao`:" },
+      {
+        lang: "java",
+        code: `public boolean updatePrice(
+        String productNo,
+        double newPrice
+) throws SQLException`,
+      },
+      { p: "Metoden ska sätta värdet i kolumnen `Price` till värdet av parametern `newPrice` för den rad i tabellen `Product` vars värde i kolumnen `ProductNo` är lika med värdet av parametern `productNo`. Rader vars värde i kolumnen `ProductNo` skiljer sig från värdet av parametern `productNo` ska inte ändras." },
+      { p: "Metoden ska returnera `true` om en rad ändrades. Om ingen rad uppfyller villkoret ska metoden returnera `false`." },
+      ...examTail("ProductDao", "Du får anta att parametern `productNo` inte är `null`."),
+    ],
+    solution: `public boolean updatePrice(
+        String productNo,
+        double newPrice
+) throws SQLException {
+    String sql = "UPDATE Product "
+            + "SET Price = ? "
+            + "WHERE ProductNo = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setDouble(1, newPrice);
+        statement.setString(2, productNo);
+        return statement.executeUpdate() > 0;
+    }
+}`,
+    check: {
+      method: { name: "updatePrice", returns: "boolean", params: [["String", "productNo"], ["double", "newPrice"]] },
+      sql: {
+        kind: "UPDATE",
+        table: "Product",
+        set: [{ column: "Price", expr: "?", param: "newPrice" }],
+        where: [{ column: "ProductNo", op: "=", param: "productNo" }],
+      },
+      binds: { newPrice: "setDouble", productNo: "setString" },
+      result: { kind: "updated" },
     },
   },
 ];

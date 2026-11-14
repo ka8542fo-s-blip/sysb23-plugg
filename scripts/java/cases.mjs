@@ -649,4 +649,72 @@ export const cases = {
       },
     ],
   },
+  "java-ov-9": {
+    seed: { Product: products },
+    cases: [
+      {
+        name: "ny rad med parametrarnas värden; ProductID 413 från databasen",
+        args: [saw.productNo, saw.name, saw.category, saw.price],
+        expect: { after: { Product: [...products, productRow(413, saw)] } },
+      },
+      {
+        name: "tom tabell: den nya raden får ProductID 1",
+        args: [saw.productNo, saw.name, saw.category, saw.price],
+        seed: { Product: [] },
+        expect: { after: { Product: [productRow(1, saw)] } },
+      },
+      {
+        name: "apostrofer och SQL i värdena lagras som text; pris med två decimaler",
+        args: [quoted.productNo, quoted.name, quoted.category, quoted.price],
+        expect: { after: { Product: [...products, productRow(413, quoted)] } },
+      },
+      {
+        name: "SQLException i executeUpdate går vidare, allt stängs",
+        args: [saw.productNo, saw.name, saw.category, saw.price],
+        fault: "execute",
+        expect: { throws: "SQLException" },
+      },
+      {
+        name: "tabellen saknas: SQLException går vidare, Connection stängs",
+        args: [saw.productNo, saw.name, saw.category, saw.price],
+        fault: "drop-table",
+        expect: { throws: "SQLException" },
+      },
+    ],
+  },
+  "java-ov-10": {
+    seed: { Product: products },
+    cases: [
+      {
+        name: "P-102 finns: true, bara dess pris ändras",
+        args: ["P-102", 64.5],
+        expect: {
+          returns: true,
+          after: { Product: products.map((row) => (row.ProductNo === "P-102" ? { ...row, Price: 64.5 } : row)) },
+        },
+      },
+      {
+        name: "inget ProductNo matchar: false, inget ändras",
+        args: ["P-999", 10],
+        expect: { returns: false },
+      },
+      {
+        name: "SQL-injektion i productNo ändrar inget: false",
+        args: ["P-101' OR '1'='1", 1],
+        expect: { returns: false },
+      },
+      {
+        name: "SQLException i executeUpdate går vidare, allt stängs",
+        args: ["P-102", 64.5],
+        fault: "execute",
+        expect: { throws: "SQLException" },
+      },
+      {
+        name: "tabellen saknas: SQLException går vidare, Connection stängs",
+        args: ["P-102", 64.5],
+        fault: "drop-table",
+        expect: { throws: "SQLException" },
+      },
+    ],
+  },
 };

@@ -921,11 +921,46 @@ const OV8_SOLUTION = `public ArrayList<Book> findBooksByAuthor(
     return books;
 }`;
 
-const OV_SOLUTIONS = { 1: OV1_SOLUTION, 2: OV2_SOLUTION, 3: OV3_SOLUTION, 4: OV4_SOLUTION, 5: OV5_SOLUTION, 6: OV6_SOLUTION, 7: OV7_SOLUTION, 8: OV8_SOLUTION };
+const OV9_SOLUTION = `public void addProduct(
+        String productNo,
+        String name,
+        String category,
+        double price
+) throws SQLException {
+    String sql = "INSERT INTO Product (ProductNo, Name, Category, Price) "
+            + "VALUES (?, ?, ?, ?);";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, productNo);
+        statement.setString(2, name);
+        statement.setString(3, category);
+        statement.setDouble(4, price);
+        statement.executeUpdate();
+    }
+}`;
+
+const OV10_SOLUTION = `public boolean updatePrice(
+        String productNo,
+        double newPrice
+) throws SQLException {
+    String sql = "UPDATE Product "
+            + "SET Price = ? "
+            + "WHERE ProductNo = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setDouble(1, newPrice);
+        statement.setString(2, productNo);
+        return statement.executeUpdate() > 0;
+    }
+}`;
+
+const OV_SOLUTIONS = { 1: OV1_SOLUTION, 2: OV2_SOLUTION, 3: OV3_SOLUTION, 4: OV4_SOLUTION, 5: OV5_SOLUTION, 6: OV6_SOLUTION, 7: OV7_SOLUTION, 8: OV8_SOLUTION, 9: OV9_SOLUTION, 10: OV10_SOLUTION };
 const ov = (n, ...pairs) => edit(OV_SOLUTIONS[n], ...pairs);
 
-test("övningarna: åtta uppgifter, och kopiorna av lösningsförslagen får full pott", () => {
-  assert.deepEqual(Object.keys(OV).map(Number), [1, 2, 3, 4, 5, 6, 7, 8]);
+test("övningarna: tio uppgifter, och kopiorna av lösningsförslagen får full pott", () => {
+  assert.deepEqual(Object.keys(OV).map(Number), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   for (const [n, code] of Object.entries(OV_SOLUTIONS)) {
     const r = correct(code, OV[n]);
     assert.deepEqual(r.errors, [], `övning ${n}: ${JSON.stringify(r.errors)}`);
@@ -1289,4 +1324,37 @@ test("regel 7: ResultSet utan eget try underkänns med kursens form som skäl, i
     /ResultSet \(resultSet\) öppnas av executeQuery\(\) men står inte i något try-with-resources\. Den stängs visserligen när PreparedStatement stängs, men kursen och lösningsförslaget stänger varje resurs som metoden öppnar uttryckligen/);
   assert.match(rule(r, 7).why, /svaret rättas efter kursens form/);
   assert.doesNotMatch(`${rule(r, 7).text} ${rule(r, 7).why}`, /kräver att samtliga resurser/);
+});
+
+test("övning 9 (INSERT från parametrar): kolumnerna i annan ordning godkänns; ProductID i kolumnlistan, fel bindning och return i void underkänns", () => {
+  correct(ov(9, `"INSERT INTO Product (ProductNo, Name, Category, Price) "`, `"INSERT INTO Product (Price, ProductNo, Name, Category) "`,
+    "statement.setString(1, productNo);", "statement.setDouble(1, price);",
+    "statement.setString(2, name);", "statement.setString(2, productNo);",
+    "statement.setString(3, category);", "statement.setString(3, name);",
+    "statement.setDouble(4, price);", "statement.setString(4, category);"), OV[9]);
+  failsOn(ov(9, `"INSERT INTO Product (ProductNo, Name, Category, Price) "`, `"INSERT INTO Product (ProductID, ProductNo, Name, Category, Price) "`, `"VALUES (?, ?, ?, ?);"`, `"VALUES (?, ?, ?, ?, ?);"`,
+    "statement.setString(1, productNo);", "statement.setInt(1, 0);\n        statement.setString(2, productNo);",
+    "statement.setString(2, name);", "statement.setString(3, name);",
+    "statement.setString(3, category);", "statement.setString(4, category);",
+    "statement.setDouble(4, price);", "statement.setDouble(5, price);"), OV[9], 2, /ProductID ska inte vara med i kolumnlistan/);
+  failsOn(ov(9, "statement.setString(2, name);", "statement.setString(2, category);", "statement.setString(3, category);", "statement.setString(3, name);"),
+    OV[9], 5, /binder category till \? nr 2, men \? nr 2 hör till Name, som ska få name/);
+  failsOn(ov(9, "        statement.executeUpdate();", "        return statement.executeUpdate();"), OV[9], 9, /Metoden är void/);
+});
+
+test("övning 10 (UPDATE som svarar boolean): >= 1, != 0, en variabel och if/return godkänns; fel ordning på ?, == 0, alltid true och antalet som svar underkänns", () => {
+  const ret = "        return statement.executeUpdate() > 0;";
+  correct(ov(10, ret, "        return statement.executeUpdate() >= 1;"), OV[10]);
+  correct(ov(10, ret, "        return 0 != statement.executeUpdate();"), OV[10]);
+  correct(ov(10, ret, "        int updated = statement.executeUpdate();\n        return updated > 0;"), OV[10]);
+  correct(ov(10, ret, "        if (statement.executeUpdate() > 0) {\n            return true;\n        }\n        return false;"), OV[10]);
+  // Priset står först i SQL-strängen, fast productNo kommer först i signaturen.
+  failsOn(ov(10, "statement.setDouble(1, newPrice);", "statement.setString(1, productNo);", "statement.setString(2, productNo);", "statement.setDouble(2, newPrice);"),
+    OV[10], 5, /binder productNo till \? nr 1, men \? nr 1 hör till Price, som ska få newPrice/);
+  failsOn(ov(10, ret, "        return statement.executeUpdate();"), OV[10], 6, /Metoden returnerar statement\.executeUpdate\(\), men svaret ska vara true/);
+  failsOn(ov(10, ret, "        return statement.executeUpdate() == 0;"), OV[10], 6, /svaret ska vara true när en rad ändrades och annars false/);
+  failsOn(ov(10, ret, "        statement.executeUpdate();\n        return true;"), OV[10], 6, /Metoden returnerar true, men svaret ska vara true när en rad ändrades/);
+  failsOn(ov(10, ret, "        if (statement.executeUpdate() > 0) {\n            return true;\n        }\n        return true;"), OV[10], 6, /svaret ska vara true när en rad ändrades/);
+  failsOn(ov(10, `"SET Price = ? "
+            + "WHERE ProductNo = ?;"`, `"SET Price = ?;"`, "        statement.setString(2, productNo);\n", ""), OV[10], 2, /WHERE saknas\. Utan WHERE ändrar satsen varje rad/);
 });
