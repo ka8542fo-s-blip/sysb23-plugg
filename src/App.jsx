@@ -12,6 +12,7 @@ import SqlWorkshop from "./views/SqlWorkshop.jsx";
 import Modeling from "./views/Modeling.jsx";
 import DbExam from "./views/DbExam.jsx";
 import ChoiceExam from "./views/ChoiceExam.jsx";
+import MockExam from "./views/MockExam.jsx";
 import Fordjupning from "./views/Fordjupning.jsx";
 import Assignments from "./views/Assignments.jsx";
 import ProcessRun from "./views/ProcessRun.jsx";
@@ -304,7 +305,15 @@ export default function App() {
         )}
         {/* Tenta: hela flervalstentor (course.choiceExams, Säkerhet) eller
             Databasers konstruktionsuppgifter. */}
-        {view === "tenta" && (course.choiceExams.length > 0 ? <ChoiceExam course={course} /> : <DbExam />)}
+        {view === "tenta" &&
+          (course.mockExams.length > 0 ? (
+            // Verksamhetsarkitektur: tre provtentor utan poäng (MockExam).
+            <MockExam course={course} navigate={navigate} />
+          ) : course.choiceExams.length > 0 ? (
+            <ChoiceExam course={course} />
+          ) : (
+            <DbExam />
+          ))}
         {view === "fordjupning" && (
           // Verksamhetsarkitektur: docx-frågorna och HT25-arkivet, utanför UF:s tips.
           <Fordjupning

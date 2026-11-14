@@ -37,6 +37,7 @@ import {
 import { essays as arkitekturEssays } from "./arkitektur/essays.js";
 import { examArchive as arkitekturExamArchive } from "./arkitektur/examArchive.js";
 import { explainCards as arkitekturExplainCards } from "./arkitektur/explainCards.js";
+import { mockExams as arkitekturMockExams, MOCK_EXAM_NOTE as arkitekturMockExamNote } from "./arkitektur/mockExams.js";
 import { zachmanTasks as arkitekturZachmanTasks } from "./arkitektur/zachman.js";
 import {
   chapters as arkitekturChapters,
@@ -80,6 +81,9 @@ const noContent = {
   // Förklarakort för fritextfrågorna i Öva (Verksamhetsarkitektur), i samma
   // kö och samma answers som frågorna men utanför `questions`.
   explainCards: [],
+  // Provtentor i fliken Tenta utan poäng (Verksamhetsarkitektur). Tom = fliken
+  // Tenta är Säkerhets (choiceExams) eller Databasers.
+  mockExams: [],
 };
 
 // Manifest över delkurser. `views` styr vilka flikar delkursen har —
@@ -178,8 +182,11 @@ export const courses = [
     // 2026-11-14 (enkel och tentafokuserad): Essä, Zachman och Fördjupning
     // döljs (finns kvar i repot och i lagringen). Fritextfrågorna övas som
     // förklarakort i Öva, Memorera ligger under modul 4 i Öva.
-    views: ["las", "ova", "statistik"],
+    views: ["las", "ova", "tenta", "statistik"],
     explainCards: arkitekturExplainCards,
+    // Tre provtentor (data/arkitektur/mockExams.js) och raden överst i fliken.
+    mockExams: arkitekturMockExams,
+    mockExamNote: arkitekturMockExamNote,
     // Eget block under en grupps frågor i Öva: Memorera under modul 4.
     practiceBlocks: { kap4: "zachman-minne" },
     // Kortet "Hur långt du har kommit" i Statistik: Zachman-delen räknar

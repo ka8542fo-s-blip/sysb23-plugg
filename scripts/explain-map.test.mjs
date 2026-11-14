@@ -37,7 +37,7 @@ test("förklarakorten i manifestet: 47 kort med frågor, svar och två val, i Ö
   assert.equal(course.explainCards, explainCards);
   assert.equal(explainCards.length, 47);
   assert.equal(course.questions.length, 135, "provtentorna bygger på de 135 modulfrågorna");
-  assert.deepEqual(course.views, ["las", "ova", "statistik"]);
+  assert.deepEqual(course.views, ["las", "ova", "tenta", "statistik"]);
   assert.deepEqual(course.practiceBlocks, { kap4: "zachman-minne" });
   for (const card of explainCards) {
     assert.equal(card.kind, "forklara");
