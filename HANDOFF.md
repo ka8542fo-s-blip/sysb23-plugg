@@ -369,12 +369,21 @@ kapitel: allt UI läser `chapter.number`.
 - **Java** (2026-10-26, vy `java` direkt efter SQL, `views/JavaWorkshop.jsx`):
   tentans Java/JDBC-uppgift. `data/databaser/javaTasks.js` har Björns två
   exempeluppgifter ordagrant (java-ex-1 DELETE med två villkor, java-ex-2
-  SELECT till ArrayList<Product>) och tio egna i samma form (java-ov-1…10:
+  SELECT till ArrayList<Product>) och fjorton egna i samma form (java-ov-1…14:
   DELETE på naturlig nyckel, UPDATE `Salary = Salary + ?` med antal rader,
   INSERT av ett Product-objekt utan surrogatnyckel, COUNT(*) → int, exists
   → boolean på en ny Book-tabell, findBy → objekt eller null, SELECT som
   mappar en del av kolumnerna, två villkor + ORDER BY DESC till lista,
-  INSERT från fyra parametrar, UPDATE `Price = ?` som svarar boolean).
+  INSERT från fyra parametrar, UPDATE `Price = ?` som svarar boolean,
+  UPDATE där SET-värdet kommer före WHERE-värdet (11), samma parameter i
+  två luckor (12), UPDATE av fyra kolumner från ett objekt → boolean (13)
+  och INSERT av en ArrayList<Product> i en loop, markerad "svårare" (14)).
+  java-ov-14 använder `check.loop` (schemat i javaTasks.js): elementets
+  variabel heter som i uppgiften oavsett namn eller indexloop; rättaren
+  kräver executeUpdate() i loopen, en räknare (+=, x = x + …, ++) som
+  returneras efter loopen och getConnection/prepareStatement före loopen.
+  `scripts/java/verify-solutions.mjs` tar nu också en ArrayList-parameter
+  (en array av objekt i cases.mjs).
   java-ov-10 använder `result.kind: "updated"` (2026-11-14): svaret prövas
   för 0 och 1 ändrade rader, så `> 0`, `>= 1`, `!= 0`, en variabel och
   if/return true/return false godkänns. En tredje övning, save(Product),
@@ -569,7 +578,7 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
   sammanfattningen och topics.js) skrevs om 2026-10-26 mot exempeltentan
   och är inte granskade av användaren.
 - **Java-fliken:** de åtta egna övningarna (java-ov-1…8) är verifierade
-  i H2 och av rättaren men inte granskade av användaren. java-ov-9 och 10
+  i H2 och av rättaren men inte granskade av användaren. java-ov-9…14
   (2026-11-14) är kompilerade med javac och rättade, och har testfall i
   `scripts/java/cases.mjs`, men är inte körda i H2 (ingen h2-jar fanns).
 - **SQL-verkstaden:** sql-54…62 (tentaspåret), facit verifierade i motorn

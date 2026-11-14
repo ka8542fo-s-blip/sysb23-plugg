@@ -956,11 +956,87 @@ const OV10_SOLUTION = `public boolean updatePrice(
     }
 }`;
 
-const OV_SOLUTIONS = { 1: OV1_SOLUTION, 2: OV2_SOLUTION, 3: OV3_SOLUTION, 4: OV4_SOLUTION, 5: OV5_SOLUTION, 6: OV6_SOLUTION, 7: OV7_SOLUTION, 8: OV8_SOLUTION, 9: OV9_SOLUTION, 10: OV10_SOLUTION };
+const OV11_SOLUTION = `public int moveToCategory(
+        String fromCategory,
+        String toCategory
+) throws SQLException {
+    String sql = "UPDATE Product "
+            + "SET Category = ? "
+            + "WHERE Category = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, toCategory);
+        statement.setString(2, fromCategory);
+        return statement.executeUpdate();
+    }
+}`;
+
+const OV12_SOLUTION = `public int raiseToMinimumSalary(
+        String department,
+        double minimumSalary
+) throws SQLException {
+    String sql = "UPDATE Employee "
+            + "SET Salary = ? "
+            + "WHERE Department = ? "
+            + "    AND Salary < ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setDouble(1, minimumSalary);
+        statement.setString(2, department);
+        statement.setDouble(3, minimumSalary);
+        return statement.executeUpdate();
+    }
+}`;
+
+const OV13_SOLUTION = `public boolean update(
+        Product product
+) throws SQLException {
+    String sql = "UPDATE Product "
+            + "SET ProductNo = ?, "
+            + "    Name = ?, "
+            + "    Category = ?, "
+            + "    Price = ? "
+            + "WHERE ProductID = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, product.getProductNo());
+        statement.setString(2, product.getName());
+        statement.setString(3, product.getCategory());
+        statement.setDouble(4, product.getPrice());
+        statement.setInt(5, product.getId());
+        return statement.executeUpdate() > 0;
+    }
+}`;
+
+const OV14_SOLUTION = `public int saveAll(
+        ArrayList<Product> products
+) throws SQLException {
+    String sql = "INSERT INTO Product (ProductNo, Name, Category, Price) "
+            + "VALUES (?, ?, ?, ?);";
+    int savedRows = 0;
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        for (Product product : products) {
+            statement.setString(1, product.getProductNo());
+            statement.setString(2, product.getName());
+            statement.setString(3, product.getCategory());
+            statement.setDouble(4, product.getPrice());
+            savedRows += statement.executeUpdate();
+        }
+    }
+
+    return savedRows;
+}`;
+
+const OV_SOLUTIONS = { 1: OV1_SOLUTION, 2: OV2_SOLUTION, 3: OV3_SOLUTION, 4: OV4_SOLUTION, 5: OV5_SOLUTION, 6: OV6_SOLUTION, 7: OV7_SOLUTION, 8: OV8_SOLUTION, 9: OV9_SOLUTION, 10: OV10_SOLUTION, 11: OV11_SOLUTION, 12: OV12_SOLUTION, 13: OV13_SOLUTION, 14: OV14_SOLUTION };
 const ov = (n, ...pairs) => edit(OV_SOLUTIONS[n], ...pairs);
 
-test("övningarna: tio uppgifter, och kopiorna av lösningsförslagen får full pott", () => {
-  assert.deepEqual(Object.keys(OV).map(Number), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+test("övningarna: fjorton uppgifter, och kopiorna av lösningsförslagen får full pott", () => {
+  assert.deepEqual(Object.keys(OV).map(Number), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
   for (const [n, code] of Object.entries(OV_SOLUTIONS)) {
     const r = correct(code, OV[n]);
     assert.deepEqual(r.errors, [], `övning ${n}: ${JSON.stringify(r.errors)}`);
@@ -1357,4 +1433,59 @@ test("övning 10 (UPDATE som svarar boolean): >= 1, != 0, en variabel och if/ret
   failsOn(ov(10, ret, "        if (statement.executeUpdate() > 0) {\n            return true;\n        }\n        return true;"), OV[10], 6, /svaret ska vara true när en rad ändrades/);
   failsOn(ov(10, `"SET Price = ? "
             + "WHERE ProductNo = ?;"`, `"SET Price = ?;"`, "        statement.setString(2, productNo);\n", ""), OV[10], 2, /WHERE saknas\. Utan WHERE ändrar satsen varje rad/);
+});
+
+test("övning 11 (UPDATE, två textparametrar): signaturens ordning i set-anropen underkänns; utan WHERE underkänns", () => {
+  failsOn(ov(11, "statement.setString(1, toCategory);", "statement.setString(1, fromCategory);", "statement.setString(2, fromCategory);", "statement.setString(2, toCategory);"),
+    OV[11], 5, /binder fromCategory till \? nr 1, men \? nr 1 hör till Category, som ska få toCategory/);
+  failsOn(ov(11, `"SET Category = ? "
+            + "WHERE Category = ?;"`, `"SET Category = ?;"`, "        statement.setString(2, fromCategory);\n", ""), OV[11], 2, /WHERE saknas/);
+});
+
+test("övning 12 (samma värde i två luckor): villkoren i annan ordning godkänns; saknad lucka 3, fel värde i den och <= underkänns", () => {
+  correct(ov(12, `"WHERE Department = ? "
+            + "    AND Salary < ?;"`, `"WHERE Salary < ? "
+            + "    AND Department = ?;"`, "statement.setString(2, department);", "statement.setDouble(2, minimumSalary);", "statement.setDouble(3, minimumSalary);", "statement.setString(3, department);"), OV[12]);
+  failsOn(ov(12, "        statement.setDouble(3, minimumSalary);\n", ""), OV[12], 3, /\? nr 3 får aldrig något värde/);
+  failsOn(ov(12, "statement.setDouble(3, minimumSalary);", "statement.setString(3, department);"), OV[12], 5, /binder department till \? nr 3, men \? nr 3 hör till Salary, som ska få minimumSalary/);
+  failsOn(ov(12, "Salary < ?", "Salary <= ?"), OV[12], 2, /Salary <= \? ska vara Salary < \?/);
+});
+
+test("övning 13 (UPDATE från ett objekt): == 1 godkänns; saknat komma, WHERE på fel kolumn och fel värde i lucka 5 underkänns", () => {
+  correct(ov(13, "return statement.executeUpdate() > 0;", "return statement.executeUpdate() == 1;"), OV[13]);
+  failsOn(ov(13, `"SET ProductNo = ?, "`, `"SET ProductNo = ? "`), OV[13], 2, /går inte att tolka/);
+  failsOn(ov(13, `"WHERE ProductID = ?;"`, `"WHERE ProductNo = ?;"`, "statement.setInt(5, product.getId());", "statement.setString(5, product.getProductNo());"), OV[13], 2, /Villkoret ProductID = \? saknas/);
+  failsOn(ov(13, "statement.setInt(5, product.getId());", "statement.setString(5, product.getProductNo());"), OV[13], 5, /\? nr 5 hör till ProductID, som ska få product\.getId\(\)/);
+});
+
+test("övning 14 (INSERT i en loop): annat namn, indexloop, ++ och x = x + … godkänns; ingen loop, överskriven räknare, return i loopen och anslutning per varv underkänns", () => {
+  const sum = "            savedRows += statement.executeUpdate();";
+  correct(ov(14, "for (Product product : products)", "for (Product p : products)").replaceAll("product.get", "p.get"), OV[14]);
+  correct(ov(14, "        for (Product product : products) {", "        for (int i = 0; i < products.size(); i++) {\n            Product product = products.get(i);"), OV[14]);
+  correct(ov(14, sum, "            statement.executeUpdate();\n            savedRows++;"), OV[14]);
+  correct(ov(14, sum, "            savedRows = savedRows + statement.executeUpdate();"), OV[14]);
+  failsOn(ov(14, "        for (Product product : products) {\n", "        Product product = products.get(0);\n", sum + "\n        }\n", sum + "\n"), OV[14], 6, /står inte i någon loop/);
+  failsOn(ov(14, sum, "            savedRows = statement.executeUpdate();"), OV[14], 6, /skriver över räknaren i varje varv/);
+  failsOn(ov(14, sum, sum + "\n            return savedRows;"), OV[14], 6, /return står i loopen/);
+  failsOn(ov(14, sum, "            statement.executeUpdate();", "    return savedRows;", "    return products.size();"), OV[14], 6, /inte en räknare som summerar/);
+  failsOn(`public int saveAll(
+        ArrayList<Product> products
+) throws SQLException {
+    String sql = "INSERT INTO Product (ProductNo, Name, Category, Price) "
+            + "VALUES (?, ?, ?, ?);";
+    int savedRows = 0;
+
+    for (Product product : products) {
+        try (Connection connection = connectionHandler.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, product.getProductNo());
+            statement.setString(2, product.getName());
+            statement.setString(3, product.getCategory());
+            statement.setDouble(4, product.getPrice());
+            savedRows += statement.executeUpdate();
+        }
+    }
+
+    return savedRows;
+}`, OV[14], 7, /står i loopen och körs en gång per element/);
 });

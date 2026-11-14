@@ -17,7 +17,8 @@
 // Ett fall:
 //   name:   vad fallet visar (står i rapporten)
 //   args:   argumenten i parametrarnas ordning: strängar, tal, true/false,
-//           null. En objektparameter (t.ex. save(Employee employee)) skrivs
+//           null. En listparameter (ArrayList<Product>) skrivs som en array
+//           av objekt. En objektparameter (t.ex. save(Employee employee)) skrivs
 //           { instansvariabel: värde }; harnessen sätter variablerna direkt.
 //   seed:   ersätter uppgiftens seed i just det här fallet
 //   fault:  "drop-table" — tabellerna tas bort före anropet (ett riktigt
@@ -712,6 +713,139 @@ export const cases = {
       {
         name: "tabellen saknas: SQLException går vidare, Connection stängs",
         args: ["P-102", 64.5],
+        fault: "drop-table",
+        expect: { throws: "SQLException" },
+      },
+    ],
+  },
+  "java-ov-11": {
+    seed: { Product: products },
+    cases: [
+      {
+        name: "Verktyg → Bygg: tre rader ändras, andra kategorier orörda",
+        args: ["Verktyg", "Bygg"],
+        expect: { returns: 3, after: { Product: products.map((row) => (row.Category === "Verktyg" ? { ...row, Category: "Bygg" } : row)) } },
+      },
+      {
+        name: "parametrarna åt rätt håll: Kök → Verktyg ändrar bara Kaffebryggaren",
+        args: ["Kök", "Verktyg"],
+        expect: { returns: 1, after: { Product: products.map((row) => (row.Category === "Kök" ? { ...row, Category: "Verktyg" } : row)) } },
+      },
+      {
+        name: "ingen rad i kategorin: 0, inget ändras",
+        args: ["Trädgård", "Verktyg"],
+        expect: { returns: 0 },
+      },
+      {
+        name: "SQL-injektion i fromCategory ändrar inget",
+        args: ["Verktyg' OR '1'='1", "X"],
+        expect: { returns: 0 },
+      },
+      {
+        name: "SQLException i executeUpdate går vidare, allt stängs",
+        args: ["Verktyg", "Bygg"],
+        fault: "execute",
+        expect: { throws: "SQLException" },
+      },
+    ],
+  },
+  "java-ov-12": {
+    seed: { Employee: employees },
+    cases: [
+      {
+        name: "IT, gräns 30000: E1 och E3 höjs till 30000; E2 (lika med) och E4 (över) orörda",
+        args: ["IT", 30000],
+        expect: {
+          returns: 2,
+          after: { Employee: employees.map((row) => (row.Department === "IT" && row.Salary < 30000 ? { ...row, Salary: 30000 } : row)) },
+        },
+      },
+      {
+        name: "Ekonomi, gräns 25000: bara E5; IT med lägre lön orörd",
+        args: ["Ekonomi", 25000],
+        expect: {
+          returns: 1,
+          after: { Employee: employees.map((row) => (row.EmployeeNo === "E5" ? { ...row, Salary: 25000 } : row)) },
+        },
+      },
+      {
+        name: "ingen under gränsen: 0, inget ändras",
+        args: ["IT", 1000],
+        expect: { returns: 0 },
+      },
+      {
+        name: "SQL-injektion i department ändrar inget",
+        args: ["IT' OR '1'='1", 99999],
+        expect: { returns: 0 },
+      },
+      {
+        name: "SQLException i executeUpdate går vidare, allt stängs",
+        args: ["IT", 30000],
+        fault: "execute",
+        expect: { throws: "SQLException" },
+      },
+    ],
+  },
+  "java-ov-13": {
+    seed: { Product: products },
+    cases: [
+      {
+        name: "id 205 finns: true, alla fyra kolumnerna får objektets värden, ProductID orört",
+        args: [{ id: 205, productNo: "P-206", name: "Pussel 1000 bitar", category: "Spel", price: 149.9 }],
+        expect: {
+          returns: true,
+          after: { Product: products.map((row) => (row.ProductID === 205 ? { ProductID: 205, ProductNo: "P-206", Name: "Pussel 1000 bitar", Category: "Spel", Price: 149.9 } : row)) },
+        },
+      },
+      {
+        name: "id som inte finns: false, inget ändras",
+        args: [{ id: 999, productNo: "P-999", name: "Ingen", category: "Ingen", price: 1 }],
+        expect: { returns: false },
+      },
+      {
+        name: "apostrofer och SQL i värdena lagras som text",
+        args: [{ id: 412, ...quoted }],
+        expect: {
+          returns: true,
+          after: { Product: products.map((row) => (row.ProductID === 412 ? productRow(412, quoted) : row)) },
+        },
+      },
+      {
+        name: "SQLException i executeUpdate går vidare, allt stängs",
+        args: [{ id: 205, productNo: "P-206", name: "Pussel", category: "Spel", price: 1 }],
+        fault: "execute",
+        expect: { throws: "SQLException" },
+      },
+    ],
+  },
+  "java-ov-14": {
+    seed: { Product: products },
+    cases: [
+      {
+        name: "två produkter: 2, raderna får ProductID 413 och 414, id (5000) används inte",
+        args: [[saw, quoted]],
+        expect: { returns: 2, after: { Product: [...products, productRow(413, saw), productRow(414, quoted)] } },
+      },
+      {
+        name: "tom lista: 0, inget ändras",
+        args: [[]],
+        expect: { returns: 0 },
+      },
+      {
+        name: "en produkt i tom tabell: 1, ProductID 1",
+        args: [[saw]],
+        seed: { Product: [] },
+        expect: { returns: 1, after: { Product: [productRow(1, saw)] } },
+      },
+      {
+        name: "SQLException i executeUpdate går vidare, allt stängs",
+        args: [[saw, quoted]],
+        fault: "execute",
+        expect: { throws: "SQLException" },
+      },
+      {
+        name: "tabellen saknas: SQLException går vidare, Connection stängs",
+        args: [[saw]],
         fault: "drop-table",
         expect: { throws: "SQLException" },
       },

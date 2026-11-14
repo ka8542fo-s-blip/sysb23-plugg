@@ -87,6 +87,9 @@ const WHY = {
   executeArg: "Frågan gavs redan till prepareStatement. executeUpdate(sql) och executeQuery(sql) med en sträng hör till det vanliga Statement; på ett PreparedStatement kastar de SQLException.",
   executeOrder: "Värdena måste vara satta när frågan körs. Ett set-anrop efter executeQuery eller executeUpdate kommer för sent.",
   affected: "Uppgiften ber om antalet rader satsen påverkade, och det är precis vad executeUpdate() returnerar.",
+  loopExec: "Varje element i listan blir en egen rad, så INSERT-satsen ska köras en gång per element: executeUpdate() i loopen.",
+  loopSum: "executeUpdate() ger 1 för varje rad som läggs till. Summan över alla varv är antalet rader, så räknaren ökas i loopen och returneras efter den.",
+  loopOpen: "Samma PreparedStatement kan köras om och om igen med nya värden. Att öppna en ny anslutning per element är långsamt och är inte vad uppgiften ber om.",
   updated: "executeUpdate() returnerar antalet ändrade rader. Är talet större än 0 ändrades en rad, och det är svaret: return statement.executeUpdate() > 0;",
   twice: "Varje anrop kör satsen på nytt i databasen.",
   twiceDelete: "Varje anrop kör satsen på nytt. Andra gången finns inget kvar att ta bort, och executeUpdate() returnerar 0.",
@@ -560,7 +563,7 @@ function parseBody(tokens, open, close, errors) {
         const iter = parseExpr();
         expectOp(")", "efter for");
         d.decls[0].init = null;
-        return { k: "for", init: [d], cond: iter, update: [], body: parseStatement(), pos: tok.pos, line: tok.line };
+        return { k: "for", each: true, init: [d], cond: iter, update: [], body: parseStatement(), pos: tok.pos, line: tok.line };
       }
       init.push(d);
     } else if (!isOp(peek(), ";")) {
@@ -797,7 +800,7 @@ function jsrc(e, max = 80) {
 // ---------- Fakta ur en metodkropp ----------
 
 function collect(body) {
-  const F = { decls: [], assigns: [], calls: [], news: [], returns: [], catches: [], loops: [], throwStmts: [], resourceNames: [], tries: [], names: [] };
+  const F = { decls: [], assigns: [], incs: [], calls: [], news: [], returns: [], catches: [], loops: [], throwStmts: [], resourceNames: [], tries: [], names: [] };
   const expr = (e, ctx) => {
     if (!e || typeof e !== "object") return;
     switch (e.k) {
@@ -807,7 +810,10 @@ function collect(body) {
         if (e.target?.k === "name") F.assigns.push({ name: e.target.name, op: e.op, value: e.value, pos: e.pos, line: e.line, ctx });
         expr(e.target, ctx); expr(e.value, ctx); return;
       case "bin": expr(e.left, ctx); expr(e.right, ctx); return;
-      case "unary": case "cast": expr(e.expr, ctx); return;
+      case "unary":
+        if ((e.op === "++" || e.op === "--") && e.expr?.k === "name") F.incs.push({ name: e.expr.name, op: e.op, pos: e.pos, ctx });
+        expr(e.expr, ctx); return;
+      case "cast": expr(e.expr, ctx); return;
       case "cond": expr(e.test, ctx); expr(e.a, ctx); expr(e.b, ctx); return;
       case "field": expr(e.target, ctx); return;
       case "index": expr(e.target, ctx); expr(e.index, ctx); return;
@@ -876,6 +882,7 @@ function collect(body) {
   return F;
 }
 
+const inAnyLoopBody = (ctx) => ctx.some((fr) => fr.kind === "loop" && fr.part === "body");
 const inFinally = (ctx) => ctx.some((fr) => fr.kind === "try" && fr.part === "finally");
 const innermost = (ctx) => ctx[ctx.length - 1];
 const loopBodyOf = (ctx) => [...ctx].reverse().find((fr) => fr.kind === "loop" && fr.part === "body")?.node ?? null;
@@ -1479,11 +1486,21 @@ function buildContext(main, helpers, check, tableCols = null) {
   const pname = (taskExpr) => String(taskExpr).replace(/^[A-Za-z_$][\w$]*/, (base) => toStudent.get(base) ?? base);
   const paramNames = m.params.map((x) => x.name);
 
+  // check.loop: variabeln som håller ett element ur listparametern heter
+  // som i uppgiften, oavsett namn och form: for (Product p : products) eller
+  // Product p = products.get(i).
+  const overParam = (e) => e?.k === "name" && paramNames.includes(e.name) && (toTask.get(e.name) ?? e.name) === check.loop?.over;
+  const loopItems = new Set(!check.loop ? [] : [
+    ...F.loops.filter((l) => l.node.each && overParam(l.node.cond)).flatMap((l) => l.node.init[0]?.decls?.map((d) => d.name) ?? []),
+    ...F.decls.filter((d) => d.init?.k === "call" && d.init.name === "get" && overParam(d.init.target)).map((d) => d.name),
+  ]);
+
   // Nyckel för ett uttryck, med parametrarna i uppgiftens namn.
   const keyOf = (e, pos, depth = 0) => {
     if (!e || depth > 10) return "?";
     switch (e.k) {
       case "name": {
+        if (loopItems.has(e.name)) return `n:${check.loop.item}`;
         if (R.isParam(e.name, pos ?? e.pos)) return `p:${toTask.get(e.name) ?? e.name}`;
         const v = R.valueAt(e.name, pos ?? e.pos);
         if (v) return keyOf(v.expr, v.pos, depth + 1);
@@ -1622,7 +1639,7 @@ function buildContext(main, helpers, check, tableCols = null) {
   for (const d of F.decls) if (normType(d.type) === "ResultSet") rsNames.add(d.name);
 
   const C = {
-    check, m, F, R, body: main.body, helpers, want, taskParams, toTask, toStudent, pname, paramNames, keyOf, taskKey,
+    check, m, F, R, body: main.body, helpers, want, taskParams, toTask, toStudent, pname, paramNames, keyOf, taskKey, loopItems,
     stmtName, stmtHolder, isPrepared, prepCalls, createCalls, sql, sqlSource, setCalls, rsNames, tableCols,
     sqlKind: sql?.parsed?.kind ?? check.sql?.kind,
   };
@@ -2102,8 +2119,14 @@ function ruleExecute(C) {
     if (e.k === "call" && e.name === "executeUpdate") return true;
     if (e.k === "cast") return fromExec(e.expr, pos, depth + 1);
     if (e.k === "cond") return fromExec(e.a, pos, depth + 1) || fromExec(e.b, pos, depth + 1);
+    // En räknare som summerar: total = total + statement.executeUpdate().
+    if (e.k === "bin" && e.op === "+") return fromExec(e.left, pos, depth + 1) || fromExec(e.right, pos, depth + 1);
     // En variabel som deklareras i ett block som redan har stängts finns inte vid return.
-    if (e.k === "name" && !R.isParam(e.name, pos)) return isDeclared(C, e.name, pos) && R.allValues(e.name).some((v) => fromExec(v.expr, v.pos, depth + 1));
+    // total += statement.executeUpdate() i en loop räknas som värdet från executeUpdate().
+    if (e.k === "name" && !R.isParam(e.name, pos)) {
+      return isDeclared(C, e.name, pos) && (R.allValues(e.name).some((v) => fromExec(v.expr, v.pos, depth + 1))
+        || F.assigns.some((a) => a.name === e.name && a.op === "+=" && fromExec(a.value, a.pos, depth + 1)));
+    }
     return false;
   };
   if (check.result?.kind === "updated") {
@@ -2149,7 +2172,40 @@ function ruleExecute(C) {
       r.fail(`Metoden returnerar ${ret ? jsrc(ret.expr, 40) : "inget"}, men svaret ska vara true när en rad ändrades och annars false: return statement.executeUpdate() > 0;`, WHY.updated);
     }
   }
-  if (check.result?.kind === "affected") {
+  if (check.result?.kind === "affected" && check.loop) {
+    // Uppgiften kör satsen en gång per element: executeUpdate() i loopen, och
+    // en räknare som summerar och returneras efter loopen.
+    const execs = F.calls.filter((c) => c.node.name === "executeUpdate");
+    const looped = execs.filter((c) => inAnyLoopBody(c.ctx));
+    const over = check.loop.over;
+    if (!looped.length) {
+      r.fail(`executeUpdate() står inte i någon loop, så bara en rad läggs till. Gå igenom listan med for (${check.loop.model} ${check.loop.item} : ${C.pname(over)}) och kör satsen i varje varv.`, WHY.loopExec);
+    } else {
+      const loopBody = (c) => [...c.ctx].reverse().find((fr) => fr.kind === "loop" && fr.part === "body")?.node;
+      const bodies = new Set(looped.map(loopBody));
+      const sameLoop = (ctx) => ctx.some((fr) => fr.kind === "loop" && fr.part === "body" && bodies.has(fr.node));
+      const holdsExec = (e, depth = 0) => !!e && depth < 6 && ((e.k === "call" && e.name === "executeUpdate") || (e.k === "cast" && holdsExec(e.expr, depth + 1))
+        || (e.k === "name" && !R.isParam(e.name, e.pos) && R.allValues(e.name).some((v) => sameLoop(v.ctx ?? []) && holdsExec(v.expr, depth + 1))));
+      const one = (e) => e?.k === "lit" && e.type === "int" && e.value === 1;
+      // name += executeUpdate(), name = name + executeUpdate(), eller name++ / name += 1 i samma loop som executeUpdate().
+      const sums = (name) =>
+        F.assigns.some((a) => a.name === name && sameLoop(a.ctx) && (
+          (a.op === "+=" && (holdsExec(a.value) || one(a.value)))
+          || (a.op === "=" && a.value?.k === "bin" && a.value.op === "+"
+            && [[a.value.left, a.value.right], [a.value.right, a.value.left]].some(([x, y]) => x?.k === "name" && x.name === name && (holdsExec(y) || one(y))))))
+        || F.incs.some((x) => x.name === name && x.op === "++" && sameLoop(x.ctx));
+      const valued = F.returns.filter((x) => x.expr);
+      const ok = valued.length && valued.every((ret) => ret.expr.k === "name" && !R.isParam(ret.expr.name, ret.pos) && sums(ret.expr.name) && !inAnyLoopBody(ret.ctx));
+      if (!ok) {
+        const ret = valued[0];
+        const name = ret?.expr?.k === "name" ? ret.expr.name : null;
+        const overwrite = name && F.assigns.find((a) => a.name === name && a.op === "=" && sameLoop(a.ctx) && holdsExec(a.value));
+        if (overwrite) r.fail(`${name} = ${jsrc(overwrite.value, 40)} skriver över räknaren i varje varv, så metoden returnerar bara den sista radens antal. Summera: ${name} += ${jsrc(overwrite.value, 40)};`, WHY.loopSum);
+        else if (ret && inAnyLoopBody(ret.ctx)) r.fail("return står i loopen, så metoden avslutas efter första varvet. Returnera räknaren efter loopen.", WHY.loopSum);
+        else r.fail(`Metoden returnerar ${ret ? jsrc(ret.expr, 40) : "inget"}, inte en räknare som summerar executeUpdate() i loopen.`, WHY.loopSum);
+      }
+    }
+  } else if (check.result?.kind === "affected") {
     if (!F.returns.some((ret) => fromExec(ret.expr, ret.pos))) {
       const ret = F.returns.find((x) => x.expr);
       if (ret?.expr.k === "name" && !R.isParam(ret.expr.name, ret.pos) && !isDeclared(C, ret.expr.name, ret.pos)) r.fail(...undeclaredAt(C, ret.expr.name, ret));
@@ -2192,6 +2248,10 @@ function ruleResources(C) {
     }
   };
   const gets = F.calls.filter((c) => c.node.name === "getConnection");
+  if (C.check.loop) {
+    const inLoop = [...gets, ...F.calls.filter((c) => c.node.name === "prepareStatement")].find((c) => inAnyLoopBody(c.ctx));
+    if (inLoop) r.fail(`${jsrc(inLoop.node, 50)} står i loopen och körs en gång per element. Anslutningen och satsen ska öppnas en gång, före loopen; bara set-anropen och executeUpdate() hör hemma i den.`, WHY.loopOpen);
+  }
   const stmts = F.calls.filter((c) => ["prepareStatement", "prepareCall", "createStatement"].includes(c.node.name));
   // ResultSet rättas bara för en SELECT; executeQuery på en annan sats underkänns i regel 6.
   const rss = C.sqlKind === "SELECT" ? F.calls.filter((c) => c.node.name === "executeQuery") : [];

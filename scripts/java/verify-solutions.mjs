@@ -184,6 +184,13 @@ function javaLiteral(value, type, where) {
     case "java.sql.Date":
       return `java.sql.Date.valueOf(${javaString(value)})`;
     default: {
+      // En listparameter, ArrayList<Modell>: en array av { instansvariabel: värde }.
+      const list = /^(?:java\.util\.)?(?:ArrayList|List)<(\w+)>$/.exec(t);
+      if (list) {
+        if (!Array.isArray(value)) fail();
+        const items = value.map((v, i) => javaLiteral(v, list[1], `${where}[${i}]`));
+        return `new java.util.ArrayList<${list[1]}>(java.util.Arrays.asList(${items.join(", ")}))`;
+      }
       // En objektparameter (en modellklass): { instansvariabel: värde }.
       if (typeof value !== "object" || Array.isArray(value) || !/^\w+$/.test(t)) fail();
       const pairs = Object.entries(value).flatMap(([field, v]) => [javaString(field), boxedLiteral(v, where)]);

@@ -48,6 +48,11 @@
 //               fields: [{ column, getter }] — get-metoden per kolumn, i
 //                       konstruktorns ordning
 //               column/getter: kolumnen (eller aliaset) och get-metoden för "scalar"
+//     loop    { over, item, model } — satsen körs en gång per element i
+//             listparametern over (java-ov-14): executeUpdate() i loopen, en
+//             räknare som summeras och returneras efter loopen, Connection och
+//             PreparedStatement öppnade före loopen. item är elementets namn i
+//             sql/binds; svarets eget namn och products.get(i) godtas.
 //     Tillägg för de egna övningarna: i en "exists"-uppgift saknas sql.select
 //     och sql.count — kolumnlistan är fri (en kolumn, 1 eller COUNT(*)). I en
 //     "scalar"-uppgift med sql.count är column lösningens alias; svarets eget
@@ -1026,6 +1031,255 @@ public class ProductDao {
       },
       binds: { newPrice: "setDouble", productNo: "setString" },
       result: { kind: "updated" },
+    },
+  },
+  {
+    id: "java-ov-11",
+    set: "ovning",
+    number: 11,
+    title: "Flytta produkterna i en kategori till en annan kategori",
+    source: OWN,
+    blocks: [
+      { p: "Givet är en databas i Microsoft SQL Server som innehåller följande tabell:" },
+      { code: PRODUCT_DDL, lang: "sql" },
+      { p: "Följande klass `ProductDao` är också given:" },
+      { code: daoClass("ProductDao", SQL_IMPORTS), lang: "java" },
+      { p: "Implementera följande instansmetod i klassen `ProductDao`:" },
+      {
+        lang: "java",
+        code: `public int moveToCategory(
+        String fromCategory,
+        String toCategory
+) throws SQLException`,
+      },
+      { p: "Metoden ska sätta värdet i kolumnen `Category` till värdet av parametern `toCategory` för samtliga rader i tabellen `Product` vars värde i kolumnen `Category` är lika med värdet av parametern `fromCategory`. Rader vars värde i kolumnen `Category` skiljer sig från värdet av parametern `fromCategory` ska inte ändras." },
+      { p: "Metoden ska returnera antalet rader som ändrades. Om inga rader uppfyller villkoret ska metoden returnera `0`." },
+      ...examTail("ProductDao", "Du får anta att parametrarna `fromCategory` och `toCategory` inte är `null`."),
+    ],
+    solution: `public int moveToCategory(
+        String fromCategory,
+        String toCategory
+) throws SQLException {
+    String sql = "UPDATE Product "
+            + "SET Category = ? "
+            + "WHERE Category = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, toCategory);
+        statement.setString(2, fromCategory);
+        return statement.executeUpdate();
+    }
+}`,
+    check: {
+      method: { name: "moveToCategory", returns: "int", params: [["String", "fromCategory"], ["String", "toCategory"]] },
+      sql: {
+        kind: "UPDATE",
+        table: "Product",
+        set: [{ column: "Category", expr: "?", param: "toCategory" }],
+        where: [{ column: "Category", op: "=", param: "fromCategory" }],
+      },
+      binds: { toCategory: "setString", fromCategory: "setString" },
+      result: { kind: "affected" },
+    },
+  },
+  {
+    id: "java-ov-12",
+    set: "ovning",
+    number: 12,
+    title: "Höj lönen till en lägstanivå på en avdelning",
+    source: OWN,
+    blocks: [
+      { p: "Givet är en databas i Microsoft SQL Server som innehåller följande tabell:" },
+      { code: EMPLOYEE_DDL, lang: "sql" },
+      { p: "Följande klass `EmployeeDao` är också given:" },
+      { code: daoClass("EmployeeDao", SQL_IMPORTS), lang: "java" },
+      { p: "Implementera följande instansmetod i klassen `EmployeeDao`:" },
+      {
+        lang: "java",
+        code: `public int raiseToMinimumSalary(
+        String department,
+        double minimumSalary
+) throws SQLException`,
+      },
+      { p: "Metoden ska sätta värdet i kolumnen `Salary` till värdet av parametern `minimumSalary` för samtliga rader i tabellen `Employee` vars värde i kolumnen `Department` är lika med värdet av parametern `department` och vars värde i kolumnen `Salary` är **lägre än** värdet av parametern `minimumSalary`. Rader vars värde i kolumnen `Salary` är lika med eller högre än värdet av parametern `minimumSalary` ska inte ändras. Rader vars värde i kolumnen `Department` skiljer sig från värdet av parametern `department` ska inte ändras." },
+      { p: "Ändringen ska göras med en enda SQL-sats, utan att raderna först hämtas till Java." },
+      { p: "Metoden ska returnera antalet rader som ändrades. Om inga rader uppfyller båda villkoren ska metoden returnera `0`." },
+      ...examTail("EmployeeDao", "Du får anta att parametern `department` inte är `null`."),
+    ],
+    solution: `public int raiseToMinimumSalary(
+        String department,
+        double minimumSalary
+) throws SQLException {
+    String sql = "UPDATE Employee "
+            + "SET Salary = ? "
+            + "WHERE Department = ? "
+            + "    AND Salary < ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setDouble(1, minimumSalary);
+        statement.setString(2, department);
+        statement.setDouble(3, minimumSalary);
+        return statement.executeUpdate();
+    }
+}`,
+    check: {
+      method: { name: "raiseToMinimumSalary", returns: "int", params: [["String", "department"], ["double", "minimumSalary"]] },
+      sql: {
+        kind: "UPDATE",
+        table: "Employee",
+        set: [{ column: "Salary", expr: "?", param: "minimumSalary" }],
+        where: [
+          { column: "Department", op: "=", param: "department" },
+          { column: "Salary", op: "<", param: "minimumSalary" },
+        ],
+      },
+      binds: { minimumSalary: "setDouble", department: "setString" },
+      result: { kind: "affected" },
+    },
+  },
+  {
+    id: "java-ov-13",
+    set: "ovning",
+    number: 13,
+    title: "Uppdatera en produkt från ett objekt",
+    source: OWN,
+    blocks: [
+      { p: "Givet är en databas i Microsoft SQL Server som innehåller följande tabell:" },
+      { code: PRODUCT_DDL, lang: "sql" },
+      { p: "Givet är även följande klass `Product`:" },
+      { code: PRODUCT_CLASS, lang: "java" },
+      { p: "Följande klass `ProductDao` är också given:" },
+      { code: daoClass("ProductDao", SQL_IMPORTS), lang: "java" },
+      { p: "Implementera följande instansmetod i klassen `ProductDao`:" },
+      {
+        lang: "java",
+        code: `public boolean update(
+        Product product
+) throws SQLException`,
+      },
+      { p: "Metoden ska ändra den rad i tabellen `Product` vars värde i kolumnen `ProductID` är lika med värdet av instansvariabeln `id` i objektet `product`. Kolumnerna `ProductNo`, `Name`, `Category` och `Price` ska tilldelas värdena av motsvarande instansvariabler i objektet `product`. Kolumnen `ProductID` ska inte ändras." },
+      { p: "Metoden ska returnera `true` om en rad ändrades. Om ingen rad uppfyller villkoret ska metoden returnera `false`." },
+      ...examTail(
+        "ProductDao",
+        "Du får anta att parametern `product` inte är `null`, att instansvariablerna `productNo`, `name` och `category` i objektet `product` inte är `null` och att ingen annan rad i tabellen `Product` har samma värde i kolumnen `ProductNo` som instansvariabeln `productNo`.",
+        "Product",
+      ),
+    ],
+    solution: `public boolean update(
+        Product product
+) throws SQLException {
+    String sql = "UPDATE Product "
+            + "SET ProductNo = ?, "
+            + "    Name = ?, "
+            + "    Category = ?, "
+            + "    Price = ? "
+            + "WHERE ProductID = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, product.getProductNo());
+        statement.setString(2, product.getName());
+        statement.setString(3, product.getCategory());
+        statement.setDouble(4, product.getPrice());
+        statement.setInt(5, product.getId());
+        return statement.executeUpdate() > 0;
+    }
+}`,
+    check: {
+      method: { name: "update", returns: "boolean", params: [["Product", "product"]] },
+      sql: {
+        kind: "UPDATE",
+        table: "Product",
+        set: [
+          { column: "ProductNo", expr: "?", param: "product.getProductNo()" },
+          { column: "Name", expr: "?", param: "product.getName()" },
+          { column: "Category", expr: "?", param: "product.getCategory()" },
+          { column: "Price", expr: "?", param: "product.getPrice()" },
+        ],
+        where: [{ column: "ProductID", op: "=", param: "product.getId()" }],
+      },
+      binds: {
+        "product.getProductNo()": "setString",
+        "product.getName()": "setString",
+        "product.getCategory()": "setString",
+        "product.getPrice()": "setDouble",
+        "product.getId()": "setInt",
+      },
+      result: { kind: "updated" },
+    },
+  },
+  {
+    id: "java-ov-14",
+    set: "ovning",
+    number: 14,
+    title: "Spara en lista med produkter (svårare)",
+    source: OWN,
+    blocks: [
+      { p: "Givet är en databas i Microsoft SQL Server som innehåller följande tabell:" },
+      { code: PRODUCT_DDL, lang: "sql" },
+      { p: "Givet är även följande klass `Product`:" },
+      { code: PRODUCT_CLASS, lang: "java" },
+      { p: "Följande klass `ProductDao` är också given:" },
+      { code: daoClass("ProductDao", [...SQL_IMPORTS, "java.util.ArrayList"]), lang: "java" },
+      { p: "Implementera följande instansmetod i klassen `ProductDao`:" },
+      {
+        lang: "java",
+        code: `public int saveAll(
+        ArrayList<Product> products
+) throws SQLException`,
+      },
+      { p: "Metoden ska lägga till en ny rad i tabellen `Product` för varje objekt i listan `products`. Kolumnerna `ProductNo`, `Name`, `Category` och `Price` ska tilldelas värdena av motsvarande instansvariabler i objektet." },
+      { p: "Kolumnen `ProductID` ska inte anges i satsen. Dess värde genereras av databasen, och värdet av instansvariabeln `id` ska inte användas." },
+      { p: "Anslutningen och satsen ska öppnas en gång, inte en gång per objekt i listan." },
+      { p: "Metoden ska returnera antalet rader som lades till. Om listan är tom ska metoden returnera `0`." },
+      ...examTail(
+        "ProductDao",
+        "Du får anta att parametern `products` inte är `null`, att inget objekt i listan är `null`, att instansvariablerna `productNo`, `name` och `category` i varje objekt inte är `null` och att varje värde av instansvariabeln `productNo` är unikt och inte redan finns i kolumnen `ProductNo`.",
+        "Product",
+      ),
+    ],
+    solution: `public int saveAll(
+        ArrayList<Product> products
+) throws SQLException {
+    String sql = "INSERT INTO Product (ProductNo, Name, Category, Price) "
+            + "VALUES (?, ?, ?, ?);";
+    int savedRows = 0;
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        for (Product product : products) {
+            statement.setString(1, product.getProductNo());
+            statement.setString(2, product.getName());
+            statement.setString(3, product.getCategory());
+            statement.setDouble(4, product.getPrice());
+            savedRows += statement.executeUpdate();
+        }
+    }
+
+    return savedRows;
+}`,
+    check: {
+      method: { name: "saveAll", returns: "int", params: [["ArrayList<Product>", "products"]] },
+      loop: { over: "products", item: "product", model: "Product" },
+      sql: {
+        kind: "INSERT",
+        table: "Product",
+        values: [
+          { column: "ProductNo", param: "product.getProductNo()" },
+          { column: "Name", param: "product.getName()" },
+          { column: "Category", param: "product.getCategory()" },
+          { column: "Price", param: "product.getPrice()" },
+        ],
+      },
+      binds: {
+        "product.getProductNo()": "setString",
+        "product.getName()": "setString",
+        "product.getCategory()": "setString",
+        "product.getPrice()": "setDouble",
+      },
+      result: { kind: "affected" },
     },
   },
 ];
