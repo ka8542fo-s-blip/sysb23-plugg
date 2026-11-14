@@ -1,10 +1,10 @@
-// Modulkorten i Läs för Verksamhetsarkitektur (Kärna): varje kort har UF:s
-// lärandemål, kärnan och distinktionerna, högst cirka 300 ord; Kärna-texterna
-// nämner inte de gamla tentorna (det står i Troligt-rutan och i
-// Fördjupning); Troligt-märkningen står ordagrant.
+// Modulkorten i Läs för Verksamhetsarkitektur: varje kort har lärarens
+// lärandemål, kärnan och distinktionerna, högst cirka 300 ord; modultexterna
+// nämner inte de gamla tentorna (det står i Zachman-rutan i modul 4 och i
+// Fördjupning), och rutan förklarar i klartext varför Zachman får mer plats.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { CARDS, LIKELY, TROLIGT_NOTE, FORDJUPNING_NOTE } from "../src/data/arkitektur/cards.js";
+import { CARDS, LIKELY, ZACHMAN_WHY } from "../src/data/arkitektur/cards.js";
 import { chapters, examNote, glossary, intro } from "../src/data/arkitektur/reading.js";
 import { topics } from "../src/data/arkitektur/topics.js";
 import { questions } from "../src/data/arkitektur/questions.js";
@@ -27,7 +27,7 @@ test("tolv kort, ett per modul, med lärandemål, kärnan och distinktioner", ()
   assert.match(CARDS.kap12, /## De tio begreppen/);
 });
 
-test("Kärna-texterna nämner inte de gamla tentorna", () => {
+test("modultexterna nämner inte de gamla tentorna", () => {
   const texts = [
     ["intro", intro],
     ["examNote", examNote.text],
@@ -39,16 +39,16 @@ test("Kärna-texterna nämner inte de gamla tentorna", () => {
   for (const [where, text] of texts) assert.doesNotMatch(text, OLD_EXAMS, where);
 });
 
-test("Troligt-rutan i modul 4 har den exakta märkningen och pekar på Zachman och essän", () => {
-  assert.equal(TROLIGT_NOTE, "Inte i modulerna, men på alla UF:s tidigare tentor och i årets bilder");
-  assert.equal(FORDJUPNING_NOTE, "Utanför UF:s tips");
+test("Zachman-rutan i modul 4 förklarar varför och pekar på Zachman och essän", () => {
   assert.deepEqual(Object.keys(LIKELY), ["kap4"]);
   const box = chapters.find((c) => c.id === "kap4").likely;
-  assert.equal(box.label, "Troligt");
-  assert.equal(box.note, TROLIGT_NOTE);
+  assert.equal(box.title, "Zachman kommer troligen på tentan");
+  assert.ok(box.text.includes(ZACHMAN_WHY));
+  assert.match(ZACHMAN_WHY, /förra året/);
+  assert.match(ZACHMAN_WHY, /inte något läraren har sagt/, "bedömningen är vår, inte lärarens");
   assert.deepEqual(box.links.map((l) => l.view), ["zachman", "essa"]);
   assert.equal(box.links[1].params.essayId, "ea-e-zachman");
-  assert.match(box.more, /HT25/, "det som gäller de gamla tentorna står här");
+  assert.match(box.more, /förra årets tre tentor/i, "det som gäller de gamla tentorna står här");
 });
 
 test("modul 12:s Läs mer har sammanfattningens avsnitt", () => {

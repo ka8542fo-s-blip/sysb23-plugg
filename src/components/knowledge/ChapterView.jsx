@@ -156,9 +156,8 @@ function MoreText({ label, markdown, components }) {
 function LikelyBox({ likely, components, views, onOpenView }) {
   const links = (likely.links || []).filter((link) => views.includes(link.view));
   return (
-    <aside className="mt-8 rounded-card border-2 border-brass p-5" aria-label={likely.label}>
-      <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-brass-text">{likely.label}</p>
-      <p className="mt-1 text-[15px] font-medium text-ink">{likely.note}</p>
+    <aside className="mt-8 rounded-card border-2 border-brass p-5" aria-label={likely.title}>
+      <h2 className="font-display text-xl">{likely.title}</h2>
       <p className="mt-2 text-[16px] leading-relaxed">{likely.text}</p>
       {links.length > 0 && onOpenView && (
         <p className="mt-3 flex flex-wrap gap-2" data-tts-skip>
@@ -169,7 +168,7 @@ function LikelyBox({ likely, components, views, onOpenView }) {
           ))}
         </p>
       )}
-      {likely.more && <MoreText label="Läs mer" markdown={likely.more} components={components} />}
+      {likely.more && <MoreText label={likely.moreLabel ?? "Läs mer"} markdown={likely.more} components={components} />}
     </aside>
   );
 }

@@ -495,4 +495,4 @@ export const examArchive = [
   }
 ];
 
-export const ARTICLE_NOTE = "Artikeln ingår inte i HT26-materialet – facit saknas.";
+export const ARTICLE_NOTE = "Artikeln ingår inte i årets kurs, så det finns inget facit.";

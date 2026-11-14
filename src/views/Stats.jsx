@@ -34,8 +34,8 @@ export default function Stats({
     [course, answers],
   );
   const overall = useMemo(() => overallStats(course, answers), [course, answers]);
-  // Nivåerna (Verksamhetsarkitektur, course.levels): Kärna, Troligt och
-  // Fördjupning var för sig, med samma beräkning som fliken Tentan.
+  // Verksamhetsarkitektur (course.levels): modulerna, Zachman utöver modul 4
+  // och Fördjupning var för sig, ur samma lagring som Öva, Essä och Zachman.
   const levels = useMemo(
     () =>
       course.levels
@@ -114,16 +114,17 @@ export default function Stats({
       </section>
 
       {levels && (
-        <section className="card p-5 sm:p-6" aria-label="Nivåer">
-          <h2 className="font-display text-xl">Nivåer</h2>
+        <section className="card p-5 sm:p-6" aria-label="Hur långt du har kommit">
+          <h2 className="font-display text-xl">Hur långt du har kommit</h2>
           <p className="mt-1 text-sm text-ink/70">
-            Kärna är modulerna (det UF har sagt att tentan bygger på). Troligt är Zachman utöver modul 4,
-            en slutsats från UF:s tidigare tentor. Fördjupning ligger utanför UF:s tips.
+            En Öva-fråga är klar efter två rätt i rad. En essäfråga räknas när du har tryckt på
+            ”Markera som genomgången”.
           </p>
           <dl className="mt-4 grid gap-4 sm:grid-cols-3">
             {[levels.karna, levels.troligt, levels.fordjupning].map((level) => (
               <div key={level.key} className="rounded-lg border border-line p-3">
                 <dt className="font-display text-lg">{level.label}</dt>
+                <dd className="mt-0.5 text-sm text-ink/70">{level.note}</dd>
                 <dd className="tabular mt-1 text-[15px]">
                   {level.done}/{level.total} · {level.total ? Math.round((level.done / level.total) * 100) : 0} %
                   <ul className="mt-1 space-y-0.5 text-sm text-ink/75">

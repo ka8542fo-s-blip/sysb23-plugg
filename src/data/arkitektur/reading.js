@@ -47,11 +47,11 @@ export const CHAPTER_TOPICS = {
 
 export const CHAPTER_ORDER = Object.keys(CHAPTER_TOPICS);
 
-export const intro = "Den här delkursen är UF:s tolv moduler i tre delar: grunderna (vad en enterprise, en arkitektur och Enterprise Architecture är, och Zachmans ramverk), arkitekturarbetet (TOGAF och ADM, domäner och vyer, förmågor, principer och styrning) och förändringen (agilt, digital transformation, bankfallet och slutrepetitionen). Kapitel N är modul N, med UF:s titlar. UF säger att man ska börja med modul 12, så den står först. Varje modul är ett kort med lärandemålen, kärnan och det du ska hålla isär; den längre texten ligger under ”Läs mer”. Räkna med ungefär {lästid} för hela texten. Termerna står på engelska, som i modulerna och på tentan.";
+export const intro = "Kursen består av lärarens tolv moduler, och läraren har sagt att tentan ser ut som dem. Kapitel 1 här är modul 1 och så vidare, med modulernas engelska titlar. Läraren säger att man ska börja med modul 12, som knyter ihop kursen, så den står först. Varje kapitel börjar med ett kort: lärandemålen (lärarens ord, på engelska), det viktigaste i modulen och det du ska hålla isär. Resten av texten ligger under ”Läs mer”. Räkna med ungefär {lästid} för hela texten. Begreppen står på engelska, som i modulerna och på tentan.";
 
 export const examNote = {
-  text: "Årets tenta ser ut som modulerna, enligt kursinformationen och UF själv: sant/falskt, flervalsfrågor och någon essäfråga. Modulernas egna frågor kan komma, liksom andra av liknande art kopplade till litteraturen. Utgå därför från modulernas frågor i Öva och modellsvaren i Essä. Poäng och eventuella minuspoäng är inte kända.",
-  source: "Kursinformationen och UF",
+  text: "Tentan ser ut som modulerna, enligt kursinformationen och läraren: sant/falskt, flervalsfrågor och någon essäfråga. Modulernas egna frågor kan komma, och även andra liknande frågor om litteraturen. Öva därför modulernas frågor i Öva och skriv essäfrågorna i Essä. Hur många poäng frågorna ger, och om fel svar ger minuspoäng, vet vi inte.",
+  source: "Kursinformationen och läraren",
 };
 
 const rawChapters = [
@@ -65,7 +65,7 @@ const rawChapters = [
     body: `
 ## Kärnan
 
-UF:s definition, som också är det första av modul 12:s tio begrepp:
+Lärarens definition, som också är det första av modul 12:s tio begrepp:
 
 > An enterprise is any collection of organizations, organizational units, or capabilities that has a common set of goals.
 
@@ -75,7 +75,7 @@ Poängen för arkitekten är att först förstå *vilken* enterprise som ska ark
 
 ## Scope bestäms av problemet
 
-UF:s exempel: Volvo, en Volvohandlare, ett logistikföretag och en bank samarbetar för att en kund ska få sin bil. Vilka av dem hör till den enterprise vi försöker förstå? Det finns inte nödvändigtvis ett rätt svar. Det beror på arkitekturarbetets scope och syfte:
+Lärarens exempel: Volvo, en Volvohandlare, ett logistikföretag och en bank samarbetar för att en kund ska få sin bil. Vilka av dem hör till den enterprise vi försöker förstå? Det finns inte nödvändigtvis ett rätt svar. Det beror på arkitekturarbetets scope och syfte:
 
 > Architecture scope is determined by the problem we are trying to solve.
 
@@ -116,11 +116,11 @@ I ett digitalt ekosystem är gränsen särskilt svår att dra. Digitala tjänste
     body: `
 ## Kärnan
 
-UF:s definition i modul 2:
+Lärarens definition i modul 2:
 
 > Architecture is concerned with the fundamental organization of something, including its components, relationships, principles and evolution.
 
-I modul 12 står samma sak med constraints i stället för evolution: "the fundamental organization of something, including its components, relationships, principles and constraints". Tillsammans blir det komponenter, relationer, principer, begränsningar och utveckling. På föreläsningen sammanfattar UF det som **components + relationships + principles + constraints + purpose**.
+I modul 12 står samma sak med constraints i stället för evolution: "the fundamental organization of something, including its components, relationships, principles and constraints". Tillsammans blir det komponenter, relationer, principer, begränsningar och utveckling. På föreläsningen sammanfattar läraren det som **components + relationships + principles + constraints + purpose**.
 
 Två saker följer:
 
@@ -129,7 +129,7 @@ Två saker följer:
 
 ## Relationer och konsekvenser
 
-Arkitektur handlar särskilt om relationer och konsekvenser. UF:s kedja:
+Arkitektur handlar särskilt om relationer och konsekvenser. Lärarens kedja:
 
 > Business capability → process → information → application → technology
 
@@ -148,7 +148,7 @@ Arkitekturen fastställer den grundläggande organisationen, relationerna, princ
 
 ## Abstraktion
 
-Abstraktion döljer detaljer som inte är relevanta, så att en fråga kan förstås på rätt nivå. Det betyder inte att undvika all teknisk detalj. UF:s exempel på samma enterprise på fem nivåer:
+Abstraktion döljer detaljer som inte är relevanta, så att en fråga kan förstås på rätt nivå. Det betyder inte att undvika all teknisk detalj. Lärarens exempel på samma enterprise på fem nivåer:
 
 - **Mycket hög nivå:** "We provide financial services."
 - **Förmåga:** Payments.
@@ -182,7 +182,7 @@ Arkitektoniska frågor gäller beroenden och konsekvenser, till exempel vilka be
     body: `
 ## Kärnan
 
-UF:s definition i modul 3:
+Lärarens definition i modul 3:
 
 > Enterprise Architecture is the practice of understanding, designing, communicating and governing the fundamental structure and evolution of an enterprise to achieve its objectives.
 
@@ -206,7 +206,7 @@ Strategin pekar ut önskade utfall. Arkitekturen pekar ut vilka förmågor, stru
 
 Stora arkitekturbeslut ska därför drivas av **verksamhetens mål och intressenternas frågor** (business objectives and stakeholder concerns), inte av teknikmode, leverantörer, utvecklarnas smak eller ritkonventioner.
 
-UF:s exempel: arkitekten ska inte hoppa direkt från "vi behöver ett nytt CRM" till "välj Salesforce". Först kommer den arkitektoniska frågan: vilken förmåga och vilket kundutfall försöker vi uppnå, och vilken arkitektonisk förändring krävs?
+Lärarens exempel: arkitekten ska inte hoppa direkt från "vi behöver ett nytt CRM" till "välj Salesforce". Först kommer den arkitektoniska frågan: vilken förmåga och vilket kundutfall försöker vi uppnå, och vilken arkitektonisk förändring krävs?
 
 ## Arkitektur är till för förändring
 
@@ -216,7 +216,7 @@ EA kan stödja beslutsfattande, transformation och styrning. Den är inte bara d
 
 ## Arkitekten
 
-Rollen går ut på att få verksamhetens olika delar att samspela för att nå mål och syfte. Det gäller människor, roller, processer och teknologi, och hur allt detta ska integreras i hela verksamheten för att ge de tänkta resultaten. UF kallar det "att skapa ordning ur kaos".
+Rollen går ut på att få verksamhetens olika delar att samspela för att nå mål och syfte. Det gäller människor, roller, processer och teknologi, och hur allt detta ska integreras i hela verksamheten för att ge de tänkta resultaten. Läraren kallar det "att skapa ordning ur kaos".
 
 ### Arkitektens fem roller
 
@@ -230,7 +230,7 @@ Rollen går ut på att få verksamhetens olika delar att samspela för att nå m
 
 ### Utan arkitekt
 
-UF räknar upp vad som händer om ingen har rollen:
+Läraren räknar upp vad som händer om ingen har rollen:
 
 - större risk för kaos och missförstånd
 - brist på information för beslutsfattande
@@ -281,7 +281,7 @@ De konkurrerar inte. Zachman hjälper till att organisera vilka sorters beskrivn
 
 ## Principerna bakom rutnätet
 
-UF formulerar ramverkets principer så här:
+Läraren formulerar ramverkets principer så här:
 
 - Ramverket visar **kontexten** för olika modeller.
 - Varje cell är **bara ett exempel** på vilken sorts modell som kan användas.
@@ -292,7 +292,7 @@ UF formulerar ramverkets principer så här:
 
 ## Kolumnerna: sex frågeord
 
-| Kolumn | Frågeord | På affischen | Vad den handlar om | UF:s exempel från universitetet |
+| Kolumn | Frågeord | På affischen | Vad den handlar om | Lärarens exempel från universitetet |
 |---|---|---|---|---|
 | K1 | Vad | What / Data | Det verksamheten vill veta något om: begrepp, ontologier, semantiska modeller | Student, program, kurs, poäng, prov, helårsstudent |
 | K2 | Hur | How / Function | Vad verksamheten sysslar med: processer och delprocesser | Antagning, registrering, kursutveckling, examination, undervisning |
@@ -301,14 +301,14 @@ UF formulerar ramverkets principer så här:
 | K5 | När | When / Time | När i tiden uppgifter ska utföras: händelser, flöden, cykler, ordningsföljd | Ansökan lämnas in innan förkunskaperna bedöms, bedömningen sker innan beslut om antagning, antagningen sker innan registrering |
 | K6 | Varför | Why / Motivation | Verksamhetens grund: mål, syften, visioner och strategier | Syften och krav i högskolelagen och högskoleförordningen, antalet helårsstudenter och helårsprestationer, strategisk plan, lärandemål |
 
-Några av UF:s poänger per kolumn:
+Några av lärarens poänger per kolumn:
 
 - **Vad:** utan data finns inget att arbeta med. Begreppens betydelse måste vara klar — kund, klient, kontohavare och leverantör är besvärligt om man menar samma sak, för då blir datan ointegrerad. Begreppen måste också relateras till varandra; begreppsmodellen är termer relaterade till varandra, vilket ger fakta.
 - **Hur:** hur data används och hanteras, vilka resurser som finns och hur de omvandlar input till output. Här hör processmodellerna hemma.
 - **Var:** hur olika arbetsuppgifter är kopplade, och hur fysiskt åtskilda uppgifter utförs.
 - **När:** ordningen måste schemaläggas noggrant.
 
-**Om arbetsflöden:** UF nämner arbetsflöden både under Hur ("processmodeller och arbetsflöden") och under Vem ("arbetsflödemodeller"). På affischen står *Work Flow Model* i Vem-kolumnen (rad 2), med begreppsparet organisationsenhet och arbetsprodukt. Tumregeln blir: processmodellen (vad som görs, i vilken ordning) hör till Hur, och arbetsflödesmodellen (vem som gör vilket arbete) till Vem.
+**Om arbetsflöden:** läraren nämner arbetsflöden både under Hur ("processmodeller och arbetsflöden") och under Vem ("arbetsflödemodeller"). På affischen står *Work Flow Model* i Vem-kolumnen (rad 2), med begreppsparet organisationsenhet och arbetsprodukt. Tumregeln blir: processmodellen (vad som görs, i vilken ordning) hör till Hur, och arbetsflödesmodellen (vem som gör vilket arbete) till Vem.
 
 ## Raderna: sex perspektiv
 
@@ -384,7 +384,7 @@ Ibland passar två celler, och då är motiveringen det som räknas.
     sources: [
       "Modul 5",
       "Föreläsningsbilder 13, 47–49 och 65–66",
-      "Fastabellen: UF:s kursmaterial (docx), ADM-avsnittet",
+      "Fastabellen: lärarens kursmaterial (Word-dokumentet), ADM-avsnittet",
       "Modul 12 (de tio begreppen)",
     ],
     body: `
@@ -404,9 +404,9 @@ TOGAF:s tionde utgåva skiljer på grundinnehåll (Fundamental Content) och ämn
 
 ## ADM:s faser
 
-UF:s förenklade bild av ADM:
+Lärarens förenklade bild av ADM:
 
-| Fas | Namn | Frågan (UF:s kursmaterial) |
+| Fas | Namn | Frågan (lärarens kursmaterial) |
 |---|---|---|
 | Preliminary | Preliminary | Hur ska vi arbeta med arkitektur? Före arkitekturen behövs förmågan att göra arkitektur |
 | A | Architecture Vision | Vad försöker vi uppnå, varför spelar det roll och vilken är den arkitektoniska riktningen? |
@@ -446,7 +446,7 @@ Ett av de mest praktiska begreppen i arkitektur:
 | Target architecture | Var vill vi vara? |
 | Transition architectures | Hur kommer vi dit utan att förstöra organisationen på vägen? |
 
-Övergångsarkitekturerna är praktiska mellanlägen mellan nuläge och målläge. Det är här, säger UF, som Enterprise Architecture blir en förändringsdisciplin och inte bara en dokumentationsdisciplin. Mer i kapitel 11.
+Övergångsarkitekturerna är praktiska mellanlägen mellan nuläge och målläge. Det är här, säger läraren, som Enterprise Architecture blir en förändringsdisciplin och inte bara en dokumentationsdisciplin. Mer i kapitel 11.
 
 ## ADM:s roll
 
@@ -484,11 +484,11 @@ En förmåga är tydligt en fråga för verksamhetsarkitekturen. Informationsäg
 
 ## Domänerna är inga silor
 
-UF:s viktigaste varning i modulen: domänerna är inte oberoende. De intressanta arkitektoniska frågorna gäller deras relationer. Domänerna är användbara just därför att relationerna mellan dem kan analyseras.
+Lärarens viktigaste varning i modulen: domänerna är inte oberoende. De intressanta arkitektoniska frågorna gäller deras relationer. Domänerna är användbara just därför att relationerna mellan dem kan analyseras.
 
 - **Relationer avslöjar beroenden, påverkan och följder av förändring.** Vet man att en förmåga beror på vissa processer, viss information och vissa applikationer och tekniker kan man bedöma hur en förändring sprider sig genom enterprisen.
 - **Det är farligt att designa domänerna var för sig.** En verksamhetsförändring kan kräva förändringar i information, applikationer och teknik. Designas domänerna oberoende kan resultatet bli inkonsekvenser, dubblerade förmågor och lösningar som inte stöder verksamhetens mål.
-- **UF:s exempel:** en förmåga stöds dåligt av flera splittrade applikationer. Då är relationen mellan verksamhets- och applikationsarkitekturen det mest användbara perspektivet, inte en enskild domän.
+- **Lärarens exempel:** en förmåga stöds dåligt av flera splittrade applikationer. Då är relationen mellan verksamhets- och applikationsarkitekturen det mest användbara perspektivet, inte en enskild domän.
 
 ## Intressenterna och deras frågor
 
@@ -513,7 +513,7 @@ Förenklat: **viewpoint = reglerna eller perspektivet för hur man tittar; view 
 
 ## Spårbarhet
 
-Ett av de mest värdefulla begreppen i seriöst arkitekturarbete är spårbarhet (traceability): går ett beslut att spåra tillbaka till verksamhetsskälet som orsakade det? UF:s kedja:
+Ett av de mest värdefulla begreppen i seriöst arkitekturarbete är spårbarhet (traceability): går ett beslut att spåra tillbaka till verksamhetsskälet som orsakade det? Lärarens kedja:
 
 > Strategy: "Reduce customer onboarding time" → Capability: "Digital customer onboarding" → Requirement: "Automated identity verification" → Architecture: Identity verification service → Implementation: specific technology/service
 
@@ -539,17 +539,17 @@ Då kan man fråga "varför kör vi den här tekniken?" och följa svaret hela v
     body: `
 ## Kärnan
 
-| Begrepp | UF:s definition |
+| Begrepp | Lärarens definition |
 |---|---|
 | Capability | What the organization is capable of doing |
 | Process | How the organization performs activities, how work is performed |
 | Value stream | How value is created and delivered to a stakeholder |
 
-UF kallar förmågan "ett av de begrepp jag skulle anse absolut nödvändigt". En förmåga föreskriver inte hur den genomförs. Processen kan ändras medan den underliggande förmågan finns kvar.
+Läraren kallar förmågan "ett av de begrepp jag skulle anse absolut nödvändigt". En förmåga föreskriver inte hur den genomförs. Processen kan ändras medan den underliggande förmågan finns kvar.
 
 På föreläsningen formuleras processen en gång som "what the organization does". Modulerna, modul 12 och frågorna säger genomgående **how** work is performed, och det är den formuleringen som gäller.
 
-**UF:s exempel:** processen "Approve a mortgage application" och förmågan "Mortgage underwriting".
+**Lärarens exempel:** processen "Approve a mortgage application" och förmågan "Mortgage underwriting".
 
 ## Ett exempel i hela kedjan
 
@@ -564,7 +564,7 @@ Förmågan leder i sin tur till vilken information, vilka applikationer, process
 
 Förmågor kan förbli relativt **stabila** även när organisationsstrukturer och processer ändras. De ger därför en stabil bro mellan strategi, verksamhet, arkitektur och investering.
 
-- **UF:s exempel på stabilitet:** ett företag omorganiserar marknadsavdelningen tre gånger på fem år, men behöver hela tiden kundinsikt, kampanjhantering och marknadsanalys. Organisationen kan ändra *vem* som utför förmågan utan att förmågan försvinner.
+- **Lärarens exempel på stabilitet:** ett företag omorganiserar marknadsavdelningen tre gånger på fem år, men behöver hela tiden kundinsikt, kampanjhantering och marknadsanalys. Organisationen kan ändra *vem* som utför förmågan utan att förmågan försvinner.
 - **Därför är förmågekartor användbara vid omorganisation.** Avdelningar kan ändras medan de underliggande förmågorna finns kvar, och arkitekten kan fokusera på vad organisationen måste kunna göra i stället för tillfälliga strukturer.
 - **Förmågor kan kopplas till** processer, människor, information, applikationer och teknik. Därför kan arkitekten spåra strategiska mål till arkitektur- och investeringsbeslut.
 - **Capability-based planning:** strategin anger önskade utfall och prioriteringar. De förutsätter förmågor som enterprisen måste ha eller stärka, och arkitekten analyserar sedan vilka människor, processer, information, applikationer och teknik som krävs. Det hjälper också till att hitta förmågeglapp (capability gaps) oberoende av dagens organisationsgränser.
@@ -573,11 +573,11 @@ En förmågekarta är en viktig verksamhetsrepresentation, men den är inte en f
 
 ## Verksamhetsarkitektur är inte IT-arkitektur
 
-UF gör det nästan till en regel: **om allt i ditt EA-diagram är applikationer eller teknik gör du förmodligen IT-arkitektur, inte Enterprise Architecture.** Verksamhetsarkitekturen ska ta upp förmågor, värdeflöden, organisation, verksamhetstjänster, affärsprocesser, kunder, produkter, affärsmodeller och strategi. Tekniken relateras till dem i efterhand.
+Läraren gör det nästan till en regel: **om allt i ditt EA-diagram är applikationer eller teknik gör du förmodligen IT-arkitektur, inte Enterprise Architecture.** Verksamhetsarkitekturen ska ta upp förmågor, värdeflöden, organisation, verksamhetstjänster, affärsprocesser, kunder, produkter, affärsmodeller och strategi. Tekniken relateras till dem i efterhand.
 
 ## Namnet avgör inte
 
-Är "Customer onboarding" en förmåga eller en process? UF:s svar i modul 12 är att det beror på modelleringssammanhanget:
+Är "Customer onboarding" en förmåga eller en process? Lärarens svar i modul 12 är att det beror på modelleringssammanhanget:
 
 - "Verify customer identity": process eller aktivitet.
 - "The organization is able to onboard customers": förmåga.
@@ -608,7 +608,7 @@ På flervalsfrågorna är mönstret ändå tydligt. "Digital customer onboarding
     lead: "Principer är varaktig vägledning för beslut, styrning är beslutsrätter och ansvar. Rätt utformade blir de guardrails som gör team snabbare, inte långsammare. Arkitektur är att hantera avvägningar.",
     sources: [
       "Modul 8",
-      "Modul 7, fråga 20–22, 24 och 27 (UF:s not: modul 8:s frågor ligger insprängda i modul 7)",
+      "Modul 7, fråga 20–22, 24 och 27 (lärarens not: modul 8:s frågor ligger insprängda i modul 7)",
       "Föreläsningsbilder 50–52, 63 och 84–87",
       "Modul 12 (de tio begreppen)",
     ],
@@ -617,7 +617,7 @@ På flervalsfrågorna är mönstret ändå tydligt. "Digital customer onboarding
 
 En arkitekturprincip är en generell regel eller riktlinje som vägleder arkitekturbeslut. I modul 12:s tio begrepp: "A principle provides enduring guidance for architectural decisions."
 
-UF:s exempel: **"Information is an enterprise asset."** Den enda principen kan påverka hundratals beslut om:
+Lärarens exempel: **"Information is an enterprise asset."** Den enda principen kan påverka hundratals beslut om:
 
 - dataägarskap
 - applikationsdesign
@@ -724,7 +724,7 @@ Agilt betyder inte "arkitektur behövs inte". Det betyder att arkitekturen måst
 - inkrementell leverans
 - lärande
 
-Arkitekturen ska ge tillräcklig riktning utan att försöka förutsäga varje detalj ett år i förväg. UF:s formulering:
+Arkitekturen ska ge tillräcklig riktning utan att försöka förutsäga varje detalj ett år i förväg. Lärarens formulering:
 
 > If we are Agile, architecture must become more responsive.
 
@@ -817,7 +817,7 @@ Architecture debt är ackumulerade arkitektoniska kompromisser som kan ge framti
 
 ## ADM i en agil miljö
 
-ADM är iterativ (kapitel 5). Iterationerna kan ske över enterprisen, förmågorna, produkterna och portföljerna, och inom enskilda initiativ. UF:s kedja för samspelet:
+ADM är iterativ (kapitel 5). Iterationerna kan ske över enterprisen, förmågorna, produkterna och portföljerna, och inom enskilda initiativ. Lärarens kedja för samspelet:
 
 > Enterprise direction → Architecture iteration → Product / capability iteration → Sprint / increment → Feedback → Architecture adaptation
 
@@ -825,7 +825,7 @@ Inbäddat i allt detta finns arkitektrollens förmåga att lyfta fram behovet av
 
 ## Arkitektursprintar och backlog (bakgrund)
 
-UF har inga modulfrågor om det här, men det finns på föreläsningen.
+Läraren har inga modulfrågor om det här, men det finns på föreläsningen.
 
 **En arkitektursprint** är en kort iteration kring en arkitektonisk fråga:
 
@@ -879,7 +879,7 @@ En effektiv arkitekt talar olika med olika mottagare:
 
 ## Arkitektens tänkande
 
-UF:s övning: du är Enterprise Architect, och vd:n säger "vårt problem är att vi har för många applikationer". Vilka frågor ställer du innan du godtar diagnosen?
+Lärarens övning: du är Enterprise Architect, och vd:n säger "vårt problem är att vi har för många applikationer". Vilka frågor ställer du innan du godtar diagnosen?
 
 - Vilka förmågor berörs?
 - Vilka applikationer stöder dem?
@@ -911,7 +911,7 @@ UF:s övning: du är Enterprise Architect, och vd:n säger "vårt problem är at
     body: `
 ## Tre begrepp
 
-| Begrepp | UF:s definition | Exempel |
+| Begrepp | Lärarens definition | Exempel |
 |---|---|---|
 | Digitization | Converting analog information into digital form | Skanna ett pappersdokument till PDF |
 | Digitalization | Using digital technologies to improve existing activities and processes | Automatisera en befintlig process med mjukvara |
@@ -980,7 +980,7 @@ Enterprisearkitekten behöver bland annat beakta:
 - kundupplevelse
 - ekosystem
 
-Tre av dem lyfter UF särskilt:
+Tre av dem lyfter läraren särskilt:
 
 - **Data som strategisk tillgång:** dataägarskap, datakvalitet, metadata, masterdata, dataprodukter, datastyrning, datadelning och analys. Arkitekten ska behandla data som en förmåga för hela enterprisen, inte bara som en applikationsfråga.
 - **Plattformstänkande:** en plattform ger återanvändbara förmågor till flera produkter, som identitet, betalningar, kunddata, integration, analys och digitala kanaler. Principen är att bygga en återanvändbar förmåga en gång och använda den många gånger.
@@ -988,7 +988,7 @@ Tre av dem lyfter UF särskilt:
 
 ## Teknikadoption (bakgrund)
 
-UF har inga modulfrågor om detta. Det finns på föreläsningen.
+Läraren har inga modulfrågor om detta. Det finns på föreläsningen.
 
 - **Adoption är ett affärsbeslut.** Frågan är inte om tekniken är intressant, utan om den kan skapa meningsfullt affärsvärde i vårt sammanhang.
 - **Mognaden (technology readiness)** bedöms på flera faktorer: affärsrelevans, organisatorisk beredskap, kompetens, arkitektonisk kompatibilitet, säkerhet, regelverk, investering, driftförmåga och ekosystemets mognad.
@@ -1011,7 +1011,7 @@ UF har inga modulfrågor om detta. Det finns på föreläsningen.
     number: 11,
     title: "Enterprise Architecture in Practice",
     readingMinutes: 5,
-    lead: "UF:s fall med den traditionella banken som vill bli digital på två år: börja med syftet, inte tekniken, och ta dig från nuläge till målläge via övergångsarkitekturer.",
+    lead: "Lärarens fall med den traditionella banken som vill bli digital på två år: börja med syftet, inte tekniken, och ta dig från nuläge till målläge via övergångsarkitekturer.",
     sources: ["Modul 11", "Föreläsningsbilder 49 och 91–101", "Modul 5 (nuläge, målläge, övergång)"],
     body: `
 ## Fallet: en traditionell bank
@@ -1048,7 +1048,7 @@ Innan arkitekten väljer teknik ska hen ha fastställt de strategiska målen, de
 
 ## En arkitektonisk ansats för banken
 
-UF:s modellsvar i ordning:
+Lärarens modellsvar i ordning:
 
 1. Klargör de strategiska målen och de önskade kundutfallen.
 2. Bedöm nuläget: förmågor, värdeflöden, information, applikationer och teknik.
@@ -1070,7 +1070,7 @@ UF:s modellsvar i ordning:
 
 Arkitektens roll är att ge övergångsvägen och samtidigt kontrollera risken och upprätthålla verksamhetens kontinuitet.
 
-UF:s andra exempel är en API-plattform för hela enterprisen. Affärsmålet är att snabbt kunna skapa digitala produkter. Svaret är en plattform med API:er, identitet, säkerhet, datatjänster, integration, övervakning och stöd för utvecklarna, så att teamen kan bygga produkter av återanvändbara förmågor.
+Lärarens andra exempel är en API-plattform för hela enterprisen. Affärsmålet är att snabbt kunna skapa digitala produkter. Svaret är en plattform med API:er, identitet, säkerhet, datatjänster, integration, övervakning och stöd för utvecklarna, så att teamen kan bygga produkter av återanvändbara förmågor.
 
 ## Att sätta ihop det
 
@@ -1107,7 +1107,7 @@ Det här ska undvikas:
 
 **God EA** har en tydlig strategisk riktning, lätt arkitekturstyrning, starka principer, självständiga team, återanvändbara plattformar, produktcentrerad leverans, kontinuerlig arkitektur, datadrivna beslut, effektiv teknikadoption och kontinuerligt lärande.
 
-**UF:s mognadsfrågor:**
+**Lärarens mognadsfrågor:**
 - Hur snabbt kan arkitekturbeslut fattas?
 - Kan produktteamen agera självständigt?
 - Förstås arkitekturprinciperna?
@@ -1132,12 +1132,12 @@ Det här ska undvikas:
     number: 12,
     title: "Integration and Examination Preparation",
     readingMinutes: 7,
-    lead: "Modul 12 knyter ihop kursen: arkitektens test, tentafällorna, slutchecklistan, fem scenarier och skillnaden mellan Zachman och TOGAF. De tio begreppen står i sammanfattningen.",
+    lead: "Modul 12 knyter ihop kursen: arkitektens test, tentafällorna, slutchecklistan, fem scenarier och skillnaden mellan Zachman och TOGAF. De tio begreppen står på kortet.",
     sources: ["Modul 12", "Föreläsningsbilder 59 och 102–103"],
     body: `
 ## Varför modul 12 är annorlunda
 
-Modul 12 ber dig integrera begreppen från de elva tidigare modulerna. Målet är inte att komma ihåg definitioner, utan att kunna koppla ihop begrepp, skilja närliggande idéer och använda arkitektoniskt tänkande på realistiska situationer. UF säger uttryckligen att man ska börja med modul 12. De tio begreppen som ska kunnas utan att slå upp dem står i sammanfattningen.
+Modul 12 ber dig integrera begreppen från de elva tidigare modulerna. Målet är inte att komma ihåg definitioner, utan att kunna koppla ihop begrepp, skilja närliggande idéer och använda arkitektoniskt tänkande på realistiska situationer. Läraren säger uttryckligen att man ska börja med modul 12. De tio begreppen som ska kunnas utan att slå upp dem står i sammanfattningen.
 
 ## Den stora bilden
 
@@ -1150,7 +1150,7 @@ En arkitektur ger ett sätt att förstå:
 - vilka konsekvenser förändringen får
 - hur förändringen kan styras
 
-UF:s mentala modell går från omvärlden till utfallen och tillbaka:
+Lärarens mentala modell går från omvärlden till utfallen och tillbaka:
 
 > Business environment → Strategy → Capabilities → Value streams → Architecture (Business, Information, Technology) → Solutions → Implementation → Outcomes → Feedback → back to Strategy
 
@@ -1166,11 +1166,11 @@ Innan du rekommenderar en lösning, ställ fem frågor:
 4. **How?** Vilken arkitektonisk förändring kan lösa problemet?
 5. **What are the consequences?** Vilka är kostnaderna, riskerna, beroendena, avvägningarna och effekterna?
 
-UF kallar det en användbar mental modell både för tentan och för verkligt arkitekturarbete.
+Läraren kallar det en användbar mental modell både för tentan och för verkligt arkitekturarbete.
 
 ## Tentafällorna
 
-Var särskilt uppmärksam på påståenden med orden **always, never, only, must, automatically, completely, exclusively**. I Enterprise Architecture är de ofta tecken på att påståendet är för absolut. UF:s exempel, alla falska:
+Var särskilt uppmärksam på påståenden med orden **always, never, only, must, automatically, completely, exclusively**. I Enterprise Architecture är de ofta tecken på att påståendet är för absolut. Lärarens exempel, alla falska:
 
 - "Digital transformation always requires cloud technology."
 - "Enterprise Architecture is exclusively about IT."
@@ -1189,7 +1189,7 @@ Var särskilt uppmärksam på påståenden med orden **always, never, only, must
 | Perspectives | Zachman |
 | Architecture governance guidance | TOGAF |
 
-UF:s förbehåll: det betyder inte att TOGAF inte kan använda klassificeringar, eller att Zachman saknar betydelse för arkitekturarbetet. Poängen är var och ens huvudsakliga roll.
+Lärarens förbehåll: det betyder inte att TOGAF inte kan använda klassificeringar, eller att Zachman saknar betydelse för arkitekturarbetet. Poängen är var och ens huvudsakliga roll.
 
 ## Fem scenarier
 
@@ -1220,7 +1220,7 @@ UF:s förbehåll: det betyder inte att TOGAF inte kan använda klassificeringar,
 - Vilken övergång är realistisk?
 - Hur ska förändringen styras?
 
-Här går man, enligt UF, från att lära sig terminologin till att tänka som en enterprisearkitekt.
+Här går man, enligt läraren, från att lära sig terminologin till att tänka som en enterprisearkitekt.
 
 ## Slutchecklistan
 
@@ -1242,7 +1242,7 @@ Före tentan ska du kunna förklara utan anteckningar:
 4. **Governance should create guardrails** — not unnecessary gates.
 5. **Architecture must continuously evolve** — the target is not a static end-state.
 
-UF:s sista budskap: kursen ska inte lära dig att memorera ett ramverk. Den ska lära dig att se en enterprise som ett system, förstå dess syfte och struktur, känna igen relationer och beroenden, värdera arkitektoniska avvägningar och hjälpa organisationen att förändras med avsikt.
+Lärarens sista budskap: kursen ska inte lära dig att memorera ett ramverk. Den ska lära dig att se en enterprise som ett system, förstå dess syfte och struktur, känna igen relationer och beroenden, värdera arkitektoniska avvägningar och hjälpa organisationen att förändras med avsikt.
 
 - Zachman ger ett sätt att tänka om enterprisens olika beskrivningar.
 - TOGAF ger vägledning för att ta fram och utveckla arkitekturen.
@@ -1283,7 +1283,7 @@ export const glossary = [
   { term: "Anti-pattern", definition: "Ett vanligt felmönster. I bankfallet: att välja teknikplattform innan affärsmålen, förmågorna och de arkitektoniska begränsningarna är fastställda.", chapter: "kap11" },
   { term: "API", definition: "Gränssnitt som möjliggör återanvändning, integration, samarbete med partner, sammansättning av produkter och deltagande i ekosystem.", chapter: "kap10" },
   { term: "Application Architecture", definition: "Domänen för applikationer och applikationstjänster. Ingår i TOGAF:s fas C tillsammans med Data Architecture.", chapter: "kap6" },
-  { term: "Architect's test", definition: "UF:s fem frågor före en rekommendation: Why? What? Who? How? What are the consequences?", chapter: "kap12" },
+  { term: "Architect's test", definition: "Lärarens fem frågor före en rekommendation: Why? What? Who? How? What are the consequences?", chapter: "kap12" },
   { term: "Architecture", definition: "Den grundläggande organisationen av något: komponenter, relationer, principer, begränsningar och utveckling. Ett diagram är bara en representation av den.", chapter: "kap2" },
   { term: "Architecture backlog", definition: "Arkitekturarbete som krävs för hållbar leverans: beslut, teknisk skuld, förmågeglapp, risker, standarder, principer och teknikutredningar. Ska kopplas till produktbackloggen.", chapter: "kap9" },
   { term: "Architecture Change Management", definition: "ADM:s fas H: vad har ändrats, och behöver arkitekturen ändras med det?", chapter: "kap5" },

@@ -4,11 +4,9 @@
 // punkterna (keyPoints, pitfalls), reading.js äger löptexten och ordlistan.
 // Kärnpunkternas form: ett begrepp per punkt, "Begrepp: förklaring".
 //
-// examPriority (prompten B4.2): kärna = Zachman, modul 12:s tio begrepp och
-// de distinktioner UF
-// upprepar. Essä = Zachman-essän, fallen i modul 11–12 och UF:s egna
-// essäfrågor. Bakgrund (teknikradar, adoptionscykel, arkitekturbacklog och
-// sprintar) är märkt "(bakgrund)" i kapiteltexten, inte på ämnesnivå.
+// Inga examPriority-etiketter (sedan 2026-11-14): allt är modulerna, så
+// etiketterna Kärna/Essä och Snabbspåret i Läs sa ingenting för den som
+// pluggar. Zachman har en bevisrad (examEvidence) i klartext.
 
 // Ordningen följer Läs: modul 12 först, sedan 1–11.
 export const topics = [
@@ -17,7 +15,6 @@ export const topics = [
     name: "Integration och tentaförberedelse",
     chapter: "kap12",
     examWeight: "hög",
-    examPriority: ["karna", "essa"],
     summary: "Modul 12 knyter ihop kursen: de tio begreppen, arkitektens fem frågor, tentafällorna med absoluta ord, fem scenarier och skillnaden mellan Zachman och TOGAF. Målet är att tänka som en enterprisearkitekt, inte att memorera ramverk.",
     keyPoints: [
       "Arkitektens test: Why? What? Who? How? What are the consequences?",
@@ -39,7 +36,6 @@ export const topics = [
     name: "Enterprise och scope",
     chapter: "kap1",
     examWeight: "hög",
-    examPriority: ["karna"],
     summary: "En enterprise är en samling organisationer, organisatoriska enheter eller förmågor med gemensamma mål, inte automatiskt ett juridiskt företag. Arkitekturens scope bestäms av problemet som ska lösas.",
     keyPoints: [
       "Enterprise: a collection of organizations, organizational units, or capabilities with a common set of goals.",
@@ -60,7 +56,6 @@ export const topics = [
     name: "Vad arkitektur är",
     chapter: "kap2",
     examWeight: "hög",
-    examPriority: ["karna"],
     summary: "Arkitektur är den grundläggande organisationen av något: komponenter, relationer, principer, begränsningar och utveckling. Ett diagram är en representation av arkitekturen, och relationerna visar konsekvenserna av förändring.",
     keyPoints: [
       "Architecture: the fundamental organization of something, including its components, relationships, principles and constraints.",
@@ -82,7 +77,6 @@ export const topics = [
     name: "Enterprise Architecture och arkitekten",
     chapter: "kap3",
     examWeight: "hög",
-    examPriority: ["karna"],
     summary: "EA är att förstå, designa, kommunicera och styra enterprisens grundläggande struktur och utveckling för att nå dess mål. Den är bredare än IT-arkitektur och finns för att möjliggöra förändring. Arkitekten har fem roller.",
     keyPoints: [
       "Enterprise Architecture: the practice of understanding, designing, communicating and governing the fundamental structure and evolution of an enterprise to achieve its objectives.",
@@ -105,8 +99,7 @@ export const topics = [
     name: "Zachmans ramverk",
     chapter: "kap4",
     examWeight: "hög",
-    examPriority: ["karna", "essa"],
-    examEvidence: { note: "Troligt, utöver modul 4:s frågor: Inte i modulerna, men på alla UF:s tidigare tentor och i årets bilder" },
+    examEvidence: { note: "Troligen på tentan: alla tre tentor förra året hade en stor Zachman-uppgift (se modul 4 i Läs)" },
     summary: "Zachmans ramverk är en ontologi och ett klassificeringsschema för beskrivningar av en enterprise: sex frågeord (kolumner) gånger sex perspektiv (rader). Det föreskriver ingen ordning och är ingen metod; det kompletterar TOGAF.",
     keyPoints: [
       "Zachman: an ontology and classification schema for enterprise descriptions.",
@@ -132,7 +125,6 @@ export const topics = [
     name: "TOGAF och ADM",
     chapter: "kap5",
     examWeight: "hög",
-    examPriority: ["karna"],
     summary: "TOGAF är vägledning och en metod för EA, med ADM som iterativ metod för att ta fram och utveckla arkitekturen. TOGAF är inte organisationens arkitektur och måste anpassas. Nuläge, målläge och övergångsarkitekturer gör EA till en förändringsdisciplin.",
     keyPoints: [
       "TOGAF: provides guidance and an approach for developing and governing Enterprise Architecture, including the ADM.",
@@ -154,7 +146,6 @@ export const topics = [
     name: "Domäner, vyer och viewpoints",
     chapter: "kap6",
     examWeight: "hög",
-    examPriority: ["karna"],
     summary: "Business, Data, Application och Technology Architecture är sammankopplade domäner, inga silor. Olika intressenter har olika frågor och behöver olika vyer; en viewpoint anger hur en vy ska ta upp en intressents fråga.",
     keyPoints: [
       "Business Architecture: förmågor, processer, organisation, värde och verksamhetstjänster.",
@@ -177,7 +168,6 @@ export const topics = [
     name: "Förmågor och värdeflöden",
     chapter: "kap7",
     examWeight: "hög",
-    examPriority: ["karna"],
     summary: "En förmåga är vad organisationen kan göra, en process hur arbetet utförs och ett värdeflöde hur värde skapas och levereras till en intressent. Förmågorna är relativt stabila och blir därför bron mellan strategi och arkitektur.",
     keyPoints: [
       "Business capability: what an organization can do.",
@@ -201,7 +191,6 @@ export const topics = [
     name: "Principer, styrning och avvägningar",
     chapter: "kap8",
     examWeight: "hög",
-    examPriority: ["karna"],
     summary: "En arkitekturprincip ger varaktig vägledning för beslut, och styrning fastställer beslutsrätter, ansvar, riktning och kontroll. Principer och guardrails gör att team kan besluta själva; arkitektur är att hantera avvägningar.",
     keyPoints: [
       "Architecture principle: provides enduring guidance for architectural decisions.",
@@ -224,7 +213,6 @@ export const topics = [
     name: "Arkitektur och agilt",
     chapter: "kap9",
     examWeight: "hög",
-    examPriority: ["karna"],
     summary: "Agilt betyder inte att arkitekturen behövs mindre, utan att den måste bli mer lyhörd. Agil arkitektur är just enough, iterativ och styrd av guardrails, och Enterprise Agility gäller hela organisationen, inte bara mjukvaruutveckling.",
     keyPoints: [
       "Agile architecture: utvecklas iterativt och ger samtidigt riktning och guardrails.",
@@ -247,7 +235,6 @@ export const topics = [
     name: "Digital transformation",
     chapter: "kap10",
     examWeight: "hög",
-    examPriority: ["karna"],
     summary: "Digitization omvandlar analogt till digitalt, digitalization förbättrar befintliga processer och digital transformation förändrar i grunden hur enterprisen skapar och levererar värde. Tekniken är en möjliggörare, inte transformationen.",
     keyPoints: [
       "Digitization: converting analog information into digital form.",
@@ -270,8 +257,7 @@ export const topics = [
     name: "Bankfallet",
     chapter: "kap11",
     examWeight: "medel",
-    examPriority: ["karna", "essa"],
-    summary: "UF:s fall med den traditionella banken: börja med mål och kundutfall, bedöm nuläget, sätt en målarkitektur med principer och styrning, ta dig dit via övergångsarkitekturer och leverera inkrementellt. Att välja teknik först är anti-mönstret.",
+    summary: "Lärarens fall med den traditionella banken: börja med mål och kundutfall, bedöm nuläget, sätt en målarkitektur med principer och styrning, ta dig dit via övergångsarkitekturer och leverera inkrementellt. Att välja teknik först är anti-mönstret.",
     keyPoints: [
       "Strategisk förmåga i fallet: digital customer onboarding.",
       "Arkitektoniskt problem i fallet: splittrad kundinformation.",

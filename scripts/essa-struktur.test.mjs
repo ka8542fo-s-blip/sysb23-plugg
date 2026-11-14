@@ -6,6 +6,7 @@ import { essays as strategiEssays } from "../src/data/strategi/essays.js";
 import { essays as processEssays } from "../src/data/process/essays.js";
 import { essays as arkitekturEssays } from "../src/data/arkitektur/essays.js";
 import { getCourse } from "../src/data/index.js";
+import { ZACHMAN_WHY } from "../src/data/arkitektur/cards.js";
 
 const essays = [...strategiEssays, ...processEssays];
 
@@ -71,7 +72,7 @@ test("kopplingssteget namnger ett område ur kursen", () => {
 // modellsvar, källa och en checklista. Ordningen är modul 12, 1–11 som i
 // Läs; modul 12:s scenarier och Final challenge är "UF:s fördjupade
 // fallfrågor"; Zachman-essän står efter modul 4:s frågor, märkt Troligt.
-test("Verksamhetsarkitektur: UF:s 53 frågor i ordningen 12, 1–11, Zachman-essän märkt Troligt", () => {
+test("Verksamhetsarkitektur: lärarens 53 frågor i ordningen 12, 1–11, Zachman-essän med förklaring", () => {
   const zachman = arkitekturEssays.find((essay) => essay.id === "ea-e-zachman");
   const rest = arkitekturEssays.filter((essay) => essay !== zachman);
   assert.equal(arkitekturEssays[0].id, "ea-e12-29", "modul 12 först");
@@ -79,14 +80,14 @@ test("Verksamhetsarkitektur: UF:s 53 frågor i ordningen 12, 1–11, Zachman-ess
   assert.deepEqual(order, ["kap12", "kap1", "kap2", "kap3", "kap4", "kap5", "kap6", "kap7", "kap8", "kap9", "kap10", "kap11"]);
   assert.equal(zachman.chapter, "kap4");
   assert.equal(zachman.level, "troligt");
-  assert.equal(zachman.levelNote, "Troligt · Inte i modulerna, men på alla UF:s tidigare tentor och i årets bilder");
+  assert.ok(zachman.levelNote.includes(ZACHMAN_WHY), "förklaringen i klartext");
   assert.ok(!zachman.pinned && !zachman.priority, "Zachman-essän är inte särskilt prioriterad");
   assert.equal(arkitekturEssays.indexOf(zachman), arkitekturEssays.findIndex((e) => e.id === "ea-e4-11") + 1);
   assert.match(zachman.question, /raderna och kolumnerna i Zachmans ramverk/);
   assert.equal(rest.length, 53);
   const fall = arkitekturEssays.filter((e) => e.group).map((e) => e.id);
   assert.deepEqual(fall, ["ea-e12-scenario-1", "ea-e12-scenario-2", "ea-e12-scenario-3", "ea-e12-scenario-4", "ea-e12-scenario-5", "ea-e12-slututmaning"]);
-  for (const id of fall) assert.equal(arkitekturEssays.find((e) => e.id === id).group, "UF:s fördjupade fallfrågor");
+  for (const id of fall) assert.equal(arkitekturEssays.find((e) => e.id === id).group, "Lärarens fördjupade fallfrågor");
   const chapters = new Set(getCourse("arkitektur").chapters.map((c) => c.id));
   const ids = new Set();
   for (const essay of arkitekturEssays) {

@@ -174,7 +174,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Begreppet enterprise kan gälla organisationer, myndigheter, utbildningsinstitutioner och samverkande ekosystem.",
-    source: "UF:s kursmaterial (docx), modul 1 fråga 3",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 1 fråga 3",
     reviewed: false,
   },
   {
@@ -192,7 +192,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Digitala tjänster går allt oftare över organisationsgränser.",
-    source: "UF:s kursmaterial (docx), modul 1 fråga 4",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 1 fråga 4",
     reviewed: false,
   },
   {
@@ -208,7 +208,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Arkitekturens scope ska knytas till arkitekturinsatsens syfte och mål.",
-    source: "UF:s kursmaterial (docx), modul 1 fråga 6",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 1 fråga 6",
     reviewed: false,
   },
   {
@@ -224,7 +224,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Falskt. Externa stakeholders kan vara ytterst viktiga.",
-    source: "UF:s kursmaterial (docx), modul 1 fråga 7",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 1 fråga 7",
     reviewed: false,
   },
   {
@@ -240,7 +240,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Olika stakeholders har olika concerns och behöver därför olika views av arkitekturen.",
-    source: "UF:s kursmaterial (docx), modul 1 fråga 8",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 1 fråga 8",
     reviewed: false,
   },
   {
@@ -615,7 +615,7 @@ const allQuestions = [
     ],
     correct: 1,
     explanation: "En metod föreskriver aktiviteter och i vilken ordning de ska göras. Zachman säger inte \"gör det här, sedan det här\" utan visar genom vilka dimensioner och perspektiv en enterprise kan beskrivas. Ramverket innehåller alltså arkitekturbegrepp, men ingen arbetsordning.",
-    source: "Modul 4, fråga 5 (alternativ E avbrutet i PDF:en, kompletterat ur docx:ens version av frågan)",
+    source: "Modul 4, fråga 5 (alternativ E avbrutet i PDF:en, kompletterat ur Word-dokumentets version av frågan)",
     reviewed: false,
   },
   {
@@ -678,7 +678,7 @@ const allQuestions = [
     correct: 3,
     secondary: true,
     explanation: "Who-frågan gäller människor, organisatoriskt ansvar, roller, organisatoriska enheter och tillhörande ansvarsstrukturer.",
-    source: "UF:s kursmaterial (docx), modul 4 fråga 4",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 4 fråga 4",
     reviewed: false,
   },
   {
@@ -694,7 +694,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. De sex frågorna är grundläggande dimensioner genom vilka en enterprise kan beskrivas.",
-    source: "UF:s kursmaterial (docx), modul 4 fråga 7",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 4 fråga 7",
     reviewed: false,
   },
   {
@@ -710,7 +710,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Deras syften skiljer sig så mycket åt att de kan komplettera varandra.",
-    source: "UF:s kursmaterial (docx), modul 4 fråga 10",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 4 fråga 10",
     reviewed: false,
   },
   {
@@ -726,7 +726,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Falskt. Ramverket handlar inte i första hand om projektplanering, tidsplanering, resurshantering eller projektgenomförande. Syftet är att klassificera och organisera beskrivningar av en enterprise.",
-    source: "UF:s kursmaterial (docx), modul 4 fråga 11",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 4 fråga 11",
     reviewed: false,
   },
   {
@@ -906,7 +906,7 @@ const allQuestions = [
     correct: 0,
     secondary: true,
     explanation: "Phase A, Architecture Vision, frågar vad som ska uppnås, varför det är viktigt och vilken arkitektonisk riktning som gäller. Där fastställs bland annat scope, mål, stakeholders och en övergripande baseline och target. Phase G och H gäller i stället implementation governance och change management.",
-    source: "UF:s kursmaterial (docx), modul 5 fråga 2",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 5 fråga 2",
     reviewed: false,
   },
   {
@@ -924,7 +924,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Phase B frågar hur verksamheten måste förändras och behandlar strategi, capabilities, value streams, organisation, processer, roller och produkter. Utgångspunkten är verksamheten, inte applikationer eller infrastruktur; de hanteras i Phase C och D.",
-    source: "UF:s kursmaterial (docx), modul 5 fråga 3",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 5 fråga 3",
     reviewed: false,
   },
   {
@@ -942,7 +942,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Baseline Architecture svarar på frågan var man står nu och beskriver relevanta delar av nuläget: inte allt som finns, utan det som behövs för de beslut som ska fattas. Den önskade framtiden beskrivs i stället av Target Architecture.",
-    source: "UF:s kursmaterial (docx), modul 5 fråga 4",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 5 fråga 4",
     reviewed: false,
   },
   {
@@ -960,7 +960,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Organisationer går sällan från baseline till target i ett steg, eftersom verksamheten måste fortsätta fungera medan den förändras. Transition Architectures beskriver praktiska mellanlägen så att man kan ta sig till target utan att slå sönder organisationen på vägen.",
-    source: "UF:s kursmaterial (docx), modul 5 fråga 5",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 5 fråga 5",
     reviewed: false,
   },
   {
@@ -978,7 +978,7 @@ const allQuestions = [
     correct: 3,
     secondary: true,
     explanation: "Phase G, Implementation Governance, frågar om implementationen håller sig i linje med den avsedda arkitekturen. Det betyder inte att arkitekter styr varje implementationsbeslut, utan att arkitekturens avsikt och implementationens verklighet hålls i lämplig samklang. Phase H gäller i stället förändring av själva arkitekturen.",
-    source: "UF:s kursmaterial (docx), modul 5 fråga 7",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 5 fråga 7",
     reviewed: false,
   },
   {
@@ -996,7 +996,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Enterprises skiljer sig i skala, komplexitet, risk, reglering, kultur, arkitekturmognad, leveransmodell och behov av governance. Frågan är därför inte hur man följer TOGAF perfekt, utan hur ADM ska tillämpas och anpassas till just den enterprise och det arkitekturproblem som gäller.",
-    source: "UF:s kursmaterial (docx), modul 5 fråga 8",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 5 fråga 8",
     reviewed: false,
   },
   {
@@ -1014,7 +1014,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Traceability betyder att ett beslut kan spåras tillbaka till det affärsskäl som orsakade det, till exempel från en identitetstjänst via capability och krav till strategin att korta onboarding-tiden. Då går det att förklara varför en viss teknik finns.",
-    source: "UF:s kursmaterial (docx), modul 5 fråga 10",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 5 fråga 10",
     reviewed: false,
   },
   {
@@ -1030,7 +1030,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Phase C, Information Systems Architectures, omfattar Data Architecture, som gäller hur information ska struktureras, styras och delas, och Application Architecture, som gäller vilka applikationsförmågor och samspel verksamheten kräver.",
-    source: "UF:s kursmaterial (docx), modul 5 fråga 12",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 5 fråga 12",
     reviewed: false,
   },
   {
@@ -1046,7 +1046,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Falskt. Technology Architecture ska stödja informationssystemen och Business Architecture, så den förutsätter att man vet hur verksamheten måste förändras. Arkitektur börjar med syfte, inte teknik, och att välja teknik utan arkitektoniskt sammanhang är att utgå från lösningen.",
-    source: "UF:s kursmaterial (docx), modul 5 fråga 13",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 5 fråga 13",
     reviewed: false,
   },
   {
@@ -1062,7 +1062,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Eftersom verksamheten måste fortsätta fungera under förändringen sker övergången från baseline till target sällan i ett steg, utan via en eller flera transition architectures. Det är det som gör arkitektur till en förändringsdisciplin snarare än bara dokumentation.",
-    source: "UF:s kursmaterial (docx), modul 5 fråga 14",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 5 fråga 14",
     reviewed: false,
   },
   {
@@ -1078,7 +1078,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Requirements Management pågår genom hela ADM och är inte begränsad till en fas. Krav och arkitektur påverkar varandra: stakeholders concerns blir krav, krav leder till beslut och implementation, och feedback från utfallet ger ändrade eller nya krav.",
-    source: "UF:s kursmaterial (docx), modul 5 fråga 15",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 5 fråga 15",
     reviewed: false,
   },
   {
@@ -1094,7 +1094,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Phase H, Architecture Change Management, frågar vad som har ändrats och om arkitekturen behöver ändras med det, och erfarenheter från implementationen är en av källorna. Arkitektur kan därför inte bara skapas, godkännas och arkiveras; den måste utvecklas.",
-    source: "UF:s kursmaterial (docx), modul 5 fråga 17",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 5 fråga 17",
     reviewed: false,
   },
   {
@@ -1110,7 +1110,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Enterprises skiljer sig i skala, komplexitet, risk, reglering, kultur och arkitekturmognad, och tailoring ingår redan i Preliminary Phase. Frågan är inte hur man följer TOGAF perfekt utan hur ADM ska tillämpas och anpassas till den egna situationen.",
-    source: "UF:s kursmaterial (docx), modul 5 fråga 19",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 5 fråga 19",
     reviewed: false,
   },
   {
@@ -1126,7 +1126,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Falskt. Zachman handlar om vilka slags beskrivningar och perspektiv en enterprise behöver, medan ADM handlar om hur arkitekturutveckling och governance organiseras. De löser olika problem och kan därför komplettera varandra snarare än konkurrera.",
-    source: "UF:s kursmaterial (docx), modul 5 fråga 20",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 5 fråga 20",
     reviewed: false,
   },
   {
@@ -1306,7 +1306,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "En view ska utgå från stakeholderns concern och det beslut som ska fattas; en executive vill veta hur arkitekturen stödjer strategin. Uppgiften är inte att göra det mest detaljerade diagrammet, utan den representation som gör att rätt beslut kan fattas.",
-    source: "UF:s kursmaterial (docx), modul 6 fråga 6",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 6 fråga 6",
     reviewed: false,
   },
   {
@@ -1324,7 +1324,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Technology Architecture tillhandahåller de underliggande tekniska förmågorna, som plattformar, nätverk och infrastruktur, som applikationerna och resten av arkitekturen behöver. Domänerna hänger ihop men är inte identiska, och Technology Architecture ersätter inte Application Architecture.",
-    source: "UF:s kursmaterial (docx), modul 6 fråga 8",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 6 fråga 8",
     reviewed: false,
   },
   {
@@ -1340,7 +1340,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Business Architecture handlar om sådant som capabilities, organisation, business services, processer, värde, produkter, kunder och affärsmål. Den beskriver hur verksamheten behöver fungera och vara strukturerad.",
-    source: "UF:s kursmaterial (docx), modul 6 fråga 12",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 6 fråga 12",
     reviewed: false,
   },
   {
@@ -1356,7 +1356,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Falskt. Technology Architecture är en domän inom Enterprise Architecture, inte detsamma som Enterprise Architecture. Om allt i ett EA-diagram är applikationer eller teknik handlar det troligen om IT-arkitektur snarare än Enterprise Architecture.",
-    source: "UF:s kursmaterial (docx), modul 6 fråga 13",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 6 fråga 13",
     reviewed: false,
   },
   {
@@ -1372,7 +1372,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Arkitektur finns till för stakeholders med olika concerns. En bra representation har ett syfte, en målgrupp, en concern och lämplig abstraktionsnivå, och arbetet bör börja i beslutet som stakeholdern behöver fatta, inte i diagrammet.",
-    source: "UF:s kursmaterial (docx), modul 6 fråga 14",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 6 fråga 14",
     reviewed: false,
   },
   {
@@ -1388,7 +1388,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Falskt. Mer detalj ger inte automatiskt bättre arkitektur. Rätt detaljnivå beror på syfte, stakeholder, beslut och abstraktionsnivå, och ett diagram som passar en stakeholder kan vara nästan oanvändbart för en annan.",
-    source: "UF:s kursmaterial (docx), modul 6 fråga 15",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 6 fråga 15",
     reviewed: false,
   },
   {
@@ -1678,7 +1678,7 @@ const allQuestions = [
     correct: 1,
     fixedOrder: true,
     explanation: "Falskt. Governance handlar om vem som har mandat att fatta vilka beslut och under vilka villkor. Med tydliga principer, decision rights och gränser kan team fatta många beslut själva, medan governance fokuserar på betydande risker, beroenden över hela verksamheten och strategiska beslut.",
-    source: "Modul 7, fråga 20 (principer och styrning: modul 8:s ämne enligt UF:s not)",
+    source: "Modul 7, fråga 20 (principer och styrning: modul 8:s ämne enligt lärarens not)",
     reviewed: false,
   },
   {
@@ -1693,7 +1693,7 @@ const allQuestions = [
     correct: 0,
     fixedOrder: true,
     explanation: "Sant. Principer ger återanvändbar vägledning för beslut. Team kan fatta många beslut på egen hand utan att be om godkännande varje gång, så länge de håller sig inom de överenskomna gränserna; på så sätt fungerar principerna som guardrails.",
-    source: "Modul 7, fråga 21 (principer och styrning: modul 8:s ämne enligt UF:s not)",
+    source: "Modul 7, fråga 21 (principer och styrning: modul 8:s ämne enligt lärarens not)",
     reviewed: false,
   },
   {
@@ -1708,7 +1708,7 @@ const allQuestions = [
     correct: 0,
     fixedOrder: true,
     explanation: "Sant. Det finns nästan aldrig en perfekt arkitektur. Standardisering ger till exempel effektivitet men mindre flexibilitet, och centralisering ger kontroll men långsammare beslut. Arkitektens uppgift är att göra avvägningarna tydliga och anpassade efter verksamhetens mål.",
-    source: "Modul 7, fråga 22 (principer och styrning: modul 8:s ämne enligt UF:s not)",
+    source: "Modul 7, fråga 22 (principer och styrning: modul 8:s ämne enligt lärarens not)",
     reviewed: false,
   },
   {
@@ -1726,7 +1726,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Organisationsschemat ändras vid omorganisationen, men behovet av betalningar, kundservice och bedrägeridetektering finns kvar. En capability model beskriver vad verksamheten måste kunna göra oberoende av den tillfälliga organisationen och blir därför den stabila referensen.",
-    source: "UF:s kursmaterial (docx), modul 7 fråga 7",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 7 fråga 7",
     reviewed: false,
   },
   {
@@ -1744,7 +1744,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Avdelningar kan var för sig optimera sina egna mål medan kundens helhetsupplevelse blir sämre, till exempel genom upprepad datainmatning och olika statusbesked. Value-stream thinking följer värdet för stakeholdern från början till slut, tvärs över organisationsgränserna, och avslöjar därför sådan local optimization.",
-    source: "UF:s kursmaterial (docx), modul 7 fråga 10",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 7 fråga 10",
     reviewed: false,
   },
   {
@@ -1760,7 +1760,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Falskt. En value stream visar hur värde skapas och levereras till en stakeholder, ofta tvärs över organisationsgränser. Det är ett verksamhetsbegrepp inom Business Architecture; applikationer och teknik kopplas sedan till de capabilities som stödjer stegen.",
-    source: "UF:s kursmaterial (docx), modul 7 fråga 14",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 7 fråga 14",
     reviewed: false,
   },
   {
@@ -1776,7 +1776,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. En value stream utgår från vad stakeholdern upplever från början till slut. Ett bolåneflöde kan till exempel involvera marknad, försäljning, compliance, risk, drift och IT, och value streamen skär tvärs igenom de gränserna.",
-    source: "UF:s kursmaterial (docx), modul 7 fråga 17",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 7 fråga 17",
     reviewed: false,
   },
   {
@@ -1792,7 +1792,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Capability-based planning frågar vilka capabilities som måste förändras för att nå det strategiska målet. När baseline capability jämförs med target capability blir skillnaden, capability gap, synlig och kan leda vidare till arkitekturinitiativ och investeringar.",
-    source: "UF:s kursmaterial (docx), modul 7 fråga 18",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 7 fråga 18",
     reviewed: false,
   },
   {
@@ -1927,7 +1927,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Krav på säkerhet, data och interoperabilitet är exempel på guardrails: gränser inom vilka teamet kan arbeta självständigt. Teamet får gå vidare utan att be om lov varje gång, så länge det håller sig inom gränserna.",
-    source: "UF:s kursmaterial (docx), modul 8 fråga 6",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 8 fråga 6",
     reviewed: false,
   },
   {
@@ -1945,7 +1945,7 @@ const allQuestions = [
     correct: 2,
     secondary: true,
     explanation: "Beslutsmandat ska motsvara beslutets räckvidd och konsekvenser. En identitetsarkitektur för hela verksamheten påverkar många produkter och domäner och är därför ett enterprise-beslut, medan val av editor, variabelnamn och skärmlayout är lokala rutinbeslut som teamet kan fatta självt.",
-    source: "UF:s kursmaterial (docx), modul 8 fråga 7",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 8 fråga 7",
     reviewed: false,
   },
   {
@@ -1963,7 +1963,7 @@ const allQuestions = [
     correct: 2,
     secondary: true,
     explanation: "Varken att avskaffa arkitekturen eller att centralisera ännu mer löser problemet. Lösningen är att definiera principer, guardrails och decision rights, delegera rutinbeslut och fortsätta styra betydande beslut som påverkar hela verksamheten. Obegränsad autonomi skulle i stället riskera dubbelarbete och fragmentering.",
-    source: "UF:s kursmaterial (docx), modul 8 fråga 8",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 8 fråga 8",
     reviewed: false,
   },
   {
@@ -1981,7 +1981,7 @@ const allQuestions = [
     correct: 2,
     secondary: true,
     explanation: "Mogen governance strävar efter kontroll där det behövs och autonomi där det passar. Beslutsmandatet anpassas efter beslutets räckvidd, påverkan och risk, och principer och guardrails gör att rutinbeslut inte behöver godkännas centralt.",
-    source: "UF:s kursmaterial (docx), modul 8 fråga 10",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 8 fråga 10",
     reviewed: false,
   },
   {
@@ -1997,7 +1997,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Falskt. Även agila organisationer måste hantera risk, compliance, säkerhet, beroenden och arkitektonisk sammanhållning. Agil governance tar inte bort styrningen utan ändrar arbetssättet, med fokus på decision rights, principer, guardrails, risk och feedback i stället för godkännanden och gates.",
-    source: "UF:s kursmaterial (docx), modul 8 fråga 14",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 8 fråga 14",
     reviewed: false,
   },
   {
@@ -2013,7 +2013,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Decision rights anger vem som har mandat att fatta vilka arkitekturbeslut, vad teamen kan besluta själva, vad som kräver konsultation eller eskalering och var godkännande på enterprise-nivå behövs. Tydliga decision rights ökar dessutom takten i besluten.",
-    source: "UF:s kursmaterial (docx), modul 8 fråga 15",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 8 fråga 15",
     reviewed: false,
   },
   {
@@ -2029,7 +2029,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. När tydliga principer och standarder finns täcks många rutinbeslut redan av en guardrail. En princip som ”Prefer reusable enterprise capabilities” gör att teamen kan fatta många beslut utan centralt godkännande, vilket minskar behovet av upprepade centrala ingripanden.",
-    source: "UF:s kursmaterial (docx), modul 8 fråga 16",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 8 fråga 16",
     reviewed: false,
   },
   {
@@ -2045,7 +2045,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Falskt. En gate innebär att stanna och be om lov, till exempel att varje API-design måste godkännas av en architecture board. En guardrail innebär att teamet får gå vidare så länge det håller sig inom gränserna, till exempel att alla API:er uppfyller säkerhets- och gränssnittskrav.",
-    source: "UF:s kursmaterial (docx), modul 8 fråga 17",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 8 fråga 17",
     reviewed: false,
   },
   {
@@ -2061,7 +2061,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Governance bör rikta uppmärksamheten mot beslut med betydande påverkan på hela verksamheten, risk, beroenden, säkerhet, compliance och långsiktiga konsekvenser. Den behöver inte granska varje implementationsdetalj; det är logiken bakom riskbaserad governance.",
-    source: "UF:s kursmaterial (docx), modul 8 fråga 18",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 8 fråga 18",
     reviewed: false,
   },
   {
@@ -2209,7 +2209,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Enterprise Agility är hela organisationens förmåga att känna av förändringar, besluta snabbt, mobilisera resurser, anpassa capabilities, leverera värde snabbt och lära kontinuerligt. Det är alltså bredare än snabbare kodning eller agil mjukvaruutveckling.",
-    source: "UF:s kursmaterial (docx), modul 9 fråga 1",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 9 fråga 1",
     reviewed: false,
   },
   {
@@ -2227,7 +2227,7 @@ const allQuestions = [
     correct: 2,
     secondary: true,
     explanation: "Agile development handlar främst om hur team utvecklar och levererar produkter. Enterprise Agility gäller hur hela organisationen svarar på förändring och omfattar även strategi, organisation, governance, finansiering, portföljstyrning och arkitektur. Agila team räcker inte om till exempel finansiering och godkännanden fortfarande tar månader.",
-    source: "UF:s kursmaterial (docx), modul 9 fråga 2",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 9 fråga 2",
     reviewed: false,
   },
   {
@@ -2245,7 +2245,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Guardrails är gränser inom vilka team kan fatta beslut säkert och självständigt. Arkitekten behöver då inte styra varje beslut utan skapar förutsättningar för säkra och sammanhängande beslut i teamen. Syftet är alltså inte att stoppa beslut eller experiment.",
-    source: "UF:s kursmaterial (docx), modul 9 fråga 5",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 9 fråga 5",
     reviewed: false,
   },
   {
@@ -2263,7 +2263,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "En produktorienterad modell har ett beständigt team, kontinuerlig investering, fokus på kundutfall och kontinuerlig utveckling av produkten. Tillfälliga team, fast scope och leverans som tar slut när scopet är klart kännetecknar i stället projekttänkandet.",
-    source: "UF:s kursmaterial (docx), modul 9 fråga 6",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 9 fråga 6",
     reviewed: false,
   },
   {
@@ -2281,7 +2281,7 @@ const allQuestions = [
     correct: 2,
     secondary: true,
     explanation: "Ett architecture backlog samlar arkitekturarbete som arkitekturbeslut, technical debt, capability gaps, arkitekturrisker, standarder, principer och teknikutredningar. Det behövs eftersom sådant arbete inte alltid passar in i ett backlog med kundfunktioner, men det ersätter inte product backlog.",
-    source: "UF:s kursmaterial (docx), modul 9 fråga 7",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 9 fråga 7",
     reviewed: false,
   },
   {
@@ -2299,7 +2299,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Product backlog frågar vilket värde produkten ska leverera; architecture backlog frågar vilket arkitekturarbete som krävs för att värdet ska kunna levereras hållbart. Om de inte kopplas ihop kan synliga funktioner prioriteras gång på gång medan arkitektoniska begränsningar växer under ytan.",
-    source: "UF:s kursmaterial (docx), modul 9 fråga 8",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 9 fråga 8",
     reviewed: false,
   },
   {
@@ -2317,7 +2317,7 @@ const allQuestions = [
     correct: 2,
     secondary: true,
     explanation: "Iterativ arkitektur ger tillräcklig riktning, lär sig genom leveransen och anpassas efter feedback, i kedjan enterprise direction, architecture iteration, product iteration, sprint, feedback och architecture adaptation. Att definiera allt i förväg eller frysa target architecture förutsätter att antaganden, kunder och teknik inte ändras.",
-    source: "UF:s kursmaterial (docx), modul 9 fråga 9",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 9 fråga 9",
     reviewed: false,
   },
   {
@@ -2335,7 +2335,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "En architecture sprint är en kort, fokuserad arkitekturiteration som ska besvara en specifik arkitekturfråga eller möjliggöra en viss förändring, till exempel hur kundidentitet ska fungera över tre produkter. Den är inte bara en dokumentationssprint.",
-    source: "UF:s kursmaterial (docx), modul 9 fråga 10",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 9 fråga 10",
     reviewed: false,
   },
   {
@@ -2351,7 +2351,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Falskt. Enterprise Agility gäller hela organisationens förmåga att svara på förändring, inklusive strategi, organisation, governance, finansiering, portföljstyrning, arkitektur och produktledning. Utvecklingsteam kan leverera varannan vecka utan att verksamheten som helhet är agil.",
-    source: "UF:s kursmaterial (docx), modul 9 fråga 11",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 9 fråga 11",
     reviewed: false,
   },
   {
@@ -2367,7 +2367,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Falskt. Just-enough architecture betyder inte ingen arkitektur, ingen planering eller inga principer. Det betyder att mängden arkitekturarbete anpassas efter beslutet, osäkerheten, risken och tidshorisonten.",
-    source: "UF:s kursmaterial (docx), modul 9 fråga 13",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 9 fråga 13",
     reviewed: false,
   },
   {
@@ -2383,7 +2383,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Leveransen ger lärdomar som påverkar arkitekturen. Visar det sig till exempel att kunderna avbryter vid dokumentuppladdningen kan dokumenttjänster, dataflöden och plattformsförmågor behöva omprövas; arkitekturen anpassas för att verkligheten har gett ny kunskap.",
-    source: "UF:s kursmaterial (docx), modul 9 fråga 14",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 9 fråga 14",
     reviewed: false,
   },
   {
@@ -2399,7 +2399,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Bra guardrails möjliggör autonomi: när gränserna för säkerhet, data, integration och regelverk är tydliga kan teamen fatta snabba lokala beslut utan att be om lov varje gång. Resultatet blir autonomi inom tydliga gränser.",
-    source: "UF:s kursmaterial (docx), modul 9 fråga 15",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 9 fråga 15",
     reviewed: false,
   },
   {
@@ -2415,7 +2415,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Falskt. Federation betyder inte att varje team får göra vad som helst, utan att ansvar och beslut fördelas på lämpligt sätt. Enterprise-nivån definierar till exempel identitetsprinciper, data governance och säkerhetskrav, och produktteamen väljer implementationsdetaljer inom de ramarna.",
-    source: "UF:s kursmaterial (docx), modul 9 fråga 16",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 9 fråga 16",
     reviewed: false,
   },
   {
@@ -2431,7 +2431,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Ett architecture backlog kan bland annat innehålla arkitekturbeslut, technical debt, capability gaps, arkitekturrisker, standarder och principer. Sådant arbete passar ofta inte naturligt in i ett backlog med kundfunktioner och behöver därför synliggöras.",
-    source: "UF:s kursmaterial (docx), modul 9 fråga 17",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 9 fråga 17",
     reviewed: false,
   },
   {
@@ -2447,7 +2447,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Falskt. De två backlogarna besvarar olika frågor men ska vara kopplade. Produktmål kan kräva arkitekturarbete, till exempel identitetsintegration och säkerhet när kunder ska kunna öppna sparkonto digitalt, och det arbetet behöver samordnas med produktleveransen.",
-    source: "UF:s kursmaterial (docx), modul 9 fråga 18",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 9 fråga 18",
     reviewed: false,
   },
   {
@@ -2595,7 +2595,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Att gå från engångsköp av licenser till löpande betalning för åtkomst ändrar intäktsmodell, kundrelation, produktlivscykel och fakturering. Det är en förändring av den operativa och ekonomiska modellen, alltså affärsmodellen, och inte bara en teknisk implementation.",
-    source: "UF:s kursmaterial (docx), modul 10 fråga 6",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 10 fråga 6",
     reviewed: false,
   },
   {
@@ -2613,7 +2613,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Digitala verksamheter blir allt mer beroende av datadrivna beslut, personalisering, automatisering, realtidstjänster och analys. Därför blir data en del av den strategiska arkitekturen och inte bara en infrastrukturfråga.",
-    source: "UF:s kursmaterial (docx), modul 10 fråga 7",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 10 fråga 7",
     reviewed: false,
   },
   {
@@ -2631,7 +2631,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "En platform låter flera produkter återanvända gemensamma capabilities, till exempel identitet, betalningar och kunddata, i stället för att varje produkt bygger dem själv: bygg en gång, använd många gånger. Produkterna kan ändå förbli autonoma; en platform betyder inte att allt centraliseras.",
-    source: "UF:s kursmaterial (docx), modul 10 fråga 8",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 10 fråga 8",
     reviewed: false,
   },
   {
@@ -2649,7 +2649,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "APIs kan stödja återanvändning, integration, sammansättning av produkter, samverkan med partner och deltagande i ekosystem, och gör capabilities mer komponerbara. Ett API är dock en arkitekturmekanism och inte digital transformation i sig; frågan är vilken capability eller vilket värde det möjliggör.",
-    source: "UF:s kursmaterial (docx), modul 10 fråga 9",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 10 fråga 9",
     reviewed: false,
   },
   {
@@ -2667,7 +2667,7 @@ const allQuestions = [
     correct: 2,
     secondary: true,
     explanation: "En digital transformation ska börja i ett tydligt affärsmål och ett meningsfullt kund- eller affärsutfall, och först därefter avgörs vilken teknik som behövs. Frågor om nyaste teknik, leverantörer eller cloud-region utgår från tekniken och riskerar att göra transformationen teknikstyrd.",
-    source: "UF:s kursmaterial (docx), modul 10 fråga 10",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 10 fråga 10",
     reviewed: false,
   },
   {
@@ -2683,7 +2683,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Digitization är omvandling av analog information till digital form, till exempel när ett pappersarkiv blir ett digitalt arkiv. Informationen blir digital, men affärsmodellen kan vara densamma.",
-    source: "UF:s kursmaterial (docx), modul 10 fråga 11",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 10 fråga 11",
     reviewed: false,
   },
   {
@@ -2699,7 +2699,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Digitalization använder digital teknik för att förbättra befintliga aktiviteter och processer, till exempel automatiserad skadehantering eller elektroniska godkännanden. Verksamheten gör i stort sett samma sak, men snabbare eller effektivare.",
-    source: "UF:s kursmaterial (docx), modul 10 fråga 12",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 10 fråga 12",
     reviewed: false,
   },
   {
@@ -2715,7 +2715,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Falskt. Cloud kan ge elasticitet, automatisering och snabbhet och därmed möjliggöra transformation. Men att bara flytta befintliga workloads till cloud kan lämna affärsmodell, processer, kundupplevelse och operating model oförändrade.",
-    source: "UF:s kursmaterial (docx), modul 10 fråga 14",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 10 fråga 14",
     reviewed: false,
   },
   {
@@ -2731,7 +2731,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. APIs kan stödja återanvändning, integration, produktsammansättning, partnersamverkan och deltagande i ekosystem. Arkitekturen sträcker sig därmed allt oftare utanför organisationens egna gränser.",
-    source: "UF:s kursmaterial (docx), modul 10 fråga 17",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 10 fråga 17",
     reviewed: false,
   },
   {
@@ -2817,7 +2817,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Teknik ska utvärderas i ljuset av strategiska mål, önskade utfall, capabilities, begränsningar och intressenternas concerns. Att börja med leverantörer eller teknikval riskerar lösningar som är tekniskt attraktiva men dåligt anpassade till verksamhetens behov.",
-    source: "UF:s kursmaterial (docx), modul 11 fråga 1",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 11 fråga 1",
     reviewed: false,
   },
   {
@@ -2835,7 +2835,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Kärnsystemet kan stödja kritiska capabilities, som kontohantering, betalningar och regulatoriska funktioner, och ha komplexa beroenden. En \"big bang\"-ersättning kan därför skapa stora operativa, finansiella och affärsmässiga risker; gammalt betyder inte onödigt.",
-    source: "UF:s kursmaterial (docx), modul 11 fråga 4",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 11 fråga 4",
     reviewed: false,
   },
   {
@@ -2853,7 +2853,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Transition architectures är praktiska mellanlägen som låter organisationen gå från baseline mot target architecture medan verksamheten fortsätter och levererar värde. De hanterar risk, beroenden och kontinuitet; de ersätter inte target architecture utan gör den genomförbar.",
-    source: "UF:s kursmaterial (docx), modul 11 fråga 6",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 11 fråga 6",
     reviewed: false,
   },
   {
@@ -2871,7 +2871,7 @@ const allQuestions = [
     correct: 2,
     secondary: true,
     explanation: "Banken kan inte hoppa direkt från ett 25 år gammalt kärnsystem till en färdig digital bank, så riktningen sätts och förändringen sker stegvis via transition architectures. Att ersätta allt direkt ignorerar beroenden, och att frysa utvecklingen gör att organisationen går miste om lärande och värde.",
-    source: "UF:s kursmaterial (docx), modul 11 fråga 8",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 11 fråga 8",
     reviewed: false,
   },
   {
@@ -2889,7 +2889,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Product backlog beskriver vilket värde produkten ska leverera, och architecture backlog vilket arkitekturarbete som krävs för att värdet ska kunna levereras hållbart. Backloggarna ska kopplas ihop och arkitekturen anpassas efter feedback, i stället för en färdig femårsdesign eller centralt godkännande av varje feature.",
-    source: "UF:s kursmaterial (docx), modul 11 fråga 9",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 11 fråga 9",
     reviewed: false,
   },
   {
@@ -2907,7 +2907,7 @@ const allQuestions = [
     correct: 1,
     secondary: true,
     explanation: "Fallet visar att arbetet ska börja i affärssyftet, det vill säga strategi, kundutfall och capabilities, och att teknik väljs sent som en enabler. Arkitekturen finns till för att möjliggöra målmedveten förändring, inte för att låta tekniken styra strategin eller likställa transformation med cloud migration.",
-    source: "UF:s kursmaterial (docx), modul 11 fråga 10",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 11 fråga 10",
     reviewed: false,
   },
   {
@@ -2923,7 +2923,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Falskt. Banken ska först fastställa strategiska mål, önskade kundutfall, capabilities, begränsningar och principer. Först därefter ska teknikplattformar utvärderas, annars riskerar banken en lösning som är tekniskt attraktiv men inte stämmer med verksamhetens behov.",
-    source: "UF:s kursmaterial (docx), modul 11 fråga 11",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 11 fråga 11",
     reviewed: false,
   },
   {
@@ -2939,7 +2939,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Flera kunddatabaser, ofta med olika definitioner av \"kund\", är främst en Data Architecture-fråga: analyser kan ge olika svar, kanaler kan visa olika uppgifter och kundupplevelsen splittras. Även Business och Application Architecture samt governance berörs.",
-    source: "UF:s kursmaterial (docx), modul 11 fråga 12",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 11 fråga 12",
     reviewed: false,
   },
   {
@@ -2955,7 +2955,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Falskt. Ålder ensam gör inte ett system till ett problem. Det gamla kärnsystemet kan fortfarande stödja kritiska capabilities, och arkitekturen måste skilja gammalt från onödigt; frågan är vilka capabilities som beror på systemet och vilka konsekvenser en förändring får.",
-    source: "UF:s kursmaterial (docx), modul 11 fråga 13",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 11 fråga 13",
     reviewed: false,
   },
   {
@@ -2971,7 +2971,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Transition architectures ger praktiska mellanlägen där nya capabilities kan införas stegvis medan befintliga system fortsätter att fungera. På så sätt hanteras beroenden, risk och affärskontinuitet utan en transformation där allt sker på en gång.",
-    source: "UF:s kursmaterial (docx), modul 11 fråga 14",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 11 fråga 14",
     reviewed: false,
   },
   {
@@ -2987,7 +2987,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Att bli en digital bank kan kräva förändringar i affärsmodell, capabilities, operating model, kundresa, data, applikationer och teknik. Tekniken är en enabler, men transformationen gäller hur värde skapas och levereras.",
-    source: "UF:s kursmaterial (docx), modul 11 fråga 15",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 11 fråga 15",
     reviewed: false,
   },
   {
@@ -3003,7 +3003,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Agile kan stödja stegvis leverans, produktorienterade team, kortare feedbackcykler och kontinuerligt lärande inom transformationen. Arkitekturen utvecklas då parallellt med leveransen i stället för att alla beslut fattas i förväg.",
-    source: "UF:s kursmaterial (docx), modul 11 fråga 16",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 11 fråga 16",
     reviewed: false,
   },
   {
@@ -3019,7 +3019,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Sant. Visst arkitekturarbete behövs för hållbar produktleverans utan att synas som kundfunktioner, till exempel minskad teknisk skuld, datasanering, säkerhetsförbättringar och återanvändbara plattformsfunktioner. Sådana poster bör kopplas till produktprioriteringarna.",
-    source: "UF:s kursmaterial (docx), modul 11 fråga 17",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 11 fråga 17",
     reviewed: false,
   },
   {
@@ -3035,7 +3035,7 @@ const allQuestions = [
     fixedOrder: true,
     secondary: true,
     explanation: "Falskt. Arkitektur och transformation är feedbacksystem som måste lära av verkligheten; om en ny digital produkt till exempel får tio gånger fler transaktioner än väntat kan arkitekturen behöva ses över. Target är inget statiskt slutläge.",
-    source: "UF:s kursmaterial (docx), modul 11 fråga 18",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 11 fråga 18",
     reviewed: false,
   },
   {
@@ -3086,7 +3086,7 @@ const allQuestions = [
     ],
     correct: 3,
     explanation: "Zachman är främst en ontologi och ett klassificeringsschema som ordnar beskrivningar av en enterprise utifrån perspektiv och de sex frågorna What, How, Where, Who, When och Why. Den säger inte \"gör steg 1, sedan steg 2\"; ett utvecklingssätt ger i stället TOGAF med ADM.",
-    source: "Modul 12, fråga 3 (avbruten i PDF:en efter alternativ C; alternativ och svar ur UF:s kursmaterial (docx), \"The Zachman Question\")",
+    source: "Modul 12, fråga 3 (avbruten i PDF:en efter alternativ C; alternativ och svar ur lärarens kursmaterial (Word-dokumentet), \"The Zachman Question\")",
     reviewed: false,
   },
   {
@@ -3599,7 +3599,7 @@ const allQuestions = [
     correct: 2,
     secondary: true,
     explanation: "Ett ramverk ersätter inte arkitektoniskt omdöme. TOGAF och ADM producerar inte arkitekturen automatiskt; organisationen måste själv bestämma sina principer, prioriteringar, governance, target state och transition approach.",
-    source: "UF:s kursmaterial (docx), modul 12, \"The TOGAF Question\"",
+    source: "Lärarens kursmaterial (Word-dokumentet), modul 12, \"The TOGAF Question\"",
     reviewed: false,
   },
 ];
@@ -3610,7 +3610,7 @@ export const extraQuestions = allQuestions.filter((q) => q.secondary);
 
 // Alla frågor är UF:s egna och ska se ut som hos honom, så ingen längd-
 // eller positionsbalans räknas (fragebank-balans.test.mjs).
-const VERBATIM = "UF:s modulfråga ordagrant";
-const DOCX = "UF:s kursmaterial (docx) ordagrant";
+const VERBATIM = "Lärarens modulfråga ordagrant";
+const DOCX = "Lärarens kursmaterial (Word-dokumentet) ordagrant";
 export const LENGTH_FLAGGED = questions.map((q) => ({ id: q.id, reason: VERBATIM }));
 export const EXTRA_LENGTH_FLAGGED = extraQuestions.map((q) => ({ id: q.id, reason: DOCX }));

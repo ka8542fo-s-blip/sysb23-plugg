@@ -13,7 +13,6 @@ import Modeling from "./views/Modeling.jsx";
 import DbExam from "./views/DbExam.jsx";
 import ChoiceExam from "./views/ChoiceExam.jsx";
 import Fordjupning from "./views/Fordjupning.jsx";
-import ExamDashboard from "./views/ExamDashboard.jsx";
 import Assignments from "./views/Assignments.jsx";
 import ProcessRun from "./views/ProcessRun.jsx";
 import Zachman from "./views/Zachman.jsx";
@@ -285,17 +284,6 @@ export default function App() {
         {/* Tenta: hela flervalstentor (course.choiceExams, Säkerhet) eller
             Databasers konstruktionsuppgifter. */}
         {view === "tenta" && (course.choiceExams.length > 0 ? <ChoiceExam course={course} /> : <DbExam />)}
-        {view === "tentan" && (
-          // Verksamhetsarkitektur: läget inför tentan ur samma lagring som Öva och Essä.
-          <ExamDashboard
-            course={course}
-            answers={answers}
-            essayState={essayState}
-            modelProgress={modelProgress}
-            readChapters={readChapters}
-            navigate={navigate}
-          />
-        )}
         {view === "fordjupning" && (
           // Verksamhetsarkitektur: docx-frågorna och HT25-arkivet, utanför UF:s tips.
           <Fordjupning

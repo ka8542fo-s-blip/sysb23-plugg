@@ -135,7 +135,7 @@ export default function Essays({ course, params, essayState, setEssayState }) {
         <div className="flex flex-wrap items-start justify-between gap-2">
           <p className="text-sm text-ink/65">
             {essay.levelNote && (
-              <span className="mb-1 block w-fit rounded-full border border-brass px-2 py-0.5 text-[12px] font-medium text-brass-text">
+              <span className="mb-2 block max-w-reading rounded-lg border border-brass px-3 py-2 text-[14px] leading-relaxed text-ink/85">
                 {essay.levelNote}
               </span>
             )}
@@ -274,7 +274,7 @@ export default function Essays({ course, params, essayState, setEssayState }) {
             {essay.modelAnswer && (
               <details className="mt-6 border-t border-line pt-4">
                 <summary className="cursor-pointer font-display text-lg hover:text-pine">
-                  {essay.modelAnswerLabel || "UF:s modellsvar"}
+                  {essay.modelAnswerLabel || "Lärarens modellsvar"}
                 </summary>
                 <p lang="en" className="mt-2 whitespace-pre-line text-[15px] leading-relaxed text-ink/80">
                   {essay.modelAnswer}

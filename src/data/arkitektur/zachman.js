@@ -140,7 +140,7 @@ const UNOFFICIAL = "T";
 const PLACEMENTS = [
   {
     id: "zp-organisationsdiagram", text: "Ett organisationsdiagram", cells: ["R2K4"], also: ["R1K4"], grade: UNOFFICIAL,
-    why: "Organisationsscheman hör till Vem-kolumnen (K4), som UF beskriver den. Ett diagram över verksamhetens enheter är verksamhetsägarens modell (rad 2, där affischens begreppspar är Organization Unit och Work Product). Är det bara en lista över organisationer passar rad 1 (List of Organizations).",
+    why: "Organisationsscheman hör till Vem-kolumnen (K4), som läraren beskriver den. Ett diagram över verksamhetens enheter är verksamhetsägarens modell (rad 2, där affischens begreppspar är Organization Unit och Work Product). Är det bara en lista över organisationer passar rad 1 (List of Organizations).",
   },
   {
     id: "zp-java", text: "En metod implementerad i Java", cells: ["R5K2"], also: [], grade: "S",
@@ -156,7 +156,7 @@ const PLACEMENTS = [
   },
   {
     id: "zp-arbetsflode", text: "En arbetsflödesmodell", cells: ["R2K4"], also: [], grade: "S",
-    why: "Work Flow Model står i R2K4 på affischen (PEOPLE = Organization Unit, WORK = Work Product): vem som gör vilket arbete. UF nämner arbetsflöden också under Hur, men affischen placerar arbetsflödesmodellen i Vem-kolumnen.",
+    why: "Work Flow Model står i R2K4 på affischen (PEOPLE = Organization Unit, WORK = Work Product): vem som gör vilket arbete. Läraren nämner arbetsflöden också under Hur, men affischen placerar arbetsflödesmodellen i Vem-kolumnen.",
   },
   {
     id: "zp-regler", text: "En modell över verksamhetsregler", cells: ["R3K6"], also: [], grade: "S",
@@ -176,7 +176,7 @@ const PLACEMENTS = [
   },
   {
     id: "zp-affarshandelser", text: "En lista över viktiga affärshändelser", cells: ["R1K5"], also: [], grade: "S",
-    why: "En lista hör till rad 1, och händelser till När-kolumnen (UF: händelser, flöden, cykler). Affischen kallar cellen List of Cycles.",
+    why: "En lista hör till rad 1, och händelser till När-kolumnen (läraren: händelser, flöden, cykler). Affischen kallar cellen List of Cycles.",
   },
   {
     id: "zp-uppdateringsbeslut", text: "Schemaläggning av mjukvaruuppdateringsbeslut", cells: ["R2K5"], also: ["R4K5"], grade: UNOFFICIAL,
@@ -270,26 +270,26 @@ export const taskById = (id) => byId[id];
 export const TASK_GROUPS = [
   {
     key: "okt",
-    title: "Ordinarie okt 2025, uppgift 2",
+    title: "Ordinarie tentan okt 2025, uppgift 2",
     note: "Placera i lämplig cell eller celler och motivera (20 p).",
     ids: ["zp-organisationsdiagram", "zp-java", "zp-natverk", "zp-granssnitt", "zp-arbetsflode", "zp-regler", "zp-processmodell", "zp-logistik", "zp-relationsscheman", "zp-affarshandelser"],
   },
   {
     key: "dec",
-    title: "Omtenta dec 2025, uppgift 2",
+    title: "Omtentan dec 2025, uppgift 2",
     note: "2 p per objekt. Två celler går bra om det motiveras.",
     ids: ["zp-uppdateringsbeslut", "zp-mjukvarusystem", "zp-natverk", "zp-granssnitt", "zp-ansvarsroller", "zp-regler", "zp-processmodell", "zp-ekonomisystem", "zp-relationsscheman", "zp-affarshandelser"],
   },
   {
     key: "maj",
-    title: "Uppsamling maj 2026, uppgift 2–8",
+    title: "Uppsamlingstentan maj 2026, uppgift 2–8",
     note: "Välj ett eller flera alternativ (6 × 3 p + 2 p).",
     ids: MAY.map((task) => task.id),
   },
   {
     key: "omvant",
     title: "Omvända frågor: vilken cell?",
-    note: "Affischens 36 celltyper. Klicka på cellen.",
+    note: "Alla 36 celler: du får cellens innehåll och klickar på var den hör hemma.",
     ids: REVERSE.map((task) => task.id),
   },
 ];

@@ -6,7 +6,7 @@ import {
 import { gradeChoice, gradeMemory, gradePlacement, MEMORY_FIELDS } from "../lib/zachman.js";
 import { KEYS, load, save } from "../lib/storage.js";
 import { useDrafts } from "../lib/useDrafts.js";
-import { TROLIGT_NOTE } from "../data/arkitektur/cards.js";
+import { ZACHMAN_WHY } from "../data/arkitektur/cards.js";
 
 // Zachman-vyn (Verksamhetsarkitektur): ramverket att utforska, memorering
 // av rad- och kolumnnamn och placeringsuppgifterna från HT25-tentorna.
@@ -36,14 +36,27 @@ export default function Zachman({ course, params, navigate, modelProgress, onSol
   return (
     <div className="space-y-6">
       <section>
-        <p className="inline-block rounded-full border border-brass px-3 py-0.5 text-[13px] font-medium text-brass-text">
-          Troligt · {TROLIGT_NOTE}
+        <h1 className="font-display text-2xl">Zachman (modul 4)</h1>
+        <p className="mt-2 max-w-reading text-[15px] leading-relaxed text-ink/85">
+          <span className="font-medium">Varför en egen flik? </span>
+          {ZACHMAN_WHY}
         </p>
-        <h1 className="mt-2 font-display text-2xl">Zachman (modul 4)</h1>
-        <p className="mt-1 max-w-reading text-[15px] text-ink/70">
-          Ramverket, rad- och kolumnnamnen och placering av modeller, utöver modul 4:s egna frågor
-          (de finns i Öva). Placeringsuppgifterna kommer från UF:s tidigare tentor. Rutnätet
-          numreras R1–R6 × K1–K6.
+        <ul className="mt-3 max-w-reading list-disc space-y-1 pl-5 text-[15px] text-ink/85">
+          <li>
+            <span className="font-medium">Ramverket:</span> klicka i rutnätet och läs vad varje rad,
+            kolumn och cell betyder.
+          </li>
+          <li>
+            <span className="font-medium">Memorera:</span> skriv radernas och kolumnernas namn ur minnet.
+          </li>
+          <li>
+            <span className="font-medium">Placera:</span> förra årets tentauppgifter, där man placerar en
+            modell i rätt cell och motiverar varför.
+          </li>
+        </ul>
+        <p className="mt-3 max-w-reading text-sm text-ink/70">
+          Raderna heter R1–R6 och kolumnerna K1–K6, så R2K4 betyder rad 2, kolumn 4. Modul 4:s egna
+          frågor finns i Öva.
         </p>
       </section>
       <div className="max-w-xl">
@@ -75,8 +88,9 @@ function Framework({ toEssay }) {
   return (
     <div className="space-y-5">
       <p className="max-w-reading text-[15px] text-ink/80">
-        Klicka på en rad, en kolumn eller en cell. Celltyperna är 2003-affischens; namnen i
-        version 3.0 står i rutan under.
+        Klicka på en rad, en kolumn eller en cell. Namnen i cellerna kommer från Zachmans
+        översiktsbild (”affischen”) från 2003, som finns i föreläsningsbilderna. Den nyare
+        versionen 3.0 har delvis andra namn; de står i rutan under rutnätet.
       </p>
       <div className="card overflow-x-auto p-3 sm:p-4">
         <div className="grid min-w-[20rem] grid-cols-[3.25rem_repeat(6,minmax(0,1fr))] sm:grid-cols-[6rem_repeat(6,minmax(0,1fr))] gap-1 text-center">
@@ -145,7 +159,7 @@ function Detail({ selected }) {
         <h2 className="mt-1 font-display text-xl">{col.sv} · {col.en} / {col.poster}</h2>
         <p className="mt-2 text-[15px] leading-relaxed">{col.about}</p>
         <p className="mt-2 text-[15px] leading-relaxed text-ink/80">
-          <span className="font-medium text-ink">UF:s exempel från universitetet: </span>
+          <span className="font-medium text-ink">Lärarens exempel från universitetet: </span>
           {col.example}
         </p>
       </section>
@@ -161,7 +175,7 @@ function Detail({ selected }) {
         </h2>
         <p className="mt-2 text-[15px] leading-relaxed">{row.about}</p>
         <dl className="mt-3 grid gap-1 text-[15px] sm:grid-cols-[10rem_1fr]">
-          <dt className="text-ink/65">2003-affischen</dt>
+          <dt className="text-ink/65">Affischen (2003)</dt>
           <dd>{row.name}{row.perspective ? ` — ${row.perspective}` : ""}</dd>
           <dt className="text-ink/65">Version 3.0</dt>
           <dd>{row.v3} · {row.v3Model}</dd>
@@ -242,8 +256,9 @@ function Memory({ drafts, done, onSolve, onReset }) {
   return (
     <div className="space-y-5">
       <p className="max-w-reading text-[15px] text-ink/80">
-        Skriv kolumnernas frågeord och radernas namn eller perspektiv, som tentans uppgift 1
-        kräver. Svenska eller engelska, 2003- eller 3.0-namnen godtas. Det du skriver sparas.
+        Skriv kolumnernas frågeord och radernas namn eller perspektiv, som förra årets tentor
+        krävde i uppgift 1. Svenska eller engelska namn går bra, och både namnen från 2003 och
+        från version 3.0 godtas. Det du skriver sparas.
       </p>
       <section className="card p-4 sm:p-5">
         <div className="flex flex-wrap items-baseline justify-between gap-2">

@@ -34,6 +34,8 @@ export default function Practice({
   onSeen,
   onResetPractice,
   navigate,
+  // Rubriken i panelen; Fördjupning visar samma vy med en egen rubrik.
+  title = "Öva",
 }) {
   const groups = useMemo(() => practiceGroups(course), [course]);
   const keyOf = useMemo(() => groupKeyFor(course), [course]);
@@ -505,7 +507,7 @@ export default function Practice({
   return (
     <div className="space-y-6 lg:flex lg:items-start lg:gap-8 lg:space-y-0">
       <section className="card p-5 lg:sticky lg:top-36 lg:max-h-[calc(100vh-11rem)] lg:w-80 lg:shrink-0 lg:overflow-y-auto">
-        <h1 className="font-display text-2xl">Öva</h1>
+        <h1 className="font-display text-2xl">{title}</h1>
 
         {hasExamMode && !hasAll && (
           <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.14em] text-brass-text">Tentafrågor</p>

@@ -27,17 +27,17 @@ export default function ExamArchive({ course, navigate, modelProgress }) {
   return (
     <div className="space-y-6">
       <section>
-        <h2 className="font-display text-xl">Gamla tentor (HT25)</h2>
-        <p className="mt-2 max-w-reading rounded-lg border border-brass p-3 text-[15px] text-ink/85">
-          <span className="font-medium text-brass-text">Äldre kursversion, annat format. </span>
-          Årets tenta ser ut som modulerna (sant/falskt, flerval och någon essäfråga). HT25-tentorna
-          hade en Zachman-essä, placering i Zachmans rutnät och sant/falskt om artiklar som inte
-          ingår i år, och är ingen prognos för årets tenta.
+        <h2 className="font-display text-xl">Förra årets tentor</h2>
+        <p className="mt-2 max-w-reading rounded-lg border border-brass p-3 text-[15px] leading-relaxed text-ink/85">
+          <span className="font-medium text-brass-text">Kursen såg annorlunda ut förra året. </span>
+          Årets tenta ska enligt läraren se ut som modulerna: sant/falskt, flervalsfrågor och någon
+          essäfråga. Förra årets tentor var upplagda på ett annat sätt, så de visar inte hur årets
+          tenta ser ut. De är bra för att öva Zachman.
         </p>
         <p className="mt-3 max-w-reading text-[15px] text-ink/80">
-          De tre HT25-tentorna, 100 p var. Zachman gav 50 p på varje: en essä om ramverket och
-          placering av modeller i rutnätet. Resten var sant/falskt om artiklar, där fel svar gav 0 p.
-          Artiklarna ingår inte i årets material, så de frågorna står här utan facit och räknas inte.
+          Varje tenta gav 100 poäng. Hälften var Zachman: en essä om ramverket och en uppgift där man
+          placerar modeller i rutnätet. Den andra hälften var sant/falskt om artiklar, där fel svar gav
+          0 poäng. Artiklarna ingår inte i år, så de frågorna står här utan facit och räknas inte.
         </p>
       </section>
 

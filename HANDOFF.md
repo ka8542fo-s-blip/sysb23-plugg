@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 583 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-13.
+- **Test:** `npm test` = 584 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-14.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -51,7 +51,7 @@ kapitel: allt UI läser `chapter.number`.
 | databaser | komplett mot tentan | se nedan |
 | process | aktiv (2026-09-29) | se "Processorienterad verksamhetsutveckling (BPM)" nedan |
 | sakerhet | aktiv (2026-11-13) | Öva (bara Tentafrågor), Tenta, Uppgifter — se "Säkerhet i informationssystem" nedan |
-| arkitektur | aktiv (2026-11-13) | Tentan, Läs (12 modulkort), Öva (135), Zachman (modul 4), Essä (54), Fördjupning (82 docx + HT25-arkivet) — se "Verksamhetsarkitektur" nedan |
+| arkitektur | aktiv (2026-11-13) | Läs (12 modulkort), Öva (135), Zachman (modul 4), Essä (54), Fördjupning (82 extrafrågor + förra årets tentor) — se "Verksamhetsarkitektur" nedan |
 
 **Databaser** (`views: las, sql, modell, tenta, ova, statistik`; Prov medvetet borta):
 
@@ -1366,23 +1366,34 @@ UF:s docx-råmaterial, kursinformationen, kursens upplägg och de tre
 HT25-tentorna. Lärare Umberto Fiaccadori (UF). Byggt i en egen worktree
 parallellt med Säkerhet-sessionen; rebasat mot main före varje push.
 
-`views: tentan, las, ova, zachman, essa, fordjupning, statistik`. Ingen
+`views: las, ova, zachman, essa, fordjupning, statistik`. Ingen
 Prov: HT26-tentans poäng och minuspoäng är okända, och ett Prov med påhittad
 poäng är sämre än inget.
 
 **Tre nivåer (Kaspers beställning 13 nov kväll, plan godkänd).** UF har
 sagt att tentan bygger på modulerna. Allt är kvar men indelat:
 
-| Nivå | Vad | Var | Märkning |
+| Nivå | Vad | Var | Så förklaras den på sidan |
 |---|---|---|---|
-| Kärna | modulerna, ordningen 12, 1–11 (UF i modul 1: börja med 12) | Läs (12 modulkort), Öva (135 modulfrågor), Essä (53) | — |
-| Troligt | Zachman utöver modul 4:s frågor | Troligt-rutan i modul 4-kortet, fliken "Zachman (modul 4)", Zachman-essän | "Inte i modulerna, men på alla UF:s tidigare tentor och i årets bilder" (`TROLIGT_NOTE` i `cards.js`) |
-| Fördjupning | allt annat | fliken Fördjupning: 82 docx-frågor och HT25-arkivet ("Äldre kursversion, annat format") | "Utanför UF:s tips" (`FORDJUPNING_NOTE`) |
+| Modulerna | ordningen 12, 1–11 (UF i modul 1: börja med 12) | Läs (12 modulkort), Öva (135 modulfrågor), Essä (53) | — |
+| Zachman utöver modul 4 | det UF:s moduler inte frågar om Zachman | rutan "Zachman kommer troligen på tentan" i modul 4-kortet, fliken "Zachman (modul 4)", Zachman-essän | `ZACHMAN_WHY` i `cards.js`: alla tre tentor förra året hade en stor Zachman-uppgift, ramverket finns i årets bilder; "vår bedömning, inte något läraren har sagt" |
+| Fördjupning | allt annat | fliken Fördjupning: "Fler frågor" (82 ur UF:s Word-dokument) och "Förra årets tentor" (HT25-arkivet) | `FORDJUPNING_WHY`: extra material utanför modulerna |
+
+**Klartext (Kasper 14 nov):** kursare som aldrig sett sajten ska förstå allt.
+I det som visas heter UF "läraren", HT25 "förra årets tentor", docx
+"Word-dokumentet", och nivånamnen Kärna/Troligt används inte; varje del
+förklaras med en mening. `klartext.test.mjs` stoppar UF, HT25/HT26, docx,
+råmaterial, Troligt och Kärna i arkitekturens visade data. Kod, kommentarer
+och HANDOFF får använda förkortningarna. Prioritetsetiketterna (Kärna/Essä)
+och Snabbspåret i Läs är borta för arkitektur (ingen `examPriority`):
+allt är modulerna, så de sa ingenting. Essäetiketterna heter "Fråga 29"
+under kapitelrubriken (inte "12: 29"); en fråga ur en annan modul får
+"(modul 7)".
 
 - **Kaspers svar:** tolv modulkort (beställningen sa 13; sammanfattningen
   är sammanslagen med modul 12), essä genomgången = knappen "Markera som
-  genomgången" (`done` i essäns läge), "UF:s fördjupade fallfrågor" =
-  modul 12:s scenarier 1–5 + Final challenge.
+  genomgången" (`done` i essäns läge), "Lärarens fördjupade fallfrågor"
+  (först "UF:s …") = modul 12:s scenarier 1–5 + Final challenge.
 - **Läs:** modulkorten ligger i `data/arkitektur/cards.js` (UF:s lärandemål
   ordagrant, modul 11: "Student task"; kärnan; Håll isär; högst ~300 ord,
   test `module-cards.test.mjs`). ChapterView visar generellt `card`, en
@@ -1390,19 +1401,19 @@ sagt att tentan bygger på modulerna. Allt är kvar men indelat:
   förrän den öppnas). `summary.js` står kvar men arkitektur har inget
   sammanfattningskort; dess avsnitt "Det tentan skiljer på" och "Zachman i
   korthet" ligger sist under modul 12:s "Läs mer". HT25-texten ur kapitel 4
-  ligger i Troligt-rutans "Läs mer". Kärna-texterna nämner inte de gamla
-  tentorna (test).
+  ligger i Zachman-rutans utfällning "Så såg Zachman-uppgifterna ut förra
+  året" (`moreLabel`). Modultexterna nämner inte de gamla tentorna (test).
 - **Öva:** `questions` = 135 modulfrågor, `extraQuestions` = 82 docx (nytt
   fält i noContent). Fördjupning kör `Practice` med delkurs-id
   `arkitektur:fordjupning`, så kö, öppen fråga, urval och genomgång är
   åtskilda; svaren ligger i samma `answers` med samma id:n.
-- **Tentan** (`views/ExamDashboard.jsx`, beräkningar i `lib/levels.js`):
-  nedräkning ur `schedule.js`, UF:s ord ur kursinformationen, staplar för
-  Kärna/Troligt/Fördjupning (`levelStats`; Troligt-id:na i manifestets
-  `levels.troligtTaskIds`), modultabell (`moduleStatus`; Läst/Öva/Essä med
-  länkar), svaga punkter (`weakPoints`, senaste svar fel). Inget sparas,
-  ingen nästa-steg-knapp. Statistik har kortet "Nivåer" med samma siffror.
-  Hem är oförändrat.
+- **Statistik** har kortet "Hur långt du har kommit" med de tre delarna
+  (`lib/levels.js` `levelStats`; Zachman-id:na i manifestets
+  `levels.troligtTaskIds`, test `levels.test.mjs`). Fördjupnings Öva-panel
+  heter "Fler frågor" (`Practice` fick propen `title`).
+- **Fliken Tentan togs bort 14 nov** (Kasper: "bara bloat"). Den hade
+  nedräkning, staplar, modultabell och svaga punkter; inget sparades i den,
+  så ingen data försvann. Sparad flik `tentan` landar på Hem.
 
 **Tidigare samma dag:** HT25 nedtonat i texterna (examNote, Hem,
 kapitel 4, Zachman- och Essä-introt).
@@ -1426,7 +1437,7 @@ kapitel 4, Zachman- och Essä-introt).
   universitetsexempel, raderna i båda affischversionerna, 2003-affischens
   36 celler och hur man placerar en modell. `[[vy:zachman|…]]` i ett stycke
   blir en knapp till vyn (generell mekanik i ChapterView, ritas bara om vyn
-  finns); kapitel 4 länkar sedan nivåindelningen via Troligt-rutan i stället.
+  finns); kapitel 4 länkar sedan nivåindelningen via Zachman-rutan i stället.
   Fastabellen (Phase A–H) i kapitel 5 kommer ur docx:en, eftersom modulen
   räknar upp faserna utan bokstäver och Öva har docx-frågor om dem.
   Bakgrund enligt prompten: arkitektursprintar och backlog (kap 9) och
@@ -1463,7 +1474,7 @@ kapitel 4, Zachman- och Essä-introt).
   har `group: "UF:s fördjupade fallfrågor"` och visas under egen rubrik.
   Knappen ”Markera som genomgången” sparar `done` i essäns läge (bock i
   förteckningen, räknas i Tentan och Statistik, ”Nollställ essän” tar bort
-  den). Zachman-essän (`level: "troligt"`, Troligt-märkt) står efter modul 4:s frågor
+  den). Zachman-essän (`level: "troligt"`, med `ZACHMAN_WHY` som förklaring) står efter modul 4:s frågor
   (okt/dec-lydelsen, majs i kontexten, checklista ur kapitel 4; ingen
   särskild prioritet sedan Kaspers beslut ovan — `pinned`/`priority` finns
   kvar i Essays.jsx för andra delkurser).
@@ -1474,7 +1485,7 @@ kapitel 4, Zachman- och Essä-introt).
   `essayWordLimit` (null = inget ordtak) och `essayIntro` i manifestet,
   förteckning per kapitel när essäerna har `chapter`, sparad vald essä och
   "Nollställ essän" (tar bort utkast och bockar). Strategi och BPM oförändrade.
-- **Zachman-vyn** (fliken ”Zachman (modul 4)”, Troligt-märkt överst; `views/Zachman.jsx`, data `data/arkitektur/zachman.js`,
+- **Zachman-vyn** (fliken ”Zachman (modul 4)”, överst ”Varför en egen flik?” och vad lägena gör; `views/Zachman.jsx`, data `data/arkitektur/zachman.js`,
   rättning `lib/zachman.js`): Ramverket (eget 6×6-rutnät, rad/kolumn/cell
   visar perspektiv i båda versionerna, frågeord med UF:s exempel, celltyp med
   begreppspar och 3.0-namn), Memorera (12 fält, tolerant rättning: svenska
@@ -1518,8 +1529,9 @@ kapitel 4, Zachman- och Essä-introt).
   `shuffle.test.mjs` (`fixedOrder`), arkitekturblock i `fragebank-balans`,
   `essa-struktur`, `practice-queue` (`secondary`), `exam-priority`,
   `practice-axis` och `reading-time`. Nivåindelningen: `module-cards.test.mjs`
-  (lärandemål, högst cirka 300 ord, inget HT25 i Kärna-texterna, Troligt-rutan)
-  och `levels.test.mjs` (staplarna, modulstatus, svaga punkter).
+  (lärandemål, högst cirka 300 ord, inget HT25 i modultexterna, Zachman-rutan)
+  och `levels.test.mjs` (Statistiks kort), `klartext.test.mjs` (inga
+  interna förkortningar i det som visas).
 - **Noterat i källorna:** en föreläsningsbild säger att en process beskriver
   "what the organization does"; modulerna säger "how" (kapitel 7 nämner
   det). Bild 11 namnger en bok ("The TOGAF Standard, 10th Edition –

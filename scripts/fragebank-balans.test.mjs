@@ -248,7 +248,7 @@ function checkUfFormat(qs, flaggedList, docx) {
     assert.equal(q.reviewed, false, `${q.id}: reviewed: false tills Kasper granskat`);
     assert.equal(q.id.startsWith("ea-d"), docx, `${q.id}: rätt bank`);
     assert.equal(Boolean(q.secondary), docx, `${q.id}: secondary bara på docx-frågor`);
-    if (docx) assert.match(q.source, /^UF:s kursmaterial \(docx\)/, q.id);
+    if (docx) assert.match(q.source, /^Lärarens kursmaterial \(Word-dokumentet\)/, q.id);
     else assert.match(q.source, /^Modul \d+, fråga \d+/, q.id);
     assert.match(flagged.get(q.id) ?? "", /ordagrant/, `${q.id}: LENGTH_FLAGGED med skäl`);
     const texts = q.options.map((o) => o.text);

@@ -93,21 +93,14 @@ test("BPM-delkursens klassning: allt kärna, essä där HT25 frågade eller Weav
   }
 });
 
-// Verksamhetsarkitektur (prompten B4.2): allt kärna utom bankfallet, som
-// också är kärna men främst essä; essä på Zachman (uppgift 1, 30 p),
-// bankfallet (modul 11) och integrationen (modul 12). Zachman har en
-// bevisrad med Troligt-märkningen: Zachman utöver modul 4 är inte i modulerna.
-test("Verksamhetsarkitekturens klassning: kärna överallt, essä på Zachman och fallen", () => {
-  const essa = ["zachman", "praktik", "integration"];
-  for (const topic of arkitekturTopics) {
-    const levels = priorityOf(topic);
-    assert.ok(levels.includes("karna"), `${topic.id} ska vara kärna`);
-    assert.equal(levels.includes("essa"), essa.includes(topic.id), topic.id);
-    assert.ok(!levels.includes("bakgrund"), topic.id);
-  }
+// Verksamhetsarkitektur (Kaspers beslut 2026-11-14): inga prioritetsetiketter,
+// eftersom allt är modulerna — Kärna/Essä-märkena och Snabbspåret i Läs sa
+// ingenting. Zachman har en bevisrad i klartext.
+test("Verksamhetsarkitektur: inga prioritetsetiketter, Zachman har en bevisrad i klartext", () => {
+  assert.equal(hasPriorities(arkitekturTopics), false);
   for (const chapter of arkitekturChapters) {
-    assert.ok(isFastTrack(chapterPriority(chapter, arkitekturTopics)), chapter.id);
+    assert.deepEqual(chapterPriority(chapter, arkitekturTopics), [], chapter.id);
   }
   const zachman = arkitekturTopics.find((topic) => topic.id === "zachman");
-  assert.match(evidenceSentence(zachman.examEvidence), /Inte i modulerna, men på alla UF:s tidigare tentor och i årets bilder/);
+  assert.match(evidenceSentence(zachman.examEvidence), /^Troligen på tentan: alla tre tentor förra året/);
 });

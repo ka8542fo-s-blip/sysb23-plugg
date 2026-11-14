@@ -38,7 +38,7 @@ test("Zachman-delarna pekar på Essä och Zachman-vyn", () => {
 });
 
 test("artikelfrågorna står utan facit och med texten ordagrant", () => {
-  assert.equal(ARTICLE_NOTE, "Artikeln ingår inte i HT26-materialet – facit saknas.");
+  assert.equal(ARTICLE_NOTE, "Artikeln ingår inte i årets kurs, så det finns inget facit.");
   for (const exam of examArchive) {
     for (const part of exam.parts.filter((p) => p.kind === "statement")) {
       for (const key of ["correct", "answer", "truth", "key"]) assert.ok(!(key in part), `${exam.id} ${part.no}: inget facit`);

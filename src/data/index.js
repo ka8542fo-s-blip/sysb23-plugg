@@ -167,31 +167,31 @@ export const courses = [
     id: "arkitektur",
     name: "Verksamhetsarkitektur",
     status: "aktiv",
-    // Tre nivåer (Kaspers beslut 2026-11-13): Kärna = modulerna (Läs, Öva,
-    // Essä), Troligt = Zachman utöver modul 4:s frågor (Zachman-fliken,
-    // Zachman-essän), Fördjupning = allt annat (docx-frågorna, HT25-arkivet).
-    // Ingen Prov: HT26-tentans poäng är okända.
-    views: ["tentan", "las", "ova", "zachman", "essa", "fordjupning", "statistik"],
-    // Nivåerna i fliken Tentan och Statistik: Troligt räknar Zachman-flikens
-    // uppgifter (memoreringen inräknad) och Zachman-essän.
+    // Tre delar (Kaspers beslut 2026-11-13): modulerna (Läs, Öva, Essä),
+    // Zachman utöver modul 4:s frågor (Zachman-fliken, Zachman-essän) och
+    // Fördjupning (Word-dokumentets frågor, förra årets tentor). Fliken Tentan
+    // togs bort 2026-11-14 (Kasper: onödig). Ingen Prov: poängen är okända.
+    views: ["las", "ova", "zachman", "essa", "fordjupning", "statistik"],
+    // Kortet "Hur långt du har kommit" i Statistik: Zachman-delen räknar
+    // Zachman-flikens uppgifter (memoreringen inräknad) och Zachman-essän.
     levels: { troligtTaskIds: arkitekturZachmanTasks.map((task) => task.id) },
-    // HT25-tentorna som arkiv i Fördjupning, artikelfrågorna utan facit.
+    // Förra årets tentor som arkiv i Fördjupning, artikelfrågorna utan facit.
     examArchive: arkitekturExamArchive,
     practiceBy: "chapter",
     topics: arkitekturTopics,
-    // Kärna: UF:s 135 modulfrågor. Fördjupning: de 82 ur docx-råmaterialet.
+    // Öva: lärarens 135 modulfrågor. Fördjupning: de 82 ur Word-dokumentet.
     questions: arkitekturQuestions,
     extraQuestions: arkitekturExtraQuestions,
-    // UF:s 53 frågor med modellsvar i modulordning (12, 1–11); Zachman-essän
-    // (Troligt) står under modul 4. Tentan anger inget ordtak, och
+    // Lärarens 53 frågor med modellsvar i modulordning (12, 1–11);
+    // Zachman-essän står under modul 4. Tentan anger inget ordtak, och
     // checklistorna följer modellsvaren, inte fyrstegsformen.
     essays: arkitekturEssays,
     essayWordLimit: null,
     essayIntro: [
-      "UF:s modellsvar är facit: checklistan bryter ner det i dess påståenden, och modellsvaret står ordagrant under checklistan. Tentan anger inget ordtak.",
-      "Frågorna står i modulordning, modul 12 först. Markera en essä som genomgången när du har skrivit och prickat av den.",
+      "Alla essäfrågor och modellsvar kommer från lärarens moduler. Modellsvaret är facit: checklistan delar upp det i punkter, och hela modellsvaret står ordagrant under checklistan. Tentan har ingen gräns för antal ord.",
+      "Frågorna står i samma ordning som i Läs, med modul 12 först. Tryck på ”Markera som genomgången” när du har skrivit ett svar och bockat av checklistan, så syns det i Statistik.",
     ],
-    // Tolv modulkort i ordningen 12, 1–11 (UF: börja med modul 12). Inget eget
+    // Tolv modulkort i ordningen 12, 1–11 (läraren: börja med modul 12). Inget eget
     // sammanfattningskort: modul 12-kortet har de tio begreppen och
     // sammanfattningens övriga text ligger under dess "Läs mer".
     chapters: arkitekturChapters,
@@ -199,7 +199,7 @@ export const courses = [
     readingIntro: arkitekturIntro,
     examNote: arkitekturExamNote,
     homeIntro:
-      "Tentan ser ut som modulerna. Börja med modul 12 och de tio begreppen, öva UF:s modulfrågor och skriv essäer mot hans modellsvar. Zachman-fliken är extra träning på modul 4.",
+      "Läraren har sagt att tentan ser ut som modulerna. Läs modulerna i Läs (börja med modul 12), öva modulernas frågor i Öva och skriv essäfrågorna i Essä. Zachman (modul 4) kommer troligen på tentan och har en egen flik. Fördjupning är extra för den som har tid.",
   },
   {
     ...noContent,

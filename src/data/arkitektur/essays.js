@@ -15,13 +15,13 @@
 // (UF:s not i modul 8). Tentan anger inget ordtak (essayWordLimit: null).
 //
 // Genererad ur källorna 2026-11-13 (parser i scratchpad, inte i repot).
-import { TROLIGT_NOTE } from "./cards.js";
+import { ZACHMAN_WHY } from "./cards.js";
 
 export const essays = [
   {
     id: "ea-e12-29",
     chapter: "kap12",
-    label: "12: 29",
+    label: "Fråga 29",
     question: "Why should an Enterprise Architect understand business strategy?",
     context: "Modul 12, fråga 29 · kortsvarsfråga",
     source: "Modul 12, fråga 29",
@@ -40,7 +40,7 @@ export const essays = [
   {
     id: "ea-e12-30",
     chapter: "kap12",
-    label: "12: 30",
+    label: "Fråga 30",
     question: "Why is a capability often a useful starting point for transformation analysis?",
     context: "Modul 12, fråga 30 · kortsvarsfråga",
     source: "Modul 12, fråga 30",
@@ -59,7 +59,7 @@ export const essays = [
   {
     id: "ea-e12-31",
     chapter: "kap12",
-    label: "12: 31",
+    label: "Fråga 31",
     question: "What is the difference between a viewpoint and a view?",
     context: "Modul 12, fråga 31 · kortsvarsfråga. Samma fråga som modul 6 fråga 11.",
     source: "Modul 12, fråga 31",
@@ -77,7 +77,7 @@ export const essays = [
   {
     id: "ea-e12-32",
     chapter: "kap12",
-    label: "12: 32",
+    label: "Fråga 32",
     question: "Why should architects be concerned with trade-offs?",
     context: "Modul 12, fråga 32 · kortsvarsfråga",
     source: "Modul 12, fråga 32",
@@ -96,7 +96,7 @@ export const essays = [
   {
     id: "ea-e12-33",
     chapter: "kap12",
-    label: "12: 33",
+    label: "Fråga 33",
     question: "Why is architecture important in an Agile organization?",
     context: "Modul 12, fråga 33 · kortsvarsfråga",
     source: "Modul 12, fråga 33",
@@ -114,7 +114,7 @@ export const essays = [
   },
   {
     id: "ea-e12-scenario-1",
-    group: "UF:s fördjupade fallfrågor",
+    group: "Lärarens fördjupade fallfrågor",
     chapter: "kap12",
     label: "Scenario 1",
     question: "The CEO tells the Enterprise Architect: \"Every competitor is using AI. We need an\nAI strategy immediately.\"\nWhat should the architect do?",
@@ -151,7 +151,7 @@ export const essays = [
   },
   {
     id: "ea-e12-scenario-2",
-    group: "UF:s fördjupade fallfrågor",
+    group: "Lärarens fördjupade fallfrågor",
     chapter: "kap12",
     label: "Scenario 2",
     question: "A company has 600 applications.\nThe CIO declares: \"We have too many applications. We need to reduce the number to 300.\"\nIs this necessarily a good architectural objective?",
@@ -188,7 +188,7 @@ export const essays = [
   },
   {
     id: "ea-e12-scenario-3",
-    group: "UF:s fördjupade fallfrågor",
+    group: "Lärarens fördjupade fallfrågor",
     chapter: "kap12",
     label: "Scenario 3",
     question: "A product team says: \"We are Agile. Architecture approval is slowing us down.\nWe don't want architects involved.\"\nHow should the Enterprise Architect respond?",
@@ -222,7 +222,7 @@ export const essays = [
   },
   {
     id: "ea-e12-scenario-4",
-    group: "UF:s fördjupade fallfrågor",
+    group: "Lärarens fördjupade fallfrågor",
     chapter: "kap12",
     label: "Scenario 4",
     question: "A bank has a 30-year-old core banking system.\nManagement says: \"It's old, so it must be replaced.\"\nIs age alone a sufficient architectural reason for replacement?",
@@ -259,7 +259,7 @@ export const essays = [
   },
   {
     id: "ea-e12-scenario-5",
-    group: "UF:s fördjupade fallfrågor",
+    group: "Lärarens fördjupade fallfrågor",
     chapter: "kap12",
     label: "Scenario 5",
     question: "A retailer has launched a mobile app and declares: \"We have completed our digital transformation.\"\nWhat should the architect investigate?",
@@ -292,7 +292,7 @@ export const essays = [
   {
     id: "ea-e12-35",
     chapter: "kap12",
-    label: "12: 35",
+    label: "Fråga 35",
     question: "A company describes:\n\"Customer onboarding\"\n\"The organization is able to onboard customers.\"\n\"Verify customer identity.\"\n\"Digital onboarding.\"\nWhich are most likely to be processes and which are capabilities?",
     context: "Modul 12, fråga 35 (Capability or process?) · kortsvarsfråga",
     source: "Modul 12, fråga 35 (Capability or process?)",
@@ -457,7 +457,7 @@ export const essays = [
   },
   {
     id: "ea-e12-slututmaning",
-    group: "UF:s fördjupade fallfrågor",
+    group: "Lärarens fördjupade fallfrågor",
     chapter: "kap12",
     label: "Final challenge",
     question: "Given the following statement: - \"Our company needs a new CRM because our competitors have better CRM-systems.\"\n\"You have been appointed Enterprise Architect. - What do you do?\"\nA strong student should not immediately answer:\n\"Let's evaluate CRM products.\"",
@@ -491,7 +491,7 @@ export const essays = [
   {
     id: "ea-e1-9",
     chapter: "kap1",
-    label: "1: 9",
+    label: "Fråga 9",
     question: "Why can defining the enterprise boundary be difficult in a digital ecosystem?",
     context: "Modul 1, fråga 9 · kortsvarsfråga",
     source: "Modul 1, fråga 9",
@@ -510,7 +510,7 @@ export const essays = [
   {
     id: "ea-e1-10",
     chapter: "kap1",
-    label: "1: 10",
+    label: "Fråga 10",
     question: "Explain why the concept of \"enterprise\" is more important to Enterprise Architecture than the concept of \"company.\"",
     context: "Modul 1, fråga 10 · essäfråga",
     source: "Modul 1, fråga 10",
@@ -535,7 +535,7 @@ export const essays = [
   {
     id: "ea-e2-10",
     chapter: "kap2",
-    label: "2: 10",
+    label: "Fråga 10",
     question: "Why is abstraction important to Enterprise Architecture?",
     context: "Modul 2, fråga 10 · kortsvarsfråga",
     source: "Modul 2, fråga 10",
@@ -554,7 +554,7 @@ export const essays = [
   {
     id: "ea-e2-x",
     chapter: "kap2",
-    label: "2: essä",
+    label: "Essäfrågan",
     question: "Why is it insufficient to describe an enterprise simply by listing its components?",
     context: "Modul 2, essäfrågan utan nummer (mellan fråga 10 och 11) · essäfråga",
     source: "Modul 2, essäfrågan utan nummer (mellan fråga 10 och 11)",
@@ -573,7 +573,7 @@ export const essays = [
   {
     id: "ea-e2-11",
     chapter: "kap2",
-    label: "2: 11",
+    label: "Fråga 11",
     question: "Explain the difference between architecture, design and implementation.",
     context: "Modul 2, fråga 11 · essäfråga",
     source: "Modul 2, fråga 11",
@@ -593,7 +593,7 @@ export const essays = [
   {
     id: "ea-e3-10",
     chapter: "kap3",
-    label: "3: 10",
+    label: "Fråga 10",
     question: "Explain the difference between Enterprise Architecture and IT architecture.",
     context: "Modul 3, fråga 10 · essäfråga",
     source: "Modul 3, fråga 10",
@@ -612,7 +612,7 @@ export const essays = [
   {
     id: "ea-e3-11",
     chapter: "kap3",
-    label: "3: 11",
+    label: "Fråga 11",
     question: "\"Enterprise Architecture connects strategy with change.\" Explain.",
     context: "Modul 3, fråga 11 · essäfråga",
     source: "Modul 3, fråga 11",
@@ -632,7 +632,7 @@ export const essays = [
   {
     id: "ea-e4-9",
     chapter: "kap4",
-    label: "4: 9",
+    label: "Fråga 9",
     question: "Explain the difference between a methodology and an ontology in the context of Enterprise Architecture.",
     context: "Modul 4, fråga 9 · kortsvarsfråga",
     source: "Modul 4, fråga 9",
@@ -651,7 +651,7 @@ export const essays = [
   {
     id: "ea-e4-10",
     chapter: "kap4",
-    label: "4: 10",
+    label: "Fråga 10",
     question: "Compare Zachman and TOGAF.",
     context: "Modul 4, fråga 10 · essäfråga. Samma fråga som modul 5 fråga 12 och modul 12 Essay 2.",
     source: "Modul 4, fråga 10",
@@ -677,7 +677,7 @@ export const essays = [
   {
     id: "ea-e4-11",
     chapter: "kap4",
-    label: "4: 11",
+    label: "Fråga 11",
     question: "Why is it misleading to describe Zachman as a methodology?",
     context: "Modul 4, fråga 11 · essäfråga",
     source: "Modul 4, fråga 11",
@@ -696,12 +696,12 @@ export const essays = [
   {
     id: "ea-e-zachman",
     level: "troligt",
-    levelNote: `Troligt · ${TROLIGT_NOTE}`,
+    levelNote: `Extra utöver modulerna. ${ZACHMAN_WHY}`,
     chapter: "kap4",
-    label: "Zachman-essän (HT25)",
+    label: "Zachman-essän (förra årets tentor)",
     question: "Beskriv och förklara raderna och kolumnerna i Zachmans ramverk. Beskrivs i Finkelstein kap 1 samt i flertalet av artiklarna (inklusive föreläsningsmaterial). Förutom vad raderna och kolumnerna heter och vad de har/kan ha för innehåll, skall för höga poäng även perspektiven förklaras - T.ex. vad är Planner? - Och exempel på cellinnehåll ges - listor på rad 1, konceptuella modeller på rad 2 o.s.v.",
-    context: "Från HT25-tentorna, som hade ett annat format än årets (extra träning på modul 4). Uppgift 1 på alla tre, 30 p (okt och dec 2025: minst 15 p för godkänt). Majtentan 2026 frågade: \"Beskriv och redogör tydligt för Zachmans ramverk i sin helhet. (30p)\". Finkelstein och artiklarna ingår inte i årets material — svara utifrån kapitel 4. Kalibrering från Strategi: A-svaren var enkla men korrekta och täckte det som efterfrågades.",
-    source: "HT25-tentorna, uppgift 1 (okt 2025, dec 2025, maj 2026); checklistan bygger på kapitel 4 (modul 4, föreläsningsbilderna och 2003-affischen)",
+    context: "Uppgift 1 på alla tre tentor förra året (oktober 2025, december 2025 och maj 2026), 30 poäng. På de två första krävdes minst 15 poäng på uppgiften för godkänt. Majtentan frågade: \"Beskriv och redogör tydligt för Zachmans ramverk i sin helhet. (30p)\". Finkelstein och artiklarna som frågan nämner ingår inte i år, så svara utifrån kapitel 4 i Läs. Ett enkelt men korrekt svar som täcker det frågan ber om räcker långt.",
+    source: "Förra årets tentor, uppgift 1 (okt 2025, dec 2025, maj 2026); checklistan bygger på kapitel 4 (modul 4, föreläsningsbilderna och Zachmans affisch från 2003)",
     examPriority: ["karna", "essa"],
     checklist: [
       {
@@ -717,7 +717,7 @@ export const essays = [
         points: [
           "Sex kolumner, en per frågeord: Vad (What/Data), Hur (How/Function), Var (Where/Network), Vem (Who/People), När (When/Time) och Varför (Why/Motivation).",
           "Varje kolumn är en central aspekt av verksamheten: begrepp och data, processer, platser och logistik, organisation och ansvar, händelser och cykler, mål och strategier.",
-          "Ett exempel per kolumn, som UF:s universitet: student och kurs, antagning och registrering, Lund och EC2, antagningsavdelningen och kursansvarig, ansökan före antagning, högskolelagen och lärandemål.",
+          "Ett exempel per kolumn, som lärarens universitet: student och kurs, antagning och registrering, Lund och EC2, antagningsavdelningen och kursansvarig, ansökan före antagning, högskolelagen och lärandemål.",
         ],
       },
       {
@@ -749,7 +749,7 @@ export const essays = [
   {
     id: "ea-e5-10",
     chapter: "kap5",
-    label: "5: 10",
+    label: "Fråga 10",
     question: "Why must an organization adapt its use of TOGAF to its own context?",
     context: "Modul 5, fråga 10 · kortsvarsfråga",
     source: "Modul 5, fråga 10",
@@ -767,7 +767,7 @@ export const essays = [
   {
     id: "ea-e5-11",
     chapter: "kap5",
-    label: "5: 11",
+    label: "Fråga 11",
     question: "Explain the role of the ADM in Enterprise Architecture.",
     context: "Modul 5, fråga 11 · essäfråga",
     source: "Modul 5, fråga 11",
@@ -786,7 +786,7 @@ export const essays = [
   {
     id: "ea-e5-12",
     chapter: "kap5",
-    label: "5: 12",
+    label: "Fråga 12",
     question: "Compare Zachman and TOGAF. What differ between them?",
     context: "Modul 5, fråga 12 · essäfråga. Samma fråga som modul 4 fråga 10 och modul 12 Essay 2.",
     source: "Modul 5, fråga 12",
@@ -811,7 +811,7 @@ export const essays = [
   {
     id: "ea-e6-11",
     chapter: "kap6",
-    label: "6: 11",
+    label: "Fråga 11",
     question: "Explain the difference between a view and a viewpoint.",
     context: "Modul 6, fråga 11 · kortsvarsfråga. Samma fråga som modul 12 fråga 31.",
     source: "Modul 6, fråga 11",
@@ -829,7 +829,7 @@ export const essays = [
   {
     id: "ea-e6-12",
     chapter: "kap6",
-    label: "6: 12",
+    label: "Fråga 12",
     question: "Why are architectural relationships often more important than individual architectural components?",
     context: "Modul 6, fråga 12 · essäfråga",
     source: "Modul 6, fråga 12",
@@ -848,7 +848,7 @@ export const essays = [
   {
     id: "ea-e6-13",
     chapter: "kap6",
-    label: "6: 13",
+    label: "Fråga 13",
     question: "Why is it dangerous to design architecture domains independently?",
     context: "Modul 6, fråga 13 · essäfråga",
     source: "Modul 6, fråga 13",
@@ -873,7 +873,7 @@ export const essays = [
   {
     id: "ea-e7-11",
     chapter: "kap7",
-    label: "7: 11",
+    label: "Fråga 11",
     question: "Why can capability maps be useful when an organization is reorganizing?",
     context: "Modul 7, fråga 11 · kortsvarsfråga",
     source: "Modul 7, fråga 11",
@@ -891,7 +891,7 @@ export const essays = [
   {
     id: "ea-e7-12",
     chapter: "kap7",
-    label: "7: 12",
+    label: "Fråga 12",
     question: "Why are capabilities useful in Enterprise Architecture?",
     context: "Modul 7, fråga 12 · essäfråga",
     source: "Modul 7, fråga 12",
@@ -910,7 +910,7 @@ export const essays = [
   {
     id: "ea-e7-13",
     chapter: "kap7",
-    label: "7: 13",
+    label: "Fråga 13",
     question: "Explain how capabilities connect strategy with architecture.",
     context: "Modul 7, fråga 13 · essäfråga. Nästan samma fråga som modul 7 fråga 26.",
     source: "Modul 7, fråga 13",
@@ -935,7 +935,7 @@ export const essays = [
   {
     id: "ea-e7-23",
     chapter: "kap7",
-    label: "7: 23",
+    label: "Fråga 23",
     question: "Why might capabilities be more useful than organizational departments when planning transformation?",
     context: "Modul 7, fråga 23 · kortsvarsfråga",
     source: "Modul 7, fråga 23",
@@ -954,10 +954,10 @@ export const essays = [
   {
     id: "ea-e7-24",
     chapter: "kap8",
-    label: "7: 24",
+    label: "Fråga 24 (modul 7)",
     question: "Give an example of an architecture principle and explain how it might affect decisions.",
-    context: "Modul 7, fråga 24 (principer och styrning: modul 8:s ämne enligt UF:s not) · kortsvarsfråga",
-    source: "Modul 7, fråga 24 (principer och styrning: modul 8:s ämne enligt UF:s not)",
+    context: "Modul 7, fråga 24 (principer och styrning: modul 8:s ämne enligt lärarens not) · kortsvarsfråga",
+    source: "Modul 7, fråga 24 (principer och styrning: modul 8:s ämne enligt lärarens not)",
     checklist: [
       {
         heading: "Exempel och effekt",
@@ -973,7 +973,7 @@ export const essays = [
   {
     id: "ea-e7-25",
     chapter: "kap7",
-    label: "7: 25",
+    label: "Fråga 25",
     question: "A company reorganizes its marketing department three times in five years. However, it continues to need customer insight, campaign management and market analysis. What does this illustrate about capabilities?",
     context: "Modul 7, fråga 25 · kortsvarsfråga",
     source: "Modul 7, fråga 25",
@@ -991,7 +991,7 @@ export const essays = [
   {
     id: "ea-e7-26",
     chapter: "kap7",
-    label: "7: 26",
+    label: "Fråga 26",
     question: "Explain how business capabilities can connect strategy with Enterprise Architecture.",
     context: "Modul 7, fråga 26 · essäfråga. Nästan samma fråga som modul 7 fråga 13.",
     source: "Modul 7, fråga 26",
@@ -1010,10 +1010,10 @@ export const essays = [
   {
     id: "ea-e7-27",
     chapter: "kap8",
-    label: "7: 27",
+    label: "Fråga 27 (modul 7)",
     question: "How can governance enable rather than restrict agility?",
-    context: "Modul 7, fråga 27 (principer och styrning: modul 8:s ämne enligt UF:s not) · essäfråga. Samma fråga som modul 12 Essay 4 i annan form.",
-    source: "Modul 7, fråga 27 (principer och styrning: modul 8:s ämne enligt UF:s not)",
+    context: "Modul 7, fråga 27 (principer och styrning: modul 8:s ämne enligt lärarens not) · essäfråga. Samma fråga som modul 12 Essay 4 i annan form.",
+    source: "Modul 7, fråga 27 (principer och styrning: modul 8:s ämne enligt lärarens not)",
     checklist: [
       {
         heading: "Vad god governance gör",
@@ -1035,7 +1035,7 @@ export const essays = [
   {
     id: "ea-e8-8",
     chapter: "kap8",
-    label: "8: 8",
+    label: "Fråga 8",
     question: "Explain how architecture principles can increase agility.",
     context: "Modul 8, fråga 8 · essäfråga",
     source: "Modul 8, fråga 8",
@@ -1054,7 +1054,7 @@ export const essays = [
   {
     id: "ea-e9-9",
     chapter: "kap9",
-    label: "9: 9",
+    label: "Fråga 9",
     question: "How can an architect avoid becoming a bottleneck in an Agile organization?",
     context: "Modul 9, fråga 9 · kortsvarsfråga",
     source: "Modul 9, fråga 9",
@@ -1073,7 +1073,7 @@ export const essays = [
   {
     id: "ea-e9-10",
     chapter: "kap9",
-    label: "9: 10",
+    label: "Fråga 10",
     question: "Explain how Enterprise Architecture can support Agile without becoming a barrier to delivery.",
     context: "Modul 9, fråga 10 · essäfråga",
     source: "Modul 9, fråga 10",
@@ -1099,7 +1099,7 @@ export const essays = [
   {
     id: "ea-e9-tankande",
     chapter: "kap9",
-    label: "9: tänkande",
+    label: "Architect's thinking",
     question: "You are the Enterprise Architect. The CEO says: \"Our problem is that we have too many applications.\" What questions would you ask before accepting that diagnosis?",
     context: "Modul 9, \"Architect's thinking\" · \"Architect's thinking\"",
     source: "Modul 9, \"Architect's thinking\"",
@@ -1122,7 +1122,7 @@ export const essays = [
   {
     id: "ea-e10-9",
     chapter: "kap10",
-    label: "10: 9",
+    label: "Fråga 9",
     question: "Explain the difference between digitization, digitalization and digital transformation.",
     context: "Modul 10, fråga 9 · essäfråga",
     source: "Modul 10, fråga 9",
@@ -1141,7 +1141,7 @@ export const essays = [
   {
     id: "ea-e10-10",
     chapter: "kap10",
-    label: "10: 10",
+    label: "Fråga 10",
     question: "Why should digital transformation be treated as an Enterprise Architecture concern?",
     context: "Modul 10, fråga 10 · essäfråga",
     source: "Modul 10, fråga 10",
@@ -1160,7 +1160,7 @@ export const essays = [
   {
     id: "ea-e11-3",
     chapter: "kap11",
-    label: "11: 3",
+    label: "Fråga 3",
     question: "Why might replacing the entire core banking system immediately be risky?",
     context: "Modul 11, fråga 3 · fallfråga",
     source: "Modul 11, fråga 3",
@@ -1179,7 +1179,7 @@ export const essays = [
   {
     id: "ea-e11-7",
     chapter: "kap11",
-    label: "11: 7",
+    label: "Fråga 7",
     question: "What would be an architectural anti-pattern in this situation?",
     context: "Modul 11, fråga 7 · fallfråga",
     source: "Modul 11, fråga 7",
@@ -1197,7 +1197,7 @@ export const essays = [
   {
     id: "ea-e11-8",
     chapter: "kap11",
-    label: "11: 8",
+    label: "Fråga 8",
     question: "What should the architect ask before selecting technology?",
     context: "Modul 11, fråga 8 · fallfråga",
     source: "Modul 11, fråga 8",
@@ -1217,7 +1217,7 @@ export const essays = [
   {
     id: "ea-e11-8b",
     chapter: "kap11",
-    label: "11: 8 (andra)",
+    label: "Fråga 8 (den andra)",
     question: "Why are transition architectures important?",
     context: "Modul 11, fråga 8 (den andra frågan med nummer 8) · fallfråga",
     source: "Modul 11, fråga 8 (den andra frågan med nummer 8)",
@@ -1236,7 +1236,7 @@ export const essays = [
   {
     id: "ea-e11-9",
     chapter: "kap11",
-    label: "11: 9",
+    label: "Fråga 9",
     question: "Develop an architectural approach for the bank.",
     context: "Modul 11, fråga 9 · fallfråga",
     source: "Modul 11, fråga 9",
@@ -1264,7 +1264,7 @@ export const essays = [
   {
     id: "ea-e11-10",
     chapter: "kap11",
-    label: "11: 10",
+    label: "Fråga 10",
     question: "How could Agile influence the transformation?",
     context: "Modul 11, fråga 10 · fallfråga",
     source: "Modul 11, fråga 10",

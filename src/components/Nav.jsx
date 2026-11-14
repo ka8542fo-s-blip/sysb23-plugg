@@ -4,7 +4,6 @@ import ThemeToggle from "./ThemeToggle.jsx";
 
 export const VIEW_LABELS = {
   hem: "Hem",
-  tentan: "Tentan",
   las: "Läs",
   ova: "Öva",
   prov: "Prov",

@@ -1,15 +1,24 @@
-// Modulkorten i Läs för Verksamhetsarkitektur: det tentan bygger på (Kärna).
-// Varje kort har UF:s lärandemål ordagrant, kärnbudskapet i några meningar
-// och de distinktioner han upprepar, högst cirka 300 ord. Den längre
-// kapiteltexten (reading.js) ligger kvar under "Läs mer".
+// Modulkorten i Läs för Verksamhetsarkitektur: det tentan bygger på.
+// Varje kort har lärarens lärandemål ordagrant, kärnbudskapet i några
+// meningar och de distinktioner läraren upprepar, högst cirka 300 ord. Den
+// längre kapiteltexten (reading.js) ligger kvar under "Läs mer".
 //
-// Ordningen i Läs är 12, 1, 2 … 11: UF säger i modul 1 att man ska börja
-// med modul 12. Inga hänvisningar till gamla tentor här — det som gäller
-// HT25 står i Troligt-rutan (LIKELY) och i Fördjupning. Modul 11 saknar
-// lärandemål i PDF:en; där står UF:s "Student task".
+// Ordningen i Läs är 12, 1, 2 … 11: läraren säger i modul 1 att man ska
+// börja med modul 12. Inga hänvisningar till gamla tentor här — det som
+// gäller förra årets tentor står i Zachman-rutan (LIKELY) och i Fördjupning.
+// Modul 11 saknar lärandemål i PDF:en; där står lärarens "Student task".
+//
+// Texterna skrivs för en kursare som aldrig sett sajten förut: inga interna
+// förkortningar (UF, HT25, docx) och inga nivånamn som kräver förklaring.
 
-export const TROLIGT_NOTE = "Inte i modulerna, men på alla UF:s tidigare tentor och i årets bilder";
-export const FORDJUPNING_NOTE = "Utanför UF:s tips";
+// Varför Zachman får mer utrymme än modulernas egna frågor. Samma
+// förklaring i modul 4-kortet, fliken Zachman och Zachman-essän.
+export const ZACHMAN_WHY =
+  "Modulerna har bara några frågor om Zachmans ramverk. Men alla tre tentor förra året hade en stor Zachman-uppgift, och ramverket finns i årets föreläsningsbilder. Därför kommer det troligen på tentan. Det är vår bedömning, inte något läraren har sagt.";
+
+// Vad fliken Fördjupning är.
+export const FORDJUPNING_WHY =
+  "Läraren har sagt att tentan bygger på modulerna, och de finns i Läs, Öva och Essä. Det här är extra material utanför modulerna, för dig som har tid över.";
 
 export const CARDS = {
   kap12: `
@@ -33,7 +42,7 @@ Modul 12 knyter ihop kursen. Målet är inte att minnas definitioner utan att ko
 
 ## De tio begreppen
 
-| Begrepp | UF:s definition |
+| Begrepp | Lärarens definition |
 |---|---|
 | Enterprise | A collection of organizations, organizational units, or capabilities with a common set of goals. |
 | Architecture | The fundamental organization of something, including its components, relationships, principles and constraints. |
@@ -212,7 +221,7 @@ Students should understand:
 
 ## Kärnan
 
-En **capability** är vad organisationen kan göra, en **process** hur arbetet utförs och en **value stream** hur värde skapas och levereras till en intressent. Förmågorna är relativt stabila när organisationsstrukturer och processer ändras, och blir därför en bro mellan strategi och arkitektur. UF:s exempel: strategin "Become the easiest bank for first-time home buyers" kräver förmågan Digital Mortgage Origination, med värdeflödet Discover → Apply → Verify → Approve → Complete. Förmågor kan kopplas till processer, människor, information, applikationer och teknik.
+En **capability** är vad organisationen kan göra, en **process** hur arbetet utförs och en **value stream** hur värde skapas och levereras till en intressent. Förmågorna är relativt stabila när organisationsstrukturer och processer ändras, och blir därför en bro mellan strategi och arkitektur. Lärarens exempel: strategin "Become the easiest bank for first-time home buyers" kräver förmågan Digital Mortgage Origination, med värdeflödet Discover → Apply → Verify → Approve → Complete. Förmågor kan kopplas till processer, människor, information, applikationer och teknik.
 
 ## Håll isär
 
@@ -236,7 +245,7 @@ Students should understand:
 
 ## Kärnan
 
-En arkitekturprincip är en generell regel som vägleder beslut. UF:s exempel "Information is an enterprise asset" påverkar dataägarskap, applikationsdesign, integration, styrning, säkerhet och investeringar.
+En arkitekturprincip är en generell regel som vägleder beslut. Lärarens exempel "Information is an enterprise asset" påverkar dataägarskap, applikationsdesign, integration, styrning, säkerhet och investeringar.
 
 > Governance answers: Who has the authority to make which decisions, under what constraints?
 
@@ -287,7 +296,7 @@ Students should be able to distinguish between:
 
 ## Kärnan
 
-| Begrepp | UF:s definition |
+| Begrepp | Lärarens definition |
 |---|---|
 | Digitization | Converting analog information into digital form |
 | Digitalization | Using digital technologies to improve existing activities and processes |
@@ -308,7 +317,7 @@ Ett transformationsinitiativ ska drivas av ett tydligt affärsutfall och strateg
   kap11: `
 ## Uppgiften
 
-UF:s modul 11 har inga egna lärandemål utan en uppgift, "Student task":
+Modul 11 har inga egna lärandemål utan en uppgift, "Student task":
 
 - Analyze the situation from an Enterprise Architecture perspective.
 
@@ -328,24 +337,24 @@ Börja med de strategiska målen och kundutfallen, inte med tekniken. Bedöm nul
 `,
 };
 
-// Troligt-rutan i modul 4-kortet: Zachman utöver modulens egna frågor.
+// Rutan i modul 4-kortet: Zachman utöver modulens egna frågor.
 export const LIKELY = {
   kap4: {
-    label: "Troligt",
-    note: TROLIGT_NOTE,
-    text: "Ramverkets rader, kolumner och celler, och placering av modeller i rutnätet, går längre än modul 4:s frågor. Öva det i Zachman-fliken och skriv Zachman-essän.",
+    title: "Zachman kommer troligen på tentan",
+    text: `${ZACHMAN_WHY} Öva därför mer på ramverket i fliken Zachman (modul 4) och skriv Zachman-essän.`,
     links: [
       { view: "zachman", label: "Zachman (modul 4)" },
       { view: "essa", params: { essayId: "ea-e-zachman" }, label: "Zachman-essän" },
     ],
     // Flyttat hit ur kapitel 4:s text (2026-11-13): det som gäller de gamla tentorna.
+    moreLabel: "Så såg Zachman-uppgifterna ut förra året",
     more: `
-## Hur Zachman prövades på UF:s tidigare tentor
+Förra årets tre tentor (oktober 2025, december 2025 och maj 2026) var upplagda på ett annat sätt än årets. Hälften av poängen var Zachman, och hälften var sant/falskt om artiklar som inte ingår i år.
 
-HT25-tentorna (okt 2025, dec 2025, maj 2026) hade ett annat format än årets: en Zachman-essä, placering i rutnätet och sant/falskt om artiklar som inte ingår i år.
+- **Uppgift 1 (30 poäng), en essä:** "Beskriv och förklara raderna och kolumnerna i Zachmans ramverk." För höga poäng skulle man förklara perspektiven (till exempel vad Planner är) och ge exempel på vad cellerna innehåller: listor på rad 1, konceptuella modeller på rad 2 och så vidare. På två av tentorna krävdes minst 15 poäng på uppgiften för att bli godkänd.
+- **Uppgift 2 (20 poäng), placering:** tio modeller som skulle placeras i rätt cell i rutnätet, eller sju flervalsfrågor med cellkoder (maj 2026). På omtentan i december 2025 fick man svara med två celler om man motiverade valet. Det finns inget officiellt facit till placeringsuppgifterna.
 
-- **Uppgift 1 (30 p):** "Beskriv och förklara raderna och kolumnerna i Zachmans ramverk." För höga poäng ska perspektiven förklaras ("vad är Planner?") och exempel på cellinnehåll ges: listor på rad 1, konceptuella modeller på rad 2 och så vidare. På två av tentorna krävdes minst 15 p för godkänt.
-- **Uppgift 2 (20 p):** tio modeller att placera, eller sju flervalsfrågor med cellkoder (maj 2026). På omtentan i december 2025 fick man svara med två celler om man motiverade det. Det finns inget officiellt facit till placeringsuppgifterna.
+Alla tre tentorna finns i fliken Fördjupning.
 `,
   },
 };

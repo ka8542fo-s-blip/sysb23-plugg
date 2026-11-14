@@ -13,14 +13,14 @@ export const summary = {
   summary: true,
   title: "Sammanfattning",
   readingMinutes: 5, // ~620 ord i sajtens lästempo (~145 ord/min)
-  lead: "Börja här, som UF säger: den stora bilden och de tio begrepp du ska kunna förklara utan att slå upp dem.",
+  lead: "Börja här, som läraren säger: den stora bilden och de tio begrepp du ska kunna förklara utan att slå upp dem.",
   sources: ["Modul 12 (de tio begreppen och den stora bilden)", "Bygger på kapitel 1–12"],
   topics: [],
   primaryTopics: [],
   body: `
 ## Så ser tentan ut
 
-Enligt kursinformationen och UF ser tentan ut som modulerna: sant/falskt, flerval och någon essäfråga, och modulernas egna frågor kan komma. Öva har alla modulfrågor, och Essä har modulernas essäfrågor med UF:s modellsvar.
+Enligt kursinformationen och läraren ser tentan ut som modulerna: sant/falskt, flerval och någon essäfråga, och modulernas egna frågor kan komma. Öva har alla modulfrågor, och Essä har modulernas essäfrågor med lärarens modellsvar.
 
 ## Den stora bilden
 
@@ -43,9 +43,9 @@ Mer: kapitel 3 och 12.
 
 ## De tio begreppen
 
-UF säger att du ska kunna förklara de här tio utan att slå upp dem. Definitionerna är hans.
+Läraren säger att du ska kunna förklara de här tio utan att slå upp dem. Definitionerna är hans.
 
-| Begrepp | UF:s definition | Kapitel |
+| Begrepp | Lärarens definition | Kapitel |
 |---|---|---|
 | Enterprise | A collection of organizations, organizational units, or capabilities with a common set of goals. | 1 |
 | Architecture | The fundamental organization of something, including its components, relationships, principles and constraints. | 2 |
