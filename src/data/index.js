@@ -195,6 +195,9 @@ export const courses = [
     // sammanfattningskort: modul 12-kortet har de tio begreppen och
     // sammanfattningens övriga text ligger under dess "Läs mer".
     chapters: arkitekturChapters,
+    // Läs visar bara Kompendium (Kaspers omgörning 2026-11-14); Begrepp och
+    // Ordlista finns kvar i datat men visas inte.
+    readingSegments: ["kompendium"],
     glossary: arkitekturGlossary,
     readingIntro: arkitekturIntro,
     examNote: arkitekturExamNote,

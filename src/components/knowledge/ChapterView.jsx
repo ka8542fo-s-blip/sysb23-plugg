@@ -7,6 +7,10 @@ import InfoTip from "../InfoTip.jsx";
 import { ExamAreaTag } from "./ChapterList.jsx";
 import LeadIn from "./LeadIn.jsx";
 import { Diagram, DIAGRAM_RE } from "./diagrams/index.jsx";
+import ZachmanFramework from "../zachman/ZachmanFramework.jsx";
+
+// Visningar som ett modulkort kan be om (`chapter.widget`).
+const WIDGETS = { "zachman-grid": ZachmanFramework };
 
 function RateSelect({ tts, compact = false }) {
   return (
@@ -208,7 +212,11 @@ export default function ChapterView({
   const [tocOpen, setTocOpen] = useState(false);
   // Med modulkort visar innehållsförteckningen kortets rubriker; "Läs mer"
   // är stängt från början.
-  const headings = useMemo(() => headingsIn(chapter.card ?? chapter.body), [chapter.card, chapter.body]);
+  const Widget = chapter.widget ? WIDGETS[chapter.widget] : null;
+  const headings = useMemo(
+    () => headingsIn(chapter.card ? `${chapter.card}\n${chapter.cardAfter ?? ""}` : chapter.body),
+    [chapter.card, chapter.cardAfter, chapter.body],
+  );
 
   const readColumnRef = useRef(null);
   const tts = useReadAloud(readColumnRef, { audio: Boolean(course.ttsAudio) });
@@ -447,6 +455,17 @@ export default function ChapterView({
                 <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
                   {chapter.card}
                 </ReactMarkdown>
+                {/* Modul 4: Zachmans rutnät som visning, sedan placeringarna. */}
+                {Widget && (
+                  <div className="my-6 text-base leading-normal" data-tts-skip>
+                    <Widget />
+                  </div>
+                )}
+                {chapter.cardAfter && (
+                  <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+                    {chapter.cardAfter}
+                  </ReactMarkdown>
+                )}
                 {chapter.likely && (
                   <LikelyBox likely={chapter.likely} components={components} views={course.views || []} onOpenView={onOpenView} />
                 )}

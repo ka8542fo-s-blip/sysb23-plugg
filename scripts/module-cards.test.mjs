@@ -1,10 +1,12 @@
-// Modulkorten i Läs för Verksamhetsarkitektur: varje kort har lärarens
-// lärandemål, kärnan och distinktionerna, högst cirka 300 ord; modultexterna
-// nämner inte de gamla tentorna (det står i Zachman-rutan i modul 4 och i
-// Fördjupning), och rutan förklarar i klartext varför Zachman får mer plats.
+// Modulkorten i Läs för Verksamhetsarkitektur (omgjorda 2026-11-14): modul
+// 12 är Start här; modul 1–11 börjar med kärnsvaret och har sedan Håll isär;
+// det som stod på korten förut ligger under Läs mer; modultexterna nämner
+// inte de gamla tentorna, och Zachman-rutan förklarar varför Zachman får
+// mer plats.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { CARDS, LIKELY, ZACHMAN_WHY } from "../src/data/arkitektur/cards.js";
+import { FORMAT_QUOTES, KARNSVAR, LEARNING, LIKELY, ZACHMAN_WHY } from "../src/data/arkitektur/cards.js";
+import { zachmanTasks } from "../src/data/arkitektur/zachman.js";
 import { chapters, examNote, glossary, intro } from "../src/data/arkitektur/reading.js";
 import { topics } from "../src/data/arkitektur/topics.js";
 import { questions } from "../src/data/arkitektur/questions.js";
@@ -12,19 +14,56 @@ import { questions } from "../src/data/arkitektur/questions.js";
 const words = (text) => text.replace(/[|#>*`-]/g, " ").split(/\s+/).filter(Boolean).length;
 const OLD_EXAMS = /HT25|HT 25|gamla tentor|tidigare tentor|omtentan|uppsamlingen|ordinarie tentan/i;
 
-test("tolv kort, ett per modul, med lärandemål, kärnan och distinktioner", () => {
+test("modul 12 är Start här med tentans form, begreppen, testet och fällorna", () => {
   assert.equal(chapters.length, 12);
-  for (const chapter of chapters) {
-    const card = CARDS[chapter.id];
-    assert.equal(chapter.card, card, chapter.id);
-    assert.ok(words(card) <= 300, `${chapter.id}: ${words(card)} ord`);
-    if (chapter.id === "kap11") assert.match(card, /Student task/);
-    else assert.match(card, /## Lärandemål/, chapter.id);
-    assert.match(card, /## Kärnan/, chapter.id);
-    if (chapter.id !== "kap12") assert.match(card, /## Håll isär/, chapter.id);
-    assert.ok(chapter.body.length > card.length, `${chapter.id}: den längre texten finns kvar under Läs mer`);
+  assert.equal(chapters[0].id, "kap12");
+  const card = chapters[0].card;
+  for (const heading of ["Start här", "Så ser tentan ut", "De tio begreppen", "Arkitektens test", "Fällorna i sant/falskt"]) {
+    assert.match(card, new RegExp(`## ${heading}`), heading);
   }
-  assert.match(CARDS.kap12, /## De tio begreppen/);
+  for (const quote of FORMAT_QUOTES) assert.ok(card.includes(quote), "kursinformationen ordagrant");
+  assert.match(card, /0 poäng, inte minuspoäng/);
+  assert.match(card, /fem timmar oavsett/);
+  assert.equal((card.match(/^\| [A-Z]/gm) || []).length - 1, 10, "tio begrepp (plus rubrikraden)");
+});
+
+test("modul 1–11: kärnsvaret först (80–120 ord, med källor), sedan Håll isär", () => {
+  for (const chapter of chapters.filter((c) => c.id !== "kap12")) {
+    const k = KARNSVAR[chapter.id];
+    assert.ok(k, chapter.id);
+    const n = words(k.text);
+    assert.ok(n >= 80 && n <= 120, `${chapter.id}: ${n} ord`);
+    if (!k.noExample) assert.match(k.text, /Lärarens exempel/, `${chapter.id}: ett av lärarens exempel`);
+    else assert.match(k.text, /Läraren säger det så här/, `${chapter.id}: lärarens formulering i stället`);
+    assert.ok(chapter.card.startsWith("## Kärnsvaret"), chapter.id);
+    assert.match(chapter.card, /\*Bygger på lärarens modellsvar till /, chapter.id);
+    assert.match(chapter.card, /## Håll isär/, chapter.id);
+    assert.ok(chapter.card.indexOf("## Kärnsvaret") < chapter.card.indexOf("## Håll isär"), chapter.id);
+    // Ett exempel står bara en gång på kortet: i kärnsvaret, inte också under rubriken.
+    assert.ok((chapter.card.match(/## Lärarens exempel/g) || []).length <= 1, chapter.id);
+  }
+});
+
+test("det som stod på korten förut ligger överst under Läs mer", () => {
+  for (const chapter of chapters) {
+    const first = chapter.id === "kap11" ? "## Uppgiften" : "## Lärandemål";
+    assert.ok(chapter.body.trimStart().startsWith(first), chapter.id);
+    assert.ok(chapter.body.includes(LEARNING[chapter.id].trim()), chapter.id);
+    assert.match(chapter.body, /## Kärnan/, chapter.id);
+  }
+});
+
+test("modul 4: rutnätet som visning och tre lösta placeringar med regeln", () => {
+  const kap4 = chapters.find((c) => c.id === "kap4");
+  assert.equal(kap4.widget, "zachman-grid");
+  for (const [model, cell] of [["Java", "R5K2 (Program)"], ["arbetsflödesmodell", "R2K4 (Work Flow Model)"], ["verksamhetsregler", "R3K6 (Business Rule Model)"]]) {
+    assert.match(kap4.cardAfter, new RegExp(`${model}.*${cell.replace(/[()]/g, "\\$&")}`), model);
+    const code = cell.slice(0, 4);
+    const task = zachmanTasks.find((t) => t.cells?.[0] === code && new RegExp(model, "i").test(t.text));
+    assert.ok(task, `${model}: samma facit som placeringsuppgiften`);
+  }
+  assert.match(kap4.cardAfter, /Kolumnen är frågan modellen svarar på/);
+  assert.match(kap4.cardAfter, /Raden är perspektivet och detaljnivån/);
 });
 
 test("modultexterna nämner inte de gamla tentorna", () => {

@@ -35,16 +35,24 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
     [course, practicableGroups],
   );
 
-  const [segment, setSegment] = useState(() => {
+  const [segmentState, setSegment] = useState(() => {
     const saved = load(KEYS.readSegment, "kompendium");
     return SEGMENTS.some((item) => item.id === saved) ? saved : "kompendium";
   });
+  // `course.readingSegments` begränsar Läs (Verksamhetsarkitektur: bara
+  // Kompendium). Då döljs växeln, sökningen gäller bara kompendiet och det
+  // sparade valet för de andra delkurserna rörs inte.
+  const allowedSegments = course.readingSegments ?? SEGMENTS.map((item) => item.id);
+  const onlyCompendium = allowedSegments.length === 1 && allowedSegments[0] === "kompendium";
+  const segment = allowedSegments.includes(segmentState) ? segmentState : "kompendium";
   const [chapterId, setChapterId] = useState(null);
   const [openTopicId, setOpenTopicId] = useState(null);
   const [highlightTerm, setHighlightTerm] = useState(null);
   const [query, setQuery] = useState("");
 
-  useEffect(() => save(KEYS.readSegment, segment), [segment]);
+  useEffect(() => {
+    if (!onlyCompendium) save(KEYS.readSegment, segmentState);
+  }, [segmentState, onlyCompendium]);
 
   // Navigering hit utifrån (t.ex. "Fortsätt läsa" på Hem eller en
   // korsreferens) styr segment och position.
@@ -58,8 +66,14 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
   }, [params]);
 
   const results = useMemo(
-    () => searchKnowledge({ query, chapters, topics: course.topics, glossary }),
-    [query, chapters, course.topics, glossary],
+    () =>
+      searchKnowledge({
+        query,
+        chapters,
+        topics: onlyCompendium ? [] : course.topics,
+        glossary: onlyCompendium ? [] : glossary,
+      }),
+    [query, chapters, course.topics, glossary, onlyCompendium],
   );
 
   function openChapter(id) {
@@ -113,23 +127,23 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
         <section>
           <h1 className="font-display text-2xl">Läs</h1>
           <p className="mt-1 max-w-reading text-[15px] text-ink/70">
-            Kompendiet bygger förståelsen, begreppskorten repeterar den och
-            ordlistan slår upp ett ord mitt i en övning. Sökningen nedan letar i
-            alla tre samtidigt.
+            {onlyCompendium
+              ? "Ett kort per modul. Börja med modul 12, Start här."
+              : "Kompendiet bygger förståelsen, begreppskorten repeterar den och ordlistan slår upp ett ord mitt i en övning. Sökningen nedan letar i alla tre samtidigt."}
           </p>
         </section>
       )}
 
       <div className="max-w-3xl">
         <label htmlFor="navsok" className="sr-only">
-          Sök i kompendium, begrepp och ordlista
+          {onlyCompendium ? "Sök i kompendiet" : "Sök i kompendium, begrepp och ordlista"}
         </label>
         <input
           id="navsok"
           type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Sök i allt — t.ex. satisfiering, alignment, Brundtland…"
+          placeholder={onlyCompendium ? "Sök i kompendiet …" : "Sök i allt — t.ex. satisfiering, alignment, Brundtland…"}
           className="w-full rounded-lg border border-line bg-surface px-4 py-3 text-[15px]"
         />
       </div>
@@ -143,17 +157,19 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
         />
       ) : (
         <>
-          <div className="max-w-3xl">
-            <SegmentedControl
-              label="Välj läge"
-              segments={segmentsWithCounts}
-              value={segment}
-              onChange={(next) => {
-                setSegment(next);
-                window.scrollTo({ top: 0 });
-              }}
-            />
-          </div>
+          {!onlyCompendium && (
+            <div className="max-w-3xl">
+              <SegmentedControl
+                label="Välj läge"
+                segments={segmentsWithCounts}
+                value={segment}
+                onChange={(next) => {
+                  setSegment(next);
+                  window.scrollTo({ top: 0 });
+                }}
+              />
+            </div>
+          )}
 
           {segment === "kompendium" &&
             (current ? (

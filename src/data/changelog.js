@@ -7,6 +7,7 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 63, date: "2026-11-14", text: "Verksamhetsarkitektur: Start här och kärnsvar överst på modulkorten" },
   { id: 62, date: "2026-11-14", text: "Java: fyra övningar till med UPDATE och INSERT, en i en loop" },
   { id: 61, date: "2026-11-14", text: "Java: två nya övningar som skriver till databasen, INSERT och UPDATE" },
   { id: 60, date: "2026-11-14", text: "Verksamhetsarkitektur: tydligare texter, fliken Tentan borttagen" },

@@ -26,7 +26,8 @@
 // inget eget kort: modul 12-kortet har de tio begreppen, och
 // sammanfattningens övriga avsnitt ligger under modul 12:s "Läs mer".
 import { summary } from "./summary.js";
-import { CARDS, LIKELY } from "./cards.js";
+import { CARDS, CARD_AFTER, KARNSVAR, LEARNING, LIKELY } from "./cards.js";
+import { essays } from "./essays.js";
 
 export { summary };
 
@@ -47,7 +48,7 @@ export const CHAPTER_TOPICS = {
 
 export const CHAPTER_ORDER = Object.keys(CHAPTER_TOPICS);
 
-export const intro = "Kursen består av lärarens tolv moduler, och läraren har sagt att tentan ser ut som dem. Kapitel 1 här är modul 1 och så vidare, med modulernas engelska titlar. Läraren säger att man ska börja med modul 12, som knyter ihop kursen, så den står först. Varje kapitel börjar med ett kort: lärandemålen (lärarens ord, på engelska), det viktigaste i modulen och det du ska hålla isär. Resten av texten ligger under ”Läs mer”. Räkna med ungefär {lästid} för hela texten. Begreppen står på engelska, som i modulerna och på tentan.";
+export const intro = "Kursen består av lärarens tolv moduler, och läraren har sagt att tentan ser ut som dem. Kapitel 1 här är modul 1 och så vidare. Börja med modul 12, Start här, som visar hur tentan ser ut. Varje annat kapitel börjar med kärnsvaret: modulens kärna i några meningar, som svarar på modulens fritextfrågor. Sedan kommer det du ska hålla isär och lärarens exempel. Lärandemålen och resten av texten ligger under ”Läs mer”. Räkna med ungefär {lästid} för hela texten. Begreppen står på engelska, som i modulerna och på tentan.";
 
 export const examNote = {
   text: "Tentan ser ut som modulerna, enligt kursinformationen och läraren: sant/falskt, flervalsfrågor och någon essäfråga. Modulernas egna frågor kan komma, och även andra liknande frågor om litteraturen. Öva därför modulernas frågor i Öva och skriv essäfrågorna i Essä. Hur många poäng frågorna ger, och om fel svar ger minuspoäng, vet vi inte.",
@@ -1132,7 +1133,7 @@ Det här ska undvikas:
     number: 12,
     title: "Integration and Examination Preparation",
     readingMinutes: 7,
-    lead: "Modul 12 knyter ihop kursen: arkitektens test, tentafällorna, slutchecklistan, fem scenarier och skillnaden mellan Zachman och TOGAF. De tio begreppen står på kortet.",
+    lead: "Start här: hur tentan ser ut, de tio begreppen, arkitektens test och fällorna i sant/falskt.",
     sources: ["Modul 12", "Föreläsningsbilder 59 och 102–103"],
     body: `
 ## Varför modul 12 är annorlunda
@@ -1264,12 +1265,28 @@ const KAP12_EXTRA = summarySections(["Det tentan skiljer på", "Zachman i korthe
 
 const byId = Object.fromEntries(rawChapters.map((chapter) => [chapter.id, chapter]));
 
+// Kärnsvaret överst på modul 1–11, med raden om vilka modellsvar det bygger
+// på (essäernas källa, t.ex. "Modul 1, fråga 9").
+function karnsvarMarkdown(id) {
+  const k = KARNSVAR[id];
+  if (!k) return "";
+  const labels = k.source.map((essayId) => essays.find((essay) => essay.id === essayId).source);
+  const also = k.moduleText ? ` och ${k.moduleText}` : "";
+  return `## Kärnsvaret\n\n${k.text}\n\n*Bygger på lärarens modellsvar till ${labels.join("; ")}${also}.*\n`;
+}
+
+// Kortet: Start här (modul 12) eller kärnsvaret, Håll isär och lärarens
+// exempel; modul 4 får rutnätet (widget) och placeringarna under det.
+// "Läs mer": det som stod på korten förut (LEARNING) och sedan modultexten.
 export const chapters = CHAPTER_ORDER.map((id) => {
   const chapter = byId[id];
+  const body = id === "kap12" ? `${chapter.body}\n${KAP12_EXTRA}\n` : chapter.body;
   return {
     ...chapter,
-    body: id === "kap12" ? `${chapter.body}\n${KAP12_EXTRA}\n` : chapter.body,
-    card: CARDS[id],
+    body: `${LEARNING[id] ?? ""}\n${body}`,
+    card: `${karnsvarMarkdown(id)}${CARDS[id]}`,
+    ...(id === "kap4" ? { widget: "zachman-grid" } : {}),
+    ...(CARD_AFTER[id] ? { cardAfter: CARD_AFTER[id] } : {}),
     ...(LIKELY[id] ? { likely: LIKELY[id] } : {}),
     ...CHAPTER_TOPICS[id],
   };
