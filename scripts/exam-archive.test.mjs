@@ -48,10 +48,11 @@ test("artikelfrågorna står utan facit och med texten ordagrant", () => {
   }
 });
 
-test("manifestet: arkivet ligger i Fördjupning, inte i fliken Tenta, och inga Tentafrågor i Öva", () => {
+// Sedan 2026-11-14 är Fördjupning dold; arkivet finns kvar i manifestet och
+// i repot men visas inte. Inga Tentafrågor i Öva.
+test("manifestet: arkivet finns kvar men Fördjupning är dold, och inga Tentafrågor i Öva", () => {
   const course = getCourse("arkitektur");
-  assert.ok(course.views.includes("fordjupning"));
-  assert.ok(!course.views.includes("tenta"));
+  assert.ok(!course.views.includes("fordjupning"));
   assert.equal(course.examArchive, examArchive);
   assert.equal(course.choiceExams.length, 0);
   assert.equal(course.pastExams.length, 0);

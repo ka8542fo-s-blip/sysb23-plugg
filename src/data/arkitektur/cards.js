@@ -509,11 +509,8 @@ Börja med de strategiska målen och kundutfallen, inte med tekniken. Bedöm nul
 export const LIKELY = {
   kap4: {
     title: "Zachman kommer troligen på tentan",
-    text: `${ZACHMAN_WHY} Öva därför mer på ramverket i fliken Zachman (modul 4) och skriv Zachman-essän.`,
-    links: [
-      { view: "zachman", label: "Zachman (modul 4)" },
-      { view: "essa", params: { essayId: "ea-e-zachman" }, label: "Zachman-essän" },
-    ],
+    text: `${ZACHMAN_WHY} Lär dig därför rutnätet ovan. I Öva, modul 4, finns Memorera för rad- och kolumnnamnen och Zachman-essän som förklarakort.`,
+    links: [{ view: "ova", params: { topics: ["kap4"], nonce: 4 }, label: "Öva modul 4" }],
     // Flyttat hit ur kapitel 4:s text (2026-11-13): det som gäller de gamla tentorna.
     moreLabel: "Så såg Zachman-uppgifterna ut förra året",
     more: `
@@ -521,8 +518,6 @@ Förra årets tre tentor (oktober 2025, december 2025 och maj 2026) var upplagda
 
 - **Uppgift 1 (30 poäng), en essä:** "Beskriv och förklara raderna och kolumnerna i Zachmans ramverk." För höga poäng skulle man förklara perspektiven (till exempel vad Planner är) och ge exempel på vad cellerna innehåller: listor på rad 1, konceptuella modeller på rad 2 och så vidare. På två av tentorna krävdes minst 15 poäng på uppgiften för att bli godkänd.
 - **Uppgift 2 (20 poäng), placering:** tio modeller som skulle placeras i rätt cell i rutnätet, eller sju flervalsfrågor med cellkoder (maj 2026). På omtentan i december 2025 fick man svara med två celler om man motiverade valet. Det finns inget officiellt facit till placeringsuppgifterna.
-
-Alla tre tentorna finns i fliken Fördjupning.
 `,
   },
 };

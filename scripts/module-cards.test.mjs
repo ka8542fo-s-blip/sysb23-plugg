@@ -78,15 +78,15 @@ test("modultexterna nämner inte de gamla tentorna", () => {
   for (const [where, text] of texts) assert.doesNotMatch(text, OLD_EXAMS, where);
 });
 
-test("Zachman-rutan i modul 4 förklarar varför och pekar på Zachman och essän", () => {
+test("Zachman-rutan i modul 4 förklarar varför och pekar på modul 4 i Öva", () => {
   assert.deepEqual(Object.keys(LIKELY), ["kap4"]);
   const box = chapters.find((c) => c.id === "kap4").likely;
   assert.equal(box.title, "Zachman kommer troligen på tentan");
   assert.ok(box.text.includes(ZACHMAN_WHY));
   assert.match(ZACHMAN_WHY, /förra året/);
   assert.match(ZACHMAN_WHY, /inte något läraren har sagt/, "bedömningen är vår, inte lärarens");
-  assert.deepEqual(box.links.map((l) => l.view), ["zachman", "essa"]);
-  assert.equal(box.links[1].params.essayId, "ea-e-zachman");
+  assert.deepEqual(box.links.map((l) => l.view), ["ova"], "Zachman och Essä är dolda; Memorera och essän finns i Öva");
+  assert.deepEqual(box.links[0].params.topics, ["kap4"]);
   assert.match(box.more, /förra årets tre tentor/i, "det som gäller de gamla tentorna står här");
 });
 

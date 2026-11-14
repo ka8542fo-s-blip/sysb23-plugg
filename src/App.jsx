@@ -17,6 +17,7 @@ import Assignments from "./views/Assignments.jsx";
 import ProcessRun from "./views/ProcessRun.jsx";
 import Zachman from "./views/Zachman.jsx";
 import JavaWorkshop from "./views/JavaWorkshop.jsx";
+import { ZachmanMemoryBlock } from "./components/zachman/ZachmanMemory.jsx";
 import { modelProgressIds } from "./data/progressLists.js";
 import { courses, getCourse } from "./data/index.js";
 import {
@@ -83,6 +84,12 @@ export default function App() {
   useEffect(() => save(KEYS.view, view), [view]);
 
   const course = useMemo(() => getCourse(courseId), [courseId]);
+  // Öva: förklarakorten (course.explainCards, Verksamhetsarkitektur) i samma
+  // kö som frågorna. Provtentorna och Statistik använder bara course.questions.
+  const practiceCourse = useMemo(
+    () => (course.explainCards?.length ? { ...course, questions: [...course.questions, ...course.explainCards] } : course),
+    [course],
+  );
 
   // Lästa kapitel: en nyckel per kapitel i localStorage. Sammanfattningen
   // (kortet "Läs först") har också en läst-markering och laddas med.
@@ -252,10 +259,24 @@ export default function App() {
         {view === "ova" && (
           <Practice
             {...shared}
+            course={practiceCourse}
             params={viewParams}
             onAnswer={handleAnswer}
             onSeen={handleSeen}
             onResetPractice={handleResetPractice}
+            extraBlocks={
+              course.practiceBlocks?.kap4 === "zachman-minne"
+                ? {
+                    kap4: (
+                      <ZachmanMemoryBlock
+                        modelProgress={modelProgress}
+                        onSolve={solveModelExercise}
+                        onReset={resetModelExercise}
+                      />
+                    ),
+                  }
+                : null
+            }
           />
         )}
         {view === "prov" && (

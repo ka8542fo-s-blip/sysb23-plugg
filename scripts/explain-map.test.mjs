@@ -6,6 +6,8 @@ import assert from "node:assert/strict";
 import { essays } from "../src/data/arkitektur/essays.js";
 import { EXPLAIN_MAP, explainCardId } from "../src/data/arkitektur/explainMap.js";
 import { KARNSVAR } from "../src/data/arkitektur/cards.js";
+import { explainCards } from "../src/data/arkitektur/explainCards.js";
+import { getCourse } from "../src/data/index.js";
 
 const cards = Object.values(EXPLAIN_MAP).flat();
 
@@ -28,4 +30,25 @@ test("kärnsvarets källor är modulens modellsvar, utom Zachman-essän som sakn
     const expected = list.flat().filter((id) => essays.find((e) => e.id === id).modelAnswer);
     assert.deepEqual([...KARNSVAR[chapter].source].sort(), expected.sort(), chapter);
   }
+});
+
+test("förklarakorten i manifestet: 47 kort med frågor, svar och två val, i Öva men inte i questions", () => {
+  const course = getCourse("arkitektur");
+  assert.equal(course.explainCards, explainCards);
+  assert.equal(explainCards.length, 47);
+  assert.equal(course.questions.length, 135, "provtentorna bygger på de 135 modulfrågorna");
+  assert.deepEqual(course.views, ["las", "ova", "statistik"]);
+  assert.deepEqual(course.practiceBlocks, { kap4: "zachman-minne" });
+  for (const card of explainCards) {
+    assert.equal(card.kind, "forklara");
+    assert.deepEqual(card.options.map((o) => o.text), ["Kunde", "Kunde inte"]);
+    assert.equal(card.correct, 0);
+    assert.ok(card.fixedOrder);
+    assert.ok(card.topic, card.id);
+    assert.ok(card.karnsvar, `${card.id}: kärnsvaret`);
+    for (const prompt of card.prompts) assert.ok(prompt.modelAnswer || prompt.checklist?.length, `${card.id}: svar`);
+  }
+  const zachman = explainCards.find((card) => card.essayIds.includes("ea-e-zachman"));
+  assert.doesNotMatch(zachman.question, /Finkelstein|artiklarna/);
+  assert.match(zachman.prompts[0].note, /^Från tidigare tentor/);
 });

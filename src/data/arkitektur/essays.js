@@ -696,11 +696,11 @@ export const essays = [
   {
     id: "ea-e-zachman",
     level: "troligt",
-    levelNote: `Extra utöver modulerna. ${ZACHMAN_WHY}`,
+    levelNote: `Från tidigare tentor, inte ur modulerna. ${ZACHMAN_WHY}`,
     chapter: "kap4",
-    label: "Zachman-essän (förra årets tentor)",
-    question: "Beskriv och förklara raderna och kolumnerna i Zachmans ramverk. Beskrivs i Finkelstein kap 1 samt i flertalet av artiklarna (inklusive föreläsningsmaterial). Förutom vad raderna och kolumnerna heter och vad de har/kan ha för innehåll, skall för höga poäng även perspektiven förklaras - T.ex. vad är Planner? - Och exempel på cellinnehåll ges - listor på rad 1, konceptuella modeller på rad 2 o.s.v.",
-    context: "Uppgift 1 på alla tre tentor förra året (oktober 2025, december 2025 och maj 2026), 30 poäng. På de två första krävdes minst 15 poäng på uppgiften för godkänt. Majtentan frågade: \"Beskriv och redogör tydligt för Zachmans ramverk i sin helhet. (30p)\". Finkelstein och artiklarna som frågan nämner ingår inte i år, så svara utifrån kapitel 4 i Läs. Ett enkelt men korrekt svar som täcker det frågan ber om räcker långt.",
+    label: "Zachman-essän (från tidigare tentor)",
+    question: "Beskriv och förklara raderna och kolumnerna i Zachmans ramverk. Förutom vad raderna och kolumnerna heter och vad de har/kan ha för innehåll, skall för höga poäng även perspektiven förklaras - T.ex. vad är Planner? - Och exempel på cellinnehåll ges - listor på rad 1, konceptuella modeller på rad 2 o.s.v.",
+    context: "Uppgift 1 på alla tre tentor förra året (oktober 2025, december 2025 och maj 2026), 30 poäng. På de två första krävdes minst 15 poäng på uppgiften för godkänt. Majtentan frågade: \"Beskriv och redogör tydligt för Zachmans ramverk i sin helhet. (30p)\". Svara utifrån kapitel 4 i Läs. Ett enkelt men korrekt svar som täcker det frågan ber om räcker långt.",
     source: "Förra årets tentor, uppgift 1 (okt 2025, dec 2025, maj 2026); checklistan bygger på kapitel 4 (modul 4, föreläsningsbilderna och Zachmans affisch från 2003)",
     examPriority: ["karna", "essa"],
     checklist: [

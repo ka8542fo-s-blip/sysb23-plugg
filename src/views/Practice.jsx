@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import QuestionCard from "../components/QuestionCard.jsx";
+import ExplainCard from "../components/ExplainCard.jsx";
+import { useDrafts } from "../lib/useDrafts.js";
 import TopicFilter from "../components/TopicFilter.jsx";
 import PastExamOverview from "../components/practice/PastExamOverview.jsx";
 import ProgressBar from "../components/practice/ProgressBar.jsx";
@@ -36,7 +38,11 @@ export default function Practice({
   navigate,
   // Rubriken i panelen; Fördjupning visar samma vy med en egen rubrik.
   title = "Öva",
+  // Ett eget block under frågorna när just den gruppen är vald, t.ex.
+  // Memorera för modul 4 (Verksamhetsarkitektur): { [gruppId]: element }.
+  extraBlocks = null,
 }) {
+  const drafts = useDrafts();
   const groups = useMemo(() => practiceGroups(course), [course]);
   const keyOf = useMemo(() => groupKeyFor(course), [course]);
   const byChapter = practiceMode(course) === "chapter";
@@ -365,6 +371,19 @@ export default function Practice({
     if (passMode) setPasses((prev) => ({ ...prev, [passKey]: recordPass(prev[passKey], current.id, wasCorrect) }));
   }, [revealed, chosen, view, current, examMode, passMode, passKey, onAnswer]);
 
+  // Förklarakort (kind "forklara"): "Kunde" räknas som rätt, "Kunde inte"
+  // som fel, i samma svar och varv som frågorna.
+  const grade = useCallback(
+    (ok) => {
+      if (revealed || !current) return;
+      setChosen(ok ? 0 : 1);
+      setRevealed(true);
+      onAnswer(current.id, ok);
+      if (passMode) setPasses((prev) => ({ ...prev, [passKey]: recordPass(prev[passKey], current.id, ok) }));
+    },
+    [revealed, current, passMode, passKey, onAnswer],
+  );
+
   const setRequire = useCallback(
     (require) => {
       setSettings((prev) => ({
@@ -415,6 +434,14 @@ export default function Practice({
       const control = event.target?.closest?.("button, a[href], [tabindex='0']");
       const foreign = control && !control.closest("[aria-label='Svarsalternativ']");
       const scrolls = Boolean(event.target?.closest?.("[tabindex='0']"));
+      if (current.kind === "forklara") {
+        if (!revealed || foreign || scrolls) return;
+        if (event.key === "Enter" || event.key === "ArrowRight") {
+          event.preventDefault();
+          next();
+        }
+        return;
+      }
       if (/^[1-9]$/.test(event.key) && Number(event.key) <= (view?.options.length ?? 4)) {
         if (revealed) return;
         event.preventDefault();
@@ -826,7 +853,39 @@ export default function Practice({
           />
         )}
 
-        {current && view && (
+        {current && view && current.kind === "forklara" && (
+          <div ref={cardRef} tabIndex={-1} className="focus:outline-none">
+            <ExplainCard
+              key={`${current.id}:${served}`}
+              card={current}
+              drafts={drafts}
+              revealed={revealed}
+              chosen={chosen}
+              onGrade={grade}
+              topicName={groupName}
+              counter={counter}
+            >
+              <div className="flex flex-wrap items-center gap-3">
+                {revealed && (
+                  <button type="button" className="btn-primary" onClick={next}>
+                    Nästa fråga
+                  </button>
+                )}
+                {navigate && currentChapterId && (
+                  <button type="button" className="btn-secondary" onClick={toChapter}>
+                    Tillbaka till kapitlet
+                  </button>
+                )}
+                <button type="button" className="btn-quiet" onClick={stop}>
+                  Klar för nu
+                </button>
+                {revealed && <span className="text-sm text-ink/65">Tangentbord: Enter eller → nästa.</span>}
+              </div>
+            </ExplainCard>
+          </div>
+        )}
+
+        {current && view && current.kind !== "forklara" && (
           <div ref={cardRef} tabIndex={-1} className="focus:outline-none">
             <QuestionCard
               question={current}
@@ -868,6 +927,10 @@ export default function Practice({
               </div>
             </QuestionCard>
           </div>
+        )}
+
+        {singleChapter && !examMode && extraBlocks?.[activeTopics[0]] && (
+          <div className="mt-8">{extraBlocks[activeTopics[0]]}</div>
         )}
       </div>
     </div>
