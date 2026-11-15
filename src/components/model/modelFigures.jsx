@@ -1048,6 +1048,233 @@ function Ovn1Task2() {
   );
 }
 
+// Övningstenta 2 (egen), uppgift 1: teater.
+function Ovn2Task1() {
+  return (
+    <Figure viewBox="0 0 920 470" maxWidth={920} label="Chen-diagram: Pjäs har Titel understruket och Genre. Unär relation Bearbetning ovanför Pjäs: rollen original med 1 och enkel linje till vänster, bearbetning_av med M och enkel linje till höger. Pjäs — Av — Föreställning: 1 vid Pjäs med enkel linje, M vid Föreställning med dubbel linje. Föreställning har Id understruket och Datum. Föreställning — Visas — Salong: M vid Föreställning med dubbel linje, 1 vid Salong med enkel linje. Salong är svag med Nummer streckat understruket och Platser. Salong — Har (identifierande) — Teater: M vid Salong med dubbel linje, 1 vid Teater med enkel linje. Teater har Namn understruket och Stad. Föreställning — Medverkar — Skådespelare: N vid Föreställning med enkel linje, M vid Skådespelare med dubbel linje; Medverkar har attributet Roll. Skådespelare identifieras av det sammansatta Id (understruket) med delarna Förnamn och Efternamn." caption="Övningstenta 2, uppgift 1.">
+      <RelationshipDiamond cx={212} cy={45} w={120} h={40} label="Bearbetning" />
+      <Connector x1={160} y1={130} x2={152} y2={45} />
+      <Ratio x={176} y={122} text="1" />
+      <Role x={146} y={78} text="original" anchor="end" />
+      <Connector x1={264} y1={130} x2={272} y2={45} />
+      <Ratio x={248} y={122} text="M" />
+      <Role x={278} y={78} text="bearbetning_av" anchor="start" />
+      <AttributeOval cx={70} cy={140} rx={40} label="Titel" identifier="solid" />
+      <AttributeOval cx={70} cy={196} rx={40} label="Genre" />
+      <AttributeLink x1={110} y1={142} x2={150} y2={148} />
+      <AttributeLink x1={108} y1={190} x2={150} y2={166} />
+      <EntityBox x={150} y={130} w={124} h={46} label="Pjäs" />
+      <Connector x1={274} y1={153} x2={315} y2={153} />
+      <Ratio x={290} y={144} text="1" />
+      <RelationshipDiamond cx={365} cy={153} w={100} h={44} label="Av" />
+      <Connector x1={415} y1={153} x2={456} y2={153} total />
+      <Ratio x={442} y={144} text="M" />
+      <EntityBox x={456} y={130} w={124} h={46} label="Föreställning" />
+      <AttributeOval cx={478} cy={66} rx={30} label="Id" identifier="solid" />
+      <AttributeOval cx={566} cy={66} rx={40} label="Datum" />
+      <AttributeLink x1={484} y1={81} x2={500} y2={130} />
+      <AttributeLink x1={556} y1={81} x2={538} y2={130} />
+      <Connector x1={580} y1={153} x2={606} y2={153} total />
+      <Ratio x={594} y={144} text="M" />
+      <RelationshipDiamond cx={656} cy={153} w={100} h={44} label="Visas" />
+      <Connector x1={706} y1={153} x2={732} y2={153} />
+      <Ratio x={720} y={144} text="1" />
+      <EntityBox x={732} y={130} w={124} h={46} label="Salong" weak />
+      <AttributeOval cx={752} cy={66} rx={44} label="Nummer" identifier="dashed" />
+      <AttributeOval cx={862} cy={66} rx={44} label="Platser" />
+      <AttributeLink x1={760} y1={81} x2={776} y2={130} />
+      <AttributeLink x1={852} y1={81} x2={826} y2={130} />
+      <Connector x1={794} y1={176} x2={794} y2={229} total />
+      <Ratio x={810} y={196} text="M" />
+      <RelationshipDiamond cx={794} cy={253} w={100} h={48} label="Har" identifying />
+      <Connector x1={794} y1={277} x2={794} y2={330} />
+      <Ratio x={810} y={322} text="1" />
+      <EntityBox x={732} y={330} w={124} h={46} label="Teater" />
+      <AttributeOval cx={748} cy={426} rx={40} label="Namn" identifier="solid" />
+      <AttributeOval cx={862} cy={426} rx={36} label="Stad" />
+      <AttributeLink x1={756} y1={411} x2={772} y2={376} />
+      <AttributeLink x1={852} y1={411} x2={828} y2={376} />
+      <Connector x1={518} y1={176} x2={518} y2={229} />
+      <Ratio x={534} y={196} text="N" />
+      <RelationshipDiamond cx={518} cy={253} w={120} h={48} label="Medverkar" />
+      <AttributeOval cx={392} cy={253} rx={36} label="Roll" />
+      <AttributeLink x1={428} y1={253} x2={458} y2={253} />
+      <Connector x1={518} y1={277} x2={518} y2={330} total />
+      <Ratio x={534} y={322} text="M" />
+      <EntityBox x={456} y={330} w={124} h={46} label="Skådespelare" />
+      <AttributeOval cx={390} cy={353} rx={28} label="Id" identifier="solid" />
+      <AttributeLink x1={418} y1={353} x2={456} y2={353} />
+      <AttributeOval cx={290} cy={316} rx={50} label="Förnamn" />
+      <AttributeOval cx={290} cy={400} rx={56} label="Efternamn" />
+      <AttributeLink x1={338} y1={322} x2={366} y2={344} />
+      <AttributeLink x1={340} y1={392} x2={368} y2={364} />
+    </Figure>
+  );
+}
+
+// Övningstenta 2 (egen), uppgift 2: flygbolag.
+function Ovn2Task2() {
+  return (
+    <Figure viewBox="0 0 920 470" maxWidth={920} label="Chen-diagram: Passagerare har Passnr understruket och Namn. Passagerare — Bokar — Flygning: M vid Passagerare, N vid Flygning, enkla linjer; Bokar har attributet Plats. Flygning har Flightnr understruket. Flygning — Avgår — Flygplats: M vid Flygning med dubbel linje, 1 vid Flygplats med enkel linje; Avgår har attributet Gate. Flygplats har Kod understruket, Namn och det sammansatta attributet Adress med delarna Gata och Stad. Unär Förbindelse ovanför Flygplats: M till vänster, N till höger, enkla linjer. Passagerare — Checkar_in (identifierande) — Bagage: 1 vid Passagerare med enkel linje, M vid Bagage med dubbel linje. Bagage är svag med Nummer streckat understruket och Vikt." caption="Övningstenta 2, uppgift 2.">
+      <AttributeOval cx={66} cy={62} rx={44} label="Passnr" identifier="solid" />
+      <AttributeOval cx={164} cy={62} rx={40} label="Namn" />
+      <AttributeLink x1={72} y1={77} x2={86} y2={130} />
+      <AttributeLink x1={156} y1={77} x2={138} y2={130} />
+      <EntityBox x={40} y={130} w={124} h={46} label="Passagerare" />
+      <Connector x1={164} y1={153} x2={212} y2={153} />
+      <Ratio x={180} y={144} text="M" />
+      <RelationshipDiamond cx={262} cy={153} w={100} h={44} label="Bokar" />
+      <AttributeOval cx={262} cy={240} rx={36} label="Plats" />
+      <AttributeLink x1={262} y1={175} x2={262} y2={225} />
+      <Connector x1={312} y1={153} x2={360} y2={153} />
+      <Ratio x={344} y={144} text="N" />
+      <EntityBox x={360} y={130} w={124} h={46} label="Flygning" />
+      <AttributeOval cx={422} cy={240} rx={50} label="Flightnr" identifier="solid" />
+      <AttributeLink x1={422} y1={176} x2={422} y2={225} />
+      <Connector x1={484} y1={153} x2={522} y2={153} total />
+      <Ratio x={500} y={144} text="M" />
+      <RelationshipDiamond cx={572} cy={153} w={100} h={44} label="Avgår" />
+      <AttributeOval cx={572} cy={72} rx={36} label="Gate" />
+      <AttributeLink x1={572} y1={87} x2={572} y2={131} />
+      <Connector x1={622} y1={153} x2={660} y2={153} />
+      <Ratio x={646} y={144} text="1" />
+      <RelationshipDiamond cx={722} cy={45} w={120} h={40} label="Förbindelse" />
+      <Connector x1={672} y1={130} x2={662} y2={45} />
+      <Ratio x={686} y={122} text="M" />
+      <Connector x1={772} y1={130} x2={782} y2={45} />
+      <Ratio x={758} y={122} text="N" />
+      <EntityBox x={660} y={130} w={124} h={46} label="Flygplats" />
+      <AttributeOval cx={856} cy={106} rx={36} label="Kod" identifier="solid" />
+      <AttributeOval cx={856} cy={196} rx={40} label="Namn" />
+      <AttributeLink x1={822} y1={112} x2={784} y2={140} />
+      <AttributeLink x1={818} y1={190} x2={784} y2={166} />
+      <AttributeOval cx={722} cy={250} rx={46} label="Adress" />
+      <AttributeLink x1={722} y1={176} x2={722} y2={235} />
+      <AttributeOval cx={660} cy={316} rx={36} label="Gata" />
+      <AttributeOval cx={788} cy={316} rx={36} label="Stad" />
+      <AttributeLink x1={702} y1={263} x2={672} y2={301} />
+      <AttributeLink x1={744} y1={263} x2={776} y2={301} />
+      <Connector x1={102} y1={176} x2={102} y2={229} />
+      <Ratio x={118} y={196} text="1" />
+      <RelationshipDiamond cx={102} cy={253} w={120} h={48} label="Checkar_in" identifying />
+      <Connector x1={102} y1={277} x2={102} y2={330} total />
+      <Ratio x={118} y={322} text="M" />
+      <EntityBox x={40} y={330} w={124} h={46} label="Bagage" weak />
+      <AttributeOval cx={66} cy={430} rx={44} label="Nummer" identifier="dashed" />
+      <AttributeOval cx={170} cy={430} rx={34} label="Vikt" />
+      <AttributeLink x1={70} y1={415} x2={86} y2={376} />
+      <AttributeLink x1={160} y1={415} x2={140} y2={376} />
+    </Figure>
+  );
+}
+
+// Övningstenta 3 (egen), uppgift 1: skidort.
+function Ovn3Task1() {
+  return (
+    <Figure viewBox="0 0 920 470" maxWidth={920} label="Chen-diagram: Gäst har Gästnr understruket och Namn. Gäst — Undervisar — Skidlärare: M vid Gäst med enkel linje, N vid Skidlärare med dubbel linje; Undervisar har attributet Datum. Skidlärare har Id understruket, Namn och flervärdesattributet Språk. Skidlärare — Anställd — Skidort: M vid Skidlärare med enkel linje, 1 vid Skidort med dubbel linje. Skidort har Namn understruket och Land. Skidort — Ligger (identifierande) — Lift: 1 vid Skidort med enkel linje, M vid Lift med dubbel linje. Lift är svag med Nummer streckat understruket och Typ. Lift — Nås_via (identifierande) — Backe: 1 vid Lift med enkel linje, M vid Backe med dubbel linje. Backe är svag med Namn streckat understruket och Svårighet." caption="Övningstenta 3, uppgift 1.">
+      <EntityBox x={40} y={130} w={124} h={46} label="Gäst" />
+      <AttributeOval cx={60} cy={240} rx={44} label="Gästnr" identifier="solid" />
+      <AttributeOval cx={160} cy={240} rx={40} label="Namn" />
+      <AttributeLink x1={70} y1={225} x2={86} y2={176} />
+      <AttributeLink x1={152} y1={225} x2={138} y2={176} />
+      <Connector x1={164} y1={153} x2={207} y2={153} />
+      <Ratio x={180} y={144} text="M" />
+      <RelationshipDiamond cx={262} cy={153} w={110} h={44} label="Undervisar" />
+      <AttributeOval cx={262} cy={72} rx={40} label="Datum" />
+      <AttributeLink x1={262} y1={87} x2={262} y2={131} />
+      <Connector x1={317} y1={153} x2={360} y2={153} total />
+      <Ratio x={344} y={144} text="N" />
+      <EntityBox x={360} y={130} w={124} h={46} label="Skidlärare" />
+      <AttributeOval cx={380} cy={62} rx={30} label="Id" identifier="solid" />
+      <AttributeOval cx={470} cy={62} rx={40} label="Namn" />
+      <AttributeLink x1={386} y1={77} x2={400} y2={130} />
+      <AttributeLink x1={462} y1={77} x2={448} y2={130} />
+      <AttributeOval cx={422} cy={240} rx={42} label="Språk" multivalued />
+      <AttributeLink x1={422} y1={176} x2={422} y2={224} />
+      <Connector x1={484} y1={153} x2={522} y2={153} />
+      <Ratio x={500} y={144} text="M" />
+      <RelationshipDiamond cx={572} cy={153} w={100} h={44} label="Anställd" />
+      <Connector x1={622} y1={153} x2={660} y2={153} total />
+      <Ratio x={646} y={144} text="1" />
+      <EntityBox x={660} y={130} w={124} h={46} label="Skidort" />
+      <AttributeOval cx={846} cy={106} rx={40} label="Namn" identifier="solid" />
+      <AttributeOval cx={846} cy={196} rx={34} label="Land" />
+      <AttributeLink x1={810} y1={112} x2={784} y2={140} />
+      <AttributeLink x1={814} y1={190} x2={784} y2={166} />
+      <Connector x1={722} y1={176} x2={722} y2={229} />
+      <Ratio x={738} y={196} text="1" />
+      <RelationshipDiamond cx={722} cy={253} w={100} h={48} label="Ligger" identifying />
+      <Connector x1={722} y1={277} x2={722} y2={330} total />
+      <Ratio x={738} y={322} text="M" />
+      <EntityBox x={660} y={330} w={124} h={46} label="Lift" weak />
+      <AttributeOval cx={858} cy={316} rx={44} label="Nummer" identifier="dashed" />
+      <AttributeOval cx={858} cy={400} rx={34} label="Typ" />
+      <AttributeLink x1={814} y1={322} x2={784} y2={340} />
+      <AttributeLink x1={826} y1={392} x2={784} y2={366} />
+      <Connector x1={660} y1={353} x2={627} y2={353} />
+      <Ratio x={646} y={344} text="1" />
+      <RelationshipDiamond cx={572} cy={353} w={110} h={48} label="Nås_via" identifying />
+      <Connector x1={517} y1={353} x2={484} y2={353} total />
+      <Ratio x={500} y={344} text="M" />
+      <EntityBox x={360} y={330} w={124} h={46} label="Backe" weak />
+      <AttributeOval cx={380} cy={432} rx={40} label="Namn" identifier="dashed" />
+      <AttributeOval cx={486} cy={432} rx={52} label="Svårighet" />
+      <AttributeLink x1={386} y1={417} x2={400} y2={376} />
+      <AttributeLink x1={476} y1={417} x2={456} y2={376} />
+    </Figure>
+  );
+}
+
+// Övningstenta 3 (egen), uppgift 2: byggföretag.
+function Ovn3Task2() {
+  return (
+    <Figure viewBox="0 0 920 470" maxWidth={920} label="Chen-diagram: Arbetare har Anstnr understruket, Namn och flervärdesattributet Kompetens. Arbetare — Arbetar_på — Projekt: M vid Arbetare, N vid Projekt, enkla linjer; Arbetar_på har attributet Timmar. Arbetare — Leder — Projekt: 1 vid Arbetare med enkel linje, M vid Projekt med dubbel linje. Projekt har Projektnr understruket och Budget. Projekt — Delas_in (identifierande) — Fas: 1 vid Projekt med enkel linje, M vid Fas med dubbel linje. Fas är svag med Nummer streckat understruket och Slutdatum. Fas — Består_av (identifierande) — Moment: 1 vid Fas med enkel linje, M vid Moment med dubbel linje. Moment är svag med Namn streckat understruket." caption="Övningstenta 3, uppgift 2.">
+      <AttributeOval cx={66} cy={62} rx={44} label="Anstnr" identifier="solid" />
+      <AttributeOval cx={164} cy={62} rx={40} label="Namn" />
+      <AttributeLink x1={72} y1={77} x2={86} y2={130} />
+      <AttributeLink x1={156} y1={77} x2={138} y2={130} />
+      <EntityBox x={40} y={130} w={124} h={46} label="Arbetare" />
+      <AttributeOval cx={70} cy={270} rx={56} label="Kompetens" multivalued />
+      <AttributeLink x1={70} y1={254} x2={80} y2={176} />
+      <Connector x1={164} y1={153} x2={207} y2={153} />
+      <Ratio x={180} y={144} text="M" />
+      <RelationshipDiamond cx={262} cy={153} w={110} h={44} label="Arbetar_på" />
+      <AttributeOval cx={262} cy={72} rx={40} label="Timmar" />
+      <AttributeLink x1={262} y1={87} x2={262} y2={131} />
+      <Connector x1={317} y1={153} x2={360} y2={153} />
+      <Ratio x={344} y={144} text="N" />
+      <Connector x1={140} y1={176} x2={212} y2={290} />
+      <Ratio x={160} y={198} text="1" />
+      <RelationshipDiamond cx={262} cy={290} w={100} h={44} label="Leder" />
+      <Connector x1={312} y1={290} x2={392} y2={176} total />
+      <Ratio x={400} y={206} text="M" />
+      <EntityBox x={360} y={130} w={124} h={46} label="Projekt" />
+      <AttributeOval cx={384} cy={62} rx={54} label="Projektnr" identifier="solid" />
+      <AttributeOval cx={490} cy={62} rx={44} label="Budget" />
+      <AttributeLink x1={394} y1={77} x2={404} y2={130} />
+      <AttributeLink x1={478} y1={77} x2={456} y2={130} />
+      <Connector x1={484} y1={153} x2={517} y2={153} />
+      <Ratio x={500} y={144} text="1" />
+      <RelationshipDiamond cx={572} cy={153} w={110} h={48} label="Delas_in" identifying />
+      <Connector x1={627} y1={153} x2={660} y2={153} total />
+      <Ratio x={646} y={144} text="M" />
+      <EntityBox x={660} y={130} w={124} h={46} label="Fas" weak />
+      <AttributeOval cx={846} cy={106} rx={44} label="Nummer" identifier="dashed" />
+      <AttributeOval cx={846} cy={196} rx={56} label="Slutdatum" />
+      <AttributeLink x1={806} y1={114} x2={784} y2={140} />
+      <AttributeLink x1={804} y1={186} x2={784} y2={166} />
+      <Connector x1={722} y1={176} x2={722} y2={229} />
+      <Ratio x={738} y={196} text="1" />
+      <RelationshipDiamond cx={722} cy={253} w={120} h={48} label="Består_av" identifying />
+      <Connector x1={722} y1={277} x2={722} y2={330} total />
+      <Ratio x={738} y={322} text="M" />
+      <EntityBox x={660} y={330} w={124} h={46} label="Moment" weak />
+      <AttributeOval cx={722} cy={432} rx={40} label="Namn" identifier="dashed" />
+      <AttributeLink x1={722} y1={417} x2={722} y2={376} />
+    </Figure>
+  );
+}
+
 export const MODEL_FIGURES = {
   "mod-person-car": PersonCar,
   "mod-teacher-course": TeacherCourse,
@@ -1070,6 +1297,10 @@ export const MODEL_FIGURES = {
   "tenta-260525-2": Tenta260525Task2,
   "ovn1-1": Ovn1Task1,
   "ovn1-2": Ovn1Task2,
+  "ovn2-1": Ovn2Task1,
+  "ovn2-2": Ovn2Task2,
+  "ovn3-1": Ovn3Task1,
+  "ovn3-2": Ovn3Task2,
 };
 
 if (import.meta.env?.DEV) {

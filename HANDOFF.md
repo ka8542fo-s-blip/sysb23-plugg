@@ -488,11 +488,15 @@ kapitel: allt UI läser `chapter.number`.
   FdAnswer-panel; 4 = `gradeTask4(…, 20)`, 20 eller 0, ingen självbedömning;
   5 = `scoreJavaShare`, uppfyllda regler (utom "gäller inte") × 20 nedåt.
   Svar i `sysb23:tenta:<id>`. Diagram `ovn1-1` (gym) och `ovn1-2`
-  (veterinärklinik) i `modelFigures.jsx`. Tenta 1: U4 join genom HasStudied +
-  GROUP BY + HAVING på egen data (6 studenter, 4 kurser), U5 UPDATE
-  (`replaceInstructor`), högsta NF 1NF. Planerat: tenta 2 (U4 mängddifferens,
-  U5 lista, 2NF) och tenta 3 (U4 skalär delfråga mot aggregat, U5 objekt
-  eller COUNT, redan 3NF).
+  (veterinärklinik) i `modelFigures.jsx`, `ovn2-1` (teater), `ovn2-2`
+  (flygbolag), `ovn3-1` (skidort, kedja av svaga entiteter), `ovn3-2`
+  (byggföretag). Varje tenta har egen data i Student/Course/HasStudied.
+  Tenta 1: U4 join genom HasStudied + GROUP BY + HAVING, U5 UPDATE
+  (`replaceInstructor`), 1NF. Tenta 2: U4 mängddifferens (NOT EXISTS; NOT IN
+  och EXCEPT godtas, S6 utan kurser fångar inre join), U5 lista
+  (`findMoviesReleasedAfter`), 2NF. Tenta 3: U4 skalär delfråga mot AVG med
+  kontrolldata (Ida 60 år) mot inskrivet medelvärde, U5 ett objekt
+  (`findVehicleByRegistrationNo`), R redan i 3NF med två kandidatnycklar.
 - **Statistik**, **Schema (Pluggkalender)** och **Hem** som för Strategi.
 
 ## Regler (följ dem)

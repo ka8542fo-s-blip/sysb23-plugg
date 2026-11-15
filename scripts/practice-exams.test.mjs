@@ -21,7 +21,7 @@ const SQL = await initSqlJs();
 const byId = Object.fromEntries(practiceExams.map((e) => [e.id, e]));
 
 test("övningstentor: fem uppgifter à 20 p, egna id, registrerade diagram", () => {
-  assert.deepEqual(practiceExams.map((e) => e.id), ["ovningstenta-1"]);
+  assert.deepEqual(practiceExams.map((e) => e.id), ["ovningstenta-1", "ovningstenta-2", "ovningstenta-3"]);
   assert.deepEqual(Object.values(PRACTICE_POINTS), [20, 20, 20, 20, 20]);
   for (const e of practiceExams) {
     assert.ok(!oldExams.some((o) => o.id === e.id), e.id);
@@ -31,7 +31,7 @@ test("övningstentor: fem uppgifter à 20 p, egna id, registrerade diagram", () 
 
 // ---------- Uppgift 1 ----------
 
-const SANNA = { "ovningstenta-1": [2, 4, 7, 9] };
+const SANNA = { "ovningstenta-1": [2, 4, 7, 9], "ovningstenta-2": [1, 3, 6, 8], "ovningstenta-3": [2, 3, 4, 6] };
 
 test("uppgift 1: tio påståenden, exakt fyra sanna, skäl till varje", () => {
   for (const e of practiceExams) {
@@ -77,8 +77,9 @@ test("uppgift 2: poängen är andelen uppfyllda regler, avrundad nedåt", () => 
 
 // ---------- Uppgift 3 ----------
 
-const SVAR_3AE = { "ovningstenta-1": ["F", "S", "F", "F", "S"] };
-const HOGSTA_NF = { "ovningstenta-1": "1NF" };
+const SVAR_3AE = { "ovningstenta-1": ["F", "S", "F", "F", "S"], "ovningstenta-2": ["S", "F", "F", "S", "F"], "ovningstenta-3": ["S", "F", "S", "S", "F"] };
+// Tentorna får olika högsta normalform.
+const HOGSTA_NF = { "ovningstenta-1": "1NF", "ovningstenta-2": "2NF", "ovningstenta-3": "3NF" };
 
 test("uppgift 3a–e: FD-motorn avgör påståendena", () => {
   for (const e of practiceExams) {
@@ -177,4 +178,61 @@ test("uppgift 5 i tenta 1: ändrar (UPDATE), och ett svar med strängsammanfogni
   assert.notEqual(r.status, "correct");
   assert.ok(scoreJavaShare(r).points < 20);
   assert.equal(scoreJavaShare(checkJava("", t)).points, 0);
+});
+
+// ---------- Tenta 2 och 3 ----------
+
+test("uppgift 3f–g: 2NF-tentan ger full pott med facit, 3NF-tentan med 3NF och ingen nedbrytning", () => {
+  const fg2 = byId["ovningstenta-2"].task3.fg;
+  const text = fg2.facit.map((x) => `${x.name}(${x.attrs})\nCK₁ = {${x.pk[0]}}\nPK = CK₁`).join("\n\n");
+  const d2 = { cks: [["A", "B"]], roles: {}, nf: "2NF", motivation: {}, text };
+  const g2 = gradeAnswer(fg2, d2);
+  assert.equal(scorePractice3f(g2, 3).points, 5);
+  assert.equal(scorePractice3g(g2, d2).points, 5);
+  const fg3 = byId["ovningstenta-3"].task3.fg;
+  const d3 = { cks: [["A", "B"], ["B", "C"]], roles: {}, nf: "3NF", motivation: {}, text: "" };
+  const g3 = gradeAnswer(fg3, d3);
+  assert.equal(scorePractice3f(g3, null).points, 5);
+  assert.equal(scorePractice3g(g3, d3).points, 5);
+  // Övernormalisering: 2NF vald och R delad.
+  const over = { ...d3, nf: "2NF", text: "R1(A, B, D, E)\nCK₁ = {A, B}\nPK = CK₁\n\nR2(C, A)\nCK₁ = {C}\nPK = CK₁" };
+  const go = gradeAnswer(fg3, over);
+  assert.equal(scorePractice3f(go, 3).points, 0);
+  assert.equal(scorePractice3g(go, over).points, 0);
+});
+
+test("uppgift 4 i tenta 2: NOT EXISTS, NOT IN och EXCEPT godtas; inre join och fel gräns ger 0", () => {
+  const t = byId["ovningstenta-2"].task4;
+  const ok = [
+    "SELECT StudentNo, Name FROM Student WHERE StudentNo NOT IN (SELECT h.StudentNo FROM HasStudied AS h INNER JOIN Course AS c ON c.Code = h.Code WHERE c.Credits >= 10);",
+    "SELECT StudentNo, Name FROM Student EXCEPT SELECT s.StudentNo, s.Name FROM Student AS s INNER JOIN HasStudied AS h ON h.StudentNo = s.StudentNo INNER JOIN Course AS c ON c.Code = h.Code WHERE c.Credits >= 10;",
+  ];
+  for (const v of ok) assert.equal(gradeTask4(SQL, t, v, 20).points, 20, v);
+  const wrong = [
+    "SELECT DISTINCT s.StudentNo, s.Name FROM Student AS s INNER JOIN HasStudied AS h ON h.StudentNo = s.StudentNo INNER JOIN Course AS c ON c.Code = h.Code WHERE c.Credits < 10;",
+    "SELECT s.StudentNo, s.Name FROM Student AS s INNER JOIN HasStudied AS h ON h.StudentNo = s.StudentNo INNER JOIN Course AS c ON c.Code = h.Code GROUP BY s.StudentNo, s.Name HAVING MAX(c.Credits) < 10;",
+    t.solution.replace(">= 10", "> 10"),
+    t.solution.replace("h.StudentNo = s.StudentNo\n            AND ", ""),
+  ];
+  for (const v of wrong) assert.equal(gradeTask4(SQL, t, v, 20).points, 0, v);
+});
+
+test("uppgift 4 i tenta 3: skalär delfråga krävs; inskrivet medelvärde faller på kontrolldatan", () => {
+  const t = byId["ovningstenta-3"].task4;
+  assert.equal(gradeTask4(SQL, t, t.solution.replace("c.Name = 'Java'", "c.Code = 'C2'"), 20).points, 20);
+  const wrong = [
+    t.solution.replace(/\(\n        SELECT AVG\(Age\)\n        FROM Student\n    \)/, "25"),
+    t.solution.replace("c.Name = 'Java'\n    AND ", ""),
+    t.solution.replace("SELECT AVG(Age)\n        FROM Student", "SELECT AVG(s2.Age)\n        FROM Student AS s2 INNER JOIN HasStudied AS h2 ON h2.StudentNo = s2.StudentNo"),
+  ];
+  for (const v of wrong) {
+    assert.notEqual(v, t.solution);
+    assert.equal(gradeTask4(SQL, t, v, 20).points, 0, v);
+  }
+});
+
+test("uppgift 5: tenta 1 ändrar, tenta 2 hämtar en lista, tenta 3 hämtar ett objekt", () => {
+  assert.deepEqual(practiceExams.map((e) => e.task5.check.result.kind), ["affected", "list", "single"]);
+  const ids = practiceExams.map((e) => e.task5.check.sql.table);
+  assert.equal(new Set(ids).size, 3);
 });
