@@ -12,7 +12,9 @@ import { load, save } from "../../lib/storage.js";
 // kontur, och bara rättningen (och ritkontrollen) färgar pilar.
 // Ritningen sparas per uppgift i localStorage (sysb23:fdritning:<id>), eller
 // under storageKey om den skickas in (tentornas ritningar). I tentaläge
-// (examMode) döljs ritkontrollen och "Rita från FD:erna", som visar facit.
+// (examMode) döljs ritkontrollen och "Rita från FD:erna", som visar facit,
+// och ytan blir högst 640 px bred (skala 1:1 mot världen), så att rutorna
+// inte växer med tentans breda spalt.
 
 const TOOLS = [
   ["select", "Flytta"],
@@ -521,7 +523,7 @@ export default function FdCanvas({ item, graded, onDiagramChange, storageKey: ke
         ref={containerRef}
         tabIndex={0}
         onKeyDown={onKeyDown}
-        className="mt-2 overflow-hidden rounded-lg border border-line bg-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-pine"
+        className={`mt-2 overflow-hidden rounded-lg border border-line bg-surface ${examMode ? "max-w-[640px]" : ""} focus-visible:outline focus-visible:outline-2 focus-visible:outline-pine`}
         aria-label="Rityta för beroendediagram. Tab växlar ruta, piltangenter flyttar, bokstav sätter bokstav, G grupperar, Delete raderar, Cmd/Ctrl+Z ångrar."
         role="group"
       >

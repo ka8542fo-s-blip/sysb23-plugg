@@ -488,7 +488,8 @@ kapitel: allt UI läser `chapter.number`.
   (`examFdKey`); "Börja om" kör `clearExamFdDrawings(tentaId)`. FdCanvas fick
   två props: `storageKey` (annars `fdritning:<item.id>` som förut) och
   `examMode`, som döljer ritkontrollen och "Rita från FD:erna"/"Visa
-  ritahjälp" (de visar facit); `graded` är alltid false, så ingen rättning
+  ritahjälp" (de visar facit) och begränsar ytan till 640 px (skala 1:1, rutorna
+  växte annars med tentans breda spalt); `graded` är alltid false, så ingen rättning
   och poängen är oförändrade. Test `scripts/exam-fd-drawing.test.mjs`.
 - **Övningstentor (egna)** (2026-11-15, uppdrag `cc-ovningstentor-databaser.md`):
   egen grupp under HT25-tentorna i Tenta. Data `data/databaser/practiceExams.js`,
