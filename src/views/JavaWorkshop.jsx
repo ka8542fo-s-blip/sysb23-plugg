@@ -15,11 +15,13 @@ import { KEYS, load, save, loadJavaState, saveJavaState, clearJavaState } from "
 // DAO-metod för hand. Exempeltentans två uppgifter ordagrant och egna
 // övningar i samma form (data/databaser/javaTasks.js). Java körs inte i
 // webbläsaren: svaret läses och rättas regel för regel (lib/javaCheck.js),
-// och lösningsförslaget visas efter rättningen direkt under svaret. Bredvid
-// blev kolumnerna för smala för tentans rader (cirka 45 av 76 tecken syntes
-// även vid 1600 px, eftersom sidan har en maxbredd). Inga poäng —
-// uppgiftens vikt på tentan är okänd. Svar och status sparas per uppgift
-// (sysb23:java:<id>), klar = rättaren har sagt Rätt, som i Modellera.
+// och lösningsförslaget visas efter rättningen, under resultatet.
+// Uppbyggnad som BPMN-övningar: menyn till vänster (ihopfälld till siffror
+// från början) står kvar när man rullar, och på bred skärm (xl) står
+// uppgiftstexten bredvid svaret och rullar för sig, så att tabellen och
+// kraven syns medan man skriver. Svaret har 13 px kod (14 px på dator) så att
+// tentans rader ryms. Svar och status sparas per uppgift (sysb23:java:<id>), klar =
+// rättaren har sagt Rätt, som i Modellera.
 
 const GROUPS = [
   { set: "exempel", title: "Exempeltentan" },
@@ -59,6 +61,8 @@ function grade(code, task) {
     };
   }
 }
+const setName = (t) => (t.set === "exempel" ? "Exempeltentan" : "Övning");
+const taskLabel = (t) => `${setName(t)} ${t.number}: ${t.title}`;
 
 export default function JavaWorkshop() {
   const tasks = javaTasks;
@@ -70,26 +74,50 @@ export default function JavaWorkshop() {
   });
   const [result, setResult] = useState(null);
   const [confirmReset, setConfirmReset] = useState(false);
-  const cardRef = useRef(null);
-  const scrollToCard = useRef(false);
+  const [confirmResetAll, setConfirmResetAll] = useState(false);
+  // Menyn står ihopfälld till siffror från början, så att uppgiften och
+  // svaret får plats bredvid varandra. Valet sparas; det gäller bred skärm.
+  const [menu, setMenu] = useState(() => (load(KEYS.javaMenu, "smal") === "full" ? "full" : "smal"));
+  const narrowMenu = menu === "smal";
+  function toggleMenu() {
+    const next = narrowMenu ? "full" : "smal";
+    setMenu(next);
+    save(KEYS.javaMenu, next);
+  }
+  // Nästa uppgift i tur och ordning eller slumpad (samma val som i BPMN-övningar).
+  const [order, setOrderState] = useState(() => (load(KEYS.javaOrder, "ordning") === "slump" ? "slump" : "ordning"));
+  const random = order === "slump";
+  function setOrder(next) {
+    setOrderState(next);
+    save(KEYS.javaOrder, next);
+  }
+  const workRef = useRef(null);
+  const textRef = useRef(null);
+  const scrollToWork = useRef(false);
 
   const task = tasks.find((t) => t.id === currentId) || tasks[0];
   const draft = states[task.id]?.draft ?? "";
   const solved = states[task.id]?.status === "solved";
   const placeholder = useMemo(() => `${signatureOf(task)} {\n}`, [task]);
   const index = tasks.indexOf(task);
-  const nextTask = tasks[index + 1] || null;
   const solvedCount = tasks.filter((t) => states[t.id]?.status === "solved").length;
+  // Den slumpade nästa väljs när uppgiften öppnas, så att knappen visar vart den leder.
+  const [randomPick, setRandomPick] = useState(null);
+  useEffect(() => {
+    setRandomPick(random ? pickRandomJavaTask(tasks, states, currentId) : null);
+  }, [random, currentId]); // eslint-disable-line react-hooks/exhaustive-deps
+  const nextTask = random ? tasks.find((t) => t.id === randomPick) || null : tasks[index + 1] || null;
 
   useEffect(() => save(KEYS.javaTask, task.id), [task.id]);
 
   useEffect(() => {
-    // Efter ett val i menyn (under uppgiften på mobil) eller "Nästa uppgift"
-    // står man nedanför uppgiften; visa början av den, under den klistrade headern.
-    if (scrollToCard.current && cardRef.current) {
-      scrollToCard.current = false;
+    // Uppgiftstexten börjar alltid överst, och efter ett byte längre ned på
+    // sidan visas början av den nya uppgiften, under den klistrade headern.
+    if (textRef.current) textRef.current.scrollTop = 0;
+    if (scrollToWork.current && workRef.current) {
+      scrollToWork.current = false;
       const header = document.querySelector("header")?.offsetHeight ?? 0;
-      const top = cardRef.current.getBoundingClientRect().top + window.scrollY - header - 12;
+      const top = workRef.current.getBoundingClientRect().top + window.scrollY - header - 12;
       if (top < window.scrollY) {
         const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
         window.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
@@ -100,11 +128,15 @@ export default function JavaWorkshop() {
   // Rättningen hör till uppgiften den gjordes på; den töms i samma
   // rendering som bytet, så att den inte blinkar till under nästa uppgift.
   function open(id) {
-    if (id === currentId) return;
-    scrollToCard.current = true;
+    if (!id || id === currentId) return;
+    scrollToWork.current = true;
     setResult(null);
     setConfirmReset(false);
     setCurrentId(id);
+  }
+
+  function openRandom() {
+    open(pickRandomJavaTask(tasks, states, currentId));
   }
 
   // Svaret och statusen sparas vid varje ändring; klar behålls när svaret ändras.
@@ -138,57 +170,65 @@ export default function JavaWorkshop() {
     setConfirmReset(false);
   }
 
-  return (
-    <div className="space-y-6">
-      <section>
-        <h1 className="font-display text-2xl">Java</h1>
-        <p className="mt-1 max-w-reading text-[15px] text-ink/70">
-          Tentans Java-fråga: du skriver en hel metod i en DAO-klass för hand, med JDBC. Exempeltentans två
-          uppgifter står här ordagrant, och övningarna är egna, i samma form. Java körs inte i webbläsaren —
-          svaret läses och rättas regel för regel, med skälet bakom varje regel. Poäng visas inte, eftersom
-          uppgiftens vikt på tentan inte är känd.
-        </p>
-        <div className="mt-2 flex flex-wrap items-center gap-3">
-          <p className="tabular text-[15px] text-ink/65">
-            {solvedCount} av {tasks.length} uppgifter klara
-          </p>
-          <button
-            type="button"
-            className="btn-secondary text-sm"
-            onClick={() => {
-              const id = pickRandomJavaTask(tasks, states, task.id);
-              if (id) open(id);
-            }}
-            title="Öppnar en annan uppgift, i första hand en som inte är klar. Övningar markerade som svårare tas inte med."
-          >
-            Slumpa uppgift
-          </button>
-        </div>
-      </section>
+  // Alla uppgifter på en gång: svar och ✓ Klar, efter bekräftelse.
+  function resetAll() {
+    for (const t of tasks) clearJavaState(t.id);
+    setStates({});
+    setResult(null);
+    setConfirmResetAll(false);
+  }
 
-      <div className="lg:flex lg:gap-8">
-        <div className="lg:order-2 lg:min-w-0 lg:flex-1">
-          <section ref={cardRef} className="card p-5" aria-labelledby="java-uppgift">
-            <div className="flex flex-wrap items-baseline justify-between gap-2">
+  const randomButton = (
+    <button
+      type="button"
+      className="btn-secondary px-3 py-1.5 text-sm"
+      onClick={openRandom}
+      title="En annan uppgift, i första hand en som inte är klar. Övningar markerade som svårare tas inte med."
+    >
+      Slumpa en uppgift
+    </button>
+  );
+
+  return (
+    <div className="lg:flex lg:gap-6">
+      <h1 className="sr-only">Java</h1>
+      <div ref={workRef} className="lg:order-2 lg:min-w-0 lg:flex-1">
+        {/* Mobilen: menyn står under uppgiften, så slumpknappen och en genväg
+            till listan står här. */}
+        <div className="mb-4 flex flex-wrap items-center gap-3 lg:hidden">
+          <span className="tabular text-sm text-ink/65">{solvedCount} av {tasks.length} klara</span>
+          {randomButton}
+          <a href="#java-meny" className="text-sm text-pine underline underline-offset-4">Alla uppgifter ↓</a>
+        </div>
+        {/* Bred skärm: uppgiften till vänster rullar för sig och står kvar
+            medan man skriver i svaret till höger. Smalare: under varandra. */}
+        <div className="xl:grid xl:grid-cols-[minmax(0,9fr)_minmax(0,14fr)] xl:items-start xl:gap-5">
+          <section
+            ref={textRef}
+            className="card p-5 xl:sticky xl:top-36 xl:max-h-[calc(100vh-10.5rem)] xl:overflow-y-auto xl:overscroll-contain xl:px-3 xl:py-4"
+            aria-labelledby="java-uppgift"
+          >
+            <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
               <p className="text-sm text-ink/65">
-                Uppgift {task.number} · {task.source}
+                {setName(task)} {task.number}
                 {solved && <span className="ml-2 text-correct">✓ Klar</span>}
               </p>
               {(solved || draft) && !confirmReset && (
-                <button type="button" className="btn-quiet text-sm" onClick={() => setConfirmReset(true)}>Nollställ uppgiften</button>
-              )}
-              {confirmReset && (
-                <span className="flex flex-wrap items-center gap-2 text-sm">
-                  <span className="text-ink/70">Ditt svar{solved ? " och ✓ Klar" : ""} tas bort.</span>
-                  <button type="button" className="btn-secondary" onClick={reset}>Ja, nollställ</button>
-                  <button type="button" className="btn-quiet" onClick={() => setConfirmReset(false)}>Avbryt</button>
-                </span>
+                <button type="button" className="btn-quiet px-0 text-sm" onClick={() => setConfirmReset(true)}>Nollställ uppgiften</button>
               )}
             </div>
+            {confirmReset && (
+              <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
+                <span className="text-ink/70">Ditt svar{solved ? " och ✓ Klar" : ""} tas bort.</span>
+                <button type="button" className="btn-secondary" onClick={reset}>Ja, nollställ</button>
+                <button type="button" className="btn-quiet" onClick={() => setConfirmReset(false)}>Avbryt</button>
+              </div>
+            )}
             <h2 id="java-uppgift" className="mt-1 font-display text-xl">{task.title}</h2>
+            <p className="mt-0.5 text-xs text-ink/60">{task.source}</p>
 
             {task.set === "exempel" && (
-              <div className="mt-3 max-w-reading rounded-lg border-l-2 border-brass bg-brass/[0.07] p-4 text-[15px] leading-relaxed">
+              <div className="mt-3 rounded-lg border-l-2 border-brass bg-brass/[0.07] p-3 text-sm leading-relaxed">
                 <p className="font-medium">Om denna exempeltentamen</p>
                 <p className="mt-1 text-ink/80">{exampleIntro}</p>
               </div>
@@ -197,112 +237,232 @@ export default function JavaWorkshop() {
             <div className="mt-4 max-w-reading space-y-3 text-[15px] leading-relaxed">
               {task.blocks.map((block, i) =>
                 block.code ? (
-                  <CodeBlock key={i} code={block.code} lang={block.lang} ariaLabel={codeBlockName(block.code)} />
+                  <CodeBlock key={i} code={block.code} lang={block.lang} ariaLabel={codeBlockName(block.code)} small />
                 ) : (
                   <p key={i}><InlineText text={block.p} /></p>
                 ),
               )}
             </div>
+          </section>
 
-            {/* Lösningsförslaget står direkt under svaret, i full bredd, så att
-                tentans långa rader syns hela i båda rutorna. */}
-            <div className="mt-5 grid gap-4">
-              <div className="min-w-0">
-                <SchemaEditor
-                  id="java-svar"
-                  label="Ditt svar"
-                  value={draft}
-                  onChange={(text) => update(task.id, { draft: text })}
-                  placeholder={placeholder}
-                  rows={18}
-                  subscripts={false}
-                  indentWidth={4}
-                  indentAfter={JAVA_INDENT}
-                  smartIndent
-                  highlight={highlightJava}
-                  onSubmit={check}
-                  format={formatJava}
-                  hint={
-                    <>
-                      Tab drar in fyra blanksteg och Shift+Tab drar ut, också på flera markerade rader. Enter
-                      behåller indraget och drar in efter "{"{"}" och åtta blanksteg efter "(", som i
-                      lösningsförslagen; "{"}"}" och ")" på en tom rad drar ut igen. {FORMAT_KEYS} formaterar
-                      indraget i hela svaret, {SUBMIT_KEYS} rättar, Esc lämnar rutan.
-                    </>
-                  }
-                />
-                <p className="mt-1 text-xs text-ink/65">
-                  Rättas regel för regel: variabelnamnen är fria, SQL-strängen får delas på flera rader och sluta
-                  med eller utan semikolon, och villkoren i WHERE får stå i valfri ordning.
-                </p>
-              </div>
-              {result && (
-                <div className="min-w-0">
-                  <CodeBlock code={task.solution} lang="java" label="Lösningsförslag" />
-                </div>
-              )}
-            </div>
+          <section className="mt-5 min-w-0 xl:mt-0" aria-label="Ditt svar och rättningen">
+            <SchemaEditor
+              id="java-svar"
+              label="Ditt svar"
+              value={draft}
+              onChange={(text) => update(task.id, { draft: text })}
+              placeholder={placeholder}
+              rows={20}
+              small
+              subscripts={false}
+              indentWidth={4}
+              indentAfter={JAVA_INDENT}
+              smartIndent
+              highlight={highlightJava}
+              onSubmit={check}
+              format={formatJava}
+              hint={
+                <>
+                  Tab drar in fyra blanksteg och Shift+Tab drar ut, också på flera markerade rader. Enter
+                  behåller indraget och drar in efter "{"{"}" och åtta blanksteg efter "(", som i
+                  lösningsförslagen; "{"}"}" och ")" på en tom rad drar ut igen. {FORMAT_KEYS} formaterar
+                  indraget i hela svaret, {SUBMIT_KEYS} rättar, Esc lämnar rutan.
+                </>
+              }
+            />
 
-            <div className="mt-4 flex flex-wrap items-center gap-3">
+            <div className="mt-3 flex flex-wrap items-center gap-3">
               <button type="button" className="btn-primary" onClick={check}>Rätta</button>
               <span className="text-sm text-ink/65">
-                Eller {SUBMIT_KEYS} i rutan. Lösningsförslaget visas efter rättningen, under ditt svar.
+                Eller {SUBMIT_KEYS} i rutan. Variabelnamnen är fria, och villkoren i WHERE får stå i valfri ordning.
               </span>
             </div>
 
             {result && (
-              <JavaResult result={result}>
-                {nextTask && result.status === "correct" && !(result.errors?.length) && (
-                  <button
-                    type="button"
-                    className="btn-secondary mt-4"
-                    onClick={() => open(nextTask.id)}
-                    title={`${nextTask.set === "exempel" ? "Exempeltentan" : "Övning"} ${nextTask.number}: ${nextTask.title}`}
-                  >
-                    Nästa uppgift →
-                  </button>
-                )}
-              </JavaResult>
+              <>
+                <JavaResult result={result}>
+                  {nextTask && result.status === "correct" && !(result.errors?.length) && (
+                    <button
+                      type="button"
+                      className="btn-secondary mt-4"
+                      onClick={() => open(nextTask.id)}
+                      title={random ? "En slumpad uppgift, i första hand en som inte är klar" : taskLabel(nextTask)}
+                    >
+                      {random ? "Slumpa nästa →" : "Nästa uppgift →"}
+                    </button>
+                  )}
+                </JavaResult>
+                <div className="mt-4 min-w-0">
+                  <CodeBlock code={task.solution} lang="java" label="Lösningsförslag" />
+                </div>
+              </>
             )}
           </section>
         </div>
+      </div>
 
-        <div className="mt-6 lg:order-1 lg:mt-0 lg:w-72 lg:shrink-0">
-          <nav aria-label="Uppgifter" className="card p-4">
-            {GROUPS.map((group) => {
-              const items = tasks.filter((t) => t.set === group.set);
-              const done = items.filter((t) => states[t.id]?.status === "solved").length;
-              return (
-                <section key={group.set} className="mt-5 first:mt-0" aria-labelledby={`java-grupp-${group.set}`}>
-                  <h3 id={`java-grupp-${group.set}`} className="font-display text-[15px]">
-                    {group.title}{" "}
-                    <span className="tabular ml-1 font-sans text-sm font-normal text-ink/65">{done} av {items.length}</span>
-                  </h3>
-                  <ul className="mt-2 space-y-1">
-                    {items.map((t) => {
-                      const active = t.id === task.id;
-                      const done = states[t.id]?.status === "solved";
-                      return (
-                        <li key={t.id}>
-                          <button
-                            type="button"
-                            onClick={() => open(t.id)}
-                            aria-current={active ? "true" : undefined}
-                            className={`flex w-full items-baseline gap-2 rounded-lg border px-3 py-2 text-left text-sm transition-colors duration-150 ${active ? "border-pine bg-pine/[0.08] text-pine" : "border-transparent hover:border-pine hover:bg-pine/[0.06]"}`}
-                          >
-                            <span className="tabular w-5 shrink-0 text-ink/65">{t.number}</span>
-                            <span className="min-w-0 flex-1 leading-snug">{t.title}</span>
-                            {done && <span className="shrink-0 text-correct" title="Klar">✓<span className="sr-only"> Klar</span></span>}
-                          </button>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </section>
-              );
-            })}
+      <div className={`mt-6 lg:order-1 lg:mt-0 lg:shrink-0 lg:transition-[width] lg:duration-200 ${narrowMenu ? "lg:w-24" : "lg:w-72"}`}>
+        {/* Ihopfälld: siffrorna och slumpknappen, på bred skärm. Mobilen visar
+            alltid hela menyn, under uppgiften. */}
+        {narrowMenu && (
+          <nav
+            aria-label="Uppgifter"
+            className="card hidden p-2 lg:sticky lg:top-36 lg:block lg:max-h-[calc(100vh-10.5rem)] lg:overflow-y-auto lg:overscroll-contain"
+          >
+            <button
+              type="button"
+              onClick={toggleMenu}
+              className="flex h-8 w-full items-center justify-center rounded-md text-ink/65 transition-colors duration-150 hover:bg-pine/[0.08] hover:text-pine"
+              aria-label="Visa hela menyn"
+              title="Visa hela menyn"
+            >
+              <span aria-hidden="true">»</span>
+            </button>
+            <p className="tabular mt-1 text-center text-xs text-ink/65" title={`${solvedCount} av ${tasks.length} klara`}>
+              {solvedCount}/{tasks.length}
+            </p>
+            <button
+              type="button"
+              onClick={openRandom}
+              className="mt-2 flex h-9 w-full items-center justify-center rounded-lg border border-line text-xs transition-colors duration-150 hover:border-pine hover:bg-pine/[0.06] hover:text-pine"
+              title="Slumpa en uppgift, i första hand en som inte är klar"
+            >
+              Slumpa
+            </button>
+            {GROUPS.map((group) => (
+              <div key={group.set} className="mt-3">
+                <p className="text-center text-[11px] text-ink/60" aria-hidden="true">{group.set === "exempel" ? "Tenta" : "Övning"}</p>
+                <ul className="mt-1 grid grid-cols-2 gap-1.5">
+                  {tasks.filter((t) => t.set === group.set).map((t) => {
+                    const active = t.id === task.id;
+                    const done = states[t.id]?.status === "solved";
+                    const label = `${taskLabel(t)}${done ? " · klar" : ""}`;
+                    return (
+                      <li key={t.id}>
+                        <button
+                          type="button"
+                          onClick={() => open(t.id)}
+                          aria-current={active ? "true" : undefined}
+                          aria-label={label}
+                          title={label}
+                          className={`tabular flex h-9 w-full items-center justify-center rounded-lg border text-sm transition-colors duration-150 ${
+                            active
+                              ? "border-pine bg-pine font-medium text-paper"
+                              : done
+                                ? "border-correct/50 bg-correct-bg text-correct hover:border-correct"
+                                : "border-line hover:border-pine hover:bg-pine/[0.06] hover:text-pine"
+                          }`}
+                        >
+                          {t.number}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
           </nav>
-        </div>
+        )}
+        <nav
+          id="java-meny"
+          aria-label="Uppgifter"
+          className={`card scroll-mt-36 p-4 lg:sticky lg:top-36 lg:max-h-[calc(100vh-10.5rem)] lg:overflow-y-auto lg:overscroll-contain ${narrowMenu ? "lg:hidden" : ""}`}
+        >
+          <div className="flex items-start justify-between gap-2">
+            <p className="font-display text-[15px]">Java</p>
+            <button
+              type="button"
+              onClick={toggleMenu}
+              className="-mr-1 -mt-1 hidden h-8 w-8 shrink-0 items-center justify-center rounded-md text-ink/65 transition-colors duration-150 hover:bg-pine/[0.08] hover:text-pine lg:flex"
+              aria-label="Fäll ihop menyn"
+              title="Fäll ihop menyn, så att uppgiften och svaret får mer plats"
+            >
+              <span aria-hidden="true">«</span>
+            </button>
+          </div>
+          <p className="mt-1 text-sm text-ink/65">
+            Tentans Java-fråga: skriv en hel DAO-metod med JDBC. Svaret rättas regel för regel.
+          </p>
+          <p className="tabular mt-3 text-sm">
+            {solvedCount} av {tasks.length} klara · {tasks.length - solvedCount} kvar
+          </p>
+          <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-line" aria-hidden="true">
+            <div className="h-full rounded-full bg-pine" style={{ width: `${(solvedCount / tasks.length) * 100}%` }} />
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Nästa uppgift">
+            {[
+              { id: "ordning", label: "I ordning" },
+              { id: "slump", label: "Slumpa" },
+            ].map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                aria-pressed={order === item.id}
+                onClick={() => setOrder(item.id)}
+                className={`chip ${order === item.id ? "chip-on" : "hover:border-pine"}`}
+              >
+                {item.label}
+              </button>
+            ))}
+            {randomButton}
+          </div>
+          <p className="mt-1.5 text-xs text-ink/65">
+            {random
+              ? "Nästa uppgift blir en slumpad som inte är klar; när alla är klara, vilken som helst. Övning 14 (svårare) tas inte med."
+              : "Nästa uppgift kommer i listans ordning."}
+          </p>
+
+          {GROUPS.map((group) => {
+            const items = tasks.filter((t) => t.set === group.set);
+            const done = items.filter((t) => states[t.id]?.status === "solved").length;
+            return (
+              <section key={group.set} className="mt-4" aria-labelledby={`java-grupp-${group.set}`}>
+                <h2 id={`java-grupp-${group.set}`} className="flex items-baseline justify-between gap-2 text-sm font-medium">
+                  <span>{group.title}</span>
+                  <span className="tabular font-normal text-ink/65">{done}/{items.length}</span>
+                </h2>
+                <ul className="mt-1 space-y-1">
+                  {items.map((t) => {
+                    const active = t.id === task.id;
+                    const isDone = states[t.id]?.status === "solved";
+                    return (
+                      <li key={t.id}>
+                        <button
+                          type="button"
+                          onClick={() => open(t.id)}
+                          aria-current={active ? "true" : undefined}
+                          title={t.title}
+                          className={`flex w-full items-baseline gap-2 rounded-lg border px-3 py-2 text-left text-sm transition-colors duration-150 ${active ? "border-pine bg-pine/[0.08] text-pine" : "border-transparent hover:border-pine hover:bg-pine/[0.06]"}`}
+                        >
+                          <span className="tabular w-6 shrink-0 text-ink/65">{t.number}</span>
+                          <span className="min-w-0 flex-1 truncate">{t.title}</span>
+                          {isDone && <span className="shrink-0 text-correct" title="Klar">✓<span className="sr-only"> Klar</span></span>}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            );
+          })}
+
+          <div className="mt-5 border-t border-line pt-3">
+            {confirmResetAll ? (
+              <div>
+                <p className="text-sm text-ink/70">Alla {tasks.length} uppgifternas svar och ✓ Klar tas bort.</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <button type="button" className="btn-secondary" onClick={resetAll}>Ja, nollställ alla</button>
+                  <button type="button" className="btn-quiet" onClick={() => setConfirmResetAll(false)}>Avbryt</button>
+                </div>
+              </div>
+            ) : (
+              <button type="button" className="btn-quiet px-0 text-sm" onClick={() => setConfirmResetAll(true)}>
+                Nollställ alla uppgifter
+              </button>
+            )}
+          </div>
+        </nav>
       </div>
     </div>
   );

@@ -9,7 +9,8 @@ const LANG_NAME = { java: "Java", sql: "SQL" };
 // att nå med Tab, så att den också kan rullas med tangentbordet. ⌘A
 // (Ctrl+A) i blocket markerar bara koden, inte hela sidan, och ett klick på
 // radnumren ger blocket fokus.
-export default function CodeBlock({ code, lang = "java", label, ariaLabel, className = "" }) {
+// small: 12 px, för uppgiftstexten bredvid svaret i fliken Java.
+export default function CodeBlock({ code, lang = "java", label, ariaLabel, className = "", small = false }) {
   const regionRef = useRef(null);
   const codeRef = useRef(null);
   const lineCount = code.split("\n").length;
@@ -32,10 +33,10 @@ export default function CodeBlock({ code, lang = "java", label, ariaLabel, class
           {label}
         </p>
       )}
-      <div className={`flex border border-code/60 bg-code font-mono text-[14px] leading-6 ${label ? "rounded-b-lg" : "rounded-lg"}`}>
+      <div className={`flex border border-code/60 bg-code font-mono ${small ? "text-[12px] leading-[1.3rem]" : "text-[14px] leading-6"} ${label ? "rounded-b-lg" : "rounded-lg"}`}>
         <pre
           aria-hidden="true"
-          className="m-0 select-none border-r border-code-ink/15 px-2 py-3 text-right font-mono text-code-ink/40"
+          className={`m-0 select-none border-r border-code-ink/15 py-3 text-right font-mono text-code-ink/40 ${small ? "px-1.5" : "px-2"}`}
           onMouseDown={(event) => {
             event.preventDefault();
             regionRef.current?.focus();
@@ -51,7 +52,7 @@ export default function CodeBlock({ code, lang = "java", label, ariaLabel, class
           onKeyDown={onKeyDown}
           className="min-w-0 flex-1 overflow-x-auto rounded-r-lg"
         >
-          <pre className="m-0 w-max min-w-full px-3 py-3 font-mono text-code-ink">
+          <pre className={`m-0 w-max min-w-full py-3 font-mono text-code-ink ${small ? "px-2.5" : "px-3"}`}>
             <code ref={codeRef}><Highlighted code={code} lang={lang} /></code>
           </pre>
         </div>

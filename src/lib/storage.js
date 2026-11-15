@@ -22,6 +22,8 @@ export const KEYS = {
   practiceCurrent: "ovaFraga", // { [delkursId]: { id, tenta, order, chosen, revealed } } — öppen fråga i Öva, kvar när man går till Läs och tillbaka
   theme: "tema", // "auto" | "ljust" | "mork" — läses också av skriptet i index.html
   javaTask: "javaUppgift", // senast öppna uppgiften i fliken Java (uppgifts-id)
+  javaMenu: "javaMeny", // "full" | "smal" — Java-flikens meny, ihopfälld till siffror (smal är förvalt)
+  javaOrder: "javaOrdning", // "ordning" | "slump" — Nästa uppgift i Java i tur och ordning eller slumpad
   sqlMode: "sqlLage", // SQL-flikens läge: "ovningar" | "tenta" | "slump" | "fritt"
   sqlOpen: "sqlOppen", // { ovningar: { id, open }, tenta: { id, open } } — senaste uppgiften per spår, och om den står öppen
   sqlHelp: "sqlHjalp", // { [sektionsId]: "tabeller" | "genomgang" } — vald flik i hjälpytan
