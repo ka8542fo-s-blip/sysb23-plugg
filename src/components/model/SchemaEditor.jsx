@@ -52,9 +52,6 @@ export default function SchemaEditor({
   onSubmit = null,
   format = null,
   hint = null,
-  // 13 px i stället för 14: Java-fliken, där svaret står bredvid uppgiften
-  // och tentans rader (upp till 76 tecken) ska rymmas utan rullning.
-  small = false,
 }) {
   const ref = useRef(null);
   const layerRef = useRef(null);
@@ -261,14 +258,13 @@ export default function SchemaEditor({
   // aldrig tvingar fram lodrät rullning i fältet.
   const lineCount = Math.max(rows, value.split("\n").length + (highlight ? 1 : 0));
   const caret = { caretColor: "rgb(var(--code-ink-rgb))" };
-  const size = small ? "text-[13px]" : "text-[14px]";
 
   const textarea = highlight ? (
     <div className="relative min-w-0 flex-1">
       <pre
         ref={layerRef}
         aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 m-0 overflow-hidden whitespace-pre px-3 py-3 font-mono ${size} leading-6 text-code-ink`}
+        className="pointer-events-none absolute inset-0 m-0 overflow-hidden whitespace-pre px-3 py-3 font-mono text-[14px] leading-6 text-code-ink"
         style={{ tabSize: indentWidth }}
       >
         <code className="block w-max min-w-full pr-16">{highlight(value)}{"\n"}</code>
@@ -290,7 +286,7 @@ export default function SchemaEditor({
         autoCorrect="off"
         autoComplete="off"
         style={{ tabSize: indentWidth, ...caret }}
-        className={`relative block h-full min-h-0 w-full resize-none overflow-auto whitespace-pre bg-transparent px-3 py-3 font-mono ${size} leading-6 text-transparent placeholder:text-code-ink/35 selection:bg-code-ink/25 focus:outline-none`}
+        className="relative block h-full min-h-0 w-full resize-none overflow-auto whitespace-pre bg-transparent px-3 py-3 font-mono text-[14px] leading-6 text-transparent placeholder:text-code-ink/35 selection:bg-code-ink/25 focus:outline-none"
       />
     </div>
   ) : (
@@ -309,7 +305,7 @@ export default function SchemaEditor({
       autoCorrect="off"
       autoComplete="off"
       style={{ tabSize: indentWidth, ...caret }}
-      className={`min-h-0 w-full resize-y bg-transparent px-3 py-3 font-mono ${size} leading-6 text-code-ink placeholder:text-code-ink/35 focus:outline-none`}
+      className="min-h-0 w-full resize-y bg-transparent px-3 py-3 font-mono text-[14px] leading-6 text-code-ink placeholder:text-code-ink/35 focus:outline-none"
     />
   );
 
@@ -337,7 +333,7 @@ export default function SchemaEditor({
             ))}
           </div>}
         </div>
-        <div className={`flex rounded-b-lg border border-code/60 bg-code font-mono ${size} leading-6`}>
+        <div className="flex rounded-b-lg border border-code/60 bg-code font-mono text-[14px] leading-6">
           <pre data-gutter aria-hidden="true" className="select-none border-r border-code-ink/15 px-2 py-3 text-right text-code-ink/40">
             {Array.from({ length: lineCount }, (_, i) => i + 1).join("\n")}
           </pre>

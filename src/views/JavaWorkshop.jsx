@@ -92,7 +92,6 @@ export default function JavaWorkshop() {
     save(KEYS.javaOrder, next);
   }
   const workRef = useRef(null);
-  const textRef = useRef(null);
   const scrollToWork = useRef(false);
 
   const task = tasks.find((t) => t.id === currentId) || tasks[0];
@@ -113,7 +112,6 @@ export default function JavaWorkshop() {
   useEffect(() => {
     // Uppgiftstexten börjar alltid överst, och efter ett byte längre ned på
     // sidan visas början av den nya uppgiften, under den klistrade headern.
-    if (textRef.current) textRef.current.scrollTop = 0;
     if (scrollToWork.current && workRef.current) {
       scrollToWork.current = false;
       const header = document.querySelector("header")?.offsetHeight ?? 0;
@@ -200,14 +198,9 @@ export default function JavaWorkshop() {
           {randomButton}
           <a href="#java-meny" className="text-sm text-pine underline underline-offset-4">Alla uppgifter ↓</a>
         </div>
-        {/* Bred skärm: uppgiften till vänster rullar för sig och står kvar
-            medan man skriver i svaret till höger. Smalare: under varandra. */}
-        <div className="xl:grid xl:grid-cols-[minmax(0,9fr)_minmax(0,14fr)] xl:items-start xl:gap-5">
-          <section
-            ref={textRef}
-            className="card p-5 xl:sticky xl:top-36 xl:max-h-[calc(100vh-10.5rem)] xl:overflow-y-auto xl:overscroll-contain xl:px-3 xl:py-4"
-            aria-labelledby="java-uppgift"
-          >
+        {/* Uppgiften överst och svaret under, i en kolumn. */}
+        <div>
+          <section className="card p-5" aria-labelledby="java-uppgift">
             <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
               <p className="text-sm text-ink/65">
                 {setName(task)} {task.number}
@@ -237,7 +230,7 @@ export default function JavaWorkshop() {
             <div className="mt-4 max-w-reading space-y-3 text-[15px] leading-relaxed">
               {task.blocks.map((block, i) =>
                 block.code ? (
-                  <CodeBlock key={i} code={block.code} lang={block.lang} ariaLabel={codeBlockName(block.code)} small />
+                  <CodeBlock key={i} code={block.code} lang={block.lang} ariaLabel={codeBlockName(block.code)} />
                 ) : (
                   <p key={i}><InlineText text={block.p} /></p>
                 ),
@@ -245,15 +238,14 @@ export default function JavaWorkshop() {
             </div>
           </section>
 
-          <section className="mt-5 min-w-0 xl:mt-0" aria-label="Ditt svar och rättningen">
+          <section className="mt-5 min-w-0" aria-label="Ditt svar och rättningen">
             <SchemaEditor
               id="java-svar"
               label="Ditt svar"
               value={draft}
               onChange={(text) => update(task.id, { draft: text })}
               placeholder={placeholder}
-              rows={20}
-              small
+              rows={18}
               subscripts={false}
               indentWidth={4}
               indentAfter={JAVA_INDENT}
