@@ -66,8 +66,8 @@ test("uppgift 2: facit-DDL:en får full pott", () => {
 test("uppgift 2: poängen är andelen uppfyllda regler, avrundad nedåt", () => {
   const t = byId["ovningstenta-1"].task2;
   const facit = toDdl(t.facit);
-  // Utan Telefon-tabellen: dess fyra regler (PK, kolumn, FK och NULL-regel) faller.
-  const missing = facit.replace(/CREATE TABLE Telefon \([\s\S]*?\);\n\n/, "");
+  // Utan tabellen C3 (flervärt): dess fyra regler (PK, kolumn, FK och NULL-regel) faller.
+  const missing = facit.replace(/CREATE TABLE C3 \([\s\S]*?\);\n\n/, "");
   const r = scoreDdlShare(checkDdl(missing, t), t.facit);
   assert.equal(r.total, 33);
   assert.equal(r.passed, 29);

@@ -3,8 +3,8 @@
 // samma typ som HT25-tentorna (oldExams.js), uppgift 5 är en JDBC-uppgift i
 // handoutens form (2026-jdbc-example-handout.pdf, som fliken Java).
 //
-// Allt innehåll är eget: nya domäner (tenta 1 gym och veterinärklinik, tenta 2
-// teater och flygbolag, tenta 3 skidort och byggföretag), egna FD:er och
+// Allt innehåll är eget: nya domäner i uppgift 1 (gym, teater, skidort) och,
+// som på HT25, abstrakta diagram med bokstäver i uppgift 2, egna FD:er och
 // egen data i Student/Course/HasStudied. Texterna följer HT25-tentornas
 // ordalydelse, med 20 poäng per uppgift. Rättningen är de befintliga
 // rättarna (lib/examGrade.js); poängreglerna står i PRACTICE_RULES och i
@@ -241,7 +241,7 @@ export const practiceExams = [
   {
     id: "ovningstenta-1",
     title: "Övningstenta 1",
-    subtitle: "Gym och veterinärklinik",
+    subtitle: "Gym",
     task1: {
       diagram: "ovn1-1",
       intro: "Givet är följande ER-diagram:",
@@ -263,27 +263,27 @@ export const practiceExams = [
     task2: {
       diagram: "ovn1-2",
       text: TASK2_TEXT,
-      composites: ["Legitimation"],
+      composites: ["B1"],
       facit: [
-        { name: "Klinik", kind: "entity", surrogate: "KlinikID", columns: [{ name: "Orgnr", notNull: true }, { name: "Namn" }], fks: [], unique: [["Orgnr"]] },
-        { name: "Veterinar", kind: "entity", surrogate: "VeterinarID", columns: [{ name: "Land", notNull: true }, { name: "Nummer", notNull: true }, { name: "Namn" }], fks: [{ name: "KlinikID", to: "Klinik", notNull: true, rel: "Arbetar", tag: "1:N" }, { name: "MentorID", to: "Veterinar", notNull: false, rel: "Mentor", tag: "unär" }], unique: [["Land", "Nummer"]] },
-        { name: "Agare", kind: "entity", surrogate: "AgareID", columns: [{ name: "Personnr", notNull: true }, { name: "Namn" }], fks: [], unique: [["Personnr"]] },
-        { name: "Telefon", aliases: ["AgareTelefon", "Agare_Telefon"], kind: "multivalued", columns: [{ name: "Telefon" }], fks: [{ name: "AgareID", to: "Agare" }], pk: ["AgareID", "Telefon"] },
-        { name: "Djur", kind: "weak", surrogate: "DjurID", columns: [{ name: "Namn", notNull: true }, { name: "Art" }], fks: [{ name: "AgareID", to: "Agare", notNull: true, rel: "Ager", tag: "svag entitet" }], unique: [["Namn", "AgareID"]] },
-        { name: "Besok", kind: "junction", columns: [{ name: "Datum" }], fks: [{ name: "VeterinarID", to: "Veterinar" }, { name: "DjurID", to: "Djur" }], pk: ["VeterinarID", "DjurID"] },
+        { name: "A", kind: "entity", surrogate: "AID", columns: [{ name: "A1", notNull: true }, { name: "A2" }], fks: [], unique: [["A1"]] },
+        { name: "B", kind: "entity", surrogate: "BID", columns: [{ name: "B2", notNull: true }, { name: "B3", notNull: true }, { name: "B4" }], fks: [{ name: "AID", to: "A", notNull: true, rel: "R1", tag: "1:N" }, { name: "BIDR2", to: "B", notNull: false, rel: "R2", tag: "unär" }], unique: [["B2", "B3"]] },
+        { name: "C", kind: "entity", surrogate: "CID", columns: [{ name: "C1", notNull: true }, { name: "C2" }], fks: [], unique: [["C1"]] },
+        { name: "C3", aliases: ["CC3", "C_C3"], kind: "multivalued", columns: [{ name: "C3" }], fks: [{ name: "CID", to: "C" }], pk: ["CID", "C3"] },
+        { name: "D", kind: "weak", surrogate: "DID", columns: [{ name: "D1", notNull: true }, { name: "D2" }], fks: [{ name: "CID", to: "C", notNull: true, rel: "R4", tag: "svag entitet" }], unique: [["D1", "CID"]] },
+        { name: "R3", kind: "junction", columns: [{ name: "R3a" }], fks: [{ name: "BID", to: "B" }, { name: "DID", to: "D" }], pk: ["BID", "DID"] },
       ],
       folded: {
-        Arbetar: { tag: "1:N", why: "Arbetar är 1:M och blir en främmande nyckel i Veterinär, M-sidan — inte en egen tabell." },
-        Mentor: { tag: "unär", why: "Mentor är unär 1:M och blir en nullbar främmande nyckel i Veterinär mot Veterinär självt — inte en egen tabell." },
-        Ager: { tag: "svag entitet", why: "Äger är identifierande: Ägares nyckel läggs i Djur och ingår i Djurs UNIQUE." },
+        R1: { tag: "1:N", why: "R1 är 1:M och blir en främmande nyckel i B, M-sidan — inte en egen tabell." },
+        R2: { tag: "unär", why: "R2 är unär 1:M och blir en nullbar främmande nyckel i B mot B självt — inte en egen tabell." },
+        R4: { tag: "svag entitet", why: "R4 är identifierande: C:s nyckel läggs i D och ingår i D:s UNIQUE." },
       },
       rules: {
-        klinik: r("Vanlig entitet", "Surrogatnyckel som PRIMARY KEY och Orgnr som NOT NULL + UNIQUE."),
-        veterinar: r("Sammansatt identifierare, 1:M och unär 1:M", "Legitimation blir sina delar Land och Nummer, båda NOT NULL, med en gemensam UNIQUE (Land, Nummer). Arbetar har dubbel linje vid Veterinär, så Kliniks nyckel blir NOT NULL. Mentor ger en främmande nyckel mot Veterinär självt; linjerna är enkla, så den får vara NULL."),
-        agare: r("Vanlig entitet med flervärt attribut", "Surrogatnyckel som PRIMARY KEY och Personnr som NOT NULL + UNIQUE. Telefon är flervärt och blir en egen tabell."),
-        telefon: r("Flervärt attribut", "Egen tabell med ägarens främmande nyckel plus värdet som PRIMARY KEY (AgareID, Telefon), utan surrogatnyckel."),
-        djur: r("Svag entitet", "Egen surrogatnyckel, Ägares nyckel som NOT NULL främmande nyckel och UNIQUE (Namn, AgareID): Namn är unikt bara inom ägaren."),
-        besok: r("M:N med attribut", "Egen tabell utan surrogatnyckel: PRIMARY KEY (VeterinarID, DjurID) och Datum som vanlig kolumn."),
+        a: r("Vanlig entitet", "Surrogatnyckel som PRIMARY KEY och A1 som NOT NULL + UNIQUE."),
+        b: r("Sammansatt identifierare, 1:M och unär 1:M", "B1 blir sina delar B2 och B3, båda NOT NULL, med en gemensam UNIQUE (B2, B3). R1 har dubbel linje vid B, så A:s nyckel blir NOT NULL. R2 ger en främmande nyckel mot B självt; linjerna är enkla, så den får vara NULL."),
+        c: r("Vanlig entitet med flervärt attribut", "Surrogatnyckel som PRIMARY KEY och C1 som NOT NULL + UNIQUE. C3 är flervärt och blir en egen tabell."),
+        c3: r("Flervärt attribut", "Egen tabell med ägarens främmande nyckel plus värdet som PRIMARY KEY (CID, C3), utan surrogatnyckel."),
+        d: r("Svag entitet", "Egen surrogatnyckel, C:s nyckel som NOT NULL främmande nyckel och UNIQUE (D1, CID): D1 är unikt bara inom C."),
+        r3: r("M:N med attribut", "Egen tabell utan surrogatnyckel: PRIMARY KEY (BID, DID) och R3a som vanlig kolumn."),
       },
     },
     task3: {
@@ -393,7 +393,7 @@ HAVING
   {
     id: "ovningstenta-2",
     title: "Övningstenta 2",
-    subtitle: "Teater och flygbolag",
+    subtitle: "Teater",
     task1: {
       diagram: "ovn2-1",
       intro: "Givet är följande ER-diagram:",
@@ -415,26 +415,26 @@ HAVING
     task2: {
       diagram: "ovn2-2",
       text: TASK2_TEXT,
-      composites: ["Adress"],
+      composites: ["D3"],
       facit: [
-        { name: "Passagerare", kind: "entity", surrogate: "PassagerareID", columns: [{ name: "Passnr", notNull: true }, { name: "Namn" }], fks: [], unique: [["Passnr"]] },
-        { name: "Bagage", kind: "weak", surrogate: "BagageID", columns: [{ name: "Nummer", notNull: true }, { name: "Vikt" }], fks: [{ name: "PassagerareID", to: "Passagerare", notNull: true, rel: "Checkar_in", tag: "svag entitet" }], unique: [["Nummer", "PassagerareID"]] },
-        { name: "Flygplats", kind: "entity", surrogate: "FlygplatsID", columns: [{ name: "Kod", notNull: true }, { name: "Namn" }, { name: "Gata" }, { name: "Stad" }], fks: [], unique: [["Kod"]] },
-        { name: "Forbindelse", kind: "junction", columns: [], fks: [{ name: "FlygplatsID", to: "Flygplats" }, { name: "TillFlygplatsID", to: "Flygplats" }], pk: ["FlygplatsID", "TillFlygplatsID"] },
-        { name: "Flygning", kind: "entity", surrogate: "FlygningID", columns: [{ name: "Flightnr", notNull: true }, { name: "Gate" }], fks: [{ name: "FlygplatsID", to: "Flygplats", notNull: true, rel: "Avgar", tag: "1:N" }], unique: [["Flightnr"]] },
-        { name: "Bokar", aliases: ["Bokning"], kind: "junction", columns: [{ name: "Plats" }], fks: [{ name: "PassagerareID", to: "Passagerare" }, { name: "FlygningID", to: "Flygning" }], pk: ["PassagerareID", "FlygningID"] },
+        { name: "A", kind: "entity", surrogate: "AID", columns: [{ name: "A1", notNull: true }, { name: "A2" }], fks: [], unique: [["A1"]] },
+        { name: "B", kind: "weak", surrogate: "BID", columns: [{ name: "B1", notNull: true }, { name: "B2" }], fks: [{ name: "AID", to: "A", notNull: true, rel: "R1", tag: "svag entitet" }], unique: [["B1", "AID"]] },
+        { name: "C", kind: "entity", surrogate: "CID", columns: [{ name: "C1", notNull: true }, { name: "R3a" }], fks: [{ name: "DID", to: "D", notNull: true, rel: "R3", tag: "1:N" }], unique: [["C1"]] },
+        { name: "R2", kind: "junction", columns: [{ name: "R2a" }], fks: [{ name: "AID", to: "A" }, { name: "CID", to: "C" }], pk: ["AID", "CID"] },
+        { name: "D", kind: "entity", surrogate: "DID", columns: [{ name: "D1", notNull: true }, { name: "D2" }, { name: "D4" }, { name: "D5" }], fks: [], unique: [["D1"]] },
+        { name: "R4", kind: "junction", columns: [], fks: [{ name: "DID", to: "D" }, { name: "R4DID", to: "D" }], pk: ["DID", "R4DID"] },
       ],
       folded: {
-        Checkar_in: { tag: "svag entitet", why: "Checkar_in är identifierande: Passagerares nyckel läggs i Bagage och ingår i Bagages UNIQUE." },
-        Avgar: { tag: "1:N", why: "Avgår är 1:M och blir en främmande nyckel i Flygning, M-sidan, med relationsattributet Gate — inte en egen tabell." },
+        R1: { tag: "svag entitet", why: "R1 är identifierande: A:s nyckel läggs i B och ingår i B:s UNIQUE." },
+        R3: { tag: "1:N", why: "R3 är 1:M och blir en främmande nyckel i C, M-sidan, med relationsattributet R3a — inte en egen tabell." },
       },
       rules: {
-        passagerare: r("Vanlig entitet", "Surrogatnyckel som PRIMARY KEY och Passnr som NOT NULL + UNIQUE."),
-        bagage: r("Svag entitet", "Egen surrogatnyckel, Passagerares nyckel som NOT NULL främmande nyckel och UNIQUE (Nummer, PassagerareID): Nummer är unikt bara inom passageraren."),
-        flygplats: r("Vanlig entitet med sammansatt attribut", "Surrogatnyckel och Kod som NOT NULL + UNIQUE. Adress är sammansatt (inte en identifierare) och blir sina delar Gata och Stad, vanliga kolumner."),
-        forbindelse: r("Unär M:N", "Egen tabell med två främmande nycklar mot Flygplats, båda i PRIMARY KEY, utan surrogatnyckel."),
-        flygning: r("Vanlig entitet, 1:M med attribut", "Surrogatnyckel och Flightnr som NOT NULL + UNIQUE. Avgår har dubbel linje vid Flygning, så Flygplats nyckel blir NOT NULL i Flygning, och relationsattributet Gate följer med."),
-        bokar: r("M:N med attribut", "Egen tabell utan surrogatnyckel: PRIMARY KEY (PassagerareID, FlygningID) och Plats som vanlig kolumn."),
+        a: r("Vanlig entitet", "Surrogatnyckel som PRIMARY KEY och A1 som NOT NULL + UNIQUE."),
+        b: r("Svag entitet", "Egen surrogatnyckel, A:s nyckel som NOT NULL främmande nyckel och UNIQUE (B1, AID): B1 är unikt bara inom A."),
+        c: r("Vanlig entitet, 1:M med attribut", "Surrogatnyckel och C1 som NOT NULL + UNIQUE. R3 har dubbel linje vid C, så D:s nyckel blir NOT NULL i C, och relationsattributet R3a följer med."),
+        r2: r("M:N med attribut", "Egen tabell utan surrogatnyckel: PRIMARY KEY (AID, CID) och R2a som vanlig kolumn."),
+        d: r("Vanlig entitet med sammansatt attribut", "Surrogatnyckel och D1 som NOT NULL + UNIQUE. D3 är sammansatt (inte en identifierare) och blir sina delar D4 och D5, vanliga kolumner."),
+        r4: r("Unär M:N", "Egen tabell med två främmande nycklar mot D, båda i PRIMARY KEY, utan surrogatnyckel."),
       },
     },
     task3: {
@@ -571,7 +571,7 @@ WHERE
   {
     id: "ovningstenta-3",
     title: "Övningstenta 3",
-    subtitle: "Skidort och byggföretag",
+    subtitle: "Skidort",
     task1: {
       diagram: "ovn3-1",
       intro: "Givet är följande ER-diagram:",
@@ -595,25 +595,25 @@ WHERE
       text: TASK2_TEXT,
       composites: [],
       facit: [
-        { name: "Arbetare", kind: "entity", surrogate: "ArbetareID", columns: [{ name: "Anstnr", notNull: true }, { name: "Namn" }], fks: [], unique: [["Anstnr"]] },
-        { name: "Kompetens", aliases: ["ArbetareKompetens", "Arbetare_Kompetens"], kind: "multivalued", columns: [{ name: "Kompetens" }], fks: [{ name: "ArbetareID", to: "Arbetare" }], pk: ["ArbetareID", "Kompetens"] },
-        { name: "Projekt", kind: "entity", surrogate: "ProjektID", columns: [{ name: "Projektnr", notNull: true }, { name: "Budget" }], fks: [{ name: "ArbetareID", to: "Arbetare", notNull: true, rel: "Leder", tag: "1:N" }], unique: [["Projektnr"]] },
-        { name: "ArbetarPa", aliases: ["Arbetar_pa"], kind: "junction", columns: [{ name: "Timmar" }], fks: [{ name: "ArbetareID", to: "Arbetare" }, { name: "ProjektID", to: "Projekt" }], pk: ["ArbetareID", "ProjektID"] },
-        { name: "Fas", kind: "weak", surrogate: "FasID", columns: [{ name: "Nummer", notNull: true }, { name: "Slutdatum" }], fks: [{ name: "ProjektID", to: "Projekt", notNull: true, rel: "Delas_in", tag: "svag entitet" }], unique: [["Nummer", "ProjektID"]] },
-        { name: "Moment", kind: "weak", surrogate: "MomentID", columns: [{ name: "Namn", notNull: true }], fks: [{ name: "FasID", to: "Fas", notNull: true, rel: "Bestar_av", tag: "svag entitet" }], unique: [["Namn", "FasID"]] },
+        { name: "A", kind: "entity", surrogate: "AID", columns: [{ name: "A1", notNull: true }, { name: "A2" }], fks: [], unique: [["A1"]] },
+        { name: "A3", aliases: ["AA3", "A_A3"], kind: "multivalued", columns: [{ name: "A3" }], fks: [{ name: "AID", to: "A" }], pk: ["AID", "A3"] },
+        { name: "B", kind: "entity", surrogate: "BID", columns: [{ name: "B1", notNull: true }, { name: "B2" }], fks: [{ name: "AID", to: "A", notNull: true, rel: "R2", tag: "1:N" }], unique: [["B1"]] },
+        { name: "R1", kind: "junction", columns: [{ name: "R1a" }], fks: [{ name: "AID", to: "A" }, { name: "BID", to: "B" }], pk: ["AID", "BID"] },
+        { name: "C", kind: "weak", surrogate: "CID", columns: [{ name: "C1", notNull: true }, { name: "C2" }], fks: [{ name: "BID", to: "B", notNull: true, rel: "R3", tag: "svag entitet" }], unique: [["C1", "BID"]] },
+        { name: "D", kind: "weak", surrogate: "DID", columns: [{ name: "D1", notNull: true }], fks: [{ name: "CID", to: "C", notNull: true, rel: "R4", tag: "svag entitet" }], unique: [["D1", "CID"]] },
       ],
       folded: {
-        Leder: { tag: "1:N", why: "Leder är 1:M och blir en främmande nyckel i Projekt, M-sidan — inte en egen tabell." },
-        Delas_in: { tag: "svag entitet", why: "Delas_in är identifierande: Projekts nyckel läggs i Fas och ingår i Fas UNIQUE." },
-        Bestar_av: { tag: "svag entitet", why: "Består_av är identifierande: Fas nyckel läggs i Moment och ingår i Moments UNIQUE." },
+        R2: { tag: "1:N", why: "R2 är 1:M och blir en främmande nyckel i B, M-sidan — inte en egen tabell." },
+        R3: { tag: "svag entitet", why: "R3 är identifierande: B:s nyckel läggs i C och ingår i C:s UNIQUE." },
+        R4: { tag: "svag entitet", why: "R4 är identifierande: C:s nyckel läggs i D och ingår i D:s UNIQUE." },
       },
       rules: {
-        arbetare: r("Vanlig entitet med flervärt attribut", "Surrogatnyckel som PRIMARY KEY och Anstnr som NOT NULL + UNIQUE. Kompetens är flervärt och blir en egen tabell."),
-        kompetens: r("Flervärt attribut", "Egen tabell med ägarens främmande nyckel plus värdet som PRIMARY KEY (ArbetareID, Kompetens), utan surrogatnyckel."),
-        projekt: r("Vanlig entitet, 1:M", "Surrogatnyckel och Projektnr som NOT NULL + UNIQUE. Leder har dubbel linje vid Projekt, så Arbetares nyckel blir NOT NULL i Projekt."),
-        arbetarpa: r("M:N med attribut", "Egen tabell utan surrogatnyckel: PRIMARY KEY (ArbetareID, ProjektID) och Timmar som vanlig kolumn."),
-        fas: r("Svag entitet", "Egen surrogatnyckel, Projekts nyckel som NOT NULL främmande nyckel och UNIQUE (Nummer, ProjektID)."),
-        moment: r("Kedjad svag entitet", "Moments ägare är Fas, som själv är svag: Moment refererar Fas surrogatnyckel och har UNIQUE (Namn, FasID)."),
+        a: r("Vanlig entitet med flervärt attribut", "Surrogatnyckel som PRIMARY KEY och A1 som NOT NULL + UNIQUE. A3 är flervärt och blir en egen tabell."),
+        a3: r("Flervärt attribut", "Egen tabell med ägarens främmande nyckel plus värdet som PRIMARY KEY (AID, A3), utan surrogatnyckel."),
+        b: r("Vanlig entitet, 1:M", "Surrogatnyckel och B1 som NOT NULL + UNIQUE. R2 har dubbel linje vid B, så A:s nyckel blir NOT NULL i B."),
+        r1: r("M:N med attribut", "Egen tabell utan surrogatnyckel: PRIMARY KEY (AID, BID) och R1a som vanlig kolumn."),
+        c: r("Svag entitet", "Egen surrogatnyckel, B:s nyckel som NOT NULL främmande nyckel och UNIQUE (C1, BID)."),
+        d: r("Kedjad svag entitet", "D:s ägare är C, som själv är svag: D refererar C:s surrogatnyckel och har UNIQUE (D1, CID)."),
       },
     },
     task3: {

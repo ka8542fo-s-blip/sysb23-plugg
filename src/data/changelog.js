@@ -7,6 +7,7 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 76, date: "2026-11-15", text: "Övningstentorna: DDL-diagrammen med bokstäver, som på tentan" },
   { id: 75, date: "2026-11-15", text: "Java: ⌘K ⌘F placerar { och } och sätter mellanrum som VS Code" },
   { id: 74, date: "2026-11-15", text: "Tenta: Övningstenta 2 och 3, med fem uppgifter à 20 poäng var" },
   { id: 73, date: "2026-11-15", text: "Tenta: Övningstenta 1, egen tenta med fem uppgifter à 20 poäng" },

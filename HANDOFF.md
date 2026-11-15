@@ -494,10 +494,11 @@ kapitel: allt UI läser `chapter.number`.
   nedbrytning); 3f och 3g gäller samma R (`task3.fg`) och besvaras i en
   FdAnswer-panel; 4 = `gradeTask4(…, 20)`, 20 eller 0, ingen självbedömning;
   5 = `scoreJavaShare`, uppfyllda regler (utom "gäller inte") × 20 nedåt.
-  Svar i `sysb23:tenta:<id>`. Diagram `ovn1-1` (gym) och `ovn1-2`
-  (veterinärklinik) i `modelFigures.jsx`, `ovn2-1` (teater), `ovn2-2`
-  (flygbolag), `ovn3-1` (skidort, kedja av svaga entiteter), `ovn3-2`
-  (byggföretag). Varje tenta har egen data i Student/Course/HasStudied.
+  Svar i `sysb23:tenta:<id>`. Diagram i `modelFigures.jsx`: uppgift 1 har
+  domäner (`ovn1-1` gym, `ovn2-1` teater, `ovn3-1` skidort med kedja av svaga
+  entiteter), uppgift 2 är abstrakt med bokstäver som på HT25 (`ovn1-2`,
+  `ovn2-2`, `ovn3-2`: A–D, A1…, R1–R4, R3a; bytt 2026-11-15 från
+  veterinärklinik, flygbolag och byggföretag, med samma struktur). Varje tenta har egen data i Student/Course/HasStudied.
   Tenta 1: U4 join genom HasStudied + GROUP BY + HAVING, U5 UPDATE
   (`replaceInstructor`), 1NF. Tenta 2: U4 mängddifferens (NOT EXISTS; NOT IN
   och EXCEPT godtas, S6 utan kurser fångar inre join), U5 lista
