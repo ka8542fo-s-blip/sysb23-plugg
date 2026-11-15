@@ -479,6 +479,17 @@ kapitel: allt UI läser `chapter.number`.
   SQLite-resultat; uppsamlingen (tomt resultat på tentans data) rättas även
   mot kontrolldata där S4 är 26 år. Diagrammen omritade i
   `modelFigures.jsx` (`tenta-250916-1` … `tenta-260525-2`).
+- **Rita beroendediagram i tentornas uppgift 3** (2026-11-15): hopfälld ruta
+  `components/fd/ExamFdDrawing.jsx` (`<details>`, stängd från början, "Ritning
+  sparad" när den är hopfälld och har rutor) med samma `FdCanvas` som
+  Normalisering. Ligger efter regeltexten före 3a–e (R) och, i HT25-tentorna,
+  efter texten i 3f och 3g före svarspanelen. Övningstentorna har en ruta, eftersom
+  3f/3g gäller samma R. Nyckel `sysb23:fdritning:tenta:<tentaId>:<R|3f|3g>`
+  (`examFdKey`); "Börja om" kör `clearExamFdDrawings(tentaId)`. FdCanvas fick
+  två props: `storageKey` (annars `fdritning:<item.id>` som förut) och
+  `examMode`, som döljer ritkontrollen och "Rita från FD:erna"/"Visa
+  ritahjälp" (de visar facit); `graded` är alltid false, så ingen rättning
+  och poängen är oförändrade. Test `scripts/exam-fd-drawing.test.mjs`.
 - **Övningstentor (egna)** (2026-11-15, uppdrag `cc-ovningstentor-databaser.md`):
   egen grupp under HT25-tentorna i Tenta. Data `data/databaser/practiceExams.js`,
   vy `views/PracticeExam.jsx` (DbExam öppnar den; Task1, Task4, TaskHead,

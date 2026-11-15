@@ -3,6 +3,7 @@ import { PRACTICE_POINTS, PRACTICE_TASK3_RULE, PRACTICE_TASK3_INTRO, PRACTICE_TA
 import { ExerciseFigure } from "../components/model/modelFigures.jsx";
 import SchemaEditor from "../components/model/SchemaEditor.jsx";
 import FdAnswer from "../components/fd/FdAnswer.jsx";
+import ExamFdDrawing from "../components/fd/ExamFdDrawing.jsx";
 import CodeBlock from "../components/java/CodeBlock.jsx";
 import InlineText from "../components/java/InlineText.jsx";
 import JavaResult from "../components/java/JavaResult.jsx";
@@ -15,7 +16,7 @@ import { formatJava } from "../lib/codeIndent.js";
 import { loadEngine } from "../lib/sqlEngine.js";
 import { scoreStatements } from "../lib/statementScore.js";
 import { scoreDdlShare, scoreJavaShare, scoreTask3ae, scorePractice3f, scorePractice3g, gradeTask4 } from "../lib/examGrade.js";
-import { load, save } from "../lib/storage.js";
+import { load, save, examFdKey, clearExamFdDrawings } from "../lib/storage.js";
 import { TaskHead, GradeBar, ScoreBox, Task1, Task4 } from "./DbExam.jsx";
 
 // En egen övningstenta i fliken Tenta: fem uppgifter à 20 poäng
@@ -115,6 +116,7 @@ export default function PracticeExamRoom({ exam, onBack }) {
   function reset() {
     const fresh = emptyState();
     save(storeKey(exam.id), fresh);
+    clearExamFdDrawings(exam.id);
     setState(fresh);
     setTab(1);
     setConfirmReset(false);
@@ -165,6 +167,7 @@ export default function PracticeExamRoom({ exam, onBack }) {
         {tab === 2 && <PTask2 task={exam.task2} code={state.t2} setCode={(t2) => update({ t2 })} result={r2} onGrade={() => grade(2)} onEdit={() => ungrade(2)} />}
         {tab === 3 && (
           <PTask3
+            examId={exam.id}
             task={exam.task3}
             answers={state.t3}
             setT3={(patch) => update((prev) => ({ ...prev, t3: { ...prev.t3, ...(typeof patch === "function" ? patch(prev.t3) : patch) } }))}
@@ -243,7 +246,7 @@ function PTask2({ task, code, setCode, result, onGrade, onEdit }) {
 
 // ---------- Uppgift 3: 3a–e, 3f och 3g på samma R ----------
 
-function PTask3({ task, answers, setT3, result, onGrade, onEdit }) {
+function PTask3({ examId, task, answers, setT3, result, onGrade, onEdit }) {
   const ae = answers.ae || {};
   const locked = Boolean(result);
   const setAe = (label, value) => { if (!locked) setT3((t3) => ({ ae: { ...(t3.ae || {}), [label]: value } })); };
@@ -266,6 +269,7 @@ function PTask3({ task, answers, setT3, result, onGrade, onEdit }) {
         ))}
       </div>
       <p className="mt-3 text-[15px] text-ink/85">{PRACTICE_TASK3_RULE}</p>
+      <ExamFdDrawing storageKey={examFdKey(examId, "R")} relation={task.relation} attrs={task.attrs} fds={task.fds} />
       <ul className="mt-3 space-y-3">
         {task.statements.map((s) => {
           const row = result?.ae.rows.find((x) => x.label === s.label);

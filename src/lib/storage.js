@@ -54,6 +54,24 @@ export function clearChoiceExam(examId) {
 // BPMN-övningar): sysb23:svar:<uppgiftsId> = svaret som det står i rutan
 // (text, markeringar eller valt alternativ). Skrivs vid varje ändring och
 // tas bort bara av "Nollställ uppgiften" eller när svaret töms.
+// Beroendediagram ritade i tentornas uppgift 3, per tenta och relation
+// (part: "R", "3f", "3g"). Egen nyckel, så att de inte krockar med
+// Modellera → Normalisering (fdritning:<uppgift>).
+export const examFdKey = (examId, part) => `fdritning:tenta:${examId}:${part}`;
+export function clearExamFdDrawings(examId) {
+  const prefix = `${PREFIX}${examFdKey(examId, "")}`;
+  try {
+    const doomed = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith(prefix)) doomed.push(k);
+    }
+    doomed.forEach((k) => localStorage.removeItem(k));
+  } catch {
+    // localStorage kan saknas (privat läge); då finns inget att radera.
+  }
+}
+
 export const draftKey = (exerciseId) => `svar:${exerciseId}`;
 export function loadDraft(exerciseId) {
   return load(draftKey(exerciseId), null);

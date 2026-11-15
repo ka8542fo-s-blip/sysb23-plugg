@@ -3,6 +3,7 @@ import { oldExams, TASK_POINTS, gradeFor, TASK3_RULE, TASK3_INTRO, TASK3FG_TEXT 
 import { ExerciseFigure } from "../components/model/modelFigures.jsx";
 import SchemaEditor from "../components/model/SchemaEditor.jsx";
 import FdAnswer from "../components/fd/FdAnswer.jsx";
+import ExamFdDrawing from "../components/fd/ExamFdDrawing.jsx";
 import SqlEditor from "../components/sql/SqlEditor.jsx";
 import ResultTable from "../components/sql/ResultTable.jsx";
 import { checkDdl, toDdl, fold } from "../lib/ddlCheck.js";
@@ -10,7 +11,7 @@ import { parseSchema } from "../lib/modelCheck.js";
 import { gradeAnswer } from "../lib/fdGrade.js";
 import { loadEngine } from "../lib/sqlEngine.js";
 import { scoreTask1, estimateDdl, DDL_LABELS, scoreTask3ae, scoreTask3fg, gradeTask4 } from "../lib/examGrade.js";
-import { load, save } from "../lib/storage.js";
+import { load, save, examFdKey, clearExamFdDrawings } from "../lib/storage.js";
 import { practiceExams } from "../data/databaser/practiceExams.js";
 import PracticeExamRoom, { practiceTotal, practiceGraded, loadPracticeState } from "./PracticeExam.jsx";
 
@@ -173,6 +174,7 @@ function ExamRoom({ exam, onBack }) {
   function reset() {
     const fresh = emptyState();
     save(storeKey(exam.id), fresh);
+    clearExamFdDrawings(exam.id);
     setState(fresh);
     setTab(1);
     setConfirmReset(false);
@@ -228,7 +230,7 @@ function ExamRoom({ exam, onBack }) {
       <div className="card mt-4 p-5">
         {tab === 1 && <Task1 task={exam.task1} marked={state.t1} setMarked={(t1) => update({ t1 })} result={r1} onGrade={() => grade(1)} onEdit={() => ungrade(1)} />}
         {tab === 2 && <Task2 task={exam.task2} code={state.t2} setCode={(t2) => update({ t2 })} result={r2} onGrade={() => grade(2)} onEdit={() => ungrade(2)} />}
-        {tab === 3 && <Task3 task={exam.task3} answers={state.t3} setAnswers={(patch) => update((prev) => ({ ...prev, t3: { ...prev.t3, ...(typeof patch === "function" ? patch(prev.t3) : patch) } }))} result={r3} onGrade={() => grade(3)} onEdit={() => ungrade(3)} />}
+        {tab === 3 && <Task3 examId={exam.id} task={exam.task3} answers={state.t3} setAnswers={(patch) => update((prev) => ({ ...prev, t3: { ...prev.t3, ...(typeof patch === "function" ? patch(prev.t3) : patch) } }))} result={r3} onGrade={() => grade(3)} onEdit={() => ungrade(3)} />}
         {tab === 4 && <Task4 task={exam.task4} code={state.t4} setCode={(t4) => update({ t4 })} graded={state.graded[4]} result={task4Result} self={state.t4self} setSelf={(t4self) => update({ t4self })} onGrade={() => grade(4)} onEdit={() => ungrade(4)} />}
       </div>
     </section>
@@ -406,7 +408,7 @@ function Givet({ task }) {
   );
 }
 
-function Task3({ task, answers, setAnswers, result, onGrade, onEdit }) {
+function Task3({ examId, task, answers, setAnswers, result, onGrade, onEdit }) {
   const ae = answers.ae || {};
   const locked = Boolean(result);
   const setAe = (label, value) => { if (!locked) setAnswers((t3) => ({ ae: { ...(t3.ae || {}), [label]: value } })); };
@@ -424,6 +426,7 @@ function Task3({ task, answers, setAnswers, result, onGrade, onEdit }) {
         ))}
       </div>
       <p className="mt-3 text-[15px] text-ink/85">{TASK3_RULE}</p>
+      <ExamFdDrawing storageKey={examFdKey(examId, "R")} relation={task.relation} attrs={task.attrs} fds={task.fds} />
       <ul className="mt-3 space-y-3">
         {task.statements.map((s) => {
           const row = result?.ae.rows.find((x) => x.label === s.label);
@@ -450,7 +453,7 @@ function Task3({ task, answers, setAnswers, result, onGrade, onEdit }) {
       </ul>
 
       {["f", "g"].map((k) => (
-        <Task3fg key={k} item={task[k]} draft={answers[k]} setDraft={(patch) => { if (!locked) setAnswers((t3) => ({ [k]: { ...t3[k], ...patch } })); }} graded={result?.fg.find((x) => x.key === k)} />
+        <Task3fg key={k} examId={examId} item={task[k]} draft={answers[k]} setDraft={(patch) => { if (!locked) setAnswers((t3) => ({ [k]: { ...t3[k], ...patch } })); }} graded={result?.fg.find((x) => x.key === k)} />
       ))}
 
       <GradeBar graded={locked} onGrade={onGrade} onEdit={onEdit} note="Rättar 3a–3g." />
@@ -466,7 +469,7 @@ function Task3({ task, answers, setAnswers, result, onGrade, onEdit }) {
   );
 }
 
-function Task3fg({ item, draft, setDraft, graded }) {
+function Task3fg({ examId, item, draft, setDraft, graded }) {
   const parsed = useMemo(() => parseSchema(draft.text || ""), [draft.text]);
   const facitText = item.facit ? item.facit.map((r) => `${r.name}(${r.attrs})  PK = {${r.pk.join("} eller {")}}`).join("\n") : "R är redan i 3NF — ingen nedbrytning.";
   return (
@@ -475,6 +478,7 @@ function Task3fg({ item, draft, setDraft, graded }) {
       <p className="mt-2 text-[15px]">Givet är följande relation med funktionella beroenden:</p>
       <pre className="mt-2 overflow-x-auto rounded-lg border border-line bg-paper p-3 font-mono text-[14.5px] leading-relaxed text-ink">{[item.relation, ...item.fds].join("\n")}</pre>
       {TASK3FG_TEXT.map((p) => <p key={p} className="mt-2 max-w-reading text-[15px] leading-relaxed">{p}</p>)}
+      <ExamFdDrawing storageKey={examFdKey(examId, item.label)} relation={item.relation} attrs={item.attrs} fds={item.fds} />
       <FdAnswer item={item} draft={draft} setDraft={setDraft} highlight={{}} parsed={parsed} result={graded?.grade} showDiagram={false} />
       {graded && (
         <div className={`mt-4 rounded-lg border-l-2 p-4 ${graded.score.points === 5 ? "border-correct bg-correct-bg" : "border-wrong bg-wrong-bg"}`}>

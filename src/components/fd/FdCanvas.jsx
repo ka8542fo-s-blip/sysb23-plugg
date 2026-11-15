@@ -10,7 +10,9 @@ import { load, save } from "../../lib/storage.js";
 // events, så att mus, styrplatta och finger fungerar likadant. Pilar ser
 // alltid likadana ut; en ny pil markeras inte, markering visas som en tunn
 // kontur, och bara rättningen (och ritkontrollen) färgar pilar.
-// Ritningen sparas per uppgift i localStorage (sysb23:fdritning:<id>).
+// Ritningen sparas per uppgift i localStorage (sysb23:fdritning:<id>), eller
+// under storageKey om den skickas in (tentornas ritningar). I tentaläge
+// (examMode) döljs ritkontrollen och "Rita från FD:erna", som visar facit.
 
 const TOOLS = [
   ["select", "Flytta"],
@@ -33,9 +35,9 @@ const labelOf = (diagram, ref) => {
   return g ? `{${g.members.map((m) => diagram.boxes.find((b) => b.id === m)?.attr || "?").join(", ")}}` : "";
 };
 
-export default function FdCanvas({ item, graded, onDiagramChange }) {
+export default function FdCanvas({ item, graded, onDiagramChange, storageKey: keyProp, examMode = false }) {
   const attrs = useMemo(() => attrsOf(item.attrs), [item.attrs]);
-  const storageKey = `fdritning:${item.id}`;
+  const storageKey = keyProp || `fdritning:${item.id}`;
   const [state, dispatch] = useReducer(historyReducer, null, () => ({ diagram: validDiagram(load(storageKey, null)) || emptyDiagram(), past: [], future: [] }));
   const { diagram } = state;
   const diagramRef = useRef(diagram);
@@ -666,13 +668,17 @@ export default function FdCanvas({ item, graded, onDiagramChange }) {
       )}
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <button type="button" className="btn-secondary text-sm" onClick={() => setShowCheck((v) => !v)} aria-pressed={showCheck} disabled={!hasContent}>
-          {showCheck ? "Dölj kontrollen" : "Kontrollera ritningen"}
-        </button>
-        {canHelp ? (
-          <button type="button" className="btn-quiet text-sm" onClick={drawFromFds}>Rita från FD:erna</button>
-        ) : (
-          <button type="button" className="btn-quiet text-sm text-ink/65" onClick={() => setHelperShown(true)}>Visa ritahjälp</button>
+        {!examMode && (
+          <>
+            <button type="button" className="btn-secondary text-sm" onClick={() => setShowCheck((v) => !v)} aria-pressed={showCheck} disabled={!hasContent}>
+              {showCheck ? "Dölj kontrollen" : "Kontrollera ritningen"}
+            </button>
+            {canHelp ? (
+              <button type="button" className="btn-quiet text-sm" onClick={drawFromFds}>Rita från FD:erna</button>
+            ) : (
+              <button type="button" className="btn-quiet text-sm text-ink/65" onClick={() => setHelperShown(true)}>Visa ritahjälp</button>
+            )}
+          </>
         )}
         {hasContent && !confirmClear && <button type="button" className="btn-quiet text-sm" onClick={() => setConfirmClear(true)}>Rensa ritning</button>}
         {confirmClear && (
