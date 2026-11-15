@@ -1,7 +1,8 @@
-// ⌘K ⌘F i kodrutorna för Java och DDL: indraget räknas om rad för rad. Bara
-// blanktecken i radernas början och slut ändras, aldrig radbrytningar,
-// strängar eller kommentarers text, så att formateringen går att lita på
-// och att ångra. SQL-frågor har en egen formaterare (lib/sqlIndent.js).
+// ⌘K ⌘F i kodrutorna för Java och DDL: indraget räknas om rad för rad. I
+// DDL ändras bara blanktecken i radernas början och slut; i Java läggs också
+// radbrytningar och mellanrum som i VS Code (tidyJava nedan). Strängar och
+// kommentarers text ändras aldrig, så formateringen går att lita på och att
+// ångra. SQL-frågor har en egen formaterare (lib/sqlIndent.js).
 //
 // Java följer lösningsförslagen (data/databaser/javaTasks.js): fyra blanksteg
 // per {, åtta efter en rad som slutar med ( och tillbaka till den radens
@@ -212,8 +213,220 @@ export function reindent(text, { width = 4, after = {}, continuation = 1, statem
     .join("\n");
 }
 
+// ---------- Java: radbrytningar och mellanrum som i VS Code ----------
+//
+// Före indraget läggs koden ut som VS Code:s Java-formaterare (Eclipse-
+// stilen) gör: "{" sist på raden (inte på egen rad), "}" på egen rad,
+// "} else", "} catch" och "} finally" på samma rad, en sats per rad,
+// mellanrum runt operatorer, efter komma och efter if/for/while/try/catch,
+// inget mellanrum innanför parenteser eller före "(" i ett metodanrop, högst
+// en tom rad i följd och ingen direkt efter "{" eller före "}". Bara
+// blanktecken mellan tecknen ändras: strängar, tecken och kommentarer står
+// orörda, och en radbrytning efter en //-kommentar tas aldrig bort.
+
+const JAVA_OPS = ["...", "->", "::", "++", "--", "&&", "||", "==", "!=", "<=", ">=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^="];
+const BINARY = new Set(["=", "==", "!=", "<", ">", "<=", ">=", "+", "-", "*", "/", "%", "&&", "||", "&", "|", "^", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "?", ":", "->"]);
+const PAREN_KEYWORDS = new Set(["if", "for", "while", "switch", "catch", "synchronized", "try", "return", "throw", "else", "case", "assert", "yield", "do"]);
+const UNARY_AFTER = new Set(["return", "case", "throw", "yield", "else", "assert"]);
+const GENERIC_PARTS = new Set([",", ".", "?", "&", "[", "]", "<", ">"]);
+
+function lexJava(text) {
+  const tokens = [];
+  const n = text.length;
+  let i = 0;
+  let gap = "";
+  const push = (type, value) => {
+    tokens.push({ type, value, nl: (gap.match(/\n/g) || []).length, sp: gap.length > 0 });
+    gap = "";
+  };
+  while (i < n) {
+    const ch = text[i];
+    if (/\s/.test(ch)) {
+      gap += ch;
+      i++;
+      continue;
+    }
+    let j;
+    if (text.startsWith("//", i)) {
+      j = text.indexOf("\n", i);
+      if (j < 0) j = n;
+      push("line-comment", text.slice(i, j));
+    } else if (text.startsWith("/*", i)) {
+      j = text.indexOf("*/", i + 2);
+      j = j < 0 ? n : j + 2;
+      push("comment", text.slice(i, j));
+    } else if (text.startsWith('"""', i)) {
+      j = i + 3;
+      while (j < n && !text.startsWith('"""', j)) j += text[j] === "\\" ? 2 : 1;
+      j = Math.min(n, j + 3);
+      push("string", text.slice(i, j));
+    } else if (ch === '"' || ch === "'") {
+      j = i + 1;
+      while (j < n && text[j] !== ch && text[j] !== "\n") j += text[j] === "\\" ? 2 : 1;
+      if (text[j] === ch) j++;
+      j = Math.min(j, n);
+      push("string", text.slice(i, j));
+    } else if (/[0-9]/.test(ch)) {
+      j = i + 1;
+      while (j < n && /[\p{L}\p{N}_.]/u.test(text[j])) j++;
+      push("word", text.slice(i, j));
+    } else if (/[\p{L}_$]/u.test(ch)) {
+      j = i + 1;
+      while (j < n && /[\p{L}\p{N}_$]/u.test(text[j])) j++;
+      push("word", text.slice(i, j));
+    } else {
+      const op = JAVA_OPS.find((o) => text.startsWith(o, i)) ?? ch;
+      j = i + op.length;
+      push("op", op);
+    }
+    i = j;
+  }
+  return { tokens, trailing: gap };
+}
+
+// "<" och ">" i en typ (ArrayList<Product>, new ArrayList<>()) markeras som
+// generiska: de får inga mellanrum, till skillnad från jämförelser.
+function markGenerics(tokens) {
+  for (let i = 0; i < tokens.length; i++) {
+    const t = tokens[i];
+    if (t.value !== "<" || t.generic) continue;
+    const prev = tokens[i - 1];
+    if (!prev || (prev.type !== "word" && prev.value !== ".")) continue;
+    let depth = 0;
+    let end = -1;
+    for (let k = i; k < tokens.length; k++) {
+      const x = tokens[k];
+      if (x.value === "<") depth++;
+      else if (x.value === ">") {
+        depth--;
+        if (depth === 0) {
+          end = k;
+          break;
+        }
+      } else if (!(x.type === "word" && !/^[0-9]/.test(x.value)) && !GENERIC_PARTS.has(x.value)) break;
+    }
+    if (end < 0) continue;
+    for (let k = i; k <= end; k++) if (tokens[k].value === "<" || tokens[k].value === ">" || tokens[k].value === "?" || tokens[k].value === "&") tokens[k].generic = true;
+  }
+}
+
+const isValue = (t) => t && (t.type === "word" || t.type === "string" || t.value === ")" || t.value === "]" || (t.value === ">" && t.generic));
+
+function spaceBetween(a, b, ctx) {
+  if (b.type === "line-comment" || b.type === "comment") return a.type === "comment" && !b.sp ? 0 : 1;
+  if (a.type === "comment") return b.sp ? 1 : 0;
+  const av = a.value;
+  const bv = b.value;
+  if (bv === "," || bv === ";") return 0;
+  if (av === "," || av === ";") return 1;
+  if (av === "." || bv === "." || av === "::" || bv === "::" || av === "@") return 0;
+  if (bv === "...") return 0;
+  if (av === "...") return 1;
+  if (av === "(" || av === "[") return 0;
+  if (bv === ")" || bv === "]") return 0;
+  if (a.generic && av === "<") return 0;
+  if (b.generic && (bv === "<" || bv === ">")) return 0;
+  if (a.generic && av === ">") return bv === "(" || bv === "[" || bv === ">" ? 0 : 1;
+  if (a.generic && (av === "?" || av === "&")) return bv === ">" ? 0 : 1;
+  if (b.generic && (bv === "?" || bv === "&")) return 1;
+  if (a.unary) return 0;
+  if (bv === "++" || bv === "--") return b.postfix ? 0 : 1;
+  if ((av === "++" || av === "--") && !a.postfix) return 0;
+  if (bv === ":" && ctx.caseLabel) return 0;
+  if (BINARY.has(bv) && !b.unary) return 1;
+  if (BINARY.has(av)) return 1;
+  if (bv === "!" || bv === "~") return av === "(" ? 0 : 1;
+  if (av === "!" || av === "~") return 0;
+  if (bv === "(") return a.type === "word" ? (PAREN_KEYWORDS.has(av) ? 1 : 0) : av === ")" || av === "]" ? 0 : 1;
+  if (bv === "[") return a.type === "word" || av === "]" || av === ")" ? 0 : 1;
+  if (bv === "{") return 1;
+  if (av === "{") return bv === "}" ? 0 : 1;
+  if (bv === "}") return 1;
+  if (av === "}") return 1;
+  if ((a.type === "word" || a.type === "string") && (b.type === "word" || b.type === "string")) return 1;
+  if ((av === ")" || av === "]") && (b.type === "word" || b.type === "string")) return 1;
+  return b.sp ? 1 : 0;
+}
+
+export function tidyJava(text) {
+  const { tokens, trailing } = lexJava(text);
+  if (!tokens.length) return text.trim() ? text : "";
+  markGenerics(tokens);
+
+  // Unära och postfixa operatorer, och klamrarnas slag (block eller
+  // initierare, som new int[] { 1, 2 }).
+  const braces = [];
+  let paren = 0;
+  let caseLine = false;
+  for (let i = 0; i < tokens.length; i++) {
+    const t = tokens[i];
+    const prev = tokens[i - 1];
+    if (t.nl) caseLine = false;
+    if (t.type === "word" && (t.value === "case" || t.value === "default")) caseLine = true;
+    t.caseLabel = caseLine && t.value === ":";
+    if (t.type !== "op") continue;
+    if ((t.value === "-" || t.value === "+") && !(isValue(prev) && !UNARY_AFTER.has(prev.value)) && !(prev && (prev.value === "++" || prev.value === "--") && prev.postfix)) t.unary = true;
+    if (t.value === "!" || t.value === "~") t.unary = true;
+    if ((t.value === "++" || t.value === "--") && isValue(prev) && !UNARY_AFTER.has(prev.value)) t.postfix = true;
+    if (t.value === "(" || t.value === "[") paren++;
+    if (t.value === ")" || t.value === "]") paren = Math.max(0, paren - 1);
+    if (t.value === "{") {
+      const outer = braces[braces.length - 1];
+      const init = paren > 0 || (prev && (prev.value === "=" || prev.value === "]" || prev.value === "->" || ((prev.value === "{" || prev.value === ",") && outer && !outer.block)));
+      const brace = { block: !init, isDo: prev?.value === "do", paren };
+      t.brace = brace;
+      braces.push(brace);
+    } else if (t.value === "}") {
+      t.brace = braces.pop() ?? { block: true, isDo: false, paren };
+    }
+  }
+
+  // Radbrytningarna.
+  for (let i = 0; i < tokens.length; i++) {
+    const t = tokens[i];
+    const prev = tokens[i - 1];
+    t.nl = Math.min(t.nl, 2);
+    if (!prev) {
+      t.nl = 0;
+      continue;
+    }
+    if (t.value === "{" && t.brace.block && t.nl > 0 && prev.type !== "line-comment" && prev.type !== "comment" && ![";", "{", "}"].includes(prev.value)) t.nl = 0;
+    if (prev.value === "{" && prev.brace.block) {
+      if (t.value === "}" && t.nl === 0) {
+        // {} står kvar
+      } else if (t.type === "line-comment" && t.nl === 0) {
+        // { // kommentar
+      } else t.nl = 1;
+    }
+    if (t.value === "}" && t.brace.block && prev.value !== "{") t.nl = 1;
+    if (prev.value === "}" && prev.brace.block) {
+      if (["else", "catch", "finally"].includes(t.value) || (t.value === "while" && prev.brace.isDo)) t.nl = 0;
+      else if ([";", ")", ",", "."].includes(t.value)) t.nl = 0;
+      else if (!(t.type === "line-comment" && t.nl === 0)) t.nl = Math.max(t.nl, 1);
+    }
+    if (prev.type === "line-comment") t.nl = Math.max(t.nl, 1);
+  }
+  // En sats per rad: efter ";" utanför parenteser.
+  paren = 0;
+  for (let i = 0; i < tokens.length; i++) {
+    const t = tokens[i];
+    const prev = tokens[i - 1];
+    if (prev?.value === ";" && paren === 0 && t.nl === 0 && t.type !== "line-comment") t.nl = 1;
+    if (t.value === "(" || t.value === "[") paren++;
+    if (t.value === ")" || t.value === "]") paren = Math.max(0, paren - 1);
+  }
+
+  let out = "";
+  for (let i = 0; i < tokens.length; i++) {
+    const t = tokens[i];
+    if (i > 0) out += t.nl > 0 ? "\n".repeat(t.nl) : " ".repeat(spaceBetween(tokens[i - 1], t, t));
+    out += t.value;
+  }
+  return trailing.includes("\n") ? `${out}\n` : out;
+}
+
 export const formatJava = (text) =>
-  reindent(text, { width: 4, after: { "{": 1, "(": 2, "[": 2 }, continuation: 2, statements: true, java: true });
+  reindent(tidyJava(text), { width: 4, after: { "{": 1, "(": 2, "[": 2 }, continuation: 2, statements: true, java: true });
 
 // DDL-rutan drar in två blanksteg (mallen och Tab); den som skriver med
 // fyra, som facit, får behålla fyra.

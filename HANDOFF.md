@@ -197,8 +197,15 @@ kapitel: allt UI läser `chapter.number`.
   `formatField`). Det finns i SQL (`formatSql`, samma som Formatera, som
   nu också behåller markören), Java (`formatJava`) och DDL i Modellera
   (`formatDdl`). Det finns inte i fliken Tentas rutor, som är som på
-  Inspera, och inte i notationsrutorna i Modellera. `lib/codeIndent.js`
-  ändrar bara blanktecken i radernas början och slut: lösningsförslagens
+  Inspera, och inte i notationsrutorna i Modellera (övningstentornas
+  Java-ruta har det). Java (2026-11-15): `tidyJava` lägger först ut koden
+  som VS Code:s Java-formaterare — { sist på raden, } på egen rad, } else /
+  } catch / } finally ihop, en sats per rad, mellanrum runt operatorer (inte
+  i generiska typer), efter komma och if/for/while/try/catch, högst en tom
+  rad och ingen direkt efter { eller före }; en radbrytning efter
+  //-kommentar tas aldrig bort. Bara blanktecken ändras, så markören följer
+  med via `mapOffset`. Sedan räknas indraget om. `lib/codeIndent.js`
+  ändrar i DDL bara blanktecken i radernas början och slut: lösningsförslagens
   stil (fyra per {, åtta efter "(" sist på raden, åtta för fortsatt sats,
   fyra för if/else utan klamrar, try-huvudets andra resurs under den
   första), strängar, textblock och kommentarstext orörda. DDL behåller det

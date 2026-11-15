@@ -5,6 +5,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { formatDdl, formatJava } from "../src/lib/codeIndent.js";
+import { practiceExams } from "../src/data/databaser/practiceExams.js";
 import { chordStep, CHORD_MS, isSelectAll } from "../src/lib/keys.js";
 import { mapOffset } from "../src/lib/textEdit.js";
 import { formatSql } from "../src/lib/sqlIndent.js";
@@ -105,12 +106,10 @@ test("Java: if och else utan klamrar, klammer på egen rad, metodkedja, lambda o
     formatJava(input),
     [
       "@Override",
-      "public int count(String category) throws SQLException",
-      "{",
+      "public int count(String category) throws SQLException {",
       "    if (category == null)",
       "        return 0;",
-      "    else",
-      "    {",
+      "    else {",
       "        log(category);",
       "    }",
       "    try (Connection connection = connectionHandler.getConnection()) {",
@@ -134,8 +133,9 @@ test("Java: ett textblock står orört, och en kommentar över flera rader flytt
   assert.equal(formatJava(input), 'void f() {\n    String s = """\n  {  innehåll  }  \n    """;\n    /**\n     * Kommentar.\n     */\n    int x;\n}');
 });
 
-test("Java: tomma rader blir tomma och raderna behåller sitt innehåll", () => {
-  assert.equal(formatJava("void f() {\n    \n\tint x;   \n}"), "void f() {\n\n    int x;\n}");
+test("Java: tomma rader blir tomma, högst en i följd och ingen direkt efter { eller före }", () => {
+  assert.equal(formatJava("void f() {\n    \n\tint x;   \n}"), "void f() {\n    int x;\n}");
+  assert.equal(formatJava("void f() {\nint x;\n\n\n\nint y;\n\n}"), "void f() {\n    int x;\n\n    int y;\n}");
 });
 
 test("Java: trasig kod (en klammer för mycket eller för lite) ger inget fel och bara indrag ändras", () => {
@@ -238,4 +238,80 @@ test("⌘A känns igen som markera allt, Ctrl+A på Mac gör det inte", () => {
   assert.equal(isSelectAll(key("a", { ctrlKey: true }), true), false);
   assert.equal(isSelectAll(key("a", { ctrlKey: true }), false), true);
   assert.equal(isSelectAll(key("a", { metaKey: true }), false), false);
+});
+
+// ---------- Java som i VS Code: radbrytningar och mellanrum ----------
+
+const solutions = [...javaTasks.map((t) => [t.id, t.solution]), ...practiceExams.map((e) => [e.task5.id, e.task5.solution])];
+const noSpace = (text) => text.replace(/\s/g, "");
+
+// Delar texten i strängar och resten, så att ändringarna aldrig rör en sträng.
+const outsideStrings = (text, fn) => text.split(/("(?:[^"\\\n]|\\.)*")/).map((part, i) => (i % 2 ? part : fn(part))).join("");
+
+// Ihoptryckt: inga mellanrum runt operatorer, efter komma eller före {.
+const squash = (text) => outsideStrings(text, (part) => part
+  .replace(/ *(==|!=|<=|>=|=|\+|\*|&&|\|\||>|<) +/g, "$1")
+  .replace(/, +/g, ",")
+  .replace(/ +\{/g, "{")
+  .replace(/\b(if|for|while|try|catch) +\(/g, "$1("));
+
+// { på egen rad och } sist på förra raden.
+const allman = (text) => text
+  .split("\n")
+  .flatMap((line) => (/ \{$/.test(line) && !line.includes('"') ? [line.replace(/ \{$/, ""), "{"] : [line]))
+  .join("\n")
+  .replace(/;\n\s*\}/g, "; }");
+
+test("Java: ihoptryckt kod får lösningsförslagets mellanrum", () => {
+  for (const [id, solution] of solutions) {
+    const input = squash(solution);
+    assert.notEqual(input, solution, id);
+    assert.equal(formatJava(input), solution, id);
+  }
+});
+
+test("Java: { på egen rad flyttas upp och } sist på en rad får en egen rad", () => {
+  for (const [id, solution] of solutions) {
+    const input = allman(flat(solution));
+    assert.notEqual(input, flat(solution), id);
+    assert.equal(formatJava(input), solution, id);
+  }
+});
+
+test("Java: bara blanktecken ändras, och en andra formatering ändrar inget", () => {
+  for (const [id, solution] of solutions) {
+    for (const input of [squash(solution), allman(solution), messy(allman(squash(solution)), 3), solution.replace(/\n\s*/g, " ")]) {
+      const out = formatJava(input);
+      assert.equal(noSpace(out), noSpace(input), id);
+      assert.equal(formatJava(out), out, `${id}: idempotent`);
+    }
+  }
+});
+
+test("Java: }} och två satser på en rad delas, } else och } catch hålls ihop", () => {
+  assert.equal(
+    formatJava("void f() { int x = 1; int y = 2;\nif (x > y) { g(); }\nelse { h(); }}"),
+    "void f() {\n    int x = 1;\n    int y = 2;\n    if (x > y) {\n        g();\n    } else {\n        h();\n    }\n}",
+  );
+  assert.equal(
+    formatJava("try { a(); }\ncatch (SQLException e) { b(); }\nfinally { c(); }"),
+    "try {\n    a();\n} catch (SQLException e) {\n    b();\n} finally {\n    c();\n}",
+  );
+});
+
+test("Java: operatorer, generiska typer, unärt minus, ++ och for-loopens semikolon", () => {
+  assert.equal(
+    formatJava("for(int i=0;i<list.size();i++){x=-1;y=a-b*2;if(!ok&&i>=2)return;}"),
+    "for (int i = 0; i < list.size(); i++) {\n    x = -1;\n    y = a - b * 2;\n    if (!ok && i >= 2) return;\n}",
+  );
+  assert.equal(formatJava("ArrayList<Product> list=new ArrayList<>();"), "ArrayList<Product> list = new ArrayList<>();");
+  assert.equal(formatJava("Map<String, List<Integer>> m = new HashMap< >( );"), "Map<String, List<Integer>> m = new HashMap<>();");
+  assert.equal(formatJava("return statement.executeUpdate()>0;"), "return statement.executeUpdate() > 0;");
+  assert.equal(formatJava("int[] a = new int[] {1, 2};"), "int[] a = new int[] { 1, 2 };");
+});
+
+test("Java: strängar, tecken och kommentarer står orörda, och en //-kommentar behåller sin radbrytning", () => {
+  const input = 'void f(){\nString sql="SELECT  a,b FROM T WHERE x=?";// kommentar  {\nchar c=\'{\';\n/*  {  */ int x=1;\n}';
+  assert.equal(formatJava(input), 'void f() {\n    String sql = "SELECT  a,b FROM T WHERE x=?"; // kommentar  {\n    char c = \'{\';\n    /*  {  */ int x = 1;\n}');
+  assert.equal(formatJava("if (x) // varför\n{\ny();\n}"), "if (x) // varför\n{\n    y();\n}");
 });
