@@ -84,13 +84,6 @@ export default function JavaWorkshop() {
     setMenu(next);
     save(KEYS.javaMenu, next);
   }
-  // Nästa uppgift i tur och ordning eller slumpad (samma val som i BPMN-övningar).
-  const [order, setOrderState] = useState(() => (load(KEYS.javaOrder, "ordning") === "slump" ? "slump" : "ordning"));
-  const random = order === "slump";
-  function setOrder(next) {
-    setOrderState(next);
-    save(KEYS.javaOrder, next);
-  }
   const workRef = useRef(null);
   const scrollToWork = useRef(false);
 
@@ -100,12 +93,7 @@ export default function JavaWorkshop() {
   const placeholder = useMemo(() => `${signatureOf(task)} {\n}`, [task]);
   const index = tasks.indexOf(task);
   const solvedCount = tasks.filter((t) => states[t.id]?.status === "solved").length;
-  // Den slumpade nästa väljs när uppgiften öppnas, så att knappen visar vart den leder.
-  const [randomPick, setRandomPick] = useState(null);
-  useEffect(() => {
-    setRandomPick(random ? pickRandomJavaTask(tasks, states, currentId) : null);
-  }, [random, currentId]); // eslint-disable-line react-hooks/exhaustive-deps
-  const nextTask = random ? tasks.find((t) => t.id === randomPick) || null : tasks[index + 1] || null;
+  const nextTask = tasks[index + 1] || null;
 
   useEffect(() => save(KEYS.javaTask, task.id), [task.id]);
 
@@ -273,15 +261,15 @@ export default function JavaWorkshop() {
             {result && (
               <>
                 <JavaResult result={result}>
-                  {nextTask && result.status === "correct" && !(result.errors?.length) && (
-                    <button
-                      type="button"
-                      className="btn-secondary mt-4"
-                      onClick={() => open(nextTask.id)}
-                      title={random ? "En slumpad uppgift, i första hand en som inte är klar" : taskLabel(nextTask)}
-                    >
-                      {random ? "Slumpa nästa →" : "Nästa uppgift →"}
-                    </button>
+                  {result.status === "correct" && !(result.errors?.length) && (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {nextTask && (
+                        <button type="button" className="btn-secondary" onClick={() => open(nextTask.id)} title={taskLabel(nextTask)}>
+                          Nästa uppgift →
+                        </button>
+                      )}
+                      {randomButton}
+                    </div>
                   )}
                 </JavaResult>
                 <div className="mt-4 min-w-0">
@@ -382,27 +370,9 @@ export default function JavaWorkshop() {
             <div className="h-full rounded-full bg-pine" style={{ width: `${(solvedCount / tasks.length) * 100}%` }} />
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Nästa uppgift">
-            {[
-              { id: "ordning", label: "I ordning" },
-              { id: "slump", label: "Slumpa" },
-            ].map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                aria-pressed={order === item.id}
-                onClick={() => setOrder(item.id)}
-                className={`chip ${order === item.id ? "chip-on" : "hover:border-pine"}`}
-              >
-                {item.label}
-              </button>
-            ))}
-            {randomButton}
-          </div>
+          <div className="mt-4">{randomButton}</div>
           <p className="mt-1.5 text-xs text-ink/65">
-            {random
-              ? "Nästa uppgift blir en slumpad som inte är klar; när alla är klara, vilken som helst. Övning 14 (svårare) tas inte med."
-              : "Nästa uppgift kommer i listans ordning."}
+            Väljer i första hand en uppgift du inte klarat. Övning 14 (svårare) tas inte med.
           </p>
 
           {GROUPS.map((group) => {

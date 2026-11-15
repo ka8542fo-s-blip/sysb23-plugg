@@ -434,9 +434,10 @@ kapitel: allt UI läser `chapter.number`.
   = ett objekt i javaTasks.js plus testfall i `scripts/java/cases.mjs`.
   Uppbyggnad (2026-11-15) som BPMN-övningar: menyn till vänster är klistrad
   och rullar för sig, ihopfälld till siffror från början (`javaMeny`,
-  "smal" förvalt) med Slumpa-knapp; utfälld har den framsteg, I ordning /
-  Slumpa (`javaOrdning`, styr Nästa-knappen efter Rätt), listan och
-  Nollställ alla. Uppgiften och svaret står under varandra i en kolumn;
+  "smal" förvalt) med Slumpa-knapp; utfälld har den framsteg, knappen
+  Slumpa en uppgift, listan och Nollställ alla. Efter Rätt visas Nästa
+  uppgift (listans ordning) och Slumpa en uppgift; ett läge I ordning /
+  Slumpa fanns en kort tid och togs bort (två slumpknappar förvirrade). Uppgiften och svaret står under varandra i en kolumn;
   att ställa dem bredvid varandra provades och togs bort (för trångt).
   Mobilen: slumpknapp och genväg till listan överst, menyn under uppgiften.
 - **Tenta** (2026-10-09): de tre HT25-tentorna med exakt deras uppgifter
