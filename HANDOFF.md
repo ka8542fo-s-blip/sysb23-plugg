@@ -472,6 +472,27 @@ kapitel: allt UI läser `chapter.number`.
   SQLite-resultat; uppsamlingen (tomt resultat på tentans data) rättas även
   mot kontrolldata där S4 är 26 år. Diagrammen omritade i
   `modelFigures.jsx` (`tenta-250916-1` … `tenta-260525-2`).
+- **Övningstentor (egna)** (2026-11-15, uppdrag `cc-ovningstentor-databaser.md`):
+  egen grupp under HT25-tentorna i Tenta. Data `data/databaser/practiceExams.js`,
+  vy `views/PracticeExam.jsx` (DbExam öppnar den; Task1, Task4, TaskHead,
+  GradeBar och ScoreBox exporteras från DbExam och tar `max`), test
+  `scripts/practice-exams.test.mjs`. Fem uppgifter à 20 p, inget betyg (inga
+  gränser för årets form). Poäng (`lib/examGrade.js`): 1 = +5/−3, golv 0, max 20
+  (`scoreStatements(…, max)`); 2 = `scoreDdlShare`, andel uppfyllda regler × 20
+  nedåt, regler per facittabell = PK + kolumner + 2 per FK (nyckel och
+  NULL-regel) + UNIQUE, överflödig tabell/fel REFERENCES = en fälld regel;
+  3a–e +2/−1/0 golv 0; 3f = 2 p automatiskt för normalformen + 0–3 p
+  självbedömd motivering mot `fg.checklist` (5 p direkt om R är i 3NF);
+  3g = 5 eller 0 (`fields.decomposition.ok`, i 3NF-fallet: ingen
+  nedbrytning); 3f och 3g gäller samma R (`task3.fg`) och besvaras i en
+  FdAnswer-panel; 4 = `gradeTask4(…, 20)`, 20 eller 0, ingen självbedömning;
+  5 = `scoreJavaShare`, uppfyllda regler (utom "gäller inte") × 20 nedåt.
+  Svar i `sysb23:tenta:<id>`. Diagram `ovn1-1` (gym) och `ovn1-2`
+  (veterinärklinik) i `modelFigures.jsx`. Tenta 1: U4 join genom HasStudied +
+  GROUP BY + HAVING på egen data (6 studenter, 4 kurser), U5 UPDATE
+  (`replaceInstructor`), högsta NF 1NF. Planerat: tenta 2 (U4 mängddifferens,
+  U5 lista, 2NF) och tenta 3 (U4 skalär delfråga mot aggregat, U5 objekt
+  eller COUNT, redan 3NF).
 - **Statistik**, **Schema (Pluggkalender)** och **Hem** som för Strategi.
 
 ## Regler (följ dem)

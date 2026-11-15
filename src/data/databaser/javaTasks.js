@@ -172,7 +172,7 @@ const EMPLOYEE_CLASS = `public class Employee {
 }`;
 
 // Den givna DAO-klassen i exempeltentans form, med de importer metoden behöver.
-function daoClass(name, imports) {
+export function daoClass(name, imports) {
   return `${imports.map((i) => `import ${i};`).join("\n")}
 
 public class ${name} {
@@ -184,13 +184,13 @@ public class ${name} {
 }`;
 }
 
-const SQL_IMPORTS = ["java.sql.Connection", "java.sql.PreparedStatement", "java.sql.SQLException"];
-const QUERY_IMPORTS = ["java.sql.Connection", "java.sql.PreparedStatement", "java.sql.ResultSet", "java.sql.SQLException"];
-const LIST_IMPORTS = [...QUERY_IMPORTS, "java.util.ArrayList"];
+export const SQL_IMPORTS = ["java.sql.Connection", "java.sql.PreparedStatement", "java.sql.SQLException"];
+export const QUERY_IMPORTS = ["java.sql.Connection", "java.sql.PreparedStatement", "java.sql.ResultSet", "java.sql.SQLException"];
+export const LIST_IMPORTS = [...QUERY_IMPORTS, "java.util.ArrayList"];
 
 // Styckena som avslutar varje uppgift, med exempeltentans ordalydelse.
 // assume = stycket "Du får anta att …"; model = den givna modellklassen, om någon.
-function examTail(dao, assume, model) {
+export function examTail(dao, assume, model) {
   return [
     { p: "Din implementation ska inte vara sårbar för SQL-injektion." },
     { p: "Du får anta att instansvariabeln `connectionHandler` redan är initierad. Anropet `connectionHandler.getConnection()` returnerar ett objekt av typen `java.sql.Connection` som representerar en giltig anslutning till databasen. Samtliga resurser som öppnas i metoden ska stängas när de inte längre behövs, även om ett Exception uppstår." },

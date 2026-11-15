@@ -20,4 +20,6 @@ export const MODEL_FIGURE_IDS = [
   "tenta-251024-2",
   "tenta-260525-1",
   "tenta-260525-2",
+  "ovn1-1",
+  "ovn1-2",
 ];

@@ -11,8 +11,11 @@ import { gradeAnswer } from "../lib/fdGrade.js";
 import { loadEngine } from "../lib/sqlEngine.js";
 import { scoreTask1, estimateDdl, DDL_LABELS, scoreTask3ae, scoreTask3fg, gradeTask4 } from "../lib/examGrade.js";
 import { load, save } from "../lib/storage.js";
+import { practiceExams } from "../data/databaser/practiceExams.js";
+import PracticeExamRoom, { practiceTotal, practiceGraded, loadPracticeState } from "./PracticeExam.jsx";
 
-// Fliken Tenta: de tre HT25-tentorna, exakt deras uppgifter. Ingen
+// Fliken Tenta: de tre HT25-tentorna, exakt deras uppgifter, och under dem
+// sajtens egna övningstentor (views/PracticeExam.jsx). Ingen
 // tidtagning; varje uppgift rättas för sig med tentans poängregler, och
 // summan visas av 100. Svaren sparas per tenta i sysb23:tenta:<id> medan man
 // arbetar; "Börja om" nollställer.
@@ -36,6 +39,8 @@ const isGraded = (scores) => [1, 2, 3, 4].some((n) => scores[n] !== null);
 export default function DbExam() {
   const [examId, setExamId] = useState(null);
   const exam = oldExams.find((e) => e.id === examId);
+  const practice = practiceExams.find((e) => e.id === examId);
+  if (practice) return <PracticeExamRoom key={practice.id} exam={practice} onBack={() => setExamId(null)} />;
   return exam ? <ExamRoom key={exam.id} exam={exam} onBack={() => setExamId(null)} /> : <ExamList onOpen={setExamId} />;
 }
 
@@ -70,6 +75,38 @@ function ExamList({ onOpen }) {
               </dl>
               <button type="button" className="btn-primary mt-4 self-start" onClick={() => onOpen(e.id)}>
                 {isGraded(scores) ? "Fortsätt" : "Öppna tentan"}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+
+      <h2 className="mt-10 font-display text-2xl">Övningstentor (egna)</h2>
+      <p className="mt-2 max-w-reading text-[15px] leading-relaxed text-ink/80">
+        Sajtens egna tentor, inte Björns: fem uppgifter à 20 poäng i den form årets tenta väntas få, med
+        nya diagram, egna FD:er, egen data och en JDBC-uppgift som uppgift 5.
+      </p>
+      <ul className="mt-4 grid gap-4 md:grid-cols-3">
+        {practiceExams.map((e) => {
+          const ps = loadPracticeState(e.id);
+          const graded = practiceGraded(ps.scores);
+          return (
+            <li key={e.id} className="card flex flex-col p-5">
+              <p className="text-sm text-ink/65">{e.subtitle}</p>
+              <h3 className="mt-1 font-display text-xl">{e.title}</h3>
+              <p className="tabular mt-3 text-[15px]">
+                {graded ? <><span className="font-display text-2xl">{practiceTotal(ps.scores)}</span> av 100 senast</> : <span className="text-ink/65">Inte påbörjad</span>}
+              </p>
+              <dl className="tabular mt-2 grid grid-cols-5 gap-1 text-center text-sm">
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <div key={n} className="rounded border border-line px-1 py-1">
+                    <dt className="text-xs text-ink/60">Uppg. {n}</dt>
+                    <dd>{ps.scores[n] === null ? "–" : ps.scores[n]}</dd>
+                  </div>
+                ))}
+              </dl>
+              <button type="button" className="btn-primary mt-4 self-start" onClick={() => onOpen(e.id)}>
+                {graded ? "Fortsätt" : "Öppna tentan"}
               </button>
             </li>
           );
@@ -200,16 +237,16 @@ function ExamRoom({ exam, onBack }) {
 
 // ---------- Gemensamt ----------
 
-function TaskHead({ n, points, label }) {
+export function TaskHead({ n, points, label, max = TASK_POINTS[n] }) {
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-2">
       <h2 className="font-display text-2xl">Uppgift {n}</h2>
-      <p className="tabular text-sm text-ink/70">{label ?? `${TASK_POINTS[n]} poäng`}{points !== undefined && points !== null ? ` · ${points} av ${TASK_POINTS[n]}` : ""}</p>
+      <p className="tabular text-sm text-ink/70">{label ?? `${max} poäng`}{points !== undefined && points !== null ? ` · ${points} av ${max}` : ""}</p>
     </div>
   );
 }
 
-function GradeBar({ graded, onGrade, onEdit, disabled, note }) {
+export function GradeBar({ graded, onGrade, onEdit, disabled, note }) {
   return (
     <div className="mt-5 flex flex-wrap items-center gap-3">
       {!graded ? (
@@ -222,7 +259,7 @@ function GradeBar({ graded, onGrade, onEdit, disabled, note }) {
   );
 }
 
-function ScoreBox({ ok, title, children }) {
+export function ScoreBox({ ok, title, children }) {
   return (
     <div className={`mt-4 rounded-lg border-l-2 p-4 ${ok ? "border-correct bg-correct-bg" : "border-wrong bg-wrong-bg"}`} role="status">
       <p className="font-display text-lg">{title}</p>
@@ -240,11 +277,11 @@ const OUTCOME = {
   "correct-blank": ["Felaktigt, inte markerat: 0", "text-correct"],
 };
 
-function Task1({ task, marked, setMarked, result, onGrade, onEdit }) {
+export function Task1({ task, marked, setMarked, result, onGrade, onEdit, max = 25 }) {
   const toggle = (i) => setMarked(marked.includes(i) ? marked.filter((x) => x !== i) : [...marked, i]);
   return (
     <>
-      <TaskHead n={1} points={result?.points} />
+      <TaskHead n={1} points={result?.points} max={max} />
       <p className="mt-2 text-[15px]">{task.intro}</p>
       <ExerciseFigure id={task.diagram} />
       <p className="text-[15px]">{task.instruction}</p>
@@ -276,7 +313,7 @@ function Task1({ task, marked, setMarked, result, onGrade, onEdit }) {
       </ul>
       <GradeBar graded={Boolean(result)} onGrade={onGrade} onEdit={onEdit} note={`${marked.length} markerade`} />
       {result && (
-        <ScoreBox ok={result.exact} title={<>{result.points} av 25 poäng</>}>
+        <ScoreBox ok={result.exact} title={<>{result.points} av {max} poäng</>}>
           <p className="mt-1 text-[15px] text-ink/80">
             {result.exact
               ? "Alla och endast de korrekta påståendena markerade."
@@ -462,11 +499,13 @@ function Task3fg({ item, draft, setDraft, graded }) {
 
 // ---------- Uppgift 4 ----------
 
-function Task4({ task, code, setCode, graded, result, self, setSelf, onGrade, onEdit }) {
-  const points = graded && result ? (result.status === "correct" ? 30 : self ?? 0) : null;
+// selfAssess: HT25-tentorna har självbedömd delpoäng vid fel resultat;
+// övningstentorna ger 20 eller 0.
+export function Task4({ task, code, setCode, graded, result, self, setSelf, onGrade, onEdit, max = 30, selfAssess = true }) {
+  const points = graded && result ? (result.status === "correct" ? max : selfAssess ? self ?? 0 : 0) : null;
   return (
     <>
-      <TaskHead n={4} points={points} />
+      <TaskHead n={4} points={points} max={max} />
       <p className="mt-2 text-[15px]">Givet är följande tabeller:</p>
       <div className="mt-2 grid gap-4 lg:grid-cols-3">
         {task.tables.map((t) => (
@@ -482,7 +521,7 @@ function Task4({ task, code, setCode, graded, result, self, setSelf, onGrade, on
       <GradeBar graded={graded} onGrade={onGrade} onEdit={onEdit} disabled={!code.trim()} note="Körs mot tentans data i SQLite, med kursens T-SQL översatt." />
       {graded && !result && <p className="mt-4 text-sm text-ink/65">Kör frågan …</p>}
       {graded && result && (
-        <ScoreBox ok={result.status === "correct"} title={<>{points} av 30 poäng{result.status !== "correct" && self !== null ? <span className="font-body text-sm text-ink/70"> · självbedömd</span> : ""}</>}>
+        <ScoreBox ok={result.status === "correct"} title={<>{points} av {max} poäng{selfAssess && result.status !== "correct" && self !== null ? <span className="font-body text-sm text-ink/70"> · självbedömd</span> : ""}</>}>
           <p className="mt-1 text-[15px]">{result.message}</p>
           {task.avgNote && <p className="mt-2 text-[15px] text-ink/80">{task.avgNote}</p>}
           {(result.user || result.control) && (
@@ -493,7 +532,7 @@ function Task4({ task, code, setCode, graded, result, self, setSelf, onGrade, on
               {result.control && <ResultTable caption="Facit på kontrolldatan" result={result.control.expected} />}
             </div>
           )}
-          {result.status !== "correct" && (
+          {selfAssess && result.status !== "correct" && (
             <div className="mt-4">
               <p className="text-sm font-medium text-ink/80">Jämför med facit och sätt delpoäng själv</p>
               <ul className="mt-1 list-disc space-y-0.5 pl-5 text-[15px] text-ink/85">{task.checklist.map((c) => <li key={c}>{c}</li>)}</ul>

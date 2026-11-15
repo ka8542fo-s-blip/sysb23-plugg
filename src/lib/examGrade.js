@@ -283,13 +283,13 @@ function runAsServer(SQL, seed, sql) {
   return { ...result, columns: result.columns.map((name) => (AVG_COLUMN.test(name) ? "(No column name)" : name)) };
 }
 
-// Rätt resultat ger 30, fel resultat 0 (checklistan för självbedömning
+// Rätt resultat ger max (30 på HT25, 20 på övningstentorna), fel resultat 0 (checklistan för självbedömning
 // visas i vyn). Svaret körs som SQL Server räknar (AVG i heltal) och godtas
 // mot task.expected, som facitfrågan räknar sig fram till om det saknas, eller
 // mot det facitfrågan ger i SQLite: AVG(CAST(...)) ger decimaler också i
 // SQL Server. Kontrolldatan är task.control.tables, eller task.control.changes
 // ovanpå tentans rader.
-export function gradeTask4(SQL, task, userSql) {
+export function gradeTask4(SQL, task, userSql, max = 30) {
   const trimmed = (userSql || "").trim();
   if (!trimmed) return { status: "empty", points: 0, message: "Skriv en fråga innan du rättar." };
   if (splitStatements(trimmed).length > 1) return { status: "error", points: 0, message: "Svaret innehåller flera satser. Uppgiften kräver en (1) fråga med ett resultat." };
@@ -325,7 +325,7 @@ export function gradeTask4(SQL, task, userSql) {
   const correct = ok && (!control || control.ok);
   return {
     status: correct ? "correct" : "wrong",
-    points: correct ? 30 : 0,
+    points: correct ? max : 0,
     user,
     expected,
     sqlite,
@@ -336,4 +336,70 @@ export function gradeTask4(SQL, task, userSql) {
         ? `Resultatet stämmer på tabellerna, men inte på kontrolldatan (${control.label}). Frågan svarar alltså inte på uppgiften i allmänhet. Har du skrivit in ett värde i stället för att hämta det med en underfråga?`
         : vsServer.message,
   };
+}
+
+// ---------- Övningstentorna (egna, 5 × 20 p) ----------
+//
+// Samma rättare som ovan, med poängreglerna i cc-uppdraget: uppgift 2 och 5
+// får andelen uppfyllda regler × 20, avrundat nedåt (en uppskattning), 3a–e
+// golvas vid 0, 3f är 2 p automatiskt för normalformen plus 0–3 p
+// självbedömd motivering, 3g är 5 eller 0.
+
+// Reglerna en facittabell prövas på: primärnyckeln (med surrogatnyckeln),
+// varje vanlig kolumn, varje främmande nyckel och dess NULL-regel, och
+// varje UNIQUE. En saknad tabell fäller alla dess regler, ett problem fäller
+// en, en överflödig tabell och en felaktig REFERENCES räknas som en fälld
+// regel var utöver facit.
+export function ddlRuleCount(t) {
+  return 1 + t.columns.length + 2 * t.fks.length + (t.unique?.length ?? 0);
+}
+
+export function scoreDdlShare(result, facit, max = 20) {
+  if (!result) return null;
+  if (result.status === "parse-error") return { points: 0, max, passed: 0, total: 0, parseError: true };
+  const byName = new Map(facit.map((t) => [t.name, t]));
+  let total = 0;
+  let failed = 0;
+  for (const t of result.tables) {
+    const n = ddlRuleCount(byName.get(t.name) ?? { columns: [], fks: [] });
+    total += n;
+    failed += t.status === "missing" ? n : Math.min(n, t.problems.length);
+  }
+  const extra = result.extra.length + (result.errors?.length ?? 0);
+  total += extra;
+  failed += extra;
+  const passed = total - failed;
+  return { points: total ? Math.floor((max * passed) / total) : 0, max, passed, total, parseError: false };
+}
+
+// result = checkJava(...). Regler som inte gäller räknas inte.
+export function scoreJavaShare(result, max = 20) {
+  if (!result) return null;
+  if (result.status === "parse-error") return { points: 0, max, passed: 0, total: 0, parseError: true };
+  const counted = result.rules.filter((x) => x.status !== "na");
+  const passed = counted.filter((x) => x.status !== "fail").length;
+  return { points: counted.length ? Math.floor((max * passed) / counted.length) : 0, max, passed, total: counted.length, parseError: false };
+}
+
+// 3f: rätt högsta normalform ger 2 p; motiveringen bedöms mot checklistan
+// (self, 0–3). Är R i 3NF krävs ingen motivering, och rätt normalform ger
+// då hela 5. 3g: nedbrytningen ger 5 när den är förlustfri,
+// beroendebevarande, i 3NF och inte övernormaliserad (fdGrade säger ok);
+// är R redan i 3NF är rätt svar att inte dela upp den.
+export function scorePractice3f(grade, self) {
+  if (!grade) return { points: 0, max: 5, nfPoints: 0, selfPoints: 0, needsSelf: false, blank: true };
+  const nfOk = grade.fields.nf.ok;
+  if (grade.expectedNf === "3NF") return { points: nfOk ? 5 : 0, max: 5, nfPoints: nfOk ? 5 : 0, selfPoints: 0, needsSelf: false, blank: false };
+  const selfPoints = Math.max(0, Math.min(3, self ?? 0));
+  return { points: (nfOk ? 2 : 0) + selfPoints, max: 5, nfPoints: nfOk ? 2 : 0, selfPoints, needsSelf: true, blank: false };
+}
+
+export function scorePractice3g(grade, draft) {
+  if (!grade) return { points: 0, max: 5, ok: false, blank: true };
+  if (grade.expectedNf === "3NF") {
+    const ok = grade.fields.nf.ok && !(draft?.text || "").trim();
+    return { points: ok ? 5 : 0, max: 5, ok, blank: false };
+  }
+  const ok = Boolean(grade.fields.decomposition?.ok);
+  return { points: ok ? 5 : 0, max: 5, ok, blank: false };
 }

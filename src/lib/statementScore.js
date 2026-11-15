@@ -4,7 +4,8 @@
 // golvas summan vid 0 — tentan säger inte vad som händer under noll.
 export const MAX_POINTS = 25;
 
-export function scoreStatements(statements, marked) {
+// max: 25 på HT25-tentorna, 20 på de egna övningstentorna.
+export function scoreStatements(statements, marked, max = MAX_POINTS) {
   const set = new Set(marked);
   const rows = statements.map((st, i) => {
     const isMarked = set.has(i);
@@ -14,7 +15,7 @@ export function scoreStatements(statements, marked) {
   });
   const exact = rows.every((r) => r.marked === r.truth);
   const raw = rows.reduce((sum, r) => sum + r.points, 0);
-  const points = exact ? MAX_POINTS : Math.max(0, Math.min(MAX_POINTS, raw));
+  const points = exact ? max : Math.max(0, Math.min(max, raw));
   const hits = rows.filter((r) => r.outcome === "hit").length;
   const falseAlarms = rows.filter((r) => r.outcome === "false-alarm").length;
   const misses = rows.filter((r) => r.outcome === "miss").length;

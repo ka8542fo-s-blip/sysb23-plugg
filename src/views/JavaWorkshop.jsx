@@ -17,10 +17,8 @@ import { KEYS, load, save, loadJavaState, saveJavaState, clearJavaState } from "
 // webbläsaren: svaret läses och rättas regel för regel (lib/javaCheck.js),
 // och lösningsförslaget visas efter rättningen, under resultatet.
 // Uppbyggnad som BPMN-övningar: menyn till vänster (ihopfälld till siffror
-// från början) står kvar när man rullar, och på bred skärm (xl) står
-// uppgiftstexten bredvid svaret och rullar för sig, så att tabellen och
-// kraven syns medan man skriver. Svaret har 13 px kod (14 px på dator) så att
-// tentans rader ryms. Svar och status sparas per uppgift (sysb23:java:<id>), klar =
+// från början) står kvar när man rullar; uppgiften och svaret står under
+// varandra. Svar och status sparas per uppgift (sysb23:java:<id>), klar =
 // rättaren har sagt Rätt, som i Modellera.
 
 const GROUPS = [

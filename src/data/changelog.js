@@ -7,6 +7,7 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 73, date: "2026-11-15", text: "Tenta: Övningstenta 1, egen tenta med fem uppgifter à 20 poäng" },
   { id: 72, date: "2026-11-15", text: "Java: en slumpknapp; efter Rätt välj Nästa uppgift eller Slumpa" },
   { id: 71, date: "2026-11-15", text: "Java: uppgiften och svaret under varandra igen, i full bredd" },
   { id: 70, date: "2026-11-15", text: "Java: uppgiften bredvid svaret och en meny som i BPMN-övningar" },
