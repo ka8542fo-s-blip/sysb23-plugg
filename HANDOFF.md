@@ -369,7 +369,7 @@ kapitel: allt UI läser `chapter.number`.
 - **Java** (2026-10-26, vy `java` direkt efter SQL, `views/JavaWorkshop.jsx`):
   tentans Java/JDBC-uppgift. `data/databaser/javaTasks.js` har Björns två
   exempeluppgifter ordagrant (java-ex-1 DELETE med två villkor, java-ex-2
-  SELECT till ArrayList<Product>) och fjorton egna i samma form (java-ov-1…14:
+  SELECT till ArrayList<Product>) och tjugotvå egna i samma form (java-ov-1…22; 1–14:
   DELETE på naturlig nyckel, UPDATE `Salary = Salary + ?` med antal rader,
   INSERT av ett Product-objekt utan surrogatnyckel, COUNT(*) → int, exists
   → boolean på en ny Book-tabell, findBy → objekt eller null, SELECT som
@@ -384,6 +384,15 @@ kapitel: allt UI läser `chapter.number`.
   returneras efter loopen och getConnection/prepareStatement före loopen.
   `scripts/java/verify-solutions.mjs` tar nu också en ArrayList-parameter
   (en array av objekt i cases.mjs).
+  Övning 15–22 (2026-11-15) är på samma nivå som 1–13, efter Kaspers besked
+  att 14 är överkurs: DELETE → boolean (Book), INSERT med fem parametrar
+  och två setInt (Book), DELETE → int (Product), UPDATE av avdelning →
+  boolean, exists och COUNT(*) på Employee, findBy som returnerar new Book
+  i if och annars null, och en lista med strikt < och ORDER BY Price ASC.
+  java-ov-14 har `hard: true`; knappen "Slumpa uppgift" (`lib/javaPick.js`,
+  test i java-pick.test.mjs) hoppar över sådana och den öppna uppgiften och
+  väljer i första hand bland de som inte är klara, annars bland alla.
+  Inget automatiskt hopp efter rättning.
   Facit är den kortaste korrekta formen i Björns stil (2026-11-14): return
   direkt när värdet kommer ur ett anrop (`return resultSet.next();` i
   java-ov-5, `resultSet.next();` + `return resultSet.getInt(…)` för COUNT(*)
@@ -584,8 +593,8 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
   sammanfattningen och topics.js) skrevs om 2026-10-26 mot exempeltentan
   och är inte granskade av användaren.
 - **Java-fliken:** de åtta egna övningarna (java-ov-1…8) är verifierade
-  i H2 och av rättaren men inte granskade av användaren. java-ov-9…14
-  (2026-11-14) är kompilerade med javac och rättade, och har testfall i
+  i H2 och av rättaren men inte granskade av användaren. java-ov-9…22
+  (2026-11-14 och -15) är kompilerade med javac och rättade, och har testfall i
   `scripts/java/cases.mjs`, men är inte körda i H2 (ingen h2-jar fanns).
 - **SQL-verkstaden:** sql-54…62 (tentaspåret), facit verifierade i motorn
   men uppgiftstexterna ogranskade. sql-62 är den nya med aggregat som

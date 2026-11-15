@@ -5,6 +5,8 @@
 //
 // En uppgift:
 //   id, set ("exempel" | "ovning"), number, title, source
+//   hard:     true för en övning över tentans nivå (java-ov-14); "Slumpa
+//             uppgift" hoppar över den (lib/javaPick.js).
 //   blocks:   uppgiftstexten i ordning, som på tentan — { p: "…" } är ett
 //             stycke (`kod` och **fetstil** som i kompendiet), { code, lang }
 //             ett kodblock ("sql" | "java"). Signaturen står som sitt eget
@@ -1207,6 +1209,7 @@ public class ProductDao {
     number: 14,
     title: "Spara en lista med produkter (svårare)",
     source: OWN,
+    hard: true,
     blocks: [
       { p: "Givet är en databas i Microsoft SQL Server som innehåller följande tabell:" },
       { code: PRODUCT_DDL, lang: "sql" },
@@ -1271,6 +1274,475 @@ public class ProductDao {
         "product.getPrice()": "setDouble",
       },
       result: { kind: "affected" },
+    },
+  },
+  // ── Övning 15–22: samma nivå som 1–13 (2026-11-15) ───────────────────
+
+  {
+    id: "java-ov-15",
+    set: "ovning",
+    number: 15,
+    title: "Ta bort en bok och svara om den fanns",
+    source: OWN,
+    blocks: [
+      { p: "Givet är en databas i Microsoft SQL Server som innehåller följande tabell:" },
+      { code: BOOK_DDL, lang: "sql" },
+      { p: "Följande klass `BookDao` är också given:" },
+      { code: daoClass("BookDao", SQL_IMPORTS), lang: "java" },
+      { p: "Implementera följande instansmetod i klassen `BookDao`:" },
+      {
+        lang: "java",
+        code: `public boolean deleteBook(
+        String isbn
+) throws SQLException`,
+      },
+      { p: "Metoden ska ta bort den rad i tabellen `Book` vars värde i kolumnen `Isbn` är lika med värdet av parametern `isbn`. Rader vars värde i kolumnen `Isbn` skiljer sig från värdet av parametern `isbn` ska inte tas bort." },
+      { p: "Metoden ska returnera `true` om en rad togs bort. Om ingen rad uppfyller villkoret ska metoden returnera `false`." },
+      ...examTail("BookDao", "Du får anta att parametern `isbn` inte är `null`."),
+    ],
+    solution: `public boolean deleteBook(
+        String isbn
+) throws SQLException {
+    String sql = "DELETE FROM Book "
+            + "WHERE Isbn = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, isbn);
+        return statement.executeUpdate() > 0;
+    }
+}`,
+    check: {
+      method: { name: "deleteBook", returns: "boolean", params: [["String", "isbn"]] },
+      sql: {
+        kind: "DELETE",
+        table: "Book",
+        where: [{ column: "Isbn", op: "=", param: "isbn" }],
+      },
+      binds: { isbn: "setString" },
+      result: { kind: "updated" },
+    },
+  },
+  {
+    id: "java-ov-16",
+    set: "ovning",
+    number: 16,
+    title: "Lägg till en bok från parametrar",
+    source: OWN,
+    blocks: [
+      { p: "Givet är en databas i Microsoft SQL Server som innehåller följande tabell:" },
+      { code: BOOK_DDL, lang: "sql" },
+      { p: "Följande klass `BookDao` är också given:" },
+      { code: daoClass("BookDao", SQL_IMPORTS), lang: "java" },
+      { p: "Implementera följande instansmetod i klassen `BookDao`:" },
+      {
+        lang: "java",
+        code: `public void addBook(
+        String isbn,
+        String title,
+        String author,
+        int publishedYear,
+        int pages
+) throws SQLException`,
+      },
+      { p: "Metoden ska lägga till en ny rad i tabellen `Book`. Kolumnerna `Isbn`, `Title`, `Author`, `PublishedYear` och `Pages` ska tilldelas värdena av parametrarna `isbn`, `title`, `author`, `publishedYear` och `pages`." },
+      { p: "Kolumnen `BookID` ska inte anges i satsen. Dess värde genereras av databasen." },
+      { p: "Metoden ska inte returnera något värde." },
+      ...examTail(
+        "BookDao",
+        "Du får anta att parametrarna `isbn`, `title` och `author` inte är `null` och att det inte redan finns någon rad i tabellen `Book` vars värde i kolumnen `Isbn` är lika med värdet av parametern `isbn`.",
+      ),
+    ],
+    solution: `public void addBook(
+        String isbn,
+        String title,
+        String author,
+        int publishedYear,
+        int pages
+) throws SQLException {
+    String sql = "INSERT INTO Book (Isbn, Title, Author, PublishedYear, Pages) "
+            + "VALUES (?, ?, ?, ?, ?);";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, isbn);
+        statement.setString(2, title);
+        statement.setString(3, author);
+        statement.setInt(4, publishedYear);
+        statement.setInt(5, pages);
+        statement.executeUpdate();
+    }
+}`,
+    check: {
+      method: {
+        name: "addBook",
+        returns: "void",
+        params: [["String", "isbn"], ["String", "title"], ["String", "author"], ["int", "publishedYear"], ["int", "pages"]],
+      },
+      sql: {
+        kind: "INSERT",
+        table: "Book",
+        values: [
+          { column: "Isbn", param: "isbn" },
+          { column: "Title", param: "title" },
+          { column: "Author", param: "author" },
+          { column: "PublishedYear", param: "publishedYear" },
+          { column: "Pages", param: "pages" },
+        ],
+      },
+      binds: { isbn: "setString", title: "setString", author: "setString", publishedYear: "setInt", pages: "setInt" },
+      result: { kind: "void" },
+    },
+  },
+  {
+    id: "java-ov-17",
+    set: "ovning",
+    number: 17,
+    title: "Ta bort samtliga produkter i en given kategori",
+    source: OWN,
+    blocks: [
+      { p: "Givet är en databas i Microsoft SQL Server som innehåller följande tabell:" },
+      { code: PRODUCT_DDL, lang: "sql" },
+      { p: "Följande klass `ProductDao` är också given:" },
+      { code: daoClass("ProductDao", SQL_IMPORTS), lang: "java" },
+      { p: "Implementera följande instansmetod i klassen `ProductDao`:" },
+      {
+        lang: "java",
+        code: `public int deleteProductsInCategory(
+        String category
+) throws SQLException`,
+      },
+      { p: "Metoden ska ta bort samtliga rader i tabellen `Product` vars värde i kolumnen `Category` är lika med värdet av parametern `category`. Rader vars värde i kolumnen `Category` skiljer sig från värdet av parametern `category` ska inte tas bort." },
+      { p: "Metoden ska returnera antalet rader som togs bort. Om inga rader uppfyller villkoret ska metoden returnera `0`." },
+      ...examTail("ProductDao", "Du får anta att parametern `category` inte är `null`."),
+    ],
+    solution: `public int deleteProductsInCategory(
+        String category
+) throws SQLException {
+    String sql = "DELETE FROM Product "
+            + "WHERE Category = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, category);
+        return statement.executeUpdate();
+    }
+}`,
+    check: {
+      method: { name: "deleteProductsInCategory", returns: "int", params: [["String", "category"]] },
+      sql: {
+        kind: "DELETE",
+        table: "Product",
+        where: [{ column: "Category", op: "=", param: "category" }],
+      },
+      binds: { category: "setString" },
+      result: { kind: "affected" },
+    },
+  },
+  {
+    id: "java-ov-18",
+    set: "ovning",
+    number: 18,
+    title: "Byt avdelning för en anställd och svara om den anställda fanns",
+    source: OWN,
+    blocks: [
+      { p: "Givet är en databas i Microsoft SQL Server som innehåller följande tabell:" },
+      { code: EMPLOYEE_DDL, lang: "sql" },
+      { p: "Följande klass `EmployeeDao` är också given:" },
+      { code: daoClass("EmployeeDao", SQL_IMPORTS), lang: "java" },
+      { p: "Implementera följande instansmetod i klassen `EmployeeDao`:" },
+      {
+        lang: "java",
+        code: `public boolean updateDepartment(
+        String employeeNo,
+        String newDepartment
+) throws SQLException`,
+      },
+      { p: "Metoden ska sätta värdet i kolumnen `Department` till värdet av parametern `newDepartment` för den rad i tabellen `Employee` vars värde i kolumnen `EmployeeNo` är lika med värdet av parametern `employeeNo`. Rader vars värde i kolumnen `EmployeeNo` skiljer sig från värdet av parametern `employeeNo` ska inte ändras." },
+      { p: "Metoden ska returnera `true` om en rad ändrades. Om ingen rad uppfyller villkoret ska metoden returnera `false`." },
+      ...examTail("EmployeeDao", "Du får anta att parametrarna `employeeNo` och `newDepartment` inte är `null`."),
+    ],
+    solution: `public boolean updateDepartment(
+        String employeeNo,
+        String newDepartment
+) throws SQLException {
+    String sql = "UPDATE Employee "
+            + "SET Department = ? "
+            + "WHERE EmployeeNo = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, newDepartment);
+        statement.setString(2, employeeNo);
+        return statement.executeUpdate() > 0;
+    }
+}`,
+    check: {
+      method: { name: "updateDepartment", returns: "boolean", params: [["String", "employeeNo"], ["String", "newDepartment"]] },
+      sql: {
+        kind: "UPDATE",
+        table: "Employee",
+        set: [{ column: "Department", expr: "?", param: "newDepartment" }],
+        where: [{ column: "EmployeeNo", op: "=", param: "employeeNo" }],
+      },
+      binds: { newDepartment: "setString", employeeNo: "setString" },
+      result: { kind: "updated" },
+    },
+  },
+  {
+    id: "java-ov-19",
+    set: "ovning",
+    number: 19,
+    title: "Kontrollera om en anställd med ett givet anställningsnummer finns",
+    source: OWN,
+    blocks: [
+      { p: "Givet är en databas i Microsoft SQL Server som innehåller följande tabell:" },
+      { code: EMPLOYEE_DDL, lang: "sql" },
+      { p: "Följande klass `EmployeeDao` är också given:" },
+      { code: daoClass("EmployeeDao", QUERY_IMPORTS), lang: "java" },
+      { p: "Implementera följande instansmetod i klassen `EmployeeDao`:" },
+      {
+        lang: "java",
+        code: `public boolean employeeExists(
+        String employeeNo
+) throws SQLException`,
+      },
+      { p: "Metoden ska undersöka om det finns en rad i tabellen `Employee` vars värde i kolumnen `EmployeeNo` är lika med värdet av parametern `employeeNo`." },
+      { p: "Metoden ska returnera `true` om en sådan rad finns. Om ingen rad uppfyller villkoret ska metoden returnera `false`." },
+      ...examTail("EmployeeDao", "Du får anta att parametern `employeeNo` inte är `null`."),
+    ],
+    solution: `public boolean employeeExists(
+        String employeeNo
+) throws SQLException {
+    String sql = "SELECT EmployeeNo "
+            + "FROM Employee "
+            + "WHERE EmployeeNo = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, employeeNo);
+
+        try (ResultSet resultSet = statement.executeQuery()) {
+            return resultSet.next();
+        }
+    }
+}`,
+    check: {
+      method: { name: "employeeExists", returns: "boolean", params: [["String", "employeeNo"]] },
+      sql: {
+        kind: "SELECT",
+        table: "Employee",
+        where: [{ column: "EmployeeNo", op: "=", param: "employeeNo" }],
+      },
+      binds: { employeeNo: "setString" },
+      result: { kind: "exists", rows: "one" },
+    },
+  },
+  {
+    id: "java-ov-20",
+    set: "ovning",
+    number: 20,
+    title: "Räkna de anställda på en given avdelning",
+    source: OWN,
+    blocks: [
+      { p: "Givet är en databas i Microsoft SQL Server som innehåller följande tabell:" },
+      { code: EMPLOYEE_DDL, lang: "sql" },
+      { p: "Följande klass `EmployeeDao` är också given:" },
+      { code: daoClass("EmployeeDao", QUERY_IMPORTS), lang: "java" },
+      { p: "Implementera följande instansmetod i klassen `EmployeeDao`:" },
+      {
+        lang: "java",
+        code: `public int countEmployeesInDepartment(
+        String department
+) throws SQLException`,
+      },
+      { p: "Metoden ska räkna antalet rader i tabellen `Employee` vars värde i kolumnen `Department` är lika med värdet av parametern `department`. Rader vars värde i kolumnen `Department` skiljer sig från värdet av parametern `department` ska inte räknas." },
+      { p: "Antalet ska beräknas i databasen med `COUNT(*)`. Raderna ska inte hämtas och räknas i Java." },
+      { p: "Metoden ska returnera antalet rader som uppfyller villkoret. Om inga rader uppfyller villkoret ska metoden returnera `0`." },
+      ...examTail("EmployeeDao", "Du får anta att parametern `department` inte är `null`."),
+    ],
+    solution: `public int countEmployeesInDepartment(
+        String department
+) throws SQLException {
+    String sql = "SELECT COUNT(*) AS NumberOfEmployees "
+            + "FROM Employee "
+            + "WHERE Department = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, department);
+
+        try (ResultSet resultSet = statement.executeQuery()) {
+            resultSet.next();
+            return resultSet.getInt("NumberOfEmployees");
+        }
+    }
+}`,
+    check: {
+      method: { name: "countEmployeesInDepartment", returns: "int", params: [["String", "department"]] },
+      sql: {
+        kind: "SELECT",
+        table: "Employee",
+        count: true,
+        where: [{ column: "Department", op: "=", param: "department" }],
+      },
+      binds: { department: "setString" },
+      result: { kind: "scalar", rows: "one", column: "NumberOfEmployees", getter: "getInt" },
+    },
+  },
+  {
+    id: "java-ov-21",
+    set: "ovning",
+    number: 21,
+    title: "Hämta en bok med ett givet ISBN",
+    source: OWN,
+    blocks: [
+      { p: "Givet är en databas i Microsoft SQL Server som innehåller följande tabell:" },
+      { code: BOOK_DDL, lang: "sql" },
+      { p: "Givet är även följande klass `Book`:" },
+      { code: BOOK_CLASS, lang: "java" },
+      { p: "Följande klass `BookDao` är också given:" },
+      { code: daoClass("BookDao", QUERY_IMPORTS), lang: "java" },
+      { p: "Implementera följande instansmetod i klassen `BookDao`:" },
+      {
+        lang: "java",
+        code: `public Book findBookByIsbn(
+        String isbn
+) throws SQLException`,
+      },
+      { p: "Metoden ska hämta den rad i tabellen `Book` vars värde i kolumnen `Isbn` är lika med värdet av parametern `isbn`." },
+      { p: "Om en sådan rad finns ska metoden returnera ett objekt av typen `Book`. Samtliga instansvariabler i objektet ska tilldelas värden från motsvarande kolumner i raden. Instansvariabeln `id` motsvarar kolumnen `BookID`." },
+      { p: "Om ingen rad uppfyller villkoret ska metoden returnera `null`." },
+      ...examTail("BookDao", "Du får anta att parametern `isbn` inte är `null`.", "Book"),
+    ],
+    solution: `public Book findBookByIsbn(
+        String isbn
+) throws SQLException {
+    String sql = "SELECT BookID, Isbn, Title, Author, PublishedYear, Pages "
+            + "FROM Book "
+            + "WHERE Isbn = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, isbn);
+
+        try (ResultSet resultSet = statement.executeQuery()) {
+            if (resultSet.next()) {
+                return new Book(
+                        resultSet.getInt("BookID"),
+                        resultSet.getString("Isbn"),
+                        resultSet.getString("Title"),
+                        resultSet.getString("Author"),
+                        resultSet.getInt("PublishedYear"),
+                        resultSet.getInt("Pages")
+                );
+            }
+        }
+    }
+
+    return null;
+}`,
+    check: {
+      method: { name: "findBookByIsbn", returns: "Book", params: [["String", "isbn"]] },
+      sql: {
+        kind: "SELECT",
+        table: "Book",
+        select: ["BookID", "Isbn", "Title", "Author", "PublishedYear", "Pages"],
+        where: [{ column: "Isbn", op: "=", param: "isbn" }],
+      },
+      binds: { isbn: "setString" },
+      result: {
+        kind: "single",
+        rows: "one",
+        model: "Book",
+        fields: [
+          { column: "BookID", getter: "getInt" },
+          { column: "Isbn", getter: "getString" },
+          { column: "Title", getter: "getString" },
+          { column: "Author", getter: "getString" },
+          { column: "PublishedYear", getter: "getInt" },
+          { column: "Pages", getter: "getInt" },
+        ],
+      },
+    },
+  },
+  {
+    id: "java-ov-22",
+    set: "ovning",
+    number: 22,
+    title: "Hämta produkter som är billigare än ett givet pris, sorterade efter pris",
+    source: OWN,
+    blocks: [
+      { p: "Givet är en databas i Microsoft SQL Server som innehåller följande tabell:" },
+      { code: PRODUCT_DDL, lang: "sql" },
+      { p: "Givet är även följande klass `Product`:" },
+      { code: PRODUCT_CLASS, lang: "java" },
+      { p: "Följande klass `ProductDao` är också given:" },
+      { code: daoClass("ProductDao", LIST_IMPORTS), lang: "java" },
+      { p: "Implementera följande instansmetod i klassen `ProductDao`:" },
+      {
+        lang: "java",
+        code: `public ArrayList<Product> findProductsCheaperThan(
+        double maxPrice
+) throws SQLException`,
+      },
+      { p: "Metoden ska hämta samtliga rader i tabellen `Product` vars värde i kolumnen `Price` är **lägre än** värdet av parametern `maxPrice`. Rader vars värde i kolumnen `Price` är lika med värdet av parametern `maxPrice` ska inte tas med." },
+      { p: "Metoden ska returnera ett objekt av typen `ArrayList<Product>` som innehåller ett objekt av typen `Product` för varje rad som uppfyller villkoret. Samtliga instansvariabler i varje `Product`-objekt ska tilldelas värden från motsvarande kolumner i raden. Instansvariabeln `id` motsvarar kolumnen `ProductID`." },
+      { p: "Objekten i listan ska vara ordnade efter värdet i kolumnen `Price` i **stigande** ordning, så att den billigaste produkten kommer först. Ordningen ska bestämmas i SQL-frågan. Produkter med samma värde i kolumnen `Price` får komma i valfri ordning sinsemellan." },
+      { p: "Om inga rader uppfyller villkoret ska metoden returnera en tom `ArrayList<Product>`, inte `null`." },
+      ...examTail("ProductDao", "Du får anta att parametern `maxPrice` är större än `0`.", "Product"),
+    ],
+    solution: `public ArrayList<Product> findProductsCheaperThan(
+        double maxPrice
+) throws SQLException {
+    String sql = "SELECT ProductID, ProductNo, Name, Category, Price "
+            + "FROM Product "
+            + "WHERE Price < ? "
+            + "ORDER BY Price ASC;";
+    ArrayList<Product> products = new ArrayList<>();
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setDouble(1, maxPrice);
+
+        try (ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                Product product = new Product(
+                        resultSet.getInt("ProductID"),
+                        resultSet.getString("ProductNo"),
+                        resultSet.getString("Name"),
+                        resultSet.getString("Category"),
+                        resultSet.getDouble("Price")
+                );
+                products.add(product);
+            }
+        }
+    }
+
+    return products;
+}`,
+    check: {
+      method: { name: "findProductsCheaperThan", returns: "ArrayList<Product>", params: [["double", "maxPrice"]] },
+      sql: {
+        kind: "SELECT",
+        table: "Product",
+        select: ["ProductID", "ProductNo", "Name", "Category", "Price"],
+        where: [{ column: "Price", op: "<", param: "maxPrice" }],
+        orderBy: [{ column: "Price", dir: "ASC" }],
+      },
+      binds: { maxPrice: "setDouble" },
+      result: {
+        kind: "list",
+        rows: "many",
+        model: "Product",
+        fields: [
+          { column: "ProductID", getter: "getInt" },
+          { column: "ProductNo", getter: "getString" },
+          { column: "Name", getter: "getString" },
+          { column: "Category", getter: "getString" },
+          { column: "Price", getter: "getDouble" },
+        ],
+      },
     },
   },
 ];

@@ -851,4 +851,301 @@ export const cases = {
       },
     ],
   },
+
+  // ------------------------------------------------- java-ov-15 … java-ov-22
+
+  "java-ov-15": {
+    seed: { Book: books },
+    cases: [
+      {
+        name: "ISBN som finns: true, bara den raden tas bort",
+        args: ["9789100000013"],
+        expect: { returns: true, after: { Book: without(books, "Isbn", "9789100000013") } },
+      },
+      {
+        name: "ISBN som inte finns: false, inget tas bort",
+        args: ["9789100000099"],
+        expect: { returns: false },
+      },
+      {
+        name: "SQL-injektion i isbn tar inte bort något: false",
+        args: ["x' OR '1'='1"],
+        expect: { returns: false },
+      },
+      {
+        name: "SQLException i executeUpdate går vidare, allt stängs",
+        args: ["9789100000013"],
+        fault: "execute",
+        expect: { throws: "SQLException" },
+      },
+      {
+        name: "tabellen saknas: SQLException går vidare, Connection stängs",
+        args: ["9789100000013"],
+        fault: "drop-table",
+        expect: { throws: "SQLException" },
+      },
+    ],
+  },
+  "java-ov-16": {
+    seed: { Book: books },
+    cases: [
+      {
+        name: "ny rad med parametrarnas värden; BookID 22 från databasen",
+        args: ["9789100000030", "Ny bok", "Cilla Ek", 2024, 312],
+        expect: { after: { Book: [...books, { BookID: 22, Isbn: "9789100000030", Title: "Ny bok", Author: "Cilla Ek", PublishedYear: 2024, Pages: 312 }] } },
+      },
+      {
+        name: "apostrofer och SQL i värdena lagras som text",
+        args: ["9789100000031", "x'); DROP TABLE Book; --", "O'Brien", 1999, 1],
+        expect: { after: { Book: [...books, { BookID: 22, Isbn: "9789100000031", Title: "x'); DROP TABLE Book; --", Author: "O'Brien", PublishedYear: 1999, Pages: 1 }] } },
+      },
+      {
+        name: "SQLException i executeUpdate går vidare, allt stängs",
+        args: ["9789100000030", "Ny bok", "Cilla Ek", 2024, 312],
+        fault: "execute",
+        expect: { throws: "SQLException" },
+      },
+      {
+        name: "tabellen saknas: SQLException går vidare, Connection stängs",
+        args: ["9789100000030", "Ny bok", "Cilla Ek", 2024, 312],
+        fault: "drop-table",
+        expect: { throws: "SQLException" },
+      },
+    ],
+  },
+  "java-ov-17": {
+    seed: { Product: products },
+    cases: [
+      {
+        name: "tre rader i Verktyg tas bort: 3, andra kategorier blir kvar",
+        args: ["Verktyg"],
+        expect: { returns: 3, after: { Product: products.filter((row) => row.Category !== "Verktyg") } },
+      },
+      {
+        name: "ingen rad i kategorin: 0",
+        args: ["Trädgård"],
+        expect: { returns: 0 },
+      },
+      {
+        name: "SQL-injektion i category tar inte bort något: 0",
+        args: ["x' OR '1'='1"],
+        expect: { returns: 0 },
+      },
+      {
+        name: "SQLException i executeUpdate går vidare, allt stängs",
+        args: ["Verktyg"],
+        fault: "execute",
+        expect: { throws: "SQLException" },
+      },
+      {
+        name: "tabellen saknas: SQLException går vidare, Connection stängs",
+        args: ["Verktyg"],
+        fault: "drop-table",
+        expect: { throws: "SQLException" },
+      },
+    ],
+  },
+  "java-ov-18": {
+    seed: { Employee: employees },
+    cases: [
+      {
+        name: "E2 finns: true, bara dess avdelning ändras",
+        args: ["E2", "Ekonomi"],
+        expect: {
+          returns: true,
+          after: { Employee: employees.map((row) => (row.EmployeeNo === "E2" ? { ...row, Department: "Ekonomi" } : row)) },
+        },
+      },
+      {
+        name: "inget EmployeeNo matchar: false, inget ändras",
+        args: ["E99", "Ekonomi"],
+        expect: { returns: false },
+      },
+      {
+        name: "SQL-injektion i employeeNo ändrar inget: false",
+        args: ["E1' OR '1'='1", "Lager"],
+        expect: { returns: false },
+      },
+      {
+        name: "SQLException i executeUpdate går vidare, allt stängs",
+        args: ["E2", "Ekonomi"],
+        fault: "execute",
+        expect: { throws: "SQLException" },
+      },
+      {
+        name: "tabellen saknas: SQLException går vidare, Connection stängs",
+        args: ["E2", "Ekonomi"],
+        fault: "drop-table",
+        expect: { throws: "SQLException" },
+      },
+    ],
+  },
+  "java-ov-19": {
+    seed: { Employee: employeesWithE10 },
+    cases: [
+      {
+        name: "anställningsnummer som finns: true",
+        args: ["E10"],
+        expect: { returns: true },
+      },
+      {
+        name: "anställningsnummer som inte finns: false",
+        args: ["E99"],
+        expect: { returns: false },
+      },
+      {
+        name: "tom tabell: false",
+        args: ["E1"],
+        seed: { Employee: [] },
+        expect: { returns: false },
+      },
+      {
+        name: "SQL-injektion i employeeNo: false",
+        args: ["x' OR '1'='1"],
+        expect: { returns: false },
+      },
+      {
+        name: "SQLException i ResultSet.next() går vidare, allt stängs",
+        args: ["E1"],
+        fault: "next",
+        expect: { throws: "SQLException" },
+      },
+      {
+        name: "SQLException i executeQuery går vidare, allt stängs",
+        args: ["E1"],
+        fault: "execute",
+        expect: { throws: "SQLException" },
+      },
+      {
+        name: "tabellen saknas: SQLException går vidare, Connection stängs",
+        args: ["E1"],
+        fault: "drop-table",
+        expect: { throws: "SQLException" },
+      },
+    ],
+  },
+  "java-ov-20": {
+    seed: { Employee: employees },
+    cases: [
+      {
+        name: "fyra anställda på IT, räknade i databasen (en rad läses)",
+        args: ["IT"],
+        expect: { returns: 4, rows: 1 },
+      },
+      {
+        name: "en anställd på Lager; andra avdelningar räknas inte",
+        args: ["Lager"],
+        expect: { returns: 1, rows: 1 },
+      },
+      {
+        name: "ingen anställd på avdelningen: 0",
+        args: ["Marknad"],
+        expect: { returns: 0 },
+      },
+      {
+        name: "SQL-injektion i department: 0",
+        args: ["x' OR '1'='1"],
+        expect: { returns: 0 },
+      },
+      {
+        name: "SQLException i ResultSet.next() går vidare, allt stängs",
+        args: ["IT"],
+        fault: "next",
+        expect: { throws: "SQLException" },
+      },
+      {
+        name: "SQLException i executeQuery går vidare, allt stängs",
+        args: ["IT"],
+        fault: "execute",
+        expect: { throws: "SQLException" },
+      },
+      {
+        name: "tabellen saknas: SQLException går vidare, Connection stängs",
+        args: ["IT"],
+        fault: "drop-table",
+        expect: { throws: "SQLException" },
+      },
+    ],
+  },
+  "java-ov-21": {
+    seed: { Book: books },
+    cases: [
+      {
+        name: "boken finns: samtliga instansvariabler rätt (id = BookID)",
+        args: ["9789100000014"],
+        expect: { returns: booksById(books, 14)[0] },
+      },
+      {
+        name: "ingen bok med ISBN:et: null",
+        args: ["9789100000099"],
+        expect: { returns: null },
+      },
+      {
+        name: "början av ett ISBN som finns räcker inte: null",
+        args: ["978910000001"],
+        expect: { returns: null },
+      },
+      {
+        name: "SQL-injektion i isbn: null",
+        args: ["x' OR '1'='1"],
+        expect: { returns: null },
+      },
+      {
+        name: "SQLException i ResultSet.next() går vidare, allt stängs",
+        args: ["9789100000014"],
+        fault: "next",
+        expect: { throws: "SQLException" },
+      },
+      {
+        name: "SQLException i executeQuery går vidare, allt stängs",
+        args: ["9789100000014"],
+        fault: "execute",
+        expect: { throws: "SQLException" },
+      },
+      {
+        name: "tabellen saknas: SQLException går vidare, Connection stängs",
+        args: ["9789100000014"],
+        fault: "drop-table",
+        expect: { throws: "SQLException" },
+      },
+    ],
+  },
+  "java-ov-22": {
+    seed: { Product: products },
+    cases: [
+      {
+        name: "billigare än 129.5: lika med tas inte med, billigast först",
+        args: [129.5],
+        expect: { ordered: true, returns: [product(products[3]), product(products[1])] },
+      },
+      {
+        name: "billigare än 500: alla fem, stigande pris",
+        args: [500],
+        expect: { ordered: true, returns: [3, 1, 2, 0, 4].map((i) => product(products[i])) },
+      },
+      {
+        name: "ingen produkt är billigare: tom lista, inte null",
+        args: [0.5],
+        expect: { returns: [] },
+      },
+      {
+        name: "SQLException i ResultSet.next() går vidare, allt stängs",
+        args: [129.5],
+        fault: "next",
+        expect: { throws: "SQLException" },
+      },
+      {
+        name: "SQLException i executeQuery går vidare, allt stängs",
+        args: [129.5],
+        fault: "execute",
+        expect: { throws: "SQLException" },
+      },
+      {
+        name: "tabellen saknas: SQLException går vidare, Connection stängs",
+        args: [129.5],
+        fault: "drop-table",
+        expect: { throws: "SQLException" },
+      },
+    ],
+  },
 };

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { exampleIntro, javaTasks } from "../data/databaser/javaTasks.js";
 import { checkJava } from "../lib/javaCheck.js";
+import { pickRandomJavaTask } from "../lib/javaPick.js";
 import { formatJava } from "../lib/codeIndent.js";
 import { FORMAT_KEYS, SUBMIT_KEYS } from "../lib/keys.js";
 import SchemaEditor from "../components/model/SchemaEditor.jsx";
@@ -147,9 +148,22 @@ export default function JavaWorkshop() {
           svaret läses och rättas regel för regel, med skälet bakom varje regel. Poäng visas inte, eftersom
           uppgiftens vikt på tentan inte är känd.
         </p>
-        <p className="tabular mt-2 text-[15px] text-ink/65">
-          {solvedCount} av {tasks.length} uppgifter klara
-        </p>
+        <div className="mt-2 flex flex-wrap items-center gap-3">
+          <p className="tabular text-[15px] text-ink/65">
+            {solvedCount} av {tasks.length} uppgifter klara
+          </p>
+          <button
+            type="button"
+            className="btn-secondary text-sm"
+            onClick={() => {
+              const id = pickRandomJavaTask(tasks, states, task.id);
+              if (id) open(id);
+            }}
+            title="Öppnar en annan uppgift, i första hand en som inte är klar. Övningar markerade som svårare tas inte med."
+          >
+            Slumpa uppgift
+          </button>
+        </div>
       </section>
 
       <div className="lg:flex lg:gap-8">

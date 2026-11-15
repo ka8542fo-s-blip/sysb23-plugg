@@ -1032,7 +1032,163 @@ const OV14_SOLUTION = `public int saveAll(
     return savedRows;
 }`;
 
-const OV_SOLUTIONS = { 1: OV1_SOLUTION, 2: OV2_SOLUTION, 3: OV3_SOLUTION, 4: OV4_SOLUTION, 5: OV5_SOLUTION, 6: OV6_SOLUTION, 7: OV7_SOLUTION, 8: OV8_SOLUTION, 9: OV9_SOLUTION, 10: OV10_SOLUTION, 11: OV11_SOLUTION, 12: OV12_SOLUTION, 13: OV13_SOLUTION, 14: OV14_SOLUTION };
+const OV15_SOLUTION = `public boolean deleteBook(
+        String isbn
+) throws SQLException {
+    String sql = "DELETE FROM Book "
+            + "WHERE Isbn = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, isbn);
+        return statement.executeUpdate() > 0;
+    }
+}`;
+
+const OV16_SOLUTION = `public void addBook(
+        String isbn,
+        String title,
+        String author,
+        int publishedYear,
+        int pages
+) throws SQLException {
+    String sql = "INSERT INTO Book (Isbn, Title, Author, PublishedYear, Pages) "
+            + "VALUES (?, ?, ?, ?, ?);";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, isbn);
+        statement.setString(2, title);
+        statement.setString(3, author);
+        statement.setInt(4, publishedYear);
+        statement.setInt(5, pages);
+        statement.executeUpdate();
+    }
+}`;
+
+const OV17_SOLUTION = `public int deleteProductsInCategory(
+        String category
+) throws SQLException {
+    String sql = "DELETE FROM Product "
+            + "WHERE Category = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, category);
+        return statement.executeUpdate();
+    }
+}`;
+
+const OV18_SOLUTION = `public boolean updateDepartment(
+        String employeeNo,
+        String newDepartment
+) throws SQLException {
+    String sql = "UPDATE Employee "
+            + "SET Department = ? "
+            + "WHERE EmployeeNo = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, newDepartment);
+        statement.setString(2, employeeNo);
+        return statement.executeUpdate() > 0;
+    }
+}`;
+
+const OV19_SOLUTION = `public boolean employeeExists(
+        String employeeNo
+) throws SQLException {
+    String sql = "SELECT EmployeeNo "
+            + "FROM Employee "
+            + "WHERE EmployeeNo = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, employeeNo);
+
+        try (ResultSet resultSet = statement.executeQuery()) {
+            return resultSet.next();
+        }
+    }
+}`;
+
+const OV20_SOLUTION = `public int countEmployeesInDepartment(
+        String department
+) throws SQLException {
+    String sql = "SELECT COUNT(*) AS NumberOfEmployees "
+            + "FROM Employee "
+            + "WHERE Department = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, department);
+
+        try (ResultSet resultSet = statement.executeQuery()) {
+            resultSet.next();
+            return resultSet.getInt("NumberOfEmployees");
+        }
+    }
+}`;
+
+const OV21_SOLUTION = `public Book findBookByIsbn(
+        String isbn
+) throws SQLException {
+    String sql = "SELECT BookID, Isbn, Title, Author, PublishedYear, Pages "
+            + "FROM Book "
+            + "WHERE Isbn = ?;";
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, isbn);
+
+        try (ResultSet resultSet = statement.executeQuery()) {
+            if (resultSet.next()) {
+                return new Book(
+                        resultSet.getInt("BookID"),
+                        resultSet.getString("Isbn"),
+                        resultSet.getString("Title"),
+                        resultSet.getString("Author"),
+                        resultSet.getInt("PublishedYear"),
+                        resultSet.getInt("Pages")
+                );
+            }
+        }
+    }
+
+    return null;
+}`;
+
+const OV22_SOLUTION = `public ArrayList<Product> findProductsCheaperThan(
+        double maxPrice
+) throws SQLException {
+    String sql = "SELECT ProductID, ProductNo, Name, Category, Price "
+            + "FROM Product "
+            + "WHERE Price < ? "
+            + "ORDER BY Price ASC;";
+    ArrayList<Product> products = new ArrayList<>();
+
+    try (Connection connection = connectionHandler.getConnection();
+         PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setDouble(1, maxPrice);
+
+        try (ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                Product product = new Product(
+                        resultSet.getInt("ProductID"),
+                        resultSet.getString("ProductNo"),
+                        resultSet.getString("Name"),
+                        resultSet.getString("Category"),
+                        resultSet.getDouble("Price")
+                );
+                products.add(product);
+            }
+        }
+    }
+
+    return products;
+}`;
+
+const OV_SOLUTIONS = { 1: OV1_SOLUTION, 2: OV2_SOLUTION, 3: OV3_SOLUTION, 4: OV4_SOLUTION, 5: OV5_SOLUTION, 6: OV6_SOLUTION, 7: OV7_SOLUTION, 8: OV8_SOLUTION, 9: OV9_SOLUTION, 10: OV10_SOLUTION, 11: OV11_SOLUTION, 12: OV12_SOLUTION, 13: OV13_SOLUTION, 14: OV14_SOLUTION, 15: OV15_SOLUTION, 16: OV16_SOLUTION, 17: OV17_SOLUTION, 18: OV18_SOLUTION, 19: OV19_SOLUTION, 20: OV20_SOLUTION, 21: OV21_SOLUTION, 22: OV22_SOLUTION };
 const ov = (n, ...pairs) => edit(OV_SOLUTIONS[n], ...pairs);
 
 // Facit i övning 4 och 5 är den korta formen (return direkt i den inre try).
@@ -1062,8 +1218,8 @@ for (const n of [4, 5]) {
   });
 }
 
-test("övningarna: fjorton uppgifter, och kopiorna av lösningsförslagen får full pott", () => {
-  assert.deepEqual(Object.keys(OV).map(Number), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+test("övningarna: tjugotvå uppgifter, och kopiorna av lösningsförslagen får full pott", () => {
+  assert.deepEqual(Object.keys(OV).map(Number), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]);
   for (const [n, code] of Object.entries(OV_SOLUTIONS)) {
     const r = correct(code, OV[n]);
     assert.deepEqual(r.errors, [], `övning ${n}: ${JSON.stringify(r.errors)}`);
@@ -1519,4 +1675,57 @@ test("övning 14 (INSERT i en loop): annat namn, indexloop, ++ och x = x + … g
 
     return savedRows;
 }`, OV[14], 7, /står i loopen och körs en gång per element/);
+});
+
+// ---------- Övning 15–22: samma nivå som 1–13 ----------
+
+test("övning 15 (DELETE som svarar boolean): en variabel och == 1 godkänns; antalet som svar och saknat WHERE underkänns", () => {
+  correct(ov(15, "return statement.executeUpdate() > 0;", "int deleted = statement.executeUpdate();\n        return deleted > 0;"), OV[15]);
+  correct(ov(15, "> 0;", "== 1;"), OV[15]);
+  failsOn(ov(15, " > 0;", ";"), OV[15], 6, /ska vara true när en rad ändrades och annars false/);
+  failsOn(ov(15, `"DELETE FROM Book "\n            + "WHERE Isbn = ?;"`, `"DELETE FROM Book;"`, "        statement.setString(1, isbn);\n", ""), OV[15], 2, /WHERE saknas/);
+});
+
+test("övning 16 (INSERT med fem parametrar): fel set-metod, år och sidor i fel lucka, BookID och return i void underkänns", () => {
+  failsOn(ov(16, "setInt(4, publishedYear)", "setString(4, publishedYear)"), OV[16], 5, /publishedYear är en int och binds med setInt/);
+  failsOn(ov(16, "setInt(4, publishedYear)", "setInt(4, pages)", "setInt(5, pages)", "setInt(5, publishedYear)"), OV[16], 5, /hör till PublishedYear/);
+  failsOn(ov(16, "(Isbn, Title", "(BookID, Isbn, Title", "VALUES (?, ", "VALUES (?, ?, "), OV[16], 2, /BookID ska inte vara med i kolumnlistan/, [3, 5]);
+  failsOn(ov(16, "        statement.executeUpdate();", "        return statement.executeUpdate();"), OV[16], 9, /Metoden är void/);
+});
+
+test("övning 17 (DELETE på en kategori): > 0 i stället för antalet underkänns", () => {
+  failsOn(ov(17, "return statement.executeUpdate();", "return statement.executeUpdate() > 0;"), OV[17], 6, /inte värdet från executeUpdate\(\)/);
+});
+
+test("övning 18 (UPDATE som svarar boolean): värdena i parameterordning och SET på fel kolumn underkänns", () => {
+  failsOn(ov(18, "setString(1, newDepartment)", "setString(1, employeeNo)", "setString(2, employeeNo)", "setString(2, newDepartment)"), OV[18], 5, /\? nr 1 hör till Department/);
+  failsOn(ov(18, "SET Department = ?", "SET EmployeeNo = ?"), OV[18], 2, /SET Department = … saknas/);
+});
+
+test("övning 19–21: den korta och den längre formen får samma regler uppfyllda", () => {
+  const same = (n, longer) => {
+    const st = (code) => correct(code, OV[n]).rules.map((x) => [x.id, x.status]);
+    assert.deepEqual(st(longer), st(OV_SOLUTIONS[n]));
+  };
+  same(19, ov(19, "            return resultSet.next();\n        }\n    }\n}", "            if (resultSet.next()) {\n                return true;\n            }\n        }\n    }\n\n    return false;\n}"));
+  same(20, ov(20, "    try (Connection", "    int numberOfEmployees = 0;\n\n    try (Connection",
+    "            resultSet.next();\n            return resultSet.getInt(\"NumberOfEmployees\");\n        }\n    }\n}",
+    "            if (resultSet.next()) {\n                numberOfEmployees = resultSet.getInt(\"NumberOfEmployees\");\n            }\n        }\n    }\n\n    return numberOfEmployees;\n}"));
+  same(21, ov(21, "    try (Connection", "    Book book = null;\n\n    try (Connection", "                return new Book(", "                book = new Book(", "    return null;", "    return book;"));
+  // return null direkt efter if, inne i den inre try, är lika rätt.
+  same(21, ov(21, "            }\n        }\n    }\n\n    return null;\n}", "            }\n\n            return null;\n        }\n    }\n}"));
+});
+
+test("övning 20 och 21: fel alias och saknat return null underkänns", () => {
+  correct(ov(20, `getInt("NumberOfEmployees")`, "getInt(1)"), OV[20]);
+  failsOn(ov(20, `getInt("NumberOfEmployees")`, `getInt("Antal")`), OV[20], 8, /Aliaset i frågan är NumberOfEmployees/);
+  failsOn(ov(21, "\n\n    return null;\n}", "\n}"), OV[21], 9, /ska metoden returnera null, men den gör det aldrig/);
+});
+
+test("övning 22 (strikt < och ORDER BY ASC): ? > Price och ORDER BY utan ASC godkänns; <=, DESC och saknad sortering underkänns", () => {
+  correct(ov(22, "Price < ?", "? > Price"), OV[22]);
+  correct(ov(22, "ORDER BY Price ASC", "ORDER BY Price"), OV[22]);
+  failsOn(ov(22, "Price < ?", "Price <= ?"), OV[22], 2, /Price <= \? ska vara Price < \?/);
+  failsOn(ov(22, "Price ASC", "Price DESC"), OV[22], 2, /ORDER BY Price DESC ska vara ORDER BY Price/);
+  failsOn(ov(22, `+ "WHERE Price < ? "\n            + "ORDER BY Price ASC;"`, `+ "WHERE Price < ?;"`), OV[22], 2, /ORDER BY saknas/);
 });
