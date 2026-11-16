@@ -177,30 +177,50 @@ function decodeEscapes(s) {
   });
 }
 
+// Tokenisering. Fel som går att ringa in (en sträng eller kommentar som
+// aldrig stängs) blir syntaxfel i `errors`, och läsningen fortsätter: en
+// sträng stängs vid radens slut, en kommentar tar resten av texten. Varje
+// token får radens indrag (`indent`) och om den står först på raden
+// (`first`), så att en } för mycket kan hittas med hjälp av indraget.
 function lexJava(src) {
   const tokens = [];
+  const errors = [];
   const n = src.length;
   let i = 0;
   let line = 1;
+  let indent = 0;
+  let first = true;
+  const measure = (at) => {
+    let w = 0;
+    for (let k = at; k < n && (src[k] === " " || src[k] === "\t"); k++) w += src[k] === "\t" ? 4 : 1;
+    return w;
+  };
+  indent = measure(0);
+  const push = (tok) => { tokens.push({ ...tok, indent, first }); first = false; };
+  const syntax = (message) => errors.push({ line, message, kind: "syntax" });
   while (i < n) {
     const ch = src[i];
-    if (ch === "\n") { line++; i++; continue; }
+    if (ch === "\n") { line++; i++; indent = measure(i); first = true; continue; }
     if (/\s/.test(ch)) { i++; continue; }
     if (ch === "/" && src[i + 1] === "/") { while (i < n && src[i] !== "\n") i++; continue; }
     if (ch === "/" && src[i + 1] === "*") {
       const end = src.indexOf("*/", i + 2);
-      if (end === -1) return { error: { line, message: `Rad ${line}: kommentaren /* stängs aldrig med */.` } };
+      if (end === -1) {
+        syntax(`Rad ${line}: kommentaren /* stängs aldrig med */, så resten av svaret räknas som kommentar.`);
+        break;
+      }
       for (let k = i; k < end; k++) if (src[k] === "\n") line++;
       i = end + 2;
       continue;
     }
     if (src.startsWith('"""', i)) {
       const end = src.indexOf('"""', i + 3);
-      if (end === -1) return { error: { line, message: `Rad ${line}: textblocket """ stängs aldrig.` } };
-      const raw = src.slice(i + 3, end);
-      tokens.push({ t: "str", v: decodeEscapes(raw.replace(/^[^\n]*\n/, "")), line });
+      if (end === -1) syntax(`Rad ${line}: textblocket """ stängs aldrig.`);
+      const stop = end === -1 ? n : end;
+      const raw = src.slice(i + 3, stop);
+      push({ t: "str", v: decodeEscapes(raw.replace(/^[^\n]*\n/, "")), line });
       for (const c of raw) if (c === "\n") line++;
-      i = end + 3;
+      i = end === -1 ? n : end + 3;
       continue;
     }
     if (ch === '"' || ch === "'") {
@@ -210,29 +230,131 @@ function lexJava(src) {
         if (src[j] === "\\" && j + 1 < n && src[j + 1] !== "\n") { raw += src[j] + src[j + 1]; j += 2; } else raw += src[j++];
       }
       if (src[j] !== ch) {
-        return { error: { line, message: ch === '"'
+        syntax(ch === '"'
           ? `Rad ${line}: strängen stängs aldrig — ett " saknas. En SQL-sats över flera rader skrivs som flera strängar med + emellan.`
-          : `Rad ${line}: tecknet ' stängs aldrig. Strängar i Java skrivs med ", inte '.` } };
+          : `Rad ${line}: tecknet ' stängs aldrig. Strängar i Java skrivs med ", inte '.`);
+        // Strängen stängs vid radens slut, och läsningen fortsätter på nästa rad.
+        push({ t: ch === '"' ? "str" : "char", v: decodeEscapes(raw), line });
+        i = j;
+        continue;
       }
-      tokens.push({ t: ch === '"' ? "str" : "char", v: decodeEscapes(raw), line });
+      push({ t: ch === '"' ? "str" : "char", v: decodeEscapes(raw), line });
       i = j + 1;
       continue;
     }
     const rest = src.slice(i, i + 256);
     if (/^\d/.test(rest) || /^\.\d/.test(rest)) {
       const m = NUM_RE.exec(rest);
-      tokens.push({ t: "num", v: m[0], line });
+      push({ t: "num", v: m[0], line });
       i += m[0].length;
       continue;
     }
     const word = /^[\p{L}_$][\p{L}\p{N}_$]*/u.exec(rest);
-    if (word) { tokens.push({ t: "id", v: word[0], line }); i += word[0].length; continue; }
+    if (word) { push({ t: "id", v: word[0], line }); i += word[0].length; continue; }
     const op = JAVA_OPS.find((o) => src.startsWith(o, i)) ?? ch;
-    tokens.push({ t: "op", v: op, line });
+    push({ t: "op", v: op, line });
     i += op.length;
   }
   tokens.forEach((t, k) => { t.pos = k; });
-  return { tokens };
+  return { tokens, errors };
+}
+
+const CLOSE = { "(": ")", "{": "}", "[": "]" };
+const OPEN = { ")": "(", "}": "{", "]": "[" };
+
+// Exakt en } för mycket: vilken? Den vars borttagning ger flest } som står
+// först på sin rad och är utdragna jämfört med blockets innehåll (raden
+// efter {). Indraget på raden med { säger mindre: ett try-huvud över två
+// rader har sin { på den indragna andra raden. Lika bra lösningar: den
+// sista (oftast en } för mycket efter metodens slut).
+function extraBrace(tokens) {
+  const closers = tokens.filter((t) => isOp(t, "}"));
+  const contentIndent = (open) => {
+    const inside = tokens[open.pos + 1];
+    return inside && inside.line > open.line && inside.first ? inside.indent : null;
+  };
+  let best = null;
+  let bestScore = -1;
+  for (const drop of closers) {
+    const stack = [];
+    let score = 0;
+    let valid = true;
+    for (const t of tokens) {
+      if (t === drop) continue;
+      if (isOp(t, "{")) stack.push(t);
+      else if (isOp(t, "}")) {
+        const open = stack.pop();
+        if (!open) { valid = false; break; }
+        const content = contentIndent(open);
+        if (t.first && content !== null && t.indent < content) score++;
+      }
+    }
+    if (valid && stack.length === 0 && score >= bestScore) { best = drop; bestScore = score; }
+  }
+  return best;
+}
+
+// Klamrar och parenteser som inte går jämnt ut repareras i stället för att
+// stoppa rättningen, som en rättare som drar för felet och läser vidare:
+// - en } för mycket tas bort (extraBrace väljer vilken);
+// - ; inne i en parentes som inte hör till for eller try betyder att ")"
+//   saknas före semikolonet;
+// - en } som stänger ett block där en ( eller [ fortfarande är öppen: det
+//   som saknas sätts in före den;
+// - en ) eller ] som inte stänger något tas bort;
+// - det som aldrig stängs stängs vid slutet.
+// Varje reparation blir ett syntaxfel med radnummer.
+function repairBalance(tokens) {
+  const errors = [];
+  const syntax = (line, message) => errors.push({ line, message, kind: "syntax" });
+  const braceDiff = tokens.filter((t) => isOp(t, "}")).length - tokens.filter((t) => isOp(t, "{")).length;
+  const drop = braceDiff === 1 ? extraBrace(tokens) : null;
+  const out = [];
+  const stack = [];
+  const insert = (v, line) => out.push({ t: "op", v, line, synthetic: true });
+  const semicolonAllowed = (open) => {
+    const before = tokens[open.pos - 1];
+    return isId(before, "for") || isId(before, "try");
+  };
+  for (const tok of tokens) {
+    if (tok === drop) { syntax(tok.line, `Rad ${tok.line}: } för mycket — klamrarna går inte jämnt ut. Ta bort den.`); continue; }
+    if (tok.t !== "op") { out.push(tok); continue; }
+    if (CLOSE[tok.v]) { stack.push(tok); out.push(tok); continue; }
+    if (tok.v === ";") {
+      while (stack.length && isOp(stack[stack.length - 1], "(") && !semicolonAllowed(stack[stack.length - 1])) {
+        const open = stack.pop();
+        syntax(tok.line, `Rad ${tok.line}: ett ) saknas före ; — parentesen från rad ${open.line} stängs aldrig.`);
+        insert(")", tok.line);
+      }
+      out.push(tok);
+      continue;
+    }
+    if (!OPEN[tok.v]) { out.push(tok); continue; }
+    const top = stack[stack.length - 1];
+    if (top && top.v === OPEN[tok.v]) { stack.pop(); out.push(tok); continue; }
+    const at = stack.map((x) => x.v).lastIndexOf(OPEN[tok.v]);
+    // Det som är öppet ovanför partnern: } får stänga allt, ) och ] bara parenteser och hakar.
+    const between = at >= 0 ? stack.slice(at + 1) : [];
+    if (at >= 0 && (tok.v === "}" || between.every((x) => x.v !== "{"))) {
+      while (stack.length - 1 > at) {
+        const open = stack.pop();
+        syntax(tok.line, `Rad ${tok.line}: ${tok.v} stänger ${open.v} från rad ${open.line} — ett ${CLOSE[open.v]} saknas före.`);
+        insert(CLOSE[open.v], tok.line);
+      }
+      stack.pop();
+      out.push(tok);
+      continue;
+    }
+    syntax(tok.line, `Rad ${tok.line}: ${tok.v} för mycket — den stänger inget som är öppet${top ? ` (${top.v} från rad ${top.line} väntar på ${CLOSE[top.v]})` : ""}. Ta bort den.`);
+  }
+  const lastLine = out[out.length - 1]?.line ?? 1;
+  while (stack.length) {
+    const open = stack.pop();
+    syntax(open.line, `Rad ${open.line}: ${open.v} stängs aldrig — ett ${CLOSE[open.v]} saknas.`);
+    insert(CLOSE[open.v], lastLine);
+  }
+  out.forEach((t, k) => { t.pos = k; delete t.match; });
+  return { tokens: out, errors };
 }
 
 // Parenteser och klamrar måste gå jämnt ut; varje öppnande tecken får sin partner i .match.
@@ -1325,7 +1447,7 @@ const sigText = (m) => (m ? `public ${m.returns} ${m.name}(${(m.params ?? []).ma
 // Uttryck i uppgiftens data ("department", "employee.getEmployeeNo()") som Java-träd.
 function parseTaskExpr(text) {
   const lexed = lexJava(String(text));
-  if (lexed.error || !lexed.tokens.length) return null;
+  if (lexed.errors.length || !lexed.tokens.length) return null;
   const toks = [{ t: "op", v: "{", line: 1 }, ...lexed.tokens, { t: "op", v: ";", line: 1 }, { t: "op", v: "}", line: 1 }];
   toks.forEach((t, k) => { t.pos = k; });
   if (checkBalance(toks)) return null;
@@ -1366,15 +1488,20 @@ export function checkJava(code, task) {
   const check = task?.check ?? {};
   const src = String(code ?? "");
   if (!src.trim()) return parseError([{ message: `Svaret är tomt. Skriv hela metoden, med signaturen först: ${sigText(check.method)} { … }` }]);
+  // Syntaxfel stoppar inte rättningen: en sträng som aldrig stängs, en }
+  // för mycket eller en ) som saknas repareras, noteras med radnummer (kind
+  // "syntax") och resten rättas regel för regel. "parse-error" blir det
+  // bara när det inte finns någon metod att rätta.
   const lexed = lexJava(src);
-  if (lexed.error) return parseError([lexed.error]);
-  const { tokens } = lexed;
-  if (!tokens.length) return parseError([{ message: "Svaret innehåller bara kommentarer. Skriv hela metoden: signaturen och kroppen." }]);
+  if (!lexed.tokens.length) return parseError(lexed.errors.length ? lexed.errors : [{ message: "Svaret innehåller bara kommentarer. Skriv hela metoden: signaturen och kroppen." }]);
+  const repaired = repairBalance(lexed.tokens);
+  const { tokens } = repaired;
+  const syntax = [...lexed.errors, ...repaired.errors];
   const unbalanced = checkBalance(tokens);
-  if (unbalanced) return parseError([unbalanced]);
+  if (unbalanced) return parseError([...syntax, unbalanced]);
   const methods = findMethods(tokens);
   if (!methods.length) {
-    return parseError([{ message: `Hittar ingen metod. Svaret ska vara hela metoden med signaturen först, ${sigText(check.method)}, och kroppen inom { }.` }]);
+    return parseError([{ message: `Hittar ingen metod. Svaret ska vara hela metoden med signaturen först, ${sigText(check.method)}, och kroppen inom { }.` }, ...syntax]);
   }
   const want = check.method ?? {};
   const outer = methods.filter((m) => !methods.some((o) => o !== m && o.open < m.nameTok.pos && m.nameTok.pos < o.close));
@@ -1382,7 +1509,7 @@ export function checkJava(code, task) {
     ?? outer.find((m) => m.name.toLowerCase() === String(want.name).toLowerCase())
     ?? outer.find((m) => normType(m.returnType) === normType(want.returns) && m.params.length === (want.params ?? []).length)
     ?? outer[0];
-  const errors = [];
+  const errors = [...syntax];
   const analyze = (m) => {
     const body = parseBody(tokens, m.open, m.close, errors);
     const F = collect(body);
@@ -1395,7 +1522,9 @@ export function checkJava(code, task) {
   const C = buildContext(main, helpers, check, tableColumns(task, check.sql?.table));
   // Ord utanför metoderna (t.ex. fält i en klass runt metoden) räknas som deklarerade.
   C.classIds = new Set(tokens.filter((t) => t.t === "id" && !methods.some((x) => x.open <= t.pos && t.pos <= x.close)).map((t) => t.v));
-  errors.push(...compileChecks(C));
+  // Det tolken noterade är syntaxfel; namn och typer som inte finns är kompileringsfel.
+  for (const e of errors) e.kind ??= "syntax";
+  errors.push(...compileChecks(C).map((e) => ({ ...e, kind: "compile" })));
   errors.sort((a, b) => (a.line ?? 0) - (b.line ?? 0));
   const rules = [
     ruleSignature(C),

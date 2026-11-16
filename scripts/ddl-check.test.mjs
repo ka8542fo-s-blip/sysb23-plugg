@@ -228,8 +228,12 @@ test("syntaxfel ger radnummer: saknat kommatecken och förkortningar", () => {
     PRIMARY KEY (DID),
     UNIQUE (D1)
 );`, E18);
-  assert.equal(comma.status, "parse-error");
-  assert.match(comma.errors[0].message, /^Rad 5: kommatecken saknas/);
+  // Kommat saknas i slutet av rad 4; tabellen rättas ändå.
+  assert.notEqual(comma.status, "parse-error");
+  assert.equal(comma.syntax.length, 1);
+  assert.match(comma.syntax[0].message, /^Rad 4: kommatecken saknas efter kolumnen D2/);
+  assert.equal(comma.syntax[0].line, 4);
+  assert.equal(table(comma, "D").answerName, "D");
   const abbrev = parseDdl(`CREATE TABLE D (
     DID INTEGER IDENTITY(1,1),
     PK (DID)
@@ -329,8 +333,55 @@ test("syntaxfel: komman, avslutande ); och stavfel i reserverade ord", () => {
     const errs = messages(text);
     assert.equal(errs.length, 1, `${re}: ${errs.join(" / ")}`);
     assert.match(errs[0], re);
-    assert.equal(checkDdl(text, E18).status, "parse-error", String(re));
+    // Felet noteras, och tabellerna rättas ändå: stavfelet läses som det avsedda ordet.
+    const r = checkDdl(text, E18);
+    assert.notEqual(r.status, "parse-error", String(re));
+    assert.equal(r.syntax.length, 1, String(re));
   }
+});
+
+// ---------- Återhämtning från syntaxfel ----------
+// Ett syntaxfel kostar lite, inte allt: parsern noterar felet med radnummer,
+// fortsätter som om det saknade fanns och rättar resten.
+
+test("återhämtning: tabellerna blir desamma som utan felet", () => {
+  const clean = parseDdl(`${C20}\n${D20}`).tables;
+  const cases = [
+    [`${C20.replace(/\n\);$/, "")}\n${D20}`, /C avslutas aldrig/, 7],
+    [`${C20.replace("C1 INTEGER NOT NULL,", "C1 INTEGER NOT NULL")}\n${D20}`, /kommatecken saknas efter kolumnen C1/, 3],
+    [`${C20.replace("UNIQUE(C1),", "UNIQUE(C1,")}\n${D20}`, /UNIQUE \(C1 saknar "\)"/, 6],
+    [`${C20.replace("UNIQUE(C1),", "UNIQUE(C1")}\n${D20}`, /UNIQUE \(C1 saknar "\)"/, 6],
+    [`${C20}\n${D20.replace("FOREIGN KEY(CID) REFERENCES", "FOREIGN KEY(CID REFERENCES")}`, /FOREIGN KEY \(CID saknar "\)"/, 16],
+    [`${C20.replace("UNIQUE(C2)\n);", "UNIQUE(C2);\n);")}\n${D20}`, /";" för mycket före "\)"/, 7],
+    [`${C20.replace("UNIQUE(C2)\n);", "UNIQUE(C2);")}\n${D20}`, /"\)" saknas före ";"/, 7],
+    [`${C20.replace("C2 INTEGER NOT NULL,", "C2 INTEGER NOT NULL;")}\n${D20}`, /";" mitt i C/, 4],
+    [`${C20.replace("CONSTRAINT PK_C_CID PRIMARY KEY(CID)", "PK(CID)")}\n${D20}`, /skriv PRIMARY KEY utskrivet, inte PK/, 5],
+  ];
+  const shape = (tables) => JSON.stringify(tables.map((t) => [t.name, t.columns.map((c) => [c.name, c.notNull, c.identity]), t.pk?.cols, t.uniques.map((u) => u.cols), t.fks.map((f) => [f.cols, f.target, f.refCols])]));
+  for (const [text, re, line] of cases) {
+    const parsed = parseDdl(text);
+    assert.equal(parsed.errors.length, 1, `${re}: ${parsed.errors.map((e) => e.message).join(" / ")}`);
+    assert.match(parsed.errors[0].message, re);
+    if (line) assert.equal(parsed.errors[0].line, line, String(re));
+    assert.equal(shape(parsed.tables), shape(clean), String(re));
+  }
+});
+
+test("återhämtning: en rad som inte går att tolka hoppas över, resten av tabellen läses", () => {
+  const parsed = parseDdl(`${C20.replace("C2 INTEGER NOT NULL,", "C2 INTEGER NOT NULL ??? ,")}\n${D20}`);
+  assert.equal(parsed.errors.length, 1, parsed.errors.map((e) => e.message).join(" / "));
+  const c = parsed.tables.find((t) => t.name === "C");
+  assert.deepEqual(c.pk.cols, ["CID"]);
+  assert.equal(c.uniques.length, 2);
+  assert.equal(parsed.tables.length, 2);
+});
+
+test("skräptext: inget går att tolka, och det sägs", () => {
+  const r = checkDdl("hej hopp\nvet inte vad jag ska skriva", E18);
+  assert.equal(r.status, "parse-error");
+  assert.match(r.errors[0].message, /Inget i svaret gick att tolka/);
+  assert.equal(estimateDdl(r).points, 0);
+  assert.equal(checkDdl("", E18).status, "parse-error");
 });
 
 test("två tabeller som pekar på varandra ger ett enda tips, i båda ordningarna", () => {

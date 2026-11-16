@@ -77,7 +77,7 @@ test("uppgift 2: avdragstabellen ger väntad poäng för kända fel", () => {
   const e = byId["tenta-250916"];
   const facit = toDdl(e.task2.facit);
   const grade = (text) => estimateDdl(checkDdl(text, e.task2)).points;
-  // Syntaxfel som hindrar tolkning: 0.
+  // En enda tabell med två syntaxfel: den rättas, men alla andra tabeller saknas, och golvet är 0.
   assert.equal(grade("CREATE TABLE A ( AID INTEGER IDENTITY(1,1) PRIMARY KEY (AID)"), 0);
   // Flervärdestabellen C2 saknas: −5.
   const withoutC2 = facit.replace(/CREATE TABLE C2 \([\s\S]*?\);\n*/, "");
@@ -92,6 +92,104 @@ test("uppgift 2: avdragstabellen ger väntad poäng för kända fel", () => {
   assert.equal(grade(`${facit}\n\nCREATE TABLE R4 (\n    CID INTEGER,\n    DID INTEGER,\n    PRIMARY KEY (CID, DID)\n);`), 25 - DDL_DEDUCTIONS.overflodig);
   // Golvet: tom men giltig kod med en enda tabell ger aldrig under 0.
   assert.equal(grade("CREATE TABLE X (\n    XID INTEGER\n);"), 0);
+});
+
+// Ett riktigt svar på omtentans uppgift 2 (cc-ddl-rattning-tolerant.md):
+// rätt i alla tabeller och constraints, men tabell B saknar ");" före nästa
+// CREATE TABLE. Syntaxfel kostar 1 p styck, högst 3 p, och resten rättas.
+const OMTENTA_SVAR = `CREATE TABLE A (
+  AID INTEGER IDENTITY(1,1),
+  A1 INTEGER NOT NULL,
+  UNIQUE(A1),
+  PRIMARY KEY(AID)
+);
+
+CREATE TABLE D (
+  DID INTEGER IDENTITY(1,1),
+  D1 INTEGER NOT NULL,
+  D2 INTEGER NOT NULL,
+  R5a INTEGER,
+  AID INTEGER,
+  UNIQUE(D1),
+  UNIQUE(D2),
+  PRIMARY KEY(DID),
+  FOREIGN KEY(AID) REFERENCES A(AID)
+);
+
+CREATE TABLE C (
+  CID INTEGER IDENTITY(1,1),
+  C1 INTEGER NOT NULL,
+  C3 INTEGER,
+  C4 INTEGER,
+  DID INTEGER NOT NULL,
+  PRIMARY KEY(CID),
+  UNIQUE(C1,DID),
+  FOREIGN KEY(DID) REFERENCES D(DID)
+);
+
+CREATE TABLE A2 (
+  AID INTEGER NOT NULL,
+  A2 INTEGER NOT NULL,
+  PRIMARY KEY(AID,A2),
+  FOREIGN KEY(AID) REFERENCES A(AID)
+);
+
+CREATE TABLE B (
+  BID INTEGER IDENTITY(1,1),
+  B1 INTEGER NOT NULL,
+  B2 INTEGER,
+  AID INTEGER NOT NULL,
+  CID INTEGER NOT NULL,
+  PRIMARY KEY(BID),
+  UNIQUE(B1,AID),
+  FOREIGN KEY(AID) REFERENCES A(AID),
+  FOREIGN KEY(CID) REFERENCES C(CID)
+
+CREATE TABLE R2 (
+  BID INTEGER,
+  BID2 INTEGER,
+  PRIMARY KEY(BID2,BID),
+  FOREIGN KEY(BID) REFERENCES B(BID),
+  FOREIGN KEY(BID2) REFERENCES B(BID)
+);`;
+
+test("uppgift 2: ett saknat \");\" kostar 1 p, inte hela uppgiften", () => {
+  const e = byId["tenta-251024"];
+  const result = checkDdl(OMTENTA_SVAR, e.task2);
+  assert.notEqual(result.status, "parse-error");
+  assert.equal(result.syntax.length, 1);
+  assert.equal(result.syntax[0].line, 47);
+  assert.match(result.syntax[0].message, /^Rad 47: B avslutas aldrig/);
+  assert.ok(result.tables.every((t) => t.status === "ok"), JSON.stringify(result.tables.filter((t) => t.status !== "ok")));
+  const est = estimateDdl(result);
+  assert.equal(est.points, 24);
+  assert.deepEqual(est.syntax.map((x) => x.points), [DDL_DEDUCTIONS.syntax]);
+});
+
+test("uppgift 2: samma svar med \");\" ger 25, och två saknade ger 23", () => {
+  const e = byId["tenta-251024"];
+  const grade = (text) => estimateDdl(checkDdl(text, e.task2)).points;
+  const fixed = OMTENTA_SVAR.replace("REFERENCES C(CID)\n\nCREATE TABLE R2", "REFERENCES C(CID)\n);\n\nCREATE TABLE R2");
+  assert.notEqual(fixed, OMTENTA_SVAR);
+  assert.equal(grade(fixed), 25);
+  const two = OMTENTA_SVAR.replace("REFERENCES A(AID)\n);\n\nCREATE TABLE C", "REFERENCES A(AID)\n\nCREATE TABLE C");
+  assert.notEqual(two, OMTENTA_SVAR);
+  assert.equal(checkDdl(two, e.task2).syntax.length, 2);
+  assert.equal(grade(two), 23);
+  // Taket: fyra saknade ");" kostar 3 p, inte 4.
+  const four = OMTENTA_SVAR.replace(/\n\);\n\nCREATE TABLE (D|C|A2)/g, "\n\nCREATE TABLE $1");
+  assert.equal(checkDdl(four, e.task2).syntax.length, 4);
+  assert.equal(grade(four), 22);
+});
+
+test("uppgift 2: skräptext ger 0 och beskedet att inget gick att tolka", () => {
+  const e = byId["tenta-251024"];
+  const result = checkDdl("jag vet inte\nhur man skriver det här", e.task2);
+  assert.equal(result.status, "parse-error");
+  assert.match(result.errors[0].message, /Inget i svaret gick att tolka/);
+  const est = estimateDdl(result);
+  assert.equal(est.points, 0);
+  assert.equal(est.parseError, true);
 });
 
 // ---------- Uppgift 3a–e ----------

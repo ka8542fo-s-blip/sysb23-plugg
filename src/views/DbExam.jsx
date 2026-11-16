@@ -10,7 +10,7 @@ import { checkDdl, toDdl, fold } from "../lib/ddlCheck.js";
 import { parseSchema } from "../lib/modelCheck.js";
 import { gradeAnswer } from "../lib/fdGrade.js";
 import { loadEngine } from "../lib/sqlEngine.js";
-import { scoreTask1, estimateDdl, DDL_LABELS, scoreTask3ae, scoreTask3fg, gradeTask4 } from "../lib/examGrade.js";
+import { scoreTask1, estimateDdl, DDL_LABELS, SYNTAX_MAX, scoreTask3ae, scoreTask3fg, gradeTask4 } from "../lib/examGrade.js";
 import { load, save, examFdKey, clearExamFdDrawings } from "../lib/storage.js";
 import { practiceExams } from "../data/databaser/practiceExams.js";
 import PracticeExamRoom, { practiceTotal, practiceGraded, loadPracticeState } from "./PracticeExam.jsx";
@@ -329,6 +329,37 @@ export function Task1({ task, marked, setMarked, result, onGrade, onEdit, max = 
 
 // ---------- Uppgift 2 ----------
 
+// Inget gick att tolka: sammanfattningen först, sedan felen med radnummer.
+export function ParseErrorText({ errors }) {
+  const [summary, ...rest] = errors;
+  return (
+    <>
+      <p className="mt-1 text-[15px]">{summary?.message} Det ger 0 poäng.</p>
+      {rest.length > 0 && <ul className="mt-1 space-y-1 text-[15px]">{rest.map((err) => <li key={`${err.line}${err.message}`}>{err.message}</li>)}</ul>}
+    </>
+  );
+}
+
+// Syntaxfelen i uppgift 2 (och 5 i övningstentorna): ett per rad, med avdraget.
+// syntax = [{ line, message, points }] ur estimateDdl/scoreDdlShare/scoreJavaShare.
+export function SyntaxList({ syntax, onlySyntax = false }) {
+  return (
+    <li>
+      <span className="font-medium text-wrong">Syntaxfel</span>
+      <span className="text-sm text-ink/70"> · 1 p per fel, högst {SYNTAX_MAX} p för uppgiften. Också det avdraget är en uppskattning. Resten är rättat som om felen vore rättade.</span>
+      <ul className="ml-4 mt-1 space-y-1">
+        {syntax.map((err) => (
+          <li key={`${err.line}${err.message}`} className="flex gap-2">
+            <span className="tabular mt-0.5 h-fit shrink-0 rounded border border-wrong/40 px-1.5 text-[11px] font-medium text-wrong">−{err.points} {DDL_LABELS.syntax}</span>
+            <span>{err.message}</span>
+          </li>
+        ))}
+      </ul>
+      {onlySyntax && <p className="mt-1 text-ink/80">Tabellerna stämmer med facit; avdraget gäller bara syntaxfelen.</p>}
+    </li>
+  );
+}
+
 function Task2({ task, code, setCode, result, onGrade, onEdit }) {
   const facitDdl = useMemo(() => toDdl(task.facit), [task]);
   const est = result?.estimate;
@@ -353,14 +384,12 @@ function Task2({ task, code, setCode, result, onGrade, onEdit }) {
       {result && (
         <ScoreBox ok={result.check.status === "correct"} title={<>{est.points} av 25 poäng <span className="font-body text-sm text-ink/70">· Uppskattad poäng — tentan anger inte avdragen</span></>}>
           {est.parseError ? (
-            <>
-              <p className="mt-1 text-[15px]">Koden går inte att tolka, och det ger 0 poäng.</p>
-              <ul className="mt-1 space-y-1 text-[15px]">{result.check.errors.map((err) => <li key={err.line + err.message}>{err.message}</li>)}</ul>
-            </>
+            <ParseErrorText errors={result.check.errors} />
           ) : est.deductions.length === 0 ? (
             <p className="mt-1 text-[15px]">Alla tabeller stämmer med facit.</p>
           ) : (
             <ul className="mt-2 space-y-3 text-[15px]">
+              {est.syntax.length > 0 && <SyntaxList syntax={est.syntax} onlySyntax={est.deductions.every((d) => d.kind === "syntax")} />}
               {result.check.errors.map((err) => (
                 <li key={err.message} className="flex gap-2">
                   <span className="tabular mt-0.5 h-fit shrink-0 rounded border border-wrong/40 px-1.5 text-[11px] font-medium text-wrong">−{est.deductions.find((d) => d.text === err.message)?.points ?? 0} {DDL_LABELS.referens}</span>

@@ -1,10 +1,14 @@
 // Rättningen av ett Java-svar (lib/javaCheck.js) i DDL-rättarens stil:
-// en domrad, sedan det som stoppar kompilatorn (semikolon, stavfel; visas
-// också när reglerna är uppfyllda, och domraden säger då "Rätt i sak, men"),
-// sedan de tio reglerna var för sig med läge, text och — för regler som
-// inte är uppfyllda eller har en kommentar — skälet bakom. En regel som
-// inte gäller visar sin text när den har en (t.ex. "se regel 2").
-// Inga poäng: uppgiftens vikt på tentan är inte känd.
+// en domrad, sedan syntaxfelen (klamrar, parenteser, strängar, semikolon —
+// reglerna rättas som om de vore rättade), sedan det övriga som stoppar
+// kompilatorn (namn och typer som inte finns; båda visas också när reglerna
+// är uppfyllda, och domraden säger då "Rätt i sak, men"), sedan de tio
+// reglerna var för sig med läge, text och — för regler som inte är
+// uppfyllda eller har en kommentar — skälet bakom. En regel som inte gäller
+// visar sin text när den har en (t.ex. "se regel 2").
+// Inga poäng i fliken Java: uppgiftens vikt på tentan är inte känd. I
+// övningstentorna skickas `syntax` (scoreJavaShare) med, och varje syntaxfel
+// visar då sitt avdrag.
 
 const VERDICT = {
   correct: "Rätt.",
@@ -20,9 +24,11 @@ const STATE = {
   na: { mark: "–", label: "gäller inte", tone: "text-ink/50" },
 };
 
-export default function JavaResult({ result, children }) {
+export default function JavaResult({ result, syntax: deducted = null, children }) {
   const rules = result.rules || [];
   const errors = result.errors || [];
+  const syntaxErrors = errors.filter((err) => err.kind === "syntax");
+  const compileErrors = errors.filter((err) => err.kind !== "syntax");
   const failed = rules.filter((r) => r.status === "fail").length;
   // Reglerna är uppfyllda, men koden kompilerar inte som den står.
   const correctButErrors = result.status === "correct" && errors.length > 0;
@@ -52,11 +58,26 @@ export default function JavaResult({ result, children }) {
               {failed === 1 ? "En regel är inte uppfylld." : `${failed} regler är inte uppfyllda.`} Jämför med lösningsförslaget.
             </p>
           )}
-          {errors.length > 0 && (
+          {syntaxErrors.length > 0 && (
+            <div className="mt-3">
+              <p className="text-sm font-medium">
+                Syntaxfel <span className="font-normal text-ink/70">· reglerna nedan är rättade som om felen vore rättade{deducted ? ". 1 p per fel, högst 3 p — också det avdraget är en uppskattning" : ""}.</span>
+              </p>
+              <ul className="mt-1 space-y-1 text-[15px]">
+                {syntaxErrors.map((err, i) => (
+                  <li key={`${err.line ?? ""}${err.message}`} className="flex gap-2">
+                    {deducted && <span className="tabular mt-0.5 h-fit shrink-0 rounded border border-wrong/40 px-1.5 text-[11px] font-medium text-wrong">−{deducted[i]?.points ?? 0} syntaxfel</span>}
+                    <span>{err.message}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {compileErrors.length > 0 && (
             <div className="mt-3">
               <p className="text-sm font-medium">Att rätta innan det kompilerar:</p>
               <ul className="mt-1 space-y-1 text-[15px]">
-                {errors.map((err) => <li key={`${err.line ?? ""}${err.message}`}>{err.message}</li>)}
+                {compileErrors.map((err) => <li key={`${err.line ?? ""}${err.message}`}>{err.message}</li>)}
               </ul>
             </div>
           )}

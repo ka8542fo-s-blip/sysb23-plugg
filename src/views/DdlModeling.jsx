@@ -37,7 +37,11 @@ export default function DdlModeling({ modelProgress, onSolve, onReset }) {
     if (outcome.status === "correct") onSolve(exercise.id, "solved");
   }
 
-  const verdict = result?.status === "correct" ? "Rätt." : result?.status === "partial" ? "Delvis rätt." : result?.status === "wrong" ? "Fel." : null;
+  // Alla tabeller stämmer, men koden går inte att köra som den står (syntaxfel eller REFERENCES fel).
+  const rightButErrors = result?.status === "partial" && result.tables.every((t) => t.status === "ok") && result.extra.length === 0;
+  const verdict = rightButErrors ? "Rätt i sak, men koden går inte att köra som den står."
+    : result?.status === "correct" ? "Rätt." : result?.status === "partial" ? "Delvis rätt." : result?.status === "wrong" ? "Fel." : null;
+  const runErrors = result && result.status !== "parse-error" ? [...(result.syntax ?? []), ...result.errors].sort((a, b) => (a.line ?? 0) - (b.line ?? 0)) : [];
   const index = exercises.findIndex((e) => e.id === exercise.id);
   const nextExercise = exercises[index + 1];
 
@@ -108,20 +112,21 @@ export default function DdlModeling({ modelProgress, onSolve, onReset }) {
           </div>
 
           {result && (
-            <div className={`mt-4 rounded-lg border-l-2 p-4 ${result.status === "correct" ? "border-correct bg-correct-bg" : result.status === "parse-error" ? "border-brass bg-paper" : "border-wrong bg-wrong-bg"}`} role="status">
+            <div className={`mt-4 rounded-lg border-l-2 p-4 ${result.status === "correct" ? "border-correct bg-correct-bg" : result.status === "parse-error" || rightButErrors ? "border-brass bg-paper" : "border-wrong bg-wrong-bg"}`} role="status">
               {result.status === "parse-error" ? (
                 <>
-                  <p className="font-display text-lg">Koden går inte att köra.</p>
-                  <ul className="mt-1 space-y-1 text-[15px]">{result.errors.map((err) => <li key={err.line + err.message}>{err.message}</li>)}</ul>
+                  <p className="font-display text-lg">{result.errors[0]?.message}</p>
+                  <ul className="mt-1 space-y-1 text-[15px]">{result.errors.slice(1).map((err) => <li key={`${err.line}${err.message}`}>{err.message}</li>)}</ul>
                   <p className="mt-2 text-sm text-ink/70">Rätta felet och rätta igen. Facit står bredvid din kod.</p>
                 </>
               ) : (
                 <>
                   <p className="font-display text-lg">{verdict}</p>
-                  {result.errors.length > 0 && (
+                  {runErrors.length > 0 && (
                     <div className="mt-2">
-                      <p className="text-[15px] font-medium text-wrong">Koden går inte att köra:</p>
-                      <ul className="mt-1 space-y-1 text-[15px]">{result.errors.map((err) => <li key={err.message}>{err.message}</li>)}</ul>
+                      <p className="text-[15px] font-medium text-wrong">Koden går inte att köra som den står:</p>
+                      <ul className="mt-1 space-y-1 text-[15px]">{runErrors.map((err) => <li key={`${err.line}${err.message}`}>{err.message}</li>)}</ul>
+                      <p className="mt-1 text-sm text-ink/70">Tabellerna nedan är rättade som om felen vore rättade.</p>
                     </div>
                   )}
                   <ul className="mt-2 space-y-3 text-[15px]">

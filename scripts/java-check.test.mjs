@@ -507,16 +507,12 @@ test("stavfel som kompilatorn stoppar: listas med rad och underkänns i regeln d
 
 // ---------- (d) Svar som inte går att tolka ----------
 
-test("tolkningsfel: tomt, bara kommentarer, obalanserade klamrar, öppen sträng, ingen metod", () => {
+test("tolkningsfel: tomt, bara kommentarer, ingen metod", () => {
   const cases = [
     ["", /tomt/],
     ["   \n\t ", /tomt/],
     ["// jag vet inte\n/* inget */", /bara kommentarer/],
-    [T1.solution.replace(/\}\s*$/, ""), /\{ stängs aldrig/],
-    [T1.solution.replace("statement.setString(1, department);", "statement.setString(1, department;"), /\) saknas före/],
-    [T1.solution.replace(`"DELETE FROM Employee "`, `"DELETE FROM Employee`), /strängen stängs aldrig/],
     [`String sql = "DELETE FROM Employee WHERE Department = ?";\ntry (Connection c = connectionHandler.getConnection()) { }`, /Hittar ingen metod/],
-    ["public int deleteLowPaidEmployees(String department, double salaryLimit) throws SQLException {\n /* ej klar\n}", /kommentaren \/\* stängs aldrig/],
   ];
   for (const [code, reason] of cases) {
     const r = checkJava(code, T1);
@@ -525,9 +521,50 @@ test("tolkningsfel: tomt, bara kommentarer, obalanserade klamrar, öppen sträng
     assert.ok(r.errors.length);
     assert.match(r.errors[0].message, reason);
   }
-  // Radnumret pekar ut felet.
-  const r = checkJava(T1.solution.replace(`"DELETE FROM Employee "`, `"DELETE FROM Employee`), T1);
-  assert.equal(r.errors[0].line, 5);
+});
+
+// ---------- (e) Syntaxfel stoppar inte rättningen ----------
+// Klamrar, parenteser, strängar och kommentarer som inte går jämnt ut
+// repareras och listas som syntaxfel med radnummer; reglerna rättas ändå.
+
+const syntaxErrors = (r) => r.errors.filter((e) => e.kind === "syntax");
+
+test("en } för mycket: alla regler rättas, och syntaxfelet listas med sin rad", () => {
+  for (const t of [T1, T2]) {
+    const code = `${t.solution}\n}`;
+    const r = checkJava(code, t);
+    assert.equal(r.status, "correct", `${t.id}:\n${show(r)}`);
+    assert.deepEqual(r.rules.map((x) => x.id), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    const errs = syntaxErrors(r);
+    assert.equal(errs.length, 1, JSON.stringify(r.errors));
+    assert.equal(errs[0].line, code.split("\n").length);
+    assert.match(errs[0].message, /\} för mycket/);
+  }
+  // Mitt i metoden: indraget visar vilken } som är för mycket, och try-blocket hålls ihop.
+  const mid = edit(T1.solution, "        statement.setString(1, department);\n", "        statement.setString(1, department);\n        }\n");
+  const r = checkJava(mid, T1);
+  assert.equal(r.status, "correct", show(r));
+  assert.deepEqual(r.errors.map((e) => [e.kind, e.line]), [["syntax", 12]], JSON.stringify(r.errors));
+});
+
+test("klamrar, parenteser, strängar och kommentarer som inte stängs: reglerna rättas ändå", () => {
+  const cases = [
+    [T1.solution.replace(/\}\s*$/, ""), /\{ stängs aldrig/, 4],
+    [T1.solution.replace("statement.setString(1, department);", "statement.setString(1, department;"), /\) saknas före/, 11],
+    [T1.solution.replace("statement.setString(1, department);", "statement.setString(1, department));"), /\) för mycket/, 11],
+    [T1.solution.replace(`"DELETE FROM Employee "`, `"DELETE FROM Employee`), /strängen stängs aldrig/, 5],
+    ["public int deleteLowPaidEmployees(String department, double salaryLimit) throws SQLException {\n /* ej klar\n}", /kommentaren \/\* stängs aldrig/, 2],
+  ];
+  for (const [code, reason, line] of cases) {
+    const r = checkJava(code, T1);
+    assert.notEqual(r.status, "parse-error", `${reason}: ${JSON.stringify(r.errors)}`);
+    assert.equal(r.rules.length, 10);
+    const hit = syntaxErrors(r).find((e) => reason.test(e.message));
+    assert.ok(hit, `${reason}: ${JSON.stringify(r.errors)}`);
+    assert.equal(hit.line, line, String(reason));
+  }
+  // Det som bara saknar ett tecken är rätt i sak: alla regler uppfyllda.
+  for (const [code] of cases.slice(0, 3)) assert.equal(checkJava(code, T1).status, "correct");
 });
 
 test("ett saknat semikolon noteras med radnummer, men resten rättas ändå", () => {

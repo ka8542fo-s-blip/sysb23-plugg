@@ -17,7 +17,7 @@ import { loadEngine } from "../lib/sqlEngine.js";
 import { scoreStatements } from "../lib/statementScore.js";
 import { scoreDdlShare, scoreJavaShare, scoreTask3ae, scorePractice3f, scorePractice3g, gradeTask4 } from "../lib/examGrade.js";
 import { load, save, examFdKey, clearExamFdDrawings } from "../lib/storage.js";
-import { TaskHead, GradeBar, ScoreBox, Task1, Task4 } from "./DbExam.jsx";
+import { TaskHead, GradeBar, ScoreBox, Task1, Task4, SyntaxList, ParseErrorText } from "./DbExam.jsx";
 
 // En egen övningstenta i fliken Tenta: fem uppgifter à 20 poäng
 // (data/databaser/practiceExams.js). Samma rättare som HT25-tentorna och
@@ -209,15 +209,16 @@ function PTask2({ task, code, setCode, result, onGrade, onEdit }) {
       {result && (
         <ScoreBox ok={result.check.status === "correct"} title={<>{score.points} av 20 poäng <span className="font-body text-sm text-ink/70">· Uppskattning: andelen uppfyllda regler × 20, avrundat nedåt</span></>}>
           {score.parseError ? (
-            <>
-              <p className="mt-1 text-[15px]">Koden går inte att tolka, och det ger 0 poäng.</p>
-              <ul className="mt-1 space-y-1 text-[15px]">{result.check.errors.map((err) => <li key={err.line + err.message}>{err.message}</li>)}</ul>
-            </>
+            <ParseErrorText errors={result.check.errors} />
           ) : (
             <>
-              <p className="mt-1 text-[15px] text-ink/80">{score.passed} av {score.total} regler uppfyllda (primärnyckel, kolumner, främmande nycklar med NULL-regel och UNIQUE per tabell).</p>
+              <p className="mt-1 text-[15px] text-ink/80">
+                {score.passed} av {score.total} regler uppfyllda (primärnyckel, kolumner, främmande nycklar med NULL-regel och UNIQUE per tabell)
+                {score.syntaxPoints > 0 ? `, minus ${score.syntaxPoints} p för syntaxfel.` : "."}
+              </p>
               {result.check.status !== "correct" && (
                 <ul className="mt-2 space-y-3 text-[15px]">
+                  {score.syntax.length > 0 && <SyntaxList syntax={score.syntax} onlySyntax={score.passed === score.total} />}
                   {result.check.errors.map((err) => <li key={err.message}>{err.message}</li>)}
                   {result.check.tables.filter((t) => t.status !== "ok").map((t) => (
                     <li key={t.name}>
@@ -375,8 +376,8 @@ function PTask5({ task, code, setCode, result, onGrade, onEdit }) {
       <GradeBar graded={Boolean(result)} onGrade={onGrade} onEdit={onEdit} disabled={!code.trim()} note="Rättas regel för regel som i fliken Java." />
       {result && (
         <>
-          <p className="tabular mt-4 font-display text-lg">{score.points} av 20 poäng <span className="font-body text-sm text-ink/70">· Uppskattning: {score.parseError ? "svaret går inte att tolka" : `${score.passed} av ${score.total} regler uppfyllda`}, × 20 avrundat nedåt</span></p>
-          <JavaResult result={result.check} />
+          <p className="tabular mt-4 font-display text-lg">{score.points} av 20 poäng <span className="font-body text-sm text-ink/70">· Uppskattning: {score.parseError ? "svaret går inte att tolka" : `${score.passed} av ${score.total} regler uppfyllda`}, × 20 avrundat nedåt{score.syntaxPoints > 0 ? `, minus ${score.syntaxPoints} p för syntaxfel` : ""}</span></p>
+          <JavaResult result={result.check} syntax={score.syntax} />
           <div className="mt-4 min-w-0">
             <CodeBlock code={task.solution} lang="java" label="Lösningsförslag" />
           </div>

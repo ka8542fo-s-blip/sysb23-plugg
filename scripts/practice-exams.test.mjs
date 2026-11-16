@@ -75,6 +75,27 @@ test("uppgift 2: poängen är andelen uppfyllda regler, avrundad nedåt", () => 
   assert.equal(scoreDdlShare(checkDdl("CREATE TABLE (", t), t.facit).points, 0);
 });
 
+test("uppgift 2: syntaxfel kostar 1 p styck, högst 3 p, och resten rättas", () => {
+  for (const e of practiceExams) {
+    const facit = toDdl(e.task2.facit);
+    // Ta bort ");" efter de n första tabellerna (före nästa CREATE TABLE).
+    const unclosed = (n) => {
+      let left = n;
+      return facit.replace(/\n\);\n\nCREATE TABLE/g, (m) => (left-- > 0 ? "\n\nCREATE TABLE" : m));
+    };
+    for (const [n, want] of [[1, 19], [2, 18], [3, 17], [4, 17]]) {
+      const result = checkDdl(unclosed(n), e.task2);
+      assert.notEqual(result.status, "parse-error", e.id);
+      assert.equal(result.syntax.length, n, `${e.id} ${n}`);
+      assert.ok(result.tables.every((t) => t.status === "ok"), e.id);
+      const score = scoreDdlShare(result, e.task2.facit);
+      assert.equal(score.points, want, `${e.id}: ${n} syntaxfel`);
+      assert.equal(score.passed, score.total);
+    }
+  }
+  assert.equal(scoreDdlShare(checkDdl("bara skräp här", byId["ovningstenta-1"].task2), byId["ovningstenta-1"].task2.facit).points, 0);
+});
+
 // ---------- Uppgift 3 ----------
 
 const SVAR_3AE = { "ovningstenta-1": ["F", "S", "F", "F", "S"], "ovningstenta-2": ["S", "F", "F", "S", "F"], "ovningstenta-3": ["S", "F", "S", "S", "F"] };
@@ -178,6 +199,23 @@ test("uppgift 5 i tenta 1: ändrar (UPDATE), och ett svar med strängsammanfogni
   assert.notEqual(r.status, "correct");
   assert.ok(scoreJavaShare(r).points < 20);
   assert.equal(scoreJavaShare(checkJava("", t)).points, 0);
+});
+
+test("uppgift 5: en } för mycket eller ett saknat semikolon kostar 1 p, reglerna rättas ändå", () => {
+  for (const e of practiceExams) {
+    const t = e.task5;
+    const extra = checkJava(`${t.solution}\n}`, t);
+    assert.equal(extra.status, "correct", e.id);
+    const score = scoreJavaShare(extra);
+    assert.equal(score.passed, score.total, e.id);
+    assert.equal(score.syntaxPoints, 1);
+    assert.equal(score.points, 19, e.id);
+  }
+  // Tre syntaxfel och fler: högst 3 p.
+  const t = byId["ovningstenta-1"].task5;
+  const many = checkJava(`${t.solution}\n}\n}\n}\n}`, t);
+  assert.ok(many.errors.filter((x) => x.kind === "syntax").length >= 4, JSON.stringify(many.errors));
+  assert.equal(scoreJavaShare(many).syntaxPoints, 3);
 });
 
 // ---------- Tenta 2 och 3 ----------

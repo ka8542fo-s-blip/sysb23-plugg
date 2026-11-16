@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 609 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-14.
+- **Test:** `npm test` = 658 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-16.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -255,7 +255,18 @@ kapitel: allt UI läser `chapter.number`.
   Rätt). REFERENCES mot en kolumn som inte finns i måltabellen är däremot
   ett fel (`kind: "referens"`, rättningen fortsätter, Tenta drar 2 p).
   Stavfel i reserverade ord (CREAT, CONSTRANT) ger "X är felstavat — skriv
-  Y". Facit i appen är strukturdata, och toDdl() sorterar alltid refererade
+  Y". **Syntaxfel stoppar inte rättningen (2026-11-16, uppdrag
+  `cc-ddl-rattning-tolerant.md`):** parsern noterar varje fel med radnummer
+  i `syntax` och fortsätter som om det saknade fanns — tabell utan ");" före
+  nästa CREATE TABLE avslutas där, saknat kommatecken mellan rader sätts in,
+  kolumnlista utan ")" stängs, ";" för mycket eller i stället för "," hoppas
+  över, stavfel och PK/FK/UQ/REF läses som det avsedda ordet; annat hoppas
+  över till nästa rad i tabellen. Kolumner i constraints som inte finns, FK
+  med fel antal kolumner och två IDENTITY räknas också som syntaxfel.
+  "parse-error" bara när ingen tabell med kolumner gick att läsa
+  (`NOTHING_PARSED`). Med syntaxfel blir status högst "partial"; Modellera
+  säger "Rätt i sak, men koden går inte att köra som den står" och markerar
+  inte uppgiften klar. Facit i appen är strukturdata, och toDdl() sorterar alltid refererade
   tabeller först, så appens facit kan inte visa häftets ordning.
   Facit är strukturdata (kind entity/weak/junction/multivalued, surrogate,
   columns, fks med notNull/rel/tag, unique, oneToOneUnique), `folded` =
@@ -426,6 +437,13 @@ kapitel: allt UI läser `chapter.number`.
   (utom java-ov-7 med `selectOnly`); extra ORDER BY-kolumner efter de
   krävda godtas. Kompileringsfel (saknat semikolon, felstavat namn) listas
   i `errors` men sänker inte regelstatus; uppgiften blir då inte klar.
+  Varje fel har `kind`: "syntax" (tolkens fel) eller "compile" (namn och
+  typer). Sedan 2026-11-16 stoppar obalanserade klamrar och öppna strängar
+  inte rättningen: `repairBalance` tar bort en } för mycket (`extraBrace`
+  väljer den som passar sämst med indraget), sätter in en ) som saknas före
+  ; och det som aldrig stängs vid slutet; en sträng stängs vid radens slut
+  och en öppen /* tar resten. "parse-error" bara för tomt, bara kommentarer
+  eller ingen metod. `JavaResult` visar syntaxfelen som egen punkt.
   Lösningsförslaget visas under svaret, inte bredvid: sidans maxbredd gav
   bara cirka 45 av tentans 76 tecken per rad i två kolumner. Kodrutan är
   SchemaEditor med `smartIndent` (fyra blanksteg, indrag efter { och (,
@@ -468,6 +486,12 @@ kapitel: allt UI läser `chapter.number`.
   Uppgift 2: `checkDdl` + uppskattade avdrag (`DDL_DEDUCTIONS`: tabell 5, pk
   3, fk 3, unique 2, notnull 2, surrogat 2, överflödig 3, kolumn 1 — kolumn
   är tillagd, fanns inte i uppdraget); varje fel i ddlCheck bär nu `kind`.
+  Syntaxfel (2026-11-16): 1 p styck, högst `SYNTAX_MAX` = 3 p för uppgiften
+  (`syntaxDeductions`), resten rättas; 0 bara när inget gick att tolka.
+  Vyn visar varje syntaxfel som egen rad med avdraget och att avdraget är
+  en uppskattning (`SyntaxList`, `ParseErrorText` i DbExam). Samma avdrag
+  i övningstentornas uppgift 2 (`scoreDdlShare`) och 5 (`scoreJavaShare`,
+  bara `kind: "syntax"`, inte namn- och typfel).
   Uppgift 3a–e: `claim` per påstående avgörs av FD-motorn (`claimTruth`),
   +2/−1/0; 3f–g: FdAnswer (ny flagga `showDiagram={false}`) + `gradeAnswer`,
   uppskattat 2 p NF+motivering (1 p om NF rätt men motivering fel) och 3 p

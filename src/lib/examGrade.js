@@ -32,7 +32,17 @@ export const DDL_DEDUCTIONS = {
   overflodig: 3,  // överflödig tabell
   kolumn: 1,      // saknad eller överflödig vanlig kolumn
   referens: 2,    // REFERENCES mot en kolumn som inte finns i måltabellen
+  syntax: 1,      // per syntaxfel, högst SYNTAX_MAX för hela uppgiften
 };
+
+// Syntaxfel kostar lite, inte allt: 1 p per fel och högst 3 p för hela
+// uppgiften, i DDL-uppgifterna och i Java-uppgiften. Också en uppskattning.
+export const SYNTAX_MAX = 3;
+
+// Avdraget för varje syntaxfel i ordning: 1, 1, 1 och sedan 0 när taket nåtts.
+export function syntaxDeductions(errors, per = DDL_DEDUCTIONS.syntax, max = SYNTAX_MAX) {
+  return (errors ?? []).map((e, i) => ({ ...e, points: Math.max(0, Math.min(per, max - i * per)) }));
+}
 
 export const DDL_LABELS = {
   tabell: "saknad tabell",
@@ -44,13 +54,16 @@ export const DDL_LABELS = {
   overflodig: "överflödig tabell",
   kolumn: "kolumn",
   referens: "REFERENCES",
+  syntax: "syntaxfel",
 };
 
-// result = checkDdl(...). Syntaxfel som hindrar tolkning ger 0.
+// result = checkDdl(...). Syntaxfel dras med 1 p styck, högst 3 p, och
+// resten rättas som vanligt; 0 bara när ingen tabell gick att tolka.
 export function estimateDdl(result, max = 25, table = DDL_DEDUCTIONS) {
   if (!result) return null;
-  if (result.status === "parse-error") return { points: 0, max, deductions: [], parseError: true };
-  const deductions = [];
+  if (result.status === "parse-error") return { points: 0, max, deductions: [], syntax: [], parseError: true };
+  const syntax = syntaxDeductions(result.syntax, table.syntax);
+  const deductions = syntax.map((e) => ({ table: null, kind: "syntax", points: e.points, text: e.message }));
   for (const t of result.tables) {
     for (const p of t.problems) {
       const kind = p.kind ?? "kolumn";
@@ -60,7 +73,7 @@ export function estimateDdl(result, max = 25, table = DDL_DEDUCTIONS) {
   for (const e of result.errors ?? []) deductions.push({ table: null, kind: "referens", points: table.referens ?? 0, text: e.message });
   for (const x of result.extra) deductions.push({ table: x.name, kind: "overflodig", points: table.overflodig, text: `${x.name}: överflödig tabell. ${x.why}` });
   const total = deductions.reduce((sum, d) => sum + d.points, 0);
-  return { points: Math.max(0, max - total), max, deductions, parseError: false };
+  return { points: Math.max(0, max - total), max, deductions, syntax, parseError: false };
 }
 
 // ---------- Uppgift 3a–e: FD-motorn avgör ----------
@@ -354,9 +367,11 @@ export function ddlRuleCount(t) {
   return 1 + t.columns.length + 2 * t.fks.length + (t.unique?.length ?? 0);
 }
 
+// Andelen uppfyllda regler × max, avrundat nedåt, minus 1 p per syntaxfel
+// (högst 3 p). Golvet är 0.
 export function scoreDdlShare(result, facit, max = 20) {
   if (!result) return null;
-  if (result.status === "parse-error") return { points: 0, max, passed: 0, total: 0, parseError: true };
+  if (result.status === "parse-error") return { points: 0, max, passed: 0, total: 0, syntax: [], syntaxPoints: 0, parseError: true };
   const byName = new Map(facit.map((t) => [t.name, t]));
   let total = 0;
   let failed = 0;
@@ -369,16 +384,25 @@ export function scoreDdlShare(result, facit, max = 20) {
   total += extra;
   failed += extra;
   const passed = total - failed;
-  return { points: total ? Math.floor((max * passed) / total) : 0, max, passed, total, parseError: false };
+  const share = total ? Math.floor((max * passed) / total) : 0;
+  const syntax = syntaxDeductions(result.syntax);
+  const syntaxPoints = syntax.reduce((sum, e) => sum + e.points, 0);
+  return { points: Math.max(0, share - syntaxPoints), max, passed, total, syntax, syntaxPoints, parseError: false };
 }
 
-// result = checkJava(...). Regler som inte gäller räknas inte.
+// result = checkJava(...). Regler som inte gäller räknas inte. Syntaxfel
+// (errors med kind "syntax": klamrar, parenteser, strängar, semikolon) dras
+// med 1 p styck, högst 3 p; namn- och typfel som kompilatorn stoppar kostar
+// inget här, eftersom regeln de rör redan underkänns.
 export function scoreJavaShare(result, max = 20) {
   if (!result) return null;
-  if (result.status === "parse-error") return { points: 0, max, passed: 0, total: 0, parseError: true };
+  if (result.status === "parse-error") return { points: 0, max, passed: 0, total: 0, syntax: [], syntaxPoints: 0, parseError: true };
   const counted = result.rules.filter((x) => x.status !== "na");
   const passed = counted.filter((x) => x.status !== "fail").length;
-  return { points: counted.length ? Math.floor((max * passed) / counted.length) : 0, max, passed, total: counted.length, parseError: false };
+  const share = counted.length ? Math.floor((max * passed) / counted.length) : 0;
+  const syntax = syntaxDeductions((result.errors ?? []).filter((e) => e.kind === "syntax"));
+  const syntaxPoints = syntax.reduce((sum, e) => sum + e.points, 0);
+  return { points: Math.max(0, share - syntaxPoints), max, passed, total: counted.length, syntax, syntaxPoints, parseError: false };
 }
 
 // 3f: rätt högsta normalform ger 2 p; motiveringen bedöms mot checklistan
