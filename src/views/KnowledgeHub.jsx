@@ -128,7 +128,7 @@ export default function KnowledgeHub({ course, params, navigate, readChapters, o
           <h1 className="font-display text-2xl">Läs</h1>
           <p className="mt-1 max-w-reading text-[15px] text-ink/70">
             {onlyCompendium
-              ? "Ett kort per modul. Börja med modul 12, Start här."
+              ? "En sida per modul."
               : "Kompendiet bygger förståelsen, begreppskorten repeterar den och ordlistan slår upp ett ord mitt i en övning. Sökningen nedan letar i alla tre samtidigt."}
           </p>
         </section>

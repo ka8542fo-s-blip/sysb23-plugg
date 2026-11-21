@@ -273,8 +273,10 @@ export default function ChapterView({
     ? chapter.sources.join(" · ")
     : chapter.sources;
 
-  const keyPointGroups = lookup.keyPointsFor(chapter.primaryTopics);
-  const pitfallGroups = lookup.pitfallsFor(chapter.primaryTopics);
+  // `cardOnly` (Verksamhetsarkitektur sedan 2026-11-21): bara kortets text,
+  // utan ämnesrutor, "Kärnan i korthet", "Se upp för" och "Läs mer".
+  const keyPointGroups = chapter.cardOnly ? [] : lookup.keyPointsFor(chapter.primaryTopics);
+  const pitfallGroups = chapter.cardOnly ? [] : lookup.pitfallsFor(chapter.primaryTopics);
   const severalPrimary = keyPointGroups.length > 1;
 
   useEffect(() => {
@@ -397,7 +399,7 @@ export default function ChapterView({
               </div>
             )}
 
-            {chapter.topics?.length > 0 && (
+            {chapter.topics?.length > 0 && !chapter.cardOnly && (
               <div className="mt-4 flex flex-wrap items-center gap-2" data-tts-skip>
                 <span className="text-sm text-ink/65">Ämnen i kapitlet:</span>
                 {chapter.topics.map((topicId) => (
@@ -469,7 +471,7 @@ export default function ChapterView({
                 {chapter.likely && (
                   <LikelyBox likely={chapter.likely} components={components} views={course.views || []} onOpenView={onOpenView} />
                 )}
-                <MoreText key={chapter.id} label="Läs mer" components={components} markdown={chapter.body} />
+                {chapter.body && <MoreText key={chapter.id} label="Läs mer" components={components} markdown={chapter.body} />}
               </>
             ) : (
               <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>

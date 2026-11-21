@@ -32,14 +32,9 @@ import {
 import { topics as arkitekturTopics } from "./arkitektur/topics.js";
 import { essays as arkitekturEssays } from "./arkitektur/essays.js";
 import { explainCards as arkitekturExplainCards } from "./arkitektur/explainCards.js";
-import { ufQuestions as arkitekturUfQuestions } from "./arkitektur/ufView.js";
+import { ufChapters as arkitekturUfChapters, ufQuestions as arkitekturUfQuestions } from "./arkitektur/ufView.js";
+import { UF_INTRO as arkitekturUfIntro } from "./arkitektur/ufText.js";
 import { mockExams as arkitekturMockExams, MOCK_EXAM_NOTE as arkitekturMockExamNote } from "./arkitektur/mockExams.js";
-import {
-  chapters as arkitekturChapters,
-  glossary as arkitekturGlossary,
-  intro as arkitekturIntro,
-  examNote as arkitekturExamNote,
-} from "./arkitektur/reading.js";
 import { examBank as sakerhetExamBank } from "./sakerhet/examBank.js";
 import {
   pastExams as sakerhetPastExams,
@@ -195,20 +190,14 @@ export const courses = [
     // checklistorna följer modellsvaren, inte fyrstegsformen.
     essays: arkitekturEssays,
     essayWordLimit: null,
-    essayIntro: [
-      "Alla essäfrågor och modellsvar kommer från lärarens moduler. Modellsvaret är facit: checklistan delar upp det i punkter, och hela modellsvaret står ordagrant under checklistan. Tentan har ingen gräns för antal ord.",
-      "Frågorna står i samma ordning som i Läs, med modul 12 först. Tryck på ”Markera som genomgången” när du har skrivit ett svar och bockat av checklistan, så syns det i Statistik.",
-    ],
-    // Tolv modulkort i ordningen 12, 1–11 (läraren: börja med modul 12). Inget eget
-    // sammanfattningskort: modul 12-kortet har de tio begreppen och
-    // sammanfattningens övriga text ligger under dess "Läs mer".
-    chapters: arkitekturChapters,
-    // Läs visar bara Kompendium (Kaspers omgörning 2026-11-14); Begrepp och
-    // Ordlista finns kvar i datat men visas inte.
+    // Läs (2026-11-21): lärarens egen text ur de tre PDF:erna, en sida per
+    // modul i ordningen 12, 1–11 (ufText.js via ufView.js), och lärarens
+    // inledning överst. Våra kapiteltexter, ordlistan, examNote och
+    // essayIntro ligger kvar i repot och visas inte.
+    chapters: arkitekturUfChapters,
+    // Läs visar bara Kompendium (Kaspers omgörning 2026-11-14).
     readingSegments: ["kompendium"],
-    glossary: arkitekturGlossary,
-    readingIntro: arkitekturIntro,
-    examNote: arkitekturExamNote,
+    readingIntro: arkitekturUfIntro,
     // Hem: tre steg i stället för introt (homeIntro finns kvar men visas inte).
     homeSteps: [
       "Läs modulkortet i Läs. Börja med modul 12, Start här, och ta sedan modul 1–11.",
