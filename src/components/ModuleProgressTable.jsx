@@ -28,7 +28,7 @@ export default function ModuleProgressTable({ course, answers, navigate }) {
               <tr key={row.chapterId}>
                 <td className="border-b border-line py-2 pr-3">
                   <span className="tabular font-medium">{row.number}</span>{" "}
-                  {row.chapterId === "kap12" ? "Start här" : row.title}
+                  {row.title}
                   {complete && <span className="ml-2 text-correct">✓</span>}
                 </td>
                 <td className="tabular border-b border-line py-2 pr-3">{cell(row.ova)}</td>

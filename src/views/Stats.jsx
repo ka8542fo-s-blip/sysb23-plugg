@@ -354,7 +354,7 @@ function MockExamResults({ course, navigate }) {
               <span className="font-medium">{exam.title}</span>
               <span className="tabular text-[15px] text-ink/80">
                 {result.submitted
-                  ? `Uppgift 2: ${result.tasks[2].right} av ${result.tasks[2].total} rätt · Uppgift 3: ${result.tasks[3].right} av ${result.tasks[3].total} rätt · Fritext: ${result.tasks[1].checked} av ${result.tasks[1].total} punkter`
+                  ? `Uppgift 2: ${result.tasks[2].right} av ${result.tasks[2].total} rätt · Uppgift 3: ${result.tasks[3].right} av ${result.tasks[3].total} rätt`
                   : result.answered > 0
                     ? `Pågår · ${result.answered} av ${examParts(exam).length} besvarade`
                     : "Inte påbörjad"}

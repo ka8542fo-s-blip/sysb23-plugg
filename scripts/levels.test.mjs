@@ -48,11 +48,9 @@ test("per modul (Hem och Statistik): Öva-frågor och förklarakort i ordningen 
   assert.deepEqual(kap1.cards, { done: 1, total: 2 });
 });
 
-test("Hem har tre steg i stället för introt", () => {
-  assert.equal(course.homeSteps.length, 3);
-  assert.match(course.homeSteps[0], /modulkortet/);
-  assert.match(course.homeSteps[1], /förklarakort/);
-  assert.match(course.homeSteps[2], /provtentorna.*när alla moduler är klara/);
+test("Hem har en mening om att allt kommer från lärarens tre moduldokument", () => {
+  assert.equal(course.homeSteps, undefined, "de tre stegen visas inte");
+  assert.match(course.homeIntro, /ordagrant från lärarens tre moduldokument/);
 });
 
 test("rubrikerna är vanlig svenska, inte interna nivånamn", () => {

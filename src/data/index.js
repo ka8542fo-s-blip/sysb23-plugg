@@ -34,7 +34,7 @@ import { essays as arkitekturEssays } from "./arkitektur/essays.js";
 import { explainCards as arkitekturExplainCards } from "./arkitektur/explainCards.js";
 import { ufChapters as arkitekturUfChapters, ufQuestions as arkitekturUfQuestions } from "./arkitektur/ufView.js";
 import { UF_INTRO as arkitekturUfIntro } from "./arkitektur/ufText.js";
-import { mockExams as arkitekturMockExams, MOCK_EXAM_NOTE as arkitekturMockExamNote } from "./arkitektur/mockExams.js";
+import { mockExams as arkitekturMockExams } from "./arkitektur/mockExams.js";
 import { examBank as sakerhetExamBank } from "./sakerhet/examBank.js";
 import {
   pastExams as sakerhetPastExams,
@@ -177,9 +177,9 @@ export const courses = [
     // repot: levels, practiceBlocks (Memorera), examArchive, extraQuestions.
     views: ["las", "ova", "tenta", "statistik"],
     explainCards: arkitekturExplainCards,
-    // Tre provtentor (data/arkitektur/mockExams.js) och raden överst i fliken.
+    // Tre provtentor (data/arkitektur/mockExams.js). Raden om 0 p
+    // (MOCK_EXAM_NOTE) står inte i lärarens dokument och visas inte.
     mockExams: arkitekturMockExams,
-    mockExamNote: arkitekturMockExamNote,
     practiceBy: "chapter",
     topics: arkitekturTopics,
     // Öva: lärarens 135 modulfrågor och exempelfrågan i modul 1:s inledning,
@@ -198,14 +198,9 @@ export const courses = [
     // Läs visar bara Kompendium (Kaspers omgörning 2026-11-14).
     readingSegments: ["kompendium"],
     readingIntro: arkitekturUfIntro,
-    // Hem: tre steg i stället för introt (homeIntro finns kvar men visas inte).
-    homeSteps: [
-      "Läs modulkortet i Läs. Börja med modul 12, Start här, och ta sedan modul 1–11.",
-      "Öva modulen i Öva: modulens frågor och förklarakort, tills alla är klara.",
-      "Gör provtentorna i Tenta när alla moduler är klara.",
-    ],
-    homeIntro:
-      "Läraren har sagt att tentan ser ut som modulerna. Läs modulerna i Läs (börja med modul 12), öva modulernas frågor i Öva och skriv essäfrågorna i Essä. Zachman (modul 4) kommer troligen på tentan och har en egen flik. Fördjupning är extra för den som har tid.",
+    // Hem (2026-11-21): en mening om var allt kommer ifrån; de tre stegen
+    // och den äldre introtexten visas inte.
+    homeIntro: "Allt här kommer ordagrant från lärarens tre moduldokument: modul 1–4, 5–8 och 9–12.",
   },
   {
     ...noContent,

@@ -171,7 +171,7 @@ export default function Home({
           {views.includes("tenta") && (course.mockExams || []).length > 0 && (
             <Shortcut
               title="Gör provtentorna"
-              hint={`${course.mockExams.length} provtentor, när alla moduler är klara`}
+              hint={`${course.mockExams.length} provtentor`}
               onClick={() => navigate("tenta")}
             />
           )}

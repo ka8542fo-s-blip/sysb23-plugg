@@ -84,7 +84,7 @@ export function buildMockExams({ questions, essays, chapterOf, chapterOrder, cha
       id,
       title: `Provtenta ${examIndex + 1}`,
       tasks: [
-        { no: 1, title: "Uppgift 1", subtitle: "Fritext: en essä och ett scenario", parts: free },
+        { no: 1, title: "Uppgift 1", subtitle: "Fritext", parts: free },
         { no: 2, title: "Uppgift 2", subtitle: "Flerval", parts: byModule(bucket.val).map(choicePart(2)) },
         { no: 3, title: "Uppgift 3", subtitle: "Sant/falskt", parts: byModule(bucket.sant).map(choicePart(3)) },
       ],

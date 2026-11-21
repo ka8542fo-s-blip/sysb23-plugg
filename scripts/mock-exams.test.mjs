@@ -17,7 +17,7 @@ test("tre provtentor i manifestet och fliken Tenta", () => {
   assert.equal(course.mockExams, mockExams);
   assert.equal(mockExams.length, 3);
   assert.ok(course.views.includes("tenta"));
-  assert.match(course.mockExamNote, /0 poäng/);
+  assert.equal(course.mockExamNote, undefined, "raden om 0 p står inte i lärarens dokument");
 });
 
 test("varje modulfråga finns i exakt en provtenta", () => {

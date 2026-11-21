@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 658 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-16.
+- **Test:** `npm test` = 662 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-21.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -51,7 +51,7 @@ kapitel: allt UI läser `chapter.number`.
 | databaser | komplett mot tentan | se nedan |
 | process | aktiv (2026-09-29) | se "Processorienterad verksamhetsutveckling (BPM)" nedan |
 | sakerhet | aktiv (2026-11-13) | Öva (bara Tentafrågor), Tenta, Uppgifter — se "Säkerhet i informationssystem" nedan |
-| arkitektur | aktiv (2026-11-13) | Läs (Start här + 11 modulkort med kärnsvar), Öva (135 frågor + 47 förklarakort, Memorera i modul 4), Tenta (3 provtentor), Statistik — se "Verksamhetsarkitektur" nedan |
+| arkitektur | aktiv (2026-11-13) | Bara lärarens tre moduldokument (21 nov): Läs (lärarens text, 12 sidor), Öva (136 frågor + 46 förklarakort), Tenta (3 provtentor), Statistik — se "Verksamhetsarkitektur" nedan |
 
 **Databaser** (`views: las, sql, modell, tenta, ova, statistik`; Prov medvetet borta):
 
@@ -1477,6 +1477,56 @@ parallellt med Säkerhet-sessionen; rebasat mot main före varje push.
 `views: las, ova, tenta, statistik` (sedan 14 nov, se nedan). Ingen
 Prov: HT26-tentans poäng och minuspoäng är okända, och ett Prov med påhittad
 poäng är sämre än inget.
+
+**Bara lärarens tre moduldokument (Kaspers beslut 21 nov, plan godkänd;
+`cc-arkitektur-bara-uf.md` i huvudmappen, gitignorerad).** Tentan bygger i
+princip på `modul-1-4.pdf`, `modul-5-8.pdf` och `modul-9-12.pdf`.
+**Grundregel:** står något inte i de tre PDF:erna visas det inte. Inget är
+raderat ur repot; datat och lagringen finns kvar. Det som visas väljs i
+`data/arkitektur/ufView.js`.
+
+- **Öva** (samma Practice som Process: krav, Fortsätt öva, kapitelväljare,
+  Blandat/Kapitel för kapitel, nollställning; ingen Tentafrågor-växel, det
+  finns inga tentor från läraren) har 136 frågor (`ufQuestions`):
+  - de 135 modulfrågorna och exempelfrågan i modul 1:s inledning
+    (`ea-m1-ex`, `example: true`, inte i provtentorna)
+  - förklaring bara där läraren har en egen "Explanation": 17 frågor,
+    `explanationUf`, ordagrant på engelska; övriga visar rätt svar och
+    de svenska förklaringarna ligger kvar men visas inte
+  - ingen svårighetsgrad och källan utan våra noter
+  - `ea-m4-5` alt. E avbrutet som i PDF:en
+  - `ea-m12-3` som i PDF:en: tre alternativ, C avbrutet, svaret C belagt
+    av lärarens svar på fråga 20 (Kaspers OK i planen)
+  - fyra alternativ med inklistrad text står rensade (bara PDF-ord)
+- **Förklarakorten:** 46 (Zachman-essän borta ur `explainMap.js`), bara
+  lärarens modellsvar (inget kärnsvar). Fråga 9 i modul 1 har också
+  exempelsvaret ur inledningen (`extraModelAnswers` i essays.js).
+- **Läs:** lärarens egen text (`ufText.js`), en sida per modul i ordningen
+  12, 1–11, och hans inledning överst (`UF_INTRO`).
+  - Varje sida har lärandemål, kärnbudskap, förklarande text och listor;
+    frågorna finns i Öva.
+  - `cardOnly` i ChapterView döljer ämnesrutor, Kärnan i korthet, Se upp
+    för och Läs mer.
+  - Kärnsvaren, Start här, Håll isär, Zachman-rutan, rutnätet, ordlistan
+    och examNote finns kvar i `cards.js`/`reading.js` men visas inte.
+- **Tenta:** bara rubrik, provtentor och knappar.
+  - Provtenta 1 har Essay 2 i stället för Zachman-essän. Gammal text på 1a
+    flyttas till `1a@ea-e-zachman` (`migrateMockState`), och val utanför
+    ett alternativ släpps.
+  - Fritexten jämförs bara med modellsvaret; checklistan visas inte, men
+    sparade bockar finns kvar.
+- **Hem:** en mening om var allt kommer ifrån.
+- **Statistik** som förut, med 136 frågor och 46 kort.
+- **Borta ur manifestet:** `levels`, `practiceBlocks`, `examArchive`,
+  `extraQuestions`, `examNote`, `glossary`, `essayIntro`, `homeSteps` och
+  `mockExamNote`.
+- **Ordagrantkontrollen** mot PDF:erna körs lokalt med pdftotext, eftersom
+  kursmaterialet aldrig committas. Senast 21 nov: allt ordagrant utom de
+  två rensade alternativen och radbrytningarna "decision-making" och
+  "trade-offs".
+- **Förhandsvisningen:** `preview_start` läser huvudmappens
+  `.claude/launch.json` och kör huvudmappens kod. Ändringar i worktreen
+  kontrollerades därför på den publicerade sidan efter push.
 
 **Enkel och tentafokuserad (Kaspers omgörning 14 nov, plan godkänd).**
 Fyra flikar: Läs, Öva, Tenta och Statistik. Essä, Zachman och Fördjupning

@@ -4,6 +4,10 @@ import { viewFor } from "../lib/shuffle.js";
 import { emptyMockState, examParts, migrateMockState, mockExamResult, partStatus } from "../lib/mockExam.js";
 import { KEYS, choiceExamKey, clearChoiceExam, load, save } from "../lib/storage.js";
 
+// Sedan 2026-11-21 (bara lärarens tre moduldokument) visar fliken bara
+// rubrik, provtentor och knappar, och fritexten jämförs bara med lärarens
+// modellsvar (vår checklista visas inte; sparade bockar ligger kvar).
+//
 // Fliken Tenta för Verksamhetsarkitektur: tre fasta provtentor
 // (course.mockExams, data/arkitektur/mockExams.js). Man svarar på allt och
 // kan ändra svaren; först efter "Lämna in" visas facit: rätt eller fel per
@@ -51,15 +55,11 @@ function ExamList({ course, exams, onOpen }) {
     <div className="space-y-6">
       <section>
         <h1 className="font-display text-3xl">Tenta</h1>
-        <p className="mt-2 max-w-reading rounded-lg border border-brass p-3 text-[15px] leading-relaxed text-ink/85">
-          {course.mockExamNote}
-        </p>
-        <p className="mt-3 max-w-reading text-[15px] leading-relaxed text-ink/80">
-          Tre provtentor byggda av modulernas frågor. Varje modulfråga finns på exakt en av dem, och
-          alternativen står i samma ordning varje gång. Gör dem när alla moduler är klara i Öva. Du kan
-          ändra dina svar tills du lämnar in; då visas facit. Det finns inga poäng eller betyg, eftersom
-          årets poäng inte är kända. Svaren här påverkar inte Öva.
-        </p>
+        {course.mockExamNote && (
+          <p className="mt-2 max-w-reading rounded-lg border border-brass p-3 text-[15px] leading-relaxed text-ink/85">
+            {course.mockExamNote}
+          </p>
+        )}
       </section>
       <ul className="grid gap-4 md:grid-cols-3">
         {exams.map((exam) => {
@@ -200,7 +200,7 @@ function ExamRoom({ course, exam, navigate, onBack }) {
             {submitted && (
               <p className="tabular mt-1 text-sm text-ink/80">
                 {task.no === 1
-                  ? `Bedöm själv: ${result.tasks[1].checked} av ${result.tasks[1].total} punkter bockade`
+                  ? "Jämför med lärarens modellsvar"
                   : `${result.tasks[task.no].right} av ${result.tasks[task.no].total} rätt`}
               </p>
             )}
@@ -420,13 +420,7 @@ function ChoicePart({ part, state, update, submitted, step, children }) {
 function FreeTextPart({ part, state, update, submitted, children }) {
   const essay = part.essay;
   const text = state.texts?.[part.no] ?? "";
-  const checks = state.checks?.[part.no] ?? {};
   const setText = (value) => update((prev) => ({ ...prev, texts: { ...prev.texts, [part.no]: value } }));
-  const toggle = (key) =>
-    update((prev) => ({
-      ...prev,
-      checks: { ...prev.checks, [part.no]: { ...(prev.checks?.[part.no] || {}), [key]: !prev.checks?.[part.no]?.[key] } },
-    }));
 
   return (
     <article className="card w-full p-5 sm:p-7">
@@ -436,11 +430,6 @@ function FreeTextPart({ part, state, update, submitted, children }) {
         </span>
         <span>{essay.label}</span>
       </div>
-      {essay.levelNote && (
-        <p className="mb-3 max-w-reading rounded-lg border border-brass px-3 py-2 text-[14px] leading-relaxed text-ink/85">
-          {essay.levelNote}
-        </p>
-      )}
       <h2 className="max-w-reading whitespace-pre-line font-sans text-[18px] font-medium leading-normal text-ink [font-variation-settings:normal] sm:text-[20px]">
         {essay.question}
       </h2>
@@ -470,32 +459,8 @@ function FreeTextPart({ part, state, update, submitted, children }) {
 
         {submitted && (
           <div>
-            <h3 className="font-display text-lg">Checklista</h3>
-            <p className="text-sm text-ink/70">Bocka av det du fick med.</p>
-            {(essay.checklist || []).map((group, g) => (
-              <div key={group.heading} className="mt-3">
-                <p className="text-[15px] font-medium">{group.heading}</p>
-                <ul className="mt-1 space-y-1.5">
-                  {group.points.map((point, p) => {
-                    const key = `${g}:${p}`;
-                    return (
-                      <li key={key}>
-                        <label className="flex items-start gap-2 text-[15px] leading-relaxed">
-                          <input type="checkbox" className="mt-1.5" checked={Boolean(checks[key])} onChange={() => toggle(key)} />
-                          <span>{point}</span>
-                        </label>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            ))}
-            <h3 className="mt-5 font-display text-lg">Lärarens modellsvar</h3>
-            {essay.modelAnswer ? (
-              <p className="mt-1 whitespace-pre-line text-[15px] leading-relaxed">{essay.modelAnswer}</p>
-            ) : (
-              <p className="mt-1 text-sm text-ink/70">Frågan har inget modellsvar; checklistan bygger på modul 4.</p>
-            )}
+            <h3 className="font-display text-lg">Lärarens modellsvar</h3>
+            <p className="mt-1 whitespace-pre-line text-[15px] leading-relaxed">{essay.modelAnswer}</p>
           </div>
         )}
       </div>
