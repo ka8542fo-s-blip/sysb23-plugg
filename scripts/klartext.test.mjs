@@ -34,7 +34,7 @@ const texts = () => {
     ...TASK_GROUPS.map((g) => [`grupp ${g.key}`, `${g.title} ${g.note}`]),
     ...zachmanTasks.map((t) => [t.id, [t.text ?? "", t.why ?? ""].join(" ")]),
   ];
-  const s = levelStats(course, { troligtTaskIds: course.levels.troligtTaskIds });
+  const s = levelStats(course, { troligtTaskIds: zachmanTasks.map((task) => task.id) });
   for (const level of [s.karna, s.troligt, s.fordjupning]) {
     out.push([`Statistik ${level.key}`, [level.label, level.note, ...level.parts.map((p) => p.label)].join(" ")]);
   }

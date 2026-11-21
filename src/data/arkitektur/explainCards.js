@@ -9,11 +9,15 @@
 // att Övas sparade öppna fråga och kölogik fungerar oförändrat; `kind:
 // "forklara"` gör att Öva ritar ExplainCard i stället för svarsalternativ.
 // De ligger i manifestets `explainCards`, inte i `questions`: provtentorna
-// och Statistiks frågeräkning bygger på de 135 modulfrågorna.
+// och Statistiks frågeräkning bygger på modulfrågorna.
+//
+// Sedan 2026-11-21 visar kortet bara lärarens modellsvar ordagrant (inget
+// kärnsvar; KARNSVAR finns kvar i cards.js) och källan utan våra noter.
+// Fråga 9 i modul 1 har också modellsvaret ur modulens inledning.
 import { essays } from "./essays.js";
-import { KARNSVAR } from "./cards.js";
 import { EXPLAIN_MAP, explainCardId } from "./explainMap.js";
 import { topics } from "./topics.js";
+import { ufSource } from "./ufView.js";
 
 const essayById = Object.fromEntries(essays.map((essay) => [essay.id, essay]));
 const topicOf = Object.fromEntries(topics.map((topic) => [topic.chapter, topic.id]));
@@ -26,10 +30,9 @@ export const explainCards = Object.entries(EXPLAIN_MAP).flatMap(([chapter, cards
         id,
         label: essay.label,
         question: essay.question,
-        source: essay.source,
+        source: ufSource(essay.source),
         modelAnswer: essay.modelAnswer ?? null,
-        checklist: essay.modelAnswer ? null : essay.checklist,
-        note: essay.levelNote ?? null,
+        extraModelAnswers: (essay.extraModelAnswers || []).map((extra) => ({ ...extra, source: ufSource(extra.source) })),
       };
     });
     return {
@@ -40,7 +43,6 @@ export const explainCards = Object.entries(EXPLAIN_MAP).flatMap(([chapter, cards
       essayIds: ids,
       question: prompts[0].question,
       prompts,
-      karnsvar: KARNSVAR[chapter]?.text ?? null,
       options: [{ text: "Kunde" }, { text: "Kunde inte" }],
       correct: 0,
       fixedOrder: true,

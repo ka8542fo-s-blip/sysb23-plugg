@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import QuestionCard from "../components/QuestionCard.jsx";
 import { viewFor } from "../lib/shuffle.js";
-import { emptyMockState, examParts, mockExamResult, partStatus } from "../lib/mockExam.js";
+import { emptyMockState, examParts, migrateMockState, mockExamResult, partStatus } from "../lib/mockExam.js";
 import { KEYS, choiceExamKey, clearChoiceExam, load, save } from "../lib/storage.js";
 
 // Fliken Tenta för Verksamhetsarkitektur: tre fasta provtentor
@@ -15,10 +15,10 @@ import { KEYS, choiceExamKey, clearChoiceExam, load, save } from "../lib/storage
 // text, bockar, öppen fråga, inlämning) och rör aldrig Öva. "Nollställ"
 // (med bekräftelse) tar bort just den provtentans svar.
 
-function loadState(id) {
-  const saved = load(choiceExamKey(id), null);
-  if (!saved || typeof saved !== "object") return emptyMockState();
-  return { ...emptyMockState(), ...saved };
+function loadState(exam) {
+  const saved = load(choiceExamKey(exam.id), null);
+  if (!saved || typeof saved !== "object") return migrateMockState(exam, emptyMockState());
+  return migrateMockState(exam, { ...emptyMockState(), ...saved });
 }
 
 export default function MockExam({ course, navigate }) {
@@ -63,7 +63,7 @@ function ExamList({ course, exams, onOpen }) {
       </section>
       <ul className="grid gap-4 md:grid-cols-3">
         {exams.map((exam) => {
-          const state = loadState(exam.id);
+          const state = loadState(exam);
           const result = mockExamResult(exam, state, chapterOrderOf(course));
           const total = examParts(exam).length;
           const [t1, t2, t3] = exam.tasks;
@@ -111,7 +111,7 @@ const LABEL = { open: "obesvarad", answered: "besvarad", ratt: "rätt", fel: "fe
 
 function ExamRoom({ course, exam, navigate, onBack }) {
   const parts = useMemo(() => examParts(exam), [exam]);
-  const [state, setState] = useState(() => loadState(exam.id));
+  const [state, setState] = useState(() => loadState(exam));
   const [confirm, setConfirm] = useState(null); // "lamna-in" | "nollstall"
   const cardRef = useRef(null);
   const scrollToCard = useRef(false);

@@ -6,11 +6,15 @@
 // till modul 8 (planen, godkänd). 54 fritextfrågor blir 47 kort. Modul 12
 // ("Start här") har inga egna kort: dess fritextfrågor ligger i den modul
 // de handlar om.
+//
+// 2026-11-21 (bara lärarens tre moduldokument): Zachman-essän från förra
+// årets tentor finns inte i PDF:erna och är borttagen ur mappningen. 53
+// fritextfrågor på 46 kort; essän ligger kvar i essays.js.
 export const EXPLAIN_MAP = {
   kap1: [["ea-e1-9"], ["ea-e1-10"]],
   kap2: [["ea-e2-10"], ["ea-e2-x"], ["ea-e2-11"], ["ea-e12-essay-5"]],
   kap3: [["ea-e3-10"], ["ea-e3-11"], ["ea-e12-29"], ["ea-e12-essay-1"]],
-  kap4: [["ea-e4-9", "ea-e4-11"], ["ea-e4-10", "ea-e5-12", "ea-e12-essay-2"], ["ea-e-zachman"]],
+  kap4: [["ea-e4-9", "ea-e4-11"], ["ea-e4-10", "ea-e5-12", "ea-e12-essay-2"]],
   kap5: [["ea-e5-10"], ["ea-e5-11"]],
   kap6: [["ea-e6-11", "ea-e12-31"], ["ea-e6-12"], ["ea-e6-13"]],
   kap7: [

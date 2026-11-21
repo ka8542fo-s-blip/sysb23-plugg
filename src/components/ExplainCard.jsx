@@ -3,8 +3,9 @@ import ReactMarkdown from "react-markdown";
 import { KEYS, load, loadDraft } from "../lib/storage.js";
 
 // Förklarakort i Öva (Verksamhetsarkitektur, data/arkitektur/explainCards.js):
-// frågan, ett frivilligt textfält, "Visa svar" med modulens kärnsvar och
-// lärarens modellsvar ordagrant, och sedan "Kunde" eller "Kunde inte".
+// frågan, ett frivilligt textfält, "Visa svar" med lärarens modellsvar
+// ordagrant (sedan 2026-11-21 inget kärnsvar; ett kärnsvar visas bara om
+// kortet har ett), och sedan "Kunde" eller "Kunde inte".
 //
 // Texten sparas i sysb23:svar:<kortId> som { text, seeded } vid varje
 // ändring. Första gången kortet visas fylls den med det man redan skrivit
@@ -88,11 +89,11 @@ export default function ExplainCard({ card, drafts, revealed, chosen, onGrade, t
           {card.prompts.map((prompt) => (
             <section key={prompt.id} className="mt-5">
               <h3 className="font-display text-lg">
-                Lärarens modellsvar{card.prompts.length > 1 ? ` · ${prompt.source}` : ""}
+                Lärarens modellsvar{card.prompts.length > 1 || prompt.extraModelAnswers?.length ? ` · ${prompt.source}` : ""}
               </h3>
               {prompt.modelAnswer ? (
                 <p className="mt-1 whitespace-pre-line text-[15px] leading-relaxed">{prompt.modelAnswer}</p>
-              ) : (
+              ) : !prompt.extraModelAnswers?.length && (
                 <>
                   <p className="mt-1 text-sm text-ink/70">
                     Frågan har inget modellsvar. Checklistan bygger på modul 4.
@@ -109,6 +110,12 @@ export default function ExplainCard({ card, drafts, revealed, chosen, onGrade, t
                   ))}
                 </>
               )}
+              {(prompt.extraModelAnswers || []).map((extra) => (
+                <div key={extra.source} className="mt-3">
+                  <p className="text-sm text-ink/65">{extra.source}</p>
+                  <p className="mt-0.5 whitespace-pre-line text-[15px] leading-relaxed">{extra.text}</p>
+                </div>
+              ))}
             </section>
           ))}
           {!revealed ? (

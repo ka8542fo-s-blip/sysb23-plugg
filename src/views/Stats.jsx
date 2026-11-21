@@ -13,7 +13,7 @@ import { useToday } from "../lib/useToday.js";
 import { practiceMode } from "../lib/practiceAxis.js";
 import { levelStats } from "../lib/levels.js";
 import ModuleProgressTable from "../components/ModuleProgressTable.jsx";
-import { emptyMockState, examParts, mockExamResult } from "../lib/mockExam.js";
+import { emptyMockState, examParts, migrateMockState, mockExamResult } from "../lib/mockExam.js";
 import { choiceExamKey, load } from "../lib/storage.js";
 
 export default function Stats({
@@ -347,7 +347,7 @@ function MockExamResults({ course, navigate }) {
       <ul className="mt-3 space-y-3">
         {course.mockExams.map((exam) => {
           const saved = load(choiceExamKey(exam.id), null);
-          const state = saved && typeof saved === "object" ? { ...emptyMockState(), ...saved } : emptyMockState();
+          const state = migrateMockState(exam, saved && typeof saved === "object" ? { ...emptyMockState(), ...saved } : emptyMockState());
           const result = mockExamResult(exam, state, order);
           return (
             <li key={exam.id} className="flex flex-wrap items-baseline justify-between gap-2 border-b border-line pb-3 last:border-0">

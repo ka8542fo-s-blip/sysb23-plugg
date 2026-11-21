@@ -27,6 +27,8 @@ import { topics as bpmTopics } from "../src/data/process/topics.js";
 import { chapters as bpmChapters } from "../src/data/process/reading.js";
 import { DIAGRAM_IDS } from "../src/components/knowledge/diagrams/ids.js";
 import * as eaQ from "../src/data/arkitektur/questions.js";
+import { getCourse } from "../src/data/index.js";
+import { ufQuestions } from "../src/data/arkitektur/ufView.js";
 import { topics as eaTopics } from "../src/data/arkitektur/topics.js";
 import { chapters as eaChapters } from "../src/data/arkitektur/reading.js";
 
@@ -249,7 +251,7 @@ function checkUfFormat(qs, flaggedList, docx) {
     assert.equal(q.id.startsWith("ea-d"), docx, `${q.id}: rätt bank`);
     assert.equal(Boolean(q.secondary), docx, `${q.id}: secondary bara på docx-frågor`);
     if (docx) assert.match(q.source, /^Lärarens kursmaterial \(Word-dokumentet\)/, q.id);
-    else assert.match(q.source, /^Modul \d+, fråga \d+/, q.id);
+    else assert.match(q.source, /^Modul \d+, (fråga \d+|exempel i inledningen)/, q.id);
     assert.match(flagged.get(q.id) ?? "", /ordagrant/, `${q.id}: LENGTH_FLAGGED med skäl`);
     const texts = q.options.map((o) => o.text);
     if (texts.join("|") === "True|False") {
@@ -257,7 +259,8 @@ function checkUfFormat(qs, flaggedList, docx) {
     } else if (texts.join("|") === "Zachman|TOGAF") {
       assert.equal(q.fixedOrder, true, `${q.id}: parfrågan i fast ordning`);
     } else {
-      assert.equal(texts.length, 5, `${q.id}: UF:s flerval har fem alternativ`);
+      // Modul 12 fråga 3 är avbruten i PDF:en efter alternativ C (2026-11-21: som där).
+      assert.equal(texts.length, q.id === "ea-m12-3" ? 3 : 5, `${q.id}: UF:s flerval har fem alternativ`);
       const refersToOthers = texts.some((t) => /^(All|None) of the above/i.test(t));
       assert.equal(Boolean(q.fixedOrder), refersToOthers, `${q.id}: fast ordning bara när ett alternativ hänvisar till de andra`);
     }
@@ -266,9 +269,34 @@ function checkUfFormat(qs, flaggedList, docx) {
   }
 }
 
-test("arkitektur, Kärna: Öva har bara UF:s 135 modulfrågor", () => {
-  assert.equal(eaQ.questions.length, 135);
+test("arkitektur, Öva: UF:s 135 modulfrågor och exempelfrågan i modul 1:s inledning", () => {
+  assert.equal(eaQ.questions.length, 136);
+  assert.deepEqual(eaQ.questions.filter((q) => q.example).map((q) => q.id), ["ea-m1-ex"]);
   checkUfFormat(eaQ.questions, eaQ.LENGTH_FLAGGED, false);
+});
+
+// 2026-11-21 (bara lärarens tre moduldokument): Öva visar frågorna genom
+// ufView.js. Förklaring bara där läraren själv har en "Explanation" i PDF:en.
+const UF_EXPLAINED = [
+  "ea-m1-1", "ea-m7-14", "ea-m7-15", "ea-m7-16", "ea-m7-18", "ea-m7-19",
+  "ea-m12-1", "ea-m12-4", "ea-m12-5", "ea-m12-16", "ea-m12-19", "ea-m12-20",
+  "ea-m12-21", "ea-m12-23", "ea-m12-25", "ea-m12-26", "ea-m12-28",
+];
+test("arkitektur, Öva visar bara lärarens förklaringar, ingen svårighetsgrad och källan utan noter", () => {
+  const course = getCourse("arkitektur");
+  assert.equal(course.questions, ufQuestions);
+  assert.equal(ufQuestions.length, 136);
+  assert.deepEqual(ufQuestions.filter((q) => q.explanation).map((q) => q.id).sort(), [...UF_EXPLAINED].sort());
+  for (const q of ufQuestions) {
+    assert.equal(q.difficulty, undefined, q.id);
+    assert.match(q.source, /^Modul (1[0-2]|[1-9]), (fråga \d+[a-f]?(, variant)?|exempel i inledningen)$/, `${q.id}: ${q.source}`);
+    if (q.explanation) assert.doesNotMatch(q.explanation, /[åäöÅÄÖ]/, `${q.id}: lärarens engelska förklaring`);
+  }
+  const m4 = ufQuestions.find((q) => q.id === "ea-m4-5");
+  assert.equal(m4.options[4].text, "It is a project-management", "avbrutet som i PDF:en, inget ur Word-dokumentet");
+  const m12 = ufQuestions.find((q) => q.id === "ea-m12-3");
+  assert.deepEqual(m12.options.map((o) => o.text), ["Correct.", "Correct only for technology architecture.", "Incorrect; Zachman primarily provides an ontology"]);
+  assert.equal(m12.correct, 2);
 });
 
 test("arkitektur, Fördjupning: de 82 docx-frågorna ligger för sig, med ämne och samma id:n", () => {

@@ -5,8 +5,10 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { getCourse } from "../src/data/index.js";
 import { MOCK_FREE_TEXT, mockExams } from "../src/data/arkitektur/mockExams.js";
-import { questions } from "../src/data/arkitektur/questions.js";
-import { buildMockExams, examParts, isStatement, lockedOrder, mockExamResult } from "../src/lib/mockExam.js";
+import { ufQuestions } from "../src/data/arkitektur/ufView.js";
+// Provtentorna bygger på modulfrågorna, inte exempelfrågan (2026-11-21).
+const questions = ufQuestions.filter((q) => !q.example);
+import { buildMockExams, examParts, isStatement, lockedOrder, migrateMockState, mockExamResult } from "../src/lib/mockExam.js";
 
 const course = getCourse("arkitektur");
 const choiceParts = (exam) => exam.tasks.filter((task) => task.no !== 1).flatMap((task) => task.parts);
@@ -32,7 +34,7 @@ test("varje provtenta har två fritextfrågor: en essä och ett scenario, i den 
     assert.ok(free.every((part) => part.kind === "fritext"));
   });
   assert.deepEqual(MOCK_FREE_TEXT, [
-    ["ea-e-zachman", "ea-e12-scenario-1"],
+    ["ea-e12-essay-2", "ea-e12-scenario-1"],
     ["ea-e12-essay-3", "ea-e12-scenario-2"],
     ["ea-e12-essay-4", "ea-e12-slututmaning"],
   ]);
@@ -102,4 +104,32 @@ test("resultatet: x av y rätt per uppgift och fel per modul i kursens ordning",
   assert.ok(allWrong.includes(second.no));
   assert.equal(allWrong.length, choiceParts(exam).length - 1, "fel och obesvarade räknas");
   assert.equal(examParts(exam).length, choiceParts(exam).length + 2);
+});
+
+test("provtentorna innehåller bara id:n som finns i Öva eller bland förklarakorten", () => {
+  const ova = new Set(course.questions.map((q) => q.id));
+  const onCards = new Set(course.explainCards.flatMap((card) => card.essayIds));
+  for (const exam of mockExams) {
+    for (const part of examParts(exam)) {
+      if (part.kind === "fritext") assert.ok(onCards.has(part.essay.id), `${exam.id} ${part.no}: ${part.essay.id}`);
+      else assert.ok(ova.has(part.item.id), `${exam.id} ${part.no}: ${part.item.id}`);
+    }
+  }
+});
+
+test("Zachman-essäns text i provtenta 1 flyttas undan, och val utanför alternativen släpps", () => {
+  const exam = mockExams[0];
+  assert.deepEqual(exam.previousFreeText, { "1a": "ea-e-zachman" });
+  const m12 = choiceParts(exam).find((part) => part.item.id === "ea-m12-3");
+  const old = { choices: { ...(m12 ? { [m12.no]: 3 } : {}) }, texts: { "1a": "Rader och kolumner", "1b": "AI" }, checks: { "1a": { "0:0": true } }, submittedAt: null };
+  const next = migrateMockState(exam, old);
+  assert.equal(next.texts["1a"], undefined, "visas inte under Essay 2");
+  assert.equal(next.texts["1a@ea-e-zachman"], "Rader och kolumner", "men finns kvar");
+  assert.deepEqual(next.checks["1a@ea-e-zachman"], { "0:0": true });
+  assert.equal(next.texts["1b"], "AI");
+  assert.equal(next.freeText["1a"], "ea-e12-essay-2");
+  if (m12) assert.equal(next.choices[m12.no], undefined, "alternativ D finns inte längre");
+  // Ny text på Essay 2 flyttas inte igen.
+  const again = migrateMockState(exam, { ...next, texts: { ...next.texts, "1a": "Zachman klassificerar" } });
+  assert.equal(again.texts["1a"], "Zachman klassificerar");
 });

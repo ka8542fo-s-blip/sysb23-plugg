@@ -97,6 +97,39 @@ export const examParts = (exam) => exam.tasks.flatMap((task) => task.parts);
 
 export const emptyMockState = () => ({ choices: {}, texts: {}, checks: {}, current: "1a", submittedAt: null });
 
+// Sparat läge som inte längre passar provtentan rättas vid inläsning, utan
+// att något raderas:
+// - text och bockar på en fritextplats som tidigare hade en annan fråga
+//   (exam.previousFreeText) flyttas till "<plats>@<gamla essä-id>" och visas
+//   inte; `freeText` minns vilken fråga platsen har nu.
+// - ett val som pekar utanför frågans alternativ (en fråga som fått färre
+//   alternativ) släpps.
+export function migrateMockState(exam, state) {
+  let next = { ...state, texts: { ...(state.texts || {}) }, checks: { ...(state.checks || {}) }, choices: { ...(state.choices || {}) } };
+  const freeText = { ...(state.freeText || {}) };
+  for (const part of exam.tasks[0]?.parts || []) {
+    const old = exam.previousFreeText?.[part.no];
+    const known = freeText[part.no];
+    if (old && known !== part.essay.id && (!known || known === old)) {
+      for (const key of ["texts", "checks"]) {
+        if (part.no in next[key]) {
+          next[key][`${part.no}@${old}`] = next[key][part.no];
+          delete next[key][part.no];
+        }
+      }
+    }
+    freeText[part.no] = part.essay.id;
+  }
+  for (const part of examParts(exam)) {
+    const choice = next.choices[part.no];
+    if (part.kind === "val" && choice !== undefined && choice !== null && !(choice >= 0 && choice < part.item.options.length)) {
+      delete next.choices[part.no];
+    }
+  }
+  next.freeText = freeText;
+  return next;
+}
+
 const rightOf = (question) => (Array.isArray(question.correct) ? question.correct : [question.correct]);
 
 // "ratt", "fel" eller "blank" för en flervals- eller sant/falskt-del.

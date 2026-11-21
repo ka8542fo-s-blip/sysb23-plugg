@@ -30,15 +30,10 @@ import {
   summary as processSummary,
 } from "./process/reading.js";
 import { topics as arkitekturTopics } from "./arkitektur/topics.js";
-import {
-  questions as arkitekturQuestions,
-  extraQuestions as arkitekturExtraQuestions,
-} from "./arkitektur/questions.js";
 import { essays as arkitekturEssays } from "./arkitektur/essays.js";
-import { examArchive as arkitekturExamArchive } from "./arkitektur/examArchive.js";
 import { explainCards as arkitekturExplainCards } from "./arkitektur/explainCards.js";
+import { ufQuestions as arkitekturUfQuestions } from "./arkitektur/ufView.js";
 import { mockExams as arkitekturMockExams, MOCK_EXAM_NOTE as arkitekturMockExamNote } from "./arkitektur/mockExams.js";
-import { zachmanTasks as arkitekturZachmanTasks } from "./arkitektur/zachman.js";
 import {
   chapters as arkitekturChapters,
   glossary as arkitekturGlossary,
@@ -181,24 +176,20 @@ export const courses = [
     // togs bort 2026-11-14 (Kasper: onödig). Ingen Prov: poängen är okända.
     // 2026-11-14 (enkel och tentafokuserad): Essä, Zachman och Fördjupning
     // döljs (finns kvar i repot och i lagringen). Fritextfrågorna övas som
-    // förklarakort i Öva, Memorera ligger under modul 4 i Öva.
+    // förklarakort i Öva.
+    // 2026-11-21 (Kaspers beslut: bara lärarens tre moduldokument): det som
+    // inte står i PDF:erna visas inte. Borttaget ur manifestet men kvar i
+    // repot: levels, practiceBlocks (Memorera), examArchive, extraQuestions.
     views: ["las", "ova", "tenta", "statistik"],
     explainCards: arkitekturExplainCards,
     // Tre provtentor (data/arkitektur/mockExams.js) och raden överst i fliken.
     mockExams: arkitekturMockExams,
     mockExamNote: arkitekturMockExamNote,
-    // Eget block under en grupps frågor i Öva: Memorera under modul 4.
-    practiceBlocks: { kap4: "zachman-minne" },
-    // Kortet "Hur långt du har kommit" i Statistik: Zachman-delen räknar
-    // Zachman-flikens uppgifter (memoreringen inräknad) och Zachman-essän.
-    levels: { troligtTaskIds: arkitekturZachmanTasks.map((task) => task.id) },
-    // Förra årets tentor som arkiv i Fördjupning, artikelfrågorna utan facit.
-    examArchive: arkitekturExamArchive,
     practiceBy: "chapter",
     topics: arkitekturTopics,
-    // Öva: lärarens 135 modulfrågor. Fördjupning: de 82 ur Word-dokumentet.
-    questions: arkitekturQuestions,
-    extraQuestions: arkitekturExtraQuestions,
+    // Öva: lärarens 135 modulfrågor och exempelfrågan i modul 1:s inledning,
+    // som de står i PDF:erna (ufView.js: bara lärarens egna förklaringar).
+    questions: arkitekturUfQuestions,
     // Lärarens 53 frågor med modellsvar i modulordning (12, 1–11);
     // Zachman-essän står under modul 4. Tentan anger inget ordtak, och
     // checklistorna följer modellsvaren, inte fyrstegsformen.

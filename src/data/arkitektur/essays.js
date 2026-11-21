@@ -495,6 +495,14 @@ export const essays = [
     question: "Why can defining the enterprise boundary be difficult in a digital ecosystem?",
     context: "Modul 1, fråga 9 · kortsvarsfråga",
     source: "Modul 1, fråga 9",
+    // Samma fråga står som exempel i modul 1:s inledning, med ett annat
+    // modellsvar (2026-11-21: förklarakortet visar båda).
+    extraModelAnswers: [
+      {
+        source: "Modul 1, exempel i inledningen",
+        text: "Digital services often depend on partners, suppliers, platforms, regulators and customers. Consequently, the capabilities required to deliver a business outcome may extend beyond the legal boundaries of one organization. The architecture scope therefore needs to be defined according to the purpose and objectives of the architecture effort.",
+      },
+    ],
     checklist: [
       {
         heading: "Därför är gränsen svår",
