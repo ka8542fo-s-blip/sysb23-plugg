@@ -7,6 +7,7 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 97, date: "2026-11-22", text: "Säkerhet: bokens kapitel 19 om juridik och etik i Läs och Öva" },
   { id: 96, date: "2026-11-22", text: "Säkerhet: bokens kapitel 17 om personalsäkerhet i Läs och Öva" },
   { id: 95, date: "2026-11-22", text: "Säkerhet: bokens kapitel 14 om riskhantering i Läs och Öva" },
   { id: 94, date: "2026-11-22", text: "Säkerhet: bokens kapitel 13 om moln och IoT i Läs och Öva" },

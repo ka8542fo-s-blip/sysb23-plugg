@@ -17,5 +17,6 @@ import * as bok14 from "./bok14.js";
 import * as bok15 from "./bok15.js";
 import * as bok16 from "./bok16.js";
 import * as bok17 from "./bok17.js";
+import * as bok19 from "./bok19.js";
 
-export const BOOK_CHAPTERS = [bok1, bok2, bok3, bok4, bok5, bok6, bok7, bok8, bok9, bok13, bok14, bok15, bok16, bok17];
+export const BOOK_CHAPTERS = [bok1, bok2, bok3, bok4, bok5, bok6, bok7, bok8, bok9, bok13, bok14, bok15, bok16, bok17, bok19];
