@@ -3,6 +3,7 @@ import Nav from "./components/Nav.jsx";
 import { useTheme } from "./lib/useTheme.js";
 import Home from "./views/Home.jsx";
 import KnowledgeHub from "./views/KnowledgeHub.jsx";
+import Moduler from "./views/Moduler.jsx";
 import Practice from "./views/Practice.jsx";
 import Exam from "./views/Exam.jsx";
 import Essays from "./views/Essays.jsx";
@@ -247,6 +248,16 @@ export default function App() {
             readChapters={readChapters}
             sqlProgress={sqlProgress}
             onSelectCourse={setCourseId}
+          />
+        )}
+        {view === "moduler" && (
+          <Moduler
+            course={course}
+            answers={answers}
+            params={viewParams}
+            navigate={navigate}
+            onAnswer={handleAnswer}
+            onResetModule={handleResetPractice}
           />
         )}
         {view === "las" && (

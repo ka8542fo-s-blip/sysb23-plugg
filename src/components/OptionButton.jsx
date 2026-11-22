@@ -1,7 +1,8 @@
 const LETTERS = ["1", "2", "3", "4"];
 
 // state: "idle" | "selected" | "correct" | "wrong" | "missed"
-export default function OptionButton({ index, text, state, disabled, onClick }) {
+// label: egen bokstav i rutan (fliken Moduler visar lärarens A–E).
+export default function OptionButton({ index, text, state, disabled, onClick, label }) {
   const styles = {
     idle: "border-line bg-surface hover:border-pine hover:bg-pine/[0.05] active:bg-pine/[0.09]",
     selected: "border-pine bg-pine/[0.07] ring-1 ring-pine",
@@ -30,7 +31,7 @@ export default function OptionButton({ index, text, state, disabled, onClick }) 
         aria-hidden="true"
         className={`tabular mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md border text-sm font-medium ${badge}`}
       >
-        {LETTERS[index] ?? index + 1}
+        {label ?? LETTERS[index] ?? index + 1}
       </span>
       <span className="text-[15px] leading-relaxed">{text}</span>
       {(state === "correct" || state === "missed") && (

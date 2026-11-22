@@ -34,6 +34,8 @@ export const KEYS = {
   zachmanLabels: "zachmanRubriker", // true = rad- och kolumnnamn i rutnätet under Placera
   examArchiveOpen: "tentaArkiv", // { [delkursId]: tentaId } — vald tenta i HT25-arkivet (Verksamhetsarkitektur, i Fördjupning)
   fordjupningPart: "fordjupningLage", // "docx" | "arkiv" — vald del i fliken Fördjupning
+  modulVald: "modulVald", // kapitel-id för öppen modul i fliken Moduler (Verksamhetsarkitektur)
+  modulInledning: "modulInledning", // true/false — lärarens inledning utfälld överst i Moduler
 };
 
 // Fliken Tenta för flervalstentor (Säkerhet): sysb23:tenta:<tentaId> =

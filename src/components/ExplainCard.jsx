@@ -66,7 +66,7 @@ export default function ExplainCard({ card, drafts, revealed, chosen, onGrade, t
         <span className="text-sm font-medium text-ink/75">Ditt svar (frivilligt, sparas)</span>
         <textarea
           value={text}
-          onChange={(event) => drafts.set(card.id, { text: event.target.value, seeded: true })}
+          onChange={(event) => drafts.set(card.id, { ...(saved && typeof saved === "object" ? saved : {}), text: event.target.value, seeded: true })}
           rows={5}
           className="mt-1 w-full rounded-lg border border-line bg-surface px-3 py-2 text-[15px] leading-relaxed"
         />
@@ -89,7 +89,8 @@ export default function ExplainCard({ card, drafts, revealed, chosen, onGrade, t
           {card.prompts.map((prompt) => (
             <section key={prompt.id} className="mt-5">
               <h3 className="font-display text-lg">
-                Lärarens modellsvar{card.prompts.length > 1 || prompt.extraModelAnswers?.length ? ` · ${prompt.source}` : ""}
+                {prompt.answerLabel ? `Lärarens ${prompt.answerLabel.toLowerCase()}` : "Lärarens modellsvar"}
+                {card.prompts.length > 1 || prompt.extraModelAnswers?.length ? ` · ${prompt.source}` : ""}
               </h3>
               {prompt.modelAnswer ? (
                 <p className="mt-1 whitespace-pre-line text-[15px] leading-relaxed">{prompt.modelAnswer}</p>
@@ -116,6 +117,13 @@ export default function ExplainCard({ card, drafts, revealed, chosen, onGrade, t
                   <p className="mt-0.5 whitespace-pre-line text-[15px] leading-relaxed">{extra.text}</p>
                 </div>
               ))}
+              {/* Lärarens "Key lesson" i scenarierna (fliken Moduler visar samma). */}
+              {prompt.keyLesson && (
+                <div className="mt-4 rounded-lg border border-correct/30 bg-correct-bg p-3">
+                  <p className="font-display text-base text-correct">{prompt.keyLesson.label}</p>
+                  <p className="mt-0.5 text-[15px] leading-relaxed">{prompt.keyLesson.text}</p>
+                </div>
+              )}
             </section>
           ))}
           {!revealed ? (

@@ -10,6 +10,9 @@ import { questions } from "../src/data/arkitektur/questions.js";
 import { essays } from "../src/data/arkitektur/essays.js";
 import { UF_TEXT } from "../src/data/arkitektur/ufText.js";
 import { ABSOLUTA, FRAGEORD, FRAGEORD_UNDANTAG, TERMER, TERM_UNDANTAG } from "../src/data/arkitektur/ordlista.js";
+import { getCourse } from "../src/data/index.js";
+import { chosenOption, modulIds, modulProgress } from "../src/lib/moduler.js";
+import { clearAnswersFor, recordAnswer } from "../src/lib/storage.js";
 
 const FACIT = JSON.parse(readFileSync(new URL("./fixtures/arkitektur-facit.json", import.meta.url), "utf8"));
 const filled = (value) => typeof value === "string" && value.trim().length > 0;
@@ -130,6 +133,34 @@ test("textblockens engelska är lärarens text (samma som ufText.js)", () => {
       assert.ok(joined.includes(paragraph), `${module.id}: saknar "${paragraph.slice(0, 80)}"`);
     }
   }
+});
+
+test("framsteg per modul: besvarade frågor och bedömda fritextfrågor, samma poster som Öva", () => {
+  const modul7 = moduler.find((m) => m.id === "kap7");
+  assert.deepEqual(modulProgress(modul7, {}), { done: 0, total: 20 + 8 });
+  let answers = recordAnswer({}, "ea-m7-1", false);
+  answers = recordAnswer(answers, "ea-f-e7-11", true);
+  answers = recordAnswer(answers, "ea-m1-1", true);
+  assert.equal(modulProgress(modul7, answers).done, 2, "fel svar räknas också som besvarat; andra moduler räknas inte");
+  assert.ok(modulIds(modul7).includes("ea-f-e7-27"), "fritextens id är förklarakortets id");
+  // Gör om modulen = clearAnswersFor(modulens id:n), som Övas nollställning.
+  assert.equal(modulProgress(modul7, clearAnswersFor(answers, modulIds(modul7))).done, 0);
+});
+
+test("valt alternativ visas bara när frågan har ett svar i answers", () => {
+  const stat = recordAnswer({}, "x", true).x;
+  assert.equal(chosenOption(stat, { choice: 2 }), 2);
+  assert.equal(chosenOption(undefined, { choice: 2 }), null, "nollställd i Öva eller gjord om: obesvarad");
+  assert.equal(chosenOption(stat, null), null, "besvarad i Öva men inte här");
+});
+
+test("manifestet: fliken Moduler med alla tolv moduler och lärarens inledning", () => {
+  const course = getCourse("arkitektur");
+  assert.equal(course.views[0], "moduler");
+  assert.equal(course.moduler, moduler);
+  assert.match(course.modulerIntro.sv, /^Jag har skapat 12 moduler/);
+  assert.match(course.modulerIntro.sv, /kapitel 12/, "läraren säger att man ska börja med modul 12");
+  for (const id of ["strategi", "databaser", "process", "sakerhet"]) assert.deepEqual(getCourse(id).moduler, []);
 });
 
 test("den svenska texten nämner varken Word-dokumentet eller interna förkortningar", () => {

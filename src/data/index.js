@@ -35,6 +35,7 @@ import { explainCards as arkitekturExplainCards } from "./arkitektur/explainCard
 import { ufChapters as arkitekturUfChapters, ufQuestions as arkitekturUfQuestions } from "./arkitektur/ufView.js";
 import { UF_INTRO as arkitekturUfIntro } from "./arkitektur/ufText.js";
 import { mockExams as arkitekturMockExams } from "./arkitektur/mockExams.js";
+import { moduler as arkitekturModuler, modulerIntro as arkitekturModulerIntro } from "./arkitektur/modulerView.js";
 import { examBank as sakerhetExamBank } from "./sakerhet/examBank.js";
 import {
   pastExams as sakerhetPastExams,
@@ -74,6 +75,10 @@ const noContent = {
   // Provtentor i fliken Tenta utan poäng (Verksamhetsarkitektur). Tom = fliken
   // Tenta är Säkerhets (choiceExams) eller Databasers.
   mockExams: [],
+  // Fliken Moduler (Verksamhetsarkitektur): lärarens moduler uppifrån och ned
+  // med frågorna på sidan (data/arkitektur/modulerView.js).
+  moduler: [],
+  modulerIntro: null,
 };
 
 // Manifest över delkurser. `views` styr vilka flikar delkursen har —
@@ -175,7 +180,11 @@ export const courses = [
     // 2026-11-21 (Kaspers beslut: bara lärarens tre moduldokument): det som
     // inte står i PDF:erna visas inte. Borttaget ur manifestet men kvar i
     // repot: levels, practiceBlocks (Memorera), examArchive, extraQuestions.
-    views: ["las", "ova", "tenta", "statistik"],
+    // 2026-11-22 (Kaspers beslut): fliken Moduler, lärarens moduldokument på
+    // svenska med frågorna på sidan. Först bredvid de andra flikarna (fas 2).
+    views: ["moduler", "las", "ova", "tenta", "statistik"],
+    moduler: arkitekturModuler,
+    modulerIntro: arkitekturModulerIntro,
     explainCards: arkitekturExplainCards,
     // Tre provtentor (data/arkitektur/mockExams.js). Raden om 0 p
     // (MOCK_EXAM_NOTE) står inte i lärarens dokument och visas inte.
