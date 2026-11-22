@@ -1,8 +1,9 @@
 // Säkerhet i informationssystem: kursens två inlämningsuppgifter, samlade
 // ur uppgiftsbeskrivningarna i Canvas (13 nov 2026). Bara kraven — själva
 // underlaget (rapporten och videorna i Hugging Face-uppgiften) är länkat i
-// Canvas och finns inte här. Fältuppgiftens deadline står inte i
-// beskrivningen: "Se Canvas" tills den är känd.
+// Canvas och finns inte här. Fältuppgiftens deadline (1 dec kl. 23:59) står
+// inte i beskrivningen; uppgiven 22 nov 2026, liksom att
+// seminariet 2 dec bygger på rapporten.
 //
 // Form: { id, title (uppgiftens namn i Canvas), kind, deadline (text eller
 // null), available, sections: [{ heading, points }], grading? }
@@ -47,8 +48,8 @@ export const assignments = [
     id: "field",
     title: "Field-Based Information Security Strategy",
     kind: "Rapport",
-    deadline: null,
-    available: null,
+    deadline: "1 dec 2026 kl. 23:59",
+    available: "Lämnas in senast 1 dec 2026 kl. 23:59. Seminariet 2 dec bygger på rapporten.",
     sections: [
       {
         heading: "Scenariot",
