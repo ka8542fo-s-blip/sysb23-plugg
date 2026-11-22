@@ -9,7 +9,7 @@ import { moduler, modulerIntro, modulerItems } from "../src/data/arkitektur/modu
 import { questions } from "../src/data/arkitektur/questions.js";
 import { essays } from "../src/data/arkitektur/essays.js";
 import { UF_TEXT } from "../src/data/arkitektur/ufText.js";
-import { ABSOLUTA, FRAGEORD, TERMER, TERM_UNDANTAG } from "../src/data/arkitektur/ordlista.js";
+import { ABSOLUTA, FRAGEORD, FRAGEORD_UNDANTAG, TERMER, TERM_UNDANTAG } from "../src/data/arkitektur/ordlista.js";
 
 const FACIT = JSON.parse(readFileSync(new URL("./fixtures/arkitektur-facit.json", import.meta.url), "utf8"));
 const filled = (value) => typeof value === "string" && value.trim().length > 0;
@@ -71,6 +71,16 @@ test("varje fråga och fritextfråga står exakt en gång, i bankens ordning, me
   }
 });
 
+test("alla 136 frågor och 53 fritextfrågor ur PDF:erna finns med, och inget annat", () => {
+  const fragor = modulerItems.filter((i) => i.kind === "fraga").map((i) => i.id);
+  const fritext = modulerItems.filter((i) => i.kind === "fritext").map((i) => i.essayId);
+  assert.equal(fragor.length, 136);
+  assert.equal(fritext.length, 53);
+  assert.deepEqual([...fragor].sort(), questions.map((q) => q.id).sort());
+  // Zachman-essän kommer från tidigare tentor, inte ur modulerna.
+  assert.deepEqual([...fritext].sort(), essays.map((e) => e.id).filter((id) => id !== "ea-e-zachman").sort());
+});
+
 test("facit är oförändrat mot origin/main (låst lista ur 9bacd25)", () => {
   assert.equal(Object.keys(FACIT).length, 136);
   for (const question of questions) assert.equal(question.correct, FACIT[question.id], question.id);
@@ -97,7 +107,7 @@ test("ordlistans termer står kvar på engelska där de finns i originalet", () 
       if (!re.test(en) || TERM_UNDANTAG[where]?.[term]) continue;
       assert.match(sv, svRe ?? re, `${where}: termen "${term}" saknas i "${sv.slice(0, 120)}"`);
     }
-    for (const word of FRAGEORD) {
+    for (const word of FRAGEORD_UNDANTAG.includes(where) ? [] : FRAGEORD) {
       if (en === word || en.includes(`${word}?`)) assert.ok(sv === word || sv.includes(`${word}?`), `${where}: ${word}`);
     }
   }

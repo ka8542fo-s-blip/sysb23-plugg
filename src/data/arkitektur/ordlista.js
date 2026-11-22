@@ -73,6 +73,10 @@ export const TERMER = [
 // är frågeord: med frågetecken i texten eller som ett helt alternativ.
 export const FRAGEORD = ["What", "How", "Where", "Who", "When", "Why"];
 
+// Block där frågeorden är vanliga frågor och inte Zachmans interrogatives
+// (arkitektens test i modul 12: Varför? Vad? Vem? Hur?).
+export const FRAGEORD_UNDANTAG = ["m12-t14"];
+
 // Block där ett ord ur TERMER inte används som term (id → termer).
 export const TERM_UNDANTAG = {
   "ea-m3-4": { concern: "\"a project-management concern only\": vardagligt, inte stakeholders concerns" },

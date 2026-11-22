@@ -22,8 +22,9 @@
 // - Modul 7:s fråga 20–22 har ämnet styrning (kapitel 8): UF:s not i
 //   modul 8 säger att modul 8:s frågor ligger insprängda i modul 7.
 // - Lagade alternativ (inklistrad text mitt i alternativet) är noterade i
-//   `source`. Modul 12 fråga 3 är avbruten i PDF:en; alternativ och svar
-//   kommer ur docx:ens "The Zachman Question".
+//   `source`. Modul 12 fråga 3 är avbruten i PDF:en efter alternativ C och
+//   står så (2026-11-21, se nedan); svaret C följer av lärarens svar på
+//   fråga 20. Word-dokumentets "The Zachman Question" används inte.
 // - reviewed: false på allt; Kasper vänder flaggan själv.
 // - Sedan 2026-11-21 (bara UF:s tre moduldokument): Öva visar frågorna
 //   genom ufView.js — förklaring bara där UF själv har en "Explanation"

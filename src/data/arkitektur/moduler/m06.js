@@ -51,7 +51,7 @@ Students should understand:
       id: "m6-t3",
       sv: `## Viktig varning
 
-Dessa domäner är inte oberoende silor. De intressanta arkitektoniska frågorna gäller deras relationer. Dessa domäner hänger ihop. En stakeholder kan behöva en viss view av arkitekturen. En viewpoint fastställer hur en view ska hantera en viss concern hos stakeholders.`,
+Dessa domäner är inte oberoende silor. De intressanta arkitektoniska frågorna gäller deras relationer. Dessa domäner hänger ihop. En stakeholder kan behöva en viss view av arkitekturen. En viewpoint fastställer hur en view bör hantera en viss concern hos stakeholders.`,
       en: `## Important warning
 
 These domains are not independent silos. The interesting architectural questions concern their relationships. These domains are interconnected. A stakeholder may need a particular view of the architecture. A viewpoint establishes how a view should address a particular stakeholder concern.`,
@@ -94,7 +94,7 @@ These domains are not independent silos. The interesting architectural questions
         "En avdelning i organisationen",
       ],
       explanation:
-        "En viewpoint fastställer hur en view ska hantera en viss concern hos stakeholders. Själva representationen som tas fram med den är en view.",
+        "En viewpoint fastställer hur en view bör hantera en viss concern hos stakeholders. Själva representationen som tas fram med den är en view.",
     },
     {
       kind: "fraga",
@@ -165,7 +165,7 @@ These domains are not independent silos. The interesting architectural questions
       nr: "9",
       question: "En viewpoint och en view är exakt samma sak.",
       explanation:
-        "En viewpoint definierar hur en viss concern hos stakeholders ska hanteras och representeras. En view är den faktiska representation som skapas med hjälp av den viewpointen.",
+        "En viewpoint definierar hur en viss concern hos stakeholders bör hanteras och representeras. En view är den faktiska representation som skapas med hjälp av den viewpointen.",
     },
     {
       kind: "fraga",
@@ -183,7 +183,7 @@ These domains are not independent silos. The interesting architectural questions
       nr: "11",
       question: "Förklara skillnaden mellan en view och en viewpoint.",
       modelAnswer:
-        "En viewpoint definierar hur en viss concern hos stakeholders ska hanteras och representeras. En view är den faktiska representation som skapas med hjälp av den viewpointen.",
+        "En viewpoint definierar hur en viss concern hos stakeholders bör hanteras och representeras. En view är den faktiska representation som skapas med hjälp av den viewpointen.",
     },
     { kind: "text", id: "m6-t7", sv: "## Essäfrågor", en: "## Essay questions" },
     {
