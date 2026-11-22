@@ -326,10 +326,13 @@ export default function Practice({
 
   // Läs kapitlet frågan hör till; tillbakalänken där tar en till samma fråga.
   const currentChapterId = useMemo(() => chapterForQuestion(course, current), [course, current]);
+  // Kapitlet bakom frågan ligger i Läs, eller i Moduler för delkurser som har
+  // den fliken i stället (Verksamhetsarkitektur sedan 2026-11-22).
+  const readView = course.views?.includes("las") ? "las" : course.views?.includes("moduler") ? "moduler" : null;
   const toChapter = useCallback(() => {
-    if (!current || !currentChapterId) return;
+    if (!current || !currentChapterId || !readView) return;
     navigate(
-      "las",
+      readView,
       { segment: "kompendium", chapterId: currentChapterId },
       {
         view: "ova",
@@ -337,7 +340,7 @@ export default function Practice({
         params: { questionId: current.id, scope: examMode ? "tenta" : "alla", nonce: Date.now() },
       },
     );
-  }, [current, currentChapterId, navigate, examMode]);
+  }, [current, currentChapterId, navigate, examMode, readView]);
 
   // Körfrågorna finns också i BPMN-övningar, där svaret visar körningen
   // steg för steg.
@@ -816,18 +819,24 @@ export default function Practice({
                   <button type="button" className="btn-primary" onClick={() => serve(filtered, true)}>
                     Fortsätt öva
                   </button>
-                  {navigate && (
+                  {navigate && readView && (
                     <button
                       type="button"
                       className="btn-secondary"
                       onClick={() =>
-                        navigate("las", {
+                        navigate(readView, {
                           segment: "kompendium",
                           chapterId: singleChapter ? activeTopics[0] : null,
                         })
                       }
                     >
-                      {singleChapter ? "Tillbaka till kapitlet" : "Tillbaka till Läs"}
+                      {readView === "moduler"
+                        ? singleChapter
+                          ? "Tillbaka till modulen"
+                          : "Tillbaka till Moduler"
+                        : singleChapter
+                          ? "Tillbaka till kapitlet"
+                          : "Tillbaka till Läs"}
                     </button>
                   )}
                   <span className="text-sm text-ink/65">
@@ -871,9 +880,9 @@ export default function Practice({
                     Nästa fråga
                   </button>
                 )}
-                {navigate && currentChapterId && (
+                {navigate && currentChapterId && readView && (
                   <button type="button" className="btn-secondary" onClick={toChapter}>
-                    Tillbaka till kapitlet
+                    {readView === "moduler" ? "Tillbaka till modulen" : "Tillbaka till kapitlet"}
                   </button>
                 )}
                 <button type="button" className="btn-quiet" onClick={stop}>
@@ -913,9 +922,9 @@ export default function Practice({
                     Kör diagrammet i BPMN-övningar
                   </button>
                 )}
-                {navigate && currentChapterId && (
+                {navigate && currentChapterId && readView && (
                   <button type="button" className="btn-secondary" onClick={toChapter}>
-                    Tillbaka till kapitlet
+                    {readView === "moduler" ? "Tillbaka till modulen" : "Tillbaka till kapitlet"}
                   </button>
                 )}
                 <button type="button" className="btn-quiet" onClick={stop}>
