@@ -49,6 +49,8 @@ export default function ConceptCards({
     const index = chapters.findIndex((chapter) => chapter.id === chapterId);
     return index === -1 ? null : chapters[index].number ?? index + 1;
   };
+  // Kapitlets egen etikett ("Föreläsning 2"), om delkursen har sådana.
+  const chapterLabelOf = (chapterId) => chapters.find((chapter) => chapter.id === chapterId)?.label ?? null;
 
   return (
     <div className="space-y-4">
@@ -172,7 +174,9 @@ export default function ConceptCards({
                         className="btn-quiet"
                         onClick={() => onOpenChapter(topic.chapter)}
                       >
-                        Läs hela avsnittet i kapitel {number} →
+                        {chapterLabelOf(topic.chapter)
+                          ? `Läs hela avsnittet (${chapterLabelOf(topic.chapter)}) →`
+                          : `Läs hela avsnittet i kapitel ${number} →`}
                       </button>
                     ) : (
                       <span className="text-sm text-ink/65">

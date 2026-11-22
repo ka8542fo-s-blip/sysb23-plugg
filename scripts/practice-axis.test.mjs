@@ -84,3 +84,17 @@ test("Verksamhetsarkitektur: modulerna i ordningen 1–12 i Öva, ingen sammanfa
 test("Strategi har ingen sammanfattning", () => {
   assert.equal(strategi.summary, undefined);
 });
+
+// Säkerhet: sammanfattningen är inget kapitel; kapitlen numreras efter
+// platsen i Läs och bär en egen etikett ("Föreläsning 1", "Bokens kapitel
+// 4") som Öva visar före titeln.
+test("Säkerhet: sammanfattning utan grupp, kapitel numrerade i ordning med etikett i Öva", () => {
+  const course = getCourse("sakerhet");
+  assert.equal(course.summary.id, "sammanfattning");
+  assert.ok(!course.chapters.some((c) => c.id === course.summary.id));
+  assert.deepEqual(course.chapters.map((c) => c.number), course.chapters.map((_, i) => i + 1));
+  assert.ok(!practiceGroups(course).some((g) => g.id === course.summary.id));
+  for (const [i, group] of practiceGroups(course).entries()) {
+    assert.equal(group.name, `${course.chapters[i].label}: ${course.chapters[i].title}`);
+  }
+});

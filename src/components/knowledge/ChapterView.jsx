@@ -357,7 +357,8 @@ export default function ChapterView({
         <div ref={readColumnRef} data-tts-root className="min-w-0 flex-1">
           <header>
             <p className="tabular text-[11px] font-medium uppercase tracking-[0.14em] text-brass">
-              {chapter.summary ? "Läs först" : `Kapitel ${number} av ${total}`}
+              {/* `label` (valfri): kapitlets egen etikett, t.ex. "Föreläsning 2". */}
+              {chapter.summary ? "Läs först" : chapter.label ?? `Kapitel ${number} av ${total}`}
             </p>
             <h1 className="mt-1 font-display text-3xl leading-tight sm:text-4xl">
               {chapter.title}

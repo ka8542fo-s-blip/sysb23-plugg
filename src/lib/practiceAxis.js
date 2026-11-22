@@ -15,7 +15,11 @@ function chapterOfTopic(course) {
 // Grupperna som Öva filtrerar på: { id, name } i visningsordning.
 export function practiceGroups(course) {
   if (practiceMode(course) === "chapter") {
-    return (course.chapters || []).map((chapter) => ({ id: chapter.id, name: chapter.title }));
+    // Ett kapitel med egen etikett (Säkerhet: "Föreläsning 2") får den först.
+    return (course.chapters || []).map((chapter) => ({
+      id: chapter.id,
+      name: chapter.label ? `${chapter.label}: ${chapter.title}` : chapter.title,
+    }));
   }
   return (course.topics || []).map((topic) => ({ id: topic.id, name: topic.name }));
 }

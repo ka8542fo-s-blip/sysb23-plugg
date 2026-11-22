@@ -26,7 +26,7 @@ const mc = (no, id, order) => {
 export const pastExams = [
   {
     id: "sak-ht25-ord",
-    term: "HT25",
+    term: "förra året",
     date: "2025-11-25",
     title: "Ordinarie tenta",
     dateLabel: "25 nov 2025",
@@ -61,7 +61,7 @@ export const pastExams = [
   },
   {
     id: "sak-ht25-om",
-    term: "HT25",
+    term: "förra året",
     date: "2026-01-14",
     title: "Omtenta",
     dateLabel: "14 jan 2026",
@@ -96,7 +96,7 @@ export const pastExams = [
   },
   {
     id: "sak-ht25-upps",
-    term: "HT25",
+    term: "förra året",
     date: "2026-05-18",
     title: "Uppsamlingstenta",
     dateLabel: "18 maj 2026",

@@ -1,17 +1,19 @@
 import { useMemo, useState } from "react";
 
-function TermRow({ entry, number, onOpenChapter, highlighted, showChapterLink }) {
+// `label`: kapitlets etikett i länken, "kapitel 4" eller kapitlets egen
+// `label` (Säkerhet: "Föreläsning 2", "Bokens kapitel 4").
+function TermRow({ entry, label, onOpenChapter, highlighted, showChapterLink }) {
   return (
     <div className={`scroll-mt-40 p-4 ${highlighted ? "bg-pine/[0.06]" : ""}`}>
       <dt className="flex flex-wrap items-baseline gap-2">
         <span className="font-medium text-pine">{entry.term}</span>
-        {showChapterLink && number && (
+        {showChapterLink && label && (
           <button
             type="button"
             className="text-xs text-ink/65 underline underline-offset-2 hover:text-pine"
             onClick={() => onOpenChapter(entry.chapter)}
           >
-            kapitel {number}
+            {label}
           </button>
         )}
       </dt>
@@ -37,9 +39,12 @@ export default function Glossary({ glossary, chapters, onOpenChapter, highlightT
     );
   }, [glossary, query]);
 
-  const chapterNumber = (chapterId) => {
+  // Kapitlets egen etikett om den finns, annars "kapitel N".
+  const chapterLabel = (chapterId) => {
     const index = chapters.findIndex((chapter) => chapter.id === chapterId);
-    return index === -1 ? null : chapters[index].number ?? index + 1;
+    if (index === -1) return null;
+    const chapter = chapters[index];
+    return chapter.label ?? `kapitel ${chapter.number ?? index + 1}`;
   };
 
   const isHighlighted = (entry) =>
@@ -51,7 +56,7 @@ export default function Glossary({ glossary, chapters, onOpenChapter, highlightT
     return chapters
       .map((chapter, index) => ({
         chapter,
-        number: chapter.number ?? index + 1,
+        label: chapter.label ?? `Kapitel ${chapter.number ?? index + 1}`,
         terms: matches.filter((entry) => entry.chapter === chapter.id),
       }))
       .filter((group) => group.terms.length > 0);
@@ -116,7 +121,7 @@ export default function Glossary({ glossary, chapters, onOpenChapter, highlightT
             <section key={group.chapter.id} className="card overflow-hidden">
               <header className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-b border-line bg-paper px-4 py-2.5">
                 <h3 className="font-display text-[15px]">
-                  <span className="tabular text-brass">Kapitel {group.number}</span>
+                  <span className="tabular text-brass">{group.label}</span>
                   <span className="ml-2 font-sans text-sm font-normal text-ink/80">
                     {group.chapter.title}
                   </span>
@@ -134,7 +139,7 @@ export default function Glossary({ glossary, chapters, onOpenChapter, highlightT
                   <TermRow
                     key={entry.term}
                     entry={entry}
-                    number={group.number}
+                    label={group.label}
                     onOpenChapter={onOpenChapter}
                     highlighted={isHighlighted(entry)}
                     showChapterLink={false}
@@ -157,7 +162,7 @@ export default function Glossary({ glossary, chapters, onOpenChapter, highlightT
                   <TermRow
                     key={entry.term}
                     entry={entry}
-                    number={chapterNumber(entry.chapter)}
+                    label={chapterLabel(entry.chapter)}
                     onOpenChapter={onOpenChapter}
                     highlighted={isHighlighted(entry)}
                     showChapterLink

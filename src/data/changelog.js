@@ -7,6 +7,7 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 87, date: "2026-11-22", text: "Säkerhet: Läs med föreläsningarna och kapitelfrågor i Öva" },
   { id: 86, date: "2026-11-22", text: "Verksamhetsarkitektur: Moduler ersätter Läs och Tenta i menyn" },
   { id: 85, date: "2026-11-22", text: "Verksamhetsarkitektur: Öva på svenska i modulordning 1–12" },
   { id: 84, date: "2026-11-22", text: "Verksamhetsarkitektur: ny flik Moduler, lärarens moduler på svenska" },

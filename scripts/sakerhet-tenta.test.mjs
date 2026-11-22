@@ -101,7 +101,8 @@ test("tabellen När lönar det sig att svara? stämmer med banken och räkningen
 
 test("Öva: tentafrågorna hämtas ur examBank, 60 poster och 26 unika", () => {
   assert.equal(sakerhet.status, "aktiv");
-  assert.equal(sakerhet.questions.length, 0, "inga kapitelfrågor än");
+  // Tentafrågorna ligger i examBank, aldrig i Övas kapitelfrågor.
+  assert.ok(!sakerhet.questions.some((question) => bank[question.id]), "examBank och questions delar inga id:n");
   const items = pastExamItems(sakerhet);
   assert.equal(items.length, 60);
   assert.equal(uniqueItems(items).length, 26);

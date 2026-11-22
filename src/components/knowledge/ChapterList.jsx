@@ -205,6 +205,11 @@ export default function ChapterList({
                   {chapter.number ?? index + 1}
                 </span>
                 <span className="min-w-0 flex-1">
+                  {chapter.label && (
+                    <span className="block text-[11px] font-medium uppercase tracking-[0.12em] text-brass-text">
+                      {chapter.label}
+                    </span>
+                  )}
                   <span className="block font-medium text-pine">{chapter.title}</span>
                   {chapter.lead && (
                     <span className="mt-0.5 block text-sm text-ink/70">{chapter.lead}</span>

@@ -46,6 +46,15 @@ import {
   ANSWER_TABLE as sakerhetAnswerTable,
 } from "./sakerhet/pastExams.js";
 import { assignments as sakerhetAssignments } from "./sakerhet/assignments.js";
+import { topics as sakerhetTopics } from "./sakerhet/topics.js";
+import { questions as sakerhetQuestions } from "./sakerhet/questions.js";
+import {
+  chapters as sakerhetChapters,
+  glossary as sakerhetGlossary,
+  intro as sakerhetIntro,
+  examNote as sakerhetExamNote,
+  summary as sakerhetSummary,
+} from "./sakerhet/reading.js";
 
 // Tomma listor för delkurser som ännu inte har den sortens material.
 const noContent = {
@@ -221,14 +230,24 @@ export const courses = [
     id: "sakerhet",
     name: "Säkerhet i informationssystem",
     status: "aktiv",
-    // Byggs i faser (2026-11-13) på det som finns: tre HT25-tentor och två
-    // uppgiftsbeskrivningar. Föreläsningsbilder och läsanvisning saknas, så
-    // inget kompendium och inga kapitelfrågor än. Öva har bara Tentafrågor
-    // (examBank via pastExams); kapitelfrågorna läggs i `questions` när
-    // föreläsningarna finns, och då dyker växeln Alla frågor/Tentafrågor upp.
-    // Tenta: skriv en hel gammal tenta med poäng, avdrag och betyg; svaren
-    // räknas för sig och rör aldrig Öva. Uppgifter: de två inlämningarna.
-    views: ["ova", "tenta", "uppgifter"],
+    // Byggd i faser (13 och 22 nov 2026). Årets tenta (enligt läraren):
+    // 5 frågor från tidigare tentor, 5 från föreläsningsbilderna, 8 från
+    // bokens kapitel, 2 essäer. Läs: sammanfattning, ett kapitel per
+    // föreläsning och per bokkapitel (`kind`, `label`). Öva: kapitelfrågor
+    // under Alla frågor, med varianter av förra årets tentafrågor
+    // (`variantOf`); förra årets frågor ordagrant under Tentafrågor
+    // (examBank via pastExams). Tenta: skriv en hel gammal tenta med poäng,
+    // avdrag och betyg; svaren räknas för sig och rör aldrig Öva.
+    // Uppgifter: de två inlämningarna.
+    views: ["las", "ova", "tenta", "uppgifter"],
+    practiceBy: "chapter",
+    topics: sakerhetTopics,
+    questions: sakerhetQuestions,
+    chapters: sakerhetChapters,
+    summary: sakerhetSummary,
+    glossary: sakerhetGlossary,
+    readingIntro: sakerhetIntro,
+    examNote: sakerhetExamNote,
     assignments: sakerhetAssignments,
     examBank: sakerhetExamBank,
     pastExams: sakerhetPastExams,
@@ -239,7 +258,7 @@ export const courses = [
     pastExamNote:
       "Tentorna publicerades utan facit. Rätt svar och förklaringar är sajtens egna, skrivna utifrån Stallings & Brown.",
     homeIntro:
-      "Öva in de 26 frågorna från HT25:s tre tentor — de återkommer nästan ordagrant — med tentans poäng och avdrag på varje fråga. Kompendium och kapitelfrågor kommer när föreläsningsbilderna finns.",
+      "Läs föreläsningarna och bokens kapitel, öva på frågor per kapitel och på förra årets tentafrågor, och skriv hela tentor. Årets tenta har enligt läraren 20 frågor: 5 från tidigare tentor med små variationer, 5 från föreläsningsbilderna, 8 från boken och 2 essäer.",
   },
 ];
 

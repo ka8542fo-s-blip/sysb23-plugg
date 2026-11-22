@@ -32,6 +32,9 @@ import { ufQuestions } from "../src/data/arkitektur/ufView.js";
 import { modulerQuestions } from "../src/data/arkitektur/modulerView.js";
 import { topics as eaTopics } from "../src/data/arkitektur/topics.js";
 import { chapters as eaChapters } from "../src/data/arkitektur/reading.js";
+import * as sakQ from "../src/data/sakerhet/questions.js";
+import { topics as sakTopics } from "../src/data/sakerhet/topics.js";
+import { chapters as sakChapters } from "../src/data/sakerhet/reading.js";
 
 const BANKS = [
   {
@@ -74,6 +77,20 @@ const BANKS = [
     perChapter: [4, 34],
     requireExplain: false,
     checkBalance: false,
+  },
+  {
+    // Säkerhet i informationssystem: BPM:s gränser. Föreläsning 2 bär
+    // många frågbara modeller och siffror, därav taket 16 per kapitel.
+    // Varianterna av förra årets tentafrågor räknas som vanliga frågor.
+    name: "sakerhet",
+    questions: sakQ.questions,
+    flagged: sakQ.LENGTH_FLAGGED,
+    topics: sakTopics,
+    chapters: sakChapters,
+    perChapter: [4, 16],
+    maxSpread: 1.5,
+    maxUniqueLongest: 0.35,
+    flaggedInTotals: false,
   },
 ];
 
