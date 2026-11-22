@@ -11,7 +11,17 @@ import { essays } from "../src/data/arkitektur/essays.js";
 import { UF_TEXT } from "../src/data/arkitektur/ufText.js";
 import { ABSOLUTA, FRAGEORD, FRAGEORD_UNDANTAG, TERMER, TERM_UNDANTAG } from "../src/data/arkitektur/ordlista.js";
 import { getCourse } from "../src/data/index.js";
-import { chosenOption, modulIds, modulProgress } from "../src/lib/moduler.js";
+import { FORELASNINGAR, INGRESS } from "../src/data/arkitektur/moduler/ingress.js";
+import {
+  chosenOption,
+  firstOpenId,
+  groupSections,
+  modulIds,
+  modulItems,
+  modulProgress,
+  modulScore,
+  panelSummary,
+} from "../src/lib/moduler.js";
 import { clearAnswersFor, recordAnswer } from "../src/lib/storage.js";
 
 const FACIT = JSON.parse(readFileSync(new URL("./fixtures/arkitektur-facit.json", import.meta.url), "utf8"));
@@ -167,4 +177,78 @@ test("den svenska texten nämner varken Word-dokumentet eller interna förkortni
   for (const [where, sv] of pairs()) {
     assert.doesNotMatch(sv, /\bWord\b|docx|\bUF\b|HT ?2[56]/, where);
   }
+});
+
+// --- Utseendet (Kaspers designbeslut 22 nov): ingen ny kurstext -----------
+
+test("modulens ingress är en mening ur lärarens egen text, på svenska och engelska", () => {
+  for (const module of moduler) {
+    const source = INGRESS[module.id];
+    assert.ok(source, `${module.id} saknar ingress`);
+    const block = module.blocks.find((item) => item.id === source.block);
+    assert.ok(block, `${module.id}: blocket ${source.block} finns inte i modulen`);
+    assert.ok(block.sv.includes(source.sv), `${module.id}: ingressen står inte ordagrant i ${source.block}`);
+    assert.ok(block.en.includes(source.en), `${module.id}: originalet står inte ordagrant i ${source.block}`);
+    assert.deepEqual(module.ingress, { sv: source.sv, en: source.en });
+  }
+  assert.equal(INGRESS.kap1.block, "m1-t3", "modul 1: kärnbudskapets första mening");
+  assert.equal(INGRESS.kap5.block, "m5-t3", "modul 5: kärnbudskapets första mening");
+});
+
+test("modullistan följer lärarens tre föreläsningar, och modul 12 är markerad", () => {
+  assert.deepEqual(
+    FORELASNINGAR.map((lecture) => lecture.moduler),
+    [["kap1", "kap2", "kap3", "kap4"], ["kap5", "kap6", "kap7", "kap8"], ["kap9", "kap10", "kap11", "kap12"]],
+  );
+  for (const lecture of FORELASNINGAR) {
+    assert.ok(modulerIntro.sv.includes(`Föreläsning ${lecture.nummer} — ${lecture.title.sv}`), `namnet på föreläsning ${lecture.nummer}`);
+    assert.ok(modulerIntro.en.includes(`Lecture ${lecture.nummer} — ${lecture.title.en}`));
+  }
+  for (const module of moduler) {
+    assert.equal(module.forelasning.nummer, Math.ceil(module.number / 4), module.id);
+  }
+  assert.deepEqual(moduler.filter((module) => module.borjaHar).map((module) => module.id), ["kap12"]);
+  assert.ok(modulerIntro.sv.includes(modulerIntro.utdrag.sv), "inledningens förhandsvisning är lärarens egen text");
+  assert.ok(modulerIntro.en.includes(modulerIntro.utdrag.en));
+});
+
+test("text och frågepaneler: inget block försvinner eller byter plats", () => {
+  for (const module of moduler) {
+    const sections = groupSections(module.blocks);
+    const flat = sections.flatMap((section) => {
+      if (section.kind === "text") return [section.block];
+      const items = section.items.flatMap((item) => {
+        if (item.kind === "tabell") return item.items;
+        if (item.kind === "notis") return [item.block];
+        return [item];
+      });
+      return section.heading ? [section.heading, ...items] : items;
+    });
+    assert.deepEqual(
+      flat.map((block) => block.id),
+      module.blocks.map((block) => block.id),
+      `${module.id}: blocken i samma ordning som i dokumentet`,
+    );
+    for (const section of sections.filter((item) => item.kind === "panel")) {
+      if (section.heading) assert.match(section.heading.sv, /^## /, `${section.id}: panelens rubrik är lärarens`);
+      assert.ok(panelSummary(section).count > 0, `${section.id}: en panel har minst en fråga`);
+    }
+  }
+  const modul1 = groupSections(moduler[0].blocks).filter((section) => section.kind === "panel");
+  assert.deepEqual(panelSummary(modul1[0]), { count: 1, type: "Flerval", examples: true }, "lärarens exempel");
+  assert.equal(modul1[1].heading.id, "m1-t5");
+  assert.deepEqual(panelSummary(modul1[1]), { count: 5, type: "Flerval", examples: false });
+});
+
+test("modulens början och slut: besvarade, rätt och första obesvarade frågan", () => {
+  const modul1 = moduler.find((m) => m.id === "kap1");
+  const items = modulItems(modul1);
+  assert.equal(firstOpenId(modul1, {}), items[0].id);
+  let answers = recordAnswer({}, items[0].id, true);
+  answers = recordAnswer(answers, items[1].id, false);
+  answers = recordAnswer(answers, "ea-f-e1-9", true);
+  assert.deepEqual(modulScore(modul1, answers), { done: 3, total: 11, right: 2 }, "Kunde räknas som rätt");
+  assert.equal(firstOpenId(modul1, answers), items[2].id);
+  for (const item of items) answers = recordAnswer(answers, item.id, true);
+  assert.equal(firstOpenId(modul1, answers), null, "allt besvarat: ingen Fortsätt-knapp");
 });

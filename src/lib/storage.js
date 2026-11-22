@@ -36,6 +36,7 @@ export const KEYS = {
   fordjupningPart: "fordjupningLage", // "docx" | "arkiv" — vald del i fliken Fördjupning
   modulVald: "modulVald", // kapitel-id för öppen modul i fliken Moduler (Verksamhetsarkitektur)
   modulInledning: "modulInledning", // true/false — lärarens inledning utfälld överst i Moduler
+  modulEngelska: "modulEngelska", // true = engelska originalet under varje block och fråga i Moduler
   kortdelning: "kortdelning", // true när de uppdelade förklarakortens status har ärvts en gång (lib/splitCards.js)
 };
 

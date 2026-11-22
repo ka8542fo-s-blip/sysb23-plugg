@@ -12,6 +12,7 @@ import { questions } from "./questions.js";
 import { essays } from "./essays.js";
 import { explainCardId } from "./explainMap.js";
 import { INLEDNING, MODULER } from "./moduler/index.js";
+import { BORJA_HAR, FORELASNINGAR, INGRESS, INLEDNING_UTDRAG } from "./moduler/ingress.js";
 import { topics } from "./topics.js";
 import { ufSource } from "./ufView.js";
 
@@ -75,12 +76,23 @@ function buildBlock(block, chapter) {
   return { kind: block.kind, id: block.id, sv: block.sv, en: block.en };
 }
 
-export const modulerIntro = INLEDNING;
+// Inledningen med utdraget som det hopfällda kortet visar.
+export const modulerIntro = { ...INLEDNING, utdrag: INLEDNING_UTDRAG };
+
+const lectureOf = (moduleId) => {
+  const lecture = FORELASNINGAR.find((item) => item.moduler.includes(moduleId));
+  return lecture ? { nummer: lecture.nummer, title: lecture.title } : null;
+};
 
 export const moduler = MODULER.map((module) => ({
   id: module.id,
   number: module.number,
   title: module.title,
+  // Modulens början: lärarens föreläsning, en mening ur hans text som
+  // ingress, och markeringen på modul 12 där han ber oss börja.
+  forelasning: lectureOf(module.id),
+  ingress: INGRESS[module.id] ? { sv: INGRESS[module.id].sv, en: INGRESS[module.id].en } : null,
+  borjaHar: module.id === BORJA_HAR,
   blocks: module.blocks.map((block) => buildBlock(block, module.id)),
 }));
 

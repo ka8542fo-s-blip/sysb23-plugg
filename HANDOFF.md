@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 693 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-22.
+- **Test:** `npm test` = 697 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-22.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -1633,6 +1633,36 @@ aldrig på sidan.
   kortets status en gång (flaggan `kortdelning`).
 - **Kvar men dolt:** `ufView.js`/`ufText.js` (Läs på engelska), provtentorna,
   `explainMap.js`/`explainCards.js` (de 46 ihopslagna korten).
+- **Utseendet (Kaspers designbeslut 22 nov; `cc-arkitektur-moduler-design.md`
+  i huvudmappen, gitignorerad).** Bara layout och form, innehållet är
+  detsamma.
+  - **Layout:** på datorn står modullistan i en fast sidospalt, grupperad
+    under lärarens tre föreläsningar (`FORELASNINGAR`). Varje rad har
+    nummer (bock när modulen är klar), titel och en tunn framstegsstapel,
+    och modul 12 har etiketten "Börja här". Innehållet har en centrerad
+    läsbredd (44rem). I mobilen är listan en rad rullande kort överst.
+  - **Modulens början:** ett kort med etiketterna Modul N och Föreläsning N,
+    titeln och en ingress, framstegsstapel och "x av y besvarade · z rätt".
+    Knapparna är "Fortsätt där du var" (första obesvarade frågan,
+    `firstOpenId`) och "Gör om modulen". Där finns också omkopplaren "Visa
+    engelskt original", som ersätter alla "Visa på engelska" och sparas i
+    `modulEngelska`.
+  - **Ingressen** (`moduler/ingress.js`) är en mening ur lärarens egen text:
+    kärnbudskapets första mening i modul 1 och 5, annars den mening ur
+    motsvarande avsnitt som bäst sammanfattar modulen. Testet kräver att den
+    står ordagrant i blocket, på både sv och en. Samma gäller inledningens
+    förhandsvisning ("Börja alltså med …"). Inledningen är hopfälld som
+    standard.
+  - **Rytmen:** `groupSections` i `lib/moduler.js` delar modulen i
+    textavsnitt och frågepaneler. Lärandemålen står i en ljus ruta och
+    kärnavsnitten vid en kantlinje. Frågorna står i en tonad panel med
+    lärarens rubrik och etiketten "Testa dig själv · typ · antal".
+    Frågekorten har nummerbricka och typ, och brickan blir grön eller röd
+    efter svar. Förklaringen står i en mjuk ruta. Fritextkorten har en
+    mässingskant. Testet kräver att inget block försvinner eller byter
+    plats.
+  - **Modulens slut:** ett kort med "Du har svarat på x av y, z rätt." och
+    knapparna Nästa modul, Öva modul N i Öva och Gör om modulen.
 
 **Bara lärarens tre moduldokument (Kaspers beslut 21 nov, plan godkänd;
 gäller fortfarande; Läs och Tenta nedan är dolda sedan 22 nov;
