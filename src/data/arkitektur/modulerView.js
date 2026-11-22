@@ -55,10 +55,14 @@ function buildFreeText(block, chapter) {
     nr: block.nr,
     chapter,
     typ: block.typ,
+    // Egen rubrik ("Arkitektens tänkande", "Scenario 1 — …") och egen
+    // etikett för svaret ("Möjliga svar", "Svar") där läraren har det.
     title: block.title ?? null,
+    answerLabel: block.answerLabel ?? null,
     question: { sv: block.question, en: essay.question },
     modelAnswer: { sv: block.modelAnswer, en: modelEn.trim() },
     keyLesson: block.keyLesson ? { sv: block.keyLesson, en: keyLessonEn?.trim() ?? null } : null,
+    keyLessonLabel: block.keyLessonLabel ?? { sv: "Viktig lärdom", en: "Key lesson" },
     extraModelAnswers: (block.extraModelAnswers || []).map((sv, index) => ({ sv, en: extras[index]?.text ?? null })),
   };
 }

@@ -28,6 +28,7 @@ function pairs() {
         if (block.explanation.en) out.push([block.id, block.explanation.sv, block.explanation.en]);
       }
       if (block.kind === "fritext") {
+        for (const label of [block.title, block.answerLabel]) if (label) out.push([block.essayId, label.sv, label.en]);
         out.push([block.essayId, block.question.sv, block.question.en]);
         out.push([block.essayId, block.modelAnswer.sv, block.modelAnswer.en]);
         if (block.keyLesson) out.push([block.essayId, block.keyLesson.sv, block.keyLesson.en]);
@@ -109,11 +110,14 @@ test("varje flervals- och sant/falskt-fråga har en svensk förklaring", () => {
   }
 });
 
+// Stycke för stycke, utan rubriktecken och numrering, eftersom frågorna står
+// insprängda i texten (t.ex. "34. Zachman or TOGAF?" före tabellraderna).
+const plain = (text) => squash(text.replace(/^#+\s*/gm, "").replace(/^\d+\.\s+/gm, ""));
 test("textblockens engelska är lärarens text (samma som ufText.js)", () => {
   for (const module of moduler) {
-    const joined = squash(module.blocks.filter((b) => b.kind === "text" || b.kind === "exempel").map((b) => b.en).join("\n"));
-    for (const section of UF_TEXT[module.id].split(/\n(?=## )/).map(squash).filter(Boolean)) {
-      assert.ok(joined.includes(section), `${module.id}: saknar "${section.slice(0, 80)}"`);
+    const joined = plain(module.blocks.filter((b) => b.kind === "text" || b.kind === "exempel").map((b) => b.en).join("\n\n"));
+    for (const paragraph of UF_TEXT[module.id].split(/\n\s*\n/).map(plain).filter(Boolean)) {
+      assert.ok(joined.includes(paragraph), `${module.id}: saknar "${paragraph.slice(0, 80)}"`);
     }
   }
 });

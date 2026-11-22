@@ -77,6 +77,8 @@ export const FRAGEORD = ["What", "How", "Where", "Who", "When", "Why"];
 export const TERM_UNDANTAG = {
   "ea-m3-4": { concern: "\"a project-management concern only\": vardagligt, inte stakeholders concerns" },
   "ea-e1-10": { view: "\"an incomplete architectural view\": vardagligt, en bild av arkitekturen" },
+  "m5-t3": { view: "\"A simplified view includes\": en förenklad bild av ADM:s faser" },
+  "ea-m5-3": { view: "\"a shared high-level view of the desired architectural direction\": en gemensam bild" },
 };
 
 export const FASTA = {
