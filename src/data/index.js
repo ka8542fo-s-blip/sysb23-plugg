@@ -47,6 +47,7 @@ import {
 } from "./sakerhet/pastExams.js";
 import { assignments as sakerhetAssignments } from "./sakerhet/assignments.js";
 import { topics as sakerhetTopics } from "./sakerhet/topics.js";
+import { essays as sakerhetEssays, ESSAY_INTRO as sakerhetEssayIntro } from "./sakerhet/essays.js";
 import { questions as sakerhetQuestions } from "./sakerhet/questions.js";
 import {
   chapters as sakerhetChapters,
@@ -239,8 +240,13 @@ export const courses = [
     // (examBank via pastExams). Tenta: skriv en hel gammal tenta med poäng,
     // avdrag och betyg; svaren räknas för sig och rör aldrig Öva.
     // Uppgifter: de två inlämningarna.
-    views: ["las", "ova", "tenta", "uppgifter"],
+    views: ["las", "ova", "essa", "tenta", "uppgifter"],
     practiceBy: "chapter",
+    // Fem egna övningsessäer; årets ämnen och längd är okända, så
+    // ordräknaren har inget tak.
+    essays: sakerhetEssays,
+    essayIntro: sakerhetEssayIntro,
+    essayWordLimit: null,
     topics: sakerhetTopics,
     questions: sakerhetQuestions,
     chapters: sakerhetChapters,

@@ -51,6 +51,7 @@ Privacy löper genom alla steg: att skydda människors integritet är ofta ett a
 
 - **Läs:** föreläsningarna först, sedan bokens kapitel. Termerna står på engelska, eftersom tentan och boken använder dem.
 - **Öva:** under Alla frågor finns frågor per kapitel, och under Tentafrågor förra årets tentafrågor. De gamla tentafrågorna finns också som varianter med nya formuleringar, i kapitlet där begreppet förklaras. Det är så tentans "små variationer" kan se ut.
+- **Essä:** fem egna övningsessäer med checklistor. Årets essäämnen är inte kända.
 - **Tenta:** förra årets tre tentor att skriva i sin helhet.
 `,
 };

@@ -68,6 +68,29 @@ test("manifestet: Läs, kapitelordning i Öva och sammanfattningen", () => {
   assert.ok(examNote.text.includes("3 december"));
 });
 
+// Essäerna: samma fyra steg som Strategi och BPM, märkta som egna
+// övningsessäer (årets ämnen är okända), byggda på föreläsningarna.
+test("essäerna: fem övningsessäer i fyrstegsform, märkta som egna, utan ordtak", () => {
+  const HEADINGS = ["Vad det är", "Varför det spelar roll", "Konkret", "Koppling"];
+  // Steg 4 ska namnge en annan del av delkursen, inte bara "koppla till kursen".
+  const OMRADEN = ["composition viii", "riskbedömning", "zero trust", "cia", "introna", "schneier", "nist",
+    "straub", "säkerhetspolicy", "data center", "konsekvensskalan", "red team", "pentest", "kryptering", "confidentiality"];
+  assert.equal(course.essays.length, 5);
+  assert.ok(course.views.includes("essa"));
+  assert.equal(course.essayWordLimit, null);
+  for (const essay of course.essays) {
+    assert.deepEqual(essay.checklist.map((g) => g.heading), HEADINGS, essay.id);
+    for (const group of essay.checklist) {
+      assert.ok(group.points.length >= 2 && group.points.length <= 4, `${essay.id} / ${group.heading}`);
+      for (const point of group.points) assert.ok(point.trim().length > 20, `${essay.id}: för kort punkt`);
+    }
+    assert.match(essay.context, /^Egen övningsessä – årets essäämnen är inte kända\./, essay.id);
+    assert.ok(essay.question && essay.outline, essay.id);
+    const step4 = essay.checklist[3].points.join(" ").toLowerCase();
+    assert.ok(OMRADEN.some((name) => step4.includes(name)), `${essay.id}: kopplingen namnger inget område`);
+  }
+});
+
 // Klartext (Kaspers regel 14 nov): det som visas ska förstås av en kursare
 // som aldrig sett sajten. Inga interna förkortningar i det Säkerhet visar.
 const JARGON = /\bHT2[56]\b|\bUF\b|docx|\bsak-\d{2}\b|\bFö\d\b/;
@@ -80,6 +103,8 @@ test("klartext i Säkerhets synliga texter", () => {
     ...topics.flatMap((t) => [t.name, t.summary, ...t.keyPoints, ...t.pitfalls]),
     ...questions.flatMap((q) => [q.question, q.source, ...q.options.flatMap((o) => [o.text, o.explain])]),
     ...course.pastExams.map((exam) => exam.term),
+    ...(course.essayIntro || []),
+    ...course.essays.flatMap((e) => [e.question, e.context, e.outline, ...e.checklist.flatMap((g) => g.points)]),
   ];
   for (const text of texts) assert.doesNotMatch(String(text), JARGON, String(text).slice(0, 80));
 });
