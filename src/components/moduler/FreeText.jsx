@@ -48,9 +48,16 @@ export default function FreeText({ item, answers, drafts, onAnswer }) {
       </label>
 
       {!draft.shown ? (
-        <button type="button" className="btn-primary mt-3" onClick={() => update({ shown: true })}>
-          Visa modellsvar
-        </button>
+        <>
+          <button type="button" className="btn-primary mt-3" onClick={() => update({ shown: true })}>
+            Visa modellsvar
+          </button>
+          {graded !== null && (
+            <p className="mt-2 text-sm text-ink/65">
+              Bedömd i Öva: {graded ? "Kunde" : "Kunde inte"}.
+            </p>
+          )}
+        </>
       ) : (
         <>
           <section className="mt-5">
