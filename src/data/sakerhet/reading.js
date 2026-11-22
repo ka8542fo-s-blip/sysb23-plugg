@@ -27,6 +27,7 @@
 // - Fö2 skriver ut SASN som "Security Architecture for Smart Networks". I
 //   boken (kap. 14) är SASN13 Standards Australia/Standards New Zealands
 //   handbok om säkerhetsrisker. Kapitlet återger bilden och nämner boken.
+import { BOOK_CHAPTERS } from "./bok/index.js";
 export { summary } from "./summary.js";
 
 const FO = "Föreläsningsfrågor";
@@ -35,10 +36,12 @@ export const CHAPTER_TOPICS = {
   fo1: { topics: ["digitalt"], primaryTopics: ["digitalt"] },
   fo2: { topics: ["risk-privacy"], primaryTopics: ["risk-privacy"] },
   alm: { topics: ["offensiv"], primaryTopics: ["offensiv"] },
+  // Bokkapitlen: ett ämne var (bok/<id>.js).
+  ...Object.fromEntries(BOOK_CHAPTERS.map((b) => [b.chapter.id, { topics: [b.topic.id], primaryTopics: [b.topic.id] }])),
 };
 
 // Läsordningen: föreläsningarna, sedan bokens kapitel i bokens ordning.
-export const ORDER = ["fo1", "fo2", "alm"];
+export const ORDER = ["fo1", "fo2", "alm", ...BOOK_CHAPTERS.map((b) => b.chapter.id)];
 
 export const intro =
   "Kompendiet har två delar, efter tentans upplägg: först föreläsningarna, sedan bokens kapitel (Stallings & Brown, Computer Security). Föreläsningskapitlen följer bilderna, bokkapitlen tar det som går att fråga om i flervalsform: definitioner, indelningar och skillnader. Räkna med ungefär {lästid} för hela texten. Termerna står på engelska, eftersom tentan och boken använder dem.";
@@ -336,7 +339,7 @@ Kryptering är alltså en kontroll i datalagret, inte en fysisk kontroll. Det va
     kind: "forelasning",
     label: "Gästföreläsning",
     examArea: FO,
-    title: "Offensiv säkerhet – angriparens blick i försvaret",
+    title: "Offensiv säkerhet: angriparens blick i försvaret",
     readingMinutes: 11,
     lead: "Erik Alm (Truesec) om hur säkerhetsarbete organiseras, hur en attack går till och hur tester av webbappar, interna nät och moln stärker försvaret.",
     sources: ["Gästföreläsning: Erik Alm, The role of offense in defense (13 nov 2026)"],
@@ -476,6 +479,7 @@ En molngranskning prövar tre saker:
 - **konfiguration och detektering:** är tjänster exponerade, och skulle misstänkt aktivitet märkas
 `,
   },
+  ...Object.fromEntries(BOOK_CHAPTERS.map((b) => [b.chapter.id, b.chapter])),
 };
 
 export const chapters = ORDER.map((id, index) => ({
@@ -484,7 +488,7 @@ export const chapters = ORDER.map((id, index) => ({
   ...(CHAPTER_TOPICS[id] || { topics: [], primaryTopics: [] }),
 }));
 
-export const glossary = [
+const lectureGlossary = [
   // Föreläsning 1
   { term: "CIA triad", definition: "Informationssäkerhetens tre aspekter enligt Wylder (2004): confidentiality, integrity och availability.", chapter: "fo1" },
   { term: "Confidentiality", definition: "Att information inte når obehöriga. Omfattar också privacy, alltså att individer styr vilken information om dem som samlas in och lämnas ut.", chapter: "fo1" },
@@ -542,3 +546,6 @@ export const glossary = [
   { term: "Assumed breach", definition: "Testmetod där man utgår från att angriparen redan är inne i det interna nätet.", chapter: "alm" },
   { term: "Cloud security is identity security", definition: "Leverantören skyddar plattformen och kunden sin konfiguration och sina data. Angriparen är ute efter användares, tjänstekontons och applikationers behörigheter.", chapter: "alm" },
 ];
+
+// Föreläsningarnas termer först, sedan bokkapitlens.
+export const glossary = [...lectureGlossary, ...BOOK_CHAPTERS.flatMap((b) => b.glossary)];

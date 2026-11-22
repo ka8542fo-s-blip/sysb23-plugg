@@ -40,7 +40,7 @@ Exempelfrågan på första föreläsningen var en flervalsfråga värd 1 poäng.
 Fem steg. Kapitlen i Läs fyller i dem.
 
 1. **Varför:** samhället har blivit digitalt på djupet, och insatserna är enorma. Cyberbrott kostar mer än nästan alla länders ekonomier. *Föreläsning 1.*
-2. **Vad som ska skyddas:** informationssäkerhet delas in i confidentiality, integrity och availability, CIA-triaden. *Föreläsning 1.*
+2. **Vad som ska skyddas:** informationssäkerhet delas in i confidentiality, integrity och availability, CIA-triaden. *Föreläsning 1 och bokens kapitel 1.*
 3. **Hur man tänker:** säkerhet är riskhantering. Man kartlägger tillgångar, hot och sårbarheter och väljer åtgärder efter risken. *Föreläsning 2.*
 4. **Vad man gör:** skydd i flera lager, från policy och åtkomstkontroll till kryptering, nätverksskydd, fysiskt skydd och människors medvetenhet. *Föreläsning 2 och bokens kapitel.*
 5. **Angriparens blick:** försvaret blir bättre av att någon med tillstånd angriper det, i pentester och övningar. *Gästföreläsningen.*
@@ -49,7 +49,7 @@ Privacy löper genom alla steg: att skydda människors integritet är ofta ett a
 
 ## Så använder du sajten
 
-- **Läs:** föreläsningarna först, sedan bokens kapitel. Termerna står på engelska, eftersom tentan och boken använder dem.
+- **Läs:** föreläsningarna först, sedan bokens kapitel i bokens ordning. Sajten tar först de kapitel som förra årets tentafrågor byggde på. Termerna står på engelska, eftersom tentan och boken använder dem.
 - **Öva:** under Alla frågor finns frågor per kapitel, och under Tentafrågor förra årets tentafrågor. De gamla tentafrågorna finns också som varianter med nya formuleringar, i kapitlet där begreppet förklaras. Det är så tentans "små variationer" kan se ut.
 - **Essä:** fem egna övningsessäer med checklistor. Årets essäämnen är inte kända.
 - **Tenta:** förra årets tre tentor att skriva i sin helhet.

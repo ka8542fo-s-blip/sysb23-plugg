@@ -4,8 +4,10 @@
 // (keyPoints, pitfalls), reading.js äger löptexten och ordlistan.
 // Kärnpunkternas form: ett begrepp per punkt, "Begrepp: förklaring".
 // Fallgroparna är de förväxlingar distraktorerna i Öva bygger på.
+// Bokkapitlens ämnen ligger i bok/<id>.js och läggs till sist.
+import { BOOK_CHAPTERS } from "./bok/index.js";
 
-export const topics = [
+const lectureTopics = [
   {
     id: "digitalt",
     name: "Informationssäkerhet i det digitala samhället",
@@ -80,3 +82,5 @@ export const topics = [
     ],
   },
 ];
+
+export const topics = [...lectureTopics, ...BOOK_CHAPTERS.map((b) => b.topic)];

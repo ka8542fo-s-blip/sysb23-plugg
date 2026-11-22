@@ -95,6 +95,6 @@ test("Säkerhet: sammanfattning utan grupp, kapitel numrerade i ordning med etik
   assert.deepEqual(course.chapters.map((c) => c.number), course.chapters.map((_, i) => i + 1));
   assert.ok(!practiceGroups(course).some((g) => g.id === course.summary.id));
   for (const [i, group] of practiceGroups(course).entries()) {
-    assert.equal(group.name, `${course.chapters[i].label}: ${course.chapters[i].title}`);
+    assert.equal(group.name, `${course.chapters[i].label} – ${course.chapters[i].title}`);
   }
 });

@@ -18,7 +18,7 @@ export function practiceGroups(course) {
     // Ett kapitel med egen etikett (Säkerhet: "Föreläsning 2") får den först.
     return (course.chapters || []).map((chapter) => ({
       id: chapter.id,
-      name: chapter.label ? `${chapter.label}: ${chapter.title}` : chapter.title,
+      name: chapter.label ? `${chapter.label} – ${chapter.title}` : chapter.title,
     }));
   }
   return (course.topics || []).map((topic) => ({ id: topic.id, name: topic.name }));

@@ -22,14 +22,18 @@
 const VERBATIM = "Lärarens exempelfråga till tentan, ordagrant med lärarens fyra alternativ; kan inte längdbalanseras.";
 const SCALE = "Alternativen är konsekvensskalans steg som på bilden och kan inte längdbalanseras.";
 
+// Bokkapitlens frågor ligger i bok/<id>.js (med eventuella egna flaggade).
+import { BOOK_CHAPTERS } from "./bok/index.js";
+
 export const LENGTH_FLAGGED = [
   { id: "sak-fo1-01", reason: VERBATIM },
   { id: "sak-fo2-08", reason: SCALE },
+  ...BOOK_CHAPTERS.flatMap((b) => b.flagged || []),
 ];
 
 const variant = (id, what) => ({ variantOf: id, source: `Variant av en tentafråga från förra året (${what})` });
 
-export const questions = [
+const lectureQuestions = [
   // ── Föreläsning 1: informationssäkerhet i det digitala samhället ─────────
   { id: "sak-fo1-01", topic: "digitalt", difficulty: 1,
     question: "Which is the Highest Industry Cost per Data Breach?",
@@ -373,3 +377,5 @@ export const questions = [
     ],
     correct: 2, source: "Gästföreläsningen (security testing)", reviewed: false },
 ];
+
+export const questions = [...lectureQuestions, ...BOOK_CHAPTERS.flatMap((b) => b.questions)];
