@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 677 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-22.
+- **Test:** `npm test` = 687 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-22.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -1513,6 +1513,9 @@ aldrig på sidan.
   (`chosenOption`), så att Övas nollställning också nollställer Moduler.
 - **Gör om modulen** (med bekräftelse) tar bort modulens status och val
   och döljer modellsvaren; texten står kvar.
+- **Besvarat i Öva** syns i Moduler ("Besvarad i Öva", "Bedömd i Öva:
+  Kunde"). Övas "Tillbaka till modulen" går till Moduler när delkursen
+  saknar Läs (`readView` i Practice.jsx).
 - **Framsteg:** Moduler visar "x av y besvarade" (svar eller bedömning sedan
   senaste Gör om). Statistik visar frågor klara (två rätt i rad, som Öva)
   och fritextfrågor Kunde (senaste bedömningen).
