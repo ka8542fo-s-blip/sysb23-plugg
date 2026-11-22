@@ -258,6 +258,23 @@ export const courses = [
     examBank: sakerhetExamBank,
     pastExams: sakerhetPastExams,
     choiceExams: sakerhetPastExams,
+    // Provtentor i årets format i fliken Tenta (lib/yearExam.js). Poäng och
+    // avdrag är okända: 1 p per flervalsfråga utan avdrag tills vidare, och
+    // inget betyg (showGrade). Ändra här när läraren har sagt mer.
+    yearExam: {
+      intro:
+        "Enligt läraren har årets tenta 20 frågor: 5 från tidigare tentor med små variationer, 5 från föreläsningsbilderna, 8 från bokens kapitel och 2 essäer. En provtenta drar just det ur sajtens frågor: varianter av förra årets frågor, föreläsningsfrågor, bokfrågor och två av övningsessäerna.",
+      rule: "Poäng och avdrag är inte kända. Tills vidare ger varje flervalsfråga 1 poäng och fel svar inget avdrag; essäerna ligger utanför poängen.",
+      pastNote:
+        "Förra årets tentor hade ett annat format: 20 flervalsfrågor à 3–8 poäng med avdrag för fel svar, och inga essäer. Frågorna kan återkomma med små variationer.",
+      sections: [
+        { pool: "variant", count: 5, points: 1, penalty: 0, title: "Från tidigare tentor, med små variationer" },
+        { pool: "forelasning", count: 5, points: 1, penalty: 0, title: "Från föreläsningarna" },
+        { pool: "bok", count: 8, points: 1, penalty: 0, title: "Från boken" },
+      ],
+      essays: 2,
+      showGrade: false,
+    },
     // "När lönar det sig att svara?" på Tentas översikt.
     answerRule: sakerhetAnswerRule,
     answerTable: sakerhetAnswerTable,
