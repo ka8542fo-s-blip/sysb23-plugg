@@ -4,6 +4,7 @@ import { useTheme } from "./lib/useTheme.js";
 import Home from "./views/Home.jsx";
 import KnowledgeHub from "./views/KnowledgeHub.jsx";
 import Moduler from "./views/Moduler.jsx";
+import { migrateSplitCards } from "./lib/splitCards.js";
 import Practice from "./views/Practice.jsx";
 import Exam from "./views/Exam.jsx";
 import Essays from "./views/Essays.jsx";
@@ -66,7 +67,14 @@ export default function App() {
     );
     return valid ? saved : "strategi";
   });
-  const [answers, setAnswers] = useState(() => load(KEYS.answers, {}));
+  // Förklarakorten i Verksamhetsarkitektur delades upp 2026-11-22; de nya
+  // korten ärver det ihopslagna kortets status en gång (lib/splitCards.js).
+  const [answers, setAnswers] = useState(() => {
+    const saved = load(KEYS.answers, {});
+    if (load(KEYS.kortdelning, false)) return saved;
+    save(KEYS.kortdelning, true);
+    return migrateSplitCards(saved);
+  });
   const [exams, setExams] = useState(() => load(KEYS.exams, []));
   const [essayState, setEssayState] = useState(() => load(KEYS.essays, {}));
   const [settings, setSettings] = useState(() => ({

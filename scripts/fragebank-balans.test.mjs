@@ -29,6 +29,7 @@ import { DIAGRAM_IDS } from "../src/components/knowledge/diagrams/ids.js";
 import * as eaQ from "../src/data/arkitektur/questions.js";
 import { getCourse } from "../src/data/index.js";
 import { ufQuestions } from "../src/data/arkitektur/ufView.js";
+import { modulerQuestions } from "../src/data/arkitektur/modulerView.js";
 import { topics as eaTopics } from "../src/data/arkitektur/topics.js";
 import { chapters as eaChapters } from "../src/data/arkitektur/reading.js";
 
@@ -282,9 +283,29 @@ const UF_EXPLAINED = [
   "ea-m12-1", "ea-m12-4", "ea-m12-5", "ea-m12-16", "ea-m12-19", "ea-m12-20",
   "ea-m12-21", "ea-m12-23", "ea-m12-25", "ea-m12-26", "ea-m12-28",
 ];
-test("arkitektur, Öva visar bara lärarens förklaringar, ingen svårighetsgrad och källan utan noter", () => {
+// Sedan 2026-11-22 visar Öva de svenska frågorna ur fliken Moduler
+// (modulerQuestions); ufQuestions (engelska, bara lärarens förklaringar) finns
+// kvar som data för provtentorna och prövas som förut.
+test("arkitektur, Öva: samma 136 frågor på svenska, med förklaring, i modulordning 1–12", () => {
   const course = getCourse("arkitektur");
-  assert.equal(course.questions, ufQuestions);
+  assert.equal(course.questions, modulerQuestions);
+  assert.equal(modulerQuestions.length, 136);
+  const uf = new Map(ufQuestions.map((q) => [q.id, q]));
+  for (const q of modulerQuestions) {
+    assert.equal(q.difficulty, undefined, q.id);
+    assert.ok(q.explanation && /[åäö]/.test(q.explanation), `${q.id}: svensk förklaring`);
+    assert.equal(q.correct, uf.get(q.id).correct, `${q.id}: samma facit`);
+    assert.equal(q.options.length, uf.get(q.id).options.length, q.id);
+    assert.equal(q.source, uf.get(q.id).source, q.id);
+  }
+  const order = modulerQuestions.map((q) => Number(q.chapter.slice(3)));
+  assert.deepEqual(order, [...order].sort((a, b) => a - b), "modul 1–12 i tur och ordning");
+  for (const id of ["ea-m7-20", "ea-m7-21", "ea-m7-22"]) {
+    assert.equal(modulerQuestions.find((q) => q.id === id).chapter, "kap7", `${id} står i modul 7`);
+  }
+});
+
+test("arkitektur, ufQuestions (dolda): bara lärarens förklaringar, ingen svårighetsgrad och källan utan noter", () => {
   assert.equal(ufQuestions.length, 136);
   assert.deepEqual(ufQuestions.filter((q) => q.explanation).map((q) => q.id).sort(), [...UF_EXPLAINED].sort());
   for (const q of ufQuestions) {

@@ -31,11 +31,14 @@ import {
 } from "./process/reading.js";
 import { topics as arkitekturTopics } from "./arkitektur/topics.js";
 import { essays as arkitekturEssays } from "./arkitektur/essays.js";
-import { explainCards as arkitekturExplainCards } from "./arkitektur/explainCards.js";
-import { ufChapters as arkitekturUfChapters, ufQuestions as arkitekturUfQuestions } from "./arkitektur/ufView.js";
-import { UF_INTRO as arkitekturUfIntro } from "./arkitektur/ufText.js";
 import { mockExams as arkitekturMockExams } from "./arkitektur/mockExams.js";
-import { moduler as arkitekturModuler, modulerIntro as arkitekturModulerIntro } from "./arkitektur/modulerView.js";
+import {
+  moduler as arkitekturModuler,
+  modulerCards as arkitekturModulerCards,
+  modulerChapters as arkitekturModulerChapters,
+  modulerIntro as arkitekturModulerIntro,
+  modulerQuestions as arkitekturModulerQuestions,
+} from "./arkitektur/modulerView.js";
 import { examBank as sakerhetExamBank } from "./sakerhet/examBank.js";
 import {
   pastExams as sakerhetPastExams,
@@ -180,36 +183,38 @@ export const courses = [
     // 2026-11-21 (Kaspers beslut: bara lärarens tre moduldokument): det som
     // inte står i PDF:erna visas inte. Borttaget ur manifestet men kvar i
     // repot: levels, practiceBlocks (Memorera), examArchive, extraQuestions.
-    // 2026-11-22 (Kaspers beslut): fliken Moduler, lärarens moduldokument på
-    // svenska med frågorna på sidan. Först bredvid de andra flikarna (fas 2).
-    views: ["moduler", "las", "ova", "tenta", "statistik"],
+    // 2026-11-22 (Kaspers beslut, plan godkänd): fliken Moduler ersätter Läs
+    // och Tenta tas bort ur menyn; allt är på svenska. Läs, Tenta, ufView.js
+    // och provtentorna finns kvar i repot men visas inte.
+    views: ["moduler", "ova", "statistik"],
     moduler: arkitekturModuler,
     modulerIntro: arkitekturModulerIntro,
-    explainCards: arkitekturExplainCards,
+    // Öva: samma 136 frågor och 53 fritextfrågor som i Moduler, på svenska och
+    // i modulordning 1–12 (modulerView.js). Ett kort per fritextfråga med
+    // samma id som i Moduler; de 46 ihopslagna korten (explainCards.js)
+    // visas inte längre.
+    explainCards: arkitekturModulerCards,
     // Tre provtentor (data/arkitektur/mockExams.js). Raden om 0 p
     // (MOCK_EXAM_NOTE) står inte i lärarens dokument och visas inte.
     mockExams: arkitekturMockExams,
     practiceBy: "chapter",
     topics: arkitekturTopics,
     // Öva: lärarens 135 modulfrågor och exempelfrågan i modul 1:s inledning,
-    // som de står i PDF:erna (ufView.js: bara lärarens egna förklaringar).
-    questions: arkitekturUfQuestions,
+    // på svenska med en förklaring till varje (modulerView.js). Provtentorna
+    // bygger fortfarande på ufView.js (engelska) men visas inte.
+    questions: arkitekturModulerQuestions,
     // Lärarens 53 frågor med modellsvar i modulordning (12, 1–11);
     // Zachman-essän står under modul 4. Tentan anger inget ordtak, och
     // checklistorna följer modellsvaren, inte fyrstegsformen.
     essays: arkitekturEssays,
     essayWordLimit: null,
-    // Läs (2026-11-21): lärarens egen text ur de tre PDF:erna, en sida per
-    // modul i ordningen 12, 1–11 (ufText.js via ufView.js), och lärarens
-    // inledning överst. Våra kapiteltexter, ordlistan, examNote och
-    // essayIntro ligger kvar i repot och visas inte.
-    chapters: arkitekturUfChapters,
-    // Läs visar bara Kompendium (Kaspers omgörning 2026-11-14).
-    readingSegments: ["kompendium"],
-    readingIntro: arkitekturUfIntro,
-    // Hem (2026-11-21): en mening om var allt kommer ifrån; de tre stegen
-    // och den äldre introtexten visas inte.
-    homeIntro: "Allt här kommer ordagrant från lärarens tre moduldokument: modul 1–4, 5–8 och 9–12.",
+    // Modulerna 1–12 med svenska titlar: grupperna i Öva och raderna i
+    // Statistik. Läs (lärarens engelska text, ufView.js/ufText.js) och våra
+    // kapiteltexter ligger kvar i repot och visas inte.
+    chapters: arkitekturModulerChapters,
+    // Hem (2026-11-22): en mening om var allt kommer ifrån och var man börjar.
+    homeIntro:
+      "Allt här kommer från lärarens tre moduldokument, översatt till svenska. Börja i Moduler och fortsätt sedan i Öva.",
   },
   {
     ...noContent,

@@ -70,13 +70,15 @@ for (const [id, numbers] of [
 
 // Verksamhetsarkitektur: tolv modulkort i ordningen 12, 1–11 (UF: börja med
 // modul 12). Inget eget sammanfattningskort; Öva följer samma ordning.
-test("Verksamhetsarkitektur: modulerna i ordningen 12, 1–11 i Läs och Öva, ingen sammanfattning", () => {
+// Sedan 2026-11-22 följer Öva fliken Moduler: modulerna i dokumentens
+// ordning 1–12 (ämnena i topics.js står kvar i den gamla ordningen 12, 1–11).
+test("Verksamhetsarkitektur: modulerna i ordningen 1–12 i Öva, ingen sammanfattning", () => {
   const course = getCourse("arkitektur");
-  const order = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  const order = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   assert.equal(course.summary, undefined);
   assert.deepEqual(course.chapters.map((c) => c.number), order);
   assert.deepEqual(practiceGroups(course).map((g) => g.id), order.map((n) => `kap${n}`));
-  assert.deepEqual(course.topics.map((t) => t.chapter), order.map((n) => `kap${n}`));
+  assert.deepEqual(course.topics.map((t) => t.chapter), [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((n) => `kap${n}`));
 });
 
 test("Strategi har ingen sammanfattning", () => {

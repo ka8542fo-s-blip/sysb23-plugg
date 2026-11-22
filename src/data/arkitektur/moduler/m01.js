@@ -16,6 +16,7 @@ Kursens storlek bidrog också till att jag bestämde mig för att ge svaren på 
 I kapitel 12 finns en genomgång av vad ni ska förstå och kunna förklara själva, tillsammans med mer djupgående fallfrågor. Börja alltså med att analysera det som sägs inom föreläsning 3 modul 3 (i kapitel 12). Börja sedan med föreläsning 1, modul 1–4 (enligt nedan), och så vidare.
 
 **Föreläsning 1 — Grunderna i Enterprise Architecture**
+
 Självstudiematerial – modul 1–4
 
 1. Vad är en enterprise?
@@ -24,6 +25,7 @@ Självstudiematerial – modul 1–4
 4. Zachman — ontology- och klassificeringsperspektivet
 
 **Föreläsning 2 — Arkitekturutveckling med TOGAF**
+
 Självstudiematerial – modul 5–8
 
 5. TOGAF och ADM
@@ -32,6 +34,7 @@ Självstudiematerial – modul 5–8
 8. Principer, governance och arkitekturbeslut
 
 **Föreläsning 3 — Enterprise Agility och digital transformation**
+
 Självstudiematerial – modul 9–12
 
 9. Arkitektur och Agile
@@ -45,6 +48,7 @@ The size of the course also helped me to decide to provide the answers to most q
 In chapter 12 there is a presentation of what to understand and be able to explain yourself together with more deep case-questions. So, start by analyze what is said within lecture 3 Modul 3 (in chapter 12). Then start with lecture 1 modules 1-4 (as seen below) and so on.
 
 **Lecture 1 — Foundations of Enterprise Architecture**
+
 Self study material - Modules 1–4
 
 1. What is an Enterprise?
@@ -53,6 +57,7 @@ Self study material - Modules 1–4
 4. Zachman — the ontology and classification perspective
 
 **Lecture 2 — Architecture Development with TOGAF**
+
 Self study material - Modules 5–8
 
 5. TOGAF and the ADM
@@ -61,6 +66,7 @@ Self study material - Modules 5–8
 8. Principles, Governance and Architecture Decisions
 
 **Lecture 3 — Enterprise Agility and Digital Transformation**
+
 Self study material - Modules 9–12
 
 9. Architecture and Agile

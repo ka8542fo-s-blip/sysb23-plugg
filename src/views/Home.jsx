@@ -34,7 +34,10 @@ export default function Home({
   // Verksamhetsarkitektur: modultabellen (Öva-frågor och förklarakort per
   // modul) i stället för de allmänna siffrorna.
   const byModule = (course.explainCards || []).length > 0;
-  const showsTopics = !course.readingSegments || course.readingSegments.includes("begrepp");
+  // Ämnena syns bara i Läs → Begrepp (Verksamhetsarkitektur har ingen Läs
+  // sedan fliken Moduler, 2026-11-22).
+  const showsTopics =
+    views.includes("las") && (!course.readingSegments || course.readingSegments.includes("begrepp"));
 
   return (
     <div className="space-y-8">
@@ -61,12 +64,14 @@ export default function Home({
         )}
         <p className="tabular mt-2 text-[15px] text-ink/65">
           {[
-            course.chapters.length > 0 && `${course.chapters.length} kapitel`,
+            (course.moduler || []).length > 0
+              ? `${course.moduler.length} moduler`
+              : course.chapters.length > 0 && `${course.chapters.length} kapitel`,
             course.questions.length > 0 && `${course.questions.length} frågor`,
             (course.explainCards || []).length > 0 && `${course.explainCards.length} förklarakort`,
             showsTopics && course.topics.length > 0 && `${course.topics.length} ämnen`,
             views.includes("essa") && course.essays.length > 0 && `${course.essays.length} essäfrågor`,
-            (course.mockExams || []).length > 0 && `${course.mockExams.length} provtentor`,
+            views.includes("tenta") && (course.mockExams || []).length > 0 && `${course.mockExams.length} provtentor`,
             sqlExercises.length > 0 && `${sqlExercises.length} SQL-övningar`,
             course.examBank.length > 0 && `${course.examBank.length} tentafrågor`,
             course.choiceExams.length > 0 && `${course.choiceExams.length} gamla tentor`,
@@ -143,6 +148,13 @@ export default function Home({
         )}
         {/* Genvägarna byggs ur delkursens lägen, i manifestets ordning. */}
         <div className="mt-5 grid gap-3 sm:grid-cols-3">
+          {views.includes("moduler") && (course.moduler || []).length > 0 && (
+            <Shortcut
+              title="Gå igenom modulerna"
+              hint={`Lärarens ${course.moduler.length} moduler med frågorna på sidan`}
+              onClick={() => navigate("moduler")}
+            />
+          )}
           {views.includes("las") && (
             <Shortcut
               title="Läs kompendiet"

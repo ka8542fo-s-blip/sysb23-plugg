@@ -37,20 +37,27 @@ test("modulerna räknar klara Öva-frågor och genomgångna essäer, Zachman-del
   assert.equal(s.fordjupning.done, 1);
 });
 
-test("per modul (Hem och Statistik): Öva-frågor och förklarakort i ordningen 12, 1–11", () => {
-  const rows = moduleProgress(course, { "ea-m1-1": done, "ea-f-e1-9": done, "ea-f-e1-10": wrong });
-  assert.deepEqual(rows.map((r) => r.number), [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+// Sedan 2026-11-22 (fliken Moduler): ordningen 1–12, 53 fritextfrågor, och
+// en fritextfråga räknas när senaste bedömningen är Kunde.
+test("per modul (Hem och Statistik): frågor klara och fritextfrågor Kunde i ordningen 1–12", () => {
+  const onceKunde = { correct: 1, wrong: 0, last: "correct", recent: [true] };
+  const answers = { "ea-m1-1": done, "ea-m1-2": onceKunde, "ea-f-e1-9": onceKunde, "ea-f-e1-10": wrong };
+  const rows = moduleProgress(course, answers);
+  assert.deepEqual(rows.map((r) => r.number), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   assert.equal(rows.reduce((t, r) => t + r.ova.total, 0), 136);
-  assert.equal(rows.reduce((t, r) => t + r.cards.total, 0), 46);
-  assert.deepEqual(rows[0].cards, { done: 0, total: 0 }, "Start här har inga förklarakort");
+  assert.equal(rows.reduce((t, r) => t + r.cards.total, 0), 53);
   const kap1 = rows.find((r) => r.chapterId === "kap1");
-  assert.deepEqual(kap1.ova.done, 1);
-  assert.deepEqual(kap1.cards, { done: 1, total: 2 });
+  assert.equal(kap1.ova.done, 1, "en fråga är klar först efter två rätt i rad, som i Öva");
+  assert.deepEqual(kap1.cards, { done: 1, total: 2 }, "ett Kunde räcker för en fritextfråga");
+  const kap7 = rows.find((r) => r.chapterId === "kap7");
+  assert.deepEqual([kap7.ova.total, kap7.cards.total], [20, 8], "fråga 20–22 och essä 24 och 27 i modul 7");
+  assert.equal(rows.find((r) => r.chapterId === "kap12").cards.total, 17);
 });
 
-test("Hem har en mening om att allt kommer från lärarens tre moduldokument", () => {
+test("Hem har en mening om lärarens tre moduldokument och var man börjar", () => {
   assert.equal(course.homeSteps, undefined, "de tre stegen visas inte");
-  assert.match(course.homeIntro, /ordagrant från lärarens tre moduldokument/);
+  assert.match(course.homeIntro, /lärarens tre moduldokument, översatt till svenska/);
+  assert.match(course.homeIntro, /Börja i Moduler och fortsätt sedan i Öva/);
 });
 
 test("rubrikerna är vanlig svenska, inte interna nivånamn", () => {

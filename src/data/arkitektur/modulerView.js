@@ -12,6 +12,8 @@ import { questions } from "./questions.js";
 import { essays } from "./essays.js";
 import { explainCardId } from "./explainMap.js";
 import { INLEDNING, MODULER } from "./moduler/index.js";
+import { topics } from "./topics.js";
+import { ufSource } from "./ufView.js";
 
 const bankQuestions = new Map(questions.map((question) => [question.id, question]));
 const bankEssays = new Map(essays.map((essay) => [essay.id, essay]));
@@ -85,4 +87,70 @@ export const moduler = MODULER.map((module) => ({
 // Alla frågor och fritextfrågor i dokumentens ordning.
 export const modulerItems = moduler.flatMap((module) =>
   module.blocks.filter((block) => block.kind === "fraga" || block.kind === "fritext"),
+);
+
+// ---------------------------------------------------------------------------
+// Öva (2026-11-22): samma frågor och fritextfrågor som i Moduler, på svenska
+// och i modulordning 1–12. Frågan, alternativen (i bankens ordning, så att
+// `correct` gäller oförändrat) och förklaringen är de svenska; Öva blandar
+// alternativen som förut. Varje fritextfråga är ett eget förklarakort med
+// samma id som i Moduler (inga ihopslagna kort längre).
+const topicOfChapter = Object.fromEntries(topics.map((topic) => [topic.chapter, topic.id]));
+
+// Kapitlen i Öva och Statistik: modulerna 1–12 med svenska titlar.
+export const modulerChapters = moduler.map((module) => ({
+  id: module.id,
+  number: module.number,
+  title: module.title.sv,
+  topics: [topicOfChapter[module.id]],
+}));
+
+export const modulerQuestions = moduler.flatMap((module) =>
+  module.blocks
+    .filter((block) => block.kind === "fraga")
+    .map((item) => {
+      const { explanation: _sv, explanationUf: _uf, difficulty: _d, ...rest } = bankQuestions.get(item.id);
+      return {
+        ...rest,
+        chapter: module.id,
+        question: item.question.sv,
+        options: item.options.map((option) => ({ text: option.sv })),
+        explanation: item.explanation.sv,
+        source: ufSource(rest.source),
+      };
+    }),
+);
+
+const cardSource = (module, item) =>
+  item.nr ? `Modul ${module.number}, fråga ${item.nr}` : `Modul ${module.number}, ${item.title?.sv ?? "fråga"}`;
+
+export const modulerCards = moduler.flatMap((module) =>
+  module.blocks
+    .filter((block) => block.kind === "fritext")
+    .map((item) => {
+      const source = cardSource(module, item);
+      const prompt = {
+        id: item.essayId,
+        label: item.title?.sv ?? `Fråga ${item.nr}`,
+        question: item.question.sv,
+        source,
+        modelAnswer: item.modelAnswer.sv,
+        answerLabel: item.answerLabel?.sv ?? null,
+        keyLesson: item.keyLesson ? { label: item.keyLessonLabel.sv, text: item.keyLesson.sv } : null,
+        extraModelAnswers: item.extraModelAnswers.map((extra) => ({ source: "Exempelsvaret i modulens inledning", text: extra.sv })),
+      };
+      return {
+        id: item.id,
+        kind: "forklara",
+        chapter: module.id,
+        topic: topicOfChapter[module.id],
+        essayIds: [item.essayId],
+        question: prompt.question,
+        prompts: [prompt],
+        options: [{ text: "Kunde" }, { text: "Kunde inte" }],
+        correct: 0,
+        fixedOrder: true,
+        source,
+      };
+    }),
 );

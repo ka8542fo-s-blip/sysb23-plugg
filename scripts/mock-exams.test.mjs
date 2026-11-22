@@ -6,6 +6,7 @@ import assert from "node:assert/strict";
 import { getCourse } from "../src/data/index.js";
 import { MOCK_FREE_TEXT, mockExams } from "../src/data/arkitektur/mockExams.js";
 import { ufQuestions } from "../src/data/arkitektur/ufView.js";
+import { CHAPTER_ORDER } from "../src/data/arkitektur/reading.js";
 // Provtentorna bygger på modulfrågorna, inte exempelfrågan (2026-11-21).
 const questions = ufQuestions.filter((q) => !q.example);
 import { buildMockExams, examParts, isStatement, lockedOrder, migrateMockState, mockExamResult } from "../src/lib/mockExam.js";
@@ -13,10 +14,12 @@ import { buildMockExams, examParts, isStatement, lockedOrder, migrateMockState, 
 const course = getCourse("arkitektur");
 const choiceParts = (exam) => exam.tasks.filter((task) => task.no !== 1).flatMap((task) => task.parts);
 
-test("tre provtentor i manifestet och fliken Tenta", () => {
+// Sedan 2026-11-22 (fliken Moduler) är Tenta borta ur menyn; provtentorna
+// och deras lagring finns kvar i repot.
+test("tre provtentor i manifestet, fliken Tenta dold", () => {
   assert.equal(course.mockExams, mockExams);
   assert.equal(mockExams.length, 3);
-  assert.ok(course.views.includes("tenta"));
+  assert.ok(!course.views.includes("tenta"));
   assert.equal(course.mockExamNote, undefined, "raden om 0 p står inte i lärarens dokument");
 });
 
@@ -68,7 +71,7 @@ test("alternativens ordning är låst: samma vid varje bygge, en permutation, sa
     questions,
     essays: [],
     chapterOf: (q) => mockExams.flatMap(choiceParts).find((part) => part.item.id === q.id).chapter,
-    chapterOrder: course.chapters.map((c) => c.id),
+    chapterOrder: CHAPTER_ORDER,
     freeText: [],
   });
   for (const [index, exam] of mockExams.entries()) {

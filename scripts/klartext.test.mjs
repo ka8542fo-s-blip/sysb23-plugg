@@ -9,15 +9,19 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { getCourse } from "../src/data/index.js";
-import { UF_TEXT } from "../src/data/arkitektur/ufText.js";
+import { UF_INTRO, UF_TEXT } from "../src/data/arkitektur/ufText.js";
+import { ufChapters } from "../src/data/arkitektur/ufView.js";
 
-const JARGON = /\bUF\b|HT ?2[56]|docx|råmaterial|\bTroligt\b|\bKärna\b/;
+const JARGON = /\bUF\b|HT ?2[56]|docx|\bWord\b|råmaterial|\bTroligt\b|\bKärna\b/;
 const course = getCourse("arkitektur");
 
 const texts = () => [
   ["homeIntro", course.homeIntro ?? ""],
-  ["readingIntro", course.readingIntro],
-  ...course.chapters.map((c) => [c.id, [c.title, c.lead ?? "", c.card, c.body, ...(c.sources || [])].join(" ")]),
+  ["modulerIntro", course.modulerIntro.sv],
+  ...course.chapters.map((c) => [c.id, c.title]),
+  ...course.moduler.flatMap((m) =>
+    m.blocks.map((b) => [b.id, b.sv ?? [b.question.sv, b.explanation?.sv ?? "", b.modelAnswer?.sv ?? "", ...(b.options || []).map((o) => o.sv)].join(" ")]),
+  ),
   ...course.questions.map((q) => [
     q.id,
     [q.question, ...(q.options || []).map((o) => (typeof o === "string" ? o : o.text)), q.explanation ?? "", q.source ?? "", q.note ?? ""].join(" "),
@@ -35,9 +39,12 @@ test("Verksamhetsarkitektur: inga interna förkortningar eller nivånamn i det s
   }
 });
 
-test("Läs visar bara lärarens text: inga ingresser, ingen Läs mer, inga ämnesrutor, källan är modulen", () => {
-  assert.equal(course.chapters.length, 12);
-  for (const chapter of course.chapters) {
+// Läs (lärarens engelska text) är dold sedan 2026-11-22, då fliken Moduler
+// ersatte den; datat i ufView.js finns kvar och prövas här.
+test("Läs och Tenta är dolda; Läs-datat är lärarens text utan våra tillägg", () => {
+  assert.ok(!course.views.includes("las") && !course.views.includes("tenta"));
+  assert.equal(ufChapters.length, 12);
+  for (const chapter of ufChapters) {
     assert.equal(chapter.card, UF_TEXT[chapter.id], chapter.id);
     assert.equal(chapter.body, "", `${chapter.id}: ingen Läs mer`);
     assert.equal(chapter.lead, undefined, `${chapter.id}: ingen ingress`);
@@ -47,7 +54,7 @@ test("Läs visar bara lärarens text: inga ingresser, ingen Läs mer, inga ämne
     assert.deepEqual(chapter.sources, [`Modul ${chapter.number}`]);
     assert.doesNotMatch(chapter.card, /[åäöÅÄÖ]/, `${chapter.id}: lärarens engelska text, inget vi skrivit`);
   }
-  assert.match(course.readingIntro, /^I have created 12 modules/);
+  assert.match(UF_INTRO, /^I have created 12 modules/);
   for (const key of ["examNote", "glossary", "essayIntro", "levels", "practiceBlocks", "examArchive"]) {
     assert.ok(course[key] === undefined || (Array.isArray(course[key]) && course[key].length === 0), `${key} visas inte`);
   }

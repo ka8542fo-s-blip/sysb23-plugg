@@ -110,17 +110,17 @@ export default function Stats({
         </section>
   );
 
-  // Verksamhetsarkitektur (Kaspers omgörning 2026-11-14): bara resultat per
-  // modul (Öva-frågor och förklarakort) och provtentornas resultat, plus
-  // Nollställ min data. Kortet med nivåerna visas inte längre.
-  if ((course.mockExams || []).length > 0) {
+  // Verksamhetsarkitektur: resultat per modul och Nollställ min data.
+  // Sedan 2026-11-22 (fliken Moduler): frågor klara och fritextfrågor Kunde
+  // per modul 1–12; provtentornas resultat bara när fliken Tenta finns.
+  if ((course.moduler || []).length > 0 || (course.mockExams || []).length > 0) {
     return (
       <div className="space-y-8">
         <section>
           <h1 className="font-display text-2xl">Statistik</h1>
           <p className="mt-1 max-w-reading text-[15px] text-ink/70">
-            Öva-frågor och förklarakort per modul, och provtentornas resultat. En fråga eller ett
-            förklarakort är klart när du har svarat rätt två gånger i rad.
+            Frågor och fritextfrågor per modul. En fråga är klar när du har svarat rätt två gånger i rad, och
+            en fritextfråga räknas när du senast valde Kunde.
           </p>
         </section>
         <section className="card p-5 sm:p-6" aria-label="Per modul">
@@ -129,7 +129,9 @@ export default function Stats({
             <ModuleProgressTable course={course} answers={answers} navigate={navigate} />
           </div>
         </section>
-        <MockExamResults course={course} navigate={navigate} />
+        {course.views.includes("tenta") && (course.mockExams || []).length > 0 && (
+          <MockExamResults course={course} navigate={navigate} />
+        )}
         {resetCard}
       </div>
     );

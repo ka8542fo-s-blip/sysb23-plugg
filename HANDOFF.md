@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 662 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-21.
+- **Test:** `npm test` = 677 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-22.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -51,7 +51,7 @@ kapitel: allt UI läser `chapter.number`.
 | databaser | komplett mot tentan | se nedan |
 | process | aktiv (2026-09-29) | se "Processorienterad verksamhetsutveckling (BPM)" nedan |
 | sakerhet | aktiv (2026-11-13) | Öva (bara Tentafrågor), Tenta, Uppgifter — se "Säkerhet i informationssystem" nedan |
-| arkitektur | aktiv (2026-11-13) | Bara lärarens tre moduldokument (21 nov): Läs (lärarens text, 12 sidor), Öva (136 frågor + 46 förklarakort), Tenta (3 provtentor), Statistik — se "Verksamhetsarkitektur" nedan |
+| arkitektur | aktiv (2026-11-13) | Lärarens tre moduldokument på svenska (22 nov): Moduler (12 moduler med frågorna på sidan), Öva (136 frågor + 53 förklarakort), Statistik — se "Verksamhetsarkitektur" nedan |
 
 **Databaser** (`views: las, sql, modell, tenta, ova, statistik`; Prov medvetet borta):
 
@@ -1474,11 +1474,60 @@ UF:s docx-råmaterial, kursinformationen, kursens upplägg och de tre
 HT25-tentorna. Lärare Umberto Fiaccadori (UF). Byggt i en egen worktree
 parallellt med Säkerhet-sessionen; rebasat mot main före varje push.
 
-`views: las, ova, tenta, statistik` (sedan 14 nov, se nedan). Ingen
+`views: moduler, ova, statistik` (sedan 22 nov, se nedan). Ingen
 Prov: HT26-tentans poäng och minuspoäng är okända, och ett Prov med påhittad
 poäng är sämre än inget.
 
+**Fliken Moduler, allt på svenska (Kaspers beslut 22 nov, plan godkänd;
+`cc-arkitektur-moduler.md` i huvudmappen, gitignorerad).** Läraren har sagt
+att tentan är på svenska. Fliken Moduler visar hans tre moduldokument
+uppifrån och ned, översatta: text, sedan frågorna som hör till, sedan nästa
+text, som i PDF:erna. `views: moduler, ova, statistik`; Läs och Tenta är
+borta ur menyn men vyerna, datat och lagringen finns kvar (sparad flik
+leder till Hem). Grundregeln från 21 nov gäller: innehållet kommer från de
+tre PDF:erna; Word-dokumentet är bara underlag för förklaringar och nämns
+aldrig på sidan.
+
+- **Data:** `data/arkitektur/moduler/m01–m12.js`, en fil per modul med
+  blocken i PDF:ens ordning (`text`, `fraga`, `fritext`, `exempel`).
+  Modulfilerna har bara svenskan för frågor och modellsvar;
+  `modulerView.js` hämtar det engelska originalet (`en`) och facit ur
+  `questions.js`/`essays.js`, så att det engelska aldrig kan glida isär och
+  facit aldrig skrivs två gånger. Textblocken har både `sv` och `en`.
+  Lärarens inledning (`INLEDNING` i m01.js) står överst i fliken.
+- **Ordlistan** (`ordlista.js`, låst i `moduler.test.mjs`): `TERMER` står
+  kvar på engelska (svensk böjning som capabilityn, enterprisen godtas),
+  `FASTA` översättningar (scope → avgränsning, implementation →
+  implementering, methodology → metodik …), `ABSOLUTA` ord (always → alltid,
+  only → endast …) och `TERM_UNDANTAG` där ordet inte används som term.
+- **Förklaringar:** varje flervals- och sant/falskt-fråga har en svensk,
+  högst cirka tre meningar. Lärarens egen "Explanation" översatt där den
+  finns (17), annars belagd i Word-dokumentets svar eller lärotext för
+  modulen eller i modulens egen text. Tre granskningsagenter jämförde
+  översättningen mot PDF:erna (22 nov) och rättade överdrifter.
+- **Lagring (allt delas med Öva):** svar och status i `sysb23:answers` med
+  samma id; valt alternativ i `svar:<frågeId>` (`{ choice }`); fritexten i
+  `svar:<kortId>` (`{ text, seeded, shown }`, samma som förklarakorten);
+  vald modul i `modulVald`, inledningen utfälld i `modulInledning`. Ett
+  valt alternativ visas bara om frågan har ett svar i answers
+  (`chosenOption`), så att Övas nollställning också nollställer Moduler.
+- **Gör om modulen** (med bekräftelse) tar bort modulens status och val
+  och döljer modellsvaren; texten står kvar.
+- **Framsteg:** Moduler visar "x av y besvarade" (svar eller bedömning sedan
+  senaste Gör om). Statistik visar frågor klara (två rätt i rad, som Öva)
+  och fritextfrågor Kunde (senaste bedömningen).
+- **Öva** (`modulerQuestions`, `modulerCards`, `modulerChapters`): samma
+  frågor på svenska, modulordning 1–12, alternativen blandas som förut.
+  Modul 7:s fråga 20–22 och essä 24 och 27 står i modul 7 (Kaspers beslut).
+  53 förklarakort, ett per fritextfråga, i den modul där läraren har
+  frågan; Kaspers mappning från 14 nov gäller inte längre. Sju kort har nya
+  id (de var ihopslagna); `lib/splitCards.js` lät dem ärva det ihopslagna
+  kortets status en gång (flaggan `kortdelning`).
+- **Kvar men dolt:** `ufView.js`/`ufText.js` (Läs på engelska), provtentorna,
+  `explainMap.js`/`explainCards.js` (de 46 ihopslagna korten).
+
 **Bara lärarens tre moduldokument (Kaspers beslut 21 nov, plan godkänd;
+gäller fortfarande; Läs och Tenta nedan är dolda sedan 22 nov;
 `cc-arkitektur-bara-uf.md` i huvudmappen, gitignorerad).** Tentan bygger i
 princip på `modul-1-4.pdf`, `modul-5-8.pdf` och `modul-9-12.pdf`.
 **Grundregel:** står något inte i de tre PDF:erna visas det inte. Inget är
@@ -1804,8 +1853,9 @@ kapitel 4, Zachman- och Essä-introt).
 - **Säkerhet när föreläsningarna kommer:** kapitel i Läs, kapitelfrågor i
   `questions` (växeln Alla frågor/Tentafrågor dyker upp), läsanvisningen.
   Kasper granskar facit och förklaringarna i examBank.
-- **Verksamhetsarkitektur:** Kasper granskar Öva (`reviewed: false` på
-  alla 217), placeringsfacit (T-uppgifterna) och essächecklistorna. Efter
-  F1–F3 (18, 20, 23 nov): stäm av kapitlen mot det UF säger om tentan och
-  litteraturen, och lägg in HT26-tentans poäng i examNote när de är kända.
-  Är poängen kända kan Prov byggas.
+- **Verksamhetsarkitektur:** Kasper granskar översättningen i Moduler
+  (`moduler/m01–m12.js`) och förklaringarna. Skillnaderna mellan
+  Word-dokumentet och PDF:erna redovisades i rapporterna 22 nov; PDF:en
+  gäller. När läraren lägger ut en svensk version av modulerna: jämför
+  hans översättning med vår och ta hans termer. Är HT26-tentans poäng
+  kända kan Prov byggas.

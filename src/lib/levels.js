@@ -55,9 +55,11 @@ export function levelStats(course, { answers = {}, essayState = {}, modelProgres
   };
 }
 
-// Hur långt man har kommit per modul (Hem och Statistik, Verksamhetsarkitektur
-// sedan 2026-11-14): Öva-frågor klara/totalt och förklarakort klara/totalt, i
-// kursens ordning (12, 1–11). Klar = två rätt i rad, som i Öva.
+// Hur långt man har kommit per modul (Hem och Statistik, Verksamhetsarkitektur):
+// frågor klara av totalt och fritextfrågor Kunde av totalt, i kursens ordning
+// (sedan 2026-11-22 modul 1–12, som fliken Moduler). En fråga är klar som i
+// Öva (två rätt i rad); en fritextfråga räknas när senaste bedömningen är
+// Kunde (Kaspers beställning 22 nov).
 export function moduleProgress(course, answers = {}) {
   const chapterOf = Object.fromEntries((course.topics || []).map((topic) => [topic.id, topic.chapter]));
   const inChapter = (items, id) => items.filter((item) => (item.chapter ?? chapterOf[item.topic]) === id);
@@ -69,7 +71,7 @@ export function moduleProgress(course, answers = {}) {
       number: chapter.number,
       title: chapter.title,
       ova: { done: count(questions, (q) => isDone(answers[q.id])), total: questions.length },
-      cards: { done: count(cards, (c) => isDone(answers[c.id])), total: cards.length },
+      cards: { done: count(cards, (c) => answers[c.id]?.last === "correct"), total: cards.length },
     };
   });
 }
