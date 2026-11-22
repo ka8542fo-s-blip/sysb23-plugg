@@ -317,6 +317,8 @@ Mini-uppgiften: en formell riskanalys drivs ofta av en **Detailed Risk Approach*
 
 Kryptering är alltså en kontroll i datalagret, inte en fysisk kontroll. Det var svaret på en av förra årets tentafrågor.
 
+**Mantrap skiljer sig mellan källorna.** Bilden lägger mantrap-entréer under site security. Bokens fyrlagermodell (bokens kapitel 5) lägger mantrap under physical security, alltså skyddet av själva datacentret. Gäller frågan föreläsningens modell är svaret site security, gäller den bokens är det physical security.
+
 ## Zero trust
 
 **Zero Trust Methodology** visas som en "Circle of Trust" med skydd i lager, utifrån och in:

@@ -296,7 +296,7 @@ Osäkert:
 - Figure 16.2 (PIV-modellens tre delsystem, Review Question 16.9) saknas i textfilen. Namnen är tagna ur löptexten: "PIV front end", "PIV card issuance and management subsystem" och "PIV relying subsystem". Figuren kan ha ett annat namn på det tredje (t.ex. access control subsystem).
 - Boken har fyra typer av områden i Table 16.6 (unrestricted, controlled, limited, exclusion) men faktorkraven (1/2/3) gäller bara de tre sista; unrestricted står med "–".
 - Kärnpunkten "premises security skyddar hela anläggningen" och jämförelsen med Föreläsning 2:s site security är min koppling. Kapitlet säger bara att modellen har physical och site security som lager och att det här kapitlet säger vad de skyddar mot, inte att site security är samma sak som premises security.
-- Mantrap: kap. 5 (s. 282) räknar mantrap till physical security, medan Föreläsning 2 och topics.js lägger mantrap-entréer under site security. Kapitlet nämner inte mantrap för att inte krocka; värt att se över i Föreläsning 2:s pitfall.
+- Mantrap: kap. 5 (s. 282) räknar mantrap till physical security, medan Föreläsning 2 och topics.js lägger mantrap-entréer under site security. Kapitlet nämner inte mantrap för att inte krocka. (22 nov: Föreläsning 2:s kapitel, fallgrop och fråga och bokens kapitel 5 säger nu båda varianterna.)
 - Att kryptering hör till logical security är en slutsats ur bokens definition (skydd mot hot via mjukvara och kommunikation), inte en mening i kapitlet.
 - "Biometriskt passersystem räknas som fysiskt" följer förra årets förklaring och bokens PACS, där biometri är en faktor vid dörren.
 

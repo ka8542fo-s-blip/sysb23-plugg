@@ -209,8 +209,8 @@ const lectureQuestions = [
   { id: "sak-fo2-04", topic: "risk-privacy", difficulty: 2,
     question: "Which layer of the lecture's data center security model includes mantrap entries and bollards?",
     options: [
-      { text: "Site security", explain: "Site security förstärker anläggningens yttre gräns och entréer — stängsel, vakter, pollare och mantrap-entréer." },
-      { text: "Physical security", explain: "Physical security gäller hårdvaran inne i anläggningen: biometriska läsare, serverburar och CCTV." },
+      { text: "Site security", explain: "Site security förstärker anläggningens yttre gräns och entréer — stängsel, vakter, pollare och mantrap-entréer. Frågan gäller föreläsningens modell; boken lägger mantrap under physical security." },
+      { text: "Physical security", explain: "Physical security gäller hårdvaran inne i anläggningen: biometriska läsare, serverburar och CCTV. Bokens fyrlagermodell (kapitel 5) lägger visserligen mantrap här, men frågan gäller föreläsningens modell." },
       { text: "Network security", explain: "Nätverkslagret har NGFW, mikrosegmentering och IDS/IPS." },
       { text: "Data security", explain: "Datalagret har kryptering, RBAC och HSM." }
     ],

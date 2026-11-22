@@ -144,7 +144,7 @@ Ett **data center** är en anläggning med ett stort antal servrar, lagringsenhe
 
 Riskerna är störst här: enorma mängder data ligger på liten yta, är sammankopplade och nås utifrån, så en angripare som tagit sig förbi gränsen hotar hela anläggningen. Hot att räkna med är bland andra denial of service, advanced persistent threats, SQL injection, skadlig kod och fysiska hot.
 
-Boken beskriver samma fyra lager som data center-modellen i Föreläsning 2: site, physical, network och data security. En skillnad: boken nämner **mantrap** (en sluss med två dörrar för en person i taget) under physical security, medan bilden i Föreläsning 2 lägger mantrap-entréer under site security.
+Boken beskriver samma fyra lager som data center-modellen i Föreläsning 2: site, physical, network och data security. En skillnad: bokens fyrlagermodell lägger **mantrap** (en sluss med två dörrar för en person i taget) under physical security, alltså skyddet av själva datacentret, medan bilden i Föreläsning 2 lägger mantrap-entréer under site security. Gäller frågan bokens modell är svaret physical security, gäller den föreläsningens är det site security.
 
 **TIA-942** är en standard för datacentrets telekommunikationsinfrastruktur. För säkerheten är **tiered reliability** viktigast: fyra tiers, där högre tier ger högre tillgänglighet.
 
@@ -180,6 +180,7 @@ export const topic = {
     "Illegal queries läcker genom utförliga felmeddelanden; blind SQL injection fungerar utan felmeddelanden.",
     "Prepared statements hindrar att indata ändrar frågan; kryptering, backup och loggning gör det inte.",
     "Tier 3 klarar planerat underhåll utan avbrott men inte oplanerade händelser; det klarar först tier 4.",
+    "Mantrap ligger under physical security i bokens fyrlagermodell, alltså själva datacentret, men under site security på bilden i Föreläsning 2.",
   ],
 };
 

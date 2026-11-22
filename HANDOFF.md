@@ -1508,10 +1508,14 @@ push, changelog-id efter det högsta på origin.
   `reading.js`, `topics.js` och `questions.js` lägger dem efter
   föreläsningarna. **Nytt bokkapitel = en fil i `bok/` och en rad i
   `bok/index.js`.** Kapitelvalet följer förra årets tentor: prioritet 1
-  (1, 4, 6, 9) och 2 (2, 3, 5, 7, 8) täcker begreppen i de 26 frågorna;
-  prioritet 3 (13, 14, 15, 16, 17, 19) är inte byggd. Utkasten skrevs av
+  (1, 4, 6, 9) och 2 (2, 3, 5, 7, 8) täcker begreppen i de 26 frågorna,
+  prioritet 3 (13, 14, 15, 16, 17, 19) resten av det som ligger nära
+  föreläsningarna. Alla tre prioriteterna är byggda (15 bokkapitel, 22
+  nov); kapitel 10–12, 18 och 20–24 är inte med. Utkasten skrevs av
   underagenter mot bokens text och granskades av Claude mot boken, inte
-  av Kasper (`reviewed: false`).
+  av Kasper (`reviewed: false`). Uppdragsbeskrivningen för underagenterna
+  ligger i `kursmaterial-sakerhet/bokkapitel-brief.md` och
+  `p3-tillagg.md` (gitignorerade); ett nytt kapitel kan skrivas efter dem.
 - **Ny föreläsning:** ett kapitel i `reading.js` med `kind:
   "forelasning"`, `label` och `examArea: FO`, en rad i `ORDER` och
   `CHAPTER_TOPICS`, ett ämne i `topics.js` (`lectureTopics`) och frågor i
@@ -1525,8 +1529,9 @@ push, changelog-id efter det högsta på origin.
   ("Variant av en tentafråga från förra året (…)"), i kapitlet som lär ut
   begreppet. Fö2: 04, 05, 06, 07, 25. Gästföreläsningen: 12, 21, 22.
   Bok 1: 19, 20. Bok 2: 08, 16, 17. Bok 3: 02. Bok 4: 13, 14. Bok 5: 01,
-  23. Bok 6: 09, 11. Bok 7: 18. Bok 8: 15. Bok 9: 03, 10, 26. sak-24
-  (molnhot) hör till bokens kapitel 13. Testet i `sakerhet-las.test.mjs`
+  23. Bok 6: 09, 11. Bok 7: 18. Bok 8: 15. Bok 9: 03, 10, 26. Bok 13:
+  24. Bok 16: 06 (andra varianten). Bok 17: 05 (andra varianten). Alla 26
+  har alltså minst en variant. Testet i `sakerhet-las.test.mjs`
   kontrollerar att varje `variantOf` finns i examBank.
 - **Essä:** `essays.js`, fem egna övningsessäer i fyrstegsformen (Fö1, Fö2
   ×3, gästföreläsningen); `context` börjar "Egen övningsessä – årets
@@ -1554,9 +1559,15 @@ push, changelog-id efter det högsta på origin.
   och nämner boken. Man-in-the-middle (sak-08) förklaras först i bokens
   kapitel 21 (Diffie–Hellman), som inte är med; varianten och ett stycke
   ligger i kapitel 2 vid nyckelutbytet, dit kapitel 21 hänvisar för
-  skyddet (signaturer och certifikat). Boken lägger mantrap under
-  physical security, Fö2-bilden under site security; kapitel 5 säger
-  det, och ingen fråga bygger på det.
+  skyddet (signaturer och certifikat). Mantrap: bokens fyrlagermodell
+  (kapitel 5) lägger den under physical security, alltså själva
+  datacentret, Fö2-bilden under site security. Båda står på båda ställena
+  (Fö2-kapitlet, dess fallgrop och fråga sak-fo2-04, och bokkapitel 5 med
+  en fallgrop), så att frågan går att klara oavsett källa (Kaspers beslut
+  22 nov). Detailed Risk Approach i Fö2 är bokens detailed risk analysis
+  (kapitel 14). Stegen i Plan-Do-Check-Act saknas i bokens textfil;
+  kapitel 14 återger dem, och frågan där bygger bara på Do, som kapitel 15
+  bekräftar.
 - **Klartext:** "förra årets tentor" i stället för HT25 i allt synligt;
   `sakerhet-las.test.mjs` letar efter HT25/UF/docx/interna id i synlig
   text.
@@ -1984,8 +1995,9 @@ kapitel 4, Zachman- och Essä-introt).
   BPMN-övningar och kapitel 11 först.
 - **Säkerhet:** Kasper granskar kapitlen, frågorna och varianterna
   (`reviewed: false`; bokkapitlens `notes` listar osäkerheterna) och
-  facit i examBank. Bokens kapitel med prioritet 3 (13, 14, 15, 16, 17,
-  19; variant av sak-24 i 13) byggs som en fil var i `bok/`. När läraren
+  facit i examBank. Alla 15 planerade bokkapitel är byggda; fler kan
+  läggas till som en fil var i `bok/` (briefen i
+  `kursmaterial-sakerhet/`). När läraren
   sagt mer om poäng, avdrag eller essälängd: ändra `yearExam` och
   `essayWordLimit` i manifestet och sammanfattningens lista över det
   okända. Kommer fler föreläsningar: ett kapitel per föreläsning (se

@@ -51,7 +51,7 @@ const lectureTopics = [
     ],
     pitfalls: [
       "Kryptering är en kontroll i datalagret, inte en fysisk kontroll.",
-      "Mantrap-entréer och stängsel är site security; biometriska läsare och serverburar är physical security.",
+      "Mantrap-entréer och stängsel är site security på bilden; biometriska läsare och serverburar är physical security. Bokens fyrlagermodell (kapitel 5) lägger mantrap under physical security, alltså själva datacentret.",
       "NIS2 är EU-lagstiftning; ISO 27005 och ISO 31000 är standarder för riskhantering.",
       "Detection and Analysis kommer först i incidenthanteringen, före containment, eradication och recovery.",
       "Virus i Excel-filer är macro virus i boken, även om bilden kallar dem file infector.",
