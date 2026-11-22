@@ -369,7 +369,7 @@ export const examBank = [
     penalty: 0,
     note: "Tentan har två fel: \"bling\" ska vara \"blind\", och två av alternativen (3 och 4 på tentan) är identiska bortsett från en punkt. Båda räknas som rätt här.",
     explanation:
-      "Blind SQL injection är en inferensattack. Angriparen ställer ja/nej-frågor via indata och drar slutsatser av hur sidan beter sig, även när inga felmeddelanden visas.",
+      "Blind SQL injection är en inferential attack, en av SQL injection-attackernas klasser (inte samma sak som inference i databaser, där man bara ställer tillåtna frågor). Angriparen ställer ja/nej-frågor via indata och drar slutsatser av hur sidan beter sig, även när inga felmeddelanden visas.",
   },
   {
     id: "sak-24",
