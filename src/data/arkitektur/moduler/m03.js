@@ -9,11 +9,11 @@ export default {
       id: "m3-t1",
       sv: `## Lärandemål
 
-Studenterna ska kunna:
+Efter den här modulen ska du kunna:
 
 - Definiera Enterprise Architecture.
 - Skilja Enterprise Architecture från IT architecture.
-- Förklara dess relation till strategi.
+- Förklara hur Enterprise Architecture hänger ihop med strategi.
 - Förklara varför Enterprise Architecture möjliggör förändring.`,
       en: `## Learning objectives
 
@@ -29,15 +29,29 @@ Students should be able to:
       id: "m3-t2",
       sv: `## Kärndefinition
 
-Enterprise Architecture är praktiken att förstå, utforma, kommunicera och styra den grundläggande strukturen och utvecklingen hos en enterprise för att nå dess mål.
+Enterprise Architecture är praktiken att förstå, utforma, kommunicera och styra den grundläggande strukturen och utvecklingen hos en enterprise för att nå dess mål. Enterprise Architecture kopplar alltså verksamhetens mål till enterprisens struktur och utveckling.
 
-Viktig distinktion: nyckelfrågan är inte: "Vilken teknik ska vi köpa?"
+### Inte "vilken teknik ska vi köpa?"
 
-Den är: "Vad behöver enterprisen få förmåga att göra, och vilka förändringar är nödvändiga för att nå dess mål?"
+Den viktiga frågan är inte: "Vilken teknik ska vi köpa?" Den är: "Vad behöver enterprisen få förmåga att göra, och vilka förändringar är nödvändiga för att nå dess mål?"
 
-IT architecture frågar: "Hur ska vår teknik vara strukturerad?"
+Därför bör stora arkitekturbeslut normalt styras av verksamhetens mål och stakeholders concerns. Tekniken kan vara en del av svaret, men den är inte nödvändigtvis utgångspunkten. Enterprise Architecture handlar alltså inte i första hand om teknik.
 
-Enterprise Architecture frågar: "Hur ska enterprisen utvecklas så att den kan nå sina mål?", men som så ofta – tekniken kan vara en del av svaret.`,
+### Enterprise Architecture och IT architecture
+
+IT architecture frågar: "Hur ska vår teknik vara strukturerad?" Den fokuserar i första hand på informationsteknikens strukturer och lösningar.
+
+Enterprise Architecture frågar: "Hur ska enterprisen utvecklas så att den kan nå sina mål?" Den har en bredare avgränsning som omfattar hela enterprisen: affärsstrategi, capabilities, organisation, information, applikationer, teknik och relationerna mellan dem. IT architecture kan därför ses som en del av det bredare Enterprise Architecture-landskapet.
+
+### En brygga mellan strategi och förändring
+
+En enterprise måste ständigt anpassa sig till strategi, marknader, teknik och andra förändringar i omvärlden. Därför handlar Enterprise Architecture om förändring. Arkitekturen finns inte i första hand för att bevara nuläget.
+
+Enterprise Architecture översätter strategiska mål till konsekvenser för arkitekturen. Strategin identifierar de resultat man vill nå. Arkitekturen identifierar de capabilities, strukturer, den information, de applikationer, den teknik och de organisationsförändringar som krävs för att nå dem. Arkitekturen blir på så sätt en brygga mellan strategisk avsikt och implementering, och den kan koppla strategi till organisatorisk förändring.
+
+Ett exempel är strategin "Bli den enklaste banken för den som köper sin första bostad". Den capability det gäller är digital bolåneutgivning. Arkitekturen anger de processer, den information, de applikationer, den teknik och de organisatoriska capabilities som krävs.
+
+Därför kan Enterprise Architecture stödja beslutsfattande, transformation och governance. Den är mer än dokumentation eller en förteckning över IT-system, och den handlar inte i första hand om att dokumentera IT-system. Att en organisation har fin dokumentation av sina system betyder inte nödvändigtvis att den har en Enterprise Architecture som fungerar.`,
       en: `## Core definition
 
 Enterprise Architecture is the practice of understanding, designing, communicating and governing the fundamental structure and evolution of an enterprise to achieve its objectives.

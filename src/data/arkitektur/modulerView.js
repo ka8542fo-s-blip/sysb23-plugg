@@ -73,6 +73,9 @@ function buildFreeText(block, chapter) {
 function buildBlock(block, chapter) {
   if (block.kind === "fraga") return buildQuestion(block, chapter);
   if (block.kind === "fritext") return buildFreeText(block, chapter);
+  // Ett tillagt textblock (`tillagd`, sedan omskrivningen 23 nov) har bara
+  // svenska; det har inget original att visa.
+  if (block.tillagd) return { kind: block.kind, id: block.id, sv: block.sv, tillagd: true };
   return { kind: block.kind, id: block.id, sv: block.sv, en: block.en };
 }
 

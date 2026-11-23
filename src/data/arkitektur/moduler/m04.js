@@ -10,12 +10,12 @@ export default {
       id: "m4-t1",
       sv: `## Lärandemål
 
-Studenterna ska förstå:
+Efter den här modulen ska du förstå:
 
-- a. Syftet med Zachman.
-- b. De sex interrogatives.
-- c. De olika perspektiven.
-- d. Varför Zachman är en ontology/ett klassificeringsschema snarare än en metodik.
+- Syftet med Zachman.
+- De sex interrogatives.
+- De olika perspektiven.
+- Varför Zachman är en ontology och ett klassificeringsschema snarare än en metodik.
 
 Zachman-ramverket förstås bäst som en ontology och ett klassificeringsschema för beskrivningar av en enterprise.`,
       en: `## Learning objectives
@@ -34,12 +34,24 @@ The Zachman Framework is best understood as an ontology and classification schem
       id: "m4-t2",
       sv: `## De sex frågorna
 
+Zachman ger en struktur för att klassificera och organisera beskrivningar av en enterprise. Ramverket hjälper arkitekten att systematiskt tänka igenom vad som behöver beskrivas och från vilket perspektiv. Det ställs upp som ett rutnät med kolumner och rader.
+
+Kolumnerna är sex interrogatives, alltså grundläggande frågor om enterprisen:
+
 - **What?** — saker/data
 - **How?** — processer/funktioner
 - **Where?** — platser
 - **Who?** — människor/ansvar
 - **When?** — tid/händelser
-- **Why?** — motivation/mål`,
+- **Why?** — motivation/mål
+
+Varje fråga visar en egen dimension av samma enterprise.
+
+### Raderna: perspektiv
+
+Raderna representerar i första hand olika perspektiv eller abstraktionsnivåer. Olika stakeholders behöver olika beskrivningar av samma enterprise. Någon i företagsledningen kan till exempel behöva se avgränsning, strategi, verksamhetsmål och de viktigaste capabilities. En teknikspecialist kan behöva se fysisk implementering, infrastruktur, plattformar och konfigurationer.
+
+Varje cell i rutnätet klassificerar alltså en viss sorts beskrivning (kolumnen) från ett visst perspektiv (raden). Därför kan Zachman hjälpa till att visa var beskrivningar saknas eller är ofullständiga. En arkitektur som beskriver How och What väl men bortser från Why och Who kan till exempel beskriva processer, information och system korrekt men ändå inte koppla dem till mål, ägarskap och ansvar.`,
       en: `## The six questions
 
 - **What?** — things/data
@@ -54,7 +66,19 @@ The Zachman Framework is best understood as an ontology and classification schem
       id: "m4-t3",
       sv: `## Viktig poäng
 
-Zachman säger inte: "Gör det här, sedan det här, sedan det här." Utan i stället: "Här är olika dimensioner och perspektiv genom vilka enterprisen kan beskrivas." – Det är därför ramverket inte ska förväxlas med en metodik.`,
+Zachman säger inte: "Gör det här, sedan det här, sedan det här." Ramverket säger i stället: "Här är olika dimensioner och perspektiv genom vilka enterprisen kan beskrivas." Det är därför ramverket inte ska förväxlas med en metodik.
+
+### Ontology eller metodik
+
+En metodik föreskriver aktiviteter, processer eller steg för att åstadkomma något. Den svarar på frågan: vad ska vi göra härnäst?
+
+En ontology fastställer begrepp och relationer som beskriver vad som finns inom en domän och hur det kan klassificeras. Zachman är i första hand en ontology, en klassificeringsstruktur, snarare än en utvecklingsmetodik. Ramverket klassificerar och organiserar beskrivningar av en enterprise utifrån perspektiv och interrogatives. Det föreskriver inte en sekvens av aktiviteter för att utveckla arkitektur.
+
+Rutnätet kan se ut som en ordning att arbeta i, men det är det inte. Raderna är inga projektfaser, och ramverket föreskriver ingen bestämd ordning att fylla i cellerna. Struktur är inte detsamma som sekvens. Zachman är inte heller en metod för projektledning eller mjukvaruutveckling.
+
+### Zachman och TOGAF
+
+TOGAF ger vägledning och ett tillvägagångssätt för att utveckla arkitektur, särskilt genom ADM (Architecture Development Method). TOGAF ger alltså en metod för att utveckla och styra arkitektur. Zachman hjälper i stället till att organisera vilka slags beskrivningar som kan behövas. Ramverken svarar på olika frågor och kan därför komplettera varandra.`,
       en: `## Key teaching point
 
 Zachman doesn't say: "Do this, then this, then this." Instead: "Here are different dimensions and perspectives through which the enterprise can be described." - That is why it should not be confused with a methodology.`,

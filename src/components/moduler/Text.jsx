@@ -53,7 +53,8 @@ export const EnglishContext = createContext(false);
 
 export function Original({ children, markdown, className = "" }) {
   const show = useContext(EnglishContext);
-  if (!show) return null;
+  // Ett tillagt textblock har inget original: då ritas ingenting.
+  if (!show || (!markdown && !children)) return null;
   return (
     <div lang="en" className={`mt-3 border-l-2 border-line-strong/70 pl-3 text-[14px] leading-relaxed text-ink/60 ${className}`}>
       {markdown ? <Markdown components={originalComponents}>{markdown}</Markdown> : children}

@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 699 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-22.
+- **Test:** `npm test` = 703 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-23.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -1687,6 +1687,35 @@ aldrig på sidan.
   "Correct answer" (skiftlägeskänsligt, eftersom lärarens "Det finns inte
   nödvändigtvis ett enda rätt svar" inte är facit). Testet kontrollerar
   också att `kalla` har samma fråga och facit som fråga 6 och 9.
+- **Texten lär ut det frågorna prövar (Kaspers beslut 23 nov;
+  `cc-arkitektur-omskrivning.md` i huvudmappen, gitignorerad).** De svenska
+  textblocken (`sv` i `kind: "text"`) är sedan 23 nov en omskrivning, inte
+  en översättning: klar svenska, och texten före varje frågepanel räcker för
+  att svara på panelens frågor. `en` är lärarens original och visas
+  oförändrat med "Visa engelskt original". Frågor, alternativ, facit,
+  förklaringar, modellsvar, id, blockordning och lagring är orörda.
+  - **Källor, i prioritetsordning:** modulens egen text, lärarens modellsvar,
+    Explanation och rätta alternativ i samma modul, hans text i andra
+    moduler, och sist Word-dokumentet (med egna ord, sparsamt, nämns aldrig
+    på sidan). Bara lärarens egna exempel. Nyansorden ("kan", "i första
+    hand", "inte nödvändigtvis", "relativt stabila", "normalt") står kvar
+    exakt, och definitionerna ligger nära hans ordalydelse.
+  - **Täckningen** står i `moduler/tackning.js` (bara för testerna): för
+    varje fråga och fritextfråga meningen i texten som bär svaret och dess
+    källa. `moduler.test.mjs` kräver att meningen står ordagrant (utan
+    markdown) i ett textblock före frågan i samma modul (modul 12 får peka
+    på modul 1–11), att varje fråga i de omskrivna modulerna (`OMSKRIVNA`)
+    har täckning eller står i `SAKNAS_GODKANDA`, och att textblocken inte
+    nämner frågenummer.
+  - **Tillagt block** (`tillagd: true`, id `mN-tillagg-N`, bara `sv`) får
+    bara läggas in när en frågepanel prövar ett ämne som modulens text inte
+    rör alls; det står direkt före panelens rubrik och visar inget original.
+  - **Kontroll per föreläsning:** ett blindtest (en agent som bara ser
+    texten och frågorna utan facit svarar och citerar meningen som avgör)
+    och en trohetsgranskning (en agent jämför texten med PDF:erna och
+    Word-dokumentet). Modul 1–4: 45 av 45 frågor gick att svara på ur
+    texten; granskningens nyansfel rättades.
+  - Reglerna gäller också framtida ändringar i textblocken.
 
 **Bara lärarens tre moduldokument (Kaspers beslut 21 nov, plan godkänd;
 gäller fortfarande; Läs och Tenta nedan är dolda sedan 22 nov;

@@ -13,6 +13,7 @@ import { ABSOLUTA, FRAGEORD, FRAGEORD_UNDANTAG, TERMER, TERM_UNDANTAG } from "..
 import { getCourse } from "../src/data/index.js";
 import { FORELASNINGAR, INGRESS } from "../src/data/arkitektur/moduler/ingress.js";
 import { MODULER } from "../src/data/arkitektur/moduler/index.js";
+import { SAKNAS_GODKANDA, TACKNING } from "../src/data/arkitektur/moduler/tackning.js";
 import {
   chosenOption,
   firstOpenId,
@@ -29,13 +30,14 @@ const FACIT = JSON.parse(readFileSync(new URL("./fixtures/arkitektur-facit.json"
 const filled = (value) => typeof value === "string" && value.trim().length > 0;
 const squash = (text) => text.replace(/\s+/g, " ").trim();
 
-// Alla sv/en-par som visas, med id:t för blocket de hör till.
+// Alla sv/en-par som visas, med id:t för blocket de hör till. Tillagda
+// textblock (bara svenska, inget original) står i `tillagda()`.
 function pairs() {
   const out = [["inledning", modulerIntro.sv, modulerIntro.en]];
   for (const module of moduler) {
     out.push([module.id, module.title.sv, module.title.en]);
     for (const block of module.blocks) {
-      if (block.kind === "text" || block.kind === "exempel") out.push([block.id, block.sv, block.en]);
+      if ((block.kind === "text" && !block.tillagd) || block.kind === "exempel") out.push([block.id, block.sv, block.en]);
       if (block.kind === "fraga") {
         out.push([block.id, block.question.sv, block.question.en]);
         block.options.forEach((option) => out.push([block.id, option.sv, option.en]));
@@ -52,6 +54,8 @@ function pairs() {
   }
   return out;
 }
+
+const tillagda = () => moduler.flatMap((module) => module.blocks.filter((block) => block.tillagd));
 
 test("modulerna står i dokumentens ordning 1–12 och har svensk och engelsk titel", () => {
   moduler.forEach((module, index) => {
@@ -143,7 +147,7 @@ test("textblockens engelska är lärarens text (samma som ufText.js)", () => {
     // källtext ur PDF:en, som finns i modulfilen men aldrig visas.
     const raw = MODULER.find((m) => m.id === module.id);
     const sources = raw.blocks.flatMap((b) =>
-      b.kind === "text" || b.kind === "exempel" ? [b.en] : b.kind === "upprepning" ? [b.kalla.en] : [],
+      (b.kind === "text" && !b.tillagd) || b.kind === "exempel" ? [b.en] : b.kind === "upprepning" ? [b.kalla.en] : [],
     );
     const joined = plain(sources.join("\n\n"));
     for (const paragraph of UF_TEXT[module.id].split(/\n\s*\n/).map(plain).filter(Boolean)) {
@@ -181,7 +185,7 @@ test("manifestet: fliken Moduler med alla tolv moduler och lärarens inledning",
 });
 
 test("den svenska texten nämner varken Word-dokumentet eller interna förkortningar", () => {
-  for (const [where, sv] of pairs()) {
+  for (const [where, sv] of [...pairs(), ...tillagda().map((block) => [block.id, block.sv])]) {
     assert.doesNotMatch(sv, /\bWord\b|docx|\bUF\b|HT ?2[56]/, where);
   }
 });
@@ -309,4 +313,69 @@ test("lärarens exempel i modul 1 är riktiga frågekort med samma id och status
   // "Så, då börjar det ☺" står kvar som text direkt efter exemplen.
   const after = modul1.blocks[modul1.blocks.indexOf(repeats[1]) + 1];
   assert.deepEqual([after.kind, after.sv], ["text", "Så, då börjar det ☺"]);
+});
+
+// --- Texten lär ut det frågorna prövar (Kaspers beslut 23 nov) ---------------
+// De svenska textblocken är en omskrivning, inte en översättning: texten före
+// varje frågepanel ska räcka för att svara på panelens frågor, och allt ska
+// gå att belägga i lärarens material. tackning.js pekar ut meningen som bär
+// varje svar. Omskrivningen görs en föreläsning i taget; OMSKRIVNA är de
+// moduler som är klara.
+const OMSKRIVNA = ["kap1", "kap2", "kap3", "kap4"];
+
+const utanMarkdown = (text) =>
+  squash(
+    text
+      .replace(/^\s*[-*]\s+/gm, "")
+      .replace(/^\s*\d+\.\s+/gm, "")
+      .replace(/^#+\s*/gm, "")
+      .replace(/\*/g, ""),
+  );
+
+const fragorI = (module) => module.blocks.filter((b) => b.kind === "fraga" || b.kind === "fritext");
+
+test("täckningen: varje fråga i de omskrivna modulerna har en mening i texten, och inga andra nycklar", () => {
+  const alla = new Set(MODULER.flatMap((module) => fragorI(module).map((b) => b.id)));
+  for (const id of [...Object.keys(TACKNING), ...SAKNAS_GODKANDA]) assert.ok(alla.has(id), `${id} är ingen fråga i m01–m12`);
+  for (const module of MODULER.filter((m) => OMSKRIVNA.includes(m.id))) {
+    for (const block of fragorI(module)) {
+      const poster = TACKNING[block.id] ?? [];
+      assert.ok(poster.length > 0 || SAKNAS_GODKANDA.includes(block.id), `${module.id}: ${block.id} saknar täckning`);
+      assert.ok(!(poster.length > 0 && SAKNAS_GODKANDA.includes(block.id)), `${block.id} står både täckt och saknad`);
+    }
+  }
+});
+
+test("täckningen pekar på ordagrann text i ett textblock före frågan i samma modul", () => {
+  for (const module of MODULER) {
+    fragorI(module).forEach((fraga) => {
+      const fore = module.blocks.slice(0, module.blocks.indexOf(fraga)).filter((b) => b.kind === "text");
+      // Modul 12 repeterar hela kursen och får peka på text i modul 1–11.
+      const tidigare = module.id === "kap12" ? MODULER.slice(0, 11).flatMap((m) => m.blocks.filter((b) => b.kind === "text")) : [];
+      for (const post of TACKNING[fraga.id] ?? []) {
+        assert.ok(post.text && post.kalla, `${fraga.id}: text och källa`);
+        const block = [...fore, ...tidigare].find((b) => b.id === post.block);
+        assert.ok(block, `${fraga.id}: ${post.block} är inget textblock före frågan i ${module.id}`);
+        assert.ok(utanMarkdown(block.sv).includes(squash(post.text)), `${fraga.id}: "${post.text}" står inte i ${post.block}`);
+      }
+    });
+  }
+});
+
+test("textblocken nämner inga frågenummer", () => {
+  for (const module of MODULER) {
+    for (const block of module.blocks.filter((b) => b.kind === "text")) {
+      assert.doesNotMatch(block.sv, /\b[Ff]råga \d/, `${module.id} ${block.id}`);
+    }
+  }
+});
+
+test("ett tillagt textblock har svenska men inget engelskt original", () => {
+  for (const block of MODULER.flatMap((module) => module.blocks.filter((b) => b.tillagd))) {
+    assert.equal(block.kind, "text", block.id);
+    assert.ok(filled(block.sv), `${block.id}: svensk text`);
+    assert.equal(block.en, undefined, `${block.id}: inget original`);
+    assert.match(block.id, /^m\d+-tillagg-\d+$/, `${block.id}: id som m7-tillagg-1`);
+  }
+  for (const block of tillagda()) assert.equal(block.en, undefined, `${block.id} i vyn`);
 });

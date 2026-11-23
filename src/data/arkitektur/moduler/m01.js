@@ -1,11 +1,13 @@
 // Modul 1 i fliken Moduler: lärarens text och frågor i PDF:ens ordning
-// (modul-1-4.pdf), översatt till svenska. Frågornas och modellsvarens
-// engelska original och facit hämtas ur questions.js och essays.js
-// (modulerView.js); textblocken har sitt original i `en`.
+// (modul-1-4.pdf). Frågor och modellsvar är översatta; textblockens `sv` är
+// sedan 23 nov en omskrivning som lär ut det frågorna prövar (täckningen
+// står i tackning.js), och `en` är lärarens original. Frågornas och
+// modellsvarens engelska original och facit hämtas ur questions.js och
+// essays.js (modulerView.js).
 //
 // Exemplen i inledningen: flervalsexemplet är en egen fråga (ea-m1-ex).
 // Sant/falskt-exemplet och kortsvarsexemplet är samma frågor som fråga 6 och
-// 9 och står därför som lärarens exempel med svaret utskrivet (planen).
+// 9 och står som upprepningar av dem (se nedan).
 
 // Lärarens inledning till hela materialet, överst i fliken Moduler.
 export const INLEDNING = {
@@ -91,12 +93,12 @@ export default {
       id: "m1-t2",
       sv: `## Lärandemål
 
-Efter den här modulen ska studenterna kunna:
+Efter den här modulen ska du kunna:
 
 - Definiera en enterprise.
 - Förklara varför en enterprise är mer än en organisation.
-- Identifiera gränserna och stakeholders för en enterprise.
-- Förklara varför förståelsen av enterprisen är grundläggande för Enterprise Architecture.`,
+- Identifiera en enterprises gränser och stakeholders.
+- Förklara varför det är grundläggande för Enterprise Architecture att förstå enterprisen.`,
       en: `## Learning objectives
 
 By the end of this module, students should be able to:
@@ -113,16 +115,20 @@ By the end of this module, students should be able to:
 
 En enterprise är vilken samling som helst av organisationer, organisatoriska enheter eller capabilities som har en gemensam uppsättning mål.
 
-Den kan därför vara:
+En enterprise definieras alltså av gemensamma mål, inte nödvändigtvis av juridiskt ägande. Den kan därför vara:
 
-- Ett företag
-- En myndighet
-- Ett universitet
-- En kommun
-- En grupp samverkande organisationer
-- Ett ekosystem i en leveranskedja
+- ett företag
+- en myndighet
+- ett universitet
+- en kommun
+- en grupp samverkande organisationer
+- ett ekosystem i en leveranskedja.
 
-Det viktiga är att arkitekten måste förstå den enterprise som arkitekturen utformas för, i stället för att automatiskt anta att enterprisen är den juridiska organisationen.`,
+En enterprise behöver inte vara en enda juridisk organisation. Ett affärsresultat kan bero på partner, leverantörer, tillsynsmyndigheter och andra externa aktörer. Då kan enterprisen sträcka sig utanför den juridiska organisationens gränser.
+
+Ordet enterprise används ibland som om det bara betydde företag. I Enterprise Architecture är den tolkningen för snäv. Enterprise Architecture handlar om en enterprises struktur och utveckling i förhållande till dess mål. Den som bara ser till företaget kan därför få en ofullständig bild av arkitekturen.
+
+Det viktiga är att arkitekten måste förstå den enterprise som arkitekturen gäller, i stället för att automatiskt anta att enterprisen är den juridiska organisationen.`,
       en: `## Core teaching message
 
 An enterprise is any collection of organizations, organizational units, or capabilities that has a common set of goals.
@@ -145,17 +151,29 @@ The key point is that the architect must understand the enterprise that is being
 
 "Om Volvo, en Volvohandlare, en logistikleverantör och en bank samarbetar för att förse en kund med en bil, vilka av dem hör till den enterprise vi försöker förstå?"
 
-Det finns inte nödvändigtvis ett enda rätt svar. Det beror på arkitekturens avgränsning och syfte.
+Det finns inte nödvändigtvis ett enda rätt svar. Det beror på arkitekturens avgränsning och syfte. Arkitekturens avgränsning bestäms av det problem vi försöker lösa.
 
-Arkitekturens avgränsning bestäms av det problem vi försöker lösa.
+### Avgränsningen
 
-Detta inför en viktig princip för hur alla moduler är uppbyggda:
+Avgränsningen fastställer vilka delar av enterprisen och dess omgivning som är relevanta för arkitekturproblemet. Därför frågar arkitekten: "Vilka delar av omgivningen är relevanta för att nå de arkitektoniska målen?" Arkitekten fastställer avgränsningen utifrån verksamhetsproblemet och det önskade resultatet.
 
-Först förklarar och i viss mån motiverar jag varje modul. Därefter har jag flervalsfrågor, sedan sant eller falskt, sedan korta essäfrågor följda av lite djupare essäfrågor i var och en av modulerna. Ibland har jag förklaringar, men oftast inte till flervals- och sant/falskt-frågorna (det skulle bli för mycket att läsa för er).
+Gränserna för en enterprise är därför inte alltid fasta, och de är inte alltid desamma som organisationens gränser. De beror delvis på syftet med och avgränsningen av arkitekturarbetet. Enterprise Architecture kan alltså omfatta relationer med externa partner och ekosystem.
 
-Exempel:
+Var gränsen dras avgör vad arkitekturen tar med. Blir avgränsningen för snäv kan viktiga beroenden missas. Att definiera avgränsningen är därför i sig en arkitektonisk concern.
 
-**Flerval –**`,
+### Digitala ekosystem
+
+I ett digitalt ekosystem kan det vara svårt att dra gränsen. Digitala produkter och tjänster är ofta beroende av organisationer utanför den juridiska enterprisen. Kunder, leverantörer, tillsynsmyndigheter, plattformar och teknikleverantörer kan alla bidra till ett affärsresultat. De capabilities som krävs för att leverera resultatet kan alltså sträcka sig utanför en organisations juridiska gränser. Arkitekten behöver därför avgöra vilka externa relationer som är relevanta för det arkitektoniska målet.
+
+### Stakeholders
+
+Enterprise Architecture berör många stakeholders, både inom och utanför den organisation som leder arbetet, och olika stakeholders har olika concerns.
+
+### Så är modulerna uppbyggda
+
+Först förklarar och i viss mån motiverar jag varje modul. Sedan kommer flervalsfrågor, sant eller falskt, korta essäfrågor och till sist lite djupare essäfrågor. Ibland har jag förklaringar, men oftast inte till flervals- och sant/falskt-frågorna (det skulle bli för mycket att läsa för er).
+
+Exempel:`,
       en: `## Lecturer explanation
 
 "If Volvo, a Volvo dealership, a logistics provider and a bank collaborate to provide a customer with a car, which of them belongs to the enterprise we are trying to understand?"

@@ -10,7 +10,7 @@ export default {
       id: "m2-t1",
       sv: `## Lärandemål
 
-Studenterna ska förstå:
+Efter den här modulen ska du förstå:
 
 - Arkitektur som struktur och relationer.
 - Arkitektur som abstraktion.
@@ -30,11 +30,9 @@ Students should understand:
       id: "m2-t2",
       sv: `## Kärnbegrepp
 
-Arkitektur handlar om:
+Arkitektur är den grundläggande organisationen av något. Den omfattar delarna (komponenterna), relationerna mellan dem, principerna och hur helheten utvecklas över tid.
 
-Den grundläggande organisationen av något, inklusive dess komponenter, relationer, principer och utveckling.
-
-En arkitektur är inte bara ett diagram. Ett diagram är en representation av en arkitektur.`,
+En arkitektur är inte bara ett diagram. Ett diagram är en representation av arkitekturen, alltså en bild av den. Diagrammet och arkitekturen är inte samma sak.`,
       en: `## Core concept
 
 Architecture is concerned with:
@@ -48,15 +46,25 @@ An architecture isn't merely a diagram. A diagram is a representation of an arch
       id: "m2-t3",
       sv: `## Kärnförklaring
 
-Arkitektur är inte bara en samling komponenter. Den gäller den grundläggande organisationen av något, inklusive dess komponenter, relationer, principer, begränsningar och utveckling. Ett diagram är en representation av arkitektur, inte arkitekturen själv. Arkitektur handlar särskilt om relationer och konsekvenser.
+Arkitektur är inte bara en samling komponenter. Komponenterna ensamma förklarar inte hur enterprisen fungerar. Arkitektur handlar också om relationer, beroenden, ansvar, principer, begränsningar och syfte. Den handlar särskilt om relationer och konsekvenser.
 
-Till exempel: Business capability → process → information → applikation → teknik
+Ett exempel är kedjan business capability → process → information → applikation → teknik. Med den kan arkitekten fråga: "Om den här capabilityn förändras, vad mer påverkas?" Arkitekturen handlar om relationerna mellan de här elementen. Det är arkitektoniskt tänkande. Ett exempel på en arkitektonisk fråga är: "Vilka beroenden finns mellan en kritisk business capability och de applikationer som stödjer den?"
 
-gör att arkitekten kan fråga:
+Att förstå relationerna gör det möjligt för arkitekten att bedöma konsekvenserna av en förändring. Arkitektur finns för att möjliggöra förändring med ett syfte.
 
-"Om den här capabilityn förändras, vad mer påverkas?" – Arkitekturen handlar om relationerna mellan dessa element.
+### Arkitektur som abstraktion
 
-Det är arkitektoniskt tänkande.`,
+Enterprise Architecture hanterar en mycket komplex verklighet. Abstraktion är användbar för att dölja irrelevanta detaljer, så att en fråga kan förstås på en lämplig nivå. Man beskriver då något på en viss detaljnivå eller ur ett visst perspektiv. Det är de irrelevanta detaljerna som döljs, inte alla detaljer. Vilka detaljer som är relevanta beror på vilken concern man har.
+
+Därför kan olika stakeholders arbeta med olika nivåer och ändå tala om samma enterprise. Samma enterprise kan beskrivas som capabilities, som processer, som applikationer eller som teknik. Beskrivningarna konkurrerar inte med varandra, utan de är olika abstraktioner av samma enterprise. En arkitektur behöver därför inte beskriva varje implementeringsdetalj.
+
+### Arkitektur, design och implementering
+
+- **Arkitektur** fastställer den grundläggande organisationen: relationerna, principerna och begränsningarna.
+- **Design** tar fram mer detaljerade lösningar inom de ramar som arkitekturen sätter.
+- **Implementering** förverkligar designen i praktiken, i en driftsmiljö.
+
+Skillnaderna mellan de tre är inte absoluta, men de motsvarar olika nivåer av beslutsfattande och abstraktion. Arkitektur och implementering är alltså inte samma sak: arkitekturen gäller den grundläggande organisationen, och implementeringen förverkligar den organisationen i praktiken.`,
       en: `## Core explanation
 
 Architecture is not simply a collection of components. It concerns the fundamental organization of something, including its components, relationships, principles, constraints and evolution. A diagram is a representation of architecture, not architecture itself. Architecture is particularly concerned with relationships and consequences.

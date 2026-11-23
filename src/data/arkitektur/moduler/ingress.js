@@ -9,6 +9,10 @@
 // har ett avsnitt med det namnet; de andra tar den mening ur motsvarande
 // avsnitt (Kärnförklaring, Kärndefinition, Viktig poäng, Governance …) som
 // bäst sammanfattar modulen, och modul 11 och 12 ur sin inledande text.
+//
+// Sedan 23 nov är de svenska textblocken en omskrivning av lärarens text
+// (se tackning.js), så `sv` här följer den omskrivna meningen medan `en`
+// är lärarens original ordagrant.
 export const INGRESS = {
   kap1: {
     block: "m1-t3",
@@ -27,7 +31,7 @@ export const INGRESS = {
   },
   kap4: {
     block: "m4-t3",
-    sv: 'Zachman säger inte: "Gör det här, sedan det här, sedan det här." Utan i stället: "Här är olika dimensioner och perspektiv genom vilka enterprisen kan beskrivas."',
+    sv: 'Zachman säger inte: "Gör det här, sedan det här, sedan det här." Ramverket säger i stället: "Här är olika dimensioner och perspektiv genom vilka enterprisen kan beskrivas."',
     en: 'Zachman doesn\'t say: "Do this, then this, then this." Instead: "Here are different dimensions and perspectives through which the enterprise can be described."',
   },
   kap5: {
