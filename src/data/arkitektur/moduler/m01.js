@@ -187,38 +187,46 @@ Examples:
       explanation:
         "Avgränsningen talar om vilka delar av organisationen och ekosystemet som hör till arkitekturproblemet. Modulen säger att arkitekturens avgränsning bestäms av det problem vi försöker lösa.",
     },
+    // Lärarens två exempel här är samma frågor som fråga 6 och fråga 9
+    // nedan (Kaspers beslut 23 nov): de ritas som riktiga frågekort med
+    // samma id och status, så att facit inte syns innan man svarat.
+    // `kalla` är exemplet som det står i PDF:en; det visas aldrig, men
+    // moduler.test.mjs kontrollerar att det är samma fråga och samma facit.
     {
-      kind: "exempel",
+      kind: "upprepning",
       id: "m1-ex-sf",
-      sv: `**Sant eller falskt:** En enterprise måste vara en enda juridisk organisation.
+      av: "ea-m1-6",
+      kalla: {
+        sv: `**Sant eller falskt:** En enterprise måste vara en enda juridisk organisation.
 
 Svar: FALSKT`,
-      en: `**True or False:** An enterprise must be a single legal organization.
+        en: `**True or False:** An enterprise must be a single legal organization.
 
 Answer: FALSE`,
+      },
     },
     {
-      kind: "exempel",
+      kind: "upprepning",
       id: "m1-ex-essa",
-      sv: `**Kort essä**
+      av: "ea-e1-9",
+      kalla: {
+        sv: `**Kort essä**
 
 Varför kan det vara svårt att definiera enterprisens gräns i ett digitalt ekosystem?
 
 Modellsvar:
 
-Digitala tjänster är ofta beroende av partner, leverantörer, plattformar, tillsynsmyndigheter och kunder. Följaktligen kan de capabilities som krävs för att leverera ett affärsresultat sträcka sig utanför en organisations juridiska gränser. Arkitekturens avgränsning behöver därför definieras utifrån syftet med och målen för arkitekturarbetet.
-
-Så, då börjar det ☺`,
-      en: `**Short essay**
+Digitala tjänster är ofta beroende av partner, leverantörer, plattformar, tillsynsmyndigheter och kunder. Följaktligen kan de capabilities som krävs för att leverera ett affärsresultat sträcka sig utanför en organisations juridiska gränser. Arkitekturens avgränsning behöver därför definieras utifrån syftet med och målen för arkitekturarbetet.`,
+        en: `**Short essay**
 
 Why can defining the enterprise boundary be difficult in a digital ecosystem?
 
 Model answer:
 
-Digital services often depend on partners, suppliers, platforms, regulators and customers. Consequently, the capabilities required to deliver a business outcome may extend beyond the legal boundaries of one organization. The architecture scope therefore needs to be defined according to the purpose and objectives of the architecture effort.
-
-So, it starts ☺`,
+Digital services often depend on partners, suppliers, platforms, regulators and customers. Consequently, the capabilities required to deliver a business outcome may extend beyond the legal boundaries of one organization. The architecture scope therefore needs to be defined according to the purpose and objectives of the architecture effort.`,
+      },
     },
+    { kind: "text", id: "m1-ex-slut", sv: "Så, då börjar det ☺", en: "So, it starts ☺" },
     { kind: "text", id: "m1-t5", sv: "## Flervalsfrågor modul 1", en: "## Multiple choice Module 1" },
     {
       kind: "fraga",

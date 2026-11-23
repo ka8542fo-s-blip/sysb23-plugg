@@ -12,6 +12,7 @@ import { UF_TEXT } from "../src/data/arkitektur/ufText.js";
 import { ABSOLUTA, FRAGEORD, FRAGEORD_UNDANTAG, TERMER, TERM_UNDANTAG } from "../src/data/arkitektur/ordlista.js";
 import { getCourse } from "../src/data/index.js";
 import { FORELASNINGAR, INGRESS } from "../src/data/arkitektur/moduler/ingress.js";
+import { MODULER } from "../src/data/arkitektur/moduler/index.js";
 import {
   chosenOption,
   firstOpenId,
@@ -138,7 +139,13 @@ test("varje flervals- och sant/falskt-fråga har en svensk förklaring", () => {
 const plain = (text) => squash(text.replace(/^#+\s*/gm, "").replace(/^\d+\.\s+/gm, ""));
 test("textblockens engelska är lärarens text (samma som ufText.js)", () => {
   for (const module of moduler) {
-    const joined = plain(module.blocks.filter((b) => b.kind === "text" || b.kind === "exempel").map((b) => b.en).join("\n\n"));
+    // Lärarens exempel som är upprepade frågor (modul 1) räknas med sin
+    // källtext ur PDF:en, som finns i modulfilen men aldrig visas.
+    const raw = MODULER.find((m) => m.id === module.id);
+    const sources = raw.blocks.flatMap((b) =>
+      b.kind === "text" || b.kind === "exempel" ? [b.en] : b.kind === "upprepning" ? [b.kalla.en] : [],
+    );
+    const joined = plain(sources.join("\n\n"));
     for (const paragraph of UF_TEXT[module.id].split(/\n\s*\n/).map(plain).filter(Boolean)) {
       assert.ok(joined.includes(paragraph), `${module.id}: saknar "${paragraph.slice(0, 80)}"`);
     }
@@ -236,6 +243,11 @@ test("text och frågepaneler: inget block försvinner eller byter plats", () => 
   }
   const modul1 = groupSections(moduler[0].blocks).filter((section) => section.kind === "panel");
   assert.deepEqual(panelSummary(modul1[0]), { count: 1, type: "Flerval", examples: true }, "lärarens exempel");
+  assert.deepEqual(
+    modul1[0].items.map((item) => item.id),
+    ["ea-m1-ex", "m1-ex-sf", "m1-ex-essa"],
+    "exempelfrågan och de två upprepade exemplen i samma panel",
+  );
   assert.equal(modul1[1].heading.id, "m1-t5");
   assert.deepEqual(panelSummary(modul1[1]), { count: 5, type: "Flerval", examples: false });
 });
@@ -251,4 +263,50 @@ test("modulens början och slut: besvarade, rätt och första obesvarade frågan
   assert.equal(firstOpenId(modul1, answers), items[2].id);
   for (const item of items) answers = recordAnswer(answers, item.id, true);
   assert.equal(firstOpenId(modul1, answers), null, "allt besvarat: ingen Fortsätt-knapp");
+});
+
+// --- Inget facit innan man svarat (Kaspers beslut 23 nov) -------------------
+
+const VISAT_FACIT = /Svar:|Answer:|Modellsvar|Model answer|Rätt svar|Correct answer/;
+
+test("inget text- eller exempelblock i modul 1–12 visar facit", () => {
+  assert.doesNotMatch(modulerIntro.sv, VISAT_FACIT, "inledningen");
+  assert.doesNotMatch(modulerIntro.en, VISAT_FACIT, "inledningen, engelska");
+  for (const module of moduler) {
+    for (const block of module.blocks.filter((b) => b.kind === "text" || b.kind === "exempel")) {
+      assert.doesNotMatch(block.sv, VISAT_FACIT, `${module.id} ${block.id}`);
+      assert.doesNotMatch(block.en, VISAT_FACIT, `${module.id} ${block.id}, engelska`);
+    }
+  }
+});
+
+test("lärarens exempel i modul 1 är riktiga frågekort med samma id och status som fråga 6 och 9", () => {
+  const modul1 = moduler.find((m) => m.id === "kap1");
+  const repeats = modul1.blocks.filter((b) => b.kind === "upprepning");
+  assert.deepEqual(
+    repeats.map((b) => [b.id, b.item.id, b.sammaSom]),
+    [["m1-ex-sf", "ea-m1-6", "6"], ["m1-ex-essa", "ea-f-e1-9", "9"]],
+  );
+  for (const repeat of repeats) {
+    assert.ok(!("kalla" in repeat), "exemplets text med facit följer inte med till vyn");
+    assert.ok(modul1.blocks.includes(repeat.item), "samma kort som frågan längre ned");
+  }
+  // Exemplen räknas en gång: modulen har fortfarande 11 frågor.
+  assert.equal(modulItems(modul1).length, 11);
+  assert.ok(!modulerItems.some((item) => item.kind === "upprepning"));
+
+  // Källtexten ur PDF:en är samma fråga med samma facit.
+  const raw = MODULER.find((m) => m.id === "kap1").blocks;
+  const sf = raw.find((b) => b.id === "m1-ex-sf");
+  const q6 = repeats[0].item;
+  assert.ok(sf.kalla.sv.includes(q6.question.sv) && sf.kalla.en.includes(q6.question.en));
+  assert.ok(sf.kalla.sv.endsWith(`Svar: ${q6.options[q6.correct].sv.toUpperCase()}`), "FALSKT är fråga 6:s facit");
+  const essa = raw.find((b) => b.id === "m1-ex-essa");
+  const q9 = repeats[1].item;
+  assert.ok(essa.kalla.sv.includes(q9.question.sv) && essa.kalla.en.includes(q9.question.en));
+  assert.ok(essa.kalla.sv.endsWith(q9.extraModelAnswers[0].sv), "exemplets modellsvar finns bakom Visa modellsvar");
+  assert.ok(essa.kalla.en.endsWith(q9.extraModelAnswers[0].en));
+  // "Så, då börjar det ☺" står kvar som text direkt efter exemplen.
+  const after = modul1.blocks[modul1.blocks.indexOf(repeats[1]) + 1];
+  assert.deepEqual([after.kind, after.sv], ["text", "Så, då börjar det ☺"]);
 });

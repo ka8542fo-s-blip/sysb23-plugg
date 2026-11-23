@@ -281,6 +281,22 @@ function Panel({ panel, answers, drafts, onAnswer }) {
             return <Question key={item.id} item={item} answers={answers} drafts={drafts} onAnswer={onAnswer} />;
           if (item.kind === "fritext")
             return <FreeText key={item.id} item={item} answers={answers} drafts={drafts} onAnswer={onAnswer} />;
+          // Lärarens exempel som är samma fråga som en senare (modul 1):
+          // samma kort, samma svar och status.
+          if (item.kind === "upprepning") {
+            const Card = item.item.kind === "fraga" ? Question : FreeText;
+            return (
+              <Card
+                key={item.id}
+                item={item.item}
+                anchor={item.id}
+                sameAs={item.sammaSom}
+                answers={answers}
+                drafts={drafts}
+                onAnswer={onAnswer}
+              />
+            );
+          }
           if (item.kind === "notis")
             return (
               <div key={item.id} className="px-1 text-[15px] leading-relaxed text-ink/75">

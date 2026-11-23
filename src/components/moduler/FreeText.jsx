@@ -12,7 +12,7 @@ import { isAnswered } from "../../lib/practiceQueue.js";
 // { text, seeded, shown } och bedömningen i answers. Första gången fylls
 // texten från Essä-utkasten, aldrig igen (som ExplainCard). `shown` gör att
 // ett visat modellsvar syns efter omladdning; "Gör om modulen" döljer det.
-export default function FreeText({ item, answers, drafts, onAnswer }) {
+export default function FreeText({ item, answers, drafts, onAnswer, anchor = item.id, sameAs }) {
   useEffect(() => {
     if (loadDraft(item.id) !== null) return;
     const essayState = load(KEYS.essays, {});
@@ -29,11 +29,11 @@ export default function FreeText({ item, answers, drafts, onAnswer }) {
 
   return (
     <article
-      id={`q-${item.id}`}
+      id={`q-${anchor}`}
       tabIndex={-1}
       className="card scroll-mt-40 border-l-[3px] border-l-brass p-4 shadow-[0_1px_2px_rgb(var(--shade-rgb)/0.04)] focus:outline-none sm:p-5"
     >
-      <CardHead item={item} state={graded === null ? "fritext" : graded ? "correct" : "wrong"} />
+      <CardHead item={item} state={graded === null ? "fritext" : graded ? "correct" : "wrong"} sameAs={sameAs} />
       {item.title && <p className="mt-3 font-display text-lg text-pine">{item.title.sv}</p>}
       <h4 className={`${item.title ? "mt-1" : "mt-3"} whitespace-pre-line font-sans text-[17px] font-medium leading-snug tracking-normal text-ink [font-variation-settings:normal]`}>
         {item.question.sv}

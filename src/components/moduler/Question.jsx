@@ -25,14 +25,16 @@ export function NumberBadge({ nr, state = "idle" }) {
   );
 }
 
-// Brickan och typen överst i varje frågekort.
-export function CardHead({ item, state, children }) {
+// Brickan och typen överst i varje frågekort. Lärarens exempel i modul 1
+// (sameAs) har ingen bricka; etiketten säger vilken fråga det är.
+export function CardHead({ item, state, sameAs, children }) {
   return (
     <div className="flex items-center gap-2.5">
-      <NumberBadge nr={item.nr} state={state} />
+      {!sameAs && <NumberBadge nr={item.nr} state={state} />}
       <span className="text-[12px] font-semibold uppercase tracking-[0.08em] text-ink/55">
-        {item.nr ? <span className="sr-only">Fråga {item.nr}, </span> : null}
+        {item.nr && !sameAs ? <span className="sr-only">Fråga {item.nr}, </span> : null}
         {typeLabel(item)}
+        {sameAs && <span className="font-medium normal-case tracking-normal"> · samma som fråga {sameAs}</span>}
       </span>
       {children}
     </div>
@@ -60,8 +62,9 @@ const questionText = "font-sans text-[17px] font-medium leading-snug tracking-no
 
 // En flervals- eller sant/falskt-fråga direkt på sidan, med alternativen i
 // lärarens ordning A–E. Valet sparas i svar:<frågeId> ({ choice }) och
-// svaret i answers, samma post som i Öva.
-export default function Question({ item, answers, drafts, onAnswer }) {
+// svaret i answers, samma post som i Öva. `anchor` är kortets id på sidan
+// (lärarens exempel har eget, eftersom frågan också står längre ned).
+export default function Question({ item, answers, drafts, onAnswer, anchor = item.id, sameAs }) {
   const stat = answers[item.id];
   const chosen = chosenOption(stat, drafts.get(item.id, null));
   const trueFalse = item.typ === "sant-falskt";
@@ -80,8 +83,8 @@ export default function Question({ item, answers, drafts, onAnswer }) {
   const badge = chosen === null ? "idle" : chosen === item.correct ? "correct" : "wrong";
 
   return (
-    <article id={`q-${item.id}`} tabIndex={-1} className="card scroll-mt-40 p-4 shadow-[0_1px_2px_rgb(var(--shade-rgb)/0.04)] focus:outline-none sm:p-5">
-      <CardHead item={item} state={badge} />
+    <article id={`q-${anchor}`} tabIndex={-1} className="card scroll-mt-40 p-4 shadow-[0_1px_2px_rgb(var(--shade-rgb)/0.04)] focus:outline-none sm:p-5">
+      <CardHead item={item} state={badge} sameAs={sameAs} />
       <h4 className={`mt-3 ${questionText}`}>{item.question.sv}</h4>
       <Original>
         <p>{item.question.en}</p>

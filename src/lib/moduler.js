@@ -46,9 +46,11 @@ export function firstOpenId(module, answers = {}) {
 // textavsnitt. Är textavsnittet närmast före bara en kort rubrik ("##
 // Flervalsfrågor", "## Scenariofrågor" med en mening …) blir det panelens
 // rubrik. En kort anteckning utan rubrik mellan två frågor (modul 5) står
-// kvar i panelen. Lärarens exempel (modul 1) följer frågan före dem.
+// kvar i panelen. Lärarens exempel i modul 1 (`upprepning`, samma fråga som
+// fråga 6 och 9) står i samma panel som exempelfrågan före dem.
 // Raderna i modul 12:s tabell "Zachman eller TOGAF?" ritas tillsammans.
 const isQuestion = (block) => block?.kind === "fraga" || block?.kind === "fritext";
+const isCard = (block) => isQuestion(block) || block?.kind === "upprepning";
 const hasList = (text) => /^\s*(?:[-*]|\d+\.)\s/m.test(text);
 
 export function isPanelHeading(block) {
@@ -68,7 +70,7 @@ export function groupSections(blocks) {
   blocks.forEach((block, index) => {
     const last = sections[sections.length - 1];
     const inPanel = last?.kind === "panel";
-    if (isQuestion(block) || (block.kind === "exempel" && inPanel)) {
+    if (isCard(block) || (block.kind === "exempel" && inPanel)) {
       let panel = inPanel ? last : null;
       if (!panel) {
         const heading = last?.kind === "text" && isPanelHeading(last.block) ? sections.pop().block : null;
@@ -82,7 +84,7 @@ export function groupSections(blocks) {
       } else panel.items.push(block);
       return;
     }
-    if (inPanel && isPanelNote(block) && isQuestion(blocks[index + 1])) {
+    if (inPanel && isPanelNote(block) && isCard(blocks[index + 1])) {
       last.items.push({ kind: "notis", id: block.id, block });
       return;
     }
@@ -112,6 +114,6 @@ export function panelSummary(panel) {
   return {
     count: questions.length,
     type: types.length === 1 ? types[0] : "",
-    examples: panel.items.some((item) => item.kind === "exempel"),
+    examples: panel.items.some((item) => item.kind === "exempel" || item.kind === "upprepning"),
   };
 }

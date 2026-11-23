@@ -76,6 +76,22 @@ function buildBlock(block, chapter) {
   return { kind: block.kind, id: block.id, sv: block.sv, en: block.en };
 }
 
+// Lärarens exempel i modul 1 som är samma fråga som en senare fråga i
+// modulen (fråga 6 och 9): blocket får en kopia av den frågans kort, med
+// samma id och därmed samma svar och status. Exemplets text ur PDF:en
+// (`kalla`, med facit utskrivet) följer inte med, så den kan aldrig visas.
+// Blockslaget är eget, så att frågan räknas en gång i framsteg och Öva.
+function withRepeats(blocks) {
+  return blocks.map((block) => {
+    if (block.kind !== "upprepning") return block;
+    const item = blocks.find((other) => (other.kind === "fraga" ? other.id : other.essayId) === block.av);
+    if (!item || (item.kind !== "fraga" && item.kind !== "fritext")) {
+      throw new Error(`Moduler: ${block.id} upprepar okänd fråga ${block.av}`);
+    }
+    return { kind: "upprepning", id: block.id, sammaSom: item.nr, item };
+  });
+}
+
 // Inledningen med utdraget som det hopfällda kortet visar.
 export const modulerIntro = { ...INLEDNING, utdrag: INLEDNING_UTDRAG };
 
@@ -93,7 +109,7 @@ export const moduler = MODULER.map((module) => ({
   forelasning: lectureOf(module.id),
   ingress: INGRESS[module.id] ? { sv: INGRESS[module.id].sv, en: INGRESS[module.id].en } : null,
   borjaHar: module.id === BORJA_HAR,
-  blocks: module.blocks.map((block) => buildBlock(block, module.id)),
+  blocks: withRepeats(module.blocks.map((block) => (block.kind === "upprepning" ? block : buildBlock(block, module.id)))),
 }));
 
 // Alla frågor och fritextfrågor i dokumentens ordning.

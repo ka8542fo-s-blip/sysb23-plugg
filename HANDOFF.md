@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 697 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-22.
+- **Test:** `npm test` = 699 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-22.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -1674,6 +1674,19 @@ aldrig på sidan.
     plats.
   - **Modulens slut:** ett kort med "Du har svarat på x av y, z rätt." och
     knapparna Nästa modul, Öva modul N i Öva och Gör om modulen.
+- **Inget facit innan man svarat (Kaspers beslut 23 nov).** Lärarens två
+  exempel i modul 1:s inledning visade svaret direkt. De är samma frågor
+  som fråga 6 och 9 och står nu som block av slaget `upprepning`
+  (`av: "ea-m1-6"` / `"ea-e1-9"`). `modulerView.js` ger blocket en kopia av
+  frågans kort, med samma id och därmed samma svar, text och status.
+  Exemplets text ur PDF:en ligger kvar i `kalla` men följer aldrig med till
+  vyn. Eftersom blockslaget är eget räknas frågan en gång i framsteg, Öva
+  och Statistik. "Så, då börjar det ☺" är ett eget textblock.
+  `moduler.test.mjs` underkänner text- och exempelblock som innehåller
+  "Svar:", "Answer:", "Modellsvar", "Model answer", "Rätt svar" eller
+  "Correct answer" (skiftlägeskänsligt, eftersom lärarens "Det finns inte
+  nödvändigtvis ett enda rätt svar" inte är facit). Testet kontrollerar
+  också att `kalla` har samma fråga och facit som fråga 6 och 9.
 
 **Bara lärarens tre moduldokument (Kaspers beslut 21 nov, plan godkänd;
 gäller fortfarande; Läs och Tenta nedan är dolda sedan 22 nov;

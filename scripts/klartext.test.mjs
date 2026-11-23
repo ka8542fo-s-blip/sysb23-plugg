@@ -20,7 +20,9 @@ const texts = () => [
   ["modulerIntro", course.modulerIntro.sv],
   ...course.chapters.map((c) => [c.id, c.title]),
   ...course.moduler.flatMap((m) =>
-    m.blocks.map((b) => [b.id, b.sv ?? [b.question.sv, b.explanation?.sv ?? "", b.modelAnswer?.sv ?? "", ...(b.options || []).map((o) => o.sv)].join(" ")]),
+    m.blocks
+      .map((b) => (b.kind === "upprepning" ? { ...b.item, id: b.id } : b))
+      .map((b) => [b.id, b.sv ?? [b.question.sv, b.explanation?.sv ?? "", b.modelAnswer?.sv ?? "", ...(b.options || []).map((o) => o.sv)].join(" ")]),
   ),
   ...course.questions.map((q) => [
     q.id,
