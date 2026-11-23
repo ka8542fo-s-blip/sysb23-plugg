@@ -319,9 +319,9 @@ test("lärarens exempel i modul 1 är riktiga frågekort med samma id och status
 // De svenska textblocken är en omskrivning, inte en översättning: texten före
 // varje frågepanel ska räcka för att svara på panelens frågor, och allt ska
 // gå att belägga i lärarens material. tackning.js pekar ut meningen som bär
-// varje svar. Omskrivningen görs en föreläsning i taget; OMSKRIVNA är de
-// moduler som är klara.
-const OMSKRIVNA = ["kap1", "kap2", "kap3", "kap4", "kap5", "kap6", "kap7", "kap8"];
+// varje svar. Omskrivningen gjordes en föreläsning i taget; sedan 23 nov
+// är alla tolv moduler omskrivna och kravet gäller varje fråga.
+const OMSKRIVNA = moduler.map((module) => module.id);
 
 const utanMarkdown = (text) =>
   squash(

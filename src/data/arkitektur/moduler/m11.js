@@ -15,12 +15,12 @@ export default {
 
 En traditionell bank har:
 
-- Flera kunddatabaser.
-- En 25 år gammal kärnbanksplattform.
-- Fristående digitala kanaler.
-- Långsamma releasecykler.
-- Många dubblerade applikationer.
-- Ökande konkurrens från digitala banker.
+- flera kunddatabaser
+- en 25 år gammal kärnbanksplattform
+- fristående digitala kanaler
+- långsamma releasecykler
+- många dubblerade applikationer
+- ökande konkurrens från digitala banker.
 
 VD:n säger: "Vi behöver bli en digital bank inom två år."`,
       en: `## Case Study: Traditional Bank
@@ -41,7 +41,31 @@ The CEO states: "We need to become a digital bank within two years."`,
       id: "m11-t2",
       sv: `## Studentuppgift
 
-Analysera situationen ur ett Enterprise Architecture-perspektiv.`,
+Analysera situationen ur ett Enterprise Architecture-perspektiv. Det här behöver du för analysen.
+
+### Börja med målet, inte med tekniken
+
+VD:ns mål är strategiskt. Innan arkitekten väljer teknik bör hen fastställa de strategiska målen, önskade kundresultat, de capabilities som krävs, nuvarande begränsningar, stakeholders concerns och arkitektoniska principer. Att välja en teknikplattform innan verksamhetens mål, de capabilities som krävs och de arkitektoniska begränsningarna har fastställts är ett arkitektoniskt antimönster.
+
+Strategiskt viktiga capabilities är det banken behöver kunna göra för att bli en digital bank, till exempel digital onboarding av kunder. Det viktiga är att skilja det banken måste kunna göra från den applikation eller teknik som råkar genomföra det.
+
+### Vad är problemet?
+
+Fallet visar fragmenterad data, beroenden till legacysystem, kanalsilor och långsamma releaser. Flera kunddatabaser betyder att kundinformationen är fragmenterad, och det är ett arkitektoniskt problem. En lämplig princip är därför att kundinformation bör behandlas som en tillgång för hela enterprisen, i stället för att varje avdelning äger sin egen kunddefinition.
+
+### Baseline, target och transition
+
+- **Baseline architecture** beskriver de relevanta delarna av nuläget.
+- **Target architecture** ska ge en sammanhållen riktning för det önskade framtida läget. Den är ingen perfekt förutsägelse av varje framtida detalj.
+- **Transition architectures** ger praktiska mellanlägen som gör att en organisation kan gå från sin baseline architecture mot target architecture samtidigt som verksamheten fortsätter och värde levereras.
+
+Att genast ersätta hela kärnbankssystemet kan vara riskabelt. Kärnsystemet kan stödja kritiska business capabilities och innehålla komplexa beroenden. En "big bang"-ersättning skulle kunna skapa stora operativa, ekonomiska och affärsmässiga risker. Inkrementella transition architectures kan i stället låta banken modernisera samtidigt som den fortsätter att leverera värde. Att ett system är gammalt är inte heller ensamt ett tillräckligt skäl att ersätta det: beslutet bör bygga på belägg som affärsvärde, verksamhetskritikalitet, teknisk hälsa, kostnad och strategisk riktning, inte på etiketter som "legacy".
+
+### Ett tillvägagångssätt
+
+Banken bör först klargöra sina strategiska mål och önskade kundresultat. Den bör sedan bedöma baseline: capabilities, value streams, information, applikationer och teknik. En target architecture bör fastställa den önskade riktningen, med stöd av arkitektoniska principer och governance. I stället för att ersätta alla legacysystem samtidigt bör banken identifiera transition architectures och prioritera initiativ efter affärsvärde, risk och beroenden.
+
+Agile-leverans kan användas för att utveckla capabilities inkrementellt. Transformationen kan då organiseras kring inkrementella produkter och capabilities, där arkitekturen utvecklas parallellt med leveransen genom feedback och lärande. Det låter banken lära sig, leverera värde tidigare och justera arkitektoniska beslut allteftersom ny information blir tillgänglig.`,
       en: `## Student task
 
 Analyze the situation from an Enterprise Architecture perspective.`,

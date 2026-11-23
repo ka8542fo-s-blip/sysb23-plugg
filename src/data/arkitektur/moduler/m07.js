@@ -85,13 +85,15 @@ En capability uttrycker vad organisationen kan göra. Den beskriver en förmåga
 
 En capability är en förmåga på verksamhetsnivå, som bolåneutgivning i bankens exempel. Ett enskilt steg, som att kunden klickar på en knapp, beskrivs snarare som en del av en process eller ett steg i en value stream. Servrar, databaser och ett REST API är teknik som kan stödja en capability men inte är den.
 
+Namnet ensamt avgör inte vilket arkitektoniskt begrepp det gäller; sammanhanget spelar roll. Den exakta klassificeringen beror på modelleringssammanhanget, men i allmänhet beskriver en formulering om vad organisationen har förmåga att göra en capability, medan ett enskilt steg i arbetet är en process eller aktivitet.
+
 ### En brygga mellan strategi och arkitektur
 
 Strategin fastställer önskade resultat och prioriteringar. Av dem följer capabilities som enterprisen måste ha eller stärka. Capabilities översätter alltså strategisk avsikt till de förmågor som enterprisen behöver för att nå sina mål, och som organisationen måste utveckla, upprätthålla eller transformera.
 
 Capabilities kan relateras till processer, människor, information och data, applikationer och teknik. När strategins prioriteringar är översatta till capabilities kan arkitekten därför analysera vilka människor, processer, vilken information, vilka applikationer och vilken teknik som behövs för att stödja dem. På så sätt kan strategiska mål spåras till arkitektur- och investeringsbeslut.
 
-Capabilities blir därför en relativt stabil brygga mellan strategisk avsikt och implementering. De kopplar strategin till de organisationsstrukturer och den organisatoriska förändring som krävs för att nå den. Capability-based planning bygger på detta: i stället för att planera bara utifrån avdelningar eller applikationer kan enterprisen planera utifrån vilka capabilities som måste förändras för att nå det strategiska resultatet.
+Capabilities blir därför en relativt stabil brygga mellan strategisk avsikt och implementering. De kopplar strategin till de organisationsstrukturer och den organisatoriska förändring som krävs för att nå den. Kedjan blir alltså: strategi → capabilities → arkitekturförändring → implementering → resultat. Capability-based planning bygger på detta: i stället för att planera bara utifrån avdelningar eller applikationer kan enterprisen planera utifrån vilka capabilities som måste förändras för att nå det strategiska resultatet.
 
 ### När organisationen förändras
 

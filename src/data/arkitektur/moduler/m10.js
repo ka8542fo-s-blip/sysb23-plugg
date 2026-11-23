@@ -1,6 +1,6 @@
 // Modul 10 i fliken Moduler (modul-9-12.pdf), översatt. Se m01.js för formen.
-// Modellsvaret till fråga 9 slutar med en avbruten mening i PDF:en och är
-// översatt som det står.
+// Modellsvaret till fråga 9 slutar med en avbruten mening i PDF:en; den
+// svenska versionen fullbordar den (se kommentaren vid svaret).
 export default {
   id: "kap10",
   number: 10,
@@ -11,13 +11,13 @@ export default {
       id: "m10-t1",
       sv: `## Lärandemål
 
-Studenterna ska kunna skilja mellan:
+Efter den här modulen ska du kunna skilja mellan:
 
-- Digitization
-- Digitalization
-- Digital transformation
-- Digitala affärsmodeller
-- Digitala ekosystem`,
+- digitization
+- digitalization
+- digital transformation
+- digitala affärsmodeller
+- digitala ekosystem.`,
       en: `## Learning objectives
 
 Students should be able to distinguish between:
@@ -33,13 +33,23 @@ Students should be able to distinguish between:
       id: "m10-t2",
       sv: `## Kärnförklaring
 
-**Digitization** – Att omvandla analog information till digital form.
+**Digitization** – att omvandla analog information till digital form, till exempel att skanna pappersdokument.
 
-**Digitalization** – Att använda digitala tekniker för att förbättra befintliga aktiviteter och processer.
+**Digitalization** – att använda digitala tekniker för att förbättra befintliga aktiviteter och processer, till exempel att automatisera ett befintligt godkännandeflöde.
 
-**Digital transformation** – Att använda digitala capabilities för att i grunden förändra hur en enterprise skapar, levererar och fångar värde (tjänster).
+**Digital transformation** – att använda digitala capabilities för att i grunden förändra hur en enterprise skapar, levererar och fångar värde (tjänster).
 
-Teknik ensam utgör inte transformation.`,
+Digital transformation är alltså bredare än de två andra. Den kan förändra affärsmodeller, kundupplevelser och operating modeln. Den kan påverka affärsmodeller, capabilities, value streams, organisationsstrukturer, information, applikationer och teknik. Ofta innebär den att capabilities förändras eller att nya skapas. Den kan också ge nya digitala affärsmodeller och digitala ekosystem, som sträcker sig utanför organisationens gränser och kan omfatta partner, plattformar och kunder. Eftersom dessa förändringar hänger ihop kräver de ett arkitektoniskt perspektiv över hela enterprisen snarare än ett isolerat teknikinitiativ. Därför är digital transformation en concern för Enterprise Architecture.
+
+### Teknik är en enabler
+
+Teknik ensam utgör inte transformation. Digital transformation är inte i grunden en teknikfråga, utan handlar om hur enterprisen skapar, levererar och fångar värde. Tekniken är en viktig enabler, alltså något som gör förändringen möjlig, men den är inte transformationen själv.
+
+Att flytta teknik förändrar inte nödvändigtvis hur enterprisen skapar eller levererar värde. En molnmigrering är därför inte automatiskt digital transformation. Om någon säger att transformationen är lyckad för att allt har flyttats till molnet bör arkitekten fråga vilka affärsresultat, capabilities eller värdeerbjudanden som har förändrats. På samma sätt bör arkitekten fråga om en ny mobilapp har förändrat hur enterprisen skapar och levererar värde. Att bara lägga till en digital kanal kan vara digitalization snarare än bredare digital transformation.
+
+Digital transformation kräver inte nödvändigtvis ny teknik. Artificiell intelligens kan vara en enabler i vissa fall, men den krävs inte för varje digital transformation.
+
+Ett initiativ för digital transformation bör drivas av ett tydligt förstått affärsresultat och strategiskt mål, inte av teknikmode eller leverantörers marknadsföring. Capability-baserad analys hjälper då organisationen att prioritera investeringar efter affärsvärde snarare än att bara välja tekniker.`,
       en: `## Core explanation
 
 **Digitization** - Converting analog information into digital form.
@@ -140,6 +150,10 @@ Technology alone does not constitute transformation.`,
         "AI kan vara en enabler i vissa sammanhang men är inget krav. Transformationen avgörs av hur enterprisen förändrar sitt sätt att skapa och leverera värde, inte av en viss teknik.",
     },
     { kind: "text", id: "m10-t5", sv: "## Essäfrågor", en: "## Essay questions" },
+    // Modellsvaret slutar med ett avbrutet fragment redan i lärarens PDF
+    // ("Because these change."). Den svenska versionen fullbordar det med
+    // lärarens egen mening ur nästa svar, ea-e10-10 (Kaspers beslut 23 nov);
+    // engelskan i essays.js står kvar som i PDF:en.
     {
       kind: "fritext",
       id: "ea-e10-9",
@@ -147,7 +161,7 @@ Technology alone does not constitute transformation.`,
       nr: "9",
       question: "Förklara skillnaden mellan digitization, digitalization och digital transformation.",
       modelAnswer:
-        "Digitization omvandlar analog information till digital form. Digitalization använder digital teknik för att förbättra befintliga processer eller aktiviteter. Digital transformation är bredare och innebär grundläggande förändringar i hur enterprisen skapar och levererar värde. Transformation kan påverka affärsmodeller, capabilities, value streams, organisationsstrukturer, information, applikationer och teknik. Eftersom dessa förändras.",
+        "Digitization omvandlar analog information till digital form. Digitalization använder digital teknik för att förbättra befintliga processer eller aktiviteter. Digital transformation är bredare och innebär grundläggande förändringar i hur enterprisen skapar och levererar värde. Transformation kan påverka affärsmodeller, capabilities, value streams, organisationsstrukturer, information, applikationer och teknik. Eftersom dessa förändringar hänger ihop kräver de ett arkitektoniskt perspektiv över hela enterprisen snarare än ett isolerat teknikinitiativ.",
     },
     {
       kind: "fritext",

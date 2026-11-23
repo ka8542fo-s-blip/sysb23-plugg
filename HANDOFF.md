@@ -1715,12 +1715,26 @@ aldrig på sidan.
     och en trohetsgranskning (en agent jämför texten med PDF:erna och
     Word-dokumentet). Modul 1–4: 45 av 45 frågor gick att svara på ur
     texten. Modul 5–8: alla 47 slutna frågor och 13 av 15 fritextfrågor
-    helt; de två tunna stärktes. Granskningarnas nyansfel rättades.
+    helt; de två tunna stärktes. Modul 9–12: alla 82 frågor. Granskningarnas
+    nyansfel rättades.
   - **Hopblandade modellsvar:** några av lärarens modellsvar är klippta
     och ihopklistrade fel redan i PDF:en. I den svenska versionen
     (`modelAnswer` i modulfilen) står meningarna i rätt ordning, utan
     dubbletter och fragment, och engelskan i `essays.js` är orörd. Varje
-    rättelse har en kommentar i modulfilen: `ea-e8-8`.
+    rättelse har en kommentar i modulfilen: `ea-e8-8`, `ea-e9-9`,
+    `ea-e10-9` och `ea-e12-essay-3`. Ett avbrutet fragment fick bara
+    fullbordas med lärarens egen mening ur ett närliggande svar; text som
+    klistrats in ur ett annat svar togs bort. En genomsökning av alla tre
+    PDF:erna (upprepade ordföljder) hittade inga fler; de inklistrade
+    svarsalternativen (`ea-m5-1b` B, `ea-m5-5` E, `ea-m11-2` D, `ea-m11-4` B)
+    var rensade sedan tidigare.
+  - **Modul 11** (fallet): under Studentuppgift står det som behövs för
+    analysen (mål före teknik, fragmenterad kundinformation, baseline,
+    target och transition, big bang, ett tillvägagångssätt).
+  - **Modul 12** är bara språkligt omskriven, och vart och ett av de tio
+    begreppen har fått högst en förtydligande mening. Dess frågor täcks av
+    text i modul 1–11; några meningar lades därför till i modul 3, 7, 8
+    och 9 (källan står i tackning.js).
   - Reglerna gäller också framtida ändringar i textblocken.
 
 **Bara lärarens tre moduldokument (Kaspers beslut 21 nov, plan godkänd;

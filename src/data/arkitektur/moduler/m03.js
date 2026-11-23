@@ -49,9 +49,11 @@ En enterprise måste ständigt anpassa sig till strategi, marknader, teknik och 
 
 Enterprise Architecture översätter strategiska mål till konsekvenser för arkitekturen. Strategin identifierar de resultat man vill nå. Arkitekturen identifierar de capabilities, strukturer, den information, de applikationer, den teknik och de organisationsförändringar som krävs för att nå dem. Arkitekturen blir på så sätt en brygga mellan strategisk avsikt och implementering, och den kan koppla strategi till organisatorisk förändring.
 
+Arkitektur finns för att stödja enterprisens mål. Utan att förstå strategin kan arkitekten inte avgöra vilka capabilities som behöver utvecklas, förändras eller skyddas, och arkitekturbeslut kan inte bedömas mot verksamhetens prioriteringar.
+
 Ett exempel är strategin "Bli den enklaste banken för den som köper sin första bostad". Den capability det gäller är digital bolåneutgivning. Arkitekturen anger de processer, den information, de applikationer, den teknik och de organisatoriska capabilities som krävs.
 
-Därför kan Enterprise Architecture stödja beslutsfattande, transformation och governance. Den är mer än dokumentation eller en förteckning över IT-system, och den handlar inte i första hand om att dokumentera IT-system. Att en organisation har fin dokumentation av sina system betyder inte nödvändigtvis att den har en Enterprise Architecture som fungerar.`,
+Därför kan Enterprise Architecture stödja beslutsfattande, transformation och governance. Den är mer än dokumentation eller en förteckning över IT-system, och den handlar inte i första hand om att dokumentera IT-system. Att en organisation har fin dokumentation av sina system betyder inte nödvändigtvis att den har en Enterprise Architecture som fungerar. Dokumentation av nuläget är användbar, men arkitekturen blir strategiskt värdefull när den förståelsen används för att fatta beslut om framtida lägen och övergångar. Enterprise Architecture identifierar då gap, beroenden, risker och möjligheter. I en miljö som präglas av digital transformation och ständig förändring behöver arkitekturen själv utvecklas i stället för att bli en statisk dokumentationsövning.`,
       en: `## Core definition
 
 Enterprise Architecture is the practice of understanding, designing, communicating and governing the fundamental structure and evolution of an enterprise to achieve its objectives.

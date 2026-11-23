@@ -1,6 +1,6 @@
 // Modul 8 i fliken Moduler (modul-5-8.pdf), översatt. Se m01.js för formen.
-// Modellsvaret till fråga 8 slutar med en trasig mening i PDF:en; den är
-// översatt som den står. Lärarens not om frågorna som ligger i modul 7 står
+// Modellsvaret till fråga 8 är hopblandat i PDF:en; den svenska versionen
+// har meningarna i rätt ordning (se kommentaren vid svaret). Lärarens not om frågorna som ligger i modul 7 står
 // sist, som i PDF:en.
 export default {
   id: "kap8",
@@ -69,6 +69,8 @@ Governance svarar på: Vem har befogenhet att fatta vilka beslut, under vilka be
 
 Governance för arkitektur handlar om att fastställa decision rights, ansvarsskyldighet och lämpliga kontroller för arkitekturbeslut. Decision rights anger vem som har befogenhet att fatta vilka arkitekturbeslut. Governance ska i första hand åstadkomma lämpligt beslutsfattande, ansvarsskyldighet och kontroll, inte maximal byråkrati.
 
+Organisationer behöver governance för att upprätthålla sammanhållning, hantera risker och säkerställa att viktiga arkitekturbeslut stödjer strategiska mål. Alltför mycket centralt godkännande kan samtidigt sakta ner leveransen. Effektiv governance fastställer därför principer, decision rights, guardrails och eskaleringsmekanismer: rutinbeslut kan delegeras, medan beslut med betydande konsekvenser för hela enterprisen kan få lämplig arkitektonisk tillsyn. På så sätt kan governance ge både enhetlighet och autonomi.
+
 ### Principer som guardrails
 
 Tydliga principer ger återanvändbar vägledning för beslut. Team kan fatta många beslut självständigt, utan att be om godkännande varje gång, så länge de håller sig inom de överenskomna gränserna. Principerna fungerar på så sätt som guardrails inom vilka team kan fatta beslut mer självständigt. De kan öka enhetligheten och beslutshastigheten samtidigt som lämpliga beslut delegeras till leveransteam. Därför kan principer öka agiliteten.
@@ -77,7 +79,7 @@ God governance kräver alltså inte nödvändigtvis godkännande av varje teknis
 
 ### Trade-offs
 
-Det finns nästan aldrig en perfekt arkitektur. Arkitektur handlar om att hantera trade-offs, alltså att väga mål som konkurrerar med varandra, som flexibilitet, kostnad, risk och standardisering. Arkitektoniska beslut har sällan bara fördelar. Ett exempel är flexibilitet kontra standardisering: standardisering kan ge effektivitet men mindre flexibilitet.`,
+Det finns nästan aldrig en perfekt arkitektur. Arkitektur handlar om att hantera trade-offs, alltså att väga mål som konkurrerar med varandra, som flexibilitet, kostnad, risk och standardisering. Arkitektoniska beslut har sällan bara fördelar. Ett exempel är flexibilitet kontra standardisering: standardisering kan ge effektivitet men mindre flexibilitet. Ökad säkerhet kan medföra friktion, och centralisering kan ge kontroll men minska den lokala autonomin. Arkitekter behöver därför göra trade-offs explicita och anpassa dem efter enterprisens mål.`,
       en: `## Governance
 
 Governance answers: Who has the authority to make which decisions, under what constraints?`,

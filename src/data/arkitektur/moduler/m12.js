@@ -5,7 +5,8 @@
 // Som i PDF:en: fråga 3 är avbruten efter alternativ C och saknar svar
 // (facit C, se questions.js). Jämförelsetabellen "Zachman or TOGAF?" är sex
 // tvåvalsfrågor (ea-m12-34a–f). Modellsvaret till Essay 3 har inklistrad
-// text i PDF:en och är översatt som det står.
+// text i PDF:en; den svenska versionen är utan dubbletterna (se kommentaren
+// vid svaret).
 const tabellrad = (id, rad, explanation) => ({
   kind: "fraga",
   id,
@@ -26,7 +27,7 @@ export default {
     {
       kind: "text",
       id: "m12-t1",
-      sv: "Den här modulen är medvetet annorlunda. Den ber studenterna att integrera begrepp från de tidigare elva modulerna.",
+      sv: `Den här modulen är medvetet annorlunda. Den ber dig att integrera begrepp från de tidigare elva modulerna.`,
       en: "This module is deliberately different. It asks students to integrate concepts from the previous eleven modules.",
     },
     {
@@ -56,20 +57,20 @@ An architecture provides a way of understanding:
     {
       kind: "text",
       id: "m12-t3",
-      sv: `## De tio begrepp som studenterna absolut bör kunna
+      sv: `## De tio begrepp som du absolut bör kunna
 
-Innan studenterna ger sig på frågorna bör de kunna förklara dessa tio begrepp utan att slå upp dem.
+Innan du ger dig på frågorna bör du kunna förklara de här tio begreppen utan att slå upp dem.
 
-1. **Enterprise** — En enterprise är en samling organisationer, organisatoriska enheter eller capabilities med en gemensam uppsättning mål.
-2. **Arkitektur** — Arkitektur beskriver den grundläggande organisationen av något, inklusive dess komponenter, relationer, principer och begränsningar.
-3. **Enterprise Architecture** — Enterprise Architecture behandlar enterprisens struktur och utveckling i förhållande till dess mål.
-4. **Business capability** — En capability beskriver vad en organisation kan göra.
-5. **Value stream** — En value stream beskriver hur värde skapas och levereras till en stakeholder.
-6. **Architecture principle** — En princip ger varaktig vägledning för arkitektoniska beslut.
-7. **Governance** — Governance fastställer decision rights, ansvarsskyldighet, riktning och kontroll.
-8. **Zachman** — Zachman tillhandahåller en ontology/ett klassificeringsschema för att organisera beskrivningar av en enterprise.
-9. **TOGAF** — TOGAF tillhandahåller vägledning och ett tillvägagångssätt för att utveckla och styra Enterprise Architecture, inklusive ADM.
-10. **Digital transformation** — Digital transformation innebär att använda digitala capabilities för att i grunden förändra hur en enterprise arbetar och skapar eller levererar värde.`,
+1. **Enterprise** — En enterprise är en samling organisationer, organisatoriska enheter eller capabilities med en gemensam uppsättning mål. Den behöver inte vara en enda juridisk organisation, och gränsen beror delvis på arkitekturens syfte och avgränsning.
+2. **Arkitektur** — Arkitektur beskriver den grundläggande organisationen av något, inklusive dess komponenter, relationer, principer och begränsningar. Ett diagram är en representation av arkitekturen, inte arkitekturen själv.
+3. **Enterprise Architecture** — Enterprise Architecture behandlar enterprisens struktur och utveckling i förhållande till dess mål. Den har en bredare avgränsning än IT architecture och kopplar strategi till förändring.
+4. **Business capability** — En capability beskriver vad en organisation kan göra. Hur arbetet utförs beskriver i stället en process.
+5. **Value stream** — En value stream beskriver hur värde skapas och levereras till en stakeholder, till exempel Upptäcka → Ansöka → Verifiera → Godkänna → Slutföra i bolånebankens exempel.
+6. **Architecture principle** — En princip, till exempel "Information är en tillgång för hela enterprisen", ger varaktig vägledning för arkitektoniska beslut och kan fungera som en guardrail.
+7. **Governance** — Governance fastställer decision rights, ansvarsskyldighet, riktning och kontroll. God governance kräver inte att varje beslut godkänns centralt.
+8. **Zachman** — Zachman ger en ontology och ett klassificeringsschema för att organisera beskrivningar av en enterprise. Ramverket är ingen metodik och föreskriver ingen ordning att arbeta i.
+9. **TOGAF** — TOGAF ger vägledning och ett tillvägagångssätt för att utveckla och styra Enterprise Architecture, inklusive ADM. ADM är iterativ och inget stelt vattenfall.
+10. **Digital transformation** — Digital transformation innebär att använda digitala capabilities för att i grunden förändra hur en enterprise arbetar och skapar eller levererar värde. Teknik ensam utgör inte transformation.`,
       en: `## The ten concepts’ students absolutely should know
 
 Before attempting the questions, students should be able to explain these ten concepts without looking them up.
@@ -98,15 +99,15 @@ Before attempting the questions, students should be able to explain these ten co
 
 Den här avslutande modulen samlar de viktigaste idéerna från hela kursen i Enterprise Architecture.
 
-Målet är inte bara att komma ihåg definitioner. Studenterna ska kunna koppla ihop begrepp, skilja mellan närliggande idéer och tillämpa Enterprise Architecture-tänkande på realistiska situationer.
+Målet är inte bara att komma ihåg definitioner. Du ska kunna koppla ihop begrepp, skilja mellan närliggande idéer och använda Enterprise Architecture-tänkande i realistiska situationer.
 
-Efter den här modulen ska studenterna kunna:
+Efter den här modulen ska du kunna:
 
 - Förklara syftet med Enterprise Architecture.
 - Skilja Enterprise Architecture från IT architecture.
 - Förklara Zachmans och TOGAF:s roller och varför de är olika.
 - Förklara relationen mellan strategi, capabilities, value streams, processer och lösningar.
-- Förklara rollen för architecture principles och governance.
+- Förklara vilken roll architecture principles och governance har.
 - Förklara hur arkitektur kan stödja Agile och digital transformation.
 - Analysera ett arkitektoniskt problem ur flera perspektiv.
 - Ge och motivera arkitektoniska rekommendationer.
@@ -639,9 +640,9 @@ Att bara lägga till en digital kanal kan vara digitalization snarare än bredar
       id: "m12-t10",
       sv: `## Integrerade jämförelsefrågor
 
-Dessa är särskilt användbara inför examinationen.
+De här är särskilt användbara inför examinationen.
 
-## 34. Zachman eller TOGAF?
+## Zachman eller TOGAF?
 
 Ange för varje påstående vilket som passar bäst.`,
       en: `## Integrated comparison questions
@@ -687,7 +688,7 @@ For each statement, identify which is the better fit.`,
       id: "m12-t11",
       sv: `**Viktig reservation**
 
-Detta betyder inte att TOGAF inte kan använda klassificeringar eller att Zachman saknar relevans för arkitekturpraktiken. Poängen är vilken roll som är primär för var och en.`,
+Det här betyder inte att TOGAF inte kan använda klassificeringar, eller att Zachman saknar betydelse för arkitekturpraktiken. Poängen är vilken roll som är den primära för var och en.`,
       en: `**Important qualification**
 
 This does not mean that TOGAF cannot use classifications or that Zachman has no relevance to architecture practice. The point is the primary role of each.`,
@@ -737,6 +738,10 @@ TOGAF tillhandahåller en bredare samling vägledning för Enterprise Architectu
 Zachman hjälper därför arkitekter att tänka på vad som behöver beskrivas och ur vilka perspektiv, medan TOGAF ger vägledning om hur arkitektur kan utvecklas och styras.
 De kan därför vara kompletterande snarare än konkurrerande tillvägagångssätt.`,
     },
+    // Modellsvaret är hopblandat redan i lärarens PDF (meningar klippta och
+    // dubblerade). Den svenska versionen har meningarna i rätt ordning, utan
+    // dubbletter och fragment (Kaspers beslut 23 nov); engelskan i essays.js
+    // står kvar som i PDF:en.
     {
       kind: "fritext",
       id: "ea-e12-essay-3",
@@ -745,7 +750,7 @@ De kan därför vara kompletterande snarare än konkurrerande tillvägagångssä
       title: { sv: "Essä 3", en: "Essay 3" },
       question: "Förklara hur business capabilities kan koppla samman strategi, Enterprise Architecture och digital transformation.",
       modelAnswer: `Strategin fastställer enterprisens riktning och mål.
-Capabilities översätter dessa mål till de förmågor som enterprisen behöver ha. Arkitekter som skapar nya. Capability-baserad analys utgör därför en brygga mellan strategisk avsikt och arkitektonisk implementering. Den hjälper också organisationer att prioritera investeringar kan sedan avgöra vilka processer, människor, information, applikationer och vilken teknik som krävs för att stödja eller transformera dessa capabilities.
+Capabilities översätter dessa mål till de förmågor som enterprisen behöver ha. Arkitekter kan sedan avgöra vilka processer och människor, vilken information, vilka applikationer och vilken teknik som krävs för att stödja eller transformera dessa capabilities.
 Digital transformation innebär ofta att capabilities förändras eller att nya skapas. Capability-baserad analys utgör därför en brygga mellan strategisk avsikt och arkitektonisk implementering. Den hjälper också organisationer att prioritera investeringar efter affärsvärde snarare än att bara välja tekniker.`,
     },
     {
@@ -776,7 +781,7 @@ Enterprise Architecten hjälper därför stakeholders att förstå dessa relatio
       id: "m12-t13",
       sv: `## Vanliga examinationsfällor
 
-Studenterna bör vara särskilt försiktiga med påståenden som innehåller ord som:
+Var särskilt försiktig med påståenden som innehåller ord som:
 
 - alltid
 - aldrig
@@ -786,15 +791,11 @@ Studenterna bör vara särskilt försiktiga med påståenden som innehåller ord
 - helt
 - uteslutande
 
-Inom Enterprise Architecture är dessa ofta tecken på att ett påstående är för absolut.
+Inom Enterprise Architecture är sådana ord ofta tecken på att ett påstående är för absolut.
 
-Till exempel: "Digital transformation kräver alltid molnteknik." Falskt.
+Påståendet "Digital transformation kräver alltid molnteknik" är till exempel falskt. Samma sak gäller "Enterprise Architecture handlar uteslutande om IT" och "Varje arkitekturbeslut måste godkännas centralt".
 
-Eller: "Enterprise Architecture handlar uteslutande om IT." Falskt.
-
-Eller: "Varje arkitekturbeslut måste godkännas centralt." Falskt.
-
-Arkitektur är i hög grad kontextberoende.`,
+Arkitektur är i hög grad beroende av sammanhanget.`,
       en: `## Common examination traps
 
 Students should be particularly careful with statements containing words such as:
@@ -822,7 +823,7 @@ Architecture is highly contextual.`,
       id: "m12-t14",
       sv: `## "Arkitektens test"
 
-Innan studenterna rekommenderar en lösning bör de lära sig att ställa fem frågor:
+Innan du rekommenderar en lösning bör du lära dig att ställa fem frågor:
 
 1. **Varför?** – Vilket affärsmål eller problem hanterar vi?
 2. **Vad?** – Vilken capability, vilket värde, vilken information eller vilket resultat berörs?
@@ -830,7 +831,7 @@ Innan studenterna rekommenderar en lösning bör de lära sig att ställa fem fr
 4. **Hur?** – Vilken arkitektonisk förändring skulle kunna lösa problemet?
 5. **Vilka blir konsekvenserna?** – Vilka är kostnaderna, riskerna, beroendena, trade-offs och effekterna?
 
-Detta är en användbar mental modell för examinationen och för verkligt arkitekturarbete.`,
+Det är en användbar tankemodell både för examinationen och för verkligt arkitekturarbete.`,
       en: `## The "architect's test"
 
 Before recommending a solution, students should learn to ask five questions:
@@ -848,7 +849,7 @@ This is a useful mental model for the examination and for real architecture work
       id: "m12-t15",
       sv: `## Slutlig checklista inför examinationen
 
-Före examinationen bör studenterna kunna förklara, utan anteckningar:
+Före examinationen bör du kunna förklara det här utan anteckningar:
 
 **Grunderna i Enterprise Architecture**
 
@@ -870,7 +871,7 @@ Före examinationen bör studenterna kunna förklara, utan anteckningar:
 **Zachman**
 
 - Vad är Zachman-ramverket?
-- Varför beskrivs det bättre som en ontology/ett klassificeringsschema?
+- Varför beskrivs det bättre som en ontology och ett klassificeringsschema?
 - Vilka är de sex interrogatives?
 - Vad representerar perspektiven?
 - Varför är Zachman inte en metodik?
@@ -996,7 +997,7 @@ Hur bör förändringen styras?`,
     {
       kind: "text",
       id: "m12-t16",
-      sv: "Det är här studenten går från att lära sig Enterprise Architecture-terminologi till att tänka som en Enterprise Architect.",
+      sv: `Det är här du går från att lära dig Enterprise Architecture-terminologi till att tänka som en Enterprise Architect.`,
       en: "This is the point at which the student move from learning Enterprise Architecture terminology to thinking like an Enterprise Architect.",
     },
     {

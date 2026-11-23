@@ -1,7 +1,7 @@
 // Modul 9 i fliken Moduler (modul-9-12.pdf), översatt. Se m01.js för formen.
 // "Architect's thinking" är en fritextfråga (ea-e9-tankande) där läraren
 // kallar svaret "Possible answers". Modellsvaret till fråga 9 har inklistrad
-// text i PDF:en och är översatt som det står.
+// text i PDF:en; den svenska versionen är utan den (se kommentaren vid svaret).
 export default {
   id: "kap9",
   number: 9,
@@ -12,7 +12,7 @@ export default {
       id: "m9-t1",
       sv: `## Lärandemål
 
-Studenterna ska förstå:
+Efter den här modulen ska du förstå:
 
 - Agile och arkitektur.
 - Kontinuerlig arkitektur.
@@ -36,17 +36,41 @@ Students should understand:
       id: "m9-t2",
       sv: `## Kärnförklaring
 
-Agile betyder inte: "Arkitektur är onödig."
+Agile betyder inte: "Arkitektur är onödig." Agile betyder alltså inte att arkitekturen ska överges.
 
 Det betyder att arkitekturen måste rymma:
 
-- Iteration
-- Feedback
-- Ändrade prioriteringar
-- Inkrementell leverans
-- Lärande
+- iteration
+- feedback
+- ändrade prioriteringar
+- inkrementell leverans
+- lärande.
 
-Arkitekturen bör ge tillräcklig riktning utan att försöka förutse varje detalj år i förväg.`,
+Arkitekturen bör ge tillräcklig riktning utan att försöka förutse varje detalj år i förväg.
+
+### Kontinuerlig arkitektur
+
+Krav, teknik och affärsförutsättningar förändras. Därför kan arkitekturen inte behandlas som en engångsinsats som blir klar innan leveransen börjar. Agile-arkitektur utvecklas iterativt och kan utvecklas inkrementellt, genom feedback och lärande från leveransen, och ger samtidigt lämplig riktning och guardrails. Arkitekturen bör alltså utvecklas i takt med att enterprisen och dess omgivning förändras.
+
+Just-enough architecture betyder endast den arkitektur som behövs för att ge lämplig riktning och hantera betydande risker och beroenden. Det är alltså varken att avstå från arkitektur eller att ta fram en fullständig arkitektur för varje framtida detalj.
+
+### Guardrails och decentraliserade beslut
+
+En guardrail är en gräns inom vilken team kan fatta beslut självständigt. Exempel är säkerhetskrav, datapolicyer, integrationsprinciper, regulatoriska krav och godkända arkitekturmönster.
+
+Arkitekten kan etablera principer, standarder, guardrails och decision rights, så att team kan fatta rutinbeslut självständigt. Arkitekten bör då fokusera på betydande beroenden mellan team, strategiska beslut, systemrisker och frågor som kräver samordning på enterprise-nivå. Arkitekturen bör utvecklas med lärandet och fokusera på beslut med betydande påverkan på enterprisen. På så sätt blir arkitekten ingen flaskhals, och teamen får lämplig autonomi. Arkitekten behöver alltså avgöra vilka beslut som verkligen kräver samordning på enterprise-nivå och vilka som kan delegeras. Att centralisera varje arkitekturbeslut är alltså inte nödvändigt för agilitet.
+
+Enterprise Architecture bör därför ge riktning, principer, återanvändbara capabilities och guardrails och samtidigt ge leveransteamen lämplig autonomi. Det möjliggör agilitet samtidigt som sammanhållningen bevaras och systemrisker hanteras. Också en Agile-organisation behöver sammanhållning, principer, riktning och hantering av betydande beroenden och risker.
+
+### Architecture debt
+
+Architecture debt är ackumulerade arkitektoniska kompromisser som kan skapa framtida kostnader, risker eller begränsningar.
+
+### Ifrågasätt diagnosen
+
+En arkitekt accepterar inte en diagnos direkt. Det som ser ut som problemet kan vara ett symptom. Innan arkitekten föreslår en lösning försöker hen förstå vilka business capabilities, informationsbehov och affärsresultat som berörs, vilket strategiskt mål som ligger bakom, vilka beroenden som finns och vad det kostar och vilka risker det finns. Om flera applikationer verkar göra samma sak behöver arkitekten också förstå skälen till dubbleringen: den kan vara ett problem, men applikationerna kan också vara avsiktligt olika.
+
+Antalet applikationer är alltså inte i sig ett arkitektoniskt problem. Arkitektur bör hantera problem och resultat, inte godtyckliga siffror.`,
       en: `## Core explanation
 
 Agile does not mean: "Architecture is unnecessary."
@@ -181,6 +205,11 @@ Vilket strategiskt mål ligger bakom denna concern?`,
         "Arkitekten behöver inte styra varje beslut. Med principer, standarder, guardrails och decision rights kan team fatta rutinbeslut självständigt, medan arkitekten fokuserar på betydande beroenden mellan team, strategiska beslut och systemrisker.",
     },
     { kind: "text", id: "m9-t5", sv: "## Kortsvarsfråga", en: "## Short-answer question" },
+    // Modellsvaret är hopblandat redan i lärarens PDF: "autonomy. Architecture
+    // should evolve … This allows" är inklistrat ur ea-e9-10 mitt i meningen
+    // "issues that require enterprise-level coordination". Den svenska
+    // versionen är utan inklistringen, så att lärarens mening blir hel
+    // (Kaspers beslut 23 nov); engelskan i essays.js står kvar.
     {
       kind: "fritext",
       id: "ea-e9-9",
@@ -188,7 +217,7 @@ Vilket strategiskt mål ligger bakom denna concern?`,
       nr: "9",
       question: "Hur kan en arkitekt undvika att bli en flaskhals i en Agile-organisation?",
       modelAnswer:
-        "Arkitekten kan etablera principer, standarder, guardrails och decision rights, så att team kan fatta rutinbeslut självständigt. Arkitekten bör fokusera på betydande beroenden mellan team, strategiska beslut, systemrisker och frågor autonomi. Arkitekturen bör utvecklas med lärandet och fokusera på beslut med betydande påverkan på enterprisen. Detta gör det möjligt som kräver samordning på enterprise-nivå.",
+        "Arkitekten kan etablera principer, standarder, guardrails och decision rights, så att team kan fatta rutinbeslut självständigt. Arkitekten bör fokusera på betydande beroenden mellan team, strategiska beslut, systemrisker och frågor som kräver samordning på enterprise-nivå.",
     },
     { kind: "text", id: "m9-t6", sv: "## Essäfråga", en: "## Essay question" },
     {

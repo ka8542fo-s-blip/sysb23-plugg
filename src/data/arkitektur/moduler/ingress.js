@@ -71,7 +71,7 @@ export const INGRESS = {
   },
   kap12: {
     block: "m12-t1",
-    sv: "Den här modulen är medvetet annorlunda. Den ber studenterna att integrera begrepp från de tidigare elva modulerna.",
+    sv: "Den här modulen är medvetet annorlunda. Den ber dig att integrera begrepp från de tidigare elva modulerna.",
     en: "This module is deliberately different. It asks students to integrate concepts from the previous eleven modules.",
   },
 };
