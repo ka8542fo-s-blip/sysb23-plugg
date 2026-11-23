@@ -17,6 +17,21 @@ const course = getCourse("arkitektur");
 
 const texts = () => [
   ["homeIntro", course.homeIntro ?? ""],
+  ["examNote", course.examNote?.text ?? ""],
+  ["essayIntro", (course.essayIntro || []).join(" ")],
+  ["essayClosing", course.essayClosing ?? ""],
+  ...course.essays.map((e) => [
+    e.id,
+    [
+      e.title,
+      e.question,
+      e.context,
+      e.outline,
+      e.modelAnswer,
+      ...e.checklist.flatMap((g) => [g.heading, ...g.points]),
+      ...(e.ufAnswers || []).flatMap((u) => [u.label, u.question, u.modelAnswer, u.keyLesson ?? ""]),
+    ].join(" "),
+  ]),
   ["modulerIntro", course.modulerIntro.sv],
   ...course.chapters.map((c) => [c.id, c.title]),
   ...course.moduler.flatMap((m) =>
@@ -57,7 +72,9 @@ test("Läs och Tenta är dolda; Läs-datat är lärarens text utan våra tilläg
     assert.doesNotMatch(chapter.card, /[åäöÅÄÖ]/, `${chapter.id}: lärarens engelska text, inget vi skrivit`);
   }
   assert.match(UF_INTRO, /^I have created 12 modules/);
-  for (const key of ["examNote", "glossary", "essayIntro", "levels", "practiceBlocks", "examArchive"]) {
+  // examNote (tentans format, på Hem) och essayIntro (fliken Essä) visas
+  // sedan 23 nov, efter lärarens besked om tentan.
+  for (const key of ["glossary", "levels", "practiceBlocks", "examArchive"]) {
     assert.ok(course[key] === undefined || (Array.isArray(course[key]) && course[key].length === 0), `${key} visas inte`);
   }
   assert.ok(!course.views.includes("tentan"), "fliken Tentan är borttagen");

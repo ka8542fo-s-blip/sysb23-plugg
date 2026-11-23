@@ -129,6 +129,17 @@ export default function Stats({
             <ModuleProgressTable course={course} answers={answers} navigate={navigate} />
           </div>
         </section>
+        {course.views.includes("essa") && course.essays.length > 0 && (
+          // Essätemana (2026-11-23): genomgångna enligt "Markera som
+          // genomgången" i fliken Essä.
+          <section className="card p-5 sm:p-6" aria-label="Essä">
+            <h2 className="font-display text-xl">Essä</h2>
+            <p className="tabular mt-2 text-[15px] text-ink/80">
+              Essäteman genomgångna {course.essays.filter((item) => essayState[item.id]?.done).length} av{" "}
+              {course.essays.length}
+            </p>
+          </section>
+        )}
         {course.views.includes("tenta") && (course.mockExams || []).length > 0 && (
           <MockExamResults course={course} navigate={navigate} />
         )}

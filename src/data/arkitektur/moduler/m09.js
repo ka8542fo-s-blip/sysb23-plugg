@@ -56,7 +56,7 @@ Just-enough architecture betyder endast den arkitektur som behövs för att ge l
 
 ### Guardrails och decentraliserade beslut
 
-En guardrail är en gräns inom vilken team kan fatta beslut självständigt. Exempel är säkerhetskrav, datapolicyer, integrationsprinciper, regulatoriska krav och godkända arkitekturmönster.
+En guardrail är en gräns inom vilken team kan fatta beslut självständigt. Exempel är säkerhetskrav, datapolicyer, integrationsprinciper, regulatoriska krav och godkända arkitekturmönster. Guardrails är alltså skyddsräcken: gränser för vad som är tillåtet, som bygger på principerna.
 
 Arkitekten kan etablera principer, standarder, guardrails och decision rights, så att team kan fatta rutinbeslut självständigt. Arkitekten bör då fokusera på betydande beroenden mellan team, strategiska beslut, systemrisker och frågor som kräver samordning på enterprise-nivå. Arkitekturen bör utvecklas med lärandet och fokusera på beslut med betydande påverkan på enterprisen. På så sätt blir arkitekten ingen flaskhals, och teamen får lämplig autonomi. Arkitekten behöver alltså avgöra vilka beslut som verkligen kräver samordning på enterprise-nivå och vilka som kan delegeras. Att centralisera varje arkitekturbeslut är alltså inte nödvändigt för agilitet.
 

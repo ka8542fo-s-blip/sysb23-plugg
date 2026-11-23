@@ -109,6 +109,7 @@ test("Verksamhetsarkitektur: lärarens 53 frågor i ordningen 12, 1–11, Zachma
   for (const id of ["ea-e7-24", "ea-e7-27"]) {
     assert.equal(arkitekturEssays.find((e) => e.id === id).chapter, "kap8", id);
   }
-  // Tentan anger inget ordtak.
-  assert.equal(getCourse("arkitektur").essayWordLimit, null);
+  // Fliken Essä visar sedan 23 nov essätemana (essa-teman.test.mjs), inte
+  // de här 53 frågorna.
+  assert.notEqual(getCourse("arkitektur").essays, arkitekturEssays);
 });

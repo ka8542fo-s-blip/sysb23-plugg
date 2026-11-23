@@ -8,11 +8,13 @@ import { getCourse } from "../src/data/index.js";
 import { levelStats, moduleProgress } from "../src/lib/levels.js";
 import { zachmanTasks } from "../src/data/arkitektur/zachman.js";
 import { extraQuestions } from "../src/data/arkitektur/questions.js";
+import { essays as arkitekturEssays } from "../src/data/arkitektur/essays.js";
 
 const course = getCourse("arkitektur");
 // levelStats visas inte längre (2026-11-21) men finns kvar; den testas med
-// docx-frågorna inlagda, som när kortet visades.
-const legacy = { ...course, extraQuestions };
+// docx-frågorna och lärarens 53 frågor som essäer inlagda, som när kortet
+// visades (fliken Essä visar sedan 23 nov essätemana).
+const legacy = { ...course, extraQuestions, essays: arkitekturEssays };
 // levels finns inte längre i manifestet (2026-11-21); funktionen testas
 // med Zachman-flikens id:n direkt.
 const ids = zachmanTasks.map((task) => task.id);
@@ -56,7 +58,7 @@ test("per modul (Hem och Statistik): frågor klara och fritextfrågor Kunde i or
 
 test("Hem har en mening om lärarens tre moduldokument och var man börjar", () => {
   assert.equal(course.homeSteps, undefined, "de tre stegen visas inte");
-  assert.match(course.homeIntro, /lärarens tre moduldokument, översatt till svenska/);
+  assert.match(course.homeIntro, /lärarens tre moduldokument, på svenska/);
   assert.match(course.homeIntro, /Börja i Moduler och fortsätt sedan i Öva/);
 });
 

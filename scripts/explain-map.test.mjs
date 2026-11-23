@@ -46,7 +46,7 @@ test("förklarakorten i manifestet: 53 kort, ett per fritextfråga, på svenska"
   assert.equal(course.explainCards, modulerCards);
   assert.equal(modulerCards.length, 53);
   assert.equal(course.questions.length, 136);
-  assert.deepEqual(course.views, ["moduler", "ova", "statistik"]);
+  assert.deepEqual(course.views, ["moduler", "ova", "essa", "statistik"]);
   assert.equal(course.practiceBlocks, undefined, "Memorera visas inte");
   assert.equal(new Set(modulerCards.map((card) => card.id)).size, 53);
   for (const card of modulerCards) {

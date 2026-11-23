@@ -3,10 +3,12 @@ import { KEYS, load, save } from "../lib/storage.js";
 
 // Ordgränsen gäller tentor som har en (Strategi och BPM: 300 ord). En
 // delkurs utan ordtak sätter `essayWordLimit: null` i manifestet
-// (Verksamhetsarkitektur: tentan anger inget).
+// (Säkerhet: tentan anger inget). `essayWordTarget` lägger till ett mål
+// i räknaren (Verksamhetsarkitektur: cirka 200, max 500).
 const DEFAULT_WORD_LIMIT = 300;
 // Samma slutrad i alla fyrstegsessäer — den hör till checklistans form,
-// inte till någon enskild fråga, så den bor i vyn.
+// inte till någon enskild fråga, så den bor i vyn. En delkurs med en annan
+// form sätter `essayClosing` i manifestet.
 const CLOSING = "Max 300 ord. Fyra stycken, ett per rubrik. Punkt 4 är den som höjer betyget.";
 const DEFAULT_INTRO = [
   "Varje essä: säg vad det är, varför det spelar roll, ge ett exempel, och koppla till en annan del av kursen.",
@@ -46,6 +48,8 @@ export default function Essays({ course, params, essayState, setEssayState }) {
 
   const state = essayState[essay.id] || { draft: "", checked: [] };
   const wordLimit = course.essayWordLimit === undefined ? DEFAULT_WORD_LIMIT : course.essayWordLimit;
+  const wordTarget = course.essayWordTarget ?? null;
+  const closing = course.essayClosing ?? (wordLimit !== null ? CLOSING : null);
   const intro = course.essayIntro ?? DEFAULT_INTRO;
 
   function select(id) {
@@ -93,6 +97,10 @@ export default function Essays({ course, params, essayState, setEssayState }) {
   const overLimit = wordLimit !== null && wordCount > wordLimit;
   const hasContent = Boolean((state.draft || "").trim()) || (state.checked || []).some(Boolean) || Boolean(state.done);
   const grouped = essays.some((item) => item.chapter);
+  // Essäteman (Verksamhetsarkitektur): knapparna visar titeln och en bock när
+  // temat är genomgånget, och temat kan markeras som genomgånget.
+  const titled = !grouped && essays.some((item) => item.title);
+  const markable = grouped || titled;
   const index = essays.indexOf(essay);
 
   return (
@@ -123,7 +131,14 @@ export default function Essays({ course, params, essayState, setEssayState }) {
               aria-current={item.id === essay.id ? "true" : undefined}
               className={`chip ${item.id === essay.id ? "chip-on" : "hover:border-pine"}`}
             >
-              Essä {i + 1}
+              {titled ? (
+                <>
+                  {essayState[item.id]?.done && <span aria-label="genomgången">✓ </span>}
+                  {item.title}
+                </>
+              ) : (
+                `Essä ${i + 1}`
+              )}
             </button>
           ))}
         </nav>
@@ -180,7 +195,9 @@ export default function Essays({ course, params, essayState, setEssayState }) {
         />
         <p className={`tabular mt-1 text-sm ${overLimit ? "font-medium text-wrong" : "text-ink/65"}`} aria-live="polite">
           Ord: {wordCount}
-          {wordLimit !== null && `/${wordLimit}`}
+          {wordTarget !== null
+            ? ` · mål cirka ${wordTarget}${wordLimit !== null ? ` · max ${wordLimit}` : ""}`
+            : wordLimit !== null && `/${wordLimit}`}
           {overLimit ? " — över tentans gräns" : ""}
           <span className="text-ink/65"> · sparas automatiskt</span>
         </p>
@@ -194,9 +211,10 @@ export default function Essays({ course, params, essayState, setEssayState }) {
           >
             {showChecklist ? "Dölj checklista" : "Visa checklista"}
           </button>
-          {grouped && (
+          {markable && (
             // Genomgången: Kaspers egen markering, som räknas i modulstatusen
-            // (fliken Tentan). Sparas i essäns läge; Nollställ essän tar bort den.
+            // (fliken Tentan) och i Statistik (essätemana). Sparas i essäns
+            // läge; Nollställ essän tar bort den.
             <button
               type="button"
               className={state.done ? "btn-secondary border-correct text-correct" : "btn-secondary"}
@@ -206,7 +224,7 @@ export default function Essays({ course, params, essayState, setEssayState }) {
               {state.done ? "✓ Genomgången" : "Markera som genomgången"}
             </button>
           )}
-          {grouped && index < essays.length - 1 && (
+          {markable && index < essays.length - 1 && (
             <button type="button" className="btn-secondary" onClick={() => select(essays[index + 1].id)}>
               Nästa fråga →
             </button>
@@ -256,9 +274,9 @@ export default function Essays({ course, params, essayState, setEssayState }) {
                 </div>
               );
             })}
-            {wordLimit !== null && (
+            {closing && (
               <p className="mt-5 border-t border-line pt-4 text-[15px] leading-relaxed text-brass">
-                {CLOSING}
+                {closing}
               </p>
             )}
 
@@ -276,9 +294,40 @@ export default function Essays({ course, params, essayState, setEssayState }) {
                 <summary className="cursor-pointer font-display text-lg hover:text-pine">
                   {essay.modelAnswerLabel || "Lärarens modellsvar"}
                 </summary>
-                <p lang="en" className="mt-2 whitespace-pre-line text-[15px] leading-relaxed text-ink/80">
+                <p
+                  lang={essay.modelAnswerLang ?? "en"}
+                  className="mt-2 whitespace-pre-line text-[15px] leading-relaxed text-ink/80"
+                >
                   {essay.modelAnswer}
                 </p>
+              </details>
+            )}
+
+            {(essay.ufAnswers || []).length > 0 && (
+              // Verksamhetsarkitektur: varje fråga i temat med lärarens korta
+              // svenska modellsvar, ur modulfilerna (essaTeman.js).
+              <details className="mt-4 border-t border-line pt-4">
+                <summary className="cursor-pointer font-display text-lg hover:text-pine">
+                  Lärarens korta svar
+                </summary>
+                <div className="mt-2 space-y-4">
+                  {essay.ufAnswers.map((item) => (
+                    <div key={item.id}>
+                      <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-brass">{item.label}</p>
+                      <p className="mt-1 whitespace-pre-line text-[15px] font-medium leading-relaxed text-ink">
+                        {item.question}
+                      </p>
+                      <p className="mt-1 whitespace-pre-line text-[15px] leading-relaxed text-ink/80">
+                        {item.modelAnswer}
+                      </p>
+                      {item.keyLesson && (
+                        <p className="mt-1 text-[15px] leading-relaxed text-ink/80">
+                          <span className="font-medium text-ink">Viktig lärdom:</span> {item.keyLesson}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </details>
             )}
           </div>

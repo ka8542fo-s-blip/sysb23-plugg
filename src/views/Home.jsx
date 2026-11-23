@@ -70,7 +70,7 @@ export default function Home({
             course.questions.length > 0 && `${course.questions.length} frågor`,
             (course.explainCards || []).length > 0 && `${course.explainCards.length} förklarakort`,
             showsTopics && course.topics.length > 0 && `${course.topics.length} ämnen`,
-            views.includes("essa") && course.essays.length > 0 && `${course.essays.length} essäfrågor`,
+            views.includes("essa") && course.essays.length > 0 && `${course.essays.length} ${course.essayUnit ?? "essäfrågor"}`,
             views.includes("tenta") && (course.mockExams || []).length > 0 && `${course.mockExams.length} provtentor`,
             sqlExercises.length > 0 && `${sqlExercises.length} SQL-övningar`,
             course.examBank.length > 0 && `${course.examBank.length} tentafrågor`,
@@ -79,6 +79,13 @@ export default function Home({
             .filter(Boolean)
             .join(" · ")}
         </p>
+        {course.examNote && !views.includes("las") && (
+          // Tentans format. Delkurser med Läs visar det där; utan Läs
+          // (Verksamhetsarkitektur) står det här.
+          <p className="mt-3 max-w-reading rounded-lg border border-brass/40 px-4 py-3 text-[15px] leading-relaxed text-ink/85">
+            {course.examNote.text}
+          </p>
+        )}
       </section>
 
       <section className="card p-5 sm:p-6">

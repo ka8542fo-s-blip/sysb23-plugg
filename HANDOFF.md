@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 703 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-23.
+- **Test:** `npm test` = 714 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-23.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -1590,9 +1590,62 @@ UF:s docx-råmaterial, kursinformationen, kursens upplägg och de tre
 HT25-tentorna. Lärare Umberto Fiaccadori (UF). Byggt i en egen worktree
 parallellt med Säkerhet-sessionen; rebasat mot main före varje push.
 
-`views: moduler, ova, statistik` (sedan 22 nov, se nedan). Ingen
+`views: moduler, ova, essa, statistik` (sedan 22 nov, Essä sedan 23 nov, se
+nedan). Ingen
 Prov: HT26-tentans poäng och minuspoäng är okända, och ett Prov med påhittad
 poäng är sämre än inget.
+
+**Fliken Essä med elva essäteman (Kaspers beslut 23 nov;
+`cc-arkitektur-essa.md` i huvudmappen, gitignorerad).**
+
+- **Tentans format** (lärarens besked 23 nov, via Kasper): 30 flervalsfrågor
+  à 2 p (60 p, inga minuspoäng) och 3 essäfrågor, 40 p, troligen bland
+  modulernas essäfrågor, cirka 200 ord per svar och max 500. Essäfrågorna
+  har flera dimensioner: lärarens modellsvar är korta, men ett bra svar
+  visar mer förståelse, med fokus på problem och effekt. Formatet står i
+  `examNote`, som Hem visar eftersom delkursen saknar Läs.
+- **Vyn** är samma `Essays.jsx` som i de andra delkurserna, med fält som
+  bara arkitektur sätter: `essayWordTarget` (200), `essayWordLimit` (500),
+  `essayClosing`, `essayIntro` och `essayUnit` i manifestet, och per essä
+  `modelAnswerLabel`, `modelAnswerLang` ("sv") och `ufAnswers` (den
+  hopfällda sektionen "Lärarens korta svar"). Essäer med `title` och utan
+  `chapter` visar titeln på knappen, en bock när de är genomgångna, samt
+  Markera som genomgången och Nästa fråga. Utan fälten ser vyn ut som förut
+  (Strategi, Process och Säkerhet; `essa-teman.test.mjs` vaktar det).
+- **Temaindelningen** står i `data/arkitektur/essaTeman.js` (`TEMAN`): 11
+  teman och 37 frågor. Det är alla essä-, fall-, scenario- och tankefrågor
+  i modulerna, inte kortsvaren, och varje fråga står i exakt ett tema.
+  `context` ("Läraren frågar om detta i …") och `ufAnswers` byggs ur
+  modulfilerna, så att lärarens svar aldrig skrivs två gånger. Bara skrivna
+  teman (de med `modelAnswer`) visas. Lagringen är `essayState` per tema-id
+  (`ea-tema-N`). Statistik visar "Essäteman genomgångna x av n".
+- **Regler för de utvecklade modellsvaren:**
+  - 200–300 ord (testet tillåter 180–320), löpande text i stycken,
+    lättläst svenska och termer enligt ordlistan.
+  - Fakta och exempel bara ur lärarens material, i samma prioritetsordning
+    som omskrivningen av modulerna. Resonemanget om problem och effekt är
+    tillåtet, men det får inte föra in nya fakta.
+  - Svaret bygger på flera moduler där det är naturligt, och huvudpoängen i
+    lärarens modellsvar för varje fråga i temat finns med. `tackning`
+    pekar ut en mening per fråga som står ordagrant i svaret.
+  - Tentafrågan är lärarens bredaste fråga i temat plus 2–3
+    utvecklingsfrågor (a, b, c), varav en om problem och effekt med
+    Arkitektens test som mönster.
+  - Varje omgång granskas mot källorna av en separat agent som inte sett
+    arbetet.
+- **Doktrin och skyddsräcken** är lärarens muntliga betoning (föreläsningen
+  23 nov, via Kasper) och står inte i hans dokument. Ta inte bort dem som
+  "utanför materialet".
+  - "Doktrin" om principer (ett mer bestående värde som enterprisen står
+    bakom, även när annat förändras) står i modul 8:s text och i tema 8.
+  - "Skyddsräcken" om guardrails (gränser för vad som är tillåtet, som
+    bygger på principerna) står i modul 9 och i modul 7:s tillagda block.
+  - Båda står bara på svenska. `en` är orört, och ingen fråga kräver orden,
+    så `tackning.js` berörs inte.
+- `arkitekturEssays` (lärarens 53 frågor som essäer, `essays.js`) ligger
+  kvar i repot men visas inte.
+- **Läge:** omgång 1 (vyn, tema 4, 7 och 8, doktrin, Hem och Statistik) är
+  pushad 23 nov. Omgång 2 (tema 1–3, 5, 6 och 9–11) återstår.
 
 **Fliken Moduler, allt på svenska (Kaspers beslut 22 nov, plan godkänd;
 `cc-arkitektur-moduler.md` i huvudmappen, gitignorerad).** Läraren har sagt

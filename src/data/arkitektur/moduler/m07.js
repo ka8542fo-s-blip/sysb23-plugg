@@ -352,7 +352,7 @@ En architecture principle är en generell regel eller riktlinje som vägleder ar
 
 Governance svarar på frågan: vem har befogenhet att fatta vilka beslut, under vilka begränsningar? Governance betyder inte nödvändigtvis att varje arkitekturbeslut måste godkännas centralt. Effektiv governance fastställer tydliga principer, decision rights och gränser och ger samtidigt team lämplig autonomi. I stället för att kräva centralt godkännande av varje beslut kan governance rikta uppmärksamheten mot betydande risker, beroenden tvärs över enterprisen och strategiska beslut.
 
-Principerna kan då fungera som guardrails. Team kan fatta många beslut själva så länge de håller sig inom de överenskomna gränserna, och därför kan de arbeta snabbt. Governance kan alltså möjliggöra agilitet i stället för att begränsa den.
+Principerna kan då fungera som guardrails. Guardrails är skyddsräcken: gränser för vad som är tillåtet, som bygger på principerna. Team kan fatta många beslut själva så länge de håller sig inom de överenskomna gränserna, och därför kan de arbeta snabbt. Governance kan alltså möjliggöra agilitet i stället för att begränsa den.
 
 Det finns nästan aldrig en perfekt arkitektur. Arkitektur innebär ofta trade-offs snarare än perfekta lösningar. Standardisering kan till exempel ge effektivitet men mindre flexibilitet, och centralisering kan ge kontroll men långsammare beslut. Arkitektens uppgift är att göra sådana trade-offs tydliga och anpassa dem till enterprisens mål.`,
     },

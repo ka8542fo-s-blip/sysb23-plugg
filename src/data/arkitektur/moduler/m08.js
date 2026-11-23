@@ -37,7 +37,7 @@ Students should understand:
       id: "m8-t2",
       sv: `## Principexempel – "Information är en tillgång för hela enterprisen."
 
-En architecture principle är en generell regel eller riktlinje som vägleder arkitekturbeslut. Den är ingen detaljerad teknisk implementering, ingen projekttidplan och inget val av en viss produkt. I stället ger den riktning. Dess huvudsakliga syfte är att ge enhetlig vägledning för arkitektoniska beslut.
+En architecture principle är en generell regel eller riktlinje som vägleder arkitekturbeslut. Den är ingen detaljerad teknisk implementering, ingen projekttidplan och inget val av en viss produkt. I stället ger den riktning. Dess huvudsakliga syfte är att ge enhetlig vägledning för arkitektoniska beslut. Läraren använder också ordet **doktrin** om principer: ett mer bestående värde som enterprisen står bakom, även när annat förändras.
 
 Principen i rubriken kan påverka:
 

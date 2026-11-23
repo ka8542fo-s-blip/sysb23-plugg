@@ -30,7 +30,7 @@ import {
   summary as processSummary,
 } from "./process/reading.js";
 import { topics as arkitekturTopics } from "./arkitektur/topics.js";
-import { essays as arkitekturEssays } from "./arkitektur/essays.js";
+import { essaTeman as arkitekturEssaTeman } from "./arkitektur/essaTeman.js";
 import { mockExams as arkitekturMockExams } from "./arkitektur/mockExams.js";
 import {
   moduler as arkitekturModuler,
@@ -196,7 +196,9 @@ export const courses = [
     // 2026-11-22 (Kaspers beslut, plan godkänd): fliken Moduler ersätter Läs
     // och Tenta tas bort ur menyn; allt är på svenska. Läs, Tenta, ufView.js
     // och provtentorna finns kvar i repot men visas inte.
-    views: ["moduler", "ova", "statistik"],
+    // 2026-11-23 (Kaspers beslut efter lärarens besked om tentan): fliken
+    // Essä med elva essäteman (data/arkitektur/essaTeman.js).
+    views: ["moduler", "ova", "essa", "statistik"],
     moduler: arkitekturModuler,
     modulerIntro: arkitekturModulerIntro,
     // Öva: samma 136 frågor och 53 fritextfrågor som i Moduler, på svenska och
@@ -213,18 +215,34 @@ export const courses = [
     // på svenska med en förklaring till varje (modulerView.js). Provtentorna
     // bygger fortfarande på ufView.js (engelska) men visas inte.
     questions: arkitekturModulerQuestions,
-    // Lärarens 53 frågor med modellsvar i modulordning (12, 1–11);
-    // Zachman-essän står under modul 4. Tentan anger inget ordtak, och
-    // checklistorna följer modellsvaren, inte fyrstegsformen.
-    essays: arkitekturEssays,
-    essayWordLimit: null,
+    // Essä (2026-11-23): elva teman som tillsammans täcker lärarens 37
+    // essä-, fall-, scenario- och tankefrågor, med ett utvecklat modellsvar
+    // på svenska och lärarens korta svar under. Tentan har tre essäfrågor,
+    // cirka 200 ord, max 500. Lärarens 53 frågor som essäer (essays.js)
+    // ligger kvar i repot men visas inte.
+    essays: arkitekturEssaTeman,
+    essayUnit: "essäteman",
+    essayWordTarget: 200,
+    essayWordLimit: 500,
+    essayClosing: "Cirka 200 ord, max 500. Visa förståelse: problem och effekt höjer svaret.",
+    essayIntro: [
+      "Tentan har tre essäfrågor, 40 p. Sikta på cirka 200 ord, max 500.",
+      "Lärarens modellsvar är korta. Visa mer: säg vad det är, vilket problem det löser eller skapar, vilken effekt det får, ge ett av lärarens exempel och koppla till en annan del av kursen.",
+      "Varje tema täcker flera av lärarens frågor. Kan du temat kan du alla frågorna i det.",
+    ],
     // Modulerna 1–12 med svenska titlar: grupperna i Öva och raderna i
     // Statistik. Läs (lärarens engelska text, ufView.js/ufText.js) och våra
     // kapiteltexter ligger kvar i repot och visas inte.
     chapters: arkitekturModulerChapters,
     // Hem (2026-11-22): en mening om var allt kommer ifrån och var man börjar.
+    // Texten är sedan 23 nov omskriven, inte översatt.
     homeIntro:
-      "Allt här kommer från lärarens tre moduldokument, översatt till svenska. Börja i Moduler och fortsätt sedan i Öva.",
+      "Allt här kommer från lärarens tre moduldokument, på svenska. Börja i Moduler och fortsätt sedan i Öva.",
+    // Tentans format enligt läraren (23 nov). Visas på Hem, eftersom
+    // delkursen inte har fliken Läs där de andra visar den.
+    examNote: {
+      text: "Tentan: 30 flervalsfrågor (2 p per fråga, inga minuspoäng) och 3 essäfrågor (40 p, cirka 200 ord, max 500).",
+    },
   },
   {
     ...noContent,
