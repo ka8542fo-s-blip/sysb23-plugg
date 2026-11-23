@@ -17,8 +17,7 @@ const fritext = MODULER.flatMap((modul) => modul.blocks.filter((block) => block.
 const temafragor = fritext.filter((block) => TEMATYPER.has(block.typ)).map((block) => block.id);
 const words = (text) => text.trim().split(/\s+/).filter(Boolean).length;
 
-// Temana som är skrivna. Omgång 1 (23 nov): tema 4, 7 och 8, de som läraren
-// frågar om oftast; resten skrivs i omgång 2.
+// Temana som är skrivna (alla elva sedan 23 nov).
 const skrivna = TEMAN.filter((tema) => tema.modelAnswer);
 
 test("temana täcker lärarens frågor: 11 teman, 37 frågor, varje fråga i exakt ett tema", () => {
@@ -34,10 +33,8 @@ test("temana täcker lärarens frågor: 11 teman, 37 frågor, varje fråga i exa
   for (const tema of TEMAN) assert.ok(tema.title?.trim() && tema.fragor.length > 0, tema.id);
 });
 
-test("tema 4, 7 och 8 är skrivna och visas i fliken Essä i temaordning", () => {
-  for (const id of ["ea-tema-4", "ea-tema-7", "ea-tema-8"]) {
-    assert.ok(skrivna.some((tema) => tema.id === id), `${id} är inte skrivet`);
-  }
+test("alla elva teman är skrivna och visas i fliken Essä i temaordning", () => {
+  assert.equal(skrivna.length, 11, `skrivna: ${skrivna.map((tema) => tema.id).join(", ")}`);
   assert.deepEqual(
     essaTeman.map((tema) => tema.id),
     skrivna.map((tema) => tema.id),

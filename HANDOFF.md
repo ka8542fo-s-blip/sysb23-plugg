@@ -1644,8 +1644,9 @@ poäng är sämre än inget.
     så `tackning.js` berörs inte.
 - `arkitekturEssays` (lärarens 53 frågor som essäer, `essays.js`) ligger
   kvar i repot men visas inte.
-- **Läge:** omgång 1 (vyn, tema 4, 7 och 8, doktrin, Hem och Statistik) är
-  pushad 23 nov. Omgång 2 (tema 1–3, 5, 6 och 9–11) återstår.
+- **Läge:** alla elva teman är skrivna och granskade (23 nov). Omgång 1 var
+  vyn, tema 4, 7 och 8, doktrin, Hem och Statistik; omgång 2 tema 1–3, 5, 6
+  och 9–11. Svaren har 256–299 ord.
 
 **Fliken Moduler, allt på svenska (Kaspers beslut 22 nov, plan godkänd;
 `cc-arkitektur-moduler.md` i huvudmappen, gitignorerad).** Läraren har sagt

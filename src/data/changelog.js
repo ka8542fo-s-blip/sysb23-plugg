@@ -7,6 +7,7 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 104, date: "2026-11-23", text: "Verksamhetsarkitektur: alla elva essäteman finns nu i Essä" },
   { id: 103, date: "2026-11-23", text: "Verksamhetsarkitektur: ny flik Essä med essäteman 4, 7 och 8" },
   { id: 102, date: "2026-11-23", text: "Verksamhetsarkitektur: modul 9–12 förklarar nu det frågorna prövar" },
   { id: 101, date: "2026-11-23", text: "Verksamhetsarkitektur: modul 5–8 förklarar nu det frågorna prövar" },

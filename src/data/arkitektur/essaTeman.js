@@ -22,16 +22,157 @@ export const TEMAN = [
     id: "ea-tema-1",
     title: "Enterprise och avgränsning",
     fragor: ["ea-e1-10"],
+    question: `Förklara varför begreppet "enterprise" är viktigare för Enterprise Architecture än begreppet "företag".
+
+a) Vad kännetecknar en enterprise, och hur avgör arkitekten var gränsen går?
+b) Vilket problem uppstår om avgränsningen blir för snäv, och vilken effekt får det att utgå från enterprisen?`,
+    checklist: [
+      {
+        heading: "Vad en enterprise är",
+        points: [
+          "En samling organisationer, organisatoriska enheter eller capabilities med en gemensam uppsättning mål.",
+          "Den definieras av gemensamma mål, inte nödvändigtvis av juridiskt ägande: ett företag, en myndighet, ett ekosystem.",
+          "Enterprise Architecture handlar om enterprisens struktur och utveckling i förhållande till dess mål.",
+        ],
+      },
+      {
+        heading: "Avgränsningen",
+        points: [
+          "Ett affärsresultat kan bero på partner, leverantörer, tillsynsmyndigheter och andra externa aktörer.",
+          "Lärarens exempel: Volvo, en Volvohandlare, en logistikleverantör och en bank som tillsammans förser en kund med en bil.",
+          "Arkitekten fastställer avgränsningen utifrån verksamhetsproblemet och det önskade resultatet; gränserna är inte alltid fasta.",
+        ],
+      },
+      {
+        heading: "Problem och effekt",
+        points: [
+          "Problemet: bara företaget ger en ofullständig bild, och en för snäv avgränsning kan missa viktiga beroenden. Att definiera avgränsningen är i sig en arkitektonisk concern.",
+          "Effekten: de relationer och stakeholders inom och utanför organisationen som påverkar resultatet kommer med.",
+        ],
+      },
+    ],
+    outline:
+      "Inled med vad Enterprise Architecture handlar om och vad en enterprise är. Visa sedan med lärarens Volvoexempel hur arkitekten avgör gränsen. Avsluta med problemet med en för snäv avgränsning och effekten av att utgå från enterprisen.",
+    modelAnswer: `Enterprise Architecture handlar om en enterprises struktur och utveckling i förhållande till dess mål. Därför spelar det roll vad som menas med enterprise.
+
+En enterprise är vilken samling som helst av organisationer, organisatoriska enheter eller capabilities som har en gemensam uppsättning mål. Den definieras alltså av gemensamma mål, inte nödvändigtvis av juridiskt ägande. Det kan vara ett företag, men också en myndighet, ett universitet, en grupp samverkande organisationer eller ett ekosystem i en leveranskedja. Ett affärsresultat kan bero på partner, leverantörer, tillsynsmyndigheter och andra externa aktörer, och då kan enterprisen sträcka sig utanför ett juridiskt företags gränser.
+
+Om Volvo, en Volvohandlare, en logistikleverantör och en bank samarbetar för att förse en kund med en bil, vilka av dem hör då till den enterprise vi försöker förstå? Det finns inte nödvändigtvis ett enda rätt svar, utan det beror på arkitekturens avgränsning och syfte. Arkitekten måste fastställa den relevanta avgränsningen utifrån verksamhetsproblemet och det önskade resultatet. Gränserna är därför inte alltid fasta och inte alltid desamma som organisationens.
+
+Problemet med att bara se till företaget är att bilden av arkitekturen kan bli ofullständig. Blir avgränsningen för snäv kan viktiga beroenden missas, till exempel i ett digitalt ekosystem där kunder, leverantörer, plattformar och teknikleverantörer alla bidrar till resultatet. Att definiera avgränsningen är därför i sig en arkitektonisk concern.
+
+Effekten av att utgå från enterprisen är att arkitekten får med de relationer och stakeholders som påverkar resultatet, både inom och utanför den organisation som leder arbetet. Arkitekten förstår då den enterprise som arkitekturen gäller, i stället för att automatiskt anta att enterprisen är den juridiska organisationen.`,
+    tackning: {
+      "ea-e1-10":
+        "Ett affärsresultat kan bero på partner, leverantörer, tillsynsmyndigheter och andra externa aktörer, och då kan enterprisen sträcka sig utanför ett juridiskt företags gränser.",
+    },
   },
   {
     id: "ea-tema-2",
     title: "Arkitektur är mer än komponenter",
     fragor: ["ea-e2-x", "ea-e2-11"],
+    question: `Varför räcker det inte att beskriva en enterprise genom att bara räkna upp dess komponenter?
+
+a) Förklara skillnaden mellan arkitektur, design och implementering.
+b) Vilket problem uppstår om man bara beskriver komponenterna, och vilken effekt får det att förstå relationerna?`,
+    checklist: [
+      {
+        heading: "Arkitektur",
+        points: [
+          "Den grundläggande organisationen av något: komponenter, relationer, principer och hur helheten utvecklas över tid.",
+          "Komponenter förklarar inte i sig hur enterprisen fungerar. Relationer, beroenden, ansvar, principer, begränsningar och syfte hör till.",
+          "Ett diagram är en representation av arkitekturen, inte arkitekturen själv.",
+          "Lärarens kedja business capability → process → information → applikation → teknik: vad mer påverkas om capabilityn förändras?",
+        ],
+      },
+      {
+        heading: "Arkitektur, design och implementering",
+        points: [
+          "Arkitektur fastställer den grundläggande organisationen, relationerna, principerna och begränsningarna.",
+          "Design tar fram mer detaljerade lösningar inom arkitekturens ramar; implementering förverkligar designen i en driftsmiljö.",
+          "Skillnaderna är inte absoluta, men de motsvarar olika nivåer av beslutsfattande och abstraktion.",
+        ],
+      },
+      {
+        heading: "Problem och effekt",
+        points: [
+          "Problemet: utan relationerna syns inte beroendena, till exempel mellan Business och Application Architecture. Effekten: konsekvenserna av en förändring kan bedömas.",
+          "Arkitektur finns för att möjliggöra förändring med ett syfte.",
+        ],
+      },
+    ],
+    outline:
+      "Inled med vad arkitektur är och varför komponenter inte räcker, med lärarens kedja som exempel. Skilj sedan arkitektur från design och implementering. Avsluta med problemet när relationerna saknas och effekten av att förstå dem.",
+    modelAnswer: `Arkitektur är den grundläggande organisationen av något. Den omfattar komponenterna, relationerna mellan dem, principerna och hur helheten utvecklas över tid. En lista över komponenter räcker därför inte, och ett diagram är inte heller arkitekturen själv, utan en representation av den.
+
+Komponenter förklarar inte i sig hur enterprisen fungerar. Arkitektur handlar också om relationer, beroenden, ansvar, principer, begränsningar och syfte. Ett exempel är kedjan business capability → process → information → applikation → teknik. Med den kan arkitekten fråga: "Om den här capabilityn förändras, vad mer påverkas?" Det är arkitektoniskt tänkande.
+
+Arkitekturen skiljer sig också från design och implementering. Arkitektur fastställer den grundläggande organisationen, relationerna, principerna och begränsningarna. Design tar fram mer detaljerade lösningar inom de ramar som arkitekturen sätter, och implementering förverkligar designen i en driftsmiljö. Skillnaderna är inte absoluta, men de motsvarar olika nivåer av beslutsfattande och abstraktion. En arkitektur behöver därför inte beskriva varje implementeringsdetalj. Abstraktion döljer de irrelevanta detaljerna, så att en fråga kan förstås på en lämplig nivå.
+
+Problemet med att bara räkna upp komponenter är att beroendena inte syns. Då går det inte att bedöma vad mer som påverkas när något förändras, till exempel vilka applikationer som stödjer en kritisk business capability. Samma sak gäller arkitekturdomänerna. Om en business capability stöds dåligt av flera fragmenterade applikationer är det en fråga om relationen mellan Business och Application Architecture, och den syns inte i en lista.
+
+Effekten av att förstå relationerna är att arkitekten kan bedöma konsekvenserna av en förändring. Det är just därför arkitektur finns: för att möjliggöra förändring med ett syfte.`,
+    tackning: {
+      "ea-e2-x":
+        "Komponenter förklarar inte i sig hur enterprisen fungerar.",
+      "ea-e2-11":
+        "Skillnaderna är inte absoluta, men de motsvarar olika nivåer av beslutsfattande och abstraktion.",
+    },
   },
   {
     id: "ea-tema-3",
     title: "EA: mer än IT, en brygga från strategi till förändring",
     fragor: ["ea-e3-10", "ea-e3-11", "ea-e12-essay-1"],
+    question: `Förklara varför Enterprise Architecture bör ses som en disciplin för att möjliggöra förändring snarare än att bara dokumentera den nuvarande enterprisen.
+
+a) Vad skiljer Enterprise Architecture från IT architecture?
+b) Hur kopplar Enterprise Architecture strategi till förändring?
+c) Vilket problem uppstår om arkitekturen bara blir dokumentation, och vilken effekt får det att använda den för beslut?`,
+    checklist: [
+      {
+        heading: "EA och IT architecture",
+        points: [
+          "EA är praktiken att förstå, utforma, kommunicera och styra enterprisens grundläggande struktur och utveckling för att nå dess mål.",
+          "IT architecture fokuserar i första hand på informationsteknikens strukturer och lösningar.",
+          "EA har en bredare avgränsning: affärsstrategi, capabilities, organisation, information, applikationer, teknik och relationerna. IT architecture kan ses som en del av den.",
+        ],
+      },
+      {
+        heading: "Från strategi till förändring",
+        points: [
+          "EA översätter strategiska mål till konsekvenser för arkitekturen.",
+          "Strategin identifierar önskade resultat; arkitekturen identifierar capabilities, information, applikationer, teknik och organisationsförändringar som krävs.",
+          "Lärarens exempel: den enklaste banken för den som köper sin första bostad behöver digital bolåneutgivning.",
+        ],
+      },
+      {
+        heading: "Problem och effekt",
+        points: [
+          "Problemet: dokumentation av nuläget är användbar men räcker inte; fin dokumentation betyder inte nödvändigtvis en fungerande EA.",
+          "Effekten: EA identifierar gap, beroenden, risker och möjligheter och stödjer beslut om framtida lägen och övergångar.",
+          "I en miljö av digital transformation och ständig förändring måste arkitekturen själv utvecklas.",
+        ],
+      },
+    ],
+    outline:
+      "Inled med vad Enterprise Architecture är och hur den skiljer sig från IT architecture. Visa sedan hur den översätter strategi till förändring med bankens exempel. Avsluta med problemet om arkitekturen bara blir dokumentation och effekten av att använda den för beslut.",
+    modelAnswer: `Enterprise Architecture är praktiken att förstå, utforma, kommunicera och styra den grundläggande strukturen och utvecklingen hos en enterprise för att nå dess mål. Den ger ett strukturerat sätt att förstå enterprisen och avgöra hur den bör utvecklas.
+
+Därmed skiljer den sig från IT architecture, som i första hand fokuserar på informationsteknikens strukturer och lösningar. Enterprise Architecture har en bredare avgränsning och tar hänsyn till affärsstrategi, capabilities, organisation, information, applikationer, teknik och deras relationer. IT architecture kan därför ses som en del av det bredare Enterprise Architecture-landskapet. Den viktiga frågan är inte vilken teknik man ska köpa, utan vad enterprisen behöver få förmåga att göra och vilka förändringar som krävs för att nå målen.
+
+Enterprise Architecture översätter strategiska mål till konsekvenser för arkitekturen. Strategin identifierar önskade resultat, och arkitekturen identifierar de capabilities, strukturer, den information, de applikationer, den teknik och de organisationsförändringar som krävs för att nå dem. Om strategin är att bli den enklaste banken för den som köper sin första bostad, är digital bolåneutgivning den capability det gäller, och arkitekturen anger vad den kräver. Arkitekturen blir på så sätt en brygga mellan strategisk avsikt och implementering.
+
+Dokumentation av nuläget är användbar, eftersom den ger förståelse av befintliga capabilities, processer, information, applikationer och teknik. Problemet uppstår om arkitekturen stannar där, för då används förståelsen inte till beslut om förändring. Fin dokumentation av systemen betyder inte nödvändigtvis att organisationen har en Enterprise Architecture som fungerar.
+
+Arkitekturen blir strategiskt värdefull när förståelsen används för att fatta beslut om framtida lägen och övergångar. Effekten är att Enterprise Architecture kopplar nuvarande förhållanden till önskade resultat: den identifierar gap, beroenden, risker och möjligheter och stödjer beslut om hur enterprisen bör förändras. I en miljö som präglas av digital transformation och ständig förändring måste arkitekturen själv utvecklas i stället för att bli en statisk dokumentationsövning.`,
+    tackning: {
+      "ea-e3-10":
+        "IT architecture kan därför ses som en del av det bredare Enterprise Architecture-landskapet.",
+      "ea-e3-11":
+        "Arkitekturen blir på så sätt en brygga mellan strategisk avsikt och implementering.",
+      "ea-e12-essay-1":
+        "Arkitekturen blir strategiskt värdefull när förståelsen används för att fatta beslut om framtida lägen och övergångar.",
+    },
   },
   {
     id: "ea-tema-4",
@@ -93,11 +234,119 @@ Effekten av att hålla isär dem är att ramverken kan komplettera varandra i st
     id: "ea-tema-5",
     title: "ADM",
     fragor: ["ea-e5-11"],
+    question: `Förklara ADM:s roll i Enterprise Architecture.
+
+a) Vilken väg tar ADM, och vad ska Architecture Vision åstadkomma?
+b) Varför bör ADM inte tolkas som ett stelt vattenfall?
+c) Vilket problem uppstår om man behandlar TOGAF som organisationens arkitektur, och vilken effekt får det att anpassa ramverket?`,
+    checklist: [
+      {
+        heading: "ADM:s roll",
+        points: [
+          "Ett strukturerat tillvägagångssätt för att utveckla, kommunicera, styra och vidareutveckla Enterprise Architecture.",
+          "Syftet är att utveckla arkitekturen, inte att utveckla mjukvara.",
+          "Vägen går från arkitekturvisionen via domänarkitektur, möjligheter och migrering till Implementation Governance.",
+        ],
+      },
+      {
+        heading: "Faserna och Architecture Vision",
+        points: [
+          "Faserna börjar med Preliminary och Architecture Vision och går via domänarkitekturerna till Implementation Governance och Architecture Change Management.",
+          "Architecture Vision ska skapa en gemensam bild av den önskade riktningen och säkra lämplig uppslutning från stakeholders.",
+          "Den svarar på vad man vill uppnå, varför det spelar roll och vilken riktningen är: arkitekturen börjar med syftet, inte med tekniken.",
+        ],
+      },
+      {
+        heading: "Iteration",
+        points: [
+          "ADM ska inte behandlas som en alltför enkel, linjär vattenfallsprocess.",
+          "Arbetet anpassas efter förändrade krav, nya lärdomar och förändrade omständigheter; iteration är lärande, inte misslyckande.",
+        ],
+      },
+      {
+        heading: "Problem och effekt",
+        points: [
+          "Problemet: TOGAF är inte enterprisens arkitektur. Organisationen bestämmer själv sina mål, principer och sin target architecture.",
+          "Effekten: organisationen anpassar arkitekturpraktiken till sina förhållanden, och arbetet får struktur utan att bli stelt.",
+        ],
+      },
+    ],
+    outline:
+      "Inled med vad ADM är och vad den ska åstadkomma. Beskriv sedan ADM:s faser, vad Architecture Vision ska åstadkomma och varför ADM inte bör tolkas som ett vattenfall. Avsluta med problemet om ramverket tas för arkitekturen och effekten av att anpassa det.",
+    modelAnswer: `TOGAF ger vägledning och en metod för arkitekturutveckling, särskilt genom ADM, Architecture Development Method. ADM tillhandahåller ett strukturerat tillvägagångssätt för att utveckla, kommunicera, styra och vidareutveckla Enterprise Architecture. Dess huvudsakliga syfte är alltså att utveckla arkitekturen, inte att utveckla mjukvara.
+
+I en förenklad bild omfattar ADM Preliminary, Architecture Vision, Business Architecture, Information Systems Architectures, Technology Architecture, Opportunities and Solutions, Migration Planning, Implementation Governance och Architecture Change Management. Den hjälper alltså arkitekten att gå från förståelsen av arkitekturvisionen via domänarkitektur, möjligheter och migrering till Implementation Governance. Architecture Vision ska skapa en gemensam övergripande bild av den önskade arkitektoniska riktningen och säkra lämplig uppslutning från stakeholders. Den svarar på vad man vill uppnå, varför det spelar roll och vilken riktningen är, så arkitekturen börjar med syftet, inte med tekniken.
+
+ADM ska ändå inte behandlas som en alltför enkel, linjär vattenfallsprocess. Den tillåter iteration och anpassning, eftersom krav och omständigheter förändras och man under arbetet lär sig mer om problemet, enterprisen och lösningen. Då kan tidigare antaganden behöva ses över. Iteration är inte ett misslyckande, utan lärande.
+
+Problemet uppstår om man tror att ramverket är arkitekturen, till exempel att TOGAF definierar exakt den arkitektur som organisationen bör införa. TOGAF hjälper till att ta fram arkitektur, men organisationen måste själv bestämma sina mål, sina principer och sin target architecture. Två organisationer kan båda använda TOGAF och ändå ha helt olika arkitekturer.
+
+Organisationer skiljer sig åt i storlek, governance, regelverk, arkitekturmognad, kultur, affärsmodell och förändringsbehov. Ett ramverk ger vägledning, men organisationen måste anpassa arkitekturpraktiken till sina förhållanden. Effekten är att arkitekturarbetet får struktur utan att bli stelt, och att arkitekturen utgår från organisationens egna mål i stället för från ramverket.`,
+    tackning: {
+      "ea-e5-11":
+        "ADM tillhandahåller ett strukturerat tillvägagångssätt för att utveckla, kommunicera, styra och vidareutveckla Enterprise Architecture.",
+    },
   },
   {
     id: "ea-tema-6",
     title: "Relationer, domäner och trade-offs",
     fragor: ["ea-e6-12", "ea-e6-13", "ea-e12-essay-5"],
+    question: `"Enterprise Architecture handlar om relationer och trade-offs." Diskutera.
+
+a) Varför är arkitektoniska relationer ofta viktigare än enskilda arkitektoniska komponenter?
+b) Varför är det farligt att utforma arkitekturdomäner oberoende av varandra?
+c) Vilket problem uppstår om trade-offs inte görs synliga, och vilken effekt får det att göra dem explicita?`,
+    checklist: [
+      {
+        heading: "Relationer",
+        points: [
+          "EA handlar om relationerna mellan mål, capabilities, processer, information, applikationer, teknik, människor och organisationsstrukturer.",
+          "Relationer visar beroenden, effekter och konsekvenser av förändring.",
+          "En business capability beror på processer, information, applikationer och teknik, så arkitekten kan bedöma hur en förändring sprider sig.",
+        ],
+      },
+      {
+        heading: "Domänerna",
+        points: [
+          "Business, Data, Application och Technology Architecture är inte oberoende silor; de är användbara just för att relationerna kan analyseras.",
+          "Ett problem kan ligga i relationen mellan två domäner, som hur väl applikationerna stödjer en business capability.",
+          "Oberoende domäner kan ge inkonsekvenser, dubblerade capabilities och lösningar som inte stödjer verksamhetens mål.",
+        ],
+      },
+      {
+        heading: "Trade-offs",
+        points: [
+          "Det finns nästan aldrig en perfekt arkitektur; besluten har sällan bara fördelar.",
+          "Standardisering kan ge effektivitet men mindre flexibilitet, säkerhet kan ge friktion, centralisering kontroll men mindre lokal autonomi.",
+        ],
+      },
+      {
+        heading: "Problem och effekt",
+        points: [
+          "Problemet: val görs utan att det syns vad som vinns och förloras, och ett beslut kan medföra kostnader eller begränsningar på andra håll.",
+          "Effekten: arkitekten hjälper stakeholders att förstå relationerna och göra trade-offs explicita, anpassade efter enterprisens mål.",
+        ],
+      },
+    ],
+    outline:
+      "Inled med att Enterprise Architecture handlar om relationer och trade-offs. Visa sedan varför relationerna och domänernas beroenden spelar roll, och ge lärarens exempel på trade-offs. Avsluta med problemet när trade-offs inte syns och effekten av att göra dem explicita.",
+    modelAnswer: `Enterprise Architecture handlar inte endast om enskilda komponenter utan om relationerna mellan verksamhetens mål, capabilities, processer, information, applikationer, teknik, människor och organisationsstrukturer. Den handlar också om trade-offs.
+
+Relationerna är ofta viktigare än de enskilda komponenterna, eftersom de visar beroenden, effekter och konsekvenser av förändring. Om arkitekten förstår att en business capability beror på vissa processer, viss information, vissa applikationer och viss teknik, går det att bedöma hur en förändring sprider sig genom enterprisen. En förändring i ett element kan alltså påverka många andra.
+
+Samma sak gäller domänerna. Business, Data, Application och Technology Architecture är inte oberoende silor; de är användbara just för att deras relationer kan analyseras. En verksamhetsförändring kan kräva förändringar i information, applikationer och teknik, och ett problem kan ligga i relationen mellan två domäner, till exempel i hur väl applikationerna stödjer en business capability. Det syns inte om man tittar på en domän i taget. Att utforma domänerna oberoende av varandra kan därför skapa inkonsekvenser, dubblerade capabilities och lösningar som inte stödjer verksamhetens mål.
+
+Arkitektoniska beslut innebär också trade-offs, och det finns nästan aldrig en perfekt arkitektur. Ökad standardisering kan förbättra effektiviteten men minska flexibiliteten. Ökad säkerhet kan medföra friktion, och centralisering kan förbättra kontrollen men minska den lokala autonomin. Problemet uppstår om sådana val görs utan att det syns vad som vinns och vad som förloras. Eftersom delarna hänger ihop kan ett beslut då medföra kostnader eller begränsningar på andra håll som ingen har vägt mot enterprisens mål.
+
+Effekten av att göra trade-offs explicita är att arkitekten kan hjälpa stakeholders att förstå hur delarna hänger ihop och att anpassa valen efter enterprisens mål. Då kan organisationen förändras medvetet.`,
+    tackning: {
+      "ea-e6-12":
+        "Relationerna är ofta viktigare än de enskilda komponenterna, eftersom de visar beroenden, effekter och konsekvenser av förändring.",
+      "ea-e6-13":
+        "Att utforma domänerna oberoende av varandra kan därför skapa inkonsekvenser, dubblerade capabilities och lösningar som inte stödjer verksamhetens mål.",
+      "ea-e12-essay-5":
+        "Arkitektoniska beslut innebär också trade-offs, och det finns nästan aldrig en perfekt arkitektur.",
+    },
   },
   {
     id: "ea-tema-7",
@@ -231,6 +480,61 @@ Effekten är att governance kan ge både enhetlighet och autonomi. Teamen kan r�
     id: "ea-tema-9",
     title: "Digital transformation",
     fragor: ["ea-e10-9", "ea-e10-10", "ea-e12-scenario-5"],
+    question: `Varför bör digital transformation behandlas som en concern för Enterprise Architecture?
+
+a) Förklara skillnaden mellan digitization, digitalization och digital transformation.
+b) En detaljhandlare har lanserat en mobilapp och säger: "Vi har slutfört vår digital transformation." Vad bör arkitekten undersöka?
+c) Vilket problem uppstår om transformationen behandlas som en teknikfråga, och vilken effekt får ett arkitektoniskt perspektiv?`,
+    checklist: [
+      {
+        heading: "Tre begrepp",
+        points: [
+          "Digitization: analog information blir digital, till exempel när pappersdokument skannas.",
+          "Digitalization: digital teknik förbättrar befintliga processer, till exempel ett automatiserat befintligt godkännandeflöde.",
+          "Digital transformation: grundläggande förändring i hur enterprisen skapar och levererar värde.",
+        ],
+      },
+      {
+        heading: "Varför det är en concern för EA",
+        points: [
+          "Transformationen kan påverka affärsmodeller, capabilities, value streams, organisationsstrukturer, information, applikationer och teknik.",
+          "Förändringarna hänger ihop och kräver ett perspektiv över hela enterprisen, inte ett isolerat teknikinitiativ.",
+        ],
+      },
+      {
+        heading: "Mobilappen",
+        points: [
+          "Fråga om appen har förändrat hur värde skapas och levereras: kundupplevelse, operating model, affärsmodell, processer.",
+          "Att bara lägga till en digital kanal kan vara digitalization snarare än bredare digital transformation.",
+        ],
+      },
+      {
+        heading: "Problem och effekt",
+        points: [
+          "Problemet: teknik ensam utgör inte transformation, och organisationen kan tro att den är klar fast värdet skapas som förut.",
+          "Effekten: initiativet drivs av affärsresultat, och capability-baserad analys hjälper till att prioritera investeringar efter affärsvärde.",
+        ],
+      },
+    ],
+    outline:
+      "Inled med de tre begreppen och lärarens exempel. Förklara sedan varför transformationen är en concern för Enterprise Architecture och pröva mobilappen mot det. Avsluta med problemet när transformationen ses som teknik och effekten av ett arkitektoniskt perspektiv.",
+    modelAnswer: `Digitization omvandlar analog information till digital form, till exempel när pappersdokument skannas. Digitalization använder digital teknik för att förbättra befintliga processer eller aktiviteter, till exempel genom att automatisera ett befintligt godkännandeflöde. Digital transformation är bredare och innebär grundläggande förändringar i hur enterprisen skapar och levererar värde.
+
+Digital transformation kan påverka affärsmodeller, capabilities, value streams, organisationsstrukturer, information, applikationer och teknik. Ofta förändras capabilities eller skapas nya, och transformationen kan ge digitala ekosystem som sträcker sig utanför organisationens gränser. Eftersom dessa förändringar hänger ihop kräver de ett arkitektoniskt perspektiv över hela enterprisen snarare än ett isolerat teknikinitiativ. Därför är digital transformation en concern för Enterprise Architecture.
+
+När en detaljhandlare säger att den har slutfört sin digital transformation genom att lansera en mobilapp, bör arkitekten fråga om appen har förändrat hur enterprisen skapar och levererar värde. Har kundupplevelsen, operating modeln eller affärsmodellen förändrats? Har nya produkter, tjänster eller digitala ekosystem skapats, och är processerna i grunden annorlunda? Att bara lägga till en digital kanal kan vara digitalization snarare än bredare digital transformation.
+
+Problemet uppstår om transformationen behandlas som en teknikfråga. Teknik ensam utgör inte transformation: tekniken är en viktig enabler, men den är inte transformationen själv. En molnmigrering är därför inte automatiskt digital transformation. Organisationen kan då tro att den är klar, som detaljhandlaren med mobilappen, fast sättet att skapa och leverera värde inte har förändrats.
+
+Effekten av ett arkitektoniskt perspektiv är att initiativet drivs av ett tydligt förstått affärsresultat och strategiskt mål, inte av teknikmode eller leverantörers marknadsföring. Capability-baserad analys blir då en brygga mellan strategisk avsikt och arkitektonisk implementering och hjälper organisationen att prioritera investeringar efter affärsvärde snarare än att bara välja tekniker.`,
+    tackning: {
+      "ea-e10-9":
+        "Digital transformation är bredare och innebär grundläggande förändringar i hur enterprisen skapar och levererar värde.",
+      "ea-e10-10":
+        "Eftersom dessa förändringar hänger ihop kräver de ett arkitektoniskt perspektiv över hela enterprisen snarare än ett isolerat teknikinitiativ.",
+      "ea-e12-scenario-5":
+        "Att bara lägga till en digital kanal kan vara digitalization snarare än bredare digital transformation.",
+    },
   },
   {
     id: "ea-tema-10",
@@ -243,11 +547,133 @@ Effekten är att governance kan ge både enhetlighet och autonomi. Teamen kan r�
       "ea-e12-scenario-2",
       "ea-e12-slututmaning",
     ],
+    question: `Ett företag säger: "Vårt företag behöver ett nytt CRM eftersom våra konkurrenter har bättre CRM-system." Du har utsetts till Enterprise Architect. Vad gör du?
+
+a) Vad är ett arkitektoniskt antimönster här, och vad bör arkitekten fråga innan teknik väljs?
+b) VD:n säger: "Vårt problem är att vi har för många applikationer." Vilka frågor ställer du innan du accepterar diagnosen?
+c) Vilket problem uppstår om man börjar i tekniken, och vilken effekt får det att börja i syfte och resultat?`,
+    checklist: [
+      {
+        heading: "Börja i problemet",
+        points: [
+          "Svara inte \"låt oss utvärdera CRM-produkter\"; fråga vilket affärsproblem och vilket strategiskt mål som driver önskemålet.",
+          "Antimönstret: att välja en teknikplattform innan mål, capabilities och arkitektoniska begränsningar är fastställda.",
+          "Fastställ först strategiska mål, kundresultat, capabilities, begränsningar, stakeholders concerns och principer.",
+        ],
+      },
+      {
+        heading: "Frågorna arkitekten ställer",
+        points: [
+          "Kundresan i dag, capability gaps och vilken information och vilka processer som berörs.",
+          "Alternativ, trade-offs, en realistisk övergång och hur förändringen ska styras.",
+        ],
+      },
+      {
+        heading: "Lärarens andra fall",
+        points: [
+          "AI-strategin: förstå vilka affärsmål och problem AI ska lösa innan specifika AI-tekniker utvärderas.",
+          "För många applikationer: antalet är inte i sig ett arkitektoniskt problem. Undersök capabilities, avsiktlig dubblering, kostnader, risker, affärsresultat och strategiskt mål.",
+        ],
+      },
+      {
+        heading: "Problem och effekt",
+        points: [
+          "Problemet: man hoppar från ett observerat symptom till en teknisk lösning, som inte nödvändigtvis löser det verkliga problemet.",
+          "Effekten: lösningen kopplas till syfte och resultat. Arkitektens test: varför, vad, vem, hur och vilka konsekvenserna blir.",
+        ],
+      },
+    ],
+    outline:
+      "Inled med hur arkitekten svarar på CRM-påståendet. Visa sedan antimönstret, frågorna före teknikvalet och fallet med för många applikationer. Avsluta med problemet när man börjar i tekniken och effekten av att börja i syfte och resultat, med AI-fallet som exempel.",
+    modelAnswer: `En Enterprise Architect bör inte genast svara: "Låt oss utvärdera CRM-produkter." Arkitekten börjar i stället i problemet och frågar vilket affärsproblem som ska lösas och vilket strategiskt mål som driver önskemålet.
+
+Att välja en teknikplattform innan verksamhetens mål, de capabilities som krävs och de arkitektoniska begränsningarna har fastställts är ett arkitektoniskt antimönster. Innan tekniken utvärderas bör arkitekten därför fastställa de strategiska målen, önskade kundresultat, de capabilities som krävs, nuvarande begränsningar, stakeholders concerns och arkitektoniska principer. För CRM-frågan betyder det att fråga hur kundresan ser ut i dag, var capability gaps finns, vilken information och vilka processer som berörs, vilka alternativ och trade-offs som finns, vilken övergång som är realistisk och hur förändringen ska styras.
+
+Samma hållning gäller när ledningen säger att problemet är för många applikationer, eller vill minska dem från 600 till 300. Antalet applikationer är inte i sig ett arkitektoniskt problem. Innan diagnosen accepteras undersöker arkitekten vilka capabilities applikationerna stödjer, om dubbleringen är avsiktlig, vilken information som dubbleras, vilka kostnader och risker som finns, vilka affärsresultat som påverkas och vilket strategiskt mål som ligger bakom. Arkitektur bör hantera problem och resultat, inte godtyckliga siffror.
+
+Problemet med att börja i tekniken är att man hoppar från ett observerat symptom till en teknisk lösning. Ett nytt system eller färre applikationer löser då inte nödvändigtvis det som faktiskt påverkar affärsresultatet.
+
+Effekten av att börja i syfte och resultat är att lösningen kopplas till det enterprisen behöver kunna göra. Det gäller också när en VD kräver en AI-strategi för att konkurrenterna använder AI: arkitekten bör först förstå vilka affärsmål och problem AI förväntas lösa. Först när affärsbehovet har fastställts bör specifika AI-tekniker utvärderas. Arkitektens test sammanfattar hållningen: varför, vad, vem, hur och vilka konsekvenserna blir.`,
+    tackning: {
+      "ea-e9-tankande":
+        "Innan diagnosen accepteras undersöker arkitekten vilka capabilities applikationerna stödjer, om dubbleringen är avsiktlig, vilken information som dubbleras, vilka kostnader och risker som finns, vilka affärsresultat som påverkas och vilket strategiskt mål som ligger bakom.",
+      "ea-e11-7":
+        "Att välja en teknikplattform innan verksamhetens mål, de capabilities som krävs och de arkitektoniska begränsningarna har fastställts är ett arkitektoniskt antimönster.",
+      "ea-e11-8":
+        "Innan tekniken utvärderas bör arkitekten därför fastställa de strategiska målen, önskade kundresultat, de capabilities som krävs, nuvarande begränsningar, stakeholders concerns och arkitektoniska principer.",
+      "ea-e12-scenario-1":
+        "Först när affärsbehovet har fastställts bör specifika AI-tekniker utvärderas.",
+      "ea-e12-scenario-2":
+        "Antalet applikationer är inte i sig ett arkitektoniskt problem.",
+      "ea-e12-slututmaning":
+        "Arkitekten börjar i stället i problemet och frågar vilket affärsproblem som ska lösas och vilket strategiskt mål som driver önskemålet.",
+    },
   },
   {
     id: "ea-tema-11",
     title: "Från nuläge till målbild: bankfallet",
     fragor: ["ea-e11-3", "ea-e11-8b", "ea-e11-9", "ea-e11-10", "ea-e12-scenario-4"],
+    question: `En traditionell bank har flera kunddatabaser, en 25 år gammal kärnbanksplattform, fristående digitala kanaler, långsamma releasecykler, många dubblerade applikationer och ökande konkurrens från digitala banker. VD:n säger: "Vi behöver bli en digital bank inom två år." Utveckla ett arkitektoniskt tillvägagångssätt för banken.
+
+a) Varför kan det vara riskabelt att genast ersätta hela kärnbankssystemet, och varför är transition architectures viktiga?
+b) Hur skulle Agile kunna påverka transformationen?
+c) Ledningen säger: "Systemet är gammalt, så det måste ersättas." Vilket problem har det resonemanget, och vilken effekt får ett evidensbaserat beslut?`,
+    checklist: [
+      {
+        heading: "Börja i målet och nuläget",
+        points: [
+          "VD:ns mål är strategiskt: klargör strategiska mål och önskade kundresultat först.",
+          "Bedöm baseline: capabilities, value streams, information, applikationer och teknik.",
+          "Fallets problem: fragmenterad kundinformation, legacyberoenden, kanalsilor och långsamma releaser.",
+        ],
+      },
+      {
+        heading: "Target och transition",
+        points: [
+          "Target architecture ger en sammanhållen riktning med stöd av principer och governance, ingen perfekt förutsägelse.",
+          "Principen: kundinformation är en tillgång för hela enterprisen.",
+          "Transition architectures är praktiska mellanlägen medan verksamheten fortsätter och värde levereras.",
+          "Prioritera initiativ efter affärsvärde, risk och beroenden.",
+        ],
+      },
+      {
+        heading: "Big bang och Agile",
+        points: [
+          "En big bang-ersättning kan ge stora operativa, ekonomiska och affärsmässiga risker, eftersom kärnsystemet stödjer kritiska capabilities.",
+          "Agile: inkrementella produkter och capabilities, arkitekturen utvecklas med leveransen, och värde levereras tidigare.",
+        ],
+      },
+      {
+        heading: "Problem och effekt",
+        points: [
+          "Problemet: ålder ensam är inget tillräckligt skäl, och etiketten \"legacy\" ska inte styra beslutet.",
+          "Effekten: ett evidensbaserat beslut som kan bli ersättning, inkapsling, modernisering, avveckling eller fortsatt användning.",
+        ],
+      },
+    ],
+    outline:
+      "Inled med fallet och att målet är strategiskt. Beskriv sedan vägen från baseline via transition architectures till target, varför en big bang är riskabel och hur Agile påverkar. Avsluta med problemet med att ersätta system för att de är gamla och effekten av evidensbaserade beslut.",
+    modelAnswer: `Banken har fragmenterad kundinformation i flera databaser, en gammal kärnbanksplattform, kanalsilor och långsamma releaser. VD:ns mål att bli en digital bank inom två år är strategiskt, så arkitekten bör börja i målet och inte i tekniken.
+
+Banken bör först klargöra sina strategiska mål och önskade kundresultat. Den bör sedan bedöma baseline, alltså de relevanta delarna av nuläget: capabilities, value streams, information, applikationer och teknik. En target architecture bör fastställa den önskade riktningen, med stöd av arkitektoniska principer och governance, till exempel principen att kundinformation är en tillgång för hela enterprisen, i stället för att varje avdelning äger sin egen kunddefinition. Target architecture är ingen perfekt förutsägelse av varje framtida detalj.
+
+I stället för att ersätta alla legacysystem samtidigt bör banken identifiera transition architectures och prioritera initiativ efter affärsvärde, risk och beroenden. Kärnsystemet kan stödja kritiska business capabilities och innehålla komplexa beroenden, så en "big bang"-ersättning skulle kunna skapa stora operativa, ekonomiska och affärsmässiga risker. Transition architectures ger praktiska mellanlägen som gör att banken kan gå från baseline mot target samtidigt som verksamheten fortsätter och värde levereras.
+
+Agile-leverans kan användas för att utveckla capabilities inkrementellt. Transformationen kan organiseras kring inkrementella produkter och capabilities, där arkitekturen utvecklas parallellt med leveransen genom feedback och lärande. Banken kan då lära sig, leverera värde tidigare och justera arkitektoniska beslut allteftersom ny information blir tillgänglig.
+
+Ålder ensam är inte ett tillräckligt arkitektoniskt skäl att ersätta kärnsystemet. Om banken ersätter det bara för att det är gammalt styr etiketten "legacy" beslutet. Ett tekniskt gammalt system kan fortfarande vara värdefullt och stabilt, och ett nyare system kan skapa betydande arkitektonisk risk. Effekten av att i stället bedöma affärsvärde, verksamhetskritikalitet, teknisk hälsa, säkerhet, kostnad och strategisk riktning är ett evidensbaserat beslut, som beroende på omständigheterna kan bli ersättning, inkapsling, modernisering, avveckling eller fortsatt användning.`,
+    tackning: {
+      "ea-e11-3":
+        "Kärnsystemet kan stödja kritiska business capabilities och innehålla komplexa beroenden, så en \"big bang\"-ersättning skulle kunna skapa stora operativa, ekonomiska och affärsmässiga risker.",
+      "ea-e11-8b":
+        "Transition architectures ger praktiska mellanlägen som gör att banken kan gå från baseline mot target samtidigt som verksamheten fortsätter och värde levereras.",
+      "ea-e11-9":
+        "I stället för att ersätta alla legacysystem samtidigt bör banken identifiera transition architectures och prioritera initiativ efter affärsvärde, risk och beroenden.",
+      "ea-e11-10":
+        "Transformationen kan organiseras kring inkrementella produkter och capabilities, där arkitekturen utvecklas parallellt med leveransen genom feedback och lärande.",
+      "ea-e12-scenario-4":
+        "Ett tekniskt gammalt system kan fortfarande vara värdefullt och stabilt, och ett nyare system kan skapa betydande arkitektonisk risk.",
+    },
   },
 ];
 
