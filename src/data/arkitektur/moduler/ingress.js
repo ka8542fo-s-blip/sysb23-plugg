@@ -36,7 +36,7 @@ export const INGRESS = {
   },
   kap5: {
     block: "m5-t3",
-    sv: "TOGAF-standarden tillhandahåller en samlad vägledning och ett tillvägagångssätt för Enterprise Architecture.",
+    sv: "TOGAF-standarden ger en samlad vägledning och ett tillvägagångssätt för Enterprise Architecture.",
     en: "The TOGAF Standard provides a body of guidance and an approach for Enterprise Architecture.",
   },
   kap6: {

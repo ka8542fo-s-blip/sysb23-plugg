@@ -19,20 +19,20 @@ export default {
       id: "m7-t1",
       sv: `## Lärandemål
 
-Studenterna ska förstå:
+Efter den här modulen ska du förstå:
 
 - Business capabilities.
 - Verksamhetsprocesser.
 - Value streams.
-- Deras relation till strategi.
+- Hur de hänger ihop med strategi.
 - Business Architecture.
 - Capability-based planning.
 
-**Capability** – Vad organisationen har förmåga att göra.
+**Capability** – vad organisationen har förmåga att göra.
 
-**Process** – Hur organisationen utför aktiviteter.
+**Process** – hur organisationen utför aktiviteter.
 
-**Value stream** – Hur värde skapas och levereras till en stakeholder.`,
+**Value stream** – hur värde skapas och levereras till en stakeholder.`,
       en: `## Learning objectives
 
 Students should understand:
@@ -55,13 +55,11 @@ Students should understand:
       id: "m7-t2",
       sv: `## Exempel
 
-Strategi: "Bli den enklaste banken för den som köper sin första bostad."
+- **Strategi:** "Bli den enklaste banken för den som köper sin första bostad."
+- **Capability:** Digital bolåneutgivning
+- **Value stream:** Upptäcka → Ansöka → Verifiera → Godkänna → Slutföra
 
-Capability: Digital bolåneutgivning
-
-Value stream: Upptäcka → Ansöka → Verifiera → Godkänna → Slutföra
-
-Processer implementerar delar av value streamen.`,
+Strategin pekar ut en capability som banken måste ha. Value streamen visar hur värdet skapas och levereras till kunden. Processer implementerar delar av value streamen.`,
       en: `## Example
 
 Strategy: "Become the easiest bank for first-time home buyers."
@@ -77,13 +75,31 @@ Processes implement parts of the value stream.`,
       id: "m7-t3",
       sv: `## Kärnförklaring
 
-En capability beskriver: Vad organisationen har förmåga att göra.
+En capability beskriver vad organisationen har förmåga att göra. En process beskriver hur arbetet utförs: den är en sekvens eller uppsättning aktiviteter som används för att utföra arbete. En value stream beskriver hur värde skapas och levereras till en stakeholder. Capabilities, processer och value streams hör till Business Architecture.
 
-En process beskriver: Hur arbetet utförs.
+Capabilities är särskilt användbara eftersom de kan förbli relativt stabila även när organisationsstrukturer och processer förändras.
 
-En value stream beskriver: Hur värde skapas och levereras till en stakeholder.
+### Capability och process är inte samma sak
 
-Capabilities är särskilt användbara eftersom de kan förbli relativt stabila även när organisationsstrukturer och processer förändras.`,
+En capability uttrycker vad organisationen kan göra. Den beskriver en förmåga som organisationen har eller behöver ha, men den föreskriver inte hur capabilityn implementeras. Sekvensen av aktiviteter som används för att utföra arbetet är i första hand ett processperspektiv. Därför går begreppen inte att byta ut mot varandra. Capabilities ger ofta en relativt stabil bild av organisationens förmåga, medan processer beskriver de sekvenser av aktiviteter som används för att utföra arbete.
+
+En capability är en förmåga på verksamhetsnivå, som bolåneutgivning i bankens exempel. Ett enskilt steg, som att kunden klickar på en knapp, beskrivs snarare som en del av en process eller ett steg i en value stream. Servrar, databaser och ett REST API är teknik som kan stödja en capability men inte är den.
+
+### En brygga mellan strategi och arkitektur
+
+Strategin fastställer önskade resultat och prioriteringar. Av dem följer capabilities som enterprisen måste ha eller stärka. Capabilities översätter alltså strategisk avsikt till de förmågor som enterprisen behöver för att nå sina mål, och som organisationen måste utveckla, upprätthålla eller transformera.
+
+Capabilities kan relateras till processer, människor, information och data, applikationer och teknik. När strategins prioriteringar är översatta till capabilities kan arkitekten därför analysera vilka människor, processer, vilken information, vilka applikationer och vilken teknik som behövs för att stödja dem. På så sätt kan strategiska mål spåras till arkitektur- och investeringsbeslut.
+
+Capabilities blir därför en relativt stabil brygga mellan strategisk avsikt och implementering. De kopplar strategin till de organisationsstrukturer och den organisatoriska förändring som krävs för att nå den. Capability-based planning bygger på detta: i stället för att planera bara utifrån avdelningar eller applikationer kan enterprisen planera utifrån vilka capabilities som måste förändras för att nå det strategiska resultatet.
+
+### När organisationen förändras
+
+Organisationsstrukturer kan förändras ofta genom omorganisationer, sammanslagningar och omstruktureringar. Avdelningarna kan förändras medan de underliggande förmågor som enterprisen behöver finns kvar. Ett exempel är ett företag som omorganiserar sin marknadsavdelning tre gånger på fem år men hela tiden behöver kundinsikt, kampanjhantering och marknadsanalys. Organisationen kan ändra vem som utför en capability utan att capabilityn i sig försvinner.
+
+Därför är capability maps användbara när en organisation omorganiseras. Capability mapping låter arkitekten fokusera på vad organisationen måste kunna göra i stället för på tillfälliga organisationsstrukturer. Det hjälper också till att identifiera capability gaps och prioritera transformation oberoende av nuvarande organisatoriska gränser.
+
+En capability map är en arkitekturrepresentation. Den ger ett viktigt verksamhetsperspektiv, men den beskriver inte hela enterprisen och är inte i sig en fullständig Enterprise Architecture.`,
       en: `## Core explanation
 
 A capability describes: What the organization is capable of doing.
@@ -318,6 +334,25 @@ Capabilities are particularly useful because they can remain relatively stable e
       question: "En capability map är i sig en fullständig Enterprise Architecture.",
       explanation:
         "En capability map är en arkitekturrepresentation. Den ger ett viktigt verksamhetsperspektiv men beskriver inte hela enterprisen.",
+    },
+    // Tillagt textblock (omskrivningen 23 nov): fråga 20–22 och 24 och 27
+    // står i modul 7 (Kaspers beslut) men gäller modul 8:s ämne, som
+    // modulens egen text inte rör. Bara svenska; inget original att visa.
+    // Källor: modul 8:s text och frågor, modellsvaren till 24 och 27, och
+    // Word-dokumentets avsnitt om trade-offs.
+    {
+      kind: "text",
+      id: "m7-tillagg-1",
+      tillagd: true,
+      sv: `## Principer, governance och trade-offs
+
+En architecture principle är en generell regel eller riktlinje som vägleder arkitekturbeslut. Ett exempel är principen "Information är en tillgång för hela enterprisen". Den kan påverka beslut om dataägarskap, integration, datakvalitet, säkerhet och applikationsdesign, och den ger en enhetlig riktning för beslut som rör enterprisens information.
+
+Governance svarar på frågan: vem har befogenhet att fatta vilka beslut, under vilka begränsningar? Governance betyder inte nödvändigtvis att varje arkitekturbeslut måste godkännas centralt. Effektiv governance fastställer tydliga principer, decision rights och gränser och ger samtidigt team lämplig autonomi. I stället för att kräva centralt godkännande av varje beslut kan governance rikta uppmärksamheten mot betydande risker, beroenden tvärs över enterprisen och strategiska beslut.
+
+Principerna kan då fungera som guardrails. Team kan fatta många beslut själva så länge de håller sig inom de överenskomna gränserna, och därför kan de arbeta snabbt. Governance kan alltså möjliggöra agilitet i stället för att begränsa den.
+
+Det finns nästan aldrig en perfekt arkitektur. Arkitektur innebär ofta trade-offs snarare än perfekta lösningar. Standardisering kan till exempel ge effektivitet men mindre flexibilitet, och centralisering kan ge kontroll men långsammare beslut. Arkitektens uppgift är att göra sådana trade-offs tydliga och anpassa dem till enterprisens mål.`,
     },
     { kind: "text", id: "m7-t9", sv: "## Sant eller falskt", en: "## True or False" },
     {

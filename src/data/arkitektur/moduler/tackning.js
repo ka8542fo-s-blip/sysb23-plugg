@@ -497,6 +497,555 @@ export const TACKNING = {
       kalla: "modul 4: modellsvar fråga 11",
     },
   ],
+
+  // --- Modul 5 -------------------------------------------------------------
+  "ea-m5-1": [
+    {
+      block: "m5-t3",
+      text: "ADM:s huvudsakliga syfte är alltså att utveckla och vidareutveckla Enterprise Architecture, inte att utveckla mjukvara.",
+      kalla: "modul 5: kärnbudskap och rätt alternativ fråga 1",
+    },
+  ],
+  "ea-m5-1b": [
+    {
+      block: "m5-t3",
+      text: "ADM:s huvudsakliga syfte är alltså att utveckla och vidareutveckla Enterprise Architecture, inte att utveckla mjukvara.",
+      kalla: "modul 5: rätt alternativ i den andra frågan 1",
+    },
+  ],
+  "ea-m5-2": [
+    { block: "m5-t3", text: "Den stödjer iteration och anpassning.", kalla: "modul 5: rätt alternativ fråga 2, modellsvar fråga 11" },
+  ],
+  "ea-m5-3": [
+    {
+      block: "m5-t3",
+      text: "Architecture Vision ska skapa en gemensam övergripande bild av den önskade arkitektoniska riktningen och säkra lämplig uppslutning (commitment) från stakeholders.",
+      kalla: "modul 5: rätt alternativ fråga 3",
+    },
+  ],
+  "ea-m5-4": [
+    {
+      block: "m5-t3",
+      text: "Arkitekturarbete är iterativt och anpassas efter förändrade krav, nya lärdomar och förändrade omständigheter.",
+      kalla: "modul 5: rätt alternativ fråga 4",
+    },
+  ],
+  "ea-m5-5": [
+    {
+      block: "m5-t3",
+      text: "Ett ramverk ger vägledning, men organisationen måste anpassa arkitekturpraktiken till sina förhållanden.",
+      kalla: "modul 5: modellsvar fråga 10",
+    },
+  ],
+  "ea-m5-6": [
+    { block: "m5-t3", text: "ADM ska inte behandlas som en alltför enkel, linjär vattenfallsprocess.", kalla: "modul 5: kärnbudskap" },
+  ],
+  "ea-m5-7": [
+    { block: "m5-t3", text: "ADM ska inte behandlas som en alltför enkel, linjär vattenfallsprocess.", kalla: "modul 5: kärnbudskap" },
+    { block: "m5-t3", text: "Den stödjer iteration och anpassning.", kalla: "modul 5: rätt alternativ fråga 2" },
+  ],
+  "ea-m5-8": [
+    { block: "m5-t3", text: "Arkitekturarbetet kan därför behöva itereras.", kalla: "modul 5: rätt alternativ fråga 4; Word-dokumentet, modul 5 bild 31" },
+  ],
+  "ea-m5-9": [
+    {
+      block: "m5-t3",
+      text: "TOGAF hjälper oss att ta fram arkitektur, men TOGAF är inte enterprisens arkitektur.",
+      kalla: "modul 5: lärandemålen; Word-dokumentet, modul 5 bild 2",
+    },
+    {
+      block: "m5-t3",
+      text: "Organisationen måste själv bestämma sina mål, sina principer, sin arkitektur och sitt önskade framtida läge, sin target architecture.",
+      kalla: "Word-dokumentet, modul 5 bild 2 och 19",
+    },
+  ],
+  "ea-e5-10": [
+    {
+      block: "m5-t3",
+      text: "Organisationer skiljer sig åt i storlek, governance, regelverk, arkitekturmognad, kultur, affärsmodell och förändringsbehov.",
+      kalla: "modul 5: modellsvar fråga 10",
+    },
+    {
+      block: "m5-t3",
+      text: "Ett ramverk ger vägledning, men organisationen måste anpassa arkitekturpraktiken till sina förhållanden.",
+      kalla: "modul 5: modellsvar fråga 10",
+    },
+  ],
+  "ea-e5-11": [
+    {
+      block: "m5-t3",
+      text: "ADM är ett strukturerat tillvägagångssätt för att utveckla, kommunicera, styra och vidareutveckla Enterprise Architecture.",
+      kalla: "modul 5: modellsvar fråga 11",
+    },
+    {
+      block: "m5-t3",
+      text: "Den hjälper arkitekten att gå från att förstå arkitekturvisionen via domänarkitektur, möjligheter och migrering till Implementation Governance.",
+      kalla: "modul 5: modellsvar fråga 11",
+    },
+    { block: "m5-t3", text: "Den stödjer iteration och anpassning.", kalla: "modul 5: modellsvar fråga 11" },
+  ],
+  "ea-e5-12": [
+    {
+      block: "m5-t3",
+      text: "Zachman ger i första hand en ontology och en klassificeringsstruktur för att organisera arkitekturbeskrivningar.",
+      kalla: "modul 5: modellsvar fråga 12",
+    },
+    { block: "m5-t3", text: "Den hjälper till att besvara vilka slags beskrivningar som behövs.", kalla: "modul 5: modellsvar fråga 12" },
+    {
+      block: "m5-t3",
+      text: "TOGAF ger vägledning och en metod för arkitekturutveckling, särskilt genom ADM, alltså ett strukturerat tillvägagångssätt för att utveckla och förvalta arkitektur.",
+      kalla: "modul 5: modellsvar fråga 12",
+    },
+  ],
+
+  // --- Modul 6 -------------------------------------------------------------
+  "ea-m6-1": [
+    {
+      block: "m6-t2",
+      text: "Business (Business Architecture) – capabilities, processer, organisation, värde och verksamhetstjänster.",
+      kalla: "modul 6: fyra välbekanta domäner",
+    },
+  ],
+  "ea-m6-2": [
+    {
+      block: "m6-t2",
+      text: "Data (Data Architecture) – information, datastrukturer, ägarskap, governance och flöden.",
+      kalla: "modul 6: fyra välbekanta domäner",
+    },
+  ],
+  "ea-m6-3": [
+    {
+      block: "m6-t3",
+      text: "Den är alltså en specifikation av hur en view ska konstrueras och vad den ska representera.",
+      kalla: "modul 6: rätt alternativ fråga 3, modellsvar fråga 11",
+    },
+  ],
+  "ea-m6-4": [
+    {
+      block: "m6-t3",
+      text: "Olika stakeholders har olika concerns och behöver därför olika information och olika abstraktionsnivåer.",
+      kalla: "modul 6: rätt alternativ fråga 4",
+    },
+  ],
+  "ea-m6-5": [
+    {
+      block: "m6-t3",
+      text: "Domänerna är användbara just för att deras relationer kan analyseras.",
+      kalla: "modul 6: viktig varning och rätt alternativ fråga 5",
+    },
+  ],
+  "ea-m6-6": [
+    {
+      block: "m6-t3",
+      text: "Hur väl applikationerna stödjer en business capability är till exempel en fråga om relationen mellan Business och Application Architecture.",
+      kalla: "modul 6: viktig varning och rätt alternativ fråga 6",
+    },
+  ],
+  "ea-m6-7": [
+    {
+      block: "m6-t3",
+      text: "Därför behövs flera views, och ett enda diagram räcker normalt inte för alla.",
+      kalla: "modul 6: viktig varning; Word-dokumentet, modul 6 essä 19",
+    },
+  ],
+  "ea-m6-8": [{ block: "m6-t3", text: "Dessa domäner är inte oberoende silor.", kalla: "modul 6: viktig varning" }],
+  "ea-m6-9": [
+    { block: "m6-t3", text: "En viewpoint och en view är därför inte samma sak.", kalla: "modul 6: modellsvar fråga 11" },
+  ],
+  "ea-m6-10": [
+    {
+      block: "m6-t3",
+      text: "Att utforma domänerna oberoende av varandra är därför farligt.",
+      kalla: "modul 6: viktig varning, modellsvar fråga 13",
+    },
+  ],
+  "ea-e6-11": [
+    {
+      block: "m6-t3",
+      text: "En viewpoint fastställer hur en view bör hantera en viss concern hos stakeholders.",
+      kalla: "modul 6: viktig varning, modellsvar fråga 11",
+    },
+    {
+      block: "m6-t3",
+      text: "En view är den faktiska representationen som skapas med hjälp av viewpointen.",
+      kalla: "modul 6: modellsvar fråga 11",
+    },
+  ],
+  "ea-e6-12": [
+    {
+      block: "m6-t3",
+      text: "Relationer visar beroenden, effekter och konsekvenser av förändring.",
+      kalla: "modul 6: modellsvar fråga 12",
+    },
+    {
+      block: "m6-t3",
+      text: "När arkitekten förstår att en business capability beror på vissa processer, viss information, vissa applikationer och viss teknik, går det att bedöma hur en förändring sprider sig genom enterprisen.",
+      kalla: "modul 6: modellsvar fråga 12",
+    },
+  ],
+  "ea-e6-13": [
+    {
+      block: "m6-t3",
+      text: "Domänerna hänger ihop och är beroende av varandra",
+      kalla: "modul 6: viktig varning, modellsvar fråga 13",
+    },
+    {
+      block: "m6-t3",
+      text: "En förändring i verksamheten kan därför kräva förändringar i information, applikationer och teknik.",
+      kalla: "modul 6: modellsvar fråga 13",
+    },
+    {
+      block: "m6-t3",
+      text: "Det kan skapa inkonsekvenser, dubblerade capabilities och lösningar som inte stödjer verksamhetens mål.",
+      kalla: "modul 6: modellsvar fråga 13",
+    },
+  ],
+
+  // --- Modul 7 -------------------------------------------------------------
+  "ea-m7-1": [
+    { block: "m7-t3", text: "En capability beskriver vad organisationen har förmåga att göra.", kalla: "modul 7: kärnförklaring" },
+  ],
+  "ea-m7-2": [
+    {
+      block: "m7-t3",
+      text: "En process beskriver hur arbetet utförs: den är en sekvens eller uppsättning aktiviteter som används för att utföra arbete.",
+      kalla: "modul 7: kärnförklaring och rätt alternativ fråga 2",
+    },
+  ],
+  "ea-m7-3": [
+    {
+      block: "m7-t3",
+      text: "Capabilities blir därför en relativt stabil brygga mellan strategisk avsikt och implementering. De kopplar strategin till de organisationsstrukturer och den organisatoriska förändring som krävs för att nå den.",
+      kalla: "modul 7: rätt alternativ fråga 3, 7 och 16",
+    },
+  ],
+  "ea-m7-4": [
+    {
+      block: "m7-t3",
+      text: "En capability är en förmåga på verksamhetsnivå, som bolåneutgivning i bankens exempel.",
+      kalla: "modul 7: exemplet och rätt alternativ fråga 17",
+    },
+    {
+      block: "m7-t3",
+      text: "Servrar, databaser och ett REST API är teknik som kan stödja en capability men inte är den.",
+      kalla: "modul 7: rätt alternativ fråga 4 och 17",
+    },
+  ],
+  "ea-m7-5": [
+    {
+      block: "m7-t3",
+      text: "En value stream beskriver hur värde skapas och levereras till en stakeholder.",
+      kalla: "modul 7: kärnförklaring",
+    },
+  ],
+  "ea-m7-6": [
+    { block: "m7-t3", text: "En capability uttrycker vad organisationen kan göra.", kalla: "modul 7: förklaring fråga 18" },
+    {
+      block: "m7-t3",
+      text: "En process beskriver hur arbetet utförs",
+      kalla: "modul 7: kärnförklaring",
+    },
+  ],
+  "ea-m7-7": [
+    {
+      block: "m7-t3",
+      text: "Capabilities blir därför en relativt stabil brygga mellan strategisk avsikt och implementering.",
+      kalla: "modul 7: rätt alternativ fråga 3",
+    },
+  ],
+  "ea-m7-8": [
+    { block: "m7-t3", text: "Därför går begreppen inte att byta ut mot varandra.", kalla: "modul 7: kärnförklaring, rätt alternativ fråga 6" },
+  ],
+  "ea-m7-9": [
+    {
+      block: "m7-t3",
+      text: "Capabilities är särskilt användbara eftersom de kan förbli relativt stabila även när organisationsstrukturer och processer förändras.",
+      kalla: "modul 7: kärnförklaring",
+    },
+  ],
+  "ea-m7-10": [
+    {
+      block: "m7-t3",
+      text: "Capabilities kan relateras till processer, människor, information och data, applikationer och teknik.",
+      kalla: "modul 7: modellsvar fråga 12",
+    },
+  ],
+  "ea-m7-11": [
+    {
+      block: "m7-t3",
+      text: "Capabilities kan relateras till processer, människor, information och data, applikationer och teknik.",
+      kalla: "modul 7: modellsvar fråga 12",
+    },
+  ],
+  "ea-e7-11": [
+    {
+      block: "m7-t3",
+      text: "Avdelningarna kan förändras medan de underliggande förmågor som enterprisen behöver finns kvar.",
+      kalla: "modul 7: modellsvar på kortsvarsfråga 11",
+    },
+    {
+      block: "m7-t3",
+      text: "Capability mapping låter arkitekten fokusera på vad organisationen måste kunna göra i stället för på tillfälliga organisationsstrukturer.",
+      kalla: "modul 7: modellsvar på kortsvarsfråga 11",
+    },
+  ],
+  "ea-e7-12": [
+    {
+      block: "m7-t3",
+      text: "Capabilities översätter alltså strategisk avsikt till de förmågor som enterprisen behöver för att nå sina mål",
+      kalla: "modul 7: modellsvar fråga 12 och 26",
+    },
+    {
+      block: "m7-t3",
+      text: "Capabilities kan relateras till processer, människor, information och data, applikationer och teknik.",
+      kalla: "modul 7: modellsvar fråga 12",
+    },
+    {
+      block: "m7-t3",
+      text: "På så sätt kan strategiska mål spåras till arkitektur- och investeringsbeslut.",
+      kalla: "modul 7: modellsvar fråga 12",
+    },
+  ],
+  "ea-e7-13": [
+    { block: "m7-t3", text: "Strategin fastställer önskade resultat och prioriteringar.", kalla: "modul 7: modellsvar fråga 13" },
+    {
+      block: "m7-t3",
+      text: "Av dem följer capabilities som enterprisen måste ha eller stärka.",
+      kalla: "modul 7: modellsvar fråga 13",
+    },
+    {
+      block: "m7-t3",
+      text: "När strategins prioriteringar är översatta till capabilities kan arkitekten därför analysera vilka människor, processer, vilken information, vilka applikationer och vilken teknik som behövs för att stödja dem.",
+      kalla: "modul 7: modellsvar fråga 13 och 26",
+    },
+    {
+      block: "m7-t3",
+      text: "Capabilities blir därför en relativt stabil brygga mellan strategisk avsikt och implementering.",
+      kalla: "modul 7: modellsvar fråga 13",
+    },
+  ],
+  "ea-m7-14": [
+    {
+      block: "m7-t3",
+      text: "Den beskriver en förmåga som organisationen har eller behöver ha, men den föreskriver inte hur capabilityn implementeras.",
+      kalla: "modul 7: lärarens förklaring fråga 14",
+    },
+  ],
+  "ea-m7-15": [
+    {
+      block: "m7-t3",
+      text: "Capabilities ger ofta en relativt stabil bild av organisationens förmåga, medan processer beskriver de sekvenser av aktiviteter som används för att utföra arbete.",
+      kalla: "modul 7: lärarens förklaring fråga 15",
+    },
+  ],
+  "ea-m7-16": [
+    {
+      block: "m7-t3",
+      text: "De kopplar strategin till de organisationsstrukturer och den organisatoriska förändring som krävs för att nå den.",
+      kalla: "modul 7: rätt alternativ fråga 16",
+    },
+    {
+      block: "m7-t3",
+      text: "och som organisationen måste utveckla, upprätthålla eller transformera.",
+      kalla: "modul 7: lärarens förklaring fråga 16",
+    },
+  ],
+  "ea-m7-17": [
+    {
+      block: "m7-t3",
+      text: "En capability är en förmåga på verksamhetsnivå, som bolåneutgivning i bankens exempel.",
+      kalla: "modul 7: exemplet och rätt alternativ fråga 17",
+    },
+    {
+      block: "m7-t3",
+      text: "Ett enskilt steg, som att kunden klickar på en knapp, beskrivs snarare som en del av en process eller ett steg i en value stream.",
+      kalla: "modul 7: rätt alternativ fråga 17; processer implementerar delar av value streamen",
+    },
+  ],
+  "ea-m7-18": [
+    {
+      block: "m7-t3",
+      text: "Sekvensen av aktiviteter som används för att utföra arbetet är i första hand ett processperspektiv.",
+      kalla: "modul 7: lärarens förklaring fråga 18",
+    },
+  ],
+  "ea-m7-19": [
+    {
+      block: "m7-t3",
+      text: "En capability map är en arkitekturrepresentation. Den ger ett viktigt verksamhetsperspektiv, men den beskriver inte hela enterprisen och är inte i sig en fullständig Enterprise Architecture.",
+      kalla: "modul 7: lärarens förklaring fråga 19",
+    },
+  ],
+  "ea-m7-20": [
+    {
+      block: "m7-tillagg-1",
+      text: "Governance betyder inte nödvändigtvis att varje arkitekturbeslut måste godkännas centralt.",
+      kalla: "modul 7: modellsvar fråga 27; modul 8: text och fråga 7",
+    },
+  ],
+  "ea-m7-21": [
+    {
+      block: "m7-tillagg-1",
+      text: "Principerna kan då fungera som guardrails.",
+      kalla: "modul 7: modellsvar fråga 27; modul 8: modellsvar fråga 8",
+    },
+  ],
+  "ea-m7-22": [
+    {
+      block: "m7-tillagg-1",
+      text: "Arkitektur innebär ofta trade-offs snarare än perfekta lösningar.",
+      kalla: "modul 8: lärandemålen och fråga 4; Word-dokumentet om trade-offs",
+    },
+  ],
+  "ea-e7-23": [
+    {
+      block: "m7-t3",
+      text: "Organisationsstrukturer kan förändras ofta genom omorganisationer, sammanslagningar och omstruktureringar.",
+      kalla: "modul 7: modellsvar fråga 23",
+    },
+    {
+      block: "m7-t3",
+      text: "Capabilities ger ofta en relativt stabil bild av organisationens förmåga",
+      kalla: "modul 7: modellsvar fråga 23, lärarens förklaring fråga 15",
+    },
+    {
+      block: "m7-t3",
+      text: "Det hjälper också till att identifiera capability gaps och prioritera transformation oberoende av nuvarande organisatoriska gränser.",
+      kalla: "modul 7: modellsvar fråga 23",
+    },
+  ],
+  "ea-e7-24": [
+    {
+      block: "m7-tillagg-1",
+      text: 'Ett exempel är principen "Information är en tillgång för hela enterprisen".',
+      kalla: "modul 7: modellsvar fråga 24; modul 8: principexemplet",
+    },
+    {
+      block: "m7-tillagg-1",
+      text: "Den kan påverka beslut om dataägarskap, integration, datakvalitet, säkerhet och applikationsdesign, och den ger en enhetlig riktning för beslut som rör enterprisens information.",
+      kalla: "modul 7: modellsvar fråga 24",
+    },
+  ],
+  "ea-e7-25": [
+    {
+      block: "m7-t3",
+      text: "Ett exempel är ett företag som omorganiserar sin marknadsavdelning tre gånger på fem år men hela tiden behöver kundinsikt, kampanjhantering och marknadsanalys.",
+      kalla: "modul 7: fråga 25 (lärarens exempel)",
+    },
+    {
+      block: "m7-t3",
+      text: "Organisationen kan ändra vem som utför en capability utan att capabilityn i sig försvinner.",
+      kalla: "modul 7: modellsvar fråga 25",
+    },
+    {
+      block: "m7-t3",
+      text: "Capabilities är särskilt användbara eftersom de kan förbli relativt stabila även när organisationsstrukturer och processer förändras.",
+      kalla: "modul 7: modellsvar fråga 25",
+    },
+  ],
+  "ea-e7-26": [
+    {
+      block: "m7-t3",
+      text: "Capabilities översätter alltså strategisk avsikt till de förmågor som enterprisen behöver för att nå sina mål",
+      kalla: "modul 7: modellsvar fråga 26",
+    },
+    {
+      block: "m7-t3",
+      text: "När strategins prioriteringar är översatta till capabilities kan arkitekten därför analysera vilka människor, processer, vilken information, vilka applikationer och vilken teknik som behövs för att stödja dem.",
+      kalla: "modul 7: modellsvar fråga 26",
+    },
+    {
+      block: "m7-t3",
+      text: "Capabilities blir därför en relativt stabil brygga mellan strategisk avsikt och implementering.",
+      kalla: "modul 7: modellsvar fråga 26",
+    },
+  ],
+  "ea-e7-27": [
+    {
+      block: "m7-tillagg-1",
+      text: "Effektiv governance fastställer tydliga principer, decision rights och gränser och ger samtidigt team lämplig autonomi.",
+      kalla: "modul 7: modellsvar fråga 27",
+    },
+    {
+      block: "m7-tillagg-1",
+      text: "I stället för att kräva centralt godkännande av varje beslut kan governance rikta uppmärksamheten mot betydande risker, beroenden tvärs över enterprisen och strategiska beslut.",
+      kalla: "modul 7: modellsvar fråga 27",
+    },
+    {
+      block: "m7-tillagg-1",
+      text: "Team kan fatta många beslut själva så länge de håller sig inom de överenskomna gränserna, och därför kan de arbeta snabbt.",
+      kalla: "modul 7: modellsvar fråga 27",
+    },
+  ],
+
+  // --- Modul 8 -------------------------------------------------------------
+  "ea-m8-1": [
+    {
+      block: "m8-t2",
+      text: "En architecture principle är en generell regel eller riktlinje som vägleder arkitekturbeslut.",
+      kalla: "modul 8: rätt alternativ fråga 1",
+    },
+  ],
+  "ea-m8-2": [
+    {
+      block: "m8-t3",
+      text: "Governance för arkitektur handlar om att fastställa decision rights, ansvarsskyldighet och lämpliga kontroller för arkitekturbeslut.",
+      kalla: "modul 8: rätt alternativ fråga 2",
+    },
+  ],
+  "ea-m8-3": [
+    {
+      block: "m8-t3",
+      text: "Principerna fungerar på så sätt som guardrails inom vilka team kan fatta beslut mer självständigt.",
+      kalla: "modul 8: rätt alternativ fråga 3, modellsvar fråga 8",
+    },
+  ],
+  "ea-m8-4": [
+    {
+      block: "m8-t3",
+      text: "Ett exempel är flexibilitet kontra standardisering: standardisering kan ge effektivitet men mindre flexibilitet.",
+      kalla: "modul 8: rätt alternativ fråga 4; Word-dokumentet om trade-offs",
+    },
+  ],
+  "ea-m8-5": [
+    {
+      block: "m8-t3",
+      text: "Governance ska i första hand åstadkomma lämpligt beslutsfattande, ansvarsskyldighet och kontroll, inte maximal byråkrati.",
+      kalla: "modul 8: rätt alternativ fråga 5",
+    },
+  ],
+  "ea-m8-6": [
+    {
+      block: "m8-t2",
+      text: "Dess huvudsakliga syfte är att ge enhetlig vägledning för arkitektoniska beslut.",
+      kalla: "modul 8: rätt alternativ fråga 6",
+    },
+  ],
+  "ea-m8-7": [
+    {
+      block: "m8-t3",
+      text: "God governance kräver alltså inte nödvändigtvis godkännande av varje tekniskt beslut.",
+      kalla: "modul 8: modellsvar fråga 8; modul 7: modellsvar fråga 27",
+    },
+  ],
+  "ea-e8-8": [
+    { block: "m8-t3", text: "Tydliga principer ger återanvändbar vägledning för beslut.", kalla: "modul 8: modellsvar fråga 8" },
+    {
+      block: "m8-t3",
+      text: "Team kan fatta många beslut självständigt, utan att be om godkännande varje gång, så länge de håller sig inom de överenskomna gränserna.",
+      kalla: "modul 8: modellsvar fråga 8",
+    },
+    {
+      block: "m8-t3",
+      text: "De kan öka enhetligheten och beslutshastigheten samtidigt som lämpliga beslut delegeras till leveransteam.",
+      kalla: "modul 8: modellsvar fråga 8 (meningarna i rätt ordning)",
+    },
+    {
+      block: "m8-t3",
+      text: "Arkitekturen bör fokusera på betydande risker och beroenden i stället för att kräva centralt godkännande av varje beslut.",
+      kalla: "modul 8: modellsvar fråga 8; modul 7: modellsvar fråga 27",
+    },
+  ],
 };
 
 // Frågor som inte går att täcka med lärarens material. Tom från början;

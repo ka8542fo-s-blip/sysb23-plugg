@@ -15,13 +15,13 @@ export default {
       id: "m8-t1",
       sv: `## Lärandemål
 
-Studenterna ska förstå:
+Efter den här modulen ska du förstå:
 
-- Architecture principles.
-- Governance.
-- Decision rights.
-- Guardrails.
-- Trade-offs.`,
+- architecture principles
+- governance
+- decision rights
+- guardrails
+- trade-offs.`,
       en: `## Learning objectives
 
 Students should understand:
@@ -37,14 +37,18 @@ Students should understand:
       id: "m8-t2",
       sv: `## Principexempel – "Information är en tillgång för hela enterprisen."
 
-Den här principen kan påverka:
+En architecture principle är en generell regel eller riktlinje som vägleder arkitekturbeslut. Den är ingen detaljerad teknisk implementering, ingen projekttidplan och inget val av en viss produkt. I stället ger den riktning. Dess huvudsakliga syfte är att ge enhetlig vägledning för arkitektoniska beslut.
 
-- Dataägarskap
-- Applikationsdesign
-- Integration
-- Governance
-- Säkerhet
-- Investeringar`,
+Principen i rubriken kan påverka:
+
+- dataägarskap
+- applikationsdesign
+- integration
+- governance
+- säkerhet
+- investeringar.
+
+Den ger en enhetlig riktning för beslut som rör enterprisens information.`,
       en: `## Principle example - "Information is an enterprise asset."
 
 This principle can influence:
@@ -61,7 +65,19 @@ This principle can influence:
       id: "m8-t3",
       sv: `## Governance
 
-Governance svarar på: Vem har befogenhet att fatta vilka beslut, under vilka begränsningar?`,
+Governance svarar på: Vem har befogenhet att fatta vilka beslut, under vilka begränsningar?
+
+Governance för arkitektur handlar om att fastställa decision rights, ansvarsskyldighet och lämpliga kontroller för arkitekturbeslut. Decision rights anger vem som har befogenhet att fatta vilka arkitekturbeslut. Governance ska i första hand åstadkomma lämpligt beslutsfattande, ansvarsskyldighet och kontroll, inte maximal byråkrati.
+
+### Principer som guardrails
+
+Tydliga principer ger återanvändbar vägledning för beslut. Team kan fatta många beslut självständigt, utan att be om godkännande varje gång, så länge de håller sig inom de överenskomna gränserna. Principerna fungerar på så sätt som guardrails inom vilka team kan fatta beslut mer självständigt. De kan öka enhetligheten och beslutshastigheten samtidigt som lämpliga beslut delegeras till leveransteam. Därför kan principer öka agiliteten.
+
+God governance kräver alltså inte nödvändigtvis godkännande av varje tekniskt beslut. Arkitekturen bör fokusera på betydande risker och beroenden i stället för att kräva centralt godkännande av varje beslut.
+
+### Trade-offs
+
+Det finns nästan aldrig en perfekt arkitektur. Arkitektur handlar om att hantera trade-offs, alltså att väga mål som konkurrerar med varandra, som flexibilitet, kostnad, risk och standardisering. Arkitektoniska beslut har sällan bara fördelar. Ett exempel är flexibilitet kontra standardisering: standardisering kan ge effektivitet men mindre flexibilitet.`,
       en: `## Governance
 
 Governance answers: Who has the authority to make which decisions, under what constraints?`,
@@ -167,6 +183,13 @@ Governance answers: Who has the authority to make which decisions, under what co
         "Governance kan fokusera på betydande risker och beroenden i stället för att kräva centralt godkännande av varje beslut. Inom principer och guardrails kan team fatta många beslut själva.",
     },
     { kind: "text", id: "m8-t6", sv: "## Essäfråga", en: "## Essay question" },
+    // Modellsvaret är hopblandat redan i lärarens PDF ("increase direction",
+    // "requiring centralize consistency and decision speed"). Den svenska
+    // versionen har meningarna i rätt ordning (Kaspers beslut 23 nov):
+    // "enhetlighet och beslutshastighet" hör till guardrails, det ensamma
+    // ordet "direction" är struket som fragment, och slutet är
+    // lärarens "centralized approval of every decision" ur fråga 27 i modul 7.
+    // Engelskan i essays.js står kvar som i PDF:en.
     {
       kind: "fritext",
       id: "ea-e8-8",
@@ -174,12 +197,12 @@ Governance answers: Who has the authority to make which decisions, under what co
       nr: "8",
       question: "Förklara hur architecture principles kan öka agiliteten.",
       modelAnswer:
-        "Tydliga principer ger återanvändbar vägledning för beslut. Team kan fatta många beslut självständigt utan att be om godkännande varje gång, förutsatt att de håller sig inom de överenskomna gränserna. Principer fungerar därför som guardrails som kan öka riktningen samtidigt som lämpliga beslut delegeras till leveransteam. Arkitekturen bör fokusera på betydande risker och beroenden snarare än att kräva centralisera enhetlighet och beslutshastighet.",
+        "Tydliga principer ger återanvändbar vägledning för beslut. Team kan fatta många beslut självständigt utan att be om godkännande varje gång, förutsatt att de håller sig inom de överenskomna gränserna. Principer fungerar därför som guardrails som kan öka enhetligheten och beslutshastigheten samtidigt som lämpliga beslut delegeras till leveransteam. Arkitekturen bör fokusera på betydande risker och beroenden snarare än att kräva centraliserat godkännande av varje beslut.",
     },
     {
       kind: "text",
       id: "m8-t7",
-      sv: "OBS: flera av det förväntade antalet frågor ligger under modul 8 eftersom de är något sammanflätade. Detta för att få en bättre överblick.",
+      sv: `OBS: Flera av de frågor man kunde vänta sig i modul 8 står i stället bland frågorna i modul 7, eftersom ämnena delvis går in i varandra. Syftet är att ge en bättre överblick.`,
       en: "NOTE: several of the expected number of questions is under module 8 since those are somewhat intermingled. This for the purpose to get a better overwiev.",
     },
   ],

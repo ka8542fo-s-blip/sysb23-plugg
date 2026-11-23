@@ -11,14 +11,14 @@ export default {
       id: "m6-t1",
       sv: `## Lärandemål
 
-Studenterna ska förstå:
+Efter den här modulen ska du förstå:
 
 - Business Architecture
 - Data Architecture
 - Application Architecture
 - Technology Architecture
-- Views och viewpoints
-- Stakeholders concerns`,
+- views och viewpoints
+- stakeholders concerns.`,
       en: `## Learning objectives
 
 Students should understand:
@@ -35,10 +35,10 @@ Students should understand:
       id: "m6-t2",
       sv: `## Fyra välbekanta domäner
 
-- **Business** – Capabilities, processer, organisation, värde och verksamhetstjänster.
-- **Data** – Information, datastrukturer, ägarskap, governance och flöden.
-- **Application** – Applikationer och applikationstjänster.
-- **Technology** – Infrastruktur, plattformar, nätverk och tekniktjänster.`,
+- **Business** (Business Architecture) – capabilities, processer, organisation, värde och verksamhetstjänster.
+- **Data** (Data Architecture) – information, datastrukturer, ägarskap, governance och flöden.
+- **Application** (Application Architecture) – applikationer och applikationstjänster.
+- **Technology** (Technology Architecture) – infrastruktur, plattformar, nätverk och tekniktjänster.`,
       en: `## Four familiar domains
 
 - **Business** - Capabilities, processes, organization, value and business services.
@@ -51,7 +51,19 @@ Students should understand:
       id: "m6-t3",
       sv: `## Viktig varning
 
-Dessa domäner är inte oberoende silor. De intressanta arkitektoniska frågorna gäller deras relationer. Dessa domäner hänger ihop. En stakeholder kan behöva en viss view av arkitekturen. En viewpoint fastställer hur en view bör hantera en viss concern hos stakeholders.`,
+Dessa domäner är inte oberoende silor. De intressanta arkitektoniska frågorna gäller deras relationer. Domänerna hänger ihop och är beroende av varandra: en business capability kan kräva viss information, vissa applikationer och viss teknik. En förändring i verksamheten kan därför kräva förändringar i information, applikationer och teknik.
+
+Domänerna är användbara just för att deras relationer kan analyseras. Relationer visar beroenden, effekter och konsekvenser av förändring. När arkitekten förstår att en business capability beror på vissa processer, viss information, vissa applikationer och viss teknik, går det att bedöma hur en förändring sprider sig genom enterprisen. Därför är relationerna ofta viktigare än de enskilda komponenterna.
+
+Ett problem kan också ligga i relationen mellan två domäner. Hur väl applikationerna stödjer en business capability är till exempel en fråga om relationen mellan Business och Application Architecture. Det syns inte om man tittar på en domän i taget.
+
+Att utforma domänerna oberoende av varandra är därför farligt. Det kan skapa inkonsekvenser, dubblerade capabilities och lösningar som inte stödjer verksamhetens mål.
+
+### Views och viewpoints
+
+En stakeholder kan behöva en viss view av arkitekturen. Olika stakeholders har olika concerns och behöver därför olika information och olika abstraktionsnivåer. En chef kan till exempel behöva se affärsresultat, och en ingenjör kan behöva detaljer om implementeringen. Därför behövs flera views, och ett enda diagram räcker normalt inte för alla.
+
+En viewpoint fastställer hur en view bör hantera en viss concern hos stakeholders. Den är alltså en specifikation av hur en view ska konstrueras och vad den ska representera. En view är den faktiska representationen som skapas med hjälp av viewpointen. En viewpoint och en view är därför inte samma sak.`,
       en: `## Important warning
 
 These domains are not independent silos. The interesting architectural questions concern their relationships. These domains are interconnected. A stakeholder may need a particular view of the architecture. A viewpoint establishes how a view should address a particular stakeholder concern.`,

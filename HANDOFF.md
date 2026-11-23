@@ -1714,7 +1714,13 @@ aldrig på sidan.
     texten och frågorna utan facit svarar och citerar meningen som avgör)
     och en trohetsgranskning (en agent jämför texten med PDF:erna och
     Word-dokumentet). Modul 1–4: 45 av 45 frågor gick att svara på ur
-    texten; granskningens nyansfel rättades.
+    texten. Modul 5–8: alla 47 slutna frågor och 13 av 15 fritextfrågor
+    helt; de två tunna stärktes. Granskningarnas nyansfel rättades.
+  - **Hopblandade modellsvar:** några av lärarens modellsvar är klippta
+    och ihopklistrade fel redan i PDF:en. I den svenska versionen
+    (`modelAnswer` i modulfilen) står meningarna i rätt ordning, utan
+    dubbletter och fragment, och engelskan i `essays.js` är orörd. Varje
+    rättelse har en kommentar i modulfilen: `ea-e8-8`.
   - Reglerna gäller också framtida ändringar i textblocken.
 
 **Bara lärarens tre moduldokument (Kaspers beslut 21 nov, plan godkänd;

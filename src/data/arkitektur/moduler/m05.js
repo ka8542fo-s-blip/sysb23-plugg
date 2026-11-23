@@ -18,7 +18,7 @@ export default {
       id: "m5-t2",
       sv: `## Lärandemål
 
-Studenterna ska förstå:
+Efter den här modulen ska du förstå:
 
 - Vad TOGAF är.
 - Syftet med ADM.
@@ -42,9 +42,11 @@ Students should understand:
       id: "m5-t3",
       sv: `## Kärnbudskap
 
-TOGAF-standarden tillhandahåller en samlad vägledning och ett tillvägagångssätt för Enterprise Architecture. Architecture Development Method (ADM) tillhandahåller ett iterativt tillvägagångssätt för att utveckla och förvalta arkitektur.
+TOGAF-standarden ger en samlad vägledning och ett tillvägagångssätt för Enterprise Architecture. Architecture Development Method (ADM) ger ett iterativt tillvägagångssätt för att utveckla och förvalta arkitektur. ADM:s huvudsakliga syfte är alltså att utveckla och vidareutveckla Enterprise Architecture, inte att utveckla mjukvara.
 
-En förenklad bild omfattar:
+### ADM:s faser
+
+En förenklad bild av ADM omfattar:
 
 - Preliminary
 - Architecture Vision
@@ -56,7 +58,23 @@ En förenklad bild omfattar:
 - Implementation Governance
 - Architecture Change Management
 
-ADM ska INTE behandlas som en alltför enkel linjär vattenfallsprocess.`,
+ADM är ett strukturerat tillvägagångssätt för att utveckla, kommunicera, styra och vidareutveckla Enterprise Architecture. Den hjälper arkitekten att gå från att förstå arkitekturvisionen via domänarkitektur, möjligheter och migrering till Implementation Governance.
+
+Architecture Vision ska skapa en gemensam övergripande bild av den önskade arkitektoniska riktningen och säkra lämplig uppslutning (commitment) från stakeholders. Den svarar på vad man vill uppnå, varför det spelar roll och vilken den arkitektoniska riktningen är. Arkitekturen börjar alltså med syftet, inte med tekniken.
+
+### Inget vattenfall
+
+ADM ska **inte** behandlas som en alltför enkel, linjär vattenfallsprocess. Den stödjer iteration och anpassning. Arkitekturarbete är iterativt och anpassas efter förändrade krav, nya lärdomar och förändrade omständigheter. Under arbetet lär man sig mer om problemet, om enterprisen och om lösningen, och då kan tidigare antaganden behöva ses över. Arkitekturarbetet kan därför behöva itereras. Iteration är inte ett misslyckande, utan lärande.
+
+### TOGAF är inte arkitekturen
+
+TOGAF hjälper oss att ta fram arkitektur, men TOGAF är inte enterprisens arkitektur. Organisationen måste själv bestämma sina mål, sina principer, sin arkitektur och sitt önskade framtida läge, sin target architecture. Två organisationer kan båda använda TOGAF och ändå ha helt olika arkitekturer.
+
+Organisationer skiljer sig åt i storlek, governance, regelverk, arkitekturmognad, kultur, affärsmodell och förändringsbehov. Ett ramverk ger vägledning, men organisationen måste anpassa arkitekturpraktiken till sina förhållanden.
+
+### TOGAF och Zachman
+
+Zachman ger i första hand en ontology och en klassificeringsstruktur för att organisera arkitekturbeskrivningar. Den hjälper till att besvara vilka slags beskrivningar som behövs. TOGAF ger vägledning och en metod för arkitekturutveckling, särskilt genom ADM, alltså ett strukturerat tillvägagångssätt för att utveckla och förvalta arkitektur. Ramverken svarar på olika frågor och kan därför komplettera varandra: Zachman kan hjälpa till att se om viktiga beskrivningar eller perspektiv saknas medan arkitekturen tas fram med ADM.`,
       en: `## Core message
 
 The TOGAF Standard provides a body of guidance and an approach for Enterprise Architecture. The Architecture Development Method (ADM) provides an iterative approach to developing and managing architecture.
@@ -94,7 +112,7 @@ The ADM should NOT be treated as a simplistic linear waterfall process.`,
     {
       kind: "text",
       id: "m5-t5",
-      sv: "Men också denna är relevant (samma fråga olika svarsalternativ):",
+      sv: `Den här frågan är också relevant. Det är samma fråga med andra svarsalternativ:`,
       en: "Men också denna är relevant (samma fråga olika svarsalternativ):",
     },
     {
