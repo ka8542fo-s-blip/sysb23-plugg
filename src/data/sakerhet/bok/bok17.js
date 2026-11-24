@@ -11,6 +11,7 @@ export const chapter = {
   kind: "bok",
   label: "Bokens kapitel 17",
   examArea: "Bokfrågor",
+  focus: ["Security policy in an organisation"],
   title: "Personalsäkerhet: medvetenhet, utbildning och incidenter",
   readingMinutes: 11,
   lead: "Människor är både en stor risk och en del av skyddet. Kapitlet handlar om hur en organisation utbildar, anställer och styr sin personal, och hur den hanterar en säkerhetsincident när den väl inträffar.",

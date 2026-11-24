@@ -10,6 +10,7 @@ export const chapter = {
   kind: "bok",
   label: "Bokens kapitel 8",
   examArea: "Bokfrågor",
+  focus: ["Understand types of network attacks"],
   title: "Intrusion detection",
   readingMinutes: 11,
   lead: "Vilka som bryter sig in och hur de går till väga, hur en IDS är uppbyggd och var den tittar, varför den ger falsklarm, skillnaden mellan anomaly och signature detection, och vad en honeypot är till för.",

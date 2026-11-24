@@ -11,6 +11,7 @@ export const chapter = {
   kind: "bok",
   label: "Bokens kapitel 4",
   examArea: "Bokfrågor",
+  focus: ["Access control / Access control mechanisms"],
   title: "Access control: DAC, MAC, RBAC och ABAC",
   readingMinutes: 11,
   lead: "Fyra sätt att bestämma vem som får göra vad med en resurs, och vad vart och ett bygger på: identitet, etiketter, roller eller attribut.",

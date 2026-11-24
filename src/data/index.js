@@ -281,7 +281,8 @@ export const courses = [
     // föreläsningsfrågor, 5 p för bokfrågor, −1 för fel svar, 15 p per essä,
     // totalt 100. Essäpoängen är den egna bedömningen ur checklistan.
     // Betygsgränserna är inte bekräftade (gradeNote). Bokdelen drar `focus`
-    // frågor ur lärarens fokuskapitel.
+    // frågor ur lärarens fokuskapitel, de kapitel som har ett `focus`-fält
+    // (lärarens formuleringar, visas som "Lärarens fokus" i Läs).
     yearExam: {
       intro:
         "Läraren har angett poängen: 20 frågor och 100 poäng. 5 frågor som liknar förra årets (3 p var), 5 från föreläsningsbilderna och relaterat material (3 p), 8 från bokens kapitel (5 p) och 2 essäer (15 p var, högst 700 ord). En provtenta drar just det ur sajtens frågor, med 7 av bokfrågorna ur lärarens fokuskapitel.",
@@ -294,8 +295,6 @@ export const courses = [
         { pool: "forelasning", count: 5, points: 3, penalty: 1, title: "Från föreläsningarna" },
         { pool: "bok", count: 8, focus: 7, points: 5, penalty: 1, title: "Från boken" },
       ],
-      // Lärarens fokusämnen (Canvas 24 nov) ligger i de här bokkapitlen.
-      focusChapters: ["bok2", "bok4", "bok6", "bok7", "bok8", "bok9", "bok10", "bok14", "bok15", "bok16", "bok17"],
       essays: 2,
       essayPoints: 15,
       showGrade: true,
@@ -306,7 +305,7 @@ export const courses = [
     pastExamNote:
       "Tentorna publicerades utan facit. Rätt svar och förklaringar är sajtens egna, skrivna utifrån Stallings & Brown.",
     homeIntro:
-      "Läs föreläsningarna och bokens kapitel, öva på frågor per kapitel och på förra årets tentafrågor, och skriv hela tentor. Årets tenta har enligt läraren 20 frågor: 5 från tidigare tentor med små variationer, 5 från föreläsningsbilderna, 8 från boken och 2 essäer.",
+      "Läs föreläsningarna och bokens kapitel, öva på frågor per kapitel och på förra årets tentafrågor, och skriv hela tentor. Årets tenta har 20 frågor och 100 poäng: 5 som liknar förra årets och 5 från föreläsningsbilderna (3 p var), 8 från boken (5 p var) och 2 essäer (15 p var). Fel svar ger −1. Kapitlen märkta Lärarens fokus är de ämnen läraren pekat ut.",
   },
 ];
 

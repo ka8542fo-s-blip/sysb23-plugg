@@ -11,6 +11,7 @@ export const chapter = {
   kind: "bok",
   label: "Bokens kapitel 9",
   examArea: "Bokfrågor",
+  focus: ["Function of firewall"],
   title: "Firewalls och intrusion prevention",
   readingMinutes: 11,
   lead: "Varför en organisation sätter en brandvägg vid gränsen, vad den klarar och inte klarar, de fyra typerna, var den kan sitta och hur en IPS och en UTM bygger vidare på den.",

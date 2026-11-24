@@ -11,6 +11,7 @@ export const chapter = {
   kind: "bok",
   label: "Bokens kapitel 7",
   examArea: "Bokfrågor",
+  focus: ["Understand types of network attacks"],
   title: "Denial-of-service-attacker",
   readingMinutes: 11,
   lead: "Hur en angripare gör en tjänst otillgänglig genom att tömma en resurs, varför förfalskade adresser och botnet gör attacken svår att stoppa, och hur man försvarar sig.",

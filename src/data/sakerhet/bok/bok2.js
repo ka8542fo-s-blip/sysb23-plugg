@@ -11,6 +11,7 @@ export const chapter = {
   kind: "bok",
   label: "Bokens kapitel 2",
   examArea: "Bokfrågor",
+  focus: ["Public key in Cryptography / Encryption"],
   title: "Kryptografiska verktyg: symmetriskt, asymmetriskt och hashfunktioner",
   readingMinutes: 11,
   lead: "Vilka nycklar som används till vad: en delad hemlig nyckel i symmetrisk kryptering, ett nyckelpar i public-key-kryptering, och hur MAC, hashfunktioner, digitala signaturer och certifikat visar att data är äkta.",

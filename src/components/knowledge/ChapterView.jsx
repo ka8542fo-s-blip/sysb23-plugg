@@ -4,7 +4,7 @@ import remarkGfm from "remark-gfm";
 import { topicLookup } from "../../lib/topicLookup.js";
 import { useReadAloud, ttsSupported, TTS_RATES } from "../../lib/useReadAloud.js";
 import InfoTip from "../InfoTip.jsx";
-import { ExamAreaTag } from "./ChapterList.jsx";
+import { ExamAreaTag, FocusTag } from "./ChapterList.jsx";
 import LeadIn from "./LeadIn.jsx";
 import { Diagram, DIAGRAM_RE } from "./diagrams/index.jsx";
 import ZachmanFramework from "../zachman/ZachmanFramework.jsx";
@@ -376,7 +376,13 @@ export default function ChapterView({
               <ExamAreaTag
                 area={"examArea" in chapter ? chapter.examArea : undefined}
               />
+              <FocusTag focus={chapter.focus} />
             </p>
+            {chapter.focus?.length > 0 && (
+              <p className="mt-2 max-w-reading text-sm text-pine" data-tts-skip>
+                Läraren pekar ut inför tentan: {chapter.focus.join(" · ")}
+              </p>
+            )}
 
             {ttsSupported() && tts.status === "idle" && (
               <div ref={ttsControlsRef} className="mt-4 flex flex-wrap items-center gap-2" data-tts-skip>

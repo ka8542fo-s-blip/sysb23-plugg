@@ -26,6 +26,17 @@ export function ExamAreaTag({ area }) {
   );
 }
 
+// Lärarens utpekade fokusämnen inför tentan (valfritt, Säkerhet): `focus` är
+// en lista med lärarens egna formuleringar. Kapitel utan fältet visar inget.
+export function FocusTag({ focus }) {
+  if (!focus?.length) return null;
+  return (
+    <span className="chip shrink-0 border-pine/60 py-0 text-xs font-medium text-pine" title={focus.join(" · ")}>
+      Lärarens fokus
+    </span>
+  );
+}
+
 // Kompendiets landningsläge: innehållsförteckning med progress.
 export default function ChapterList({
   chapters,
@@ -219,6 +230,7 @@ export default function ChapterList({
                       ca {chapter.readingMinutes} min
                     </span>
                     <ExamAreaTag area={"examArea" in chapter ? chapter.examArea : undefined} />
+                    <FocusTag focus={chapter.focus} />
                     <PriorityTag levels={levels} />
                     {dimmed && <span className="text-sm text-ink/65">Läs om tid finns</span>}
                   </span>

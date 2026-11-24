@@ -11,6 +11,7 @@ export const chapter = {
   kind: "bok",
   label: "Bokens kapitel 16",
   examArea: "Bokfrågor",
+  focus: ["Physical security control types"],
   title: "Fysisk säkerhet och infrastruktur",
   readingMinutes: 11,
   lead: "Informationssystemen vilar på något fysiskt: hårdvara, lokaler, el och kyla, och människor. Vad som hotar den grunden, hur man skyddar och återställer den, och hur fysisk och logisk access control kan förenas.",

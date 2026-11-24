@@ -8,6 +8,7 @@ import { getCourse } from "../src/data/index.js";
 import {
   drawYearExam,
   essayScore,
+  focusChapterIds,
   withYearPoints,
   yearExamMax,
   yearExamPools,
@@ -25,7 +26,9 @@ const config = real.yearExam;
 function fakeCourse() {
   const chapters = [
     ...["f1", "f2"].map((id) => ({ id, kind: "forelasning" })),
-    ...["b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9"].map((id) => ({ id, kind: "bok" })),
+    ...["b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9"].map((id, i) => ({
+      id, kind: "bok", ...(i < 7 ? { focus: [`ämne ${id}`] } : {}),
+    })),
   ];
   const topics = chapters.map((c) => ({ id: `t-${c.id}`, chapter: c.id }));
   const q = (id, chapter, extra = {}) => ({
@@ -40,8 +43,7 @@ function fakeCourse() {
     id,
     checklist: [{ heading: "A", points: ["a1", "a2"] }, { heading: "B", points: ["b1", "b2"] }],
   }));
-  const yearExam = { ...config, focusChapters: ["b1", "b2", "b3", "b4", "b5", "b6", "b7"] };
-  return { id: "fake", chapters, topics, questions, essays, yearExam };
+  return { id: "fake", chapters, topics, questions, essays, yearExam: config };
 }
 
 test("manifestet följer lärarens poäng: 3/3/5 p, −1 för fel, 2 essäer à 15 p, 100 totalt, betyg med anmärkning", () => {
@@ -59,10 +61,18 @@ test("manifestet följer lärarens poäng: 3/3/5 p, −1 för fel, 2 essäer à 
   assert.match(config.gradeNote, /inte bekräftade/);
   for (const field of ["intro", "rule", "pastNote"]) assert.ok(config[field]?.length > 40, field);
   assert.match(config.rule, /−1/);
-  // Fokuskapitlen är bokkapitel (kapitel 10 kan saknas tills det är byggt).
-  const bookIds = new Set(real.chapters.filter((c) => c.kind === "bok").map((c) => c.id));
-  assert.ok(config.focusChapters.filter((id) => bookIds.has(id)).length >= 10);
-  assert.ok(config.focusChapters.every((id) => /^bok\d+$/.test(id)));
+});
+
+test("lärarens fokuskapitel: bokkapitlen med focus-fält, minst de tio läraren pekat ut", () => {
+  const focus = focusChapterIds(real);
+  for (const id of ["bok2", "bok4", "bok6", "bok7", "bok8", "bok9", "bok14", "bok15", "bok16", "bok17"]) {
+    assert.ok(focus.includes(id), id);
+  }
+  for (const id of focus) {
+    const chapter = real.chapters.find((c) => c.id === id);
+    assert.equal(chapter.kind, "bok", id);
+    assert.ok(chapter.focus.every((text) => typeof text === "string" && text.length > 5), id);
+  }
 });
 
 test("poolerna delar kapitelfrågorna utan överlapp: varianter, föreläsningar, boken", () => {
@@ -106,7 +116,8 @@ test("en dragen provtenta har rätt antal ur varje pool, numrerad 1–20, utan d
 
 test("bokdelen: 7 frågor ur fokuskapitlen, högst en per kapitel, och 1 ur övriga", () => {
   const course = fakeCourse();
-  const focus = new Set(course.yearExam.focusChapters);
+  const focus = new Set(focusChapterIds(course));
+  assert.equal(focus.size, 7);
   for (const seed of ["a", "b", "c", "d", "e"]) {
     const exam = drawYearExam(course, seed, 1, "2026-11-22T10:00:00Z");
     const chapters = exam.sections[2].parts.map((p) => p.question.split("-")[0]);
@@ -115,7 +126,7 @@ test("bokdelen: 7 frågor ur fokuskapitlen, högst en per kapitel, och 1 ur övr
     assert.equal(new Set(inFocus).size, 7, `${seed}: en per fokuskapitel`);
   }
   // Den riktiga delkursen: minst 7 av 8 ur lärarens fokuskapitel.
-  const realFocus = new Set(config.focusChapters);
+  const realFocus = new Set(focusChapterIds(real));
   const chapterOf = Object.fromEntries(real.topics.map((t) => [t.id, t.chapter]));
   const byId = Object.fromEntries(real.questions.map((q) => [q.id, q]));
   for (const seed of ["x", "y", "z"]) {

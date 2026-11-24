@@ -13,8 +13,8 @@
 // manifestet: withYearPoints sätter om dem när en sparad tenta laddas.
 //
 // Bokdelen vägs mot lärarens fokusämnen: en sektion med `focus: n` drar n
-// frågor ur `yearExam.focusChapters` (högst en per kapitel i första varvet)
-// och resten ur övriga bokkapitel.
+// frågor ur fokuskapitlen, de kapitel som har ett `focus`-fält (högst en per
+// kapitel i första varvet), och resten ur övriga bokkapitel.
 //
 // Essäerna rättas inte automatiskt. Deras poäng är den egna bedömningen:
 // `essayPoints` × andelen ibockade punkter i essäns checklista, avrundat.
@@ -31,6 +31,10 @@ const chapterIdOf = (course) => {
   const chapterOf = Object.fromEntries((course.topics || []).map((t) => [t.id, t.chapter]));
   return (question) => question.chapter ?? chapterOf[question.topic] ?? null;
 };
+
+// Kapitlen som läraren pekat ut (chapter.focus).
+export const focusChapterIds = (course) =>
+  (course.chapters || []).filter((chapter) => chapter.focus?.length).map((chapter) => chapter.id);
 
 export function yearExamPools(course) {
   const kind = chapterKindOf(course);
@@ -74,7 +78,7 @@ export function drawYearExam(course, seed, number, created = new Date().toISOStr
   const pools = yearExamPools(course);
   const chapterOf = chapterIdOf(course);
   let no = 0;
-  const focus = new Set(config.focusChapters || []);
+  const focus = new Set(focusChapterIds(course));
   const sections = config.sections.map((section) => {
     const pool = pools[section.pool] || [];
     const groupOf = section.pool === "variant" ? (q) => q.variantOf : chapterOf;

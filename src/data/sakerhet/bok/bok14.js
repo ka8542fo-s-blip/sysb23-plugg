@@ -11,6 +11,7 @@ export const chapter = {
   kind: "bok",
   label: "Bokens kapitel 14",
   examArea: "Bokfrågor",
+  focus: ["IT Security Management and Risk Assessment", "Security policy in an organisation (14.2)"],
   title: "IT security management och riskbedömning",
   readingMinutes: 11,
   lead: "Hur en organisation går från mål och säkerhetspolicy till en bedömning av sina risker, vilka fyra sätt det finns att göra bedömningen på och vad man kan göra med en risk som är för hög.",

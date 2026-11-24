@@ -9,6 +9,7 @@ export const chapter = {
   kind: "bok",
   label: "Bokens kapitel 6",
   examArea: "Bokfrågor",
+  focus: ["Malicious Software / Types of malware"],
   title: "Malicious software: virus, maskar och nyttolaster",
   readingMinutes: 11,
   lead: "Hur skadlig kod tar sig fram och vad den gör när den är framme: virus, maskar och trojaner, nyttolaster från ransomware till rootkits, och vad som gör en APT ihärdig.",

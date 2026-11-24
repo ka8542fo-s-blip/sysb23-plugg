@@ -11,6 +11,7 @@ export const chapter = {
   kind: "bok",
   label: "Bokens kapitel 15",
   examArea: "Bokfrågor",
+  focus: ["Security policy in an organisation"],
   title: "Säkerhetskontroller, planer och rutiner",
   readingMinutes: 11,
   lead: "Vad som händer efter riskbedömningen: vilka slags kontroller som finns, hur man väljer dem och skriver en säkerhetsplan, och hur arbetet följs upp när kontrollerna väl är på plats.",
