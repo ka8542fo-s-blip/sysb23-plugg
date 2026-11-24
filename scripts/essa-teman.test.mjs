@@ -158,12 +158,16 @@ test("Strategi, Process och Säkerhet har samma essäer och samma ordgräns som 
   assert.equal(process.essays, processEssays);
   assert.equal(sakerhet.essays, sakerhetEssays);
   assert.equal(sakerhet.essayIntro, sakerhetEssayIntro);
-  // Strategi och Process: vyns standard (300 ord, fyrstegsraden); Säkerhet utan tak.
+  // Strategi och Process: vyns standard (300 ord, fyrstegsraden). Säkerhet:
+  // 700 ord sedan lärarens besked 24 nov 2026.
   assert.equal(strategi.essayWordLimit, undefined);
   assert.equal(process.essayWordLimit, undefined);
-  assert.equal(sakerhet.essayWordLimit, null);
+  assert.equal(sakerhet.essayWordLimit, 700);
+  // Säkerhet har egen slutrad (lärarens fem kriterier), inte Strategis fyra steg.
+  assert.match(sakerhet.essayClosing, /700 ord/);
   for (const course of [strategi, process, sakerhet]) {
     for (const field of ["essayWordTarget", "essayClosing", "essayUnit"]) {
+      if (course === sakerhet && field === "essayClosing") continue;
       assert.equal(course[field], undefined, `${course.id}: ${field}`);
     }
     for (const essay of course.essays) {

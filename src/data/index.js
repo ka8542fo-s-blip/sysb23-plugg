@@ -260,11 +260,12 @@ export const courses = [
     // Uppgifter: de två inlämningarna.
     views: ["las", "ova", "essa", "tenta", "uppgifter"],
     practiceBy: "chapter",
-    // Fem egna övningsessäer; årets ämnen och längd är okända, så
-    // ordräknaren har inget tak.
+    // Sju egna övningsessäer med lärarens kriterier i checklistan; essäerna
+    // får vara högst 700 ord (lärarens anslag 24 nov).
     essays: sakerhetEssays,
     essayIntro: sakerhetEssayIntro,
-    essayWordLimit: null,
+    essayWordLimit: 700,
+    essayClosing: "Högst 700 ord. Fem delar: tes, kursbegrepp ur bok och föreläsning, konkreta exempel, ett motargument eller en begränsning, och en slutsats som svarar på frågan.",
     topics: sakerhetTopics,
     questions: sakerhetQuestions,
     chapters: sakerhetChapters,

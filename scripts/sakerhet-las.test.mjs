@@ -68,26 +68,25 @@ test("manifestet: Läs, kapitelordning i Öva och sammanfattningen", () => {
   assert.ok(examNote.text.includes("3 december"));
 });
 
-// Essäerna: samma fyra steg som Strategi och BPM, märkta som egna
-// övningsessäer (årets ämnen är okända), byggda på föreläsningarna.
-test("essäerna: fem övningsessäer i fyrstegsform, märkta som egna, utan ordtak", () => {
-  const HEADINGS = ["Vad det är", "Varför det spelar roll", "Konkret", "Koppling"];
-  // Steg 4 ska namnge en annan del av delkursen, inte bara "koppla till kursen".
-  const OMRADEN = ["composition viii", "riskbedömning", "zero trust", "cia", "introna", "schneier", "nist",
-    "straub", "säkerhetspolicy", "data center", "konsekvensskalan", "red team", "pentest", "kryptering", "confidentiality"];
-  assert.equal(course.essays.length, 5);
+// Essäerna: lärarens kriterier (Canvas 24 nov) som checklista, märkta som
+// egna övningsessäer (årets ämnen är okända), högst 700 ord.
+test("essäerna: sju övningsessäer med lärarens fem kriterier, märkta som egna, 700 ord", () => {
+  const HEADINGS = ["Tes", "Kursbegrepp", "Konkreta exempel", "Motargument eller begränsning", "Slutsats"];
+  assert.equal(course.essays.length, 7);
   assert.ok(course.views.includes("essa"));
-  assert.equal(course.essayWordLimit, null);
+  assert.equal(course.essayWordLimit, 700);
   for (const essay of course.essays) {
     assert.deepEqual(essay.checklist.map((g) => g.heading), HEADINGS, essay.id);
     for (const group of essay.checklist) {
-      assert.ok(group.points.length >= 2 && group.points.length <= 4, `${essay.id} / ${group.heading}`);
+      assert.ok(group.points.length >= 2 && group.points.length <= 3, `${essay.id} / ${group.heading}`);
       for (const point of group.points) assert.ok(point.trim().length > 20, `${essay.id}: för kort punkt`);
     }
     assert.match(essay.context, /^Egen övningsessä – årets essäämnen är inte kända\./, essay.id);
     assert.ok(essay.question && essay.outline, essay.id);
-    const step4 = essay.checklist[3].points.join(" ").toLowerCase();
-    assert.ok(OMRADEN.some((name) => step4.includes(name)), `${essay.id}: kopplingen namnger inget område`);
+    assert.match(essay.outline, /700 ord/, essay.id);
+    // Kursbegreppen ska ta både bok och föreläsning.
+    const concepts = essay.checklist[1].points.join(" ").toLowerCase();
+    assert.ok(/bok|kapitel/.test(concepts) || /bok/.test(essay.context.toLowerCase()), `${essay.id}: inget bokbegrepp`);
   }
 });
 
