@@ -293,6 +293,25 @@ export const questions = [
       { text: "Stealthing payload", explain: "Stealthing döljer att systemet är infekterat, med backdoors och rootkits." }
     ],
     correct: 1, source: "Bokens kapitel 6 (nyttolaster)", reviewed: false },
+  { id: "sak-bok6-07", topic: "bok6-malware", difficulty: 1,
+    question: "What distinguishes a Trojan horse from a virus or a worm?",
+    options: [
+      { text: "It does not replicate itself; it relies on tricking the user", explain: "En trojan ser användbar ut men har dold skadlig kod. Den sprids genom social engineering och kopierar sig inte själv." },
+      { text: "It needs a host program to attach itself to before spreading", explain: "Det beskriver ett virus, som infekterar ett värdprogram eller ett dokument." },
+      { text: "It spreads on its own by exploiting network vulnerabilities", explain: "Det beskriver en mask, som söker upp och angriper nya system själv." },
+      { text: "It changes its own code completely with every new infection", explain: "Det beskriver ett metamorphic virus." },
+    ],
+    correct: 0, source: "Bokens kapitel 6 (trojaner och social engineering)", reviewed: false },
+
+  { id: "sak-bok6-08", topic: "bok6-malware", difficulty: 1,
+    question: "Malware that records keystrokes to steal passwords belongs to which of the book's payload categories?",
+    options: [
+      { text: "System corruption payload", explain: "System corruption förstör eller låser data och system, till exempel ransomware." },
+      { text: "Attack agent payload", explain: "Attack agent gör den smittade datorn till en bot som angriparen styr, till exempel i en DDoS-attack." },
+      { text: "Information theft payload", explain: "Keyloggers, phishing och spyware stjäl uppgifter som lösenord. De hotar confidentiality." },
+      { text: "Stealthing payload", explain: "Stealthing döljer intrånget, med backdoors och rootkits." },
+    ],
+    correct: 2, source: "Bokens kapitel 6 (nyttolasterna)", reviewed: false },
 ];
 
 export const notes = `

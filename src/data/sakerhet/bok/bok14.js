@@ -291,6 +291,25 @@ export const questions = [
       { text: "How hard the organization is hit if a threat occurs", explain: "Det är consequence, som tillgångarnas ägare och ledningen bedömer." },
     ],
     correct: 1, source: "Bokens kapitel 14 (risk appetite)", reviewed: false },
+  { id: "sak-bok14-09", topic: "bok14-riskhantering", difficulty: 2,
+    question: "How do security objectives, security strategies and the organizational security policy differ in the book?",
+    options: [
+      { text: "Objectives: what to achieve; strategies: how; policy: what must be done", explain: "Målen anger vilka resultat IT-säkerheten ska uppnå, strategierna hur de ska nås, och policyn vad som behöver göras för att nå dem." },
+      { text: "Objectives: who is responsible; strategies: when; policy: the budget", explain: "Ansvar och tidpunkter hör till policyn och säkerhetsplanen; målen anger resultaten." },
+      { text: "Objectives: the risk levels; strategies: controls; policy: the risk register", explain: "Risknivåer och risk register hör till riskanalysen, som kommer efter målen och policyn." },
+      { text: "Objectives come from ISO 27001, strategies and policy from the law", explain: "Målen bygger på IT:s roll i den egna verksamheten. Lagkrav är en av sakerna policyn tar upp." },
+    ],
+    correct: 0, source: "Bokens kapitel 14 (organisationens mål och säkerhetspolicy)", reviewed: false },
+
+  { id: "sak-bok14-10", topic: "bok14-riskhantering", difficulty: 1,
+    question: "Why does the book stress that the IT security policy needs full support from senior management?",
+    options: [
+      { text: "Because only managers may read the policy documents", explain: "Policyn ska tvärtom vara känd i organisationen, och de anställda ska följa den." },
+      { text: "Because the law requires the chief executive to write it", explain: "Boken säger inget om att lagen kräver det; ansvaret läggs ofta på en IT security officer." },
+      { text: "Without it, the security objectives are unlikely to be met", explain: "Erfarenheten är att säkerheten annars inte prioriteras och får för lite resurser. Med ledningens stöd tas den på allvar." },
+      { text: "Because management must assess the likelihood of every threat", explain: "Likelihood bedöms av den som gör riskanalysen. Ledningen och tillgångarnas ägare bedömer consequence." },
+    ],
+    correct: 2, source: "Bokens kapitel 14 (ledningens stöd)", reviewed: false },
 ];
 
 export const notes = `Byggt på kap. 14 i del2-filen, s. 786–830 (markeringarna "Page N of 1641", rad 7717–9074): inledningen med de tre grundfrågorna (s. 786–787), 14.1 med ISO 27000-tabellen, NIST-standarderna, definitionen och processens sju steg (s. 788–791), Plan-Do-Check-Act (s. 792), 14.2 om objectives, strategies, policy, policyns ämnen, ledningens stöd och IT security officer (s. 793–796), 14.3 om de fyra angreppssätten (s. 797–802), 14.4 om den detaljerade analysen med definitionerna, threat sources, likelihood- och consequence-tabellerna, risknivåtabellen, risk register, evaluate och de fem behandlingsalternativen (s. 803–819), 14.5 Silver Star Mines kort (s. 820–825), Key Terms och Review Questions 14.1–14.16 (s. 827–828), som styrde urvalet. SASN13 enligt bokens referenslista (del3, "HB 98:2013—Security Risk Management", Standards Australia och Standards New Zealand).

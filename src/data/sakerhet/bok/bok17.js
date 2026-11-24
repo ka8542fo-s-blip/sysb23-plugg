@@ -280,6 +280,15 @@ export const questions = [
       { text: "Close the case, since most incidents are one-off events", explain: "En incident kan vara ren otur, men oftare visar den att organisationens riskbild har ändrats." },
     ],
     correct: 2, source: "Bokens kapitel 17 (efter incidenten)", reviewed: false },
+  { id: "sak-bok17-08", topic: "bok17-personal", difficulty: 2,
+    question: "According to the book, why should an organization enforce its acceptable use policy consistently and fairly?",
+    options: [
+      { text: "So that employees never need security awareness training", explain: "AUP:n och awareness kompletterar varandra; programmet för awareness ska pågå hela tiden." },
+      { text: "Because the AUP fully replaces the organization's security policy", explain: "AUP:n är en del av säkerhetspolicyn, inte en ersättning för den." },
+      { text: "It can reduce the organization's liability if a breach occurs", explain: "En tydlig policy som genomdrivs kan minska organisationens ansvar om en anställd bryter mot den och till exempel kunddata läcker." },
+      { text: "So that only the IT department has to read and sign it", explain: "AUP:n gäller alla anställda med åtkomst till organisationens tillgångar, och att skriva under den bör vara ett villkor för anställningen." },
+    ],
+    correct: 2, source: "Bokens kapitel 17 (acceptable use policy)", reviewed: false },
 ];
 
 export const notes = `Byggt på kap. 17 i del2-filen, PDF-sidorna 903–941 (markeringarna "Page N of 1641"): s. 903 (innehåll, lärandemål), s. 906 (fyra fördelar med programmen, de anställdas beteende, phishing och stulna inloggningsuppgifter som de två vanligaste vägarna in), s. 907–908 (learning continuum, NIST SP 800-50:s fyra nivåer, Table 17.1), s. 910–912 (security awareness, mål, material), s. 913 (cybersecurity basics and literacy), s. 914–915 (role-based training per roll), s. 916 (education and certification), s. 917 (17.2: insiders, omedvetet/medvetet, insiderhoten), s. 918–919 (rekrytering, bakgrundskontroll, negligent hiring, anställningsavtal, arbetsbeskrivningar), s. 921 (under anställningen, de fem principerna), s. 922 (när anställningen upphör), s. 923–924 (AUP, fem steg, SANS-mallens områden), s. 925–927 (CSIRT, NIST SP 800-61:s fördelar, incidentdefinitionen, CARN03:s fyra aktiviteter, Table 17.2), s. 928–929 (detecting), s. 930 (triage), s. 931–932 (responding, NIST:s fem kategorier, rapportering, bevis), s. 934 (documenting), s. 937–938 (Key Terms, Review Questions). Key Terms och Review Questions 17.1–17.11 styrde urvalet.

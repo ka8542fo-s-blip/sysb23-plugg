@@ -284,6 +284,25 @@ export const questions = [
       { text: "The current time, hacker activity and network used", explain: "Environment attributes beskriver sammanhanget kring begäran, inte användaren eller resursen." },
     ],
     correct: 3, source: "Bokens kapitel 4 (ABAC:s attribut)", reviewed: false },
+  { id: "sak-bok4-07", topic: "bok4-access", difficulty: 1,
+    question: "In mandatory access control (MAC), what decides whether a subject may access an object?",
+    options: [
+      { text: "The object's owner, who may grant access to anyone else", explain: "Det är discretionary access control (DAC): den som har en rättighet kan själv ge den vidare." },
+      { text: "Security labels on objects compared with clearances", explain: "Systemets regler jämför resursens klassning med subjektets clearance. Den som har behörighet kan inte på eget initiativ ge den vidare." },
+      { text: "The roles that are assigned to the subject's job", explain: "Det är role-based access control (RBAC), där rättigheterna hör till roller." },
+      { text: "Rules evaluating subject, object and environment", explain: "Det är attribute-based access control (ABAC), som prövar attribut hos subjekt, objekt och miljö." },
+    ],
+    correct: 1, source: "Bokens kapitel 4 (MAC)", reviewed: false },
+
+  { id: "sak-bok4-08", topic: "bok4-access", difficulty: 2,
+    question: "What is an access control list (ACL)?",
+    options: [
+      { text: "A ticket held by a user, listing the objects it may access", explain: "Det är en capability ticket: access matrix uppdelad per rad, alltså per subjekt." },
+      { text: "A set of objects with the access rights a process holds", explain: "Det är en protection domain." },
+      { text: "A table of every subject and every object in the whole system", explain: "Det är hela access matrix. En ACL är en kolumn ur den." },
+      { text: "A list for one object of the users and their access rights", explain: "Access matrix uppdelad per kolumn: för varje objekt listas vilka användare som får nå det och med vilka rättigheter." },
+    ],
+    correct: 3, source: "Bokens kapitel 4 (access matrix, ACL och capability)", reviewed: false },
 ];
 
 export const notes = `Byggt på kap. 4 i del1-filen, s. 188–245: inledningen och 4.1 (definitioner, context, de fyra policyerna), 4.2 (subject/object/access right, owner/group/world), 4.3 (access matrix, ACL, capability ticket, protection domain, user/kernel mode), 4.4 bara som en mening om UNIX owner/group/others, 4.5 (MAC, BLP, MLS, MIC), 4.6 (RBAC, entiteter, RBAC0–3, hierarkier, constraints), 4.7 (ABAC:s tre attributtyper, styrka/kostnad, streamingexemplet), 4.8–4.9 kort (ICAM, identity federation, trust framework, OpenID). Key Terms och Review Questions 4.1–4.11 styrde urvalet.

@@ -260,6 +260,15 @@ export const questions = [
       { text: "Reaction, after the attack", explain: "Attack reaction kommer efter attacken och försöker eliminera eller begränsa effekterna." },
     ],
     correct: 2, source: "Bokens kapitel 7 (försvarets fyra linjer)", reviewed: false },
+  { id: "sak-bok7-08", topic: "bok7-dos", difficulty: 2,
+    question: "A SYN spoofing attack fills a server's table of half-open TCP connections. Which kind of resource does it exhaust?",
+    options: [
+      { text: "The network bandwidth to the server", explain: "Att fylla länken med trafik är en flooding attack. SYN spoofing klarar sig med lite trafik." },
+      { text: "The server's system resources", explain: "Tabellen över påbörjade anslutningar hör till programvaran som hanterar nätverkstrafiken. När den är full avvisas riktiga användare." },
+      { text: "The application's resources", explain: "Application resources töms av giltiga men kostsamma förfrågningar till en applikation, som tunga databasfrågor." },
+      { text: "The attacker's own botnet capacity", explain: "Angriparens zombies är verktyget i en DDoS-attack, inte resursen som töms hos målet." },
+    ],
+    correct: 1, source: "Bokens kapitel 7 (resurstyperna och SYN spoofing)", reviewed: false },
 ];
 
 export const notes = `Byggt på kap. 7 i del1-filen, s. 372–416: inledningen och 7.1 (NIST-definitionen, de tre resurstyperna, poison packet, motiv, klassisk flooding, source address spoofing, backscatter, SYN spoofing som idé), 7.2 (ICMP/UDP/SYN flood bara som namn och idé, skillnaden SYN flood mot SYN spoofing), 7.3 (zombies, botnet, handlers/agents, botnet för uthyrning, Mirai/Dyn ur 7.1), 7.4 kort (SIP flood, HTTP flood, Slowloris), 7.5 (reflection, amplification via directed broadcast, DNS amplification, ingen backscatter, spoofing som förutsättning), 7.6 (flash crowd/slashdotted, de fyra försvarslinjerna, antispoofing, filtrering uppströms, rate limiting, captcha, SYN cookies och random drop i en mening), 7.7 (förberedelser och stegen när en attack upptäcks). Key Terms och Review Questions 7.1–7.18 styrde urvalet.

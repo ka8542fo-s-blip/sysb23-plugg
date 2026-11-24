@@ -274,6 +274,25 @@ export const questions = [
       { text: "It raises alerts but leaves all of the traffic untouched", explain: "Det beskriver en IDS, som upptäcker och larmar men inte stoppar trafiken." }
     ],
     correct: 2, source: "Bokens kapitel 9 (intrusion prevention systems)", reviewed: false },
+  { id: "sak-bok9-06", topic: "bok9-firewall", difficulty: 2,
+    question: "Besides filtering traffic, which role does the book say a firewall can have?",
+    options: [
+      { text: "Encrypting the data stored on internal file servers", explain: "Kryptering av lagrade data är en kontroll i datalagret, inte en brandväggsfunktion." },
+      { text: "A platform for NAT, VPNs, logging and alarms", explain: "Brandväggen är en naturlig plats för loggning, larm och övervakning och kan bära funktioner som adressöversättning (NAT) och VPN." },
+      { text: "Cleaning laptops that were infected outside the network", explain: "En dator som smittats utanför nätet och kopplas in innanför är en av brandväggens begränsningar." },
+      { text: "Stopping insiders who misuse their own valid access", explain: "Interna hot, som en missnöjd anställd, kan brandväggen inte skydda fullt ut mot." },
+    ],
+    correct: 1, source: "Bokens kapitel 9 (vad brandväggen klarar)", reviewed: false },
+
+  { id: "sak-bok9-07", topic: "bok9-firewall", difficulty: 2,
+    question: "Which type of firewall relays the traffic of a specific application, can require the user to authenticate, and examines the application content?",
+    options: [
+      { text: "Packet filtering firewall", explain: "Ett paketfilter prövar varje paket efter adresser, portar och protokoll, utan att förstå applikationens innehåll." },
+      { text: "Stateful inspection firewall", explain: "Stateful inspection håller dessutom reda på förbindelserna, men granskar inte applikationsdata." },
+      { text: "Circuit-level gateway", explain: "En circuit-level gateway förmedlar data mellan två TCP-förbindelser utan att granska innehållet." },
+      { text: "Application-level gateway", explain: "Även kallad application proxy: säkrare än ett paketfilter och kan stänga av enskilda funktioner, men varje förbindelse kräver mer bearbetning." },
+    ],
+    correct: 3, source: "Bokens kapitel 9 (brandväggarnas typer)", reviewed: false },
 ];
 
 export const notes = `Byggt på Stallings & Brown kap. 9 (s. 481–533: 9.1–9.7, Key Terms och Review Questions) och kap. 12.8 Virtual Firewall (s. 698–703) för tentans definition av virtual firewall. Föreläsning 2:s data center-modell (NGFW och IDS/IPS i nätverkslagret) är hänvisad till, inte upprepad.

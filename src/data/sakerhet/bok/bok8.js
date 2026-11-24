@@ -275,6 +275,15 @@ export const questions = [
       { text: "Real users often reach it as part of normal work", explain: "En honeypot har inget produktionsvärde, så ingen behörig har anledning att använda den. Därför är all trafik dit misstänkt." },
     ],
     correct: 0, source: "Bokens kapitel 8 (honeypots)", reviewed: false },
+  { id: "sak-bok8-08", topic: "bok8-ids", difficulty: 1,
+    question: "Which of the book's classes of intruders is mainly driven by social or political causes?",
+    options: [
+      { text: "Cyber criminals and organized crime", explain: "De drivs av pengar: identitetsstöld, datastöld och utpressning." },
+      { text: "State-sponsored organizations", explain: "De angriper på uppdrag av en regering, för spionage eller sabotage, ofta under lång tid (APT)." },
+      { text: "Hobby hackers seeking status", explain: "Klassen others: klassiska hackare och hobbyhackare som drivs av teknisk utmaning och anseende." },
+      { text: "Activists, also called hacktivists", explain: "De drivs av sociala eller politiska frågor och angriper till exempel med vandaliserade webbplatser, denial of service och läckta data." },
+    ],
+    correct: 3, source: "Bokens kapitel 8 (intruders)", reviewed: false },
 ];
 
 export const notes = `Byggt på Stallings & Brown kap. 8 i del1-filen, s. 417–480: 8.1 (fyra klasser av intruders, kunskapsnivåer, sex steg i ett intrång, supply-chain attack, BEC), 8.2 (definitionerna av security intrusion och intrusion detection, IDS:ens tre delar, HIDS/NIDS/distributed, tre fördelar, false positive/negative, base-rate fallacy, insiders enligt Anderson), 8.3 (anomaly mot signature/heuristic, de tre klassningssätten), 8.4 (HIDS, datakällor, att signature/heuristic HIDS i form av antivirus är vanligast), 8.5 (inline/passive, sensorplaceringen, vilka attacker som passar signature respektive anomaly enligt NIST SP 800-94), 8.6 kort (distributed/hybrid, SIEM), 8.8 (honeypots, low/high interaction, placering) och 8.9 bara som exempel (Snort). Key Terms och Review Questions 8.1–8.23 styrde urvalet. IDS/IPS i Föreläsning 2:s data center-modell och Detect/purple team i gästföreläsningen är hänvisade till, inte upprepade.

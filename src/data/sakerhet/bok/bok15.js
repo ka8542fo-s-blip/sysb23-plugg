@@ -290,6 +290,15 @@ export const questions = [
       { text: "Whether availability or security has the higher priority", explain: "Direkt installation ger snabbare skydd men kan orsaka fel och förlorad funktion, så ledningen avgör vad som går först." },
     ],
     correct: 3, source: "Bokens kapitel 15 (change management och patchar)", reviewed: false },
+  { id: "sak-bok15-09", topic: "bok15-kontroller", difficulty: 1,
+    question: "Security policies, planning, guidelines and standards that steer the choice of other controls belong to which class of control?",
+    options: [
+      { text: "Management controls", explain: "Management controls är de frågor ledningen måste ta hand om, som säkerhetspolicyn, och de styr valet av operativa och tekniska kontroller." },
+      { text: "Operational controls", explain: "Operational controls är rutiner som främst utförs av människor, som utbildning och incidenthantering." },
+      { text: "Technical controls", explain: "Technical controls bygger på säkerhetsfunktioner i hårdvara och mjukvara, som åtkomstkontroll och loggning." },
+      { text: "Supportive controls", explain: "Supportive är en funktion, inte en klass: grundläggande tekniska funktioner som andra kontroller bygger på." },
+    ],
+    correct: 0, source: "Bokens kapitel 15 (management controls)", reviewed: false },
 ];
 
 export const notes = `Byggt på kap. 15 i del2-filen, s. 831–866 (rad 9076–9993): inledningen, 15.1 (var kontrollerna kommer in, NIST SP 800-39), 15.2 (definitionen av control, de tre klasserna, de tre funktionerna, standarderna, Table 15.1 med klasserna per kontrollfamilj, baseline-anpassningar, feasibility/effectiveness, tre sätt att sänka risken, cost-benefit, de fyra tumreglerna, residual risk), 15.3 (planens innehåll enligt NIST SP 800-30, Table 15.4 routerexemplet), 15.4 (implementering, security officers tre kontroller, accreditation, awareness and training), 15.5 (uppföljningens fyra delar, maintenance, security compliance, change och configuration management, incident handling). Key Terms och Review Questions 15.1–15.10 styrde urvalet. Kap. 14 (s. 790–792, 818–819) lästes för definitionen av IT security management, plan-do-check-act och riskbehandlingens alternativ, som det här kapitlet hänvisar till men inte upprepar.

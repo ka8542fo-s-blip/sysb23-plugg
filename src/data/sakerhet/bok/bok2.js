@@ -293,6 +293,15 @@ export const questions = [
       { text: "A traffic analysis attack", explain: "Traffic analysis är passiv: angriparen ser vem som kommunicerar men ändrar ingenting. Darth deltar aktivt i nyckelutbytet." },
     ],
     correct: 0, reviewed: false },
+  { id: "sak-bok2-07", topic: "bok2-krypto", difficulty: 2,
+    question: "Why has public-key encryption not made symmetric encryption obsolete, according to the book?",
+    options: [
+      { text: "Public-key encryption is inherently more secure in every case", explain: "En missuppfattning som boken rättar: säkerheten beror på nyckellängden och hur mycket arbete det krävs att knäcka den, inte på typen av kryptering." },
+      { text: "Public keys can never be shared over an open network", explain: "Tvärtom: den publika nyckeln får alla känna till, det är hela poängen." },
+      { text: "It needs much more computation than symmetric ciphers", explain: "Därför krypteras stora datamängder fortfarande symmetriskt, ofta med en engångsnyckel som i sin tur skyddas med mottagarens publika nyckel (digital envelope)." },
+      { text: "Symmetric ciphers are the only way to sign a message", explain: "Digitala signaturer görs med den privata nyckeln i ett nyckelpar, alltså med public-key-kryptering." },
+    ],
+    correct: 2, source: "Bokens kapitel 2 (missuppfattningar om public-key-kryptering)", reviewed: false },
 ];
 
 export const notes = `Byggt på kap. 2 i del1-filen, s. 81–125 (texten) och s. 124–125 (Key Terms och Review Questions 2.1–2.13, som styrde urvalet); Problems s. 126–130 bara skummade. Avsnitt: 2.1 (fem beståndsdelar, två krav, cryptanalysis mot brute force, block mot stream cipher, keystream, DES/3DES/AES som namn), 2.2 (passiv mot aktiv attack, message authentication, MAC, hashfunktion utan nyckel, Figure 2.5 i en mening, de tre praktiska kraven och de tre säkerhetsegenskaperna, lösenord och intrångsdetektering, SHA), 2.3 (sex beståndsdelar, stegen Bob–Alice, två användningssätt, tre missuppfattningar, tre användningar, RSA/Diffie–Hellman/DSS), 2.4 (digital signatur enligt FIPS 186-4, certifikat och CA, X.509, nyckelutbyte, digital envelope), 2.6 (data at rest, PGP, BitLocker/FileVault). Privat mot hemlig nyckel bygger på fotnot 8 (slutnoterna i del3-filen, s. 1634 av 1641).

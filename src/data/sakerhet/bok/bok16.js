@@ -288,6 +288,25 @@ export const questions = [
       { text: "A certificate authority that signs the card data", explain: "En certificate authority signerar kortets uppgifter och ingår i systemets kärna, men den är inte själva kortet." },
     ],
     correct: 1, source: "Bokens kapitel 16 (PIV)", reviewed: false },
+  { id: "sak-bok16-08", topic: "bok16-fysisk", difficulty: 1,
+    question: "Which measure does the book recommend against short power interruptions, lasting seconds or minutes?",
+    options: [
+      { text: "A backup generator that powers the whole site", explain: "En generator är skyddet vid längre avbrott och brownouts. Den hinner inte ta över vid korta avbrott." },
+      { text: "Filters and shielding of the cables", explain: "Filter och skärmning skyddar mot elektromagnetisk störning (EMI)." },
+      { text: "Water sensors that cut the power automatically", explain: "Vattensensorer skyddar mot vattenskador, inte mot strömavbrott." },
+      { text: "A UPS for each critical piece of equipment", explain: "En uninterruptible power supply är ett batteri som håller strömmen i några minuter och kan också skydda mot överspänning och filtrera brus." },
+    ],
+    correct: 3, source: "Bokens kapitel 16 (åtgärder mot technical threats)", reviewed: false },
+
+  { id: "sak-bok16-09", topic: "bok16-fysisk", difficulty: 2,
+    question: "In the book's layered physical access control, what does bolting a computer to a heavy object achieve?",
+    options: [
+      { text: "It stops theft, vandalism and misuse of the computer", explain: "Fastbultning gör datorn svår att flytta, men hindrar inte att den förstörs eller missbrukas på plats." },
+      { text: "It deters theft, but not vandalism or misuse", explain: "Ett av stegen i physical access control: det avskräcker från stöld, och stegen kombineras för att täcka resten." },
+      { text: "It keeps unauthorized employees out of the building", explain: "Att begränsa tillträdet till byggnaden stoppar utomstående, men inte obehöriga anställda." },
+      { text: "It raises an alarm when the computer is moved out", explain: "Det gör en spårningsenhet, ett annat steg i physical access control." },
+    ],
+    correct: 1, source: "Bokens kapitel 16 (physical access control)", reviewed: false },
 ];
 
 export const notes = `Byggt på kap. 16 i del2-filen, s. 867–902: inledningen med de tre delarna av IS-säkerhet (s. 867–868), 16.1 (infrastrukturens fyra delar och missbruk, s. 869), 16.2 (natural disasters, environmental, technical och human-caused threats, s. 870–881), 16.3 (åtgärder per hot, physical access control i sex steg, Wi-Fi, s. 882–887), 16.4 (återställning, s. 888), 16.6 (integration, Bob-exemplet, FIPS 201 PIV, PACS och NIST SP 800-116, s. 890–898), Key Terms och Review Questions 16.1–16.10 (s. 899–900). Key Terms och Review Questions styrde urvalet. Kopplingen till data center-modellen (site och physical security) kontrollerad mot kap. 5 s. 282–283.
