@@ -94,6 +94,13 @@ export default function App() {
   useEffect(() => save(KEYS.view, view), [view]);
 
   const course = useMemo(() => getCourse(courseId), [courseId]);
+  // Vyn som ritas. Byter man delkurs med en flik öppen som den nya delkursen
+  // saknar (Moduler finns bara i Verksamhetsarkitektur) ritas Hem direkt, i
+  // stället för den gamla vyn med den nya delkursens data — det kraschade
+  // sidan 2026-11-24. Effekten längre ned sparar sedan Hem som vy. <main>
+  // har delkursen som key, så vyernas egna tillstånd (vald modul, essä …)
+  // aldrig följer med till en annan delkurs.
+  const shownView = ["hem", "schema", ...(course.views || [])].includes(view) ? view : "hem";
   // Öva: förklarakorten (course.explainCards, Verksamhetsarkitektur) i samma
   // kö som frågorna. Provtentorna och Statistik använder bara course.questions.
   const practiceCourse = useMemo(
@@ -222,7 +229,7 @@ export default function App() {
       </a>
 
       <Nav
-        view={view}
+        view={shownView}
         onNavigate={navigate}
         courses={courses}
         course={course}
@@ -232,7 +239,7 @@ export default function App() {
         theme={theme}
       />
 
-      <main id="innehall" className="mx-auto max-w-7xl px-4 py-7 sm:px-6 sm:py-10 lg:px-8">
+      <main key={course.id} id="innehall" className="mx-auto max-w-7xl px-4 py-7 sm:px-6 sm:py-10 lg:px-8">
         {/* backLink: { view, label, title?, params? } — title är länktexten
             (standard "Tillbaka till schemat"), params skickas med tillbaka. */}
         {backLink && (
@@ -248,7 +255,7 @@ export default function App() {
           </button>
         )}
 
-        {view === "hem" && (
+        {shownView === "hem" && (
           <Home
             {...shared}
             courses={courses}
@@ -258,7 +265,7 @@ export default function App() {
             onSelectCourse={setCourseId}
           />
         )}
-        {view === "moduler" && (
+        {shownView === "moduler" && (
           <Moduler
             course={course}
             answers={answers}
@@ -268,7 +275,7 @@ export default function App() {
             onResetModule={handleResetPractice}
           />
         )}
-        {view === "las" && (
+        {shownView === "las" && (
           <KnowledgeHub
             {...shared}
             params={viewParams}
@@ -276,7 +283,7 @@ export default function App() {
             onToggleRead={toggleRead}
           />
         )}
-        {view === "ova" && (
+        {shownView === "ova" && (
           <Practice
             {...shared}
             course={practiceCourse}
@@ -299,7 +306,7 @@ export default function App() {
             }
           />
         )}
-        {view === "prov" && (
+        {shownView === "prov" && (
           <Exam
             {...shared}
             session={examSession}
@@ -307,10 +314,10 @@ export default function App() {
             onFinish={handleExamFinished}
           />
         )}
-        {view === "essa" && (
+        {shownView === "essa" && (
           <Essays {...shared} params={viewParams} essayState={essayState} setEssayState={setEssayState} />
         )}
-        {view === "sql" && (
+        {shownView === "sql" && (
           <SqlWorkshop
             course={course}
             sqlProgress={sqlProgress}
@@ -318,13 +325,13 @@ export default function App() {
             onReset={resetSqlExercise}
           />
         )}
-        {view === "java" && <JavaWorkshop />}
-        {view === "modell" && (
+        {shownView === "java" && <JavaWorkshop />}
+        {shownView === "modell" && (
           <Modeling modelProgress={modelProgress} onSolve={solveModelExercise} onReset={resetModelExercise} />
         )}
         {/* Tenta: hela flervalstentor (course.choiceExams, Säkerhet) eller
             Databasers konstruktionsuppgifter. */}
-        {view === "tenta" &&
+        {shownView === "tenta" &&
           (course.mockExams.length > 0 ? (
             // Verksamhetsarkitektur: tre provtentor utan poäng (MockExam).
             <MockExam course={course} navigate={navigate} />
@@ -333,7 +340,7 @@ export default function App() {
           ) : (
             <DbExam />
           ))}
-        {view === "fordjupning" && (
+        {shownView === "fordjupning" && (
           // Verksamhetsarkitektur: docx-frågorna och HT25-arkivet, utanför UF:s tips.
           <Fordjupning
             {...shared}
@@ -344,8 +351,8 @@ export default function App() {
             onResetPractice={handleResetPractice}
           />
         )}
-        {view === "uppgifter" && <Assignments course={course} />}
-        {view === "zachman" && (
+        {shownView === "uppgifter" && <Assignments course={course} />}
+        {shownView === "zachman" && (
           <Zachman
             course={course}
             params={viewParams}
@@ -355,7 +362,7 @@ export default function App() {
             onReset={resetModelExercise}
           />
         )}
-        {view === "bpmn" && (
+        {shownView === "bpmn" && (
           <ProcessRun
             params={viewParams}
             modelProgress={modelProgress}
@@ -363,7 +370,7 @@ export default function App() {
             onReset={resetModelExercise}
           />
         )}
-        {view === "schema" && (
+        {shownView === "schema" && (
           <Schedule
             answers={answers}
             exams={exams}
@@ -371,7 +378,7 @@ export default function App() {
             onSelectCourse={setCourseId}
           />
         )}
-        {view === "statistik" && (
+        {shownView === "statistik" && (
           <Stats
             {...shared}
             exams={exams}
