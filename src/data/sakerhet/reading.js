@@ -442,7 +442,7 @@ Ur OWASP Top 10 (2025):
 | **SQL injection (SQLi)** | \`'--\` i adressen gör resten av databasfrågan till en kommentar, så villkoret \`released = 1\` försvinner | **prepared statements** och en **allowlist** för förväntad indata |
 | **Cross-site scripting (XSS)** | ett \`<script>\` i adressen visas på sidan och skickar besökaren vidare till en annan webbplats | validera och rensa indata, **encode output** |
 
-**Buffer overflow** hör inte hit. Det är ett minnesfel i program, och förra årets tentor hade det som rätt svar på frågan om vad som *inte* är en vanlig webbsårbarhet.
+**Buffer overflow** hör inte hit. Det är ett minnesfel i program, och förra årets tentor hade det som rätt svar på frågan om vad som *inte* är en vanlig webbsårbarhet. Varför förklaras i bokens kapitel om buffer overflow.
 
 ## Interna nät och Active Directory
 
