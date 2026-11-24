@@ -16,7 +16,7 @@ under prefixet `sysb23:`. All UI-text på svenska.
   bygger och publicerar via `.github/workflows/deploy.yml` (~40 s). Vänta in
   körningen med `gh run watch` och verifiera live efter varje push.
 - **Dev-server:** `preview_start {name: "sysb23-plugg"}` (`.claude/launch.json`), port 5173.
-- **Test:** `npm test` = 714 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-23.
+- **Test:** `npm test` = 718 fall (node:test, `scripts/*.test.mjs`), alla gröna 2026-11-24.
 - **Kursmaterialet ligger lokalt, aldrig i repot:** decken i
   `~/Desktop/Skola/SKOLA T3/___Lectures_export` (nya HT26-decken Fö1, Fö2–3,
   Fö4, Fö5, Fö7). **Fö6 finns i HT2026-version sedan 2026-09-30:**
@@ -50,7 +50,7 @@ kapitel: allt UI läser `chapter.number`.
 | strategi | komplett | 11 kapitel (kap `digital` = nr 9 ur Weavers föreläsning 1; kap9/kap10 är nr 10/11), 14 ämnen, 124 termer, 71 frågor (designregler i filens kommentar, mätskript `scripts/check-fragebank.mjs`), 4 essäer, `practiceBy: "chapter"`. Tillägg 2026-09-09 ur Weavers föreläsning 2: kapitel 2 value creation/value capture, kapitel 6 stuck in the middle + omskrivet RBV-avsnitt med VRIO och de tre imitationshindren + nya avsnitt "Dynamiska förmågor" (Teece: sensing/seizing/transforming) och "Sex sätt att nå uthållig konkurrensfördel" + omskrivet Mintzberg-avsnitt med Waters fem termer och Honda/Netflix, kapitel 8 hållbarhetens tidslinje (CSRD) och "Tre termer att hålla isär: CSR, TBL och ESG" (internt/externt är det som prövas). Sju frågor str-q67…73, sju ordlistetermer, essächecklistan för lärande organisation har de tre godtagbara perspektiven |
 | databaser | komplett mot tentan | se nedan |
 | process | aktiv (2026-09-29) | se "Processorienterad verksamhetsutveckling (BPM)" nedan |
-| sakerhet | aktiv (2026-11-13, utbyggd 22 nov) | Läs (sammanfattning, tre föreläsningar, bokkapitel, ordlista), Öva (kapitelfrågor med varianter + Tentafrågor), Essä (5 övningsessäer), Tenta (provtentor i årets format + förra årets tre), Uppgifter — se "Säkerhet i informationssystem" nedan |
+| sakerhet | aktiv (2026-11-13, utbyggd 22 och 24 nov) | Läs (sammanfattning med lärarens poäng och fokus, tre föreläsningar, 16 bokkapitel, ordlista), Öva (kapitelfrågor med varianter + Tentafrågor), Essä (5 övningsessäer), Tenta (provtentor i årets format + förra årets tre), Uppgifter — se "Säkerhet i informationssystem" nedan |
 | arkitektur | aktiv (2026-11-13) | Lärarens tre moduldokument på svenska (22 nov): Moduler (12 moduler med frågorna på sidan), Öva (136 frågor + 53 förklarakort), Statistik — se "Verksamhetsarkitektur" nedan |
 
 **Databaser** (`views: las, sql, modell, tenta, ova, statistik`; Prov medvetet borta):
@@ -1481,17 +1481,40 @@ management). Byggt i worktreen `.claude/worktrees/sakerhet` medan
 arkitektur-sessionen arbetade i sin; rebase mot `origin/main` före varje
 push, changelog-id efter det högsta på origin.
 
-- **Årets format är lärarens muntliga besked, inte bilderna:** 20 frågor,
-  5 ur tidigare tentor med små variationer, 5 ur föreläsningsbilderna och
-  relaterat material, 8 ur bokens kapitel, 2 essäer. Det står bara i
-  Fö2-avskriftens tredje del, utan bild som källa, så sajten skriver
-  "enligt läraren". Okänt: poäng, avdrag, essäernas längd och vilka
-  bokkapitel som ingår. Fö1:s exempelfråga ("Which is the Highest Industry
-  Cost per Data Breach?", sak-fo1-01 ordagrant) är märkt "Multiple choice,
-  1 point" — därav gissningen 1 p per fråga. "Relaterat material" kan
-  betyda lärarens egen forskning (Kajtazi m.fl.); den används inte.
-- **Läs:** Sammanfattning (`summary.js`, "Läs först": formatet, det okända,
-  hur delkursen hänger ihop, hur sajten används), Föreläsning 1 (`fo1`),
+- **Årets format, lärarens anslag på Canvas 24 nov 2026** (underlag
+  `cc-prompt-sakerhet-tentainfo.md`, gitignorerad): 20 frågor, 100 p.
+  2 essäer à 15 p (högst 700 ord, bedöms på djup och argumentation), 5
+  frågor som liknar förra årets à 3 p, 5 från föreläsningsbilderna och
+  relaterat material à 3 p, 8 från bokens kapitel à 5 p. De 18 slutna:
+  rätt ger frågans poäng, fel −1, blankt 0. **Betygsgränserna är inte
+  angivna**; sajten räknar med förra årets (A 85, B 75, C 65, D 55, E 50,
+  `lib/gradeScale.js`) och säger att de inte är bekräftade
+  (`yearExam.gradeNote`). Alla 155+ frågor har fyra alternativ, så en ren
+  gissning ger i snitt 0 p på 3-poängsfrågorna och +0,5 på 5-poängsfrågorna
+  — det är svarsregeln i Tenta och i sammanfattningen. Läraren betonar att
+  boken är huvudlitteraturen och att föreläsnings- och gästföreläsningsbilderna
+  är viktigt material. "Relaterat material" kan betyda lärarens egen
+  forskning (Kajtazi m.fl.); den används inte.
+- **Lärarens fokusämnen** (samma anslag), som `focus` på kapitlen med
+  lärarens formulering: Introduction to Buffer Overflow (kap. 10), IT
+  Security Management and Risk Assessment (14), Physical security control
+  types (16), Security policy in an organisation (14.2, 15, 17), Understand
+  types of network attacks (7, 8), Function of firewall (9), Malicious
+  Software / Types of malware (6), Access control mechanisms (4), Public key
+  in Cryptography / Encryption (2). `focus` (valfritt, generellt) ger
+  taggen "Lärarens fokus" i kapitellistan (`FocusTag` i
+  `ChapterList.jsx`) och raden "Läraren pekar ut inför tentan: …" i
+  kapitlets huvud; provtentan drar sina fokusfrågor ur samma fält
+  (`focusChapterIds` i `lib/yearExam.js`). Fokuskapitlen har 9–10 frågor
+  var (15 nya 24 nov, riktade mot lärarens ämnen). Läraren skrev "10.1
+  Introduction to Buffer Overflow"; i 5:e upplagan heter 10.1 "Stack
+  Overflows", så kapitel 10 tolkar fokus som 10.1 plus försvaren i 10.2.
+- **Saknas:** bilderna från gästföreläsarna Pelle Hafström (Tetra Pak) och
+  Boris Berberovic. Läggs till som föreläsningskapitel när de kommer (se
+  "Ny föreläsning").
+- **Läs:** Sammanfattning (`summary.js`, "Läs först": poängtabellen,
+  rättningen, svarsregeln, fokuslistan, hur delkursen hänger ihop, hur
+  sajten används), Föreläsning 1 (`fo1`),
   Föreläsning 2 (`fo2`), Gästföreläsning (`alm`, Erik Alm, Truesec), sedan
   bokkapitlen i bokens ordning. Ordlistan är föreläsningarnas termer plus
   bokkapitlens (`glossary`, unika termer, testat).
@@ -1511,7 +1534,8 @@ push, changelog-id efter det högsta på origin.
   (1, 4, 6, 9) och 2 (2, 3, 5, 7, 8) täcker begreppen i de 26 frågorna,
   prioritet 3 (13, 14, 15, 16, 17, 19) resten av det som ligger nära
   föreläsningarna. Alla tre prioriteterna är byggda (15 bokkapitel, 22
-  nov); kapitel 10–12, 18 och 20–24 är inte med. Utkasten skrevs av
+  nov), och kapitel 10 (buffer overflow) kom till 24 nov eftersom läraren
+  pekade ut det; kapitel 11, 12, 18 och 20–24 är inte med. Utkasten skrevs av
   underagenter mot bokens text och granskades av Claude mot boken, inte
   av Kasper (`reviewed: false`). Uppdragsbeskrivningen för underagenterna
   ligger i `kursmaterial-sakerhet/bokkapitel-brief.md` och
@@ -1529,25 +1553,36 @@ push, changelog-id efter det högsta på origin.
   ("Variant av en tentafråga från förra året (…)"), i kapitlet som lär ut
   begreppet. Fö2: 04, 05, 06, 07, 25. Gästföreläsningen: 12, 21, 22.
   Bok 1: 19, 20. Bok 2: 08, 16, 17. Bok 3: 02. Bok 4: 13, 14. Bok 5: 01,
-  23. Bok 6: 09, 11. Bok 7: 18. Bok 8: 15. Bok 9: 03, 10, 26. Bok 13:
-  24. Bok 16: 06 (andra varianten). Bok 17: 05 (andra varianten). Alla 26
+  23. Bok 6: 09, 11. Bok 7: 18. Bok 8: 15. Bok 9: 03, 10, 26. Bok 10: 22
+  (andra varianten, varför buffer overflow inte är en webbsårbarhet). Bok
+  13: 24. Bok 16: 06 (andra varianten). Bok 17: 05 (andra varianten). Alla 26
   har alltså minst en variant. Testet i `sakerhet-las.test.mjs`
   kontrollerar att varje `variantOf` finns i examBank.
-- **Essä:** `essays.js`, fem egna övningsessäer i fyrstegsformen (Fö1, Fö2
-  ×3, gästföreläsningen); `context` börjar "Egen övningsessä – årets
-  essäämnen är inte kända". `essayWordLimit: null` ger ordräknare utan
-  gräns; `essayIntro` föreslår Strategis 300 ord som riktmärke.
+- **Essä:** `essays.js`, sju egna övningsessäer: fem på föreläsningarna
+  (Fö1, Fö2 ×3, gästföreläsningen) och två på lärarens fokuskapitel
+  (riskhantering kap. 14, säkerhetspolicyn kap. 14/15/17); `context` börjar
+  "Egen övningsessä – årets essäämnen är inte kända". Checklistorna följer
+  **lärarens bedömning, inte Strategis fyra steg**: Tes / Kursbegrepp (bok
+  och föreläsning) / Konkreta exempel / Motargument eller begränsning /
+  Slutsats, 2–3 punkter var (testat i `sakerhet-las.test.mjs`).
+  `essayWordLimit: 700` och en egen `essayClosing` (annars visar Essä
+  Strategis slutrad om 300 ord och fyra steg); `essa-teman.test.mjs`
+  vaktar båda.
 - **Provtentor i Tenta** (`yearExam` i manifestet, `lib/yearExam.js`,
-  `views/ChoiceExam.jsx`): "Årets format" överst med "Dra en ny provtenta",
-  "Förra årets tentor" under. En provtenta drar med ett frö 5 varianter
-  (högst en per sak-fråga), 5 föreläsningsfrågor och 8 bokfrågor, spridda
-  över kapitlen, plus 2 av övningsessäerna, och blir en tenta i
-  `pastExams`-form som ChoiceExam rättar som de gamla. Poängen står i
-  manifestet: 1 p, inget avdrag, `showGrade: false` (bara "X av 18 · P %"
-  — betyget vore påhittat). **När läraren sagt mer: ändra `points`,
-  `penalty` och `showGrade` i manifestet.** Essädelarna har textruta och
-  efter inlämning checklistan; de ligger utanför poängen. Svårighetsgraden
-  visas inte i tentan.
+  `views/ChoiceExam.jsx`): "Årets format" överst med lärarens poäng och
+  svarsregel och "Dra en ny provtenta", "Förra årets tentor" under. En
+  provtenta drar med ett frö 5 varianter (högst en per sak-fråga, 3 p, −1),
+  5 föreläsningsfrågor (3 p, −1) och 8 bokfrågor (5 p, −1), plus 2 av
+  övningsessäerna (15 p var), och blir en tenta i `pastExams`-form som
+  ChoiceExam rättar. Bokdelen: `focus: 7` drar 7 frågor ur
+  fokuskapitlen, högst en per kapitel, och 1 ur övriga. **Essäpoängen är
+  den egna bedömningen**: 15 × andelen ibockade checklistpunkter
+  (`essayScore`), och totalen och betyget (`yearExamResult`) räknas på
+  flerval plus essäer, med `gradeNote` under. Provtentor dragna med äldre
+  poäng får manifestets poäng när listan laddas (`withYearPoints`, känner
+  igen sektionerna på `pool` eller ordningen); svaren rörs inte. Ändras
+  poängen igen räcker det att ändra `yearExam` i manifestet.
+  Svårighetsgraden visas inte i tentan.
 - **Invändningar mot underlaget:** RTO och pentest finns inte i boken
   (varianterna ligger i Fö2 och gästföreläsningen). Tentans formulering om
   virtual firewall står i bokens kapitel 12, inte 9; kapitel 9 har
@@ -1573,10 +1608,12 @@ push, changelog-id efter det högsta på origin.
   text.
 - **Tester:** `sakerhet-las.test.mjs` (kapitlens kind/label/examArea, ett
   ämne, frågor och termer per kapitel, unika termer, giltiga varianter,
-  manifestet, essäerna, klartext), `sakerhet-provtenta.test.mjs`
-  (poolerna, 5/5/8/2, numrering 1–20, samma frö ger samma tenta, rättning
-  med 1 p utan avdrag), Säkerhetsraden i `fragebank-balans.test.mjs`,
-  etiketterna i `practice-axis.test.mjs`.
+  manifestet, essäerna med lärarens fem kriterier, klartext),
+  `sakerhet-provtenta.test.mjs` (lärarens poäng och 100 totalt, poolerna,
+  5/5/8/2, 7 bokfrågor ur fokuskapitlen, numrering 1–20, samma frö ger
+  samma tenta, −1 för fel, essäpoängen, uppdatering av gamla provtentor),
+  Säkerhetsraden i `fragebank-balans.test.mjs`, etiketterna i
+  `practice-axis.test.mjs`.
 
 ## Verksamhetsarkitektur, byggd 2026-11-13
 
@@ -2111,12 +2148,13 @@ kapitel 4, Zachman- och Essä-introt).
   BPMN-övningar och kapitel 11 först.
 - **Säkerhet:** Kasper granskar kapitlen, frågorna och varianterna
   (`reviewed: false`; bokkapitlens `notes` listar osäkerheterna) och
-  facit i examBank. Alla 15 planerade bokkapitel är byggda; fler kan
-  läggas till som en fil var i `bok/` (briefen i
-  `kursmaterial-sakerhet/`). När läraren
-  sagt mer om poäng, avdrag eller essälängd: ändra `yearExam` och
-  `essayWordLimit` i manifestet och sammanfattningens lista över det
-  okända. Kommer fler föreläsningar: ett kapitel per föreläsning (se
+  facit i examBank. 16 bokkapitel är byggda (de 15 planerade plus
+  kapitel 10); fler kan läggas till som en fil var i `bok/` (briefen i
+  `kursmaterial-sakerhet/`). Poängen, avdraget och 700 ord är lärarens
+  (24 nov). Anger läraren betygsgränser: ändra `lib/gradeScale.js` eller
+  lägg en egen skala för provtentan, och ta bort `gradeNote` och raden om
+  gränserna i sammanfattningen. Gästföreläsarna Pelle Hafströms och Boris
+  Berberovics bilder saknas: ett kapitel per föreläsning när de kommer (se
   "Ny föreläsning").
 - **Verksamhetsarkitektur:** Kasper granskar översättningen i Moduler
   (`moduler/m01–m12.js`) och förklaringarna. Skillnaderna mellan
