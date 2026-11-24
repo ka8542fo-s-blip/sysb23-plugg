@@ -276,22 +276,29 @@ export const courses = [
     examBank: sakerhetExamBank,
     pastExams: sakerhetPastExams,
     choiceExams: sakerhetPastExams,
-    // Provtentor i årets format i fliken Tenta (lib/yearExam.js). Poäng och
-    // avdrag är okända: 1 p per flervalsfråga utan avdrag tills vidare, och
-    // inget betyg (showGrade). Ändra här när läraren har sagt mer.
+    // Provtentor i årets format i fliken Tenta (lib/yearExam.js), med
+    // lärarens poäng (Canvas 24 nov 2026): 3 p för varianter och
+    // föreläsningsfrågor, 5 p för bokfrågor, −1 för fel svar, 15 p per essä,
+    // totalt 100. Essäpoängen är den egna bedömningen ur checklistan.
+    // Betygsgränserna är inte bekräftade (gradeNote). Bokdelen drar `focus`
+    // frågor ur lärarens fokuskapitel.
     yearExam: {
       intro:
-        "Enligt läraren har årets tenta 20 frågor: 5 från tidigare tentor med små variationer, 5 från föreläsningsbilderna, 8 från bokens kapitel och 2 essäer. En provtenta drar just det ur sajtens frågor: varianter av förra årets frågor, föreläsningsfrågor, bokfrågor och två av övningsessäerna.",
-      rule: "Poäng och avdrag är inte kända. Tills vidare ger varje flervalsfråga 1 poäng och fel svar inget avdrag; essäerna ligger utanför poängen.",
+        "Läraren har angett poängen: 20 frågor och 100 poäng. 5 frågor som liknar förra årets (3 p var), 5 från föreläsningsbilderna och relaterat material (3 p), 8 från bokens kapitel (5 p) och 2 essäer (15 p var, högst 700 ord). En provtenta drar just det ur sajtens frågor, med 7 av bokfrågorna ur lärarens fokuskapitel.",
+      rule: "Fel svar på en flervalsfråga ger −1, blankt ger 0. 5-poängsfrågor: svara alltid, en ren gissning ger i snitt +0,5. 3-poängsfrågor: en ren gissning ger i snitt 0, så svara om du kan stryka minst ett alternativ. Essäerna rättas inte automatiskt: efter inlämningen bockar du i checklistan, och essäpoängen blir din egen bedömning.",
+      gradeNote: "Betygsgränserna är inte bekräftade för i år; sajten räknar med förra årets: A 85, B 75, C 65, D 55, E 50.",
       pastNote:
         "Förra årets tentor hade ett annat format: 20 flervalsfrågor à 3–8 poäng med avdrag för fel svar, och inga essäer. Frågorna kan återkomma med små variationer.",
       sections: [
-        { pool: "variant", count: 5, points: 1, penalty: 0, title: "Från tidigare tentor, med små variationer" },
-        { pool: "forelasning", count: 5, points: 1, penalty: 0, title: "Från föreläsningarna" },
-        { pool: "bok", count: 8, points: 1, penalty: 0, title: "Från boken" },
+        { pool: "variant", count: 5, points: 3, penalty: 1, title: "Från tidigare tentor, med små variationer" },
+        { pool: "forelasning", count: 5, points: 3, penalty: 1, title: "Från föreläsningarna" },
+        { pool: "bok", count: 8, focus: 7, points: 5, penalty: 1, title: "Från boken" },
       ],
+      // Lärarens fokusämnen (Canvas 24 nov) ligger i de här bokkapitlen.
+      focusChapters: ["bok2", "bok4", "bok6", "bok7", "bok8", "bok9", "bok10", "bok14", "bok15", "bok16", "bok17"],
       essays: 2,
-      showGrade: false,
+      essayPoints: 15,
+      showGrade: true,
     },
     // "När lönar det sig att svara?" på Tentas översikt.
     answerRule: sakerhetAnswerRule,

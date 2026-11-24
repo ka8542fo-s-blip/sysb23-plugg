@@ -1,21 +1,31 @@
 // Provtentor i årets format (Säkerhet): lib/yearExam.js drar en tenta ur
 // kapitelfrågorna enligt manifestets yearExam, och fliken Tenta rättar den
-// med lib/choiceExam.js som vilken tenta som helst.
+// med lib/choiceExam.js plus essäernas egna bedömning. Poängen följer
+// lärarens besked (Canvas 24 nov 2026): 3/3/5 p, −1 för fel, 15 p per essä.
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { getCourse } from "../src/data/index.js";
-import { drawYearExam, yearExamMax, yearExamPools } from "../src/lib/yearExam.js";
+import {
+  drawYearExam,
+  essayScore,
+  withYearPoints,
+  yearExamMax,
+  yearExamPools,
+  yearExamResult,
+  yearExamTotal,
+} from "../src/lib/yearExam.js";
 import { examResult, writtenParts } from "../src/lib/choiceExam.js";
 
 const real = getCourse("sakerhet");
 const config = real.yearExam;
 
 // En konstruerad delkurs med gott om frågor i varje pool: två föreläsningar
-// och fem bokkapitel, varianter av sex gamla frågor (två av en av dem).
+// och nio bokkapitel (sju av dem fokuskapitel), varianter av sex gamla frågor
+// (två av en av dem).
 function fakeCourse() {
   const chapters = [
     ...["f1", "f2"].map((id) => ({ id, kind: "forelasning" })),
-    ...["b1", "b2", "b3", "b4", "b5"].map((id) => ({ id, kind: "bok" })),
+    ...["b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9"].map((id) => ({ id, kind: "bok" })),
   ];
   const topics = chapters.map((c) => ({ id: `t-${c.id}`, chapter: c.id }));
   const q = (id, chapter, extra = {}) => ({
@@ -26,20 +36,33 @@ function fakeCourse() {
   for (const c of chapters) for (let i = 1; i <= 4; i++) questions.push(q(`${c.id}-${i}`, c.id));
   ["01", "02", "03", "04", "05", "06"].forEach((n, i) => questions.push(q(`v-${n}`, chapters[i % chapters.length].id, { variantOf: `sak-${n}` })));
   questions.push(q("v-01b", "b2", { variantOf: "sak-01" }));
-  const essays = ["e1", "e2", "e3", "e4", "e5"].map((id) => ({ id, checklist: [] }));
-  return { id: "fake", chapters, topics, questions, essays, yearExam: config };
+  const essays = ["e1", "e2", "e3", "e4", "e5"].map((id) => ({
+    id,
+    checklist: [{ heading: "A", points: ["a1", "a2"] }, { heading: "B", points: ["b1", "b2"] }],
+  }));
+  const yearExam = { ...config, focusChapters: ["b1", "b2", "b3", "b4", "b5", "b6", "b7"] };
+  return { id: "fake", chapters, topics, questions, essays, yearExam };
 }
 
-test("manifestet: 5 varianter, 5 föreläsningsfrågor, 8 bokfrågor à 1 p utan avdrag, 2 essäer, inget betyg", () => {
+test("manifestet följer lärarens poäng: 3/3/5 p, −1 för fel, 2 essäer à 15 p, 100 totalt, betyg med anmärkning", () => {
   assert.deepEqual(config.sections.map((s) => [s.pool, s.count, s.points, s.penalty]), [
-    ["variant", 5, 1, 0],
-    ["forelasning", 5, 1, 0],
-    ["bok", 8, 1, 0],
+    ["variant", 5, 3, 1],
+    ["forelasning", 5, 3, 1],
+    ["bok", 8, 5, 1],
   ]);
+  assert.equal(config.sections.find((s) => s.pool === "bok").focus, 7);
   assert.equal(config.essays, 2);
-  assert.equal(config.showGrade, false);
-  assert.equal(yearExamMax(config), 18);
+  assert.equal(config.essayPoints, 15);
+  assert.equal(yearExamMax(config), 70);
+  assert.equal(yearExamTotal(config), 100);
+  assert.equal(config.showGrade, true);
+  assert.match(config.gradeNote, /inte bekräftade/);
   for (const field of ["intro", "rule", "pastNote"]) assert.ok(config[field]?.length > 40, field);
+  assert.match(config.rule, /−1/);
+  // Fokuskapitlen är bokkapitel (kapitel 10 kan saknas tills det är byggt).
+  const bookIds = new Set(real.chapters.filter((c) => c.kind === "bok").map((c) => c.id));
+  assert.ok(config.focusChapters.filter((id) => bookIds.has(id)).length >= 10);
+  assert.ok(config.focusChapters.every((id) => /^bok\d+$/.test(id)));
 });
 
 test("poolerna delar kapitelfrågorna utan överlapp: varianter, föreläsningar, boken", () => {
@@ -56,6 +79,7 @@ test("en dragen provtenta har rätt antal ur varje pool, numrerad 1–20, utan d
   const exam = drawYearExam(course, "frö-1", 1, "2026-11-22T10:00:00Z");
   const [variants, lectures, book, essays] = exam.sections.map((s) => s.parts);
   assert.deepEqual([variants.length, lectures.length, book.length, essays.length], [5, 5, 8, 2]);
+  assert.deepEqual(exam.sections.slice(0, 3).map((s) => s.pool), ["variant", "forelasning", "bok"]);
   const nos = exam.sections.flatMap((s) => s.parts.map((p) => p.no));
   assert.deepEqual(nos, Array.from({ length: 20 }, (_, i) => String(i + 1)));
   const ids = exam.sections.slice(0, 3).flatMap((s) => s.parts.map((p) => p.question));
@@ -64,21 +88,41 @@ test("en dragen provtenta har rätt antal ur varje pool, numrerad 1–20, utan d
   const byId = Object.fromEntries(course.questions.map((q) => [q.id, q]));
   const olds = variants.map((p) => byId[p.question].variantOf);
   assert.equal(new Set(olds).size, olds.length);
-  // Föreläsningsfrågorna ur föreläsningarna, bokfrågorna ur boken och spridda.
+  // Föreläsningsfrågorna ur föreläsningarna, bokfrågorna ur boken.
   assert.ok(lectures.every((p) => /^f/.test(p.question)));
   assert.ok(book.every((p) => /^b/.test(p.question)));
-  const perChapter = {};
-  for (const p of book) perChapter[p.question.split("-")[0]] = (perChapter[p.question.split("-")[0]] || 0) + 1;
-  assert.ok(Math.max(...Object.values(perChapter)) <= 2, "bokfrågorna spridda över kapitlen");
   // Poäng ur manifestet, alternativordningen en permutation, essäerna ur essays.
-  for (const p of exam.sections.slice(0, 3).flatMap((s) => s.parts)) {
-    assert.deepEqual([p.points, p.penalty], [1, 0]);
-    assert.deepEqual([...p.order].sort(), [0, 1, 2, 3]);
+  for (const [section, points] of [[variants, 3], [lectures, 3], [book, 5]]) {
+    for (const p of section) {
+      assert.deepEqual([p.points, p.penalty], [points, 1]);
+      assert.deepEqual([...p.order].sort(), [0, 1, 2, 3]);
+    }
   }
   assert.ok(essays.every((p) => course.essays.some((e) => e.id === p.essay)));
   assert.equal(new Set(essays.map((p) => p.essay)).size, 2);
   assert.equal(exam.title, "Provtenta 1");
   assert.equal(exam.generated, true);
+});
+
+test("bokdelen: 7 frågor ur fokuskapitlen, högst en per kapitel, och 1 ur övriga", () => {
+  const course = fakeCourse();
+  const focus = new Set(course.yearExam.focusChapters);
+  for (const seed of ["a", "b", "c", "d", "e"]) {
+    const exam = drawYearExam(course, seed, 1, "2026-11-22T10:00:00Z");
+    const chapters = exam.sections[2].parts.map((p) => p.question.split("-")[0]);
+    const inFocus = chapters.filter((c) => focus.has(c));
+    assert.equal(inFocus.length, 7, seed);
+    assert.equal(new Set(inFocus).size, 7, `${seed}: en per fokuskapitel`);
+  }
+  // Den riktiga delkursen: minst 7 av 8 ur lärarens fokuskapitel.
+  const realFocus = new Set(config.focusChapters);
+  const chapterOf = Object.fromEntries(real.topics.map((t) => [t.id, t.chapter]));
+  const byId = Object.fromEntries(real.questions.map((q) => [q.id, q]));
+  for (const seed of ["x", "y", "z"]) {
+    const exam = drawYearExam(real, seed, 1, "2026-11-22T10:00:00Z");
+    const book = exam.sections.find((s) => s.pool === "bok").parts;
+    assert.ok(book.filter((p) => realFocus.has(chapterOf[byId[p.question].topic])).length >= 7, seed);
+  }
 });
 
 test("samma frö ger samma tenta, ett annat frö en annan", () => {
@@ -90,15 +134,49 @@ test("samma frö ger samma tenta, ett annat frö en annan", () => {
   assert.notDeepEqual(a.sections, c.sections);
 });
 
-test("den riktiga delkursen: provtentan rättas av choiceExam med 1 p per fråga", () => {
+test("den riktiga delkursen: rätt ger 70 p, fel ger −1 per fråga, essäerna efter egen bedömning", () => {
   const exam = drawYearExam(real, "riktig", 1, "2026-11-22T10:00:00Z");
   const parts = writtenParts(real, exam);
-  assert.ok(parts.length > 0 && parts.every((p) => p.points === 1 && p.penalty === 0));
+  assert.equal(parts.length, 18);
   const right = Object.fromEntries(parts.map((p) => [p.no, Array.isArray(p.item.correct) ? p.item.correct[0] : p.item.correct]));
-  const result = examResult(parts, right);
-  assert.equal(result.points, parts.length);
-  assert.equal(result.max, parts.length);
-  // Fel svar kostar inget.
   const wrong = Object.fromEntries(parts.map((p) => [p.no, (right[p.no] + 1) % p.item.options.length]));
-  assert.equal(examResult(parts, wrong).points, 0);
+  assert.equal(examResult(parts, right).points, 70);
+  assert.equal(examResult(parts, wrong).points, -18);
+  // Essäerna: allt ibockat ger 15 p var, inget ger 0.
+  const essays = exam.sections.flatMap((s) => s.parts).filter((p) => p.essay)
+    .map((p) => ({ ...p, essayItem: real.essays.find((e) => e.id === p.essay) }));
+  const all = Object.fromEntries(essays.map((p) => [p.no, p.essayItem.checklist.flatMap((g) => g.points).map(() => true)]));
+  const full = yearExamResult(config, parts, essays, { choices: right, checks: all });
+  assert.deepEqual([full.points, full.max, full.grade, full.essayPoints], [100, 100, "A", 30]);
+  const noEssays = yearExamResult(config, parts, essays, { choices: right, checks: {} });
+  assert.deepEqual([noEssays.points, noEssays.max, noEssays.grade], [70, 100, "C"]);
+});
+
+test("essäpoängen är andelen ibockade punkter, avrundad", () => {
+  const essay = { checklist: [{ heading: "A", points: ["1", "2"] }, { heading: "B", points: ["3", "4"] }] };
+  assert.equal(essayScore(essay, [true, true, false, false], 15), 8);
+  assert.equal(essayScore(essay, [true, false, false, false], 15), 4);
+  assert.equal(essayScore(essay, [], 15), 0);
+  assert.equal(essayScore(essay, [true, true, true, true], 15), 15);
+});
+
+test("en provtenta dragen med de gamla poängen får manifestets poäng, svaren rörs inte", () => {
+  const course = fakeCourse();
+  const fresh = drawYearExam(course, "gammal", 1, "2026-11-22T10:00:00Z");
+  // Som den sparades före 24 nov: 1 p utan avdrag och sektioner utan pool.
+  const old = {
+    ...fresh,
+    sections: fresh.sections.map(({ pool, ...section }) => ({
+      ...section,
+      parts: section.parts.map((p) => (p.question ? { ...p, points: 1, penalty: 0 } : p)),
+    })),
+  };
+  const updated = withYearPoints(course.yearExam, old);
+  assert.deepEqual(updated.sections, fresh.sections);
+  assert.equal(updated.id, old.id);
+  // En tenta som redan har rätt poäng lämnas som den är.
+  assert.equal(withYearPoints(course.yearExam, fresh), fresh);
+  // Förra årets tentor (inte dragna) rörs aldrig.
+  const past = { id: "x", sections: old.sections };
+  assert.equal(withYearPoints(course.yearExam, past), past);
 });

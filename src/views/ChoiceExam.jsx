@@ -3,7 +3,7 @@ import QuestionCard from "../components/QuestionCard.jsx";
 import { viewFor } from "../lib/shuffle.js";
 import { pointsLabel } from "../lib/pastExams.js";
 import { examResult, scorePart, writtenParts } from "../lib/choiceExam.js";
-import { drawYearExam } from "../lib/yearExam.js";
+import { drawYearExam, essayScore, withYearPoints, yearExamResult } from "../lib/yearExam.js";
 import { KEYS, choiceExamKey, clearChoiceExam, load, save } from "../lib/storage.js";
 
 // Fliken Tenta för flervalstentor (course.choiceExams; Säkerhet): skriv en
@@ -17,8 +17,10 @@ import { KEYS, choiceExamKey, clearChoiceExam, load, save } from "../lib/storage
 // Provtentor i årets format (course.yearExam, lib/yearExam.js): dras ur
 // kapitelfrågorna och sparas i sin helhet i sysb23:provtentor:<delkurs>
 // (frågor, alternativordning, essäer), så att en påbörjad provtenta aldrig
-// ändras. De har essädelar utanför poängen (text och checklista sparas) och
-// visar inget betyg så länge poängen per fråga är okänd (showGrade).
+// byter frågor. Poängen följer manifestet (withYearPoints, när listan
+// laddas). Essädelarna (text och checklista sparas) får poäng efter den
+// egna bedömningen i checklistan, och betyget räknas på totalen med
+// yearExam.gradeNote om att gränserna inte är bekräftade.
 
 const emptyState = () => ({ choices: {}, texts: {}, checks: {}, current: "1", submittedAt: null });
 function loadExamState(id) {
@@ -34,9 +36,14 @@ function loadExamState(id) {
 }
 
 const generatedKey = (courseId) => `provtentor:${courseId}`;
-const loadGenerated = (courseId) => {
-  const list = load(generatedKey(courseId), []);
-  return Array.isArray(list) ? list.filter((exam) => exam && exam.id && Array.isArray(exam.sections)) : [];
+// Sparade provtentor, med manifestets poäng. Har poängen ändrats sedan
+// tentan drogs skrivs listan tillbaka; svaren ligger i tenta:<id> och rörs inte.
+const loadGenerated = (course) => {
+  const saved = load(generatedKey(course.id), []);
+  const list = Array.isArray(saved) ? saved.filter((exam) => exam && exam.id && Array.isArray(exam.sections)) : [];
+  const updated = list.map((exam) => withYearPoints(course.yearExam, exam));
+  if (updated.some((exam, i) => exam !== list[i])) save(generatedKey(course.id), updated);
+  return updated;
 };
 
 // Essädelarna i en tenta, med essän ur course.essays.
@@ -48,7 +55,7 @@ const essayParts = (course, exam) =>
     .filter((part) => part.essayItem);
 
 export default function ChoiceExam({ course }) {
-  const [generated, setGenerated] = useState(() => loadGenerated(course.id));
+  const [generated, setGenerated] = useState(() => loadGenerated(course));
   const exams = [...generated, ...course.choiceExams];
   // Öppen tenta per delkurs, så att en omladdning landar i tentan.
   const [openId, setOpenId] = useState(() => {
@@ -95,8 +102,16 @@ export default function ChoiceExam({ course }) {
   );
 }
 
-// Poängraden på kortet och i rummet: betyg för förra årets tentor, poäng
-// och procent för provtentor så länge poängen per fråga är okänd.
+// Resultatet för en tenta: provtentor räknar med essäernas egen bedömning
+// (lib/yearExam.js), förra årets tentor bara flervalsdelen.
+function resultFor(course, exam, parts, essays, state) {
+  return exam.generated && course.yearExam
+    ? yearExamResult(course.yearExam, parts, essays, state)
+    : examResult(parts, state.choices);
+}
+
+// Poängraden på kortet och i rummet: poäng och betyg (eller procent om
+// manifestet inte vill visa betyg för provtentorna).
 function ScoreLine({ course, exam, result, large = false }) {
   const showGrade = !exam.generated || course.yearExam?.showGrade;
   const big = large ? "font-display text-3xl" : "font-display text-2xl";
@@ -122,7 +137,7 @@ function ExamCard({ course, exam, onOpen, onRemove }) {
   const state = loadExamState(exam.id);
   const parts = writtenParts(course, exam);
   const essays = essayParts(course, exam);
-  const result = examResult(parts, state.choices);
+  const result = resultFor(course, exam, parts, essays, state);
   const submitted = Boolean(state.submittedAt);
   const started = result.answered > 0 || essays.some((p) => state.texts[p.no]?.trim());
   return (
@@ -130,7 +145,7 @@ function ExamCard({ course, exam, onOpen, onRemove }) {
       <p className="text-sm text-ink/65">{exam.dateLabel}</p>
       <h2 className="mt-1 font-display text-xl">{exam.title}</h2>
       <p className="mt-1 text-sm text-ink/65">
-        {parts.length} flervalsfrågor · {result.max} p{essays.length > 0 ? ` · ${essays.length} essäer` : ""}
+        {parts.length} flervalsfrågor{essays.length > 0 ? ` · ${essays.length} essäer` : ""} · {result.max} p
       </p>
       <p className="tabular mt-3 text-[15px]">
         {submitted ? (
@@ -267,7 +282,8 @@ const LABEL = { open: "obesvarad", answered: "besvarad", ratt: "rätt", fel: "fe
 
 function ExamRoom({ course, exam, onBack }) {
   const parts = useMemo(() => writtenParts(course, exam), [course, exam]);
-  // Essäerna (provtentor) ligger efter flervalsfrågorna och räknas inte i poängen.
+  // Essäerna (provtentor) ligger efter flervalsfrågorna; deras poäng är den
+  // egna bedömningen i checklistan efter inlämning.
   const essays = useMemo(() => essayParts(course, exam), [course, exam]);
   const items = useMemo(() => [...parts, ...essays].sort((a, b) => Number(a.no) - Number(b.no)), [parts, essays]);
   const [state, setState] = useState(() => loadExamState(exam.id));
@@ -286,7 +302,7 @@ function ExamRoom({ course, exam, onBack }) {
   );
 
   const submitted = Boolean(state.submittedAt);
-  const result = useMemo(() => examResult(parts, state.choices), [parts, state.choices]);
+  const result = useMemo(() => resultFor(course, exam, parts, essays, state), [course, exam, parts, essays, state]);
   const index = Math.max(0, items.findIndex((item) => item.no === state.current));
   const currentItem = items[index];
   // `part` är aktuell flervalsfråga; null när en essä visas.
@@ -406,6 +422,14 @@ function ExamRoom({ course, exam, onBack }) {
             <p className="tabular mt-1 text-sm text-ink/70">
               {result.right} rätt · {result.wrong} fel · {result.blank} obesvarade
             </p>
+            {result.essayMax > 0 && (
+              <p className="tabular mt-1 text-sm text-ink/70">
+                Flerval {result.choicePoints} av {result.choiceMax} · essäer {result.essayPoints} av {result.essayMax}, din egen bedömning
+              </p>
+            )}
+            {exam.generated && course.yearExam?.showGrade && course.yearExam.gradeNote && (
+              <p className="mt-1 text-xs text-ink/60">{course.yearExam.gradeNote}</p>
+            )}
             {exam.generated && !course.yearExam?.showGrade && (
               <p className="mt-1 text-xs text-ink/60">Betyget går inte att räkna ut förrän poängen per fråga är känd.</p>
             )}
@@ -500,6 +524,8 @@ function ExamRoom({ course, exam, onBack }) {
             <EssayPart
               item={currentItem}
               total={items.length}
+              maxPoints={exam.generated ? course.yearExam?.essayPoints || 0 : 0}
+              wordLimit={course.essayWordLimit || null}
               text={state.texts[currentItem.no] || ""}
               checks={state.checks[currentItem.no] || []}
               submitted={submitted}
@@ -558,9 +584,12 @@ function ExamRoom({ course, exam, onBack }) {
 
 // En essädel i en provtenta: fritext före inlämning, sedan essäns checklista
 // (bockarna sparas) och disposition. Utanför poängen.
-function EssayPart({ item, total, text, checks, submitted, onText, onCheck, onStep, isFirst, isLast }) {
+// En essä i en provtenta. `maxPoints` > 0 ger poäng efter den egna
+// bedömningen (andelen ibockade punkter), `wordLimit` visar taket.
+function EssayPart({ item, total, maxPoints, wordLimit, text, checks, submitted, onText, onCheck, onStep, isFirst, isLast }) {
   const essay = item.essayItem;
   const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+  const over = wordLimit && words > wordLimit;
   let pointIndex = -1;
   return (
     <article className="card mx-auto w-full max-w-reading p-5 sm:p-7">
@@ -568,7 +597,7 @@ function EssayPart({ item, total, text, checks, submitted, onText, onCheck, onSt
         <span className="rounded-full border border-brass/50 px-2.5 py-0.5 text-xs font-medium text-brass-text">
           Fråga {item.no} av {total} · essä
         </span>
-        <span>utanför poängen</span>
+        <span>{maxPoints ? `${maxPoints} p · bedöms på djup och argumentation` : "utanför poängen"}</span>
       </div>
       {essay.context && <p className="mb-2 text-sm text-ink/65">{essay.context}</p>}
       <h2 className="font-sans text-[18px] font-medium leading-normal text-ink sm:text-[20px]">{essay.question}</h2>
@@ -583,12 +612,17 @@ function EssayPart({ item, total, text, checks, submitted, onText, onCheck, onSt
         rows={12}
         className="mt-1 w-full rounded-lg border border-line bg-surface px-3 py-2 text-[15px] leading-relaxed"
       />
-      <p className="tabular mt-1 text-xs text-ink/60">Ord: {words}{submitted ? "" : " · sparas automatiskt"}</p>
+      <p className={`tabular mt-1 text-xs ${over ? "text-wrong" : "text-ink/60"}`}>
+        Ord: {words}{wordLimit ? ` av högst ${wordLimit}` : ""}{over ? " · för långt" : ""}{submitted ? "" : " · sparas automatiskt"}
+      </p>
 
       {submitted && (
         <div className="mt-5 border-t border-line pt-4">
           <p className="font-display text-lg">Checklista</p>
-          <p className="mt-1 text-sm text-ink/65">Kryssa i det du fick med. Bockarna sparas.</p>
+          <p className="mt-1 text-sm text-ink/65">
+            Kryssa i det du fick med. Bockarna sparas.
+            {maxPoints ? ` Din egen bedömning: ${essayScore(essay, checks, maxPoints)} av ${maxPoints} p (andelen ibockade punkter).` : ""}
+          </p>
           {essay.checklist.map((group) => (
             <div key={group.heading} className="mt-3">
               <p className="text-sm font-medium text-ink/80">{group.heading}</p>
