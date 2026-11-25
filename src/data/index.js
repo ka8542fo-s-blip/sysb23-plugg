@@ -260,12 +260,13 @@ export const courses = [
     // Uppgifter: de två inlämningarna.
     views: ["las", "ova", "essa", "tenta", "uppgifter"],
     practiceBy: "chapter",
-    // Sju egna övningsessäer med lärarens kriterier i checklistan; essäerna
-    // får vara högst 700 ord (lärarens anslag 24 nov).
+    // Lärarens exempel och sex egna scenarioessäer i samma stil, med
+    // lärarens krav i checklistan; högst 700 ord (lärarens anslag 24 nov,
+    // tillägget 25 nov om reflekterande scenariofrågor).
     essays: sakerhetEssays,
     essayIntro: sakerhetEssayIntro,
     essayWordLimit: 700,
-    essayClosing: "Högst 700 ord. Fem delar: tes, kursbegrepp ur bok och föreläsning, konkreta exempel, ett motargument eller en begränsning, och en slutsats som svarar på frågan.",
+    essayClosing: "Högst 700 ord. Svara på scenariot: vilka säkerhetsrisker som uppstår, varför de uppstår och vad man gör åt dem, med kursbegrepp ur bok och föreläsning, ett eget resonemang och ett motargument eller en begränsning.",
     topics: sakerhetTopics,
     questions: sakerhetQuestions,
     chapters: sakerhetChapters,
@@ -286,7 +287,7 @@ export const courses = [
     // (lärarens formuleringar, visas som "Lärarens fokus" i Läs).
     yearExam: {
       intro:
-        "Läraren har angett poängen: 20 frågor och 100 poäng. 5 frågor som liknar förra årets (3 p var), 5 från föreläsningsbilderna och relaterat material (3 p), 8 från bokens kapitel (5 p) och 2 essäer (15 p var, högst 700 ord). En provtenta drar just det ur sajtens frågor, med 7 av bokfrågorna ur lärarens fokuskapitel.",
+        "Läraren har angett poängen: 20 frågor och 100 poäng. 5 frågor som liknar förra årets (3 p var), 5 från föreläsningsbilderna och relaterat material (3 p), 8 från bokens kapitel (5 p) och 2 essäer (15 p var, högst 700 ord), som är reflekterande scenariofrågor. En provtenta drar just det ur sajtens frågor, med 7 av bokfrågorna ur lärarens fokuskapitel.",
       rule: "Fel svar på en flervalsfråga ger −1, blankt ger 0. 5-poängsfrågor: svara alltid, en ren gissning ger i snitt +0,5. 3-poängsfrågor: en ren gissning ger i snitt 0, så svara om du kan stryka minst ett alternativ. Essäerna rättas inte automatiskt: efter inlämningen bockar du i checklistan, och essäpoängen blir din egen bedömning.",
       gradeNote: "Betygsgränserna är inte bekräftade för i år; sajten räknar med förra årets: A 85, B 75, C 65, D 55, E 50.",
       pastNote:
@@ -306,7 +307,7 @@ export const courses = [
     pastExamNote:
       "Tentorna publicerades utan facit. Rätt svar och förklaringar är sajtens egna, skrivna utifrån Stallings & Brown.",
     homeIntro:
-      "Läs föreläsningarna och bokens kapitel, öva på frågor per kapitel och på förra årets tentafrågor, och skriv hela tentor. Årets tenta har 20 frågor och 100 poäng: 5 som liknar förra årets och 5 från föreläsningsbilderna (3 p var), 8 från boken (5 p var) och 2 essäer (15 p var). Fel svar ger −1. Kapitlen märkta Lärarens fokus är de ämnen läraren pekat ut.",
+      "Läs föreläsningarna och bokens kapitel, öva på frågor per kapitel och på förra årets tentafrågor, och skriv hela tentor. Årets tenta har 20 frågor och 100 poäng: 5 som liknar förra årets och 5 från föreläsningsbilderna (3 p var), 8 från boken (5 p var) och 2 essäer om scenarier (15 p var). Fel svar ger −1. Kapitlen märkta Lärarens fokus är de ämnen läraren pekat ut.",
   },
 ];
 

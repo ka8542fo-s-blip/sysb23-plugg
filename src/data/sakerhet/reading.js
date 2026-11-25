@@ -47,8 +47,8 @@ export const intro =
   "Kompendiet har två delar, efter tentans upplägg: först föreläsningarna, sedan bokens kapitel (Stallings & Brown, Computer Security). Föreläsningskapitlen följer bilderna, bokkapitlen tar det som går att fråga om i flervalsform: definitioner, indelningar och skillnader. Räkna med ungefär {lästid} för hela texten. Termerna står på engelska, eftersom tentan och boken använder dem.";
 
 export const examNote = {
-  text: "Salstenta torsdag 3 december 08–13 i MA 10, utan hjälpmedel. 20 frågor, 100 poäng: 5 som liknar förra årets (3 p), 5 från föreläsningsbilderna (3 p), 8 från bokens kapitel (5 p) och 2 essäer (15 p, högst 700 ord). Fel svar på de slutna frågorna ger −1. Kapitlen märkta Lärarens fokus är de ämnen läraren pekat ut.",
-  source: "lärarens anslag på Canvas 24 nov",
+  text: "Salstenta torsdag 3 december 08–13 i MA 10, utan hjälpmedel. 20 frågor, 100 poäng: 5 som liknar förra årets (3 p), 5 från föreläsningsbilderna (3 p), 8 från bokens kapitel (5 p) och 2 essäer (15 p, högst 700 ord), som är reflekterande scenariofrågor. Fel svar på de slutna frågorna ger −1. Kapitlen märkta Lärarens fokus är de ämnen läraren pekat ut. Omtentan i januari har samma upplägg.",
+  source: "lärarens anslag på Canvas 24 nov och tillägget 25 nov",
 };
 
 const rawChapters = {

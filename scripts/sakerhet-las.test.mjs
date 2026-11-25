@@ -68,26 +68,54 @@ test("manifestet: Läs, kapitelordning i Öva och sammanfattningen", () => {
   assert.ok(examNote.text.includes("3 december"));
 });
 
-// Essäerna: lärarens kriterier (Canvas 24 nov) som checklista, märkta som
-// egna övningsessäer (årets ämnen är okända), högst 700 ord.
-test("essäerna: sju övningsessäer med lärarens fem kriterier, märkta som egna, 700 ord", () => {
-  const HEADINGS = ["Tes", "Kursbegrepp", "Konkreta exempel", "Motargument eller begränsning", "Slutsats"];
+// Essäerna (lärarens anslag 24 nov och tillägget 25 nov): reflekterande
+// scenariofrågor, högst 700 ord. Essä 1 är lärarens exempel ordagrant, de
+// andra egna övningsessäer i samma stil. Checklistan följer lärarens krav.
+test("essäerna: lärarens exempel först, sex egna scenarioessäer, lärarens krav i checklistan, 700 ord", () => {
+  const HEADINGS = [
+    "Risker som uppstår",
+    "Varför de uppstår",
+    "Vad man gör åt dem",
+    "Kursbegrepp",
+    "Eget resonemang",
+    "Motargument eller begränsning",
+  ];
   assert.equal(course.essays.length, 7);
   assert.ok(course.views.includes("essa"));
   assert.equal(course.essayWordLimit, 700);
+  assert.equal(new Set(course.essays.map((e) => e.id)).size, 7, "unika id");
+
+  const [teacher, ...own] = course.essays;
+  assert.equal(
+    teacher.question,
+    "How do you envision a digital transition in a company that has to migrate and integrate data with new platforms, by focusing on the security perspectives and issues that might arise.",
+  );
+  assert.equal(teacher.group, "Lärarens exempel");
+  assert.match(teacher.context, /^Lärarens exempel/);
+  for (const essay of own) {
+    assert.equal(essay.group, undefined, essay.id);
+    assert.match(essay.context, /^Egen övningsessä i samma stil som lärarens exempel\./, essay.id);
+    // Samma stil som lärarens: ett scenario och säkerhetsperspektivet.
+    assert.match(essay.question, /^How do you envision .*security .*might arise\?$/, essay.id);
+  }
+
   for (const essay of course.essays) {
     assert.deepEqual(essay.checklist.map((g) => g.heading), HEADINGS, essay.id);
     for (const group of essay.checklist) {
       assert.ok(group.points.length >= 2 && group.points.length <= 3, `${essay.id} / ${group.heading}`);
       for (const point of group.points) assert.ok(point.trim().length > 20, `${essay.id}: för kort punkt`);
     }
-    assert.match(essay.context, /^Egen övningsessä – årets essäämnen är inte kända\./, essay.id);
+    // 15 punkter: i provtentan ger varje ibockad punkt 1 av essäns 15 poäng.
+    assert.equal(essay.checklist.flatMap((g) => g.points).length, 15, essay.id);
     assert.ok(essay.question && essay.outline, essay.id);
-    assert.match(essay.outline, /700 ord/, essay.id);
+    assert.match(essay.outline, /^Högst 700 ord\./, essay.id);
     // Kursbegreppen ska ta både bok och föreläsning.
-    const concepts = essay.checklist[1].points.join(" ").toLowerCase();
-    assert.ok(/bok|kapitel/.test(concepts) || /bok/.test(essay.context.toLowerCase()), `${essay.id}: inget bokbegrepp`);
+    const concepts = essay.checklist[3].points.join(" ");
+    assert.match(concepts, /bokens kapitel/, `${essay.id}: inget bokbegrepp`);
+    assert.match(concepts, /[Ff]öreläsning/, `${essay.id}: inget föreläsningsbegrepp`);
   }
+  assert.match(course.essayClosing, /700 ord/);
+  assert.match(course.essayClosing, /risker.*varför.*vad man gör/);
 });
 
 // Klartext (Kaspers regel 14 nov): det som visas ska förstås av en kursare

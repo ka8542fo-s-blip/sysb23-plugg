@@ -4,6 +4,8 @@
 //
 // Regel: inget nytt i sak. Tentans upplägg är lärarens anslag på Canvas
 // (24 nov 2026): delarna, poängen, rättningen, 700 ord och fokusämnena.
+// Lärarens tillägg 25 nov: essäerna är reflekterande scenariofrågor, och
+// omtentan i januari har samma upplägg och rättning.
 // Resten sammanfattar kapitlen.
 export const summary = {
   id: "sammanfattning",
@@ -11,13 +13,13 @@ export const summary = {
   title: "Sammanfattning",
   readingMinutes: 5,
   lead: "Tentans upplägg och poäng, lärarens fokusämnen, hur delkursen hänger ihop och var du läser mer.",
-  sources: ["Lärarens anslag på Canvas 24 nov", "Föreläsning 1 och 2, gästföreläsningen"],
+  sources: ["Lärarens anslag på Canvas 24 nov och tillägget 25 nov", "Föreläsning 1 och 2, gästföreläsningen"],
   topics: [],
   primaryTopics: [],
   body: `
 ## Tentan den 3 december
 
-Salstenta 08–13 i MA 10, utan hjälpmedel. Läraren har angett delarna och poängen: 20 frågor och 100 poäng.
+Salstenta 08–13 i MA 10, utan hjälpmedel. Läraren har angett delarna och poängen: 20 frågor och 100 poäng. Omtentan i januari har samma upplägg och rättning.
 
 | Del | Antal | Poäng per fråga | Totalt |
 |---|---|---|---|
@@ -30,6 +32,7 @@ Salstenta 08–13 i MA 10, utan hjälpmedel. Läraren har angett delarna och po�
 
 - De 18 slutna frågorna: rätt svar ger frågans poäng, fel svar ger −1, blankt ger 0.
 - Essäerna: upp till 15 poäng var, högst 700 ord. Poängen beror på hur djupt och väl argumenterat svaret är.
+- Essäfrågorna är reflekterande scenariofrågor. Lärarens exempel: "How do you envision a digital transition in a company that has to migrate and integrate data with new platforms, by focusing on the security perspectives and issues that might arise." Svaret ska visa vilka säkerhetsrisker som uppstår, varför och vad man gör åt dem, med kursbegrepp ur bok och föreläsningar.
 - Betygsgränserna är inte angivna. Sajten räknar med förra årets: A 85, B 75, C 65, D 55, E 50. De är inte bekräftade för i år.
 
 **När lönar det sig att svara?** Alla frågor har fyra alternativ.
@@ -71,7 +74,7 @@ Privacy löper genom alla steg: att skydda människors integritet är ofta ett a
 
 - **Läs:** föreläsningarna först, sedan bokens kapitel i bokens ordning. Sajten tar upp lärarens fokuskapitel och de kapitel som förra årets tentafrågor byggde på. Termerna står på engelska, eftersom tentan och boken använder dem.
 - **Öva:** under Alla frågor finns frågor per kapitel, och under Tentafrågor förra årets tentafrågor. De gamla tentafrågorna finns också som varianter med nya formuleringar, i kapitlet där begreppet förklaras. Det är så tentans "små variationer" kan se ut.
-- **Essä:** fem egna övningsessäer med checklistor. Årets essäämnen är inte kända.
+- **Essä:** lärarens exempel och sex egna scenarioessäer i samma stil, med checklistor efter lärarens krav.
 - **Tenta:** provtentor i årets format med lärarens poäng, där 7 av de 8 bokfrågorna kommer ur fokuskapitlen, och förra årets tre tentor att skriva i sin helhet.
 `,
 };
