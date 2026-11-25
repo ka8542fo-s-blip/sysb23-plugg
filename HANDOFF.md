@@ -50,7 +50,7 @@ kapitel: allt UI läser `chapter.number`.
 | strategi | komplett | 11 kapitel (kap `digital` = nr 9 ur Weavers föreläsning 1; kap9/kap10 är nr 10/11), 14 ämnen, 124 termer, 71 frågor (designregler i filens kommentar, mätskript `scripts/check-fragebank.mjs`), 4 essäer, `practiceBy: "chapter"`. Tillägg 2026-09-09 ur Weavers föreläsning 2: kapitel 2 value creation/value capture, kapitel 6 stuck in the middle + omskrivet RBV-avsnitt med VRIO och de tre imitationshindren + nya avsnitt "Dynamiska förmågor" (Teece: sensing/seizing/transforming) och "Sex sätt att nå uthållig konkurrensfördel" + omskrivet Mintzberg-avsnitt med Waters fem termer och Honda/Netflix, kapitel 8 hållbarhetens tidslinje (CSRD) och "Tre termer att hålla isär: CSR, TBL och ESG" (internt/externt är det som prövas). Sju frågor str-q67…73, sju ordlistetermer, essächecklistan för lärande organisation har de tre godtagbara perspektiven |
 | databaser | komplett mot tentan | se nedan |
 | process | aktiv (2026-09-29) | se "Processorienterad verksamhetsutveckling (BPM)" nedan |
-| sakerhet | aktiv (2026-11-13, utbyggd 22 och 24 nov) | Läs (sammanfattning med lärarens poäng och fokus, tre föreläsningar, 16 bokkapitel, ordlista), Öva (kapitelfrågor med varianter + Tentafrågor), Essä (5 övningsessäer), Tenta (provtentor i årets format + förra årets tre), Uppgifter — se "Säkerhet i informationssystem" nedan |
+| sakerhet | aktiv (2026-11-13, utbyggd 22, 24 och 25 nov) | Läs (sammanfattning med lärarens poäng och fokus, tre föreläsningar, 16 bokkapitel, ordlista), Öva (kapitelfrågor med varianter + Tentafrågor), Essä (lärarens exempel + 6 scenarioessäer), Tenta (provtentor i årets format + förra årets tre), Uppgifter — se "Säkerhet i informationssystem" nedan |
 | arkitektur | aktiv (2026-11-13) | Lärarens tre moduldokument på svenska (22 nov): Moduler (12 moduler med frågorna på sidan), Öva (136 frågor + 53 förklarakort), Statistik — se "Verksamhetsarkitektur" nedan |
 
 **Databaser** (`views: las, sql, modell, tenta, ova, statistik`; Prov medvetet borta):
@@ -641,8 +641,8 @@ markera vid mer än ungefär 40 % säkerhet (brytpunkt 3/8).
 
 - **Säkerhet (22 nov 2026):** allt är ogranskat av Kasper —
   sammanfattningen, föreläsnings- och bokkapitlen, ordlistan, Öva-frågorna
-  med varianterna (`reviewed: false`), de fem övningsessäerna och
-  provtentans regler. Bokkapitlen är skrivna av underagenter och granskade
+  med varianterna (`reviewed: false`), övningsessäerna (lärarens exempel
+  och sex egna scenarioessäer, 25 nov) och provtentans regler. Bokkapitlen är skrivna av underagenter och granskade
   av Claude mot bokens text; osäkerheterna står i varje fils `notes`.
 - **Verksamhetsarkitektur (2026-11-13):** allt är ogranskat av Kasper —
   kapitlen och sammanfattningen, de 217 Öva-frågornas förklaringar
@@ -1418,7 +1418,8 @@ en separat Tenta-flik, ingen växel inne i en flik.
   alternativen: ordningen skiljer sig mellan tentorna. 26 unika frågor,
   **14** på alla tre (prompten sa 17; sak-01, 02, 03 och 05 saknas i
   uppsamlingen). Ordinarie 25 nov 2025, omtenta 14 jan 2026, uppsamling 18
-  maj 2026. Kommande: 3 dec 2026 08–13 MA 10, omtenta 14 jan 2027 Sparta.
+  maj 2026. Kommande: 3 dec 2026 08–13 MA 10, omtenta 14 jan 2027 Sparta (samma
+  upplägg och rättning som ordinarien, lärarens tillägg 25 nov).
 - **Data:** `data/sakerhet/examBank.js` (sak-01…26 i Övas frågeform,
   ordagrant ur PDF:erna, radbrytningar ihopslagna, kontrollerat med skript
   2026-11-13; förklaringar ur promptens B3, `reviewed` saknas — ogranskat
@@ -1495,6 +1496,12 @@ push, changelog-id efter det högsta på origin.
   boken är huvudlitteraturen och att föreläsnings- och gästföreläsningsbilderna
   är viktigt material. "Relaterat material" kan betyda lärarens egen
   forskning (Kajtazi m.fl.); den används inte.
+- **Lärarens tillägg 25 nov 2026:** omtentan i januari har samma upplägg
+  och rättning. Essäfrågorna är reflekterande scenariofrågor; lärarens
+  exempel (ordagrant, essä 1 i Essä och i sammanfattningen): "How do you
+  envision a digital transition in a company that has to migrate and
+  integrate data with new platforms, by focusing on the security
+  perspectives and issues that might arise."
 - **Lärarens fokusämnen** (samma anslag), som `focus` på kapitlen med
   lärarens formulering: Introduction to Buffer Overflow (kap. 10), IT
   Security Management and Risk Assessment (14), Physical security control
@@ -1558,13 +1565,23 @@ push, changelog-id efter det högsta på origin.
   13: 24. Bok 16: 06 (andra varianten). Bok 17: 05 (andra varianten). Alla 26
   har alltså minst en variant. Testet i `sakerhet-las.test.mjs`
   kontrollerar att varje `variantOf` finns i examBank.
-- **Essä:** `essays.js`, sju egna övningsessäer: fem på föreläsningarna
-  (Fö1, Fö2 ×3, gästföreläsningen) och två på lärarens fokuskapitel
-  (riskhantering kap. 14, säkerhetspolicyn kap. 14/15/17); `context` börjar
-  "Egen övningsessä – årets essäämnen är inte kända". Checklistorna följer
-  **lärarens bedömning, inte Strategis fyra steg**: Tes / Kursbegrepp (bok
-  och föreläsning) / Konkreta exempel / Motargument eller begränsning /
-  Slutsats, 2–3 punkter var (testat i `sakerhet-las.test.mjs`).
+- **Essä (25 nov):** `essays.js`, sju essäer, alla reflekterande
+  scenariofrågor på engelska som lärarens. Essä 1 (`sak-e8`) är lärarens
+  exempel ordagrant (`TEACHER_EXAMPLE`, `group: "Lärarens exempel"`, visas
+  som etikett). De andra sex är egna övningsessäer i samma stil (`context`
+  börjar "Egen övningsessä i samma stil som lärarens exempel."):
+  molnmigrering (`sak-e9`), generativ AI (`sak-e10`), distansarbete
+  (`sak-e11`), företagsfusion (`sak-e12`), en ny e-handelsplattform utan
+  riskbedömning (`sak-e6`, kap. 14) och en säkerhetspolicy i ett växande
+  företag (`sak-e7`, kap. 14/15/17). De fem föreläsningsessäerna (`sak-e1`–
+  `e5`) är borttagna; ingen hade sparat något i dem i Kaspers Chrome.
+  Checklistorna följer **lärarens krav, inte Strategis fyra steg**, sex
+  rubriker (`CHECKLIST_HEADINGS`): Risker som uppstår / Varför de uppstår /
+  Vad man gör åt dem / Kursbegrepp (bok och föreläsning) / Eget resonemang
+  / Motargument eller begränsning, 2–3 punkter var och **15 punkter per
+  essä**, så en ibockad punkt är 1 p i provtentan (testat i
+  `sakerhet-las.test.mjs`). AI-förordningen finns bara i inlämningsuppgiften,
+  inte i boken eller på bilderna; essän om generativ AI säger det.
   `essayWordLimit: 700` och en egen `essayClosing` (annars visar Essä
   Strategis slutrad om 300 ord och fyra steg); `essa-teman.test.mjs`
   vaktar båda.
@@ -2147,8 +2164,8 @@ kapitel 4, Zachman- och Essä-introt).
   artikel 86:s datum (se "F5 inlagd"). Kasper granskar själv,
   BPMN-övningar och kapitel 11 först.
 - **Säkerhet:** Kasper granskar kapitlen, frågorna och varianterna
-  (`reviewed: false`; bokkapitlens `notes` listar osäkerheterna) och
-  facit i examBank. 16 bokkapitel är byggda (de 15 planerade plus
+  (`reviewed: false`; bokkapitlens `notes` listar osäkerheterna),
+  facit i examBank och scenarioessäernas checklistor (25 nov). 16 bokkapitel är byggda (de 15 planerade plus
   kapitel 10); fler kan läggas till som en fil var i `bok/` (briefen i
   `kursmaterial-sakerhet/`). Poängen, avdraget och 700 ord är lärarens
   (24 nov). Anger läraren betygsgränser: ändra `lib/gradeScale.js` eller
