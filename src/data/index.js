@@ -226,6 +226,7 @@ export const courses = [
     essayWordLimit: 500,
     essayClosing: "Cirka 200 ord, max 500. Visa förståelse: problem och effekt höjer svaret.",
     essayIntro: [
+      "Börja med de fem temana under Prioritera först. De innehåller modul 12:s fem stora essäer, som läraren skrev inför examinationen, och täcker de flesta små frågorna också.",
       "Tentan har tre essäfrågor, 40 p. Sikta på cirka 200 ord, max 500.",
       "Lärarens modellsvar är korta. Visa mer: säg vad det är, vilket problem det löser eller skapar, vilken effekt det får, ge ett av lärarens exempel och koppla till en annan del av kursen.",
       "Varje tema täcker flera av lärarens frågor. Kan du temat kan du alla frågorna i det.",

@@ -1696,6 +1696,14 @@ poäng är sämre än inget.
     bygger på principerna) står i modul 9 och i modul 7:s tillagda block.
   - Båda står bara på svenska. `en` är orört, och ingen fråga kräver orden,
     så `tackning.js` berörs inte.
+- **Prioriteringen** (Kaspers beslut 26 nov, `cc-arkitektur-essa-prioritet.md`):
+  knapparna står i tre grupper efter `prioritet`, och "Prioritera först" är
+  tema 4, 7, 8, 3 och 6, de fem temana med en av modul 12:s stora essäer
+  (`storEssa`, etiketten "Stor essä · modul 12"). Läraren skrev dem inför
+  examinationen och de knyter ihop flera moduler, som tentans essäer med
+  flera dimensioner. Sedan kommer 9, 10 och 11, som har modul 12:s scenarier,
+  och sist 1, 2 och 5, som bara gäller en modul var. `ORDNING` i `essaTeman.js` ger ordningen
+  inom gruppen; vyn grupperar bara när essäerna har `prioritet`.
 - `arkitekturEssays` (lärarens 53 frågor som essäer, `essays.js`) ligger
   kvar i repot men visas inte.
 - **Läge:** alla elva teman är skrivna och granskade (23 nov). Omgång 1 var

@@ -33,15 +33,48 @@ test("temana täcker lärarens frågor: 11 teman, 37 frågor, varje fråga i exa
   for (const tema of TEMAN) assert.ok(tema.title?.trim() && tema.fragor.length > 0, tema.id);
 });
 
-test("alla elva teman är skrivna och visas i fliken Essä i temaordning", () => {
+// Prioriteringen (Kaspers beslut 26 nov): de fem temana med modul 12:s
+// stora essäer först, i den här ordningen.
+const GRUPPER = {
+  1: ["ea-tema-4", "ea-tema-7", "ea-tema-8", "ea-tema-3", "ea-tema-6"],
+  2: ["ea-tema-9", "ea-tema-10", "ea-tema-11"],
+  3: ["ea-tema-1", "ea-tema-2", "ea-tema-5"],
+};
+
+test("alla elva teman är skrivna och visas i fliken Essä i prioritetsordning", () => {
   assert.equal(skrivna.length, 11, `skrivna: ${skrivna.map((tema) => tema.id).join(", ")}`);
   assert.deepEqual(
     essaTeman.map((tema) => tema.id),
-    skrivna.map((tema) => tema.id),
+    [...GRUPPER[1], ...GRUPPER[2], ...GRUPPER[3]],
   );
   const course = getCourse("arkitektur");
   assert.equal(course.essays, essaTeman);
   assert.deepEqual(course.views, ["moduler", "ova", "essa", "statistik"]);
+});
+
+test("varje tema har en prioritet: 4, 7, 8, 3, 6 först, sedan 9, 10, 11, sist 1, 2, 5", () => {
+  for (const tema of TEMAN) assert.ok([1, 2, 3].includes(tema.prioritet), `${tema.id}: ${tema.prioritet}`);
+  for (const [prioritet, ids] of Object.entries(GRUPPER)) {
+    assert.deepEqual(
+      essaTeman.filter((tema) => tema.prioritet === Number(prioritet)).map((tema) => tema.id),
+      ids,
+      `grupp ${prioritet}`,
+    );
+  }
+});
+
+test("storEssa finns i exakt de fem temana under Prioritera först och står i temats frågor", () => {
+  assert.deepEqual(
+    TEMAN.filter((tema) => tema.storEssa).map((tema) => tema.id).sort(),
+    [...GRUPPER[1]].sort(),
+  );
+  const stora = new Set();
+  for (const tema of TEMAN.filter((item) => item.storEssa)) {
+    assert.match(tema.storEssa, /^ea-e12-essay-[1-5]$/, tema.id);
+    assert.ok(tema.fragor.includes(tema.storEssa), `${tema.id}: ${tema.storEssa} står inte i fragor`);
+    stora.add(tema.storEssa);
+  }
+  assert.equal(stora.size, 5, "modul 12:s fem stora essäer, en per tema");
 });
 
 test("ett skrivet tema har alla delar", () => {
@@ -145,7 +178,8 @@ test("arkitekturens Essä: mål cirka 200 ord, max 500, egen slutrad och intro",
   assert.equal(course.essayWordTarget, 200);
   assert.equal(course.essayWordLimit, 500);
   assert.match(course.essayClosing, /Cirka 200 ord, max 500/);
-  assert.equal(course.essayIntro.length, 3);
+  assert.equal(course.essayIntro.length, 4);
+  assert.match(course.essayIntro[0], /^Börja med de fem temana under Prioritera först\./);
   assert.match(course.examNote.text, /30 flervalsfrågor .* 3 essäfrågor/);
   assert.doesNotMatch(course.homeIntro, /översatt/);
 });
@@ -171,7 +205,10 @@ test("Strategi, Process och Säkerhet har samma essäer och samma ordgräns som 
       assert.equal(course[field], undefined, `${course.id}: ${field}`);
     }
     for (const essay of course.essays) {
-      assert.ok(!essay.title && !essay.ufAnswers && !essay.modelAnswerLang, `${course.id} / ${essay.id}`);
+      assert.ok(
+        !essay.title && !essay.ufAnswers && !essay.modelAnswerLang && !essay.prioritet && !essay.storEssa,
+        `${course.id} / ${essay.id}`,
+      );
     }
   }
 });

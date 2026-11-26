@@ -7,6 +7,7 @@
 // commit. Nyast först, id räknas upp med ett, texten är kort (högst 70
 // tecken) och skriven för den som pluggar, inte för utvecklaren.
 export const changelog = [
+  { id: 112, date: "2026-11-26", text: "Verksamhetsarkitektur: Essä visar vilka teman du ska prioritera först" },
   { id: 111, date: "2026-11-25", text: "Säkerhet: lärarens essäexempel och sex scenarioessäer i samma stil" },
   { id: 110, date: "2026-11-24", text: "Säkerhet: essäer med lärarens kriterier, 700 ord och två nya essäer" },
   { id: 109, date: "2026-11-24", text: "Säkerhet: 15 nya frågor om lärarens fokusämnen i Öva" },

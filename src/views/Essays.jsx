@@ -15,12 +15,25 @@ const DEFAULT_INTRO = [
   "Tentans essäsvar får vara max 300 ord. Välj tre till fyra bärande punkter och skriv tätt — hoppa inledning och sammanfattning.",
 ];
 
+// Essäer med `prioritet` (Verksamhetsarkitektur, Kaspers beslut 26 nov) står
+// i de här grupperna, och inom en grupp i datats ordning.
+const PRIORITY_GROUPS = [
+  { prioritet: 1, title: "Prioritera först" },
+  { prioritet: 2, title: "Sedan" },
+  { prioritet: 3, title: "Om tid finns" },
+];
+
 function loadOpen(courseId) {
   return load(KEYS.essayOpen, {})[courseId];
 }
 
 export default function Essays({ course, params, essayState, setEssayState }) {
-  const essays = course.essays || [];
+  const allEssays = course.essays || [];
+  // Med prioritet följer förvalet och Nästa fråga gruppernas ordning.
+  const prioritized = allEssays.some((item) => item.prioritet);
+  const essays = prioritized
+    ? PRIORITY_GROUPS.flatMap((group) => allEssays.filter((item) => item.prioritet === group.prioritet))
+    : allEssays;
   // params.essayId: från Tentafrågor och Tenta, som länkar till tentans egen essä.
   const [activeId, setActiveId] = useState(() => {
     if (essays.some((item) => item.id === params?.essayId)) return params.essayId;
@@ -103,6 +116,25 @@ export default function Essays({ course, params, essayState, setEssayState }) {
   const markable = grouped || titled;
   const index = essays.indexOf(essay);
 
+  const chip = (item, i) => (
+    <button
+      key={item.id}
+      type="button"
+      onClick={() => select(item.id)}
+      aria-current={item.id === essay.id ? "true" : undefined}
+      className={`chip ${item.id === essay.id ? "chip-on" : "hover:border-pine"}`}
+    >
+      {titled ? (
+        <>
+          {essayState[item.id]?.done && <span aria-label="genomgången">✓ </span>}
+          {item.title}
+        </>
+      ) : (
+        `Essä ${i + 1}`
+      )}
+    </button>
+  );
+
   return (
     <div className="space-y-6">
       <section>
@@ -121,26 +153,22 @@ export default function Essays({ course, params, essayState, setEssayState }) {
 
       {grouped ? (
         <EssayIndex course={course} essays={essays} activeId={essay.id} essayState={essayState} onSelect={select} />
+      ) : prioritized ? (
+        <nav aria-label="Essäfrågor" className="space-y-4">
+          {PRIORITY_GROUPS.map((group) => {
+            const items = essays.filter((item) => item.prioritet === group.prioritet);
+            if (items.length === 0) return null;
+            return (
+              <div key={group.prioritet}>
+                <h2 className="text-[11px] font-medium uppercase tracking-[0.14em] text-brass">{group.title}</h2>
+                <div className="mt-2 flex flex-wrap gap-2">{items.map((item) => chip(item, essays.indexOf(item)))}</div>
+              </div>
+            );
+          })}
+        </nav>
       ) : (
         <nav aria-label="Essäfrågor" className="flex flex-wrap gap-2">
-          {essays.map((item, i) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => select(item.id)}
-              aria-current={item.id === essay.id ? "true" : undefined}
-              className={`chip ${item.id === essay.id ? "chip-on" : "hover:border-pine"}`}
-            >
-              {titled ? (
-                <>
-                  {essayState[item.id]?.done && <span aria-label="genomgången">✓ </span>}
-                  {item.title}
-                </>
-              ) : (
-                `Essä ${i + 1}`
-              )}
-            </button>
-          ))}
+          {essays.map((item, i) => chip(item, i))}
         </nav>
       )}
 
@@ -162,6 +190,11 @@ export default function Essays({ course, params, essayState, setEssayState }) {
             {essay.priority === "hogst" && (
               <span className="mr-2 inline-block rounded-full border border-brass px-2 py-0.5 text-[12px] font-medium text-brass-text">
                 Högst prioriterad
+              </span>
+            )}
+            {essay.storEssa && (
+              <span className="mr-2 inline-block rounded-full border border-brass px-2 py-0.5 text-[12px] font-medium text-brass-text">
+                Stor essä · modul 12
               </span>
             )}
             {essay.context}

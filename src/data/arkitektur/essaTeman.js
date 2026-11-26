@@ -12,6 +12,9 @@
 // "doktrin" och "skyddsräcken", som läraren använde muntligt på
 // föreläsningen 23 nov. `tackning` pekar ut en mening i svaret per fråga.
 //
+// `prioritet` (1–3) och `storEssa` styr ordningen i fliken Essä, se ORDNING
+// nedan.
+//
 // `context` och "Lärarens korta svar" (`ufAnswers`) byggs nedan ur
 // modulfilerna, så att lärarens modellsvar aldrig skrivs två gånger.
 // `arkitekturEssays` i essays.js ligger kvar i repot men visas inte.
@@ -21,6 +24,7 @@ export const TEMAN = [
   {
     id: "ea-tema-1",
     title: "Enterprise och avgränsning",
+    prioritet: 3,
     fragor: ["ea-e1-10"],
     question: `Förklara varför begreppet "enterprise" är viktigare för Enterprise Architecture än begreppet "företag".
 
@@ -70,6 +74,7 @@ Effekten av att utgå från enterprisen är att arkitekten får med de relatione
   {
     id: "ea-tema-2",
     title: "Arkitektur är mer än komponenter",
+    prioritet: 3,
     fragor: ["ea-e2-x", "ea-e2-11"],
     question: `Varför räcker det inte att beskriva en enterprise genom att bara räkna upp dess komponenter?
 
@@ -122,6 +127,8 @@ Effekten av att förstå relationerna är att arkitekten kan bedöma konsekvense
   {
     id: "ea-tema-3",
     title: "EA: mer än IT, en brygga från strategi till förändring",
+    prioritet: 1,
+    storEssa: "ea-e12-essay-1",
     fragor: ["ea-e3-10", "ea-e3-11", "ea-e12-essay-1"],
     question: `Förklara varför Enterprise Architecture bör ses som en disciplin för att möjliggöra förändring snarare än att bara dokumentera den nuvarande enterprisen.
 
@@ -177,6 +184,8 @@ Arkitekturen blir strategiskt värdefull när förståelsen används för att fa
   {
     id: "ea-tema-4",
     title: "Zachman och TOGAF",
+    prioritet: 1,
+    storEssa: "ea-e12-essay-2",
     fragor: ["ea-e4-10", "ea-e4-11", "ea-e5-12", "ea-e12-essay-2"],
     question: `Jämför Zachmans och TOGAF:s roller i Enterprise Architecture.
 
@@ -233,6 +242,7 @@ Effekten av att hålla isär dem är att ramverken kan komplettera varandra i st
   {
     id: "ea-tema-5",
     title: "ADM",
+    prioritet: 3,
     fragor: ["ea-e5-11"],
     question: `Förklara ADM:s roll i Enterprise Architecture.
 
@@ -290,6 +300,8 @@ Organisationer skiljer sig åt i storlek, governance, regelverk, arkitekturmogna
   {
     id: "ea-tema-6",
     title: "Relationer, domäner och trade-offs",
+    prioritet: 1,
+    storEssa: "ea-e12-essay-5",
     fragor: ["ea-e6-12", "ea-e6-13", "ea-e12-essay-5"],
     question: `"Enterprise Architecture handlar om relationer och trade-offs." Diskutera.
 
@@ -351,6 +363,8 @@ Effekten av att göra trade-offs explicita är att arkitekten kan hjälpa stakeh
   {
     id: "ea-tema-7",
     title: "Capabilities kopplar ihop strategi, arkitektur och transformation",
+    prioritet: 1,
+    storEssa: "ea-e12-essay-3",
     fragor: ["ea-e7-12", "ea-e7-13", "ea-e7-26", "ea-e12-essay-3"],
     question: `Förklara hur business capabilities kan koppla samman strategi, Enterprise Architecture och digital transformation.
 
@@ -414,6 +428,8 @@ Effekten av att planera utifrån capabilities är att planen vilar på något so
   {
     id: "ea-tema-8",
     title: "Principer, governance och agilitet",
+    prioritet: 1,
+    storEssa: "ea-e12-essay-4",
     fragor: ["ea-e7-27", "ea-e8-8", "ea-e9-10", "ea-e12-essay-4", "ea-e12-scenario-3"],
     question: `Förklara varför governance för arkitektur bör utformas för att stödja snarare än förhindra agilitet.
 
@@ -479,6 +495,7 @@ Effekten är att governance kan ge både enhetlighet och autonomi. Teamen kan r�
   {
     id: "ea-tema-9",
     title: "Digital transformation",
+    prioritet: 2,
     fragor: ["ea-e10-9", "ea-e10-10", "ea-e12-scenario-5"],
     question: `Varför bör digital transformation behandlas som en concern för Enterprise Architecture?
 
@@ -539,6 +556,7 @@ Effekten av ett arkitektoniskt perspektiv är att initiativet drivs av ett tydli
   {
     id: "ea-tema-10",
     title: "Börja i problemet, inte i tekniken",
+    prioritet: 2,
     fragor: [
       "ea-e9-tankande",
       "ea-e11-7",
@@ -612,6 +630,7 @@ Effekten av att börja i syfte och resultat är att lösningen kopplas till det 
   {
     id: "ea-tema-11",
     title: "Från nuläge till målbild: bankfallet",
+    prioritet: 2,
     fragor: ["ea-e11-3", "ea-e11-8b", "ea-e11-9", "ea-e11-10", "ea-e12-scenario-4"],
     question: `En traditionell bank har flera kunddatabaser, en 25 år gammal kärnbanksplattform, fristående digitala kanaler, långsamma releasecykler, många dubblerade applikationer och ökande konkurrens från digitala banker. VD:n säger: "Vi behöver bli en digital bank inom två år." Utveckla ett arkitektoniskt tillvägagångssätt för banken.
 
@@ -742,8 +761,21 @@ function larareSvar(id) {
   };
 }
 
-// Temana som visas i fliken Essä: de som är skrivna, i temaordning.
-export const essaTeman = TEMAN.filter((tema) => tema.modelAnswer).map((tema) => ({
+// Prioriteringen i fliken Essä (Kaspers beslut 26 nov). Grupp 1, "Prioritera
+// först", är de fem temana med en av modul 12:s stora essäer (`storEssa`),
+// som läraren skrev inför examinationen och som knyter ihop flera moduler.
+// Grupp 2 har modul 12:s scenarier, grupp 3 gäller bara en modul var. `prioritet`
+// ger gruppen och listan ordningen inom gruppen.
+const ORDNING = [
+  "ea-tema-4", "ea-tema-7", "ea-tema-8", "ea-tema-3", "ea-tema-6",
+  "ea-tema-9", "ea-tema-10", "ea-tema-11",
+  "ea-tema-1", "ea-tema-2", "ea-tema-5",
+];
+
+// Temana som visas i fliken Essä: de som är skrivna, i prioritetsordning.
+export const essaTeman = TEMAN.filter((tema) => tema.modelAnswer)
+  .sort((a, b) => ORDNING.indexOf(a.id) - ORDNING.indexOf(b.id))
+  .map((tema) => ({
   ...tema,
   context: temaKontext(tema.fragor),
   modelAnswerLabel: "Utvecklat modellsvar",
